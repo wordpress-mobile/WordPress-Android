@@ -59,7 +59,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + job
     private var isStarted = false
-    private var segmentId by Delegates.notNull<Long>()
+    private var segmentId: Long? = null
 
     private val _uiState: MutableLiveData<DomainsUiState> = MutableLiveData()
     val uiState: LiveData<DomainsUiState> = _uiState
@@ -90,7 +90,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
         dispatcher.unregister(fetchDomainsUseCase)
     }
 
-    fun start(segmentId: Long) {
+    fun start(segmentId: Long?) {
         if (isStarted) {
             return
         }

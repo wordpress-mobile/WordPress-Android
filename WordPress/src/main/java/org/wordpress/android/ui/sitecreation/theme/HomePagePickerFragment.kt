@@ -12,8 +12,8 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
-import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
-import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
+import kotlinx.android.synthetic.main.home_page_picker_fragment.*
+import kotlinx.android.synthetic.main.home_page_picker_loading_skeleton.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
@@ -22,16 +22,19 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AniUtils.Duration
-import org.wordpress.android.util.DisplayUtils
+import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
-
-private const val NUM_COLUMNS = 2
 
 /**
  * Implements the Home Page Picker UI
  */
 class HomePagePickerFragment : Fragment() {
+    @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
 
@@ -40,20 +43,27 @@ class HomePagePickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.home_page_picker_fragment, container, false)
+        val view = inflater.inflate(R.layout.home_page_picker_fragment, container, false)
+        val skeletonCardView = view.findViewById<View>(R.id.skeletonCardView)
+        skeletonCardView.minimumHeight = thumbDimensionProvider.height
+        skeletonCardView.minimumWidth = thumbDimensionProvider.width
+        (skeletonCardView.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
+            it.marginStart = thumbDimensionProvider.calculatedStartMargin
+        }
+        return view
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         layoutsRecyclerView.apply {
-            adapter = HomePagePickerAdapter()
-            layoutManager = GridLayoutManager(activity, NUM_COLUMNS)
+            adapter = HomePagePickerAdapter(imageManager, thumbDimensionProvider)
+            layoutManager = GridLayoutManager(activity, thumbDimensionProvider.columns)
         }
 
         setupUi()
+        setupViewModel()
         setupActionListeners()
-        setupViewModel(savedInstanceState)
     }
 
     override fun onAttach(context: Context) {
@@ -61,19 +71,25 @@ class HomePagePickerFragment : Fragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
-    private fun setupViewModel(savedInstanceState: Bundle?) {
+    private fun setupViewModel() {
         viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             setTitleVisibility(uiState.isHeaderVisible)
+            description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
+            loadingIndicator.setVisible(uiState.loadingIndicatorVisible)
+            errorView.setVisible(uiState.errorViewVisible)
+            layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
-                is UiState.Loading -> {
+                is UiState.Loading -> { // Nothing more to do here
                 }
                 is UiState.Content -> {
+                    (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
                 is UiState.Error -> {
+                    uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
         })
@@ -82,7 +98,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupUi() {
-        title?.setVisible(DisplayUtils.isLandscape(requireContext()))
+        title?.setVisible(isPhoneLandscape())
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
@@ -91,19 +107,18 @@ class HomePagePickerFragment : Fragment() {
         previewButton.setOnClickListener { viewModel.onPreviewTapped() }
         chooseButton.setOnClickListener { viewModel.onChooseTapped() }
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
-        backButton.setOnClickListener {
-            requireActivity().onBackPressed() // FIXME: This is temporary for PR #13192
-            viewModel.onBackPressed()
-        }
+        errorView.button.setOnClickListener { viewModel.onRetryClicked() }
+        backButton.setOnClickListener { viewModel.onBackPressed() }
         setScrollListener()
     }
 
     private fun setScrollListener() {
-        if (DisplayUtils.isLandscape(requireContext())) return // Always visible
+        if (isPhoneLandscape()) return // Always visible
         val scrollThreshold = resources.getDimension(R.dimen.picker_header_scroll_snap_threshold).toInt()
         appBarLayout.addOnOffsetChangedListener(AppBarLayout.OnOffsetChangedListener { _, verticalOffset ->
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
+        viewModel.onAppBarOffsetChanged(0, scrollThreshold)
     }
 
     private fun setTitleVisibility(visible: Boolean) {
@@ -116,4 +131,6 @@ class HomePagePickerFragment : Fragment() {
             AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
         }
     }
+
+    private fun isPhoneLandscape() = displayUtils.isLandscape() && !displayUtils.isTablet()
 }

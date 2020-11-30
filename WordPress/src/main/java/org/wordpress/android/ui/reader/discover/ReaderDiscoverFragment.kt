@@ -12,10 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
-import kotlinx.android.synthetic.main.reader_fullscreen_empty_with_action.*
-import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
@@ -29,7 +26,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher.OpenUrlType
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState
-import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ErrorUiState
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.SharePost
@@ -40,6 +36,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSit
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -86,12 +83,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
         }
-        error_retry.setOnClickListener {
-            viewModel.onRetryButtonClick()
-        }
-        empty_action.setOnClickListener {
-            viewModel.onEmptyActionClick()
-        }
     }
 
     private fun initViewModel() {
@@ -105,19 +96,21 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                         recycler_view.scrollToPosition(0)
                     }
                 }
-                is ErrorUiState -> {
-                    uiHelpers.setTextOrHide(error_title, it.titleResId)
-                }
                 is EmptyUiState -> {
-                    uiHelpers.setTextOrHide(empty_title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.subtitle, it.subTitleRes)
+                    uiHelpers.setImageOrHide(actionable_empty_view.image, it.illustrationResId)
+                    uiHelpers.setTextOrHide(actionable_empty_view.button, it.buttonResId)
+                    actionable_empty_view.button.setOnClickListener { _ ->
+                        it.action.invoke()
+                    }
                 }
             }
             uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
             uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
             uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
-            uiHelpers.updateVisibility(error_layout, it.fullscreenErrorVisibility)
             uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
-            uiHelpers.updateVisibility(empty_layout, it.fullscreenEmptyVisibility)
+            uiHelpers.updateVisibility(actionable_empty_view, it.fullscreenEmptyVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
             ptr_layout.isRefreshing = it.reloadProgressVisibility
         })
@@ -150,6 +143,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                                 readerUtilsWrapper.getReportPostUrl(url),
                                 OpenUrlType.INTERNAL
                         )
+                    }
+                    is ShowReaderSubs -> {
+                        ReaderActivityLauncher.showReaderSubs(context)
                     }
                 }
             }

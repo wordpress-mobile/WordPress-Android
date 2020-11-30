@@ -151,6 +151,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -162,6 +163,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
 import org.wordpress.android.util.requestEmailValidation
+import org.wordpress.android.util.setVisible
 import org.wordpress.android.widgets.WPDialogSnackbar
 import org.wordpress.android.widgets.WPSnackbar
 import java.io.File
@@ -197,6 +199,8 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
+    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+
     val selectedSite: SiteModel?
         get() {
             return (activity as? WPMainActivity)?.selectedSite
@@ -232,11 +236,13 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
+            updateScanMenuVisibility()
+
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
                     site
             ) && !site.isJetpackConnected
-            if (isNotAdmin || isSelfHostedWithoutJetpack) {
+            if (isNotAdmin || isSelfHostedWithoutJetpack || site.isWpForTeamsSite) {
                 row_activity_log.visibility = View.GONE
             } else {
                 row_activity_log.visibility = View.VISIBLE
@@ -249,6 +255,10 @@ class MySiteFragment : Fragment(),
             showQuickStartDialogMigration()
         }
         showQuickStartNoticeIfNecessary()
+    }
+
+    private fun updateScanMenuVisibility() {
+        row_scan.setVisible(scanFeatureConfig.isEnabled())
     }
 
     private fun showQuickStartNoticeIfNecessary() {
@@ -774,12 +784,7 @@ class MySiteFragment : Fragment(),
                 isDomainCreditAvailable = false
             }
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK && data != null) {
-                if (consolidatedMediaPickerFeatureConfig.isEnabled() ||
-                        !storiesMediaPickerResultHandler.handleMediaPickerResultForStories(
-                                data,
-                                activity,
-                                selectedSite
-                        )) {
+                if (!storiesMediaPickerResultHandler.handleMediaPickerResultForStories(data, activity, selectedSite)) {
                     if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID)) {
                         val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
                         showSiteIconProgressBar(true)
@@ -1014,7 +1019,7 @@ class MySiteFragment : Fragment(),
 
         // Hide the Plan item if the Plans feature is not available for this blog
         val planShortName = site.planShortName
-        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions) {
+        if (!TextUtils.isEmpty(planShortName) && site.hasCapabilityManageOptions && !site.isWpForTeamsSite) {
             if (site.isWPCom || site.isAutomatedTransfer) {
                 my_site_current_plan_text_view.text = planShortName
                 row_plan.visibility = View.VISIBLE

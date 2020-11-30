@@ -11,7 +11,7 @@
         android:backgroundTint="@color/transparent"
         android:contentDescription="@string/navigate_back_desc"
         android:src="@drawable/ic_arrow_left_white_24dp"
-        android:tint="?attr/colorControlNormal" />
+        android:tint="?attr/colorOnSurface" />
 
     <TextView
         android:id="@+id/title"

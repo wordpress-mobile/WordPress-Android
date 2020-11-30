@@ -1,11 +1,110 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-10 02:43:17+0000
+Translation-Revision-Date: 2020-11-25 07:59:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
+    <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Can\'t edit Story</string>
+    <string name="dialog_edit_story_unavailable_message">Unable to load media for this story. Check your internet connection and try again in a moment.</string>
+    <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
+    <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
+    <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try editing your Story.</string>
+    <string name="color_picker_label_background">Background</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="dialog_discard_story_ok_button_edit">Discard</string>
+    <string name="dialog_discard_story_message_edit">Any changes made will not be saved.</string>
+    <string name="dialog_discard_story_title_edit">Discard changes?</string>
+    <string name="label_done_button">Done</string>
+    <string name="label_next_button">Next</string>
+    <string name="delete_button_alt">Delete</string>
+    <string name="hpp_choose_error">There was an error while selecting the design.</string>
+    <string name="hpp_retry_error">Please check your internet connection and retry.</string>
+    <string name="hpp_error_subtitle">Tap retry when you\'re back online.</string>
+    <string name="hpp_error_title">Layouts not available while offline</string>
+    <string name="continue_site_credentials">Continue with store credentials</string>
+    <string name="login_find_your_connected_email">Find your connected email</string>
+    <string name="reader_discover_no_posts_button_text">Follow topics</string>
+    <string name="reader_discover_no_posts_subtitle">Try following more topics to broaden the search</string>
+    <string name="reader_discover_no_posts_title">No recent posts</string>
+    <string name="reader_discover_empty_title">Welcome!</string>
+    <string name="scan">Scan</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> responded to your post</string>
+    <string name="login_prologue_third_subtitle_two">You received &lt;b>50 likes&lt;/b> on your site today</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> liked your post</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollable block menu opened. Select a block.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Scrollable block menu closed.</string>
+    <string name="hpp_skip_button">Skip</string>
+    <string name="hpp_choose_button">Choose</string>
+    <string name="hpp_subtitle">Pick your favourite homepage layout. You can customize or change it later.</string>
+    <string name="hpp_title">Choose a design</string>
+    <string name="mlp_network_error_subtitle">Tap retry when you\'re back online or create a blank page using the button below.</string>
+    <string name="mlp_network_error_title">Layouts not available while offline</string>
+    <string name="mlp_error_subtitle">Tap retry or create a blank page using the button below.</string>
+    <string name="mlp_error_title">Layouts not available due to an error</string>
+    <string name="prepublishing_nudges_add_category_button">Add Category</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Add New Category</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categories</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Not set</string>
+    <string name="prepublishing_nudges_categories_action">Categories</string>
+    <string name="login_prologue_fifth_caption_three">Museums in London</string>
+    <string name="login_prologue_fifth_caption_two">The World\'s Best Fans</string>
+    <string name="login_prologue_fifth_caption_one">My Top Ten Cafes</string>
+    <string name="login_prologue_fifth_tag_six">Politics</string>
+    <string name="login_prologue_fifth_tag_five">Music</string>
+    <string name="login_prologue_fifth_tag_four">Gardening</string>
+    <string name="login_prologue_fifth_tag_three">Football</string>
+    <string name="login_prologue_fifth_tag_two">Cooking</string>
+    <string name="login_prologue_fifth_tag_one">Art</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Weekly</string>
+    <string name="login_prologue_fifth_subtitle_two">Web News</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten’s work. I will be trying these techniques on my next</string>
+    <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
+    <string name="login_prologue_title_fifth">Follow your favourite sites and discover new reads.</string>
+    <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
+    <string name="login_prologue_title_third">See comments and notifications in real time.</string>
+    <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
+    <string name="login_prologue_title_first">Welcome to the world’s most popular website builder.</string>
+    <string name="media_loading_failed">Media loading failed</string>
+    <string name="reader_discover_recommended_blogs_header">Sites to follow</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">We are working hard to add more blocks with each release.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' is not fully–supported</string>
+    <string name="gutenberg_native_help_button">Help button</string>
+    <string name="gutenberg_native_edit_using_web_editor">Edit using web editor</string>
+    <string name="gutenberg_native_choose_images">Choose images</string>
+    <string name="stories_intro_create_story_post_label">Create Story Post</string>
+    <string name="stories_intro_description_second">They’re published as a new blog post on your site so your audience never misses out on a thing.</string>
+    <string name="stories_intro_title_second">Story posts don\'t disappear</string>
+    <string name="stories_intro_description_first">Combine photos, videos, and text to create engaging and tappable story posts that your visitors will love.</string>
+    <string name="stories_intro_title_first">Now stories are for everyone</string>
+    <string name="stories_intro_image_caption_second">Example story title</string>
+    <string name="stories_intro_image_caption_first">How to create a story post</string>
+    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_title">Introducing Story Posts</string>
+    <string name="mlp_notice_blank_page_created">Blank page created</string>
+    <string name="mlp_notice_page_created">Page created</string>
+    <string name="mlp_preview_title">Layout Preview</string>
+    <string name="media_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s and %3$s.</string>
+    <string name="media_insert_failed">Media insert failed.</string>
+    <string name="media_insert_failed_with_reason">Media insert failed: %s</string>
+    <string name="photo_picker_wordpress_media_library">Choose from WordPress Media Library</string>
+    <string name="reader_label_toolbar_back">Back</string>
+    <string name="reader_discover_empty_button_text">Get Started</string>
+    <string name="reader_discover_empty_subtitle">Follow topics to discover new blogs</string>
+    <string name="reader_post_details_header_by_author_name">By</string>
+    <string name="stats_referrer_snackbar_cant_mark_as_spam">This referrer can\'t be marked as spam</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Unmark as Spam</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Mark as Spam</string>
+    <string name="stats_referrer_popup_menu_open_website">Open Website</string>
+    <string name="media_uploading_gif_library_photo">Uploading gif media</string>
+    <string name="media_uploading_stock_library_photo">Uploading stock media</string>
+    <string name="media_uploading_default">Uploading media</string>
     <string name="gutenberg_native_select_item">Select item</string>
     <string name="gutenberg_native_search_or_type_url">Search or type URL</string>
     <string name="gutenberg_native_add_this_telephone_link">Add this telephone link</string>
@@ -27,7 +126,6 @@ Language: en_CA
     <string name="comment_unable_to_show_error">Unable to show this comment</string>
     <string name="media_browse_for_items">Browse for items</string>
     <string name="reader_menu_report_post">Report this post</string>
-    <string name="gutenberg_native_angle">Angle</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
@@ -76,7 +174,6 @@ Language: en_CA
     <string name="dialog_discard_errored_page_message">This slide has not been saved yet. If you delete this slide, you will lose any edits you have made.</string>
     <string name="dialog_discard_page_message">This slide will be removed from your story.</string>
     <string name="dialog_discard_page_title">Delete story slide?</string>
-    <string name="menu_delete_page">Delete slide</string>
     <string name="label_text_color_button">Change text colour</string>
     <string name="label_text_alignment_button">Change text alignment</string>
     <string name="label_frame_errored">errored</string>
@@ -86,8 +183,6 @@ Language: en_CA
     <string name="label_retry_icon">Retry</string>
     <string name="label_saved_icon">Saved</string>
     <string name="label_close_button">Close</string>
-    <string name="label_control_publish">Next</string>
-    <string name="label_done">Done</string>
     <string name="label_share_to">Share to</string>
     <string name="label_snackbar_share">SHARE</string>
     <string name="label_snackbar_loop_frame_saved">Saved to photos</string>
@@ -98,7 +193,6 @@ Language: en_CA
     <string name="label_control_flip_camera">Flip</string>
     <string name="sound_button_alt">Sound</string>
     <string name="text_button_alt">Text</string>
-    <string name="more_button_alt">More</string>
     <string name="stickers_button_alt">Stickers</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Flip camera</string>
@@ -453,7 +547,6 @@ Language: en_CA
     <string name="login_site_credentials_magic_link_label">Almost there! We just need to verify your Jetpack connected email address &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Log in with site credentials.</string>
     <string name="enter_credentials_for_site">Log in with your %1$s site credentials</string>
-    <string name="send_verification_email">Send verification email</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="reader_following_display_name">Following</string>
     <string name="reader_my_likes_display_name">Likes</string>
@@ -478,7 +571,6 @@ Language: en_CA
     <string name="gutenberg_native_take_a_photo_or_video">Take a Photo or Video</string>
     <string name="gutenberg_native_take_a_photo">Take a Photo</string>
     <string name="gutenberg_native_start_writing">Start writing…</string>
-    <string name="gutenberg_native_size">Size</string>
     <string name="gutenberg_native_sidebar_title_plugin">Sidebar title plugin</string>
     <string name="gutenberg_native_show_section">Show section</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s block. This block has invalid content</string>

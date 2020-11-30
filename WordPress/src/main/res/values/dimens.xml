@@ -19,6 +19,7 @@
 
     <dimen name="fab_margin">@dimen/fab_margin_default</dimen>
     <dimen name="fab_margin_default">16dp</dimen>
+    <dimen name="fab_margin_stories">64dp</dimen>
     <dimen name="fab_margin_tablet">24dp</dimen>
     <dimen name="design_fab_size">56dp</dimen>
 
@@ -365,7 +366,6 @@
 
     <!-- login -->
     <dimen name="promo_indicator_bullet_size">4dp</dimen>
-    <dimen name="magic_link_sent_illustration_sz">120dp</dimen>
 
     <dimen name="button_container_shadow_height">5dp</dimen>
 
@@ -547,6 +547,7 @@
     <!-- Common Picker resources -->
     <dimen name="picker_header_scroll_snap_threshold">-54dp</dimen>
     <dimen name="picker_bottom_button_vertical_margin">@dimen/margin_extra_large</dimen>
+    <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
     <dimen name="mlp_layouts_row_height">281dp</dimen>
@@ -575,8 +576,12 @@
     <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
-    <dimen name="hpp_card_width">156dp</dimen>
-    <dimen name="hpp_card_height">226dp</dimen>
+    <dimen name="hpp_card_width">160dp</dimen>
+    <dimen name="hpp_card_padding">16dp</dimen>
+    <dimen name="hpp_card_margin_outer">40dp</dimen>
+    <dimen name="hpp_maximum_container_width">728dp</dimen>
+    <dimen name="hpp_subtitle_width">350dp</dimen>
+    <dimen name="hpp_button_max_width">244dp</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>
