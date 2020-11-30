@@ -178,7 +178,7 @@ class BackupDownloadStatusServiceTest {
             }
 
     @Test
-    fun `triggers BackupDownload And Makes Action Unavailable`() = runBlocking {
+    fun `triggers BackupDownload and makes action unavailable`() = runBlocking {
         val rewindId = "10"
 
         backupDownloadStatusService.backupDownload(rewindId, site, types)
