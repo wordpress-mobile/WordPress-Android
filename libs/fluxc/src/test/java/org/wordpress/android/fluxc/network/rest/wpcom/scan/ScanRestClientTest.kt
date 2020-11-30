@@ -24,7 +24,7 @@ import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.fluxc.model.scan.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR

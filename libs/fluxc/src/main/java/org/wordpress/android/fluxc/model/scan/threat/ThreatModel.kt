@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model.scan
+package org.wordpress.android.fluxc.model.scan.threat
 
 import java.util.Date
 
