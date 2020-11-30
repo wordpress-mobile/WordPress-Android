@@ -29,4 +29,12 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
 
     fun trackWithReaderPostDetails(stat: AnalyticsTracker.Stat, post: ReaderPost) =
             AnalyticsUtils.trackWithReaderPostDetails(stat, post)
+
+    fun trackFollowCommentsWithReaderPostDetails(
+        stat: AnalyticsTracker.Stat,
+        blogId: Long,
+        postId: Long,
+        post: ReaderPost?,
+        properties: Map<String, Any?>?
+    ) = AnalyticsUtils.trackFollowCommentsWithReaderPostDetails(stat, blogId, postId, post, properties)
 }

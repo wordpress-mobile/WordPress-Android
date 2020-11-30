@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-09 15:05:22+0000
+Translation-Revision-Date: 2020-11-25 08:38:35+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">Nu au fost adăugate diapozitive în narațiunea ta deoarece narațiunile nu acceptă fișiere GIF. Te rog alege în schimb o imagine statică sau un fundal video.</string>
+    <string name="dialog_edit_story_unsupported_format_title">Fișierele GIF nu sunt acceptate</string>
+    <string name="dialog_edit_story_unrecoverable_message">Nu am putut găsi pe sit conținut media pentru această narațiune.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Nu pot edita narațiunea</string>
+    <string name="dialog_edit_story_unavailable_message">Nu pot să încarc conținut media pentru această narațiune. Verifică conexiunea la internet și încearcă din nou.</string>
+    <string name="dialog_edit_story_unavailable_title">Nu pot edita narațiunea</string>
+    <string name="dialog_edit_story_limited_message">Această narațiune a fost editată pe un alt dispozitiv, iar posibilitatea de a edita anumite obiecte poate fi limitată.</string>
+    <string name="dialog_edit_story_limited_title">Editare limitată pentru narațiuni</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Conținutul media a fost înlăturat. Încearcă să-ți editezi narațiunea.</string>
+    <string name="color_picker_label_background">Fundal</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="dialog_discard_story_ok_button_edit">Renunță</string>
+    <string name="dialog_discard_story_message_edit">Nu va fi salvată nicio modificare făcută.</string>
+    <string name="dialog_discard_story_title_edit">Renunți la modificări?</string>
+    <string name="label_done_button">Gata</string>
+    <string name="label_next_button">Următorul</string>
+    <string name="delete_button_alt">Șterge</string>
+    <string name="hpp_choose_error">A apărut o eroare în timpul selectării designului.</string>
+    <string name="hpp_retry_error">Te rog verifică-ți conexiunea la internet și încearcă din nou.</string>
+    <string name="hpp_error_subtitle">Atinge reîncearcă când ești din nou online.</string>
+    <string name="hpp_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
+    <string name="continue_site_credentials">Continuă cu datele de conectare la magazin</string>
+    <string name="login_find_your_connected_email">Găsește emailul conectat</string>
+    <string name="reader_discover_no_posts_button_text">Urmărește subiecte</string>
+    <string name="reader_discover_no_posts_subtitle">Încearcă să urmărești mai multe subiecte pentru a extinde căutarea</string>
+    <string name="reader_discover_no_posts_title">Niciun articol recent</string>
+    <string name="reader_discover_empty_title">Bine ai venit!</string>
+    <string name="scan">Scanează</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> a răspuns la articolul tău</string>
     <string name="login_prologue_third_subtitle_two">Azi ai primit &lt;b>50 de aprecieri&lt;/b> pe sit</string>
     <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> ți-a apreciat articolul</string>
@@ -68,7 +96,7 @@ Language: ro
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>
     <string name="reader_label_toolbar_back">Înapoi</string>
     <string name="reader_discover_empty_button_text">Începe</string>
-    <string name="reader_discover_empty_title">Urmărește niște subiecte pentru a descoperi bloguri noi</string>
+    <string name="reader_discover_empty_subtitle">Urmărește niște subiecte pentru a descoperi bloguri noi</string>
     <string name="reader_post_details_header_by_author_name">De</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Acest referent nu poate fi marcat ca spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Anulează marcarea ca spam</string>
@@ -98,7 +126,6 @@ Language: ro
     <string name="comment_unable_to_show_error">Nu pot să arăt acest comentariu</string>
     <string name="media_browse_for_items">Răsfoiește pentru a căuta elemente</string>
     <string name="reader_menu_report_post">Raportează acest articol</string>
-    <string name="gutenberg_native_angle">Unghi</string>
     <string name="reader_welcome_banner">Bine ai venit la Cititor. Descoperi milioane de bloguri la îndemână.</string>
     <string name="error_media_xmlrcp_server_error">A apărut o eroare internă la server</string>
     <string name="error_media_xmlrpc_not_allowed">Acțiunea ta nu este permisă</string>
@@ -147,7 +174,6 @@ Language: ro
     <string name="dialog_discard_errored_page_message">Acest diapozitiv nu a fost încă salvat. Dacă ștergi acest diapozitiv, vei pierde toate modificările pe care le-ai făcut.</string>
     <string name="dialog_discard_page_message">Acest diapozitiv va fi înlăturat din narațiune.</string>
     <string name="dialog_discard_page_title">Ștergi diapozitivul narațiunii?</string>
-    <string name="menu_delete_page">Șterge diapozitivul</string>
     <string name="label_text_color_button">Schimbă culoarea textului</string>
     <string name="label_text_alignment_button">Modifică alinierea textului</string>
     <string name="label_frame_errored">eronat</string>
@@ -157,8 +183,6 @@ Language: ro
     <string name="label_retry_icon">Reîncearcă</string>
     <string name="label_saved_icon">Salvat</string>
     <string name="label_close_button">Închide</string>
-    <string name="label_control_publish">Următor</string>
-    <string name="label_done">Gata</string>
     <string name="label_share_to">Partajează pe</string>
     <string name="label_snackbar_share">PARTAJEAZĂ</string>
     <string name="label_snackbar_loop_frame_saved">Salvată în fotografii</string>
@@ -169,7 +193,6 @@ Language: ro
     <string name="label_control_flip_camera">Întoarcere</string>
     <string name="sound_button_alt">Sunet</string>
     <string name="text_button_alt">Text</string>
-    <string name="more_button_alt">Mai multe</string>
     <string name="stickers_button_alt">Autocolante</string>
     <string name="flash_button_alt">Bliț</string>
     <string name="flip_button_alt">Întoarce camera</string>
@@ -530,7 +553,6 @@ Language: ro
     <string name="login_site_credentials_magic_link_label">Aproape gata! Trebuie doar să-ți verificăm adresa de email conectată la Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Autentifică-te cu datele de conectare ale sitului.</string>
     <string name="enter_credentials_for_site">Autentifică-te cu datele de conectare ale sitului %1$s</string>
-    <string name="send_verification_email">Trimite emailul de verificare</string>
     <string name="my_site_bottom_sheet_add_page">Pagină sit</string>
     <string name="reader_following_display_name">Urmăresc</string>
     <string name="reader_my_likes_display_name">Aprecieri</string>
@@ -556,7 +578,6 @@ Language: ro
     <string name="gutenberg_native_take_a_photo_or_video">Fă o fotografie sau un video</string>
     <string name="gutenberg_native_take_a_photo">Fă o poză</string>
     <string name="gutenberg_native_start_writing">Începe să scrii…</string>
-    <string name="gutenberg_native_size">Dimensiune</string>
     <string name="gutenberg_native_sidebar_title_plugin">Conectare titlu bară laterală</string>
     <string name="gutenberg_native_show_section">Arată secțiunea</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloc %s. Acest bloc are conținut invalid</string>

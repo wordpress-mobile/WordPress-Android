@@ -60,6 +60,7 @@ import org.wordpress.android.ui.plugins.PluginBrowserActivity;
 import org.wordpress.android.ui.plugins.PluginDetailActivity;
 import org.wordpress.android.ui.plugins.PluginUtils;
 import org.wordpress.android.ui.posts.EditPostActivity;
+import org.wordpress.android.ui.posts.JetpackSecuritySettingsActivity;
 import org.wordpress.android.ui.posts.PostUtils;
 import org.wordpress.android.ui.posts.PostsListActivity;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
@@ -1027,6 +1028,20 @@ public class ActivityLauncher {
     public static void viewNotificationsSettings(Activity activity) {
         Intent intent = new Intent(activity, NotificationsSettingsActivity.class);
         activity.startActivity(intent);
+    }
+
+    public static void viewJetpackSecuritySettings(Activity activity, SiteModel site) {
+        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
+        Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
+    public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
+        AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
+        Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
     }
 
     public static void viewHelpAndSupportInNewStack(@NonNull Context context, @NonNull Origin origin,

@@ -153,6 +153,12 @@
     <dimen name="reader_tag_header_horizontal_padding">20dp</dimen>
     <dimen name="reader_tag_header_vertical_padding">40dp</dimen>
 
+    <!-- reader follow unfollow comments dimensions -->
+    <dimen name="reader_follow_button_min_height">32dp</dimen>
+    <dimen name="reader_follow_button_skeleton_width">165dp</dimen>
+    <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
+    <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
+
     <!-- collapsing toolbar scrim visible height trigger -->
     <dimen name="scrim_visible_height_trigger">100dp</dimen>
 
@@ -160,6 +166,7 @@
         @dimen/emphasis_extra_low
     </item>
 
+    <dimen name="text_sz_extra_extra_small">7sp</dimen>
     <dimen name="text_sz_extra_small">10sp</dimen>
     <dimen name="text_sz_small">12sp</dimen>
     <dimen name="text_sz_medium">14sp</dimen>

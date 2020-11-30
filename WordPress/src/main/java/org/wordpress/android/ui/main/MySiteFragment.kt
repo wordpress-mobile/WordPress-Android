@@ -132,6 +132,7 @@ import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AccessibilityUtils.getSnackbarDuration
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
@@ -199,6 +200,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
 
     private val selectedSite: SiteModel?
@@ -352,6 +354,7 @@ class MySiteFragment : Fragment(),
             completeQuickStarTask(EXPLORE_PLANS)
             ActivityLauncher.viewBlogPlans(activity, selectedSite)
         }
+        row_jetpack_settings.setOnClickListener { ActivityLauncher.viewJetpackSecuritySettings(activity, selectedSite) }
         quick_action_posts_button.setOnClickListener {
             AnalyticsTracker.track(QUICK_ACTION_POSTS_TAPPED)
             viewPosts()
@@ -1028,6 +1031,16 @@ class MySiteFragment : Fragment(),
         } else {
             row_plan.visibility = View.GONE
         }
+
+        val jetpackSectionVisible = site.isJetpackConnected && // jetpack is installed and connected
+                !site.isWPComAtomic // isn't atomic site
+
+        val jetpackSettingsVisible = jetpackSectionVisible &&
+                SiteUtils.isAccessedViaWPComRest(site) && // is using .com login
+                site.hasCapabilityManageOptions // has permissions to manage the site
+
+        uiHelpers.updateVisibility(row_label_jetpack, jetpackSectionVisible)
+        uiHelpers.updateVisibility(row_jetpack_settings, jetpackSettingsVisible)
 
         // Do not show pages menu item to Collaborators.
         val pageVisibility = if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) View.VISIBLE else View.GONE

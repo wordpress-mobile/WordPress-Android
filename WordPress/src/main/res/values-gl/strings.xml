@@ -284,7 +284,6 @@ Language: gl_ES
     <string name="login_discovery_error_xmlrpc">Non puidemos acceder no teu sitio ao &lt;b>arquivo XMLRCP&lt;/b>. Terás que contactar co teu aloxamento para solucionalo.</string>
     <string name="login_site_credentials_magic_link_label">Xa case estamos! Só necesitamos verificar o teu enderezo de correo electrónico conectado a Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">Accede coas credenciais do teu sitio %1$s</string>
-    <string name="send_verification_email">Enviar o correo electrónico de verificación</string>
     <string name="my_site_bottom_sheet_add_page">Páxina do sitio</string>
     <string name="reader_following_display_name">Seguindo</string>
     <string name="reader_my_likes_display_name">Gústame</string>
@@ -309,7 +308,6 @@ Language: gl_ES
     <string name="gutenberg_native_take_a_photo_or_video">Fai unha foto ou un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Fai unha foto</string>
     <string name="gutenberg_native_start_writing">Empeza a escribir…</string>
-    <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_sidebar_title_plugin">Título do plugin na barra lateral</string>
     <string name="gutenberg_native_show_section">Amosar a sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque ten contido non válido</string>

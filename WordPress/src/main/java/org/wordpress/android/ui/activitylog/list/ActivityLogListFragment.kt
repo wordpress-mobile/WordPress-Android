@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
@@ -123,8 +124,8 @@ class ActivityLogListFragment : Fragment() {
             uiHelpers.updateVisibility(activity_type_filter, visibility)
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { _ ->
-            showActivityTypeFilterDialog()
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
+            showActivityTypeFilterDialog(remoteSiteId)
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
@@ -180,8 +181,8 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog() {
-        ActivityLogTypeFilterFragment().show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
