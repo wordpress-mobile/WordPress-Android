@@ -43,8 +43,10 @@ class SiteItemsBuilderTest {
 
     @Test
     fun `adds look and feel header when themes accessible`() {
-        whenever(themeBrowserUtils.isAccessible(siteModel)).thenReturn(false)
+        whenever(themeBrowserUtils.isAccessible(siteModel)).thenReturn(true)
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(false)
+        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
+        whenever(siteModel.hasCapabilityListUsers).thenReturn(false)
 
         val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel)
 
@@ -59,8 +61,6 @@ class SiteItemsBuilderTest {
     fun `adds configuration header when site can manage options`() {
         whenever(themeBrowserUtils.isAccessible(siteModel)).thenReturn(false)
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(true)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
-        whenever(siteModel.hasCapabilityListUsers).thenReturn(false)
 
         val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel)
 
@@ -92,7 +92,6 @@ class SiteItemsBuilderTest {
         whenever(themeBrowserUtils.isAccessible(siteModel)).thenReturn(false)
         whenever(siteModel.hasCapabilityManageOptions).thenReturn(false)
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(false)
-        whenever(siteModel.hasCapabilityListUsers).thenReturn(false)
 
         val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel)
 
