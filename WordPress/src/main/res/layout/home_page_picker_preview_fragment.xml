@@ -19,7 +19,8 @@
 
         <FrameLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/margin_small_medium">
 
             <ImageButton
                 android:id="@+id/backButton"
@@ -69,7 +70,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center|top" />
+            android:layout_gravity="center" />
     </FrameLayout>
 
     <LinearLayout
@@ -84,7 +85,7 @@
         <FrameLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="?attr/categoriesBackground"
+            android:background="?attr/layoutPickerBackground"
             android:gravity="center"
             android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
             android:paddingTop="@dimen/picker_bottom_button_vertical_margin">

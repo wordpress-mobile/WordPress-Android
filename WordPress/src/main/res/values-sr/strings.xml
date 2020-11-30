@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-07 10:43:07+0000
+Translation-Revision-Date: 2020-11-18 00:11:38+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
 -->
 <resources>
+    <string name="color_picker_label_background">Позадина</string>
+    <string name="color_picker_label_text">Текст</string>
+    <string name="dialog_discard_story_ok_button_edit">Одбаци</string>
+    <string name="dialog_discard_story_title_edit">Одбацити измене?</string>
+    <string name="label_done_button">Готово</string>
+    <string name="label_next_button">Следеће</string>
+    <string name="delete_button_alt">Обриши</string>
     <string name="hpp_skip_button">Прескочи</string>
     <string name="hpp_choose_button">Одабери</string>
     <string name="hpp_title">Одаберите дизајн</string>
@@ -42,7 +49,6 @@ Language: sr_RS
     <string name="mlp_selected_description">%s одабрано</string>
     <string name="permission_microphone">Микрофон</string>
     <string name="reader_menu_report_post">Пријави овај чланак</string>
-    <string name="gutenberg_native_angle">Угао</string>
     <string name="error_media_xmlrpc_not_allowed">Ваша акција није дозвољена</string>
     <string name="reader_welcome_banner">Добродошли у читач. Откријте милионе блогова на дохват руке.</string>
     <string name="error_media_xmlrcp_server_error">Дошло је до интерне грешке сервера</string>
@@ -88,7 +94,6 @@ Language: sr_RS
     <string name="dialog_discard_page_message">Овај слајд ће бити уклоњен из Ваше приче.</string>
     <string name="dialog_discard_errored_page_message">Овај слајд још увек није сачуван. Ако обришете овај слајд, изгубићете сва уређивања која сте направили.</string>
     <string name="dialog_discard_page_title">Обриши слајд приче?</string>
-    <string name="menu_delete_page">Обриши слајд</string>
     <string name="label_text_color_button">Измени боју текста</string>
     <string name="label_text_alignment_button">Измени поравнање текста</string>
     <string name="label_frame_errored">има грешку</string>
@@ -102,8 +107,6 @@ Language: sr_RS
     <string name="label_retry_icon">Покушај поново</string>
     <string name="label_saved_icon">Сачувано</string>
     <string name="label_close_button">Затвори</string>
-    <string name="label_control_publish">Следећи</string>
-    <string name="label_done">Готово</string>
     <string name="label_share_to">Подели</string>
     <string name="label_snackbar_share">ПОДЕЛИ</string>
     <string name="label_snackbar_loop_frame_saved">Сачувано међу фотографијама</string>
@@ -114,7 +117,6 @@ Language: sr_RS
     <string name="label_control_flash">Блиц</string>
     <string name="sound_button_alt">Звук</string>
     <string name="text_button_alt">Текст</string>
-    <string name="more_button_alt">Више</string>
     <string name="stickers_button_alt">Налепнице</string>
     <string name="flash_button_alt">Блиц</string>
     <string name="flip_button_alt">Окрени камеру</string>
@@ -296,7 +298,6 @@ Language: sr_RS
     <string name="dialog_confirm_scheduled_post_sync_title">Спремни за синхронизацију?</string>
     <string name="new_site_creation_unavailable_domain">Домен није доступан</string>
     <string name="negative_prefix">-%s</string>
-    <string name="send_verification_email">Пошаљи верификациону електронску пошту</string>
     <string name="my_site_bottom_sheet_add_page">Страница сајта</string>
     <string name="reader_following_display_name">Прати</string>
     <string name="reader_save_for_later_display_name">Сачувано</string>
@@ -319,7 +320,6 @@ Language: sr_RS
     <string name="gutenberg_native_take_a_video">Направи видео запис</string>
     <string name="gutenberg_native_take_a_photo_or_video">Направи фотографију или видео запис</string>
     <string name="gutenberg_native_take_a_photo">Направи фотографију</string>
-    <string name="gutenberg_native_size">Величина</string>
     <string name="gutenberg_native_cut_block">Исеци блок</string>
     <string name="gutenberg_native_reset_block">Ресетуј блок</string>
     <string name="gutenberg_native_show_section">Прикажи одељак</string>
@@ -372,6 +372,8 @@ Language: sr_RS
     <string name="site_settings_site_accelerator_off">Искључено</string>
     <string name="site_settings_media">Садржај</string>
     <string name="site_settings_ad_free_video_hosting">Видео хостинг без реклама</string>
+    <string name="site_settings_faster_images">Брже слике</string>
+    <string name="site_settings_faster_static_files">Брже статичке датотеке</string>
     <string name="site_settings_site_accelerator_on">Укључено</string>
     <string name="site_settings_site_accelerator">Убрзавач сајта</string>
     <string name="site_settings_performance">Перформанса</string>
@@ -379,11 +381,17 @@ Language: sr_RS
     <string name="stats_file_downloads_title_label">Датотека</string>
     <string name="stats_file_downloads">Преузимања датотеке</string>
     <string name="stats_data_not_recorded_for_period">Статистика преузимања датотеке није бележена пре 28. јуна 2019. године.</string>
+    <string name="stats_site_negative_utc">Временска зона сајта (UTC - %s)</string>
+    <string name="stats_site_positive_utc">Временска зона сајта (UTC + %s)</string>
+    <string name="stats_site_neutral_utc">Временска зона сајта (UTC)</string>
     <string name="share_desc">Подели</string>
     <string name="web_preview_default">Подразумевано</string>
     <string name="web_preview_desktop">Десктоп</string>
     <string name="navigate_back_desc">Иди назад</string>
     <string name="navigate_forward_desc">Иди напред</string>
+    <string name="notification_scheduled_post">Заказан чланак</string>
+    <string name="notification_scheduled_post_ten_minute_reminder">Заказан чланак: подсетник за 10 минута</string>
+    <string name="notification_scheduled_post_one_hour_reminder">Заказан чланак: подсетник за 1 сат</string>
     <string name="post_settings_time_and_date">Датум и време</string>
     <string name="post_notification_off">Искључено</string>
     <string name="post_notification_ten_minutes_before">10 минута раније</string>
@@ -1409,6 +1417,7 @@ Language: sr_RS
     <string name="post_format_chat">Ћаскање</string>
     <string name="post_format_audio">Звук</string>
     <string name="post_format_aside">Са стране</string>
+    <string name="notif_tips">Савети за максимизирање користи од WordPress.com.</string>
     <string name="notif_community">Заједница</string>
     <string name="notif_suggestions">Предлози</string>
     <string name="replies_to_my_comments">Одговори на моје коментаре</string>
@@ -1426,6 +1435,8 @@ Language: sr_RS
     <string name="approve_manual">Нема коментара</string>
     <string name="site_settings_paging_summary_other">%d коментара по страни</string>
     <string name="site_settings_paging_summary_one">1 коментар по страни</string>
+    <string name="site_settings_multiple_links_summary_other">Затражи допуштење за више од %d веза</string>
+    <string name="site_settings_multiple_links_summary_one">Затражи допуштење за више од 1 везе</string>
     <string name="site_settings_multiple_links_summary_zero">Потребно допуштење за више од 0 веза</string>
     <string name="detail_approve_auto">Аутоматски одобри коментаре свих.</string>
     <string name="detail_approve_auto_if_previously_approved">Аутоматски одобри ако корисник има претходно одобрени коментар</string>

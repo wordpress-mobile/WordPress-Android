@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-03 08:35:55+0000
+Translation-Revision-Date: 2020-11-23 18:45:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_title">GIF-filer ikke støttet</string>
+    <string name="color_picker_label_background">Bakgrunn</string>
+    <string name="color_picker_label_text">Tekst</string>
+    <string name="dialog_discard_story_ok_button_edit">Forkast</string>
+    <string name="dialog_discard_story_message_edit">Ingen endringer vil bli lagret.</string>
+    <string name="dialog_discard_story_title_edit">Forkaste endringer?</string>
+    <string name="label_done_button">Fullført</string>
+    <string name="label_next_button">Neste</string>
+    <string name="delete_button_alt">Slett</string>
+    <string name="reader_discover_no_posts_button_text">Følg emner</string>
+    <string name="reader_discover_empty_title">Velkommen!</string>
+    <string name="scan">Skann</string>
     <string name="hpp_skip_button">Hopp over</string>
     <string name="hpp_choose_button">Velg</string>
+    <string name="hpp_title">Velg en utforming</string>
     <string name="prepublishing_nudges_add_category_button">Legg til kategori</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Legg til ny kategori</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorier</string>
@@ -25,9 +38,12 @@ Language: nb_NO
     <string name="mlp_notice_page_created">Side opprettet</string>
     <string name="reader_label_toolbar_back">Tilbake</string>
     <string name="reader_discover_empty_button_text">Kom i gang</string>
-    <string name="reader_discover_empty_title">Følg emner for å oppdage nye nettsteder</string>
+    <string name="reader_discover_empty_subtitle">Følg emner for å oppdage nye blogger</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
+    <string name="stats_referrer_popup_unmark_as_spam">Merk som ikke spam</string>
+    <string name="stats_referrer_popup_menu_mark_as_spam">Merk som spam</string>
     <string name="stats_referrer_popup_menu_open_website">Åpne nettstedet</string>
+    <string name="media_uploading_gif_library_photo">Laster opp gif-media</string>
     <string name="gutenberg_native_select_item">Velg element</string>
     <string name="gutenberg_native_search_or_type_url">Søk eller skriv inn URL</string>
     <string name="gutenberg_native_add_this_telephone_link">Legg til denne telefonlenken</string>
@@ -80,22 +96,23 @@ Language: nb_NO
     <string name="dialog_discard_story_title">Forkaste fortelling?</string>
     <string name="dialog_discard_page_ok_button">Slett</string>
     <string name="dialog_discard_page_title">Slette fortellingslysbilde?</string>
-    <string name="menu_delete_page">Slette lysbilde</string>
     <string name="label_text_color_button">Endre tekstfarge</string>
     <string name="label_text_alignment_button">Endre tekstjustering</string>
+    <string name="label_frame_errored">feilet</string>
+    <string name="label_frame_selected_border">valgte</string>
+    <string name="label_frame_unselected_border">fravalgte</string>
+    <string name="label_frame_image">Lysbilde</string>
     <string name="label_retry_icon">Prøv igjen</string>
     <string name="label_saved_icon">Lagret</string>
     <string name="label_close_button">Lukk</string>
-    <string name="label_control_publish">Neste</string>
-    <string name="label_done">Utført</string>
     <string name="label_share_to">Del på</string>
+    <string name="label_snackbar_share">DEL</string>
     <string name="label_snackbar_loop_frame_saved">Lagret til forografier</string>
     <string name="label_control_retry">Prøv på nytt</string>
     <string name="label_control_saved">Lagret</string>
     <string name="label_control_saving">Lagrer</string>
     <string name="sound_button_alt">Lyd</string>
     <string name="text_button_alt">Tekst</string>
-    <string name="more_button_alt">Mer</string>
     <string name="mlp_preview_page">Forhåndsvis</string>
     <string name="mlp_create_page">Lag side</string>
     <string name="mlp_create_blank_page">Lag tom side</string>
@@ -390,7 +407,6 @@ Language: nb_NO
     <string name="login_site_credentials_magic_link_label">Straks ferdig! Vi må bare få bekreftet din e-postadresse koblet til Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Logg inn med nettstedsinnloggingen.</string>
     <string name="enter_credentials_for_site">Logg inn med din innlggingsinformasjon fra nettstedet %1$s</string>
-    <string name="send_verification_email">Send e-post for bekreftelse</string>
     <string name="my_site_bottom_sheet_add_page">Nettstedsside</string>
     <string name="reader_following_display_name">Følger</string>
     <string name="reader_my_likes_display_name">Likinger</string>
@@ -416,7 +432,6 @@ Language: nb_NO
     <string name="gutenberg_native_take_a_photo_or_video">Ta et bilde eller en video</string>
     <string name="gutenberg_native_take_a_photo">Ta et foto</string>
     <string name="gutenberg_native_start_writing">Start å skrive…</string>
-    <string name="gutenberg_native_size">Størrelse</string>
     <string name="gutenberg_native_show_section">Vis seksjon</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s-blokk. enn blokken har ugyldig innhold</string>
     <string name="gutenberg_native_s_block_empty">%s blokk. Tom</string>

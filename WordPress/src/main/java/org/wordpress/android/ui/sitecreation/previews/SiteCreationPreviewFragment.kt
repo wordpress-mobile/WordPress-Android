@@ -121,6 +121,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
                 sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
+                sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
                 sitePreviewWebView.loadUrl(url)
             }
         })

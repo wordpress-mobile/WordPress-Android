@@ -1,3 +1,0 @@
-16.1:
-* Choose from a variety of predesigned page templates when you create a new page on a Gutenberg-enabled site.
-

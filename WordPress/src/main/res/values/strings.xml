@@ -1345,6 +1345,13 @@
     <string name="reader_discover_empty_button_text">Get Started</string>
     <string name="reader_discover_no_posts_button_text">Follow topics</string>
     <string name="reader_author_with_blog_name" translatable="false">%1$s ▸ %2$s</string>
+    <string name="reader_follow_comments_null_response">No response received</string>
+    <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
+    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
+    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1739,7 +1746,8 @@
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="reader_btn_done">Done</string>
-
+    <string name="reader_btn_follow_comments">Follow conversation</string>
+    <string name="reader_btn_following_comments">Following conversation</string>
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
@@ -1915,7 +1923,9 @@
     <string name="my_site_header_external">External</string>
     <string name="my_site_header_configuration">Configuration</string>
     <string name="my_site_header_look_and_feel">Look and Feel</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
@@ -2931,7 +2941,7 @@
 
     <!-- Home Page Picker -->
     <string name="hpp_title">Choose a design</string>
-    <string name="hpp_subtitle">Pick your favorite homepage layout. You can customize or change it later.</string>
+    <string name="hpp_subtitle">Pick your favorite homepage layout. You can edit and customize it later.</string>
     <string name="hpp_choose_button">Choose</string>
     <string name="hpp_skip_button">Skip</string>
     <string name="hpp_error_title">Layouts not available while offline</string>
@@ -3063,6 +3073,7 @@
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
+    <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
@@ -3073,6 +3084,7 @@
     <string name="gutenberg_native_content" tools:ignore="UnusedResources">Content…</string>
     <string name="gutenberg_native_copied_block" tools:ignore="UnusedResources">Copied block</string>
     <string name="gutenberg_native_copy_block" tools:ignore="UnusedResources">Copy block</string>
+    <string name="gutenberg_native_copy_file_url" tools:ignore="UnusedResources">Copy file URL</string>
     <!-- translators: %s: current cell value. -->
     <string name="gutenberg_native_current_value_is_s" tools:ignore="UnusedResources">Current value is %s</string>
     <string name="gutenberg_native_customize" tools:ignore="UnusedResources">CUSTOMIZE</string>
@@ -3107,12 +3119,17 @@
     <!-- translators: sample content for "About" page template -->
     <string name="gutenberg_native_dr_seuss" tools:ignore="UnusedResources">Dr. Seuss</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
+    <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a" tools:ignore="UnusedResources">Email me: &lt;a href=\"mailto:mail@example.com\"&gt;mail@example.com&lt;/a&gt;</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
+    <string name="gutenberg_native_file_block_settings" tools:ignore="UnusedResources">File block settings</string>
+    <string name="gutenberg_native_file_name" tools:ignore="UnusedResources">File name</string>
     <!-- translators: accessibility text. %s: gallery caption. -->
     <string name="gutenberg_native_gallery_caption_s" tools:ignore="UnusedResources">Gallery caption. %s</string>
     <!-- translators: sample content for "About" page template
@@ -3128,7 +3145,6 @@ translators: sample content for "Team" page template -->
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
-    <string name="gutenberg_native_insert_mention" tools:ignore="UnusedResources">Insert mention</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_inspiration" tools:ignore="UnusedResources">Inspiration</string>
     <!-- translators: sample content for "About" page template -->

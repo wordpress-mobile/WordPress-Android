@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/categoriesBackground"
+    android:background="?attr/layoutPickerBackground"
     android:fitsSystemWindows="false"
     android:focusableInTouchMode="true">
 
@@ -11,7 +11,7 @@
         android:id="@+id/appBarLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/categoriesBackground"
+        android:background="?attr/layoutPickerBackground"
         android:fitsSystemWindows="false">
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
@@ -32,13 +32,14 @@
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="?attr/categoriesBackground"
+                android:background="?attr/layoutPickerBackground"
                 android:elevation="0dp"
                 app:layout_collapseMode="pin">
 
                 <FrameLayout
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/toolbar_height"
+                    android:layout_marginTop="@dimen/margin_extra_small"
                     android:orientation="vertical">
 
                     <include
@@ -70,7 +71,7 @@
         android:paddingStart="@dimen/hpp_card_padding"
         android:paddingEnd="0dp"
         android:paddingBottom="@dimen/toolbar_content_offset"
-        android:background="?attr/categoriesBackground"
+        android:background="?attr/layoutPickerBackground"
         android:clipToPadding="false"
         android:descendantFocusability="beforeDescendants"
         android:scrollbars="none"
