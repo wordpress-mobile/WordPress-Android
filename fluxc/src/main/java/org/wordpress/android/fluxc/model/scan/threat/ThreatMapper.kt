@@ -1,8 +1,7 @@
 package org.wordpress.android.fluxc.model.scan.threat
 
-import org.wordpress.android.fluxc.model.scan.ThreatModel
-import org.wordpress.android.fluxc.model.scan.ThreatModel.Extension
-import org.wordpress.android.fluxc.model.scan.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Extension
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import javax.inject.Inject
 
