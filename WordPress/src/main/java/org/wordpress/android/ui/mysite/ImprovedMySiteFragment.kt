@@ -30,8 +30,8 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
@@ -43,6 +43,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
@@ -61,6 +62,7 @@ class ImprovedMySiteFragment : Fragment(),
         TextInputDialogFragment.Callback {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
@@ -311,7 +313,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     private fun loadData(items: List<MySiteItem>) {
         if (recycler_view.adapter == null) {
-            recycler_view.adapter = MySiteAdapter(imageManager)
+            recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
         }
         val adapter = recycler_view.adapter as MySiteAdapter
         adapter.loadData(items)
