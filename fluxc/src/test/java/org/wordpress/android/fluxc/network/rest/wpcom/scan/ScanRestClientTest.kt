@@ -24,6 +24,8 @@ import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
+import org.wordpress.android.fluxc.model.scan.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
 import org.wordpress.android.fluxc.network.UserAgent
@@ -32,7 +34,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanStateResponse.Threat
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
@@ -46,6 +48,7 @@ class ScanRestClientTest {
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var threatMapper: ThreatMapper
 
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var scanRestClient: ScanRestClient
@@ -56,6 +59,7 @@ class ScanRestClientTest {
         urlCaptor = argumentCaptor()
         scanRestClient = ScanRestClient(
             wpComGsonRequestBuilder,
+            threatMapper,
             dispatcher,
             null,
             requestQueue,
@@ -90,55 +94,35 @@ class ScanRestClientTest {
             assertNull(error)
             assertNotNull(scanStateModel)
             requireNotNull(scanStateModel).apply {
-                assertEquals(state, State.fromValue(requireNotNull(scanResponse?.state)))
-                assertEquals(hasCloud, requireNotNull(scanResponse?.hasCloud))
+                assertEquals(state, State.fromValue(requireNotNull(scanResponse.state)))
+                assertEquals(hasCloud, requireNotNull(scanResponse.hasCloud))
                 assertNull(reason)
                 assertNotNull(credentials)
                 assertNotNull(threats)
                 mostRecentStatus?.apply {
-                    assertEquals(progress, scanResponse?.mostRecentStatus?.progress)
-                    assertEquals(startDate, scanResponse?.mostRecentStatus?.startDate)
-                    assertEquals(duration, scanResponse?.mostRecentStatus?.duration)
-                    assertEquals(error, scanResponse?.mostRecentStatus?.error)
-                    assertEquals(isInitial, scanResponse?.mostRecentStatus?.isInitial)
+                    assertEquals(progress, scanResponse.mostRecentStatus?.progress)
+                    assertEquals(startDate, scanResponse.mostRecentStatus?.startDate)
+                    assertEquals(duration, scanResponse.mostRecentStatus?.duration)
+                    assertEquals(error, scanResponse.mostRecentStatus?.error)
+                    assertEquals(isInitial, scanResponse.mostRecentStatus?.isInitial)
                 }
                 currentStatus?.apply {
-                    assertEquals(progress, scanResponse?.mostRecentStatus?.progress)
-                    assertEquals(startDate, scanResponse?.mostRecentStatus?.startDate)
-                    assertEquals(isInitial, scanResponse?.mostRecentStatus?.isInitial)
+                    assertEquals(progress, scanResponse.mostRecentStatus?.progress)
+                    assertEquals(startDate, scanResponse.mostRecentStatus?.startDate)
+                    assertEquals(isInitial, scanResponse.mostRecentStatus?.isInitial)
                 }
                 credentials?.forEachIndexed { index, creds ->
                     creds.apply {
-                        assertEquals(type, scanResponse?.credentials?.get(index)?.type)
-                        assertEquals(role, scanResponse?.credentials?.get(index)?.role)
-                        assertEquals(host, scanResponse?.credentials?.get(index)?.host)
-                        assertEquals(port, scanResponse?.credentials?.get(index)?.port)
-                        assertEquals(user, scanResponse?.credentials?.get(index)?.user)
-                        assertEquals(path, scanResponse?.credentials?.get(index)?.path)
-                        assertEquals(stillValid, scanResponse?.credentials?.get(index)?.stillValid)
+                        assertEquals(type, scanResponse.credentials?.get(index)?.type)
+                        assertEquals(role, scanResponse.credentials?.get(index)?.role)
+                        assertEquals(host, scanResponse.credentials?.get(index)?.host)
+                        assertEquals(port, scanResponse.credentials?.get(index)?.port)
+                        assertEquals(user, scanResponse.credentials?.get(index)?.user)
+                        assertEquals(path, scanResponse.credentials?.get(index)?.path)
+                        assertEquals(stillValid, scanResponse.credentials?.get(index)?.stillValid)
                     }
                 }
-                threats?.forEachIndexed { index, threat ->
-                    threat.apply {
-                        assertEquals(id, scanResponse?.threats?.get(index)?.id)
-                        assertEquals(signature, scanResponse?.threats?.get(index)?.signature)
-                        assertEquals(description, scanResponse?.threats?.get(index)?.description)
-                        assertEquals(status, scanResponse?.threats?.get(index)?.status)
-                        assertEquals(firstDetected, scanResponse?.threats?.get(index)?.firstDetected)
-                        assertEquals(fixedOn, scanResponse?.threats?.get(index)?.fixedOn)
-                        fixable?.apply {
-                            assertEquals(fixer, scanResponse?.threats?.get(index)?.fixable?.fixer)
-                            assertEquals(target, scanResponse?.threats?.get(index)?.fixable?.target)
-                        }
-                        extension?.apply {
-                            assertEquals(type, scanResponse?.threats?.get(index)?.extension?.type)
-                            assertEquals(slug, scanResponse?.threats?.get(index)?.extension?.slug)
-                            assertEquals(name, scanResponse?.threats?.get(index)?.extension?.name)
-                            assertEquals(version, scanResponse?.threats?.get(index)?.extension?.version)
-                            assertEquals(isPremium, scanResponse?.threats?.get(index)?.extension?.isPremium)
-                        }
-                    }
-                }
+                assertEquals(threats?.size, scanResponse.threats?.size)
             }
         }
     }
@@ -318,6 +302,10 @@ class ScanRestClientTest {
             )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
+
+        val threatModel = mock<ThreatModel>()
+        whenever(threatMapper.map(any())).thenReturn(threatModel)
+
         return response
     }
 
