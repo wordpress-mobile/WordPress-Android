@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-02 10:54:08+0000
+Translation-Revision-Date: 2020-11-27 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="color_picker_label_background">Latar Belakang</string>
+    <string name="color_picker_label_text">Teks</string>
+    <string name="dialog_discard_story_ok_button_edit">Batal</string>
+    <string name="dialog_discard_story_message_edit">Perubahan yang dibuat tidak akan tersimpan.</string>
+    <string name="dialog_discard_story_title_edit">Buang perubahan?</string>
+    <string name="label_done_button">Selesai</string>
+    <string name="label_next_button">Selanjutnya</string>
+    <string name="delete_button_alt">Hapus</string>
+    <string name="hpp_choose_error">Terjadi error saat memilih desain.</string>
+    <string name="hpp_retry_error">Harap periksa koneksi internet Anda lalu coba lagi.</string>
+    <string name="hpp_error_subtitle">Ketuk coba lagi saat  Anda kembali online.</string>
+    <string name="hpp_error_title">Tata letak tidak tersedia saat offline</string>
+    <string name="continue_site_credentials">Lanjutkan dengan kredensial toko</string>
+    <string name="login_find_your_connected_email">Temukan email Anda yang terhubung</string>
+    <string name="reader_discover_no_posts_button_text">Ikuti topik</string>
+    <string name="reader_discover_no_posts_subtitle">Coba ikuti lebih banyak topik untuk memperluas pencarian</string>
+    <string name="reader_discover_no_posts_title">Tak ada pos terbaru</string>
+    <string name="reader_discover_empty_title">Selamat datang!</string>
+    <string name="scan">Pindai</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> menanggapi pos Anda</string>
+    <string name="login_prologue_third_subtitle_two">Anda menerima &lt;b>50 suka&lt;/b> di situs Anda hari ini</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> menyukai pos Anda</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu blok yang dapat digulir terbuka. Pilih blok.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
+    <string name="hpp_skip_button">Lewati</string>
+    <string name="hpp_choose_button">Pilih</string>
+    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda selalu dapat menyesuaikan atau mengubahnya nanti.</string>
+    <string name="hpp_title">Pilih desain</string>
+    <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
+    <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>
+    <string name="mlp_error_subtitle">Ketuk coba lagi atau buat halaman kosong dengan tombol di bawah ini.</string>
+    <string name="mlp_error_title">Tata letak tersedia karena error</string>
+    <string name="prepublishing_nudges_add_category_button">Tambahkan Kategori</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Tambah Kategori Baru</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategori</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Tidak ditentukan</string>
+    <string name="prepublishing_nudges_categories_action">Kategori</string>
+    <string name="login_prologue_fifth_caption_three">Museum di London</string>
+    <string name="login_prologue_fifth_caption_two">Penggemar Terbaik di Dunia</string>
+    <string name="login_prologue_fifth_caption_one">Sepuluh Kafe Favorit Saya</string>
+    <string name="login_prologue_fifth_tag_six">Politik</string>
+    <string name="login_prologue_fifth_tag_five">Musik</string>
+    <string name="login_prologue_fifth_tag_four">Berkebun</string>
+    <string name="login_prologue_fifth_tag_three">Sepakbola</string>
+    <string name="login_prologue_fifth_tag_two">Memasak</string>
+    <string name="login_prologue_fifth_tag_one">Seni</string>
+    <string name="login_prologue_fifth_subtitle_three">Rock n\' Roll Mingguan</string>
+    <string name="login_prologue_fifth_subtitle_two">Berita Web</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">Saya sangat terinspirasi oleh karya fotografer Cameron Karsten. Saya akan mencoba teknik ini selanjutnya</string>
+    <string name="login_prologue_second_subtitle_one">Dapatkan Inspirasi</string>
+    <string name="login_prologue_title_fifth">Ikuti situs favorit Anda dan temukan bacaan-bacaan baru.</string>
+    <string name="login_prologue_title_fourth">Perhatikan audiens Anda tumbuh dengan analisis mendalam.</string>
+    <string name="login_prologue_title_second">Dengan editor yang hebat, Anda dapat langsung menerbitkan pos.</string>
+    <string name="login_prologue_title_first">Selamat datang di pembuat situs web terpopuler di dunia.</string>
+    <string name="login_prologue_title_third">Lihat komentar dan pemberitahuan secara real-time.</string>
+    <string name="media_loading_failed">Gagal memuat media</string>
+    <string name="reader_discover_recommended_blogs_header">Rekomendasi situs</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Kami berusaha keras untuk menambahkan banyak blok setiap rilis.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' tidak sepenuhnya didukung</string>
     <string name="gutenberg_native_help_button">Tombol Bantuan</string>
@@ -29,7 +87,6 @@ Language: id
     <string name="photo_picker_wordpress_media_library">Pilih dari Pustaka Media WordPress</string>
     <string name="reader_label_toolbar_back">Kembali</string>
     <string name="reader_discover_empty_button_text">Memulai</string>
-    <string name="reader_discover_empty_title">Ikuti topik untuk menemukan blog baru</string>
     <string name="reader_post_details_header_by_author_name">Oleh</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Perujuk ini tidak dapat ditandai sebagai spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Hilangkan tanda sebagai Spam</string>
@@ -58,7 +115,6 @@ Language: id
     <string name="comment_unable_to_show_error">Tidak dapat menampilkan komentar ini</string>
     <string name="media_browse_for_items">Telusuri item</string>
     <string name="reader_menu_report_post">Melaporkan Pos Ini</string>
-    <string name="gutenberg_native_angle">Sudut</string>
     <string name="reader_welcome_banner">Selamat datang di Pembaca. Temukan jutaan blog dengan ujung jari Anda.</string>
     <string name="error_media_xmlrcp_server_error">Terjadi kesalahan server internal</string>
     <string name="error_media_xmlrpc_not_allowed">Tindakan Anda tidak diizinkan</string>
@@ -107,7 +163,6 @@ Language: id
     <string name="dialog_discard_errored_page_message">Slide ini belum disimpan. Jika menghapus slide ini, seluruh pengeditan yang Anda lakukan akan dibuang.</string>
     <string name="dialog_discard_page_message">Slide ini akan dihapus dari cerita Anda.</string>
     <string name="dialog_discard_page_title">Hapus slide cerita?</string>
-    <string name="menu_delete_page">Hapus slide</string>
     <string name="label_text_color_button">Ubah warna teks</string>
     <string name="label_text_alignment_button">Ubah perataan teks</string>
     <string name="label_frame_errored">error</string>
@@ -117,8 +172,6 @@ Language: id
     <string name="label_retry_icon">Coba lagi</string>
     <string name="label_saved_icon">Disimpan</string>
     <string name="label_close_button">Tutup</string>
-    <string name="label_control_publish">Selanjutnya</string>
-    <string name="label_done">Selesai</string>
     <string name="label_share_to">Bagikan ke</string>
     <string name="label_snackbar_share">BAGIKAN</string>
     <string name="label_snackbar_loop_frame_saved">Disimpan ke foto</string>
@@ -129,7 +182,6 @@ Language: id
     <string name="label_control_flip_camera">Balik</string>
     <string name="sound_button_alt">Suara</string>
     <string name="text_button_alt">Teks</string>
-    <string name="more_button_alt">Lainnya</string>
     <string name="stickers_button_alt">Stiker</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Balik kamera</string>
@@ -159,6 +211,7 @@ Language: id
     <string name="continue_with_wpcom">Lanjutkan dengan WordPress.com</string>
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
+    <string name="enter_your_site_address">Masukkan alamat situs Anda yang sudah ada</string>
     <string name="continue_terms_of_service_text">Dengan melanjutkan, Anda menyetujui %1$sKetentuan Layanan%2$s kami.</string>
     <string name="signup_confirmation_magic_link_message">Kami akan mengirimi Anda email berisi tautan pendaftaran untuk membuat akun WordPress.com baru.</string>
     <string name="signup_confirmation_message">Kami akan menggunakan alamat email ini untuk membuat akun WordPress.com baru Anda.</string>
@@ -488,7 +541,6 @@ Language: id
     <string name="login_discovery_error_xmlrpc">Kami tidak dapat mengakses &lt;b>file XMLRPC&lt;/b> situs Anda. Anda harus menghubungi host untuk mengatasi masalah ini.</string>
     <string name="login_site_credentials_magic_link_label">Hampir selesai! Kami hanya perlu memverifikasi alamat email Anda yang terhubung dengan Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">Login dengan kredensial situs %1$s</string>
-    <string name="send_verification_email">Kirim email verifikasi</string>
     <string name="reader_following_display_name">Mengikuti</string>
     <string name="my_site_bottom_sheet_add_page">Halaman situs</string>
     <string name="enter_site_credentials_instead">Login dengan kredensial situs.</string>
@@ -515,7 +567,6 @@ Language: id
     <string name="gutenberg_native_take_a_photo_or_video">Potret atau Rekam Video</string>
     <string name="gutenberg_native_take_a_photo">Ambil Foto</string>
     <string name="gutenberg_native_start_writing">Mulai menulis…</string>
-    <string name="gutenberg_native_size">Ukuran</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin judul bilah sisi</string>
     <string name="gutenberg_native_show_section">Tampilkan bagian</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s blok. Blok ini memiliki konten yang tidak valid</string>
