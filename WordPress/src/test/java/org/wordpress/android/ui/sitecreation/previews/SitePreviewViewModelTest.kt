@@ -17,6 +17,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
@@ -60,6 +61,7 @@ class SitePreviewViewModelTest {
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
+    @Mock private lateinit var quickStartStore: QuickStartStore
     @Mock private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var urlUtils: UrlUtilsWrapper
@@ -80,6 +82,7 @@ class SitePreviewViewModelTest {
         viewModel = SitePreviewViewModel(
                 dispatcher,
                 siteStore,
+                quickStartStore,
                 fetchWpComUseCase,
                 networkUtils,
                 urlUtils,
