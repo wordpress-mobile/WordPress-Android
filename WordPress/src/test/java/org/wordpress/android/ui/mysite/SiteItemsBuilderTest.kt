@@ -15,12 +15,13 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
+    @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
     fun setUp() {
-        siteItemsBuilder = SiteItemsBuilder(siteCategoryItemBuilder)
+        siteItemsBuilder = SiteItemsBuilder(siteCategoryItemBuilder, siteListItemBuilder)
     }
 
     @Test
