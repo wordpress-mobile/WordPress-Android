@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
+import org.wordpress.android.ui.backup.download.BackupDownloadProgressChecker
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,7 +32,10 @@ class BackupDownloadProgressCheckerTest {
 
     @Before
     fun setUp() {
-        backupDownloadProgressChecker = BackupDownloadProgressChecker(activityLogStore, TEST_SCOPE)
+        backupDownloadProgressChecker = BackupDownloadProgressChecker(
+                activityLogStore,
+                TEST_SCOPE
+        )
     }
 
     private val finishedBackupDownloadStatusModel = BackupDownloadStatusModel(

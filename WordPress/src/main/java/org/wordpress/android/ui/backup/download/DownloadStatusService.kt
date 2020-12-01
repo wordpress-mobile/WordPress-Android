@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.backup.download
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -23,7 +23,7 @@ import javax.inject.Singleton
 // todo: annmarie - add tracking key - may be rewindId const val REWIND_ID_TRACKING_KEY = "rewind_id"
 
 @Singleton
-class BackupDownloadStatusService @Inject constructor(
+class DownloadStatusService @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val backupDownloadProgressChecker: BackupDownloadProgressChecker,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
