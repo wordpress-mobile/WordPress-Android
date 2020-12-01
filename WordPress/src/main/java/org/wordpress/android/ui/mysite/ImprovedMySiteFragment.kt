@@ -19,7 +19,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
-import kotlinx.android.synthetic.main.media_picker_fragment.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
@@ -30,8 +29,8 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
@@ -176,9 +175,8 @@ class ImprovedMySiteFragment : Fragment(),
                     }
                     is OpenMediaPicker -> {
                         mediaPickerLauncher.showSiteIconPicker(
-                                requireActivity(),
-                                action.site,
-                                RequestCodes.SITE_ICON_PICKER
+                                this,
+                                action.site
                         )
                     }
                     is OpenCropActivity -> {
@@ -321,7 +319,7 @@ class ImprovedMySiteFragment : Fragment(),
         snackbarSequencer.enqueue(
                 SnackbarItem(
                         Info(
-                                view = coordinator,
+                                view = coordinator_layout,
                                 textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                         ),

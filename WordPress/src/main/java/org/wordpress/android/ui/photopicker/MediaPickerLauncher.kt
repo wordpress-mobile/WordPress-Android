@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -76,33 +77,52 @@ class MediaPickerLauncher @Inject constructor(
 
     fun showSiteIconPicker(
         activity: Activity,
-        site: SiteModel?,
-        requestCode: Int = RequestCodes.PHOTO_PICKER
+        site: SiteModel?
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val mediaPickerSetup = MediaPickerSetup(
-                    primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY),
-                    canMultiselect = false,
-                    requiresStoragePermissions = true,
-                    allowedTypes = setOf(IMAGE),
-                    cameraSetup = ENABLED,
-                    systemPickerEnabled = true,
-                    editingEnabled = true,
-                    queueResults = false,
-                    defaultSearchView = false,
-                    title = R.string.photo_picker_title
-            )
-            val intent = MediaPickerActivity.buildIntent(
-                    activity,
-                    mediaPickerSetup,
-                    site,
-                    null
-            )
-            activity.startActivityForResult(intent, requestCode)
+            val intent = buildSitePickerIntent(activity, site)
+            activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, SITE_ICON_PICKER, site, null)
         }
+    }
+
+    fun showSiteIconPicker(
+        fragment: Fragment,
+        site: SiteModel?
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val intent = buildSitePickerIntent(fragment.requireActivity(), site)
+            fragment.startActivityForResult(intent, RequestCodes.SITE_ICON_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(fragment.requireActivity(), SITE_ICON_PICKER, site, null)
+        }
+    }
+
+    private fun buildSitePickerIntent(
+        activity: Activity,
+        site: SiteModel?
+    ): Intent {
+        val mediaPickerSetup = MediaPickerSetup(
+                primaryDataSource = DEVICE,
+                availableDataSources = setOf(WP_LIBRARY),
+                canMultiselect = false,
+                requiresStoragePermissions = true,
+                allowedTypes = setOf(IMAGE),
+                cameraSetup = ENABLED,
+                systemPickerEnabled = true,
+                editingEnabled = true,
+                queueResults = false,
+                defaultSearchView = false,
+                title = string.photo_picker_title
+        )
+        val intent = MediaPickerActivity.buildIntent(
+                activity,
+                mediaPickerSetup,
+                site,
+                null
+        )
+        return intent
     }
 
     fun showPhotoPickerForResult(
