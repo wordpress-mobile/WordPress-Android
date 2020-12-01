@@ -169,6 +169,18 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         ).isEmpty()
     }
 
+    @Test
+    fun `items are checked, when the user opens the screen with active activity type filter`() = test {
+        val uiStates = init().uiStates
+        val initialSelection = listOf(1, 4)
+
+        startVM(initialSelection = initialSelection)
+
+        assertThat((uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
+                        .filter { it.checked }.map { it.id }
+        ).containsExactlyElementsOf(initialSelection)
+    }
+
     private suspend fun init(successResponse: Boolean = true, activityTypeCount: Int = 5): Observers {
         val uiStates = mutableListOf<UiState>()
         val dismissDialogEvents = mutableListOf<Unit>()
@@ -190,8 +202,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         return Observers(uiStates, dismissDialogEvents)
     }
 
-    private fun startVM() {
-        viewModel.start(RemoteId(0L), parentViewModel)
+    private fun startVM(initialSelection: List<Int> = listOf()) {
+        viewModel.start(RemoteId(0L), parentViewModel, initialSelection)
     }
 
     private fun generateActivityTypes(count: Int): List<DummyActivityType> {

@@ -30,6 +30,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private var isStarted = false
     private lateinit var remoteSiteId: RemoteId
     private lateinit var parentViewModel: ActivityLogViewModel
+    private lateinit var initialSelection: List<Int>
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -37,11 +38,16 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private val _dismissDialog = MutableLiveData<Event<Unit>>()
     val dismissDialog: LiveData<Event<Unit>> = _dismissDialog
 
-    fun start(remoteSiteId: RemoteId, parentViewModel: ActivityLogViewModel) {
+    fun start(
+        remoteSiteId: RemoteId,
+        parentViewModel: ActivityLogViewModel,
+        initialSelection: List<Int>
+    ) {
         if (isStarted) return
         isStarted = true
         this.remoteSiteId = remoteSiteId
         this.parentViewModel = parentViewModel
+        this.initialSelection = initialSelection
 
         fetchAvailableActivityTypes()
     }
@@ -71,7 +77,8 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                         ListItemUiState.ActivityType(
                                 id = it.id,
                                 title = UiStringText(it.toString()),
-                                onClick = { onItemClicked(it.id) }
+                                onClick = { onItemClicked(it.id) },
+                                checked = initialSelection.contains(it.id)
                         )
                     }
             Content(
