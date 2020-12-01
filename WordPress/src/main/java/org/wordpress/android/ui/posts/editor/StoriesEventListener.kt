@@ -13,7 +13,9 @@ import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveCompleted
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveFailed
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveProgress
 import com.wordpress.stories.compose.frame.StorySaveEvents.FrameSaveStart
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
+import com.wordpress.stories.compose.story.StoryIndex
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -58,6 +60,8 @@ class StoriesEventListener @Inject constructor(
     private lateinit var site: SiteModel
     private lateinit var editPostRepository: EditPostRepository
     private var storySaveMediaListener: StorySaveMediaListener? = null
+    var storiesSavingInProgress = HashSet<StoryIndex>()
+        private set
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
@@ -168,6 +172,7 @@ class StoriesEventListener @Inject constructor(
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStorySaveProcessFinished(event: StorySaveResult) {
+        storiesSavingInProgress.remove(event.storyIndex)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -177,6 +182,11 @@ class StoriesEventListener @Inject constructor(
             val localMediaId = story.frames[0].id.toString()
             storySaveMediaListener?.onStorySaveResult(localMediaId, event.isSuccess())
         }
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onStorySaveStart(event: StorySaveProcessStart) {
+        storiesSavingInProgress.add(event.storyIndex)
     }
 
     // Editor load / cancel events
