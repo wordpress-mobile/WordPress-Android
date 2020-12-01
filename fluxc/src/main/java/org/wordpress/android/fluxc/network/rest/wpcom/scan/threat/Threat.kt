@@ -2,8 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.scan.threat
 
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Row
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel.Row
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
 import java.util.Date
 
 data class Threat(

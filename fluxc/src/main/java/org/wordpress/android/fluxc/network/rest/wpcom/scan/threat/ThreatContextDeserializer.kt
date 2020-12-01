@@ -4,8 +4,8 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext.ContextLine
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext.ContextLine
 import java.lang.reflect.Type
 
 class ThreatContextDeserializer : JsonDeserializer<ThreatContext?> {
