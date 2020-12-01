@@ -14,7 +14,9 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyAvailableActivityTypesResponse
 
@@ -52,7 +54,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat((viewModel.uiState.value as UiState.Content).items[0])
+        assertThat((viewModel.uiState.value as Content).items[0])
                 .isInstanceOf(ListItemUiState.SectionHeader::class.java)
     }
 
@@ -62,7 +64,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(Content::class.java)
     }
 
     @Test
@@ -79,7 +81,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         init(successResponse = false)
         startVM()
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
 
         verify(dummyActivityTypesProvider, times(2)).fetchAvailableActivityTypes(anyOrNull())
     }
@@ -90,9 +92,9 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
         init(successResponse = true)
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
 
-        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(Content::class.java)
     }
 
     @Test
@@ -102,7 +104,28 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat((viewModel.uiState.value as UiState.Content).items.size).isEqualTo(1 + activityTypeCount)
+        assertThat((viewModel.uiState.value as Content).items.size).isEqualTo(1 + activityTypeCount)
+    }
+
+    @Test
+    fun `item is checked, when the user clicks on it`() = test {
+        val uiStates = init().uiStates
+        startVM()
+
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
+
+        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isTrue()
+    }
+
+    @Test
+    fun `item is unchecked, when the user clicks on it twice`() = test {
+        val uiStates = init().uiStates
+        startVM()
+
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
+
+        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isFalse()
     }
 
     private suspend fun init(successResponse: Boolean = true, activityTypeCount: Int = 5): Observers {
@@ -127,7 +150,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     private fun generateActivityTypes(count: Int): List<DummyActivityType> {
-        return (1..count).asSequence().map { DummyActivityType(it.toString()) }.toList()
+        return (1..count).asSequence().map { DummyActivityType(it, it.toString()) }.toList()
     }
 
     private data class Observers(val uiStates: List<UiState>)

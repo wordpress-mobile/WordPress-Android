@@ -9,7 +9,6 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.SectionHeader
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
@@ -57,10 +56,13 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
             // TODO malinjir replace the hardcoded header title
-            val headerListItem = SectionHeader(UiStringText("Test"))
+            val headerListItem = ListItemUiState.SectionHeader(UiStringText("Test"))
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
-                    .map { ListItemUiState.ActivityType(title = UiStringText(it.toString())) }
+                    .map {
+                        ListItemUiState.ActivityType(id = it.id, title = UiStringText(it.toString()))
+                                .apply { onClick = { onItemClicked(it.id) } }
+                    }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
@@ -68,6 +70,19 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                     secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
                             .apply { action = ::onClearClicked }
             )
+        }
+    }
+
+    private fun onItemClicked(itemId: Int) {
+        (_uiState.value as? Content)?.let { content ->
+            val updatedList = content.items.map { itemUiState ->
+                if (itemUiState is ListItemUiState.ActivityType && itemUiState.id == itemId) {
+                    itemUiState.copy(checked = !itemUiState.checked).apply { onClick = itemUiState.onClick }
+                } else {
+                    itemUiState
+                }
+            }
+            _uiState.postValue(content.copy(items = updatedList))
         }
     }
 
@@ -126,9 +141,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
 
         data class ActivityType(
+            val id: Int,
             val title: UiString,
             val checked: Boolean = false
-        ) : ListItemUiState()
+        ) : ListItemUiState() {
+            lateinit var onClick: (() -> Unit)
+        }
     }
 
     data class Action(val label: UiString) {
