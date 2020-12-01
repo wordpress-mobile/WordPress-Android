@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.scan
+package org.wordpress.android.fluxc.scan.threat
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
@@ -91,6 +92,27 @@ class ThreatsMapperTest {
         assertTrue(requireNotNull(model.context?.lines).isEmpty())
     }
 
+    @Test
+    fun `maps fixable received as json object correctly`() {
+        val threatJsonString = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_FIXABLE_JSON)
+        val threat = getThreatFromJsonString(threatJsonString)
+
+        val model = mapper.map(threat)
+
+        assertNotNull(model.fixable)
+        assertEquals(model.fixable?.fixer, threat.fixable?.fixer)
+    }
+
+    @Test
+    fun `maps fixable received as boolean correctly`() {
+        val threatJsonString = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_NOT_FIXABLE_JSON)
+        val threat = getThreatFromJsonString(threatJsonString)
+
+        val model = mapper.map(threat)
+
+        assertNull(model.fixable)
+    }
+
     private fun getThreatFromJsonString(json: String): Threat {
         val responseType = object : TypeToken<Threat>() {}.type
         return Gson().fromJson(json, responseType) as Threat
@@ -101,5 +123,7 @@ class ThreatsMapperTest {
         private const val THREAT_CONTEXT_AS_JSON_OBJECT_JSON =
             "wp/jetpack/scan/threat/threat_context_as_json_object.json"
         private const val THREAT_CONTEXT_AS_STRING_JSON = "wp/jetpack/scan/threat/threat_context_as_string.json"
+        private const val THREAT_FIXABLE_JSON = "wp/jetpack/scan/threat/threat-fixable.json"
+        private const val THREAT_NOT_FIXABLE_JSON = "wp/jetpack/scan/threat/threat-not-fixable.json"
     }
 }

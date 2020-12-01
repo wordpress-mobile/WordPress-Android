@@ -13,11 +13,13 @@ class ThreatMapper @Inject constructor() {
             signature = response.signature ?: "",
             description = response.description ?: "",
             status = response.status,
-            fixable = Fixable(
-                file = response.fixable?.file,
-                fixer = response.fixable?.fixer,
-                target = response.fixable?.target
-            ),
+            fixable = response.fixable?.let {
+                Fixable(
+                    file = response.fixable.file,
+                    fixer = response.fixable.fixer,
+                    target = response.fixable.target
+                )
+            },
             extension = Extension(
                 type = response.extension?.type,
                 slug = response.extension?.slug,
