@@ -79,7 +79,7 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_my_sites_white_24dp,
                     UiStringRes(R.string.my_site_btn_view_admin),
-                    isExternalLink = true,
+                    secondaryIcon = R.drawable.ic_external_white_24dp,
                     onClick = onClick
             )
         } else null

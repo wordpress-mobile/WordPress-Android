@@ -34,7 +34,6 @@ sealed class MySiteItem(val type: Type) {
         val primaryText: UiString,
         @DrawableRes val secondaryIcon: Int? = null,
         val secondaryText: UiString? = null,
-        val isExternalLink: Boolean = false,
         val onClick: ListItemInteraction
     ) : MySiteItem(LIST_ITEM)
 }
