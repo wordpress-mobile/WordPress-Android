@@ -1352,7 +1352,7 @@ open class WellSqlConfig : DefaultWellConfig {
                             "REASON TEXT)"
                     )
                 }
-                125 -> migrate(version) {
+                125 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCOrderModel ADD FEE_LINES TEXT")
                 }
             }
