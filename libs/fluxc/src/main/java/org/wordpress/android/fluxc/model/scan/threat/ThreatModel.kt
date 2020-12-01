@@ -14,7 +14,7 @@ data class ThreatModel(
     var context: ThreatContext? = null,
     val fileName: String? = null,
     val diff: String? = null,
-    val rows: String? = null
+    val rows: List<Row>? = null
 ) {
     data class ThreatContext(
         val lines: List<ContextLine>
@@ -25,6 +25,14 @@ data class ThreatModel(
             val highlights: List<Pair<Int, Int>>? = null
         )
     }
+
+    data class Row(
+        val id: Int,
+        val rowNumber: Int,
+        val description: String? = null,
+        val code: String? = null,
+        val url: String? = null
+    )
 
     data class Fixable(
         val file: String?,
