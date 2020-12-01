@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.backup.rewind
+package org.wordpress.android.ui.jetpack.rewind
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

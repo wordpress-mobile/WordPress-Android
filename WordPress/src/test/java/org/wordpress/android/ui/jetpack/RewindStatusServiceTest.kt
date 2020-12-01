@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.jetpack
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
@@ -38,9 +38,9 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.backup.rewind.RewindProgressChecker
-import org.wordpress.android.ui.backup.rewind.RewindStatusService
-import org.wordpress.android.ui.backup.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.jetpack.rewind.RewindProgressChecker
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)

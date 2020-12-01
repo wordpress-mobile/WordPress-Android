@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.backup.rewind
+package org.wordpress.android.ui.jetpack.rewind
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

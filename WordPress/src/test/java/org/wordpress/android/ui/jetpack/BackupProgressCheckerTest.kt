@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.jetpack
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
@@ -20,11 +20,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
-import org.wordpress.android.ui.backup.download.BackupDownloadProgressChecker
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadProgressChecker
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class BackupDownloadProgressCheckerTest {
+class BackupProgressCheckerTest {
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock lateinit var site: SiteModel
     private val restoreId = 1L
