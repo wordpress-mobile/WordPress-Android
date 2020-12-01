@@ -4,7 +4,6 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import com.google.gson.JsonSyntaxException
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext.ContextLine
 import java.lang.reflect.Type
@@ -17,7 +16,7 @@ class ThreatContextDeserializer : JsonDeserializer<ThreatContext?> {
     ): ThreatContext? {
         return if (context != null && json != null) {
             /**
-             *  ThreatContext obj can either be:
+             *  Threat context obj can either be:
              * - a key, value map
              * - an empty string
              * - not present
@@ -46,30 +45,26 @@ class ThreatContextDeserializer : JsonDeserializer<ThreatContext?> {
          * 5: end test
          * marks: 4: [0, 9]
          */
-        return try {
-            var threatContext: ThreatContext? = null
+        var threatContext: ThreatContext? = null
 
-            val threatContextJsonObject = json.asJsonObject
+        val threatContextJsonObject = json.asJsonObject
 
-            val marks = threatContextJsonObject.get(MARKS)
-            val marksJsonObject = if (marks?.isJsonObject == true) marks.asJsonObject else null
+        val marks = threatContextJsonObject.get(MARKS)
+        val marksJsonObject = if (marks?.isJsonObject == true) marks.asJsonObject else null
 
-            val lines: ArrayList<ContextLine> = arrayListOf()
-            threatContextJsonObject.keySet().iterator().forEach { key ->
-                if (key != MARKS) {
-                    val contextLine = getContextLine(threatContextJsonObject, marksJsonObject, key)
-                    contextLine?.let { lines.add(it) }
-                }
+        val lines: ArrayList<ContextLine> = arrayListOf()
+        threatContextJsonObject.keySet().iterator().forEach { key ->
+            if (key != MARKS) {
+                val contextLine = getContextLine(threatContextJsonObject, marksJsonObject, key)
+                contextLine?.let { lines.add(it) }
             }
-            if (lines.isNotEmpty()) {
-                lines.sortBy(ContextLine::lineNumber)
-                threatContext = ThreatContext(lines)
-            }
-
-            threatContext
-        } catch (e: JsonSyntaxException) {
-            null
         }
+        if (lines.isNotEmpty()) {
+            lines.sortBy(ContextLine::lineNumber)
+            threatContext = ThreatContext(lines)
+        }
+
+        return threatContext
     }
 
     private fun getContextLine(
