@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
-    <string name="send_verification_email">Poslat ověřovací email</string>
     <string name="gutenberg_native_translate">Přeložit</string>
     <string name="gutenberg_native_title">Název:</string>
-    <string name="gutenberg_native_size">Velikost</string>
     <string name="domain_registration_state_picker_dialog_title">Vybrat stát</string>
     <string name="domain_registration_country_picker_dialog_title">Vybrat zemi</string>
     <string name="domain_registration_result_continue_button">Další</string>

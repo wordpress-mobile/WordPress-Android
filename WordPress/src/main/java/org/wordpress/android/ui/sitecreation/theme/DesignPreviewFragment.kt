@@ -67,7 +67,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
             when (state) {
                 is Loading -> {
                     progressBar.setVisible(true)
-                    webView.setVisible(true)
+                    webView.setVisible(false)
                     errorView.setVisible(false)
                     webView.loadUrl(url)
                 }
@@ -89,6 +89,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
 
+        webView.settings.userAgentString = WordPress.getUserAgent()
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)

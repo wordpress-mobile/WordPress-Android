@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 13:54:09+0000
+Translation-Revision-Date: 2020-11-26 10:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="delete_button_alt">Löschen</string>
+    <string name="hpp_choose_error">Beim Auswählen des Designs ist ein Fehler aufgetreten.</string>
+    <string name="label_next_button">Weiter</string>
+    <string name="label_done_button">Fertig</string>
+    <string name="dialog_discard_story_title_edit">Änderungen verwerfen?</string>
+    <string name="dialog_discard_story_ok_button_edit">Verwerfen</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="color_picker_label_background">Hintergrund</string>
+    <string name="hpp_error_title">Layouts sind offline nicht verfügbar</string>
+    <string name="dialog_discard_story_message_edit">Änderungen werden nicht gespeichert.</string>
+    <string name="hpp_retry_error">Bitte überprüfe deine Internetverbindung und versuche es erneut.</string>
+    <string name="hpp_error_subtitle">Tippe auf „Erneut versuchen“, wenn du wieder online bist.</string>
+    <string name="reader_discover_empty_title">Willkommen!</string>
+    <string name="scan">Scannen</string>
+    <string name="reader_discover_no_posts_title">Keine aktuellen Beiträge</string>
+    <string name="continue_site_credentials">Mit Store-Anmeldedaten fortfahren</string>
+    <string name="login_find_your_connected_email">Verbundene E-Mail-Adresse suchen</string>
+    <string name="reader_discover_no_posts_button_text">Themen folgen</string>
+    <string name="reader_discover_no_posts_subtitle">Folge mehreren Themen, um deine Suche zu erweitern</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> hat auf deinen Beitrag geantwortet</string>
+    <string name="login_prologue_third_subtitle_two">Heute hast du auf deiner Website &lt;b>50 \"Gefällt mir\"-Angaben&lt;/b> erhalten:</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> gefällt dein Beitrag</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrollbares Block-Menü geöffnet. Wähle einen Block aus.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
     <string name="hpp_skip_button">Überspringen</string>
@@ -39,6 +61,7 @@ Language: de
     <string name="login_prologue_title_fourth">Sieh mithilfe von umfassenden Analysen dabei zu, wie deine Zielgruppe wächst.</string>
     <string name="login_prologue_title_second">Mit dem leistungsstarken Editor kannst du auch von unterwegs aus Beiträge veröffentlichen.</string>
     <string name="login_prologue_title_first">Willkommen beim beliebtesten Website-Baukasten der Welt.</string>
+    <string name="login_prologue_title_third">Kommentare und Benachrichtigungen in Echtzeit anzeigen.</string>
     <string name="media_loading_failed">Laden der Medien fehlgeschlagen</string>
     <string name="reader_discover_recommended_blogs_header">Websites, denen du folgen möchtest</string>
     <string name="gutenberg_native_s_is_not_fully_supported">„%s“ wird nicht vollständig unterstützt</string>
@@ -65,7 +88,7 @@ Language: de
     <string name="reader_label_toolbar_back">Zurück</string>
     <string name="reader_discover_empty_button_text">Erste Schritte</string>
     <string name="reader_post_details_header_by_author_name">Von</string>
-    <string name="reader_discover_empty_title">Folge Themen, um neue Blogs zu entdecken</string>
+    <string name="reader_discover_empty_subtitle">Folge Themen, um neue Blogs zu entdecken</string>
     <string name="stats_referrer_popup_menu_mark_as_spam">Als Spam markieren</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Dieser Referrer kann nicht als Spam markiert werden</string>
     <string name="stats_referrer_popup_unmark_as_spam">Spam-Markierung aufheben</string>
@@ -94,7 +117,6 @@ Language: de
     <string name="comment_unable_to_show_error">Dieser Kommentar kann nicht angezeigt werden</string>
     <string name="media_browse_for_items">Artikel durchsuchen</string>
     <string name="reader_menu_report_post">Diesen Beitrag melden</string>
-    <string name="gutenberg_native_angle">Winkel</string>
     <string name="reader_welcome_banner">Willkommen beim Reader. Entdecke mit nur einem Klick Millionen von Blogs.</string>
     <string name="error_media_xmlrcp_server_error">Es ist ein interner Serverfehler aufgetreten</string>
     <string name="error_media_xmlrpc_not_allowed">Deine Aktion ist nicht zulässig</string>
@@ -137,7 +159,6 @@ Language: de
     <string name="label_frame_errored">fehlerhaft</string>
     <string name="label_text_alignment_button">Textausrichtung ändern</string>
     <string name="label_text_color_button">Textfarbe ändern</string>
-    <string name="menu_delete_page">Slide löschen</string>
     <string name="dialog_discard_story_ok_button">Verwerfen</string>
     <string name="dialog_discard_page_ok_button">Löschen</string>
     <string name="story_saving_untitled">Ohne Titel</string>
@@ -148,19 +169,16 @@ Language: de
     <string name="dialog_discard_page_title">Story-Slide entfernen?</string>
     <string name="mlp_preview_page">Vorschau</string>
     <string name="text_button_alt">Text</string>
-    <string name="more_button_alt">Mehr</string>
     <string name="sound_button_alt">Ton</string>
     <string name="label_control_saved">Gespeichert</string>
     <string name="label_snackbar_share">TEILEN</string>
     <string name="label_control_retry">Erneut versuchen</string>
     <string name="label_saved_icon">Gespeichert</string>
     <string name="label_close_button">Schließen</string>
-    <string name="label_control_publish">Weiter</string>
     <string name="label_retry_icon">Erneut versuchen</string>
     <string name="mlp_create_page">Seite erstellen</string>
     <string name="mlp_create_blank_page">Leere Seite erstellen</string>
     <string name="label_frame_image">Folie</string>
-    <string name="label_done">Fertig</string>
     <string name="label_share_to">Teilen auf</string>
     <string name="label_snackbar_loop_frame_saved">In Fotos gespeichert</string>
     <string name="label_control_saving">Wird gespeichert …</string>
@@ -520,7 +538,6 @@ Language: de
     <string name="login_discovery_error_ssl">Wir konnten wegen eines Problems mit dem &lt;b>SSL-Zertifikat&lt;/b> nicht auf deine Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
     <string name="login_discovery_error_http_auth">Wir konnten nicht auf deine Website zugreifen, da &lt;b>HTTP-Authentifizierung&lt;/b> erforderlich ist. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
     <string name="reader_following_display_name">Folgen</string>
-    <string name="send_verification_email">Bestätigungs-E-Mail senden</string>
     <string name="login_site_credentials_magic_link_label">Fast geschafft! Wir müssen nur noch deine mit Jetpack verbundene E-Mail-Adresse bestätigen &lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">Mit deinen Anmeldedaten der Website %1$s anmelden</string>
     <string name="login_discovery_error_xmlrpc">Wir konnten nicht auf die &lt;b>XMLRPC-Datei&lt;/b> deiner Website zugreifen. Du musst dich an deinen Host wenden, um dies zu beheben.</string>
@@ -549,7 +566,6 @@ Language: de
     <string name="gutenberg_native_tap_to_hide_the_keyboard">Zum Ausblenden der Tastatur hier tippen</string>
     <string name="gutenberg_native_tap_here_to_show_help">Zum Anzeigen der Hilfe hier tippen</string>
     <string name="gutenberg_native_start_writing">Fang an zu schreiben…</string>
-    <string name="gutenberg_native_size">Größe</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin für Seitenleisten-Titel</string>
     <string name="gutenberg_native_show_section">Abschnitt anzeigen</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block %s. Dieser Block hat ungültigen Inhalt</string>

@@ -56,7 +56,7 @@
         android:id="@+id/create_site_button_container"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="?attr/categoriesBackground"
+        android:background="?attr/layoutPickerBackground"
         android:gravity="center"
         android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
         android:paddingTop="@dimen/picker_bottom_button_vertical_margin"

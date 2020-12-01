@@ -1,11 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-02 08:54:55+0000
+Translation-Revision-Date: 2020-11-25 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="color_picker_label_background">背景</string>
+    <string name="color_picker_label_text">テキスト</string>
+    <string name="dialog_discard_story_ok_button_edit">保存しない</string>
+    <string name="dialog_discard_story_message_edit">行った変更はすべて保存されません。</string>
+    <string name="dialog_discard_story_title_edit">変更を破棄しますか ?</string>
+    <string name="label_done_button">終了</string>
+    <string name="label_next_button">次へ</string>
+    <string name="delete_button_alt">削除</string>
+    <string name="hpp_choose_error">デザインの選択中にエラーが発生しました。</string>
+    <string name="hpp_retry_error">ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="hpp_error_subtitle">オンラインに戻ったら、「再試行」をタップします。</string>
+    <string name="hpp_error_title">レイアウトはオフラインでは利用できません</string>
+    <string name="continue_site_credentials">ストアのログイン情報で続ける</string>
+    <string name="login_find_your_connected_email">連携済みのメールアドレスを検索</string>
+    <string name="reader_discover_no_posts_button_text">トピックをフォロー</string>
+    <string name="reader_discover_no_posts_subtitle">もっと多くのトピックをフォローして、検索を広げてみてください</string>
+    <string name="reader_discover_no_posts_title">最近の投稿はありません</string>
+    <string name="reader_discover_empty_title">ようこそ !</string>
+    <string name="scan">スキャン</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> さんが投稿に返信しました</string>
+    <string name="login_prologue_third_subtitle_two">今日サイトで&lt;b>50回「いいね」&lt;/b>されました</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> さんが投稿に「いいね」しました</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">スクロール可能なブロックメニューが開きました。 ブロックを選択します。</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
+    <string name="hpp_skip_button">スキップ</string>
+    <string name="hpp_choose_button">選択</string>
+    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後でカスタマイズまたは変更できます。</string>
+    <string name="hpp_title">デザインを選択</string>
+    <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
+    <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
+    <string name="mlp_error_subtitle">「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
+    <string name="mlp_error_title">レイアウトがエラーにより利用できません</string>
+    <string name="prepublishing_nudges_add_category_button">カテゴリーを追加</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">新規カテゴリーを追加</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">カテゴリー</string>
+    <string name="prepublishing_nudges_home_categories_not_set">未設定</string>
+    <string name="prepublishing_nudges_categories_action">カテゴリー</string>
+    <string name="login_prologue_fifth_caption_three">ロンドンの博物館</string>
+    <string name="login_prologue_fifth_caption_two">世界最高のファン</string>
+    <string name="login_prologue_fifth_caption_one">私のお気に入りカフェトップ10</string>
+    <string name="login_prologue_fifth_tag_six">政治</string>
+    <string name="login_prologue_fifth_tag_five">ミュージック</string>
+    <string name="login_prologue_fifth_tag_four">園芸</string>
+    <string name="login_prologue_fifth_tag_three">フットボール</string>
+    <string name="login_prologue_fifth_tag_two">クッキング</string>
+    <string name="login_prologue_fifth_tag_one">アート</string>
+    <string name="login_prologue_fifth_subtitle_three">今週のロックンロール</string>
+    <string name="login_prologue_fifth_subtitle_two">ウェブニュース</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_second_subtitle_two">写真家の Cameron Karsten 氏の作品にはとても感銘を受けました。 この技術を今度試すつもりです</string>
+    <string name="login_prologue_second_subtitle_one">インスピレーションを受ける</string>
+    <string name="login_prologue_title_fifth">お気に入りのサイトをフォローして新しい読み物を発見しましょう。</string>
+    <string name="login_prologue_title_fourth">詳細な分析により、オーディエンスの成長を見守れます。</string>
+    <string name="login_prologue_title_third">コメントと通知をリアルタイムで表示します。</string>
+    <string name="login_prologue_title_second">強力なエディターで、外出中も投稿できます。</string>
+    <string name="login_prologue_title_first">世界で最も人気のサイト構築サービスへようこそ。</string>
+    <string name="media_loading_failed">メディア読み込み失敗</string>
+    <string name="reader_discover_recommended_blogs_header">フォローするサイト</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">リリースごとにブロックを追加できるよう努めています。</string>
     <string name="gutenberg_native_s_is_not_fully_supported">「%s」は完全にはサポートされていません</string>
     <string name="gutenberg_native_help_button">ヘルプボタン</string>
@@ -29,7 +87,6 @@ Language: ja_JP
     <string name="photo_picker_wordpress_media_library">WordPress メディアライブラリから選択</string>
     <string name="reader_label_toolbar_back">戻る</string>
     <string name="reader_discover_empty_button_text">今すぐ始める</string>
-    <string name="reader_discover_empty_title">トピックをフォローして新しいブログを見つける</string>
     <string name="reader_post_details_header_by_author_name">By</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">このリファラーはスパムとしてマークできません</string>
     <string name="stats_referrer_popup_unmark_as_spam">スパムとしてのマークを解除</string>
@@ -59,7 +116,6 @@ Language: ja_JP
     <string name="comment_unable_to_show_error">このコメントを表示できません</string>
     <string name="media_browse_for_items">項目を閲覧</string>
     <string name="reader_menu_report_post">この投稿を報告</string>
-    <string name="gutenberg_native_angle">角度</string>
     <string name="reader_welcome_banner">Reader へようこそ。何百万ものブログの中から、お気に入りを発見しましょう。</string>
     <string name="error_media_xmlrcp_server_error">内部サーバーエラーが発生しました</string>
     <string name="error_media_xmlrpc_not_allowed">操作は許可されていません</string>
@@ -108,7 +164,6 @@ Language: ja_JP
     <string name="dialog_discard_errored_page_message">このスライドはまだ保存されていません。 このスライドを削除すると、編集内容がすべて失われます。</string>
     <string name="dialog_discard_page_message">このスライドはストーリーから削除されます。</string>
     <string name="dialog_discard_page_title">ストーリーのスライドを削除しますか ?</string>
-    <string name="menu_delete_page">スライドを削除</string>
     <string name="label_text_color_button">テキストの色を変更</string>
     <string name="label_text_alignment_button">テキストの配置を変更</string>
     <string name="label_frame_errored">エラーが発生</string>
@@ -118,8 +173,6 @@ Language: ja_JP
     <string name="label_retry_icon">再試行</string>
     <string name="label_saved_icon">保存しました</string>
     <string name="label_close_button">閉じる</string>
-    <string name="label_control_publish">次へ</string>
-    <string name="label_done">終了</string>
     <string name="label_share_to">以下と共有</string>
     <string name="label_snackbar_share">共有</string>
     <string name="label_snackbar_loop_frame_saved">写真に保存しました</string>
@@ -130,7 +183,6 @@ Language: ja_JP
     <string name="label_control_flip_camera">反転</string>
     <string name="sound_button_alt">音声</string>
     <string name="text_button_alt">テキスト</string>
-    <string name="more_button_alt">その他</string>
     <string name="stickers_button_alt">ステッカー</string>
     <string name="flash_button_alt">フラッシュ</string>
     <string name="flip_button_alt">カメラを反転</string>
@@ -157,6 +209,7 @@ Language: ja_JP
     <string name="gutenberg_native_choose_image_or_video">画像または動画を選択</string>
     <string name="gutenberg_native_choose_image">画像を選択</string>
     <string name="gutenberg_native_block_removed">削除したブロック</string>
+    <string name="enter_your_site_address">既存のサイトアドレスを入力</string>
     <string name="continue_with_wpcom">WordPress.com で続ける</string>
     <string name="signup_confirmation_title">登録の確認</string>
     <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
@@ -490,7 +543,6 @@ Language: ja_JP
     <string name="login_site_credentials_magic_link_label">もう少しです !最後に、Jetpack に連携したメールアドレス &lt;b>%1$s&lt;/b> を確認します</string>
     <string name="enter_site_credentials_instead">サイトのログイン情報でログインします。</string>
     <string name="enter_credentials_for_site">%1$s サイトのログイン情報でログインします。</string>
-    <string name="send_verification_email">確認メールを送信</string>
     <string name="my_site_bottom_sheet_add_page">サイトのページ</string>
     <string name="reader_following_display_name">フォロー中</string>
     <string name="reader_my_likes_display_name">いいね</string>
@@ -516,7 +568,6 @@ Language: ja_JP
     <string name="gutenberg_native_take_a_photo_or_video">写真または動画を撮る</string>
     <string name="gutenberg_native_take_a_photo">写真を撮る</string>
     <string name="gutenberg_native_start_writing">執筆を開始…</string>
-    <string name="gutenberg_native_size">サイズ</string>
     <string name="gutenberg_native_sidebar_title_plugin">サイドバータイトルプラグイン</string>
     <string name="gutenberg_native_show_section">セクションを表示</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%sブロック。このブロックは無効なコンテンツです</string>

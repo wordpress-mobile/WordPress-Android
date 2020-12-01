@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-09 09:03:10+0000
+Translation-Revision-Date: 2020-11-25 09:02:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">Una o más diapositivas no se han añadido a tu historia porque en este momento las historias no son compatibles con archivos GIF. Por favor, elige una imagen estática o un vídeo de fondo en su lugar.</string>
+    <string name="dialog_edit_story_unsupported_format_title">Los archivos GIF no son compatibles</string>
+    <string name="dialog_edit_story_unrecoverable_message">No hemos podido encontrar en el sitio los medios para esta historia.</string>
+    <string name="dialog_edit_story_unrecoverable_title">No se puede editar la historia</string>
+    <string name="dialog_edit_story_unavailable_message">No ha sido posible subir medios a esta historia. Comprueba tu conexión a Internet e inténtalo de nuevo dentro de un momento.</string>
+    <string name="dialog_edit_story_unavailable_title">No se puede editar la historia</string>
+    <string name="dialog_edit_story_limited_message">Esta historia se ha editado en un dispositivo diferente y la posibilidad de editar ciertos objetos puede estar limitada.</string>
+    <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta editar tu historia.</string>
+    <string name="color_picker_label_background">Fondo</string>
+    <string name="color_picker_label_text">Texto</string>
+    <string name="dialog_discard_story_ok_button_edit">Descartar</string>
+    <string name="dialog_discard_story_message_edit">Cualquier cambio realizado no se guardará.</string>
+    <string name="dialog_discard_story_title_edit">¿Descartar cambios?</string>
+    <string name="label_done_button">Hecho</string>
+    <string name="label_next_button">Siguiente</string>
+    <string name="delete_button_alt">Borrar</string>
+    <string name="hpp_choose_error">Ocurrió un error al seleccionar el diseño.</string>
+    <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
+    <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
+    <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
+    <string name="continue_site_credentials">Continuar con las credenciales de la tienda</string>
+    <string name="login_find_your_connected_email">Encuentra tu correo electrónico conectado</string>
+    <string name="reader_discover_no_posts_button_text">Seguir temas</string>
+    <string name="reader_discover_no_posts_subtitle">Prueba a seguir más temas para ampliar la búsqueda</string>
+    <string name="reader_discover_no_posts_title">No hay entradas recientes</string>
+    <string name="reader_discover_empty_title">¡Bienvenido!</string>
+    <string name="scan">Explorar</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Juan Gómez&lt;/b> ha respondido en tu entrada</string>
     <string name="login_prologue_third_subtitle_two">Hoy has recibido &lt;b>50 me gusta&lt;/b> en tu sitio</string>
     <string name="login_prologue_third_subtitle_one">A &lt;b>Madison Ruíz&lt;/b> le ha gustado tu entrada</string>
@@ -68,7 +96,7 @@ Language: es
     <string name="photo_picker_wordpress_media_library">Elige desde la biblioteca de medios de WordPress</string>
     <string name="reader_label_toolbar_back">Volver</string>
     <string name="reader_discover_empty_button_text">Primeros pasos</string>
-    <string name="reader_discover_empty_title">Sigue temáticas y descubre nuevos blogs</string>
+    <string name="reader_discover_empty_subtitle">Sigue temáticas para descubrir nuevos blogs</string>
     <string name="reader_post_details_header_by_author_name">por</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referido no puede ser marcado como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -98,7 +126,6 @@ Language: es
     <string name="comment_unable_to_show_error">No se puede mostrar este comentario</string>
     <string name="media_browse_for_items">Navegar por elementos</string>
     <string name="reader_menu_report_post">Informar de esta entrada</string>
-    <string name="gutenberg_native_angle">Ángulo</string>
     <string name="reader_welcome_banner">Bienvenido al Lector. Descubre millones de blogs a tu alcance.</string>
     <string name="error_media_xmlrcp_server_error">Ha ocurrido un error interno del servidor</string>
     <string name="error_media_xmlrpc_not_allowed">Tu acción no está permitida</string>
@@ -147,7 +174,6 @@ Language: es
     <string name="dialog_discard_errored_page_message">Esta diapositiva aún no ha sido guardada. Si borras esta diapositiva, perderás cualquier edición que hayas hecho.</string>
     <string name="dialog_discard_page_message">Esta diapositiva será eliminada de tu historia.</string>
     <string name="dialog_discard_page_title">¿Borrar la diapositiva de la historia?</string>
-    <string name="menu_delete_page">Borrar la diapositiva</string>
     <string name="label_text_color_button">Cambiar el color del texto</string>
     <string name="label_text_alignment_button">Cambiar la alineación del texto</string>
     <string name="label_frame_errored">con error</string>
@@ -157,8 +183,6 @@ Language: es
     <string name="label_retry_icon">Reintentar</string>
     <string name="label_saved_icon">Guardado</string>
     <string name="label_close_button">Cerrar</string>
-    <string name="label_control_publish">Siguiente</string>
-    <string name="label_done">Hecho</string>
     <string name="label_share_to">Compartir con</string>
     <string name="label_snackbar_share">COMPARTIR</string>
     <string name="label_snackbar_loop_frame_saved">Guardado en fotos</string>
@@ -169,7 +193,6 @@ Language: es
     <string name="label_control_flip_camera">Girar</string>
     <string name="sound_button_alt">Sonido</string>
     <string name="text_button_alt">Texto</string>
-    <string name="more_button_alt">Más</string>
     <string name="stickers_button_alt">Pegatinas</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Girar la cámara</string>
@@ -530,7 +553,6 @@ Language: es
     <string name="login_site_credentials_magic_link_label">¡Ya casi estamos! Solo necesitamos verificar tu dirección de correo electrónico conectada a Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Accede con las credenciales del sitio.</string>
     <string name="enter_credentials_for_site">Accede con las credenciales de tu sitio %1$s</string>
-    <string name="send_verification_email">Enviar el correo electrónico de verificación</string>
     <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
     <string name="reader_following_display_name">Siguiendo</string>
     <string name="reader_my_likes_display_name">Me gusta</string>
@@ -556,7 +578,6 @@ Language: es
     <string name="gutenberg_native_take_a_photo_or_video">Haz una foto o un vídeo</string>
     <string name="gutenberg_native_take_a_photo">Haz una foto</string>
     <string name="gutenberg_native_start_writing">Empieza a escribir…</string>
-    <string name="gutenberg_native_size">Tamaño</string>
     <string name="gutenberg_native_sidebar_title_plugin">Título del plugin en la barra lateral</string>
     <string name="gutenberg_native_show_section">Mostrar la sección</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloque %s. Este bloque tiene contenido no válido</string>

@@ -92,7 +92,7 @@
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background</item>
         <item name="categoriesButtonBackgroundSelected">@color/grey_900</item>
         <item name="mlpDividerColor">@color/grey_300</item>
-        <item name="categoriesBackground">@color/white</item>
+        <item name="layoutPickerBackground">@color/white</item>
 
         <!-- Material Date Range Picker -->
         <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
@@ -1419,7 +1419,9 @@
     <style name="ModalLayoutPickerCategoryEmoji" parent="ModalLayoutPickerText">
         <item name="android:layout_width">@dimen/mlp_categories_emoji_size</item>
         <item name="android:layout_height">@dimen/mlp_categories_emoji_size</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_extra_extra_small</item>
+        <item name="autoSizeTextType">uniform</item>
         <item name="android:layout_marginStart">@dimen/mlp_category_horizontal_margin</item>
         <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_central_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>

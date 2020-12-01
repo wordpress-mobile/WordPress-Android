@@ -23,7 +23,6 @@ Language: el_GR
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
     <string name="gutenberg_native_take_a_photo">Λήψη φωτογραφίας</string>
     <string name="gutenberg_native_start_writing">Ξεκινήστε να γράφετε …</string>
-    <string name="gutenberg_native_size">Μέγεθος</string>
     <string name="gutenberg_native_show_section">Εμφάνιση ενότητας</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s μπλοκ. Αυτό το μπλοκ έχει μη έγκυρο περιεχόμενο</string>
     <string name="gutenberg_native_s_block_empty">%s μπλοκ. Είναι άδειο</string>

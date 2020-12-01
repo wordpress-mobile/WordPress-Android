@@ -7,15 +7,12 @@ Language: hr
 -->
 <resources>
     <string name="label_close_button">Zatvori</string>
-    <string name="label_control_publish">Sljedeće</string>
-    <string name="label_done">Gotovo</string>
     <string name="label_share_to">Podijeli</string>
     <string name="label_control_retry">Pokušaj ponovno</string>
     <string name="label_control_saved">Spremljeno</string>
     <string name="label_control_saving">Spremanje</string>
     <string name="sound_button_alt">Zvuk</string>
     <string name="text_button_alt">Tekst</string>
-    <string name="more_button_alt">Više</string>
     <string name="stickers_button_alt">Naljepnice</string>
     <string name="alignment_none">Ništa</string>
     <string name="title_follower">Sljedbenik</string>

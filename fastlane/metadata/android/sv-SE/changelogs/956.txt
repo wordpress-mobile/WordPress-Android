@@ -1,3 +1,0 @@
-16.1:
-* Välj bland ett urval fördesignade sidmallar när du skapar en ny sida på en webbplats där tillägget Gutenberg är installerat och aktiverat.
-
