@@ -19,5 +19,6 @@ class MySiteListItemViewHolder(parent: ViewGroup, private val uiHelpers: UiHelpe
         uiHelpers.setImageOrHide(secondaryIcon, item.secondaryIcon)
         uiHelpers.setTextOrHide(primaryText, item.primaryText)
         uiHelpers.setTextOrHide(secondaryText, item.secondaryText)
+        itemView.setOnClickListener { item.onClick.click() }
     }
 }

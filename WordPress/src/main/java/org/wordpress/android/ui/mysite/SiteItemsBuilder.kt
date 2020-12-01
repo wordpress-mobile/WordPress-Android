@@ -13,7 +13,7 @@ class SiteItemsBuilder
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun buildSiteItems(site: SiteModel, onClick: ListItemInteraction): List<MySiteItem> {
+    fun buildSiteItems(site: SiteModel, onClick: (ListItemAction) -> Unit): List<MySiteItem> {
         val siteItems = mutableListOf<MySiteItem>()
         siteItems.addItemIfNotNull(siteListItemBuilder.buildPlanItemIfAvailable(site, onClick))
         siteItems.addItemIfNotNull(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site))
@@ -21,7 +21,7 @@ class SiteItemsBuilder
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,
                         UiStringRes(R.string.stats),
-                        onClick = onClick
+                        onClick = ListItemInteraction.create(ListItemAction.STATS, onClick)
                 )
         )
         siteItems.addItemIfNotNull(siteListItemBuilder.buildActivityLogItemIfAvailable(site, onClick))
@@ -32,21 +32,21 @@ class SiteItemsBuilder
                 ListItem(
                         R.drawable.ic_posts_white_24dp,
                         UiStringRes(R.string.my_site_btn_blog_posts),
-                        onClick = onClick
+                        onClick = ListItemInteraction.create(ListItemAction.POSTS, onClick)
                 )
         )
         siteItems.add(
                 ListItem(
                         R.drawable.ic_media_white_24dp,
                         UiStringRes(R.string.media),
-                        onClick = onClick
+                        onClick = ListItemInteraction.create(ListItemAction.MEDIA, onClick)
                 )
         )
         siteItems.add(
                 ListItem(
                         R.drawable.ic_comment_white_24dp,
                         UiStringRes(R.string.my_site_btn_comments),
-                        onClick = onClick
+                        onClick = ListItemInteraction.create(ListItemAction.COMMENTS, onClick)
                 )
         )
         siteItems.addItemIfNotNull(siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(site))
@@ -62,7 +62,7 @@ class SiteItemsBuilder
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = onClick
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick)
                 )
         )
         siteItems.addItemIfNotNull(siteListItemBuilder.buildAdminItemIfAvailable(site, onClick))

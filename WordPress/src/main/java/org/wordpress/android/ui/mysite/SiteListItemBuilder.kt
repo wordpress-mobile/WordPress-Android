@@ -26,7 +26,7 @@ class SiteListItemBuilder
     private val scanFeatureConfig: ScanFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
-    fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val isWpComOrJetpack = siteUtilsWrapper.isAccessedViaWPComRest(
                 site
         ) || site.isJetpackConnected
@@ -34,22 +34,22 @@ class SiteListItemBuilder
             ListItem(
                     R.drawable.ic_history_alt_white_24dp,
                     UiStringRes(R.string.activity),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
             )
         } else null
     }
 
-    fun buildScanItemIfAvailable(onClick: ListItemInteraction): ListItem? {
+    fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
         return if (scanFeatureConfig.isEnabled()) {
             ListItem(
                     R.drawable.ic_scan_alt_white_24dp,
                     UiStringRes(R.string.scan),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.SCAN, onClick)
             )
         } else null
     }
 
-    fun buildPlanItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildPlanItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
                 site.hasCapabilityManageOptions &&
@@ -59,68 +59,68 @@ class SiteListItemBuilder
                     R.drawable.ic_plans_white_24dp,
                     UiStringRes(R.string.plan),
                     secondaryText = UiStringText(planShortName),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick)
             )
         } else null
     }
 
-    fun buildPagesItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildPagesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.isSelfHostedAdmin || site.hasCapabilityEditPages) {
             ListItem(
                     R.drawable.ic_pages_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_pages),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.PAGES, onClick)
             )
         } else null
     }
 
-    fun buildAdminItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildAdminItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (shouldShowWPAdmin(site)) {
             ListItem(
                     R.drawable.ic_my_sites_white_24dp,
                     UiStringRes(R.string.my_site_btn_view_admin),
                     secondaryIcon = R.drawable.ic_external_white_24dp,
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.ADMIN, onClick)
             )
         } else null
     }
 
-    fun buildPeopleItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildPeopleItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityListUsers) {
             ListItem(
                     R.drawable.ic_user_white_24dp,
                     UiStringRes(R.string.people),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.PEOPLE, onClick)
             )
         } else null
     }
 
-    fun buildPluginItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildPluginItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (pluginUtilsWrapper.isPluginFeatureAvailable(site)) {
             ListItem(
                     R.drawable.ic_plugins_white_24dp,
                     UiStringRes(R.string.my_site_btn_plugins),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.PLUGINS, onClick)
             )
         } else null
     }
 
-    fun buildShareItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildShareItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (siteUtilsWrapper.isAccessedViaWPComRest(site)) {
             ListItem(
                     R.drawable.ic_share_white_24dp,
                     UiStringRes(R.string.my_site_btn_sharing),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.SHARING, onClick)
             )
         } else null
     }
 
-    fun buildSiteSettingsItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+    fun buildSiteSettingsItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
         return if (site.hasCapabilityManageOptions || !siteUtilsWrapper.isAccessedViaWPComRest(site)) {
             ListItem(
                     R.drawable.ic_cog_white_24dp,
                     UiStringRes(R.string.my_site_btn_site_settings),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.SITE_SETTINGS, onClick)
             )
         } else null
     }
@@ -139,12 +139,12 @@ class SiteListItemBuilder
         }
     }
 
-    fun buildThemesItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): MySiteItem? {
+    fun buildThemesItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): MySiteItem? {
         return if (themeBrowserUtils.isAccessible(site)) {
             ListItem(
                     R.drawable.ic_themes_white_24dp,
                     UiStringRes(R.string.themes),
-                    onClick = onClick
+                    onClick = ListItemInteraction.create(ListItemAction.THEMES, onClick)
             )
         } else null
     }

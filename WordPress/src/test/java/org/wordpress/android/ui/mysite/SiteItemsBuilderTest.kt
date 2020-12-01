@@ -7,17 +7,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteItemsBuilderTest {
     @Mock lateinit var siteCategoryItemBuilder: SiteCategoryItemBuilder
     @Mock lateinit var siteListItemBuilder: SiteListItemBuilder
     @Mock lateinit var siteModel: SiteModel
-    private val statsItem = ListItem(R.drawable.ic_stats_alt_white_24dp, UiStringRes(R.string.stats), onClick = onClick)
     private lateinit var siteItemsBuilder: SiteItemsBuilder
 
     @Before
@@ -29,21 +25,21 @@ class SiteItemsBuilderTest {
     fun `always adds stats, publish, posts, media, comment, external and view site items`() {
         setupHeaders(addJetpackHeader = false, addLookAndFeelHeader = false, addConfigurationHeader = false)
 
-        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, onClick)
+        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, SITE_ITEM_ACTION)
 
         assertThat(buildSiteItems).containsExactly(
-                statsItem,
-                publishHeader,
-                postsItem,
-                mediaItem,
-                commentsItem,
-                externalHeader,
-                viewSiteItem
+                STATS_ITEM,
+                PUBLISH_HEADER,
+                POSTS_ITEM,
+                MEDIA_ITEM,
+                COMMENTS_ITEM,
+                EXTERNAL_HEADER,
+                VIEW_SITE_ITEM
         )
     }
 
     @Test
-    fun `always all the items in the correct order`() {
+    fun `adds all the items in the correct order`() {
         setupHeaders(
                 addJetpackHeader = true,
                 addLookAndFeelHeader = true,
@@ -60,29 +56,29 @@ class SiteItemsBuilderTest {
                 addScanItem = true
         )
 
-        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, onClick)
+        val buildSiteItems = siteItemsBuilder.buildSiteItems(siteModel, SITE_ITEM_ACTION)
 
         assertThat(buildSiteItems).containsExactly(
-                planItem,
-                jetpackHeader,
-                statsItem,
-                activityItem,
-                scanItem,
-                publishHeader,
-                pagesItem,
-                postsItem,
-                mediaItem,
-                commentsItem,
-                lookAndFeelHeader,
-                themesItem,
-                configurationHeader,
-                peopleItem,
-                pluginsItem,
-                sharingItem,
-                siteSettingsItem,
-                externalHeader,
-                viewSiteItem,
-                adminItem
+                PLAN_ITEM,
+                JETPACK_HEADER,
+                STATS_ITEM,
+                ACTIVITY_ITEM,
+                SCAN_ITEM,
+                PUBLISH_HEADER,
+                PAGES_ITEM,
+                POSTS_ITEM,
+                MEDIA_ITEM,
+                COMMENTS_ITEM,
+                LOOK_AND_FEEL_HEADER,
+                THEMES_ITEM,
+                CONFIGURATION_HEADER,
+                PEOPLE_ITEM,
+                PLUGINS_ITEM,
+                SHARING_ITEM,
+                SITE_SETTINGS_ITEM,
+                EXTERNAL_HEADER,
+                VIEW_SITE_ITEM,
+                ADMIN_ITEM
         )
     }
 
@@ -103,67 +99,67 @@ class SiteItemsBuilderTest {
     ) {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
-                    jetpackHeader
+                    JETPACK_HEADER
             )
         }
         if (addLookAndFeelHeader) {
             whenever(siteCategoryItemBuilder.buildLookAndFeelHeaderIfAvailable(siteModel)).thenReturn(
-                    lookAndFeelHeader
+                    LOOK_AND_FEEL_HEADER
             )
         }
         if (addConfigurationHeader) {
             whenever(siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(siteModel)).thenReturn(
-                    configurationHeader
+                    CONFIGURATION_HEADER
             )
         }
         if (addPlanItem) {
-            whenever(siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)).thenReturn(
-                    planItem
+            whenever(siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    PLAN_ITEM
             )
         }
         if (addActivityLogItem) {
-            whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)).thenReturn(
-                    activityItem
+            whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    ACTIVITY_ITEM
             )
         }
         if (addScanItem) {
-            whenever(siteListItemBuilder.buildScanItemIfAvailable(onClick)).thenReturn(
-                    scanItem
+            whenever(siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)).thenReturn(
+                    SCAN_ITEM
             )
         }
         if (addPagesItem) {
-            whenever(siteListItemBuilder.buildPagesItemIfAvailable(siteModel, onClick)).thenReturn(
-                    pagesItem
+            whenever(siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    PAGES_ITEM
             )
         }
         if (addAdminItem) {
-            whenever(siteListItemBuilder.buildAdminItemIfAvailable(siteModel, onClick)).thenReturn(
-                    adminItem
+            whenever(siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    ADMIN_ITEM
             )
         }
         if (addPeopleItem) {
-            whenever(siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, onClick)).thenReturn(
-                    peopleItem
+            whenever(siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    PEOPLE_ITEM
             )
         }
         if (addPluginItem) {
-            whenever(siteListItemBuilder.buildPluginItemIfAvailable(siteModel, onClick)).thenReturn(
-                    pluginsItem
+            whenever(siteListItemBuilder.buildPluginItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    PLUGINS_ITEM
             )
         }
         if (addShareItem) {
-            whenever(siteListItemBuilder.buildShareItemIfAvailable(siteModel, onClick)).thenReturn(
-                    sharingItem
+            whenever(siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    SHARING_ITEM
             )
         }
         if (addSiteSettingsItem) {
-            whenever(siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, onClick)).thenReturn(
-                    siteSettingsItem
+            whenever(siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    SITE_SETTINGS_ITEM
             )
         }
         if (addThemesItem) {
-            whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, onClick)).thenReturn(
-                    themesItem
+            whenever(siteListItemBuilder.buildThemesItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    THEMES_ITEM
             )
         }
     }
