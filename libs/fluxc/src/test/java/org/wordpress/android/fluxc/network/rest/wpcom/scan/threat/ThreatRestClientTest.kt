@@ -29,6 +29,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.store.ThreatStore.FetchedThreatPayload
 import org.wordpress.android.fluxc.store.ThreatStore.ThreatErrorType
 import org.wordpress.android.fluxc.test
 
@@ -100,6 +101,50 @@ class ThreatRestClientTest {
             assertEquals(site, this@ThreatRestClientTest.site)
             assertTrue(isError)
             assertEquals(ThreatErrorType.API_ERROR, error.type)
+        }
+    }
+
+    @Test
+    fun `fetch threat dispatches error on missing threat id`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_SUCCESS_RESPONSE_JSON)
+        val threatResponse = getThreatResponseFromJsonString(successResponseJson)
+        initFetchThreat(threatResponse.copy(threat = threatResponse.threat?.copy(id = null)))
+
+        val payload = threatRestClient.fetchThreat(site, threat)
+
+        assertEmittedThreatError(payload, ThreatErrorType.MISSING_THREAT_ID)
+    }
+
+    @Test
+    fun `fetch threat dispatches error on missing signature`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_SUCCESS_RESPONSE_JSON)
+        val threatResponse = getThreatResponseFromJsonString(successResponseJson)
+        initFetchThreat(threatResponse.copy(threat = threatResponse.threat?.copy(signature = null)))
+
+        val payload = threatRestClient.fetchThreat(site, threat)
+
+        assertEmittedThreatError(payload, ThreatErrorType.MISSING_SIGNATURE)
+    }
+
+    @Test
+    fun `fetch threat dispatches error on missing first detected`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_SUCCESS_RESPONSE_JSON)
+        val threatResponse = getThreatResponseFromJsonString(successResponseJson)
+        initFetchThreat(threatResponse.copy(threat = threatResponse.threat?.copy(firstDetected = null)))
+
+        val payload = threatRestClient.fetchThreat(site, threat)
+
+        assertEmittedThreatError(payload, ThreatErrorType.MISSING_FIRST_DETECTED)
+    }
+
+    private fun assertEmittedThreatError(payload: FetchedThreatPayload, errorType: ThreatErrorType) {
+        with(payload) {
+            assertEquals(this.site, site)
+            assertTrue(this.isError)
+            assertEquals(this.error.type, errorType)
         }
     }
 
