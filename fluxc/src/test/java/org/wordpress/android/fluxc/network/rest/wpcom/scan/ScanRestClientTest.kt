@@ -231,7 +231,7 @@ class ScanRestClientTest {
         val successResponseJson =
             UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
-        val threatWithIdNotSet = requireNotNull(scanResponse.threats?.get(0)).copy(signature = null)
+        val threatWithIdNotSet = requireNotNull(scanResponse.threats?.get(0)).copy(id = null)
         initFetchScanState(scanResponse.copy(threats = listOf(threatWithIdNotSet)))
 
         val payload = scanRestClient.fetchScanState(site)
