@@ -573,10 +573,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            actionBar.setTitle(R.string.log_in);
+            return;
+        }
+
         if (mShouldUseNewLayout) {
             actionBar.setTitle(R.string.get_started);
-        } else if (mOptionalSiteCredsLayout) {
-            actionBar.setTitle(R.string.log_in);
         } else {
             super.buildToolbar(toolbar, actionBar);
         }
