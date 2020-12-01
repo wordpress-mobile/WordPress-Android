@@ -69,7 +69,7 @@ class NotificationsListFragmentPage : ViewPagerFragment(), OnScrollToTopListener
 
     private val showNewUnseenNotificationsRunnable = Runnable {
         if (isAdded) {
-            notifications_list.addOnScrollListener(mOnScrollListener)
+            notifications_list?.addOnScrollListener(mOnScrollListener)
         }
     }
 

@@ -56,7 +56,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat((viewModel.uiState.value as UiState.Content).items[0])
+        assertThat((viewModel.uiState.value as Content).items[0])
                 .isInstanceOf(ListItemUiState.SectionHeader::class.java)
     }
 
@@ -66,7 +66,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(Content::class.java)
     }
 
     @Test
@@ -83,7 +83,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         init(successResponse = false)
         startVM()
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
 
         verify(dummyActivityTypesProvider, times(2)).fetchAvailableActivityTypes(anyOrNull())
     }
@@ -94,9 +94,9 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
         init(successResponse = true)
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action!!.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
 
-        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Content::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(Content::class.java)
     }
 
     @Test
@@ -106,7 +106,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        assertThat((viewModel.uiState.value as UiState.Content).items.size).isEqualTo(1 + activityTypeCount)
+        assertThat((viewModel.uiState.value as Content).items.size).isEqualTo(1 + activityTypeCount)
     }
 
     @Test
@@ -114,9 +114,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
         startVM()
 
-        ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke()
-        }
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
 
         assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isTrue()
     }
@@ -126,12 +124,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         val uiStates = init().uiStates
         startVM()
 
-        ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke()
-        }
-        ((uiStates.last() as Content).items[1] as ActivityType).let {
-            it.onClick.invoke()
-        }
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
+        ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
 
         assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isFalse()
     }

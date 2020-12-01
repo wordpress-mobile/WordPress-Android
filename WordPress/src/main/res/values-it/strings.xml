@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 14:54:11+0000
+Translation-Revision-Date: 2020-11-19 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="login_prologue_third_subtitle_two">Oggi hai ricevuto &lt;b>50 Mi piace&lt;/b> al tuo sito</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu del blocco a scorrimento aperto. Seleziona un blocco.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu del blocco a scorrimento chiuso.</string>
     <string name="hpp_skip_button">Salta</string>
@@ -37,6 +38,7 @@ Language: it
     <string name="login_prologue_second_subtitle_one">Lasciati ispirare</string>
     <string name="login_prologue_title_fifth">Segui i tuoi siti preferiti e scopri nuove letture.</string>
     <string name="login_prologue_title_fourth">Guarda il tuo pubblico crescere con analisi approfondite.</string>
+    <string name="login_prologue_title_third">Visualizza i commenti e le notifiche in tempo reale.</string>
     <string name="login_prologue_title_second">Con l\'editor potente puoi pubblicare anche durante i tuoi spostamenti.</string>
     <string name="login_prologue_title_first">Benvenuto nel costruttore di siti web più popolare del mondo.</string>
     <string name="media_loading_failed">Caricamento dei file multimediali non riuscito</string>
@@ -63,7 +65,6 @@ Language: it
     <string name="photo_picker_wordpress_media_library">Scegli dalla Libreria multimediale di WordPress</string>
     <string name="reader_label_toolbar_back">Indietro</string>
     <string name="reader_discover_empty_button_text">Inizia ora</string>
-    <string name="reader_discover_empty_title">Segui gli argomenti per scoprire nuovi blog</string>
     <string name="reader_post_details_header_by_author_name">Da</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Questo referrer non può essere contrassegnato come spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Annulla contrassegno come spam</string>
@@ -93,7 +94,6 @@ Language: it
     <string name="comment_unable_to_show_error">Impossibile mostrare questo commento</string>
     <string name="media_browse_for_items">Sfoglia gli elementi</string>
     <string name="reader_menu_report_post">Segnala questo articolo</string>
-    <string name="gutenberg_native_angle">Angolo</string>
     <string name="reader_welcome_banner">Benvenuto al Reader Scopri milioni di blog con il tocco delle dita.</string>
     <string name="error_media_xmlrcp_server_error">Si è verificato un errore del server interno</string>
     <string name="error_media_xmlrpc_not_allowed">L\'azione non è consentita</string>
@@ -142,7 +142,6 @@ Language: it
     <string name="dialog_discard_errored_page_message">Questa diapositiva non è ancora stata salvata. Se elimini questa diapositiva, eventuali modifiche andranno perse.</string>
     <string name="dialog_discard_page_message">Questa diapositiva sarà rimossa dalla tua storia.</string>
     <string name="dialog_discard_page_title">Eliminare la diapositiva della storia?</string>
-    <string name="menu_delete_page">Elimina diapositiva</string>
     <string name="label_text_color_button">Modifica colore del testo</string>
     <string name="label_text_alignment_button">Modifica allineamento del testo</string>
     <string name="label_frame_errored">errore</string>
@@ -152,8 +151,6 @@ Language: it
     <string name="label_retry_icon">Riprova</string>
     <string name="label_saved_icon">Salvataggio completato</string>
     <string name="label_close_button">Chiudi</string>
-    <string name="label_control_publish">Successivo</string>
-    <string name="label_done">Fatto</string>
     <string name="label_share_to">Condividi con</string>
     <string name="label_snackbar_share">CONDIVISIONE</string>
     <string name="label_snackbar_loop_frame_saved">Salvato nelle foto</string>
@@ -164,7 +161,6 @@ Language: it
     <string name="label_control_flip_camera">Inverti</string>
     <string name="sound_button_alt">Suono</string>
     <string name="text_button_alt">Testo</string>
-    <string name="more_button_alt">Altro</string>
     <string name="stickers_button_alt">Adesivi</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Inverti fotocamera</string>
@@ -525,7 +521,6 @@ Language: it
     <string name="login_site_credentials_magic_link_label">Ci sei quasi! Dobbiamo solamente verificare il tuo indirizzo e-mail connesso a Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">Accedi con le credenziali del sito.</string>
     <string name="enter_credentials_for_site">Accedi con le credenziali del sito %1$s</string>
-    <string name="send_verification_email">Invia email di verifica</string>
     <string name="my_site_bottom_sheet_add_page">Pagina del sito</string>
     <string name="reader_following_display_name">Stai seguendo</string>
     <string name="reader_my_likes_display_name">Mi piace</string>
@@ -551,7 +546,6 @@ Language: it
     <string name="gutenberg_native_take_a_photo_or_video">Fai un video o scatta una foto</string>
     <string name="gutenberg_native_take_a_photo">Scatta una foto</string>
     <string name="gutenberg_native_start_writing">Inizia a scrivere…</string>
-    <string name="gutenberg_native_size">Dimensione</string>
     <string name="gutenberg_native_sidebar_title_plugin">Plugin del titolo sulla barra laterale</string>
     <string name="gutenberg_native_show_section">Mostra sezione</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Blocco %s. Questo blocco ha contenuti non validi</string>

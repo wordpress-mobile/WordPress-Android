@@ -29,7 +29,6 @@ Language: pt_BR
     <string name="photo_picker_wordpress_media_library">Escolher da biblioteca de mídias do WordPress</string>
     <string name="reader_label_toolbar_back">Voltar</string>
     <string name="reader_discover_empty_button_text">Comece agora</string>
-    <string name="reader_discover_empty_title">Siga tópicos para descobrir novos blogs</string>
     <string name="reader_post_details_header_by_author_name">Por</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referenciador não pode ser marcado como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -59,7 +58,6 @@ Language: pt_BR
     <string name="permission_microphone">Microfone</string>
     <string name="comment_unable_to_show_error">Não é possível mostrar este comentário</string>
     <string name="reader_menu_report_post">Reportar este post</string>
-    <string name="gutenberg_native_angle">Ângulo</string>
     <string name="error_media_xmlrpc_not_allowed">Sua ação não é permitida</string>
     <string name="reader_welcome_banner">Boas-vindas ao Leitor. Descubra milhões de blogs ao seu alcance.</string>
     <string name="error_media_xmlrcp_server_error">Ocorreu um erro interno no servidor</string>
@@ -103,7 +101,6 @@ Language: pt_BR
     <string name="story_saving_untitled">Sem título</string>
     <string name="dialog_discard_page_ok_button">Excluir</string>
     <string name="dialog_discard_page_title">Excluir slide do story?</string>
-    <string name="menu_delete_page">Excluir slide</string>
     <string name="label_text_color_button">Mudar cor do texto</string>
     <string name="label_text_alignment_button">Mudar alinhamento do texto</string>
     <string name="dialog_discard_story_ok_button">Descartar</string>
@@ -117,8 +114,6 @@ Language: pt_BR
     <string name="label_retry_icon">Tentar novamente</string>
     <string name="label_saved_icon">Salvo</string>
     <string name="label_close_button">Fechar</string>
-    <string name="label_control_publish">Próximo</string>
-    <string name="label_done">Concluído</string>
     <string name="label_share_to">Compartilhar em</string>
     <string name="label_snackbar_share">Compartilhar</string>
     <string name="label_snackbar_loop_frame_saved">Salvo em fotos</string>
@@ -129,7 +124,6 @@ Language: pt_BR
     <string name="label_control_flip_camera">Virar</string>
     <string name="sound_button_alt">Som</string>
     <string name="text_button_alt">Texto</string>
-    <string name="more_button_alt">Mais</string>
     <string name="stickers_button_alt">Adesivos</string>
     <string name="flash_button_alt">Flash</string>
     <string name="flip_button_alt">Virar câmera</string>
@@ -489,7 +483,6 @@ Language: pt_BR
     <string name="login_discovery_error_xmlrpc">Não foi possível acessar o &lt;b>arquivo XMLRPC&lt;/b> de seu site. Entre em contato com sua hospedagem para resolver isso.</string>
     <string name="login_site_credentials_magic_link_label">Quase pronto! Só precisamos verificar seu endereço de e-mail conectado ao Jetpack: &lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">Acessar com as credenciais do site %1$s</string>
-    <string name="send_verification_email">Enviar um e-mail de verificação</string>
     <string name="reader_following_display_name">Seguindo</string>
     <string name="my_site_bottom_sheet_add_page">Página do site</string>
     <string name="enter_site_credentials_instead">Acessar com as credenciais do site.</string>
@@ -516,7 +509,6 @@ Language: pt_BR
     <string name="gutenberg_native_take_a_photo_or_video">Fotografar ou filmar</string>
     <string name="gutenberg_native_take_a_photo">Tirar uma foto</string>
     <string name="gutenberg_native_start_writing">Comece a escrever…</string>
-    <string name="gutenberg_native_size">Tamanho</string>
     <string name="gutenberg_native_sidebar_title_plugin">Barra lateral de título do plugin</string>
     <string name="gutenberg_native_show_section">Mostrar seção</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Bloco %s. Este bloco tem conteúdo inválido.</string>
