@@ -174,7 +174,13 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
+        // TODO malinjir pass initially selected activity types
         _showActivityTypeFilterDialog.value = RemoteId(site.siteId)
+    }
+
+    fun onActivityTypesSelected(activityTypeIds: List<Int>) {
+        // TODO malinjir store the ids
+        // TODO malinjir: refetch/load data
     }
 
     fun onRewindConfirmed(rewindId: String) {
