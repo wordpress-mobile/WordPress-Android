@@ -60,7 +60,27 @@ class ThreatRestClient(
         val threatStatus = ThreatStatus.fromValue(response.threat?.status)
         if (threatStatus != ThreatStatus.UNKNOWN) {
             response.threat?.let { threat ->
-                val threatModel = threatMapper.map(threat)
+                var error: ThreatErrorType? = null
+                val threatModel = when {
+                    threat.id == null -> {
+                        error = ThreatErrorType.MISSING_THREAT_ID
+                        null
+                    }
+                    threat.signature == null -> {
+                        error = ThreatErrorType.MISSING_SIGNATURE
+                        null
+                    }
+                    threat.firstDetected == null -> {
+                        error = ThreatErrorType.MISSING_FIRST_DETECTED
+                        null
+                    }
+                    else -> {
+                        threatMapper.map(threat)
+                    }
+                }
+                error?.let {
+                    return buildThreatErrorPayload(site, it)
+                }
                 return FetchedThreatPayload(threatModel = threatModel, site = site)
             }
         }
