@@ -1,6 +1,5 @@
 package org.wordpress.android.fluxc.model.scan.threat
 
-import com.google.gson.JsonArray
 import java.util.Date
 
 data class ThreatModel(
@@ -23,7 +22,7 @@ data class ThreatModel(
         data class ContextLine(
             val lineNumber: Int,
             val contents: String,
-            val highlights: JsonArray?
+            val highlights: List<Pair<Int, Int>>? = null
         )
     }
 
