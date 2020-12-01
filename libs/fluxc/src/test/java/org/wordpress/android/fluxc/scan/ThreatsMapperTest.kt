@@ -5,17 +5,16 @@ import com.google.gson.reflect.TypeToken
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
+import kotlin.test.assertTrue
 
 @RunWith(MockitoJUnitRunner::class)
 class ThreatsMapperTest {
-    @Mock lateinit var site: SiteModel
     private lateinit var mapper: ThreatMapper
 
     @Before
@@ -25,8 +24,8 @@ class ThreatsMapperTest {
 
     @Test
     fun `maps threat fields correctly`() {
-        val threatson = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_JSON)
-        val threat = getThreatFromJsonString(threatson)
+        val threatJsonString = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_JSON)
+        val threat = getThreatFromJsonString(threatJsonString)
 
         val model = mapper.map(threat)
 
@@ -47,6 +46,49 @@ class ThreatsMapperTest {
             assertEquals(version, threat.extension?.version)
             assertEquals(isPremium, threat.extension?.isPremium)
         }
+        assertEquals(model.fileName, threat.fileName)
+        assertEquals(model.rows, threat.rows)
+        assertEquals(model.diff, threat.diff)
+    }
+
+    @Test
+    fun `maps threat context received as json correctly`() {
+        val threatContextJsonString = UnitTestUtils.getStringFromResourceFile(
+            javaClass,
+            THREAT_CONTEXT_AS_JSON_OBJECT_JSON
+        )
+        val threat = getThreatFromJsonString(threatContextJsonString)
+
+        val model = mapper.map(threat)
+
+        assertNotNull(model.context)
+        assertNotNull(model.context?.lines)
+        assertTrue(requireNotNull(model.context?.lines).isNotEmpty())
+
+        assertEquals(model.context?.lines?.size, 3)
+
+        model.context?.lines?.get(0)?.apply {
+            assertEquals(lineNumber, 3)
+            assertEquals(contents, "echo <<<HTML")
+        }
+
+        val highlights = model.context?.lines?.get(1)?.highlights?.get(0)
+        highlights?.let {
+            val (startIndex, endIndex) = it
+            assertEquals(startIndex, 0)
+            assertEquals(endIndex, 68)
+        }
+    }
+
+    @Test
+    fun `maps threat context received as string correctly`() {
+        val threatContextJsonString = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_CONTEXT_AS_STRING_JSON)
+        val threat = getThreatFromJsonString(threatContextJsonString)
+
+        val model = mapper.map(threat)
+
+        assertNotNull(model.context)
+        assertTrue(requireNotNull(model.context?.lines).isEmpty())
     }
 
     private fun getThreatFromJsonString(json: String): Threat {
@@ -55,6 +97,9 @@ class ThreatsMapperTest {
     }
 
     companion object {
-        private const val THREAT_JSON = "wp/jetpack/threat/threat.json"
+        private const val THREAT_JSON = "wp/jetpack/scan/threat/threat.json"
+        private const val THREAT_CONTEXT_AS_JSON_OBJECT_JSON =
+            "wp/jetpack/scan/threat/threat_context_as_json_object.json"
+        private const val THREAT_CONTEXT_AS_STRING_JSON = "wp/jetpack/scan/threat/threat_context_as_string.json"
     }
 }
