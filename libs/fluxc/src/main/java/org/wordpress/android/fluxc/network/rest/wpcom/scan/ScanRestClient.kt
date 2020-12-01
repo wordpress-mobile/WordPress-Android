@@ -44,10 +44,10 @@ class ScanRestClient(
             }
             is Error -> {
                 val errorType = NetworkErrorMapper.map(
-                        response.error,
-                        ScanStateErrorType.GENERIC_ERROR,
-                        ScanStateErrorType.INVALID_RESPONSE,
-                        ScanStateErrorType.AUTHORIZATION_REQUIRED
+                    response.error,
+                    ScanStateErrorType.GENERIC_ERROR,
+                    ScanStateErrorType.INVALID_RESPONSE,
+                    ScanStateErrorType.AUTHORIZATION_REQUIRED
                 )
                 val error = ScanStateError(errorType, response.error.message)
                 FetchedScanStatePayload(error, site)
@@ -82,43 +82,62 @@ class ScanRestClient(
     }
 
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
-        val scanStateModel = mapResponseToScanStateModel(response)
-        scanStateModel?.let {
-            return FetchedScanStatePayload(scanStateModel, site)
-        }
-        return buildErrorPayload(site, ScanStateErrorType.INVALID_RESPONSE)
-    }
-
-    private fun mapResponseToScanStateModel(response: ScanStateResponse): ScanStateModel? {
-        val state = State.fromValue(response.state) ?: return null
-
-        return ScanStateModel(
-                state = state,
-                reason = response.reason,
-                threats = response.threats?.map { threatMapper.map(it) },
-                hasCloud = response.hasCloud,
-                credentials = response.credentials?.map {
-                    Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
-                },
-                mostRecentStatus = response.mostRecentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            duration = it.duration,
-                            progress = it.progress,
-                            error = it.error,
-                            isInitial = it.isInitial
-                    )
-                },
-                currentStatus = response.currentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            progress = it.progress,
-                            isInitial = it.isInitial
-                    )
-                }
+        val state = State.fromValue(response.state) ?: return buildErrorPayload(
+            site,
+            ScanStateErrorType.INVALID_RESPONSE
         )
+        var error: ScanStateErrorType? = null
+        val threatModels = response.threats?.mapNotNull { threat ->
+            val threatModel = when {
+                threat.id == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_ID
+                    null
+                }
+                threat.signature == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_SIGNATURE
+                    null
+                }
+                threat.firstDetected == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED
+                    null
+                }
+                else -> {
+                    threatMapper.map(threat)
+                }
+            }
+            threatModel
+        }
+        error?.let {
+            return buildErrorPayload(site, it)
+        }
+        val scanStateModel = ScanStateModel(
+            state = state,
+            reason = response.reason,
+            threats = threatModels,
+            hasCloud = response.hasCloud,
+            credentials = response.credentials?.map {
+                Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
+            },
+            mostRecentStatus = response.mostRecentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    duration = it.duration,
+                    progress = it.progress,
+                    error = it.error,
+                    isInitial = it.isInitial
+                )
+            },
+            currentStatus = response.currentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    progress = it.progress,
+                    isInitial = it.isInitial
+                )
+            }
+        )
+        return FetchedScanStatePayload(scanStateModel, site)
     }
 
     private fun buildErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
-            FetchedScanStatePayload(ScanStateError(errorType), site)
+        FetchedScanStatePayload(ScanStateError(errorType), site)
 }
