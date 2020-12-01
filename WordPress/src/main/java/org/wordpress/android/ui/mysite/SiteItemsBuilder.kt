@@ -13,9 +13,8 @@ class SiteItemsBuilder
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun buildSiteItems(site: SiteModel): List<MySiteItem> {
+    fun buildSiteItems(site: SiteModel, onClick: ListItemInteraction): List<MySiteItem> {
         val siteItems = mutableListOf<MySiteItem>()
-        val onClick = ListItemInteraction.create { }
         siteItems.addItemIfNotNull(siteListItemBuilder.buildPlanItemIfAvailable(site, onClick))
         siteItems.addItemIfNotNull(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site))
         siteItems.add(

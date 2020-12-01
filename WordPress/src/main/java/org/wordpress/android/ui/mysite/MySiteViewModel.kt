@@ -32,6 +32,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -91,7 +92,7 @@ class MySiteViewModel
                     this::urlClick,
                     this::switchSiteClick
             ))
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, ListItemInteraction.create {  }))
             siteItems
         } else {
             listOf()
