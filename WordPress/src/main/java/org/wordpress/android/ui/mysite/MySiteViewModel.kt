@@ -92,7 +92,7 @@ class MySiteViewModel
                     this::urlClick,
                     this::switchSiteClick
             ))
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, ListItemInteraction.create {  }))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, ListItemInteraction.create { }))
             siteItems
         } else {
             listOf()
