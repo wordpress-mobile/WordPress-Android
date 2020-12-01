@@ -1,5 +1,6 @@
 16.4
 -----
+* [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
  
 16.3
 -----
