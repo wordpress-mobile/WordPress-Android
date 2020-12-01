@@ -50,6 +50,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
     @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
     @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -83,7 +84,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 wpMediaUtilsWrapper,
                 mediaUtilsWrapper,
                 fluxCUtilsWrapper,
-                contextProvider
+                contextProvider,
+                siteIconUploadHandler
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()

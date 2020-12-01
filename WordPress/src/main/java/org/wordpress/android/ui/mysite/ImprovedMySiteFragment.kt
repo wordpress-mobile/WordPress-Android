@@ -33,7 +33,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeSc
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -66,14 +66,12 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
-    private lateinit var siteIconUploadViewModel: SiteIconUploadViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MySiteViewModel::class.java)
-        siteIconUploadViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteIconUploadViewModel::class.java)
         dialogViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
     }
@@ -198,7 +196,7 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
-        siteIconUploadViewModel.onUploadedItem.observe(viewLifecycleOwner, {
+        viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
                 when (itemUploadedModel) {
                     is ItemUploadedModel.PostUploaded -> {

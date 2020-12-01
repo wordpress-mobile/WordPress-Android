@@ -12,15 +12,15 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_UPLOAD
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel.MediaUploaded
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel.PostUploaded
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel.MediaUploaded
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel.PostUploaded
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
-class SiteIconUploadViewModelTest : BaseUnitTest() {
+class SiteIconUploadHandlerTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var eventBusWrapper: EventBusWrapper
@@ -28,11 +28,11 @@ class SiteIconUploadViewModelTest : BaseUnitTest() {
     @Mock lateinit var mediaModel: MediaModel
     @Mock lateinit var siteModel: SiteModel
     private var uploadedEvents = mutableListOf<ItemUploadedModel>()
-    private lateinit var viewModel: SiteIconUploadViewModel
+    private lateinit var viewModel: SiteIconUploadHandler
 
     @Before
     fun setUp() {
-        viewModel = SiteIconUploadViewModel(selectedSiteRepository, analyticsTrackerWrapper, eventBusWrapper)
+        viewModel = SiteIconUploadHandler(selectedSiteRepository, analyticsTrackerWrapper, eventBusWrapper)
         uploadedEvents = mutableListOf()
         viewModel.onUploadedItem.observeForever {
             it?.getContentIfNotHandled()?.let { model ->

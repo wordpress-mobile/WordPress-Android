@@ -61,7 +61,8 @@ class MySiteViewModel
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val siteIconUploadHandler: SiteIconUploadHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -75,6 +76,7 @@ class MySiteViewModel
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
+    val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
@@ -247,6 +249,11 @@ class MySiteViewModel
 
     fun onAvatarPressed() {
         _onNavigation.value = Event(OpenMeScreen)
+    }
+
+    override fun onCleared() {
+        siteIconUploadHandler.clear()
+        super.onCleared()
     }
 
     data class UiModel(
