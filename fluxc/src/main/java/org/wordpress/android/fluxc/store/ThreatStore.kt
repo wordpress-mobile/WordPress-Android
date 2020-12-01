@@ -77,7 +77,10 @@ class ThreatStore @Inject constructor(
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
         INVALID_RESPONSE,
-        API_ERROR
+        API_ERROR,
+        MISSING_THREAT_ID,
+        MISSING_SIGNATURE,
+        MISSING_FIRST_DETECTED
     }
 
     class ThreatError(var type: ThreatErrorType, var message: String? = null) : OnChangedError
