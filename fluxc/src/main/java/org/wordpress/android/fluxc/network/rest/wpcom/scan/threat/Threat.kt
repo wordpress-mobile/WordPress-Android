@@ -10,11 +10,11 @@ data class Threat(
     @SerializedName("signature") val signature: String?,
     @SerializedName("description") val description: String?,
     @SerializedName("status") val status: String?,
-    @SerializedName("fixable") val fixable: Fixable?,
+    @SerializedName("fixable") @JsonAdapter(FixableDeserializer::class) val fixable: Fixable?,
     @SerializedName("extension") val extension: Extension?,
     @SerializedName("first_detected") val firstDetected: Date?,
     @SerializedName("fixed_on") val fixedOn: Date?,
-    @SerializedName("context") @JsonAdapter(ThreatContextDeserializer::class) var context: ThreatContext?,
+    @SerializedName("context") @JsonAdapter(ThreatContextDeserializer::class) val context: ThreatContext?,
     @SerializedName("filename") val fileName: String?,
     @SerializedName("diff") val diff: String?,
     @SerializedName("rows") val rows: String?
