@@ -118,7 +118,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteDesignPreviewLoaded(template: String) {
         tracker.track(
-                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
                 mapOf("template" to template)
         )
     }

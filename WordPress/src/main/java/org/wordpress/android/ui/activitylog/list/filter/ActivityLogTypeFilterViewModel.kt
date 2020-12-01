@@ -92,15 +92,15 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onItemClicked(itemId: Int) {
-        (_uiState.value as? Content)?.let { it ->
-            val updatedList = it.items.map {
-                if (it is ListItemUiState.ActivityType && it.id == itemId) {
-                    it.copy(checked = !it.checked)
+        (_uiState.value as? Content)?.let { content ->
+            val updatedList = content.items.map { itemUiState ->
+                if (itemUiState is ListItemUiState.ActivityType && itemUiState.id == itemId) {
+                    itemUiState.copy(checked = !itemUiState.checked)
                 } else {
-                    it
+                    itemUiState
                 }
             }
-            _uiState.postValue(it.copy(items = updatedList))
+            _uiState.postValue(content.copy(items = updatedList))
         }
     }
 

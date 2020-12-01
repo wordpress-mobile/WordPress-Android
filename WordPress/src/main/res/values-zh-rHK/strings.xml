@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 14:54:11+0000
+Translation-Revision-Date: 2020-11-25 10:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="color_picker_label_background">背景</string>
+    <string name="color_picker_label_text">文字</string>
+    <string name="dialog_discard_story_ok_button_edit">捨棄</string>
+    <string name="dialog_discard_story_message_edit">系統將不會儲存任何變更。</string>
+    <string name="dialog_discard_story_title_edit">要捨棄變更嗎？</string>
+    <string name="label_done_button">完成</string>
+    <string name="label_next_button">下一步</string>
+    <string name="delete_button_alt">刪除</string>
+    <string name="hpp_choose_error">選取設計時發生錯誤。</string>
+    <string name="hpp_retry_error">請檢查你的網際網路連線，然後再試一次。</string>
+    <string name="hpp_error_subtitle">請在重新上線時點選重試。</string>
+    <string name="hpp_error_title">版面配置在離線時無法使用</string>
+    <string name="continue_site_credentials">使用商店憑證繼續</string>
+    <string name="login_find_your_connected_email">尋找你連結的電子郵件</string>
+    <string name="reader_discover_no_posts_button_text">追蹤主題</string>
+    <string name="reader_discover_no_posts_subtitle">嘗試追蹤更多主題以擴大搜尋範圍</string>
+    <string name="reader_discover_no_posts_title">沒有近期文章</string>
+    <string name="reader_discover_empty_title">歡迎！</string>
+    <string name="scan">掃瞄</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> 已回應你的文章</string>
+    <string name="login_prologue_third_subtitle_two">你的網站本日獲得 &lt;b>50 個讚&lt;/b></string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> 已對你的文章按讚</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">已開啟可捲動的區塊選單。 請選取一個區塊。</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
     <string name="hpp_skip_button">跳過</string>
@@ -37,6 +59,7 @@ Language: zh_TW
     <string name="login_prologue_second_subtitle_one">激發靈感</string>
     <string name="login_prologue_title_fifth">關注你喜歡的網站並發掘新讀物。</string>
     <string name="login_prologue_title_fourth">透過深入分析資料拓展讀者群。</string>
+    <string name="login_prologue_title_third">即時查看留言和通知。</string>
     <string name="login_prologue_title_second">這個功能強大的編輯器讓你隨時隨地都能發佈文章。</string>
     <string name="login_prologue_title_first">歡迎使用全球最受歡迎的網站建置工具。</string>
     <string name="media_loading_failed">媒體載入失敗</string>
@@ -64,7 +87,7 @@ Language: zh_TW
     <string name="photo_picker_wordpress_media_library">從 WordPress 媒體庫選擇</string>
     <string name="reader_label_toolbar_back">返回</string>
     <string name="reader_discover_empty_button_text">開始使用</string>
-    <string name="reader_discover_empty_title">關注主題以探索新網誌</string>
+    <string name="reader_discover_empty_subtitle">追蹤主題以探索新網誌</string>
     <string name="reader_post_details_header_by_author_name">發表者：</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">此推薦連結不能被標記為垃圾郵件</string>
     <string name="stats_referrer_popup_unmark_as_spam">取消標記為垃圾郵件</string>
@@ -93,7 +116,6 @@ Language: zh_TW
     <string name="comment_unable_to_show_error">無法顯示此留言</string>
     <string name="media_browse_for_items">瀏覽項目</string>
     <string name="reader_menu_report_post">檢舉這篇文章</string>
-    <string name="gutenberg_native_angle">角度</string>
     <string name="reader_welcome_banner">歡迎使用閱讀器。 動動指尖即可探索數百萬個網誌。</string>
     <string name="error_media_xmlrcp_server_error">發生內部伺服器錯誤</string>
     <string name="error_media_xmlrpc_not_allowed">你無法執行此動作</string>
@@ -142,7 +164,6 @@ Language: zh_TW
     <string name="dialog_discard_errored_page_message">此投影片尚未儲存。 若刪除此投影片，你所做的任何編輯將會遺失。</string>
     <string name="dialog_discard_page_message">此投影片將從你的故事移除。</string>
     <string name="dialog_discard_page_title">要刪除故事投影片嗎？</string>
-    <string name="menu_delete_page">刪除投影片</string>
     <string name="label_text_color_button">變更文字顏色</string>
     <string name="label_text_alignment_button">變更文字對齊方式</string>
     <string name="label_frame_errored">發生錯誤</string>
@@ -152,8 +173,6 @@ Language: zh_TW
     <string name="label_retry_icon">重試</string>
     <string name="label_saved_icon">已儲存</string>
     <string name="label_close_button">關閉</string>
-    <string name="label_control_publish">下一篇</string>
-    <string name="label_done">完成</string>
     <string name="label_share_to">分享至</string>
     <string name="label_snackbar_share">分享</string>
     <string name="label_snackbar_loop_frame_saved">已儲存至相片</string>
@@ -164,7 +183,6 @@ Language: zh_TW
     <string name="label_control_flip_camera">翻轉</string>
     <string name="sound_button_alt">音效</string>
     <string name="text_button_alt">文字</string>
-    <string name="more_button_alt">更多</string>
     <string name="stickers_button_alt">貼紙</string>
     <string name="flash_button_alt">閃爍</string>
     <string name="flip_button_alt">翻轉相機</string>
@@ -522,7 +540,6 @@ Language: zh_TW
     <string name="login_site_credentials_magic_link_label">快完成了！我們只需驗證你與 Jetpack 綁定的電子郵件地址就行了&lt;b>%1$s&lt;/b></string>
     <string name="enter_site_credentials_instead">請使用網站憑證登入。</string>
     <string name="enter_credentials_for_site">請使用 %1$s 網站憑證登入</string>
-    <string name="send_verification_email">傳送驗證電子郵件</string>
     <string name="my_site_bottom_sheet_add_page">網頁</string>
     <string name="reader_following_display_name">關注中</string>
     <string name="reader_my_likes_display_name">按讚數</string>
@@ -548,7 +565,6 @@ Language: zh_TW
     <string name="gutenberg_native_take_a_photo_or_video">拍攝相片或視訊</string>
     <string name="gutenberg_native_take_a_photo">拍攝照片</string>
     <string name="gutenberg_native_start_writing">開始撰寫內容…</string>
-    <string name="gutenberg_native_size">大小</string>
     <string name="gutenberg_native_sidebar_title_plugin">側邊欄標題外掛程式</string>
     <string name="gutenberg_native_show_section">顯示區段</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 區塊含有無效內容</string>

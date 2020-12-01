@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -38,6 +39,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
 import org.wordpress.android.datasets.SuggestionTable;
@@ -67,6 +69,7 @@ import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
@@ -76,6 +79,8 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
+import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
@@ -91,6 +96,8 @@ import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_RE
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_END;
 import static org.wordpress.android.ui.CommentFullScreenDialogFragment.RESULT_SELECTION_START;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
+
+import kotlin.Unit;
 
 public class ReaderCommentListActivity extends LocaleAwareActivity {
     private static final String KEY_REPLY_TO_COMMENT_ID = "reply_to_comment_id";
@@ -121,8 +128,10 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     private String mInterceptedUri;
     private SiteModel mSite;
 
+    @Inject FollowUnfollowCommentsFeatureConfig mFollowUnfollowCommentsFeatureConfig;
     @Inject SiteStore mSiteStore;
     @Inject AccountStore mAccountStore;
+    @Inject UiHelpers mUiHelpers;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     private ReaderCommentListViewModel mViewModel;
 
@@ -143,7 +152,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
-        mViewModel = mViewModelFactory.create(ReaderCommentListViewModel.class);
+        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
 
         AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
 
@@ -165,6 +174,25 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                 appBarLayout.post(appBarLayout::requestLayout);
             }
         });
+
+        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+            mViewModel.getSnackbarEvents().observe(this, event ->
+                    event.applyIfNotHandled(holder -> {
+                        WPSnackbar.make(mRecyclerView,
+                                mUiHelpers.getTextOfUiString(this, holder.getMessage()),
+                                Snackbar.LENGTH_LONG)
+                                  .show();
+                        return Unit.INSTANCE;
+                    })
+            );
+
+            mViewModel.getUpdateFollowUiState().observe(this, uiState -> {
+                        if (mCommentAdapter != null) {
+                            mCommentAdapter.updateFollowingState(uiState);
+                        }
+                    }
+            );
+        }
 
         Toolbar toolbar = findViewById(R.id.toolbar_main);
         setSupportActionBar(toolbar);
@@ -189,12 +217,18 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             mCommentId = getIntent().getLongExtra(ReaderConstants.ARG_COMMENT_ID, 0);
             mInterceptedUri = getIntent().getStringExtra(ReaderConstants.ARG_INTERCEPTED_URI);
         }
+        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+            mViewModel.start(mBlogId, mPostId);
+        }
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
                 new SwipeToRefreshHelper.RefreshListener() {
                     @Override
                     public void onRefreshStarted() {
+                        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+                            mViewModel.onSwipeToRefresh();
+                        }
                         updatePostAndComments();
                     }
                 }
@@ -604,6 +638,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
                                 AnalyticsUtils.trackWithReaderPostDetails(
                                         AnalyticsTracker.Stat.READER_ARTICLE_COMMENT_LIKED, mPost);
+                                AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_LIKED,
+                                        AnalyticsCommentActionSource.READER, mPost);
                             } else {
                                 ToastUtils.showToast(ReaderCommentListActivity.this,
                                                      R.string.reader_toast_err_generic);
@@ -777,6 +813,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
+                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_REPLIED_TO,
+                            AnalyticsCommentActionSource.READER, mPost);
                 } else {
                     mEditComment.setText(commentText);
                     mSubmitReplyBtn.setEnabled(true);
