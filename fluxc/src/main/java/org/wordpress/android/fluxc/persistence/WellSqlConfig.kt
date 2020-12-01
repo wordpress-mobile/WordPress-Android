@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 124
+        return 125
     }
 
     override fun getDbName(): String {
@@ -1351,6 +1351,9 @@ open class WellSqlConfig : DefaultWellConfig {
                             "INITIAL BOOLEAN," +
                             "REASON TEXT)"
                     )
+                }
+                125 -> migrate(version) {
+                    db.execSQL("ALTER TABLE WCOrderModel ADD FEE_LINES TEXT")
                 }
             }
         }
