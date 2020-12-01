@@ -4,7 +4,7 @@ import com.google.gson.JsonDeserializationContext
 import com.google.gson.JsonDeserializer
 import com.google.gson.JsonElement
 import com.google.gson.JsonObject
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Row
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel.Row
 import java.lang.reflect.Type
 
 class RowsDeserializer : JsonDeserializer<List<Row>?> {
