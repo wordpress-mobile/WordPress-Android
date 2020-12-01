@@ -152,7 +152,9 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    fun refreshAccountAvatarUrl() {
+    fun refresh(selectedSite: SiteModel?) {
+        selectedSiteRepository.updateSite(selectedSite)
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
@@ -200,6 +202,10 @@ class MySiteViewModel
                 }
             }
         }
+    }
+
+    fun handleSelectedSiteIcon(mediaId: Long) {
+        selectedSiteRepository.updateSiteIconMediaId(mediaId.toInt(), true)
     }
 
     fun handleCropResult(croppedUri: Uri?, success: Boolean) {

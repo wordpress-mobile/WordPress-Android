@@ -302,7 +302,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh(null)
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
@@ -312,8 +312,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is the same`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh(null)
+        viewModel.refresh(null)
 
         assertThat(uiModels).hasSize(3)
     }
@@ -322,11 +322,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is empty`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh(null)
 
         setupAccount(buildAccountWithAvatarUrl(null))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh(null)
 
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()
@@ -336,7 +336,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if account is null`() {
         setupAccount(null)
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh(null)
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()

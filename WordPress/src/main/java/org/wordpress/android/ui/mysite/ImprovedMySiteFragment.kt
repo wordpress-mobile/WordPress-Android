@@ -63,7 +63,6 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
@@ -235,9 +234,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh((activity as? WPMainActivity)?.selectedSite)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -270,8 +267,8 @@ class ImprovedMySiteFragment : Fragment(),
                 }
                 when {
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) -> {
-                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
-                        selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
+                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)
+                        viewModel.handleSelectedSiteIcon(mediaId)
                     }
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                         val mediaUriStringsArray = data.getStringArrayExtra(
