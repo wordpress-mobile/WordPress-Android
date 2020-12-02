@@ -26,6 +26,7 @@ import org.wordpress.android.ui.ScrollableViewInitializedListener;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.publicize.PublicizeConstants.ConnectAction;
 import org.wordpress.android.util.WebViewUtils;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import javax.inject.Inject;
 
@@ -192,9 +193,9 @@ public class PublicizeWebViewFragment extends PublicizeBaseFragment {
         }
     }
 
-    private class PublicizeWebChromeClient extends WebChromeClient {
+    private class PublicizeWebChromeClient extends WebChromeClientWithVideoPoster {
         PublicizeWebChromeClient() {
-            super();
+            super(mWebView, R.drawable.media_movieclip);
         }
 
         @Override
