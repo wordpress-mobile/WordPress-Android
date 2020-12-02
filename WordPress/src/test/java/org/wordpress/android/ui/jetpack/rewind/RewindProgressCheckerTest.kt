@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.jetpack.rewind
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
@@ -33,7 +33,10 @@ class RewindProgressCheckerTest {
     private lateinit var rewindProgressChecker: RewindProgressChecker
     @Before
     fun setUp() {
-        rewindProgressChecker = RewindProgressChecker(activityLogStore, TEST_SCOPE)
+        rewindProgressChecker = RewindProgressChecker(
+                activityLogStore,
+                TEST_SCOPE
+        )
     }
 
     private val finishedRewind = Rewind("rewindId", restoreId, FINISHED, 100, "finished")

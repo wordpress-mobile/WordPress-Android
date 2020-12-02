@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.jetpack.backup
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
@@ -31,7 +31,10 @@ class BackupDownloadProgressCheckerTest {
 
     @Before
     fun setUp() {
-        backupDownloadProgressChecker = BackupDownloadProgressChecker(activityLogStore, TEST_SCOPE)
+        backupDownloadProgressChecker = BackupDownloadProgressChecker(
+                activityLogStore,
+                TEST_SCOPE
+        )
     }
 
     private val finishedBackupDownloadStatusModel = BackupDownloadStatusModel(

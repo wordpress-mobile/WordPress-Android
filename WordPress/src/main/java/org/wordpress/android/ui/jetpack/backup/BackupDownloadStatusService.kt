@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.activitylog
+package org.wordpress.android.ui.jetpack.backup
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
