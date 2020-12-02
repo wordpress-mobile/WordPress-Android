@@ -1588,7 +1588,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
-        if (callbackId == site_info_container.title.id) {
+        if (callbackId == site_info_container?.title?.id) {
             showQuickStartNoticeIfNecessary()
             updateQuickStartContainer()
         }
