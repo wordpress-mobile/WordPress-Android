@@ -13,10 +13,10 @@ class DummyActivityTypesProvider @Inject constructor() {
         delay(1000)
         return DummyAvailableActivityTypesResponse(
                 false, listOf(
-                DummyActivityType("Dummy Users"),
-                DummyActivityType("Dummy Backup"),
-                DummyActivityType("Dummy Comments"),
-                DummyActivityType("Dummy Posts")
+                DummyActivityType(1, "Dummy Users"),
+                DummyActivityType(2, "Dummy Backup"),
+                DummyActivityType(3, "Dummy Comments"),
+                DummyActivityType(4, "Dummy Posts")
         )
         )
     }
@@ -26,5 +26,5 @@ class DummyActivityTypesProvider @Inject constructor() {
         val activityTypes: List<DummyActivityType> = listOf()
     )
 
-    data class DummyActivityType(val name: String)
+    data class DummyActivityType(val id: Int, val name: String)
 }

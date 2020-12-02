@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_UPLOADED
@@ -10,8 +9,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_UPLOAD
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel.MediaUploaded
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel.PostUploaded
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel.MediaUploaded
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel.PostUploaded
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
 import org.wordpress.android.util.AppLog
@@ -21,12 +20,12 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
-class SiteIconUploadViewModel
+class SiteIconUploadHandler
 @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val eventBusWrapper: EventBusWrapper
-) : ViewModel() {
+) {
     private val _onUploadedItem = MutableLiveData<Event<ItemUploadedModel>>()
     val onUploadedItem = _onUploadedItem as LiveData<Event<ItemUploadedModel>>
 
@@ -34,9 +33,8 @@ class SiteIconUploadViewModel
         eventBusWrapper.register(this)
     }
 
-    override fun onCleared() {
+    fun clear() {
         eventBusWrapper.unregister(this)
-        super.onCleared()
     }
 
     sealed class ItemUploadedModel(open val site: SiteModel?, open val errorMessage: String? = null) {

@@ -1,8 +1,11 @@
 package org.wordpress.android.ui.sitecreation.previews
 
+import android.os.Bundle
+import android.os.Parcelable
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -21,6 +24,8 @@ import org.wordpress.android.ui.sitecreation.SiteCreationState
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteCreationCompleted
+import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotCreated
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.CreateSiteState.SiteNotInLocalDb
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewContentUiState
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel.SitePreviewUiState.SitePreviewFullscreenErrorUiState.SitePreviewConnectionErrorUiState
@@ -47,6 +52,7 @@ import javax.inject.Inject
 import javax.inject.Named
 import kotlin.coroutines.CoroutineContext
 
+const val KEY_CREATE_SITE_STATE = "CREATE_SITE_STATE"
 private const val CONNECTION_ERROR_DELAY_TO_SHOW_LOADING_STATE = 1000L
 private const val DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER = 1000L
 const val LOADING_STATE_TEXT_ANIMATION_DELAY = 2000L
@@ -80,7 +86,7 @@ class SitePreviewViewModel @Inject constructor(
     private lateinit var urlWithoutScheme: String
     private var lastReceivedServiceState: SiteCreationServiceState? = null
     private var serviceStateForRetry: SiteCreationServiceState? = null
-    private var createSiteState: CreateSiteState = CreateSiteState.SiteNotCreated
+    private var createSiteState: CreateSiteState = SiteNotCreated
 
     private val _uiState: MutableLiveData<SitePreviewUiState> = MutableLiveData()
     val uiState: LiveData<SitePreviewUiState> = _uiState
@@ -117,7 +123,11 @@ class SitePreviewViewModel @Inject constructor(
         loadingAnimationJob?.cancel()
     }
 
-    fun start(siteCreationState: SiteCreationState) {
+    fun writeToBundle(outState: Bundle) {
+        outState.putParcelable(KEY_CREATE_SITE_STATE, createSiteState)
+    }
+
+    fun start(siteCreationState: SiteCreationState, savedState: Bundle?) {
         if (isStarted) {
             return
         }
@@ -125,8 +135,27 @@ class SitePreviewViewModel @Inject constructor(
         this.siteCreationState = siteCreationState
         urlWithoutScheme = requireNotNull(siteCreationState.domain)
 
-        showFullscreenProgress()
-        startCreateSiteService()
+        val restoredState = savedState?.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)
+
+        init(restoredState ?: SiteNotCreated)
+    }
+
+    private fun init(state: CreateSiteState) {
+        createSiteState = state
+        when (state) {
+            SiteNotCreated -> {
+                showFullscreenProgress()
+                startCreateSiteService()
+            }
+            is SiteNotInLocalDb -> {
+                showFullscreenProgress()
+                startPreLoadingWebView()
+                fetchNewlyCreatedSiteModel(state.remoteSiteId)
+            }
+            is SiteCreationCompleted -> {
+                startPreLoadingWebView(skipDelay = true)
+            }
+        }
     }
 
     private fun startCreateSiteService(previousState: SiteCreationServiceState? = null) {
@@ -223,14 +252,16 @@ class SitePreviewViewModel @Inject constructor(
         }
     }
 
-    private fun startPreLoadingWebView() {
+    private fun startPreLoadingWebView(skipDelay: Boolean = false) {
         tracker.trackPreviewLoading()
         launch {
-            /**
-             * Keep showing the full screen loading screen for 1 more second or until the webview is loaded whichever
-             * happens first. This will give us some more time to fetch the newly created site.
-             */
-            delay(DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER)
+            if (!skipDelay) {
+                /**
+                 * Keep showing the full screen loading screen for 1 more second or until the webview is loaded
+                 * whichever happens first. This will give us some more time to fetch the newly created site.
+                 */
+                delay(DELAY_TO_SHOW_WEB_VIEW_LOADING_SHIMMER)
+            }
             /**
              * If the webview is still not loaded after some delay, we'll show the loading shimmer animation instead
              * of the full screen progress, so the user is not blocked for taking actions.
@@ -383,10 +414,11 @@ class SitePreviewViewModel @Inject constructor(
         val previousState: SiteCreationServiceState?
     )
 
-    sealed class CreateSiteState {
+    sealed class CreateSiteState : Parcelable {
         /**
          * CreateSite request haven't finished yet or failed.
          */
+        @Parcelize
         object SiteNotCreated : CreateSiteState()
 
         /**
@@ -394,11 +426,13 @@ class SitePreviewViewModel @Inject constructor(
          * Since we fetch the site without user awareness in background, the user may potentially leave the screen
          * before the request is finished.
          */
+        @Parcelize
         data class SiteNotInLocalDb(val remoteSiteId: Long) : CreateSiteState()
 
         /**
          * The site has been successfully created and stored into local db.
          */
+        @Parcelize
         data class SiteCreationCompleted(val localSiteId: Int) : CreateSiteState()
     }
 }

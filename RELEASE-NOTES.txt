@@ -1,3 +1,7 @@
+16.4
+-----
+* [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
+ 
 16.3
 -----
 * [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
