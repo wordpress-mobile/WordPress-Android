@@ -44,6 +44,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
+    @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var accountStore: AccountStore
@@ -81,6 +82,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 siteInfoBlockBuilder,
+                siteItemsBuilder,
                 accountStore,
                 selectedSiteRepository,
                 wpMediaUtilsWrapper,

@@ -56,6 +56,7 @@ class MySiteViewModel
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
@@ -83,15 +84,17 @@ class MySiteViewModel
             selectedSiteRepository.showSiteIconProgressBar.distinct()
     ) { currentAvatarUrl, site, showSiteIconProgressBar ->
         val items = if (site != null) {
-            val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
+            val siteItems = mutableListOf<MySiteItem>()
+            siteItems.add(siteInfoBlockBuilder.buildSiteInfoBlock(
                     site,
                     showSiteIconProgressBar ?: false,
                     this::titleClick,
                     this::iconClick,
                     this::urlClick,
                     this::switchSiteClick
-            )
-            listOf<MySiteItem>(siteInfoBlock)
+            ))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site))
+            siteItems
         } else {
             listOf()
         }

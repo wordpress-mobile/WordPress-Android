@@ -542,12 +542,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
-        if (ThemeBrowserActivity.isAccessible(site)) {
-            Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
-        }
+        Intent intent = new Intent(context, ThemeBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {

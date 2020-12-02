@@ -17,4 +17,6 @@ class SiteUtilsWrapper @Inject constructor() {
     fun isPhotonCapable(site: SiteModel): Boolean = SiteUtils.isPhotonCapable(site)
     fun getAccessibilityInfoFromSite(site: SiteModel): SiteAccessibilityInfo =
             SiteUtils.getAccessibilityInfoFromSite(site)
+
+    fun isAccessedViaWPComRest(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
 }
