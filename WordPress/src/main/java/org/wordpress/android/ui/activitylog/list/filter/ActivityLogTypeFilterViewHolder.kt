@@ -20,6 +20,7 @@ sealed class ActivityLogTypeFilterViewHolder(internal val parent: ViewGroup, @La
         parent: ViewGroup,
         private val uiHelpers: UiHelpers
     ) : ActivityLogTypeFilterViewHolder(parent, R.layout.activity_log_type_filter_item) {
+        private val container = itemView.findViewById<ViewGroup>(R.id.container)
         private val activityType = itemView.findViewById<TextView>(R.id.activity_type)
         private val checkbox = itemView.findViewById<CheckBox>(R.id.checkbox)
 
@@ -27,6 +28,9 @@ sealed class ActivityLogTypeFilterViewHolder(internal val parent: ViewGroup, @La
             uiState as ActivityType
             uiHelpers.setTextOrHide(activityType, uiState.title)
             checkbox.isChecked = uiState.checked
+            container.setOnClickListener {
+                uiState.onClick.invoke()
+            }
         }
     }
 

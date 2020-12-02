@@ -19,7 +19,6 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
-import kotlinx.android.synthetic.main.media_picker_fragment.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
@@ -27,14 +26,13 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -64,17 +62,14 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
-    private lateinit var siteIconUploadViewModel: SiteIconUploadViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MySiteViewModel::class.java)
-        siteIconUploadViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteIconUploadViewModel::class.java)
         dialogViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
     }
@@ -176,9 +171,8 @@ class ImprovedMySiteFragment : Fragment(),
                     }
                     is OpenMediaPicker -> {
                         mediaPickerLauncher.showSiteIconPicker(
-                                requireActivity(),
-                                action.site,
-                                RequestCodes.SITE_ICON_PICKER
+                                this,
+                                action.site
                         )
                     }
                     is OpenCropActivity -> {
@@ -200,7 +194,7 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
-        siteIconUploadViewModel.onUploadedItem.observe(viewLifecycleOwner, {
+        viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
                 when (itemUploadedModel) {
                     is ItemUploadedModel.PostUploaded -> {
@@ -239,9 +233,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -274,8 +266,8 @@ class ImprovedMySiteFragment : Fragment(),
                 }
                 when {
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) -> {
-                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
-                        selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
+                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)
+                        viewModel.handleSelectedSiteIcon(mediaId)
                     }
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                         val mediaUriStringsArray = data.getStringArrayExtra(
@@ -321,7 +313,7 @@ class ImprovedMySiteFragment : Fragment(),
         snackbarSequencer.enqueue(
                 SnackbarItem(
                         Info(
-                                view = coordinator,
+                                view = coordinator_layout,
                                 textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                         ),
