@@ -136,7 +136,7 @@ class MySiteViewModel
 
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            val navigationAction = when(action) {
+            val navigationAction = when (action) {
                 ACTIVITY_LOG -> OpenActivityLog(site)
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
