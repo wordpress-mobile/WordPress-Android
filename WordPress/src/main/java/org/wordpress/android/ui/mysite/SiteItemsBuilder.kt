@@ -26,6 +26,7 @@ class SiteItemsBuilder
         )
         siteItems.addItemIfNotNull(siteListItemBuilder.buildActivityLogItemIfAvailable(site, onClick))
         siteItems.addItemIfNotNull(siteListItemBuilder.buildScanItemIfAvailable(onClick))
+        siteItems.addItemIfNotNull(siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick))
         siteItems.add(CategoryHeader(UiStringRes(R.string.my_site_header_publish)))
         siteItems.addItemIfNotNull(siteListItemBuilder.buildPagesItemIfAvailable(site, onClick))
         siteItems.add(

@@ -241,6 +241,69 @@ class SiteListItemBuilderTest {
     }
 
     @Test
+    fun `returns jetpack item when site is jetpack, WPCom, can manage options and is not atomic`() {
+        setupJetpackItem(isJetpackConnected = true, isWpCom = true, canManageOptions = true, isAtomic = false)
+
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+
+        assertThat(lookAndFeelHeader).isEqualTo(
+                ListItem(
+                        R.drawable.ic_cog_white_24dp,
+                        UiStringRes(R.string.my_site_btn_jetpack_settings),
+                        onClick = onClick
+                )
+        )
+    }
+
+    @Test
+    fun `does not return jetpack item when site is not jetpack`() {
+        setupJetpackItem(isJetpackConnected = false)
+
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+
+        assertThat(lookAndFeelHeader).isNull()
+    }
+
+    @Test
+    fun `does not return jetpack item when site is not WPCom`() {
+        setupJetpackItem(isWpCom = false)
+
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+
+        assertThat(lookAndFeelHeader).isNull()
+    }
+
+    @Test
+    fun `does not return jetpack item when site can manage options`() {
+        setupJetpackItem(canManageOptions = false)
+
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+
+        assertThat(lookAndFeelHeader).isNull()
+    }
+
+    @Test
+    fun `does not return jetpack item when site is atomic`() {
+        setupJetpackItem(isAtomic = true)
+
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+
+        assertThat(lookAndFeelHeader).isNull()
+    }
+
+    private fun setupJetpackItem(
+        isJetpackConnected: Boolean = true,
+        isAtomic: Boolean = false,
+        isWpCom: Boolean = true,
+        canManageOptions: Boolean = true
+    ) {
+        whenever(siteModel.isJetpackConnected).thenReturn(isJetpackConnected)
+        whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
+        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isWpCom)
+        whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
+    }
+
+    @Test
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 

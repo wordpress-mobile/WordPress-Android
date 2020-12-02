@@ -49,6 +49,20 @@ class SiteListItemBuilder
         } else null
     }
 
+    fun buildJetpackItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
+        val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
+                !site.isWPComAtomic &&
+                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
+                site.hasCapabilityManageOptions // has permissions to manage the site
+        return if (jetpackSettingsVisible) {
+            ListItem(
+                    R.drawable.ic_cog_white_24dp,
+                    UiStringRes(R.string.my_site_btn_jetpack_settings),
+                    onClick = onClick
+            )
+        } else null
+    }
+
     fun buildPlanItemIfAvailable(site: SiteModel, onClick: ListItemInteraction): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
