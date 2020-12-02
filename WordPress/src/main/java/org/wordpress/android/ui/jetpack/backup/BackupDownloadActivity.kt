@@ -24,6 +24,8 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+            // todo: annmarie - this is here to get past lint - this will be set from childfrag
+            it.title = getString(R.string.backup_download_details_page_title)
         }
         setupViewModel()
     }

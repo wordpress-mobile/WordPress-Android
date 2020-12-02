@@ -27,7 +27,8 @@
             style="@style/Backup.Details.PrimaryButton"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_description" />
+            app:layout_constraintTop_toBottomOf="@+id/backup_details_description"
+            android:text="@string/backup_download_details_action_button"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/backup_details_header"
@@ -35,14 +36,16 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backup_details_action_icon"
-            tools:text="Create downloadable backup" />
+            tools:text="Create downloadable backup"
+            android:text="@string/backup_download_details_header"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/backup_details_description"
             style="@style/Backup.Details.Description"
             app:layout_constraintStart_toStartOf="@+id/backup_details_header"
             app:layout_constraintTop_toBottomOf="@+id/backup_details_header"
-            tools:text="October 21, 2020 at 3:40 AM is the selected point to create a downloadable backup." />
+            tools:text="October 21, 2020 at 3:40 AM is the selected point to create a downloadable backup."
+            android:text="@string/backup_download_details_description"/>
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/backup_details_secondary_header"
@@ -51,7 +54,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backup_details_action_button"
-            tools:text="Items included in this download" />
+            tools:text="Items included in this download"
+            android:text="@string/backup_download_details_choose_items_header"/>
 
         <!-- todo: annmarie - hmmm, I wonder if I should make this a RV, but it's hardcoded? -->
         <include layout="@layout/backup_details_choose_items"
