@@ -12,12 +12,14 @@ import org.wordpress.android.fluxc.model.XPostModel
 import org.wordpress.android.fluxc.model.XPostSiteModel
 import org.wordpress.android.fluxc.persistence.XPostsSqlUtils
 import kotlin.test.assertEquals
+import kotlin.test.assertNull
 import kotlin.test.assertTrue
 
 @RunWith(RobolectricTestRunner::class)
 class XPostSqlUtilsTest {
     private lateinit var xPostSqlUtils: XPostsSqlUtils
-    private val xPostSite = XPostSiteModel().apply { blogId = 10 }
+    private val xPostSiteModel = XPostSiteModel().apply { blogId = 10 }
+    private val site = SiteModel().apply { id = 100 }
 
     @Before
     fun setUp() {
@@ -32,28 +34,59 @@ class XPostSqlUtilsTest {
         config.reset()
 
         xPostSqlUtils = XPostsSqlUtils()
-    }
-
-    @Test
-    fun `test inserting and retrieving an xpost`() {
-        val site = SiteModel().apply { id = 100 }
         WellSql.insert(site).execute()
-
-        xPostSqlUtils.insertOrUpdateXPost(listOf(xPostSite), site)
-
-        assertEquals(listOf(xPostSite), xPostSqlUtils.selectXPostsForSite(site))
     }
 
     @Test
-    fun `test insert xpost for different site`() {
-        val siteWithXpost = SiteModel().apply { id = 100 }
-        WellSql.insert(siteWithXpost).execute()
+    fun `sets xposts for a site`() {
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), site)
 
-        val otherSite = SiteModel().apply { id = 101 }
+        assertEquals(listOf(xPostSiteModel), xPostSqlUtils.selectXPostsForSite(site))
+    }
+
+    @Test
+    fun `setting xposts for a site deletes previous xposts`() {
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), site)
+        xPostSqlUtils.setXPostsForSite(emptyList(), site)
+        assertTrue(xPostSqlUtils.selectXPostsForSite(site)!!.isEmpty())
+    }
+
+    @Test
+    fun `selectXPostsForSite returns null if no xposts ever set`() {
+        assertNull(xPostSqlUtils.selectXPostsForSite(site))
+    }
+
+    @Test
+    fun `selectXPostsForSite returns empty list if empty list of xposts previously set`() {
+        xPostSqlUtils.setXPostsForSite(emptyList(), site)
+        assertTrue(xPostSqlUtils.selectXPostsForSite(site)!!.isEmpty())
+    }
+
+    @Test
+    fun `inserting and retrieving an xpost`() {
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), site)
+        assertEquals(listOf(xPostSiteModel), xPostSqlUtils.selectXPostsForSite(site))
+    }
+
+    @Test
+    fun `inserting an xpost target does not affect that xpost target for other sites`() {
+        val siteWithNoXposts = SiteModel().apply { site.id + 1 }
+        WellSql.insert(siteWithNoXposts).execute()
+
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), site)
+
+        assertNull(xPostSqlUtils.selectXPostsForSite(siteWithNoXposts))
+    }
+
+    @Test
+    fun `can insert same xpost for two sites`() {
+        val otherSite = SiteModel().apply { site.id + 1 }
         WellSql.insert(otherSite).execute()
 
-        xPostSqlUtils.insertOrUpdateXPost(listOf(xPostSite), siteWithXpost)
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), site)
+        xPostSqlUtils.setXPostsForSite(listOf(xPostSiteModel), otherSite)
+        xPostSqlUtils.setXPostsForSite(emptyList(), otherSite)
 
-        assertTrue(xPostSqlUtils.selectXPostsForSite(otherSite).isEmpty())
+        assertTrue(xPostSqlUtils.selectXPostsForSite(site)!!.isNotEmpty())
     }
 }
