@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -102,7 +103,13 @@ class ScanRestClient(
                     null
                 }
                 else -> {
-                    threatMapper.map(threat)
+                    val threatStatus = ThreatStatus.fromValue(threat.status)
+                    if (threatStatus != ThreatStatus.UNKNOWN) {
+                        threatMapper.map(threat)
+                    } else {
+                        error = ScanStateErrorType.INVALID_RESPONSE
+                        null
+                    }
                 }
             }
             threatModel
