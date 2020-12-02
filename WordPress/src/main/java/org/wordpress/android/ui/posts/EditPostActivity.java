@@ -266,6 +266,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ExceptionLogger,
         SiteSettingsInterface.SiteSettingsListener {
     public static final String ACTION_REBLOG = "reblogAction";
+    public static final String ACTION_COPY = "copyAction";
     public static final String EXTRA_POST_LOCAL_ID = "postModelLocalId";
     public static final String EXTRA_LOAD_AUTO_SAVE_REVISION = "loadAutosaveRevision";
     public static final String EXTRA_POST_REMOTE_ID = "postModelRemoteId";
@@ -2378,9 +2379,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         // Needed blog settings needed by the editor
         mEditorFragment.setFeaturedImageSupported(mSite.isFeaturedImageSupported());
 
+        String action = getIntent().getAction();
+
         // Special actions - these only make sense for empty posts that are going to be populated now
         if (TextUtils.isEmpty(mEditPostRepository.getContent())) {
-            String action = getIntent().getAction();
             if (Intent.ACTION_SEND.equals(action) || Intent.ACTION_SEND_MULTIPLE.equals(action)) {
                 setPostContentFromShareAction();
             } else if (NEW_MEDIA_POST.equals(action)) {
@@ -2391,7 +2393,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             }
         }
 
-        if (mIsPage) {
+        if (mIsPage || ACTION_COPY.equals(action)) {
             setPageContent();
         }
 
