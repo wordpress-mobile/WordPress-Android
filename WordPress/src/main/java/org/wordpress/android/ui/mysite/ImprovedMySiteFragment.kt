@@ -179,59 +179,27 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
-                    is OpenMeScreen -> {
-                        ActivityLauncher.viewMeActivityForResult(activity)
-                    }
-                    is OpenSitePicker -> {
-                        ActivityLauncher.showSitePickerForResult(activity, action.site)
-                    }
-                    is OpenSite -> {
-                        ActivityLauncher.viewCurrentSite(activity, action.site, true)
-                    }
-                    is OpenMediaPicker -> {
-                        mediaPickerLauncher.showSiteIconPicker(
-                                this,
-                                action.site
-                        )
-                    }
-                    is OpenCropActivity -> {
-                        startCropActivity(action.imageUri)
-                    }
-                    is OpenActivityLog ->
-                        ActivityLauncher.viewActivityLogList(
-                                activity,
-                                action.site
-                        )
+                    is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+                    is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+                    is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+                    is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
+                    is OpenCropActivity -> startCropActivity(action.imageUri)
+                    is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
                     is OpenScan -> TODO()
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
                     is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(
-                            activity,
-                            action.site
-                    )
-                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(
-                            activity,
-                            action.site
-                    )
+                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
                     is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(
-                            activity,
-                            action.site
-                    )
+                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
                     is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(
-                            activity,
-                            action.site
-                    )
+                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
                     is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(
-                            activity,
-                            action.site
-                    )
+                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
                     is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
                     is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                    StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
+                    is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
                     is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
                 }
             }
