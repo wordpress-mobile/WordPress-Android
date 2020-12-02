@@ -338,7 +338,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(false, viewModel.filtersVisibility.value)
+        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test
@@ -347,7 +347,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(true, viewModel.filtersVisibility.value)
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test
