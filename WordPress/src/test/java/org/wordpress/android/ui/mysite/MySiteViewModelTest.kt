@@ -19,12 +19,41 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -374,6 +403,139 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenMeScreen)
     }
 
+    @Test
+    fun `activity item click emits OpenActivity navigation event`() {
+        invokeItemClickAction(ACTIVITY_LOG)
+
+        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
+    }
+
+    @Test
+    fun `scan item click emits OpenScan navigation event`() {
+        invokeItemClickAction(SCAN)
+
+        assertThat(navigationActions).containsExactly(OpenScan(site))
+    }
+
+    @Test
+    fun `plan item click emits OpenPlan navigation event`() {
+        invokeItemClickAction(PLAN)
+
+        assertThat(navigationActions).containsExactly(OpenPlan(site))
+    }
+
+    @Test
+    fun `posts item click emits OpenPosts navigation event`() {
+        invokeItemClickAction(POSTS)
+
+        assertThat(navigationActions).containsExactly(OpenPosts(site))
+    }
+
+    @Test
+    fun `pages item click emits OpenPages navigation event`() {
+        invokeItemClickAction(PAGES)
+
+        assertThat(navigationActions).containsExactly(OpenPages(site))
+    }
+
+    @Test
+    fun `admin item click emits OpenAdmin navigation event`() {
+        invokeItemClickAction(ADMIN)
+
+        assertThat(navigationActions).containsExactly(OpenAdmin(site))
+    }
+
+    @Test
+    fun `sharing item click emits OpenSharing navigation event`() {
+        invokeItemClickAction(SHARING)
+
+        assertThat(navigationActions).containsExactly(OpenSharing(site))
+    }
+
+    @Test
+    fun `site settings item click emits OpenSiteSettings navigation event`() {
+        invokeItemClickAction(SITE_SETTINGS)
+
+        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
+    }
+
+    @Test
+    fun `themes item click emits OpenThemes navigation event`() {
+        invokeItemClickAction(THEMES)
+
+        assertThat(navigationActions).containsExactly(OpenThemes(site))
+    }
+
+    @Test
+    fun `plugins item click emits OpenPlugins navigation event`() {
+        invokeItemClickAction(PLUGINS)
+
+        assertThat(navigationActions).containsExactly(OpenPlugins(site))
+    }
+
+    @Test
+    fun `media item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(MEDIA)
+
+        assertThat(navigationActions).containsExactly(OpenMedia(site))
+    }
+
+    @Test
+    fun `comments item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(COMMENTS)
+
+        assertThat(navigationActions).containsExactly(OpenComments(site))
+    }
+
+    @Test
+    fun `view site item click emits OpenSite navigation event`() {
+        invokeItemClickAction(VIEW_SITE)
+
+        assertThat(navigationActions).containsExactly(OpenSite(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsWPCom(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsJetpackConnected(true)
+        site.setIsJetpackInstalled(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(false)
+        site.setIsWPCom(false)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
+    }
+
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
@@ -395,6 +557,20 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(clickAction).isNotNull()
         clickAction!!.invoke(site)
+    }
+
+    private fun invokeItemClickAction(action: ListItemAction) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        var clickAction: ((ListItemAction) -> Unit)? = null
+        doAnswer {
+            clickAction = it.getArgument(1)
+            listOf<MySiteItem>()
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any())
+
+        onSiteChange.postValue(site)
+
+        assertThat(clickAction).isNotNull()
+        clickAction!!.invoke(action)
     }
 
     private enum class SiteInfoBlockAction {

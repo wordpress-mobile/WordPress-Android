@@ -7,16 +7,11 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
-import org.wordpress.android.ui.utils.ListItemInteraction
-import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
 
@@ -28,8 +23,6 @@ class SiteListItemBuilderTest {
     @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
-    @Mock lateinit var onClick: ListItemInteraction
-    private val business = "business"
     private lateinit var siteListItemBuilder: SiteListItemBuilder
 
     @Before
@@ -52,15 +45,9 @@ class SiteListItemBuilderTest {
                 isWpForTeams = false
         )
 
-        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_history_alt_white_24dp,
-                        UiStringRes(R.string.activity),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(ACTIVITY_ITEM)
     }
 
     @Test
@@ -72,22 +59,16 @@ class SiteListItemBuilderTest {
                 isWpForTeams = false
         )
 
-        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_history_alt_white_24dp,
-                        UiStringRes(R.string.activity),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(ACTIVITY_ITEM)
     }
 
     @Test
     fun `activity item not built when site cannot manage options`() {
         setupActivityLogItem(canManageOptions = false)
 
-        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -96,7 +77,7 @@ class SiteListItemBuilderTest {
     fun `activity item not built when site is WP for teams`() {
         setupActivityLogItem(isWpForTeams = true)
 
-        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -105,7 +86,7 @@ class SiteListItemBuilderTest {
     fun `activity item not built when site is neither Jetpack nor uses WPComRest`() {
         setupActivityLogItem(isAccessedViaWPComRest = false, isJetpackConnected = false)
 
-        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -126,22 +107,16 @@ class SiteListItemBuilderTest {
     fun `scan item built if scan feature config enabled`() {
         whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
 
-        val item = siteListItemBuilder.buildScanItemIfAvailable(onClick)
+        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_scan_alt_white_24dp,
-                        UiStringRes(R.string.scan),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(SCAN_ITEM)
     }
 
     @Test
     fun `scan item not built if scan feature config not enabled`() {
         whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
 
-        val item = siteListItemBuilder.buildScanItemIfAvailable(onClick)
+        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -149,52 +124,38 @@ class SiteListItemBuilderTest {
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is WPcom`() {
         setupPlanItem(
-                planShortName = business,
+                planShortName = PLAN_NAME,
                 canManageOptions = true,
                 isWpForTeams = false,
                 isWPCom = true,
                 isAutomatedTransfer = false
         )
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_plans_white_24dp,
-                        UiStringRes(R.string.plan),
-                        secondaryText = UiStringText(business),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PLAN_ITEM)
     }
 
     @Test
     fun `plan item built when plan not empty, site can manage options, is not WP for teams and is AT`() {
         setupPlanItem(
-                planShortName = business,
+                planShortName = PLAN_NAME,
                 canManageOptions = true,
                 isWpForTeams = false,
                 isWPCom = false,
                 isAutomatedTransfer = true
         )
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_plans_white_24dp,
-                        UiStringRes(R.string.plan),
-                        secondaryText = UiStringText(business),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PLAN_ITEM)
     }
 
     @Test
     fun `plan item not built when plan name is empty`() {
         setupPlanItem(planShortName = "")
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -203,7 +164,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site cannot manage options`() {
         setupPlanItem(canManageOptions = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -212,7 +173,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is WP for teams`() {
         setupPlanItem(isWpForTeams = true)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -221,13 +182,13 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is neither WP com nor AT`() {
         setupPlanItem(isWPCom = false, isAutomatedTransfer = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
 
     private fun setupPlanItem(
-        planShortName: String = business,
+        planShortName: String = PLAN_NAME,
         canManageOptions: Boolean = true,
         isWpForTeams: Boolean = false,
         isWPCom: Boolean = true,
@@ -244,22 +205,16 @@ class SiteListItemBuilderTest {
     fun `returns jetpack item when site is jetpack, WPCom, can manage options and is not atomic`() {
         setupJetpackItem(isJetpackConnected = true, isWpCom = true, canManageOptions = true, isAtomic = false)
 
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(lookAndFeelHeader).isEqualTo(
-                ListItem(
-                        R.drawable.ic_cog_white_24dp,
-                        UiStringRes(R.string.my_site_btn_jetpack_settings),
-                        onClick = onClick
-                )
-        )
+        assertThat(lookAndFeelHeader).isEqualTo(JETPACK_ITEM)
     }
 
     @Test
     fun `does not return jetpack item when site is not jetpack`() {
         setupJetpackItem(isJetpackConnected = false)
 
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(lookAndFeelHeader).isNull()
     }
@@ -268,7 +223,7 @@ class SiteListItemBuilderTest {
     fun `does not return jetpack item when site is not WPCom`() {
         setupJetpackItem(isWpCom = false)
 
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(lookAndFeelHeader).isNull()
     }
@@ -277,7 +232,7 @@ class SiteListItemBuilderTest {
     fun `does not return jetpack item when site can manage options`() {
         setupJetpackItem(canManageOptions = false)
 
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(lookAndFeelHeader).isNull()
     }
@@ -286,7 +241,7 @@ class SiteListItemBuilderTest {
     fun `does not return jetpack item when site is atomic`() {
         setupJetpackItem(isAtomic = true)
 
-        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, onClick)
+        val lookAndFeelHeader = siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(lookAndFeelHeader).isNull()
     }
@@ -307,7 +262,7 @@ class SiteListItemBuilderTest {
     fun `pages item not built when not self-hosted admin and cannot edit pages`() {
         setupPagesItem(isSelfHostedAdmin = false, canEditPages = false)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -316,30 +271,18 @@ class SiteListItemBuilderTest {
     fun `pages item built when self-hosted admin`() {
         setupPagesItem(isSelfHostedAdmin = true)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_pages_white_24dp,
-                        UiStringRes(R.string.my_site_btn_site_pages),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PAGES_ITEM)
     }
 
     @Test
     fun `pages item built when can edit pages`() {
         setupPagesItem(canEditPages = true)
 
-        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPagesItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_pages_white_24dp,
-                        UiStringRes(R.string.my_site_btn_site_pages),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PAGES_ITEM)
     }
 
     private fun setupPagesItem(isSelfHostedAdmin: Boolean = false, canEditPages: Boolean = false) {
@@ -351,55 +294,34 @@ class SiteListItemBuilderTest {
     fun `admin item built when site is not WPCom`() {
         setupAdminItem(isWPCom = false)
 
-        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_my_sites_white_24dp,
-                        UiStringRes(R.string.my_site_btn_view_admin),
-                        secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(ADMIN_ITEM)
     }
 
     @Test
     fun `admin item built when site is WPCom and account created before 2015-10-07`() {
         setupAdminItem(isWPCom = true, accountDate = "2015-10-06T02:00:00+0200")
 
-        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_my_sites_white_24dp,
-                        UiStringRes(R.string.my_site_btn_view_admin),
-                        secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(ADMIN_ITEM)
     }
 
     @Test
     fun `admin item built when site is WPCom and account date is empty`() {
         setupAdminItem(isWPCom = true, accountDate = "")
 
-        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_my_sites_white_24dp,
-                        UiStringRes(R.string.my_site_btn_view_admin),
-                        secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(ADMIN_ITEM)
     }
 
     @Test
     fun `admin item not built when site is WPCom and account created after 2015-10-07`() {
         setupAdminItem(isWPCom = true, accountDate = "2015-10-08T02:00:00+0200")
 
-        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildAdminItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -415,22 +337,16 @@ class SiteListItemBuilderTest {
     fun `people item built if site can list users`() {
         whenever(siteModel.hasCapabilityListUsers).thenReturn(true)
 
-        val item = siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_user_white_24dp,
-                        UiStringRes(R.string.people),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PEOPLE_ITEM)
     }
 
     @Test
     fun `people item not built if site cannot list users`() {
         whenever(siteModel.hasCapabilityListUsers).thenReturn(false)
 
-        val item = siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPeopleItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -439,22 +355,16 @@ class SiteListItemBuilderTest {
     fun `plugin item built if feature available`() {
         whenever(pluginUtilsWrapper.isPluginFeatureAvailable(siteModel)).thenReturn(true)
 
-        val item = siteListItemBuilder.buildPluginItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPluginItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_plugins_white_24dp,
-                        UiStringRes(R.string.my_site_btn_plugins),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(PLUGINS_ITEM)
     }
 
     @Test
     fun `plugin item not built if feature not available`() {
         whenever(pluginUtilsWrapper.isPluginFeatureAvailable(siteModel)).thenReturn(false)
 
-        val item = siteListItemBuilder.buildPluginItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildPluginItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -463,22 +373,16 @@ class SiteListItemBuilderTest {
     fun `share item built if is accessed through WPCom REST`() {
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(true)
 
-        val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_share_white_24dp,
-                        UiStringRes(R.string.my_site_btn_sharing),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(SHARING_ITEM)
     }
 
     @Test
     fun `share item not built if is not accessed through WPCom REST`() {
         whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(false)
 
-        val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildShareItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -487,37 +391,25 @@ class SiteListItemBuilderTest {
     fun `settings item built if site can manage options`() {
         setupSiteSettings(canManageOptions = true)
 
-        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_cog_white_24dp,
-                        UiStringRes(R.string.my_site_btn_site_settings),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(SITE_SETTINGS_ITEM)
     }
 
     @Test
     fun `settings item built if site is not accessed through WPCom REST`() {
         setupSiteSettings(isAccessedViaWPComRest = false)
 
-        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(
-                ListItem(
-                        R.drawable.ic_cog_white_24dp,
-                        UiStringRes(R.string.my_site_btn_site_settings),
-                        onClick = onClick
-                )
-        )
+        assertThat(item).isEqualTo(SITE_SETTINGS_ITEM)
     }
 
     @Test
     fun `settings item not built if site is accessed through WPCom REST and cannot manage options`() {
         setupSiteSettings(canManageOptions = false, isAccessedViaWPComRest = true)
 
-        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, onClick)
+        val item = siteListItemBuilder.buildSiteSettingsItemIfAvailable(siteModel, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
