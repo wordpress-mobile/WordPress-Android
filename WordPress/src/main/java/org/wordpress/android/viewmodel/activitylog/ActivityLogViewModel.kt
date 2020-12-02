@@ -71,8 +71,8 @@ class ActivityLogViewModel @Inject constructor(
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
-    private val _showActivityTypeFilterDialog = SingleLiveEvent<RemoteId>()
-    val showActivityTypeFilterDialog: LiveData<RemoteId>
+    private val _showActivityTypeFilterDialog = SingleLiveEvent<ShowActivityTypePicker>()
+    val showActivityTypeFilterDialog: LiveData<ShowActivityTypePicker>
         get() = _showActivityTypeFilterDialog
 
     private val _showDateRangePicker = SingleLiveEvent<ShowDateRangePicker>()
@@ -105,7 +105,10 @@ class ActivityLogViewModel @Inject constructor(
 
     private var lastRewindActivityId: String? = null
     private var lastRewindStatus: Status? = null
+
     private var currentDateRangeFilter: DateRange? = null
+    private var currentActivityTypeFilter: List<Int> = listOf()
+
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
             lastRewindActivityId = it?.activityLogItem?.activityID
@@ -189,7 +192,13 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
-        _showActivityTypeFilterDialog.value = RemoteId(site.siteId)
+        // TODO malinjir pass initially selected activity types
+        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(RemoteId(site.siteId), currentActivityTypeFilter)
+    }
+
+    fun onActivityTypesSelected(activityTypeIds: List<Int>) {
+        currentActivityTypeFilter = activityTypeIds
+        // TODO malinjir: refetch/load data
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -336,6 +345,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
+    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<Int>)
 
     sealed class FiltersUiState(val visibility: Boolean) {
         object FiltersHidden : FiltersUiState(visibility = false)

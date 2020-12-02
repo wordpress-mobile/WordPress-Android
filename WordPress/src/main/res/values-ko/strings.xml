@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-10 01:29:13+0000
+Translation-Revision-Date: 2020-11-27 01:33:15+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">하나 또는 그 이상의 슬라이드는 지금 이야기가 GIF 파일을 지원하지 않기에 이야기에 추가할 수 없습니다. 정지한 이미지 또는 비디오 배경을 대신 선택하시기 바랍니다.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF 파일을 지원하지 않습니다</string>
+    <string name="dialog_edit_story_unrecoverable_message">사이트의 이 이야기에 대한 미디어를 찾을 수 없습니다.</string>
+    <string name="dialog_edit_story_unrecoverable_title">이야기를 편집할 수 없습니다</string>
+    <string name="dialog_edit_story_unavailable_message">이 이야기에 대한 미디어를 로드할 수 없습니다. 인터넷 연결을 확인하고 잠시 후 다시 시도하세요.</string>
+    <string name="dialog_edit_story_unavailable_title">이야기를 편집할 수 없습니다</string>
+    <string name="dialog_edit_story_limited_message">이 이야기는 다른 장치에서 편집하였고 특정 객체를 편집하는 기능을 제한할 수도 있습니다.</string>
+    <string name="dialog_edit_story_limited_title">제한적인 이야기 편집 중</string>
+    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 편집을 시도하세요.</string>
+    <string name="color_picker_label_background">배경</string>
+    <string name="color_picker_label_text">본문</string>
+    <string name="dialog_discard_story_ok_button_edit">폐기하기</string>
+    <string name="dialog_discard_story_message_edit">아무 변경사항도 저장하지 않을 것입니다.</string>
+    <string name="dialog_discard_story_title_edit">변경사항을 취소하시나요?</string>
+    <string name="label_done_button">완료</string>
+    <string name="label_next_button">다음</string>
+    <string name="delete_button_alt">삭제하기</string>
+    <string name="hpp_choose_error">디자인을 선택하는 중에 오류가 있습니다.</string>
+    <string name="hpp_retry_error">인터넷 연결을 확인하고 재시도하시기 바랍니다.</string>
+    <string name="hpp_error_subtitle">온라인으로 돌아오면 재시도를 누르세요.</string>
+    <string name="hpp_error_title">레이아웃은 오프라인에서 사용할 수 없습니다</string>
+    <string name="continue_site_credentials">상점 자격증명으로 계속하기</string>
+    <string name="login_find_your_connected_email">연결한 이메일 찾기</string>
+    <string name="reader_discover_no_posts_button_text">토픽 따르기</string>
+    <string name="reader_discover_no_posts_subtitle">폭 넓은 검색을 위해 더 많은 토픽을 따르도록 해보세요</string>
+    <string name="reader_discover_no_posts_title">최근 글이 없습니다</string>
+    <string name="reader_discover_empty_title">환영합니다!</string>
+    <string name="scan">검색하기</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>요한 브란트&lt;/b>가 글에 답했습니다</string>
     <string name="login_prologue_third_subtitle_two">오늘 사이트에서 &lt;b>50개의 좋아요&lt;/b>를 받았습니다</string>
     <string name="login_prologue_third_subtitle_one">&lt;b>메디슨 루이즈&lt;/b>가 글을 좋아합니다</string>
@@ -68,7 +96,7 @@ Language: ko_KR
     <string name="photo_picker_wordpress_media_library">워드프레스 미디어 라이브러리에서 선택하기</string>
     <string name="reader_label_toolbar_back">돌아가기</string>
     <string name="reader_discover_empty_button_text">시작하기</string>
-    <string name="reader_discover_empty_title">새 블로그를 발견할 수 있는 토픽을 팔로우하세요</string>
+    <string name="reader_discover_empty_subtitle">새 블로그를 발견할 수 있는 토픽을 팔로우하세요</string>
     <string name="reader_post_details_header_by_author_name">작성자</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">이 리퍼러는 스팸으로 표시할 수 없습니다.</string>
     <string name="stats_referrer_popup_unmark_as_spam">스팸 표시 해제하기</string>
@@ -98,7 +126,6 @@ Language: ko_KR
     <string name="comment_unable_to_show_error">이 댓글을 볼 수 없습니다</string>
     <string name="media_browse_for_items">항목 탐색하기</string>
     <string name="reader_menu_report_post">이 글 신고하기</string>
-    <string name="gutenberg_native_angle">각도</string>
     <string name="reader_welcome_banner">리더에 오신 것을 환영합니다. 손끝에서 백만의 블로그를 발견하세요.</string>
     <string name="error_media_xmlrcp_server_error">내부 서버 오류가 생겼습니다</string>
     <string name="error_media_xmlrpc_not_allowed">동작을 허용하지 않습니다</string>
@@ -147,7 +174,6 @@ Language: ko_KR
     <string name="dialog_discard_errored_page_message">이 슬라이드는 아직 저장하지 않았습니다. 이 슬라이드를 지웠다면, 편집한 내용을 읽게 될 것입니다.</string>
     <string name="dialog_discard_page_message">이 슬라이드는 스토리에서 지워질 것입니다.</string>
     <string name="dialog_discard_page_title">스토리 슬라이드를 지우시겠어요?</string>
-    <string name="menu_delete_page">슬라이드 지우기</string>
     <string name="label_text_color_button">본문 색상 변경하기</string>
     <string name="label_text_alignment_button">본문 정렬 변경하기</string>
     <string name="label_frame_errored">오류가 있습니다</string>
@@ -157,8 +183,6 @@ Language: ko_KR
     <string name="label_retry_icon">다시 시도하기</string>
     <string name="label_saved_icon">저장했습니다</string>
     <string name="label_close_button">닫기</string>
-    <string name="label_control_publish">다음</string>
-    <string name="label_done">완료했습니다</string>
     <string name="label_share_to">공유할 대상</string>
     <string name="label_snackbar_share">공유하기</string>
     <string name="label_snackbar_loop_frame_saved">사진에 저장했습니다</string>
@@ -169,7 +193,6 @@ Language: ko_KR
     <string name="label_control_flip_camera">뒤집기</string>
     <string name="sound_button_alt">소리</string>
     <string name="text_button_alt">문자</string>
-    <string name="more_button_alt">기타</string>
     <string name="stickers_button_alt">스티커</string>
     <string name="flash_button_alt">플래시</string>
     <string name="flip_button_alt">카메라 뒤집기</string>
@@ -530,7 +553,6 @@ Language: ko_KR
     <string name="login_site_credentials_magic_link_label">마지막 부분입니다! 젯팩에 연결된 이메일 주소 &lt;b>%1$s&lt;/b>만 확인하면 됩니다.</string>
     <string name="enter_site_credentials_instead">사이트 자격 증명으로 로그인합니다.</string>
     <string name="enter_credentials_for_site">%1$s 사이트 자격 증명으로 로그인</string>
-    <string name="send_verification_email">인증 이메일 보내기</string>
     <string name="my_site_bottom_sheet_add_page">사이트 페이지</string>
     <string name="reader_following_display_name">팔로우 중</string>
     <string name="reader_my_likes_display_name">좋아요</string>
@@ -556,7 +578,6 @@ Language: ko_KR
     <string name="gutenberg_native_take_a_photo_or_video">사진 찍기 또는 비디오 촬영</string>
     <string name="gutenberg_native_take_a_photo">사진 촬영</string>
     <string name="gutenberg_native_start_writing">글쓰기 시작…</string>
-    <string name="gutenberg_native_size">크기</string>
     <string name="gutenberg_native_sidebar_title_plugin">사이드바 제목 플러그인</string>
     <string name="gutenberg_native_show_section">섹션 표시</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s 블록. 이 블록에는 잘못된 내용이 있습니다.</string>

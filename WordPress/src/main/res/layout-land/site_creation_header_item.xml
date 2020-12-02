@@ -4,7 +4,6 @@
     xmlns:tools="http://schemas.android.com/tools"
     style="@style/SiteCreationHeaderLinearLayoutStyle"
     android:paddingStart="@dimen/site_creation_segments_content_padding_horizontal"
-    android:paddingTop="@dimen/site_creation_segments_content_padding_vertical"
     android:paddingEnd="@dimen/site_creation_segments_content_padding_horizontal"
     android:paddingBottom="@dimen/site_creation_segments_content_padding_vertical">
 
