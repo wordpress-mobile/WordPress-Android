@@ -165,15 +165,7 @@ class MySiteViewModel
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
-                STATS -> if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
-                    // If the user is not connected to WordPress.com, ask him to connect first.
-                    StartWPComLoginForJetpackStats
-                } else if (site.isWPCom || site.isJetpackInstalled && site
-                                .isJetpackConnected) {
-                    OpenStats(site)
-                } else {
-                    ConnectJetpackForStats(site)
-                }
+                STATS -> getStatsNavigationActionForSite(site)
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> OpenSite(site)
@@ -239,14 +231,7 @@ class MySiteViewModel
 
     private fun quickActionStatsClick(site: SiteModel) {
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
-        if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
-            // If the user is not connected to WordPress.com, ask him to connect first.
-            _onNavigation.value = Event(StartWPComLoginForJetpackStats)
-        } else if (site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected) {
-            _onNavigation.value = Event(OpenStats(site))
-        } else {
-            _onNavigation.value = Event(ConnectJetpackForStats(site))
-        }
+        _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
     private fun quickActionPagesClick(site: SiteModel) {
@@ -372,6 +357,17 @@ class MySiteViewModel
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = contextProvider.getContext().contentResolver.getType(uri)
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
+    }
+
+    private fun getStatsNavigationActionForSite(site: SiteModel): NavigationAction {
+        return if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
+            // If the user is not connected to WordPress.com, ask him to connect first.
+            StartWPComLoginForJetpackStats
+        } else if (site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected) {
+            OpenStats(site)
+        } else {
+            ConnectJetpackForStats(site)
+        }
     }
 
     fun onAvatarPressed() {
