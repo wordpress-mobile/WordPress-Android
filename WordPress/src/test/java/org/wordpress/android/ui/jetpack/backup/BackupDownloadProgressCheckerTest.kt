@@ -20,7 +20,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadProgressChecker
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)

@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
-import org.wordpress.android.ui.jetpack.rewind.RewindProgressChecker
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
