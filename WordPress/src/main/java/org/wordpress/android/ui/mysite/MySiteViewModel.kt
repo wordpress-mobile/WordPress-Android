@@ -136,10 +136,10 @@ class MySiteViewModel
             )
             siteItems.add(
                     QuickActionsBlock(
-                            ListItemInteraction.create(site) { statsClick(site, true) },
-                            ListItemInteraction.create(site) { pagesClick(site, true) },
-                            ListItemInteraction.create(site) { postsClick(site, true) },
-                            ListItemInteraction.create(site) { mediaClick(site, true) },
+                            ListItemInteraction.create { quickActionStatsClick(site) },
+                            ListItemInteraction.create { quickActionPagesClick(site) },
+                            ListItemInteraction.create { quickActionPostsClick(site) },
+                            ListItemInteraction.create { quickActionMediaClick(site) },
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
@@ -237,10 +237,8 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    private fun statsClick(site: SiteModel, isFromQuickActions: Boolean) {
-        if (isFromQuickActions) {
-            analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
-        }
+    private fun quickActionStatsClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
         if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
             // If the user is not connected to WordPress.com, ask him to connect first.
             _onNavigation.value = Event(StartWPComLoginForJetpackStats)
@@ -251,24 +249,18 @@ class MySiteViewModel
         }
     }
 
-    private fun pagesClick(site: SiteModel, isFromQuickActions: Boolean) {
-        if (isFromQuickActions) {
-            analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
-        }
+    private fun quickActionPagesClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
         _onNavigation.value = Event(OpenPages(site))
     }
 
-    private fun postsClick(site: SiteModel, isFromQuickActions: Boolean) {
-        if (isFromQuickActions) {
-            analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
-        }
+    private fun quickActionPostsClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
         _onNavigation.value = Event(OpenPosts(site))
     }
 
-    private fun mediaClick(site: SiteModel, isFromQuickActions: Boolean) {
-        if (isFromQuickActions) {
-            analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
-        }
+    private fun quickActionMediaClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
         _onNavigation.value = Event(OpenMedia(site))
     }
 
