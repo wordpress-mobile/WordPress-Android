@@ -1397,7 +1397,7 @@ open class WellSqlConfig : DefaultWellConfig {
                             "SOURCE_SITE_ID INTEGER," +
                             "TARGET_SITE_ID INTEGER," +
                             "FOREIGN KEY(SOURCE_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
-                            "FOREIGN KEY(TARGET_SITE_ID) REFERENCES XPostSites(BLOG_ID) ON DELETE CASCADE," +
+                            "FOREIGN KEY(TARGET_SITE_ID) REFERENCES XPostSites(BLOG_ID)," +
                             "UNIQUE (SOURCE_SITE_ID, TARGET_SITE_ID) ON CONFLICT IGNORE)")
                 }
             }
