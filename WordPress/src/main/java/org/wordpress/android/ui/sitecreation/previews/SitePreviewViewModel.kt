@@ -91,9 +91,6 @@ class SitePreviewViewModel @Inject constructor(
     private val _startCreateSiteService: SingleLiveEvent<SitePreviewStartServiceData> = SingleLiveEvent()
     val startCreateSiteService: LiveData<SitePreviewStartServiceData> = _startCreateSiteService
 
-    private val _hideGetStartedBar: SingleLiveEvent<Unit> = SingleLiveEvent()
-    val hideGetStartedBar: LiveData<Unit> = _hideGetStartedBar
-
     private val _onHelpClicked = SingleLiveEvent<Unit>()
     val onHelpClicked: LiveData<Unit> = _onHelpClicked
 
@@ -252,7 +249,6 @@ class SitePreviewViewModel @Inject constructor(
     }
 
     fun onUrlLoaded() {
-        _hideGetStartedBar.call()
         if (!webviewFullyLoadedTracked) {
             webviewFullyLoadedTracked = true
             tracker.trackPreviewWebviewFullyLoaded()
