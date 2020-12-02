@@ -33,7 +33,7 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-        mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(mWebView, R.drawable.media_image_placeholder) {
+        mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(mWebView, R.drawable.media_movieclip) {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress == 100) {
                     mProgress.setVisibility(View.GONE);

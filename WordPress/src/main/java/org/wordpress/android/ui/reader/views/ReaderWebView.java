@@ -321,7 +321,7 @@ public class ReaderWebView extends WPWebView {
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
-            super(readerWebView, R.drawable.media_image_placeholder);
+            super(readerWebView, R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }
