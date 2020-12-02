@@ -335,7 +335,7 @@ class ImprovedMySiteFragment : Fragment(),
         }
     }
 
-    override fun onSuccessfulInput(input: String?, callbackId: Int) {
+    override fun onSuccessfulInput(input: String, callbackId: Int) {
         viewModel.onSiteNameChosen(input)
     }
 

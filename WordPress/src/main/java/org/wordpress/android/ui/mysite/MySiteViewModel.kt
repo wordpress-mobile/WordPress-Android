@@ -157,12 +157,18 @@ class MySiteViewModel
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
-    fun onSiteNameChosen(input: String?) {
-        TODO("Not yet implemented")
+    fun onSiteNameChosen(input: String) {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            _onSnackbarMessage.postValue(
+                    Event(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
+            )
+        } else {
+            selectedSiteRepository.updateTitle(input)
+        }
     }
 
     fun onSiteNameChooserDismissed() {
-        TODO("Not yet implemented")
+        // do nothing
     }
 
     fun onDialogInteraction(interaction: DialogInteraction) {

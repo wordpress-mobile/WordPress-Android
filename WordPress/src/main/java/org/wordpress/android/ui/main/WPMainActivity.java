@@ -1058,9 +1058,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         AppPrefs.setLastSkippedQuickStartTask(null);
                         mPrivateAtomicCookie.clearCookie();
                     }
+                }
 
-                    setSite(data);
+                setSite(data);
 
+                if (getMySiteFragment() != null) {
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
