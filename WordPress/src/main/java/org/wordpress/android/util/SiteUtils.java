@@ -250,7 +250,7 @@ public class SiteUtils {
                 site.isPrivateWPComAtomic());
     }
 
-    public static ImageType getSiteIconType(boolean isP2, BlavatarShape shape) {
+    public static ImageType getSiteImageType(boolean isP2, BlavatarShape shape) {
         ImageType type = ImageType.BLAVATAR;
         if (isP2) {
             switch (shape) {

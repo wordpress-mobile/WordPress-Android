@@ -26,7 +26,6 @@ import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
 
@@ -158,7 +157,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         mImageManager.loadIntoCircle(blavatarImg,
-                SiteUtils.getSiteIconType(blogInfo.isWpForTeams, BlavatarShape.CIRCULAR),
+                SiteUtils.getSiteImageType(blogInfo.isWpForTeams, BlavatarShape.CIRCULAR),
                 PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
 
         txtFollowCount.setText(String.format(

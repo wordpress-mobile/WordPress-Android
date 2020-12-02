@@ -235,7 +235,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
                 isAuthorAvatarVisible = isP2Post,
-                blavatarType = SiteUtils.getSiteIconType(isP2Post, CIRCULAR),
+                blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
                 authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                         post.postAvatar,
                         R.dimen.avatar_sz_medium

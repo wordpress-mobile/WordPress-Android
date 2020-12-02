@@ -779,7 +779,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
             mHomeURL = SiteUtils.getHomeURLOrHostName(siteModel);
             mBlavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
-            mBlavatarType = SiteUtils.getSiteIconType(
+            mBlavatarType = SiteUtils.getSiteImageType(
                     siteModel.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
             mIsHidden = !siteModel.isVisible();
         }

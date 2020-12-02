@@ -1008,7 +1008,7 @@ class MySiteFragment : Fragment(),
         my_site_configuration_header.visibility = settingsVisibility
         imageManager.load(
                 my_site_blavatar,
-                SiteUtils.getSiteIconType(site.isWpForTeamsSite, SQUARE),
+                SiteUtils.getSiteImageType(site.isWpForTeamsSite, SQUARE),
                 SiteUtils.getSiteIconUrl(site, blavatarSz)
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
