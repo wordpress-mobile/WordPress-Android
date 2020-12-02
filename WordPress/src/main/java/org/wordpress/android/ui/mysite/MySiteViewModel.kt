@@ -62,7 +62,8 @@ class MySiteViewModel
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val siteIconUploadHandler: SiteIconUploadHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -76,6 +77,7 @@ class MySiteViewModel
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
+    val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
@@ -153,7 +155,8 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    fun refreshAccountAvatarUrl() {
+    fun refresh() {
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
@@ -209,6 +212,10 @@ class MySiteViewModel
         }
     }
 
+    fun handleSelectedSiteIcon(mediaId: Long) {
+        selectedSiteRepository.updateSiteIconMediaId(mediaId.toInt(), true)
+    }
+
     fun handleCropResult(croppedUri: Uri?, success: Boolean) {
         if (success && croppedUri != null) {
             analyticsTrackerWrapper.track(MY_SITE_ICON_CROPPED)
@@ -256,6 +263,11 @@ class MySiteViewModel
 
     fun onAvatarPressed() {
         _onNavigation.value = Event(OpenMeScreen)
+    }
+
+    override fun onCleared() {
+        siteIconUploadHandler.clear()
+        super.onCleared()
     }
 
     data class UiModel(
