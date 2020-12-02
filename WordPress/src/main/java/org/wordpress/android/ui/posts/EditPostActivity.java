@@ -2307,7 +2307,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled(),
+                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
