@@ -26,7 +26,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
@@ -234,7 +233,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        viewModel.refresh((activity as? WPMainActivity)?.selectedSite)
+        viewModel.refresh()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {

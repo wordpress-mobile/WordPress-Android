@@ -152,8 +152,7 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    fun refresh(selectedSite: SiteModel?) {
-        selectedSiteRepository.updateSite(selectedSite)
+    fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
