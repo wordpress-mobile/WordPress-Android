@@ -57,7 +57,7 @@ class SiteItemsBuilder
                         secondaryIcon = drawable.ic_external_white_24dp,
                         onClick = onClick
                 ),
-                siteListItemBuilder.buildAdminItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildAdminItemIfAvailable(site, onClick)
         )
     }
 }
