@@ -34,6 +34,7 @@ import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.helpers.ToastMessageHolder
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -111,6 +112,9 @@ class PostActionHandler(
                     }
                     else -> trashPost(post)
                 }
+            }
+            BUTTON_COPY -> {
+                // TODO
             }
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
