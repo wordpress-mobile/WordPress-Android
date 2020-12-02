@@ -11,10 +11,15 @@ sealed class MySiteItem(val type: Type) {
     data class SiteInfoBlock(
         val title: String,
         val url: String,
-        val iconUrl: String? = null,
+        val iconState: IconState,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteItem(SITE_INFO_BLOCK)
+    ) : MySiteItem(SITE_INFO_BLOCK) {
+        sealed class IconState {
+            object Progress : IconState()
+            data class Visible(val url: String? = null) : IconState()
+        }
+    }
 }

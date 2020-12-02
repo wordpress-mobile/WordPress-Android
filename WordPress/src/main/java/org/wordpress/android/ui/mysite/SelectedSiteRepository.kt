@@ -22,21 +22,23 @@ class SelectedSiteRepository
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
     fun updateSite(selectedSite: SiteModel?) {
         if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
-            _showSiteIconProgressBar.value = false
+            showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
         siteSettings?.let {
-            _showSiteIconProgressBar.postValue(showProgressBar)
+            showSiteIconProgressBar(showProgressBar)
             it.setSiteIconMediaId(mediaId)
             it.saveSettings()
         }
     }
 
     fun showSiteIconProgressBar(progressBarVisible: Boolean) {
-        _showSiteIconProgressBar.postValue(progressBarVisible)
+        if (_showSiteIconProgressBar.value != progressBarVisible) {
+            _showSiteIconProgressBar.postValue(progressBarVisible)
+        }
     }
 
     fun updateTitle(title: String) {
@@ -66,7 +68,7 @@ class SelectedSiteRepository
         }
         if (siteSettings == null) {
             fun onError(error: Exception?) {
-                _showSiteIconProgressBar.postValue(false)
+                showSiteIconProgressBar(false)
             }
             siteSettings = siteSettingsInterfaceFactory.build(
                     selectedSite,
@@ -81,5 +83,9 @@ class SelectedSiteRepository
 
             siteSettings?.init(true)
         }
+    }
+
+    fun isSiteIconUploadInProgress(): Boolean {
+        return _showSiteIconProgressBar.value == true
     }
 }

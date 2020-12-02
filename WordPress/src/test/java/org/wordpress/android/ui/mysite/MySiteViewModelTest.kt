@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
@@ -17,6 +18,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
@@ -31,14 +33,24 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
+    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -51,16 +63,29 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteName = "Site"
     private lateinit var site: SiteModel
     private lateinit var siteInfoBlock: SiteInfoBlock
+    private val onSiteChange = MutableLiveData<SiteModel>()
+    private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
+        onSiteChange.value = null
+        onShowSiteIconProgressBar.value = null
+        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
+        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         viewModel = MySiteViewModel(
-                TEST_DISPATCHER,
                 networkUtilsWrapper,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 siteInfoBlockBuilder,
-                accountStore
+                accountStore,
+                selectedSiteRepository,
+                wpMediaUtilsWrapper,
+                mediaUtilsWrapper,
+                fluxCUtilsWrapper,
+                contextProvider,
+                siteIconUploadHandler
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -97,7 +122,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         siteInfoBlock = SiteInfoBlock(
                 siteName,
                 siteUrl,
-                siteIcon,
+                IconState.Visible(siteIcon),
                 null,
                 mock(),
                 mock(),
@@ -111,7 +136,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is empty with no selected site`() {
-        viewModel.updateSite(null)
+        onSiteChange.postValue(null)
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().items).isEmpty()
@@ -119,11 +144,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is contains header of selected site`() {
-        viewModel.updateSite(site)
+        onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().items).hasSize(1)
-        assertThat(uiModels.last().items.first() as SiteInfoBlock).isEqualTo(uiModels.last().items[0] as SiteInfoBlock)
+        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
 
     @Test
@@ -146,8 +171,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(
-                UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(
+                        UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint)
+                )
         )
     }
 
@@ -275,7 +302,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
@@ -285,8 +312,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is the same`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(3)
     }
@@ -295,11 +322,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is empty`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         setupAccount(buildAccountWithAvatarUrl(null))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()
@@ -309,7 +336,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if account is null`() {
         setupAccount(null)
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()
@@ -339,7 +366,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             siteInfoBlock
         }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())
 
-        viewModel.updateSite(site)
+        onSiteChange.postValue(site)
 
         assertThat(clickAction).isNotNull()
         clickAction!!.invoke(site)
