@@ -41,25 +41,19 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJ
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
@@ -439,7 +433,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onStatsClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenStatsScreen(site))
+        assertThat(navigationActions).containsOnly(OpenStats(site))
     }
 
     @Test
@@ -453,7 +447,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onStatsClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenStatsScreen(site))
+        assertThat(navigationActions).containsOnly(OpenStats(site))
     }
 
     @Test
@@ -467,7 +461,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onStatsClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenConnectJetpackForStatsScreen(site))
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
     }
 
     @Test
@@ -481,7 +475,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onStatsClick?.click()
 
-        assertThat(navigationActions).containsOnly(StartLoginForJetpackStats)
+        assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
     }
 
     @Test
@@ -495,7 +489,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onStatsClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenConnectJetpackForStatsScreen(site))
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
     }
 
     @Test
@@ -504,7 +498,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenPagesScreen(site))
+        assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
     @Test
@@ -513,7 +507,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onPostsClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenPostsScreen(site))
+        assertThat(navigationActions).containsOnly(OpenPosts(site))
     }
 
     @Test
@@ -522,7 +516,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         findQuickActionsBlock()?.onMediaClick?.click()
 
-        assertThat(navigationActions).containsOnly(OpenMediaScreen(site))
+        assertThat(navigationActions).containsOnly(OpenMedia(site))
     }
 
     @Test
@@ -531,7 +525,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         viewModel.handleSuccessfulLoginResult()
 
-        assertThat(navigationActions).containsOnly(OpenStatsScreen(site))
+        assertThat(navigationActions).containsOnly(OpenStats(site))
     }
 
     @Test

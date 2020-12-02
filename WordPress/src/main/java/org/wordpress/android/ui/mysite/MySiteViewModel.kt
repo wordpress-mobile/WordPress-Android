@@ -43,29 +43,23 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJ
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
@@ -249,11 +243,11 @@ class MySiteViewModel
         }
         if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
             // If the user is not connected to WordPress.com, ask him to connect first.
-            _onNavigation.value = Event(StartLoginForJetpackStats)
+            _onNavigation.value = Event(StartWPComLoginForJetpackStats)
         } else if (site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected) {
-            _onNavigation.value = Event(OpenStatsScreen(site))
+            _onNavigation.value = Event(OpenStats(site))
         } else {
-            _onNavigation.value = Event(OpenConnectJetpackForStatsScreen(site))
+            _onNavigation.value = Event(ConnectJetpackForStats(site))
         }
     }
 
@@ -261,21 +255,21 @@ class MySiteViewModel
         if (isFromQuickActions) {
             analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
         }
-        _onNavigation.value = Event(OpenPagesScreen(site))
+        _onNavigation.value = Event(OpenPages(site))
     }
 
     private fun postsClick(site: SiteModel, isFromQuickActions: Boolean) {
         if (isFromQuickActions) {
             analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
         }
-        _onNavigation.value = Event(OpenPostsScreen(site))
+        _onNavigation.value = Event(OpenPosts(site))
     }
 
     private fun mediaClick(site: SiteModel, isFromQuickActions: Boolean) {
         if (isFromQuickActions) {
             analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
         }
-        _onNavigation.value = Event(OpenMediaScreen(site))
+        _onNavigation.value = Event(OpenMedia(site))
     }
 
     fun refresh() {
@@ -356,7 +350,7 @@ class MySiteViewModel
     }
 
     fun handleSuccessfulLoginResult() {
-        selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStatsScreen(site)) }
+        selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStats(site)) }
     }
 
     private fun startSiteIconUpload(filePath: String) {
@@ -434,12 +428,6 @@ class MySiteViewModel
         data class OpenStats(val site: SiteModel) : NavigationAction()
         data class ConnectJetpackForStats(val site: SiteModel) : NavigationAction()
         data class OpenJetpackSettings(val site: SiteModel) : NavigationAction()
-        data class OpenStatsScreen(val site: SiteModel) : NavigationAction()
-        data class OpenConnectJetpackForStatsScreen(val site: SiteModel) : NavigationAction()
-        object StartLoginForJetpackStats : NavigationAction()
-        data class OpenPagesScreen(val site: SiteModel) : NavigationAction()
-        data class OpenPostsScreen(val site: SiteModel) : NavigationAction()
-        data class OpenMediaScreen(val site: SiteModel) : NavigationAction()
     }
 
     companion object {

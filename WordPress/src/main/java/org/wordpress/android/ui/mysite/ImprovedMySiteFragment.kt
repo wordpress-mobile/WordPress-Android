@@ -23,39 +23,31 @@ import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
-import org.wordpress.android.login.LoginMode.JETPACK_STATS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -239,30 +231,8 @@ class ImprovedMySiteFragment : Fragment(),
                     )
                     is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
                     is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                    StartWPComLoginForJetpackStats -> {
-                        val loginIntent = Intent(activity, LoginActivity::class.java)
-                        JETPACK_STATS.putInto(loginIntent)
-                        startActivityForResult(loginIntent, RequestCodes.DO_LOGIN)
-                    }
+                    StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
                     is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
-                    is OpenStatsScreen -> {
-                        ActivityLauncher.viewBlogStats(activity, action.site)
-                    }
-                    is OpenConnectJetpackForStatsScreen -> {
-                        ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                    }
-                    is StartLoginForJetpackStats -> {
-                        ActivityLauncher.loginForJetpackStats(this)
-                    }
-                    is OpenPagesScreen -> {
-                        ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-                    }
-                    is OpenPostsScreen -> {
-                        ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
-                    }
-                    is OpenMediaScreen -> {
-                        ActivityLauncher.viewCurrentBlogMedia(requireActivity(), action.site)
-                    }
                 }
             }
         })
