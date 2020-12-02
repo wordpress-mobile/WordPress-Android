@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.views.uistates
 
 import androidx.annotation.AttrRes
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.util.image.ImageType
 
 data class ReaderBlogSectionUiState(
     val postId: Long,
@@ -12,6 +13,7 @@ data class ReaderBlogSectionUiState(
     val avatarOrBlavatarUrl: String?,
     val authorAvatarUrl: String?,
     val isAuthorAvatarVisible: Boolean,
+    val blavatarType: ImageType,
     val blogSectionClickData: ReaderBlogSectionClickData?
 ) {
     data class ReaderBlogSectionClickData(
