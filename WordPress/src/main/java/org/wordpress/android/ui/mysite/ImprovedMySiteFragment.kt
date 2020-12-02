@@ -19,28 +19,45 @@ import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
-import kotlinx.android.synthetic.main.media_picker_fragment.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
+import org.wordpress.android.login.LoginMode.JETPACK_STATS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.main.WPMainActivity
+import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
-import org.wordpress.android.ui.mysite.SiteIconUploadViewModel.ItemUploadedModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -49,6 +66,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
@@ -67,20 +85,18 @@ class ImprovedMySiteFragment : Fragment(),
         TextInputDialogFragment.Callback {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var snackbarSequencer: SnackbarSequencer
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
-    @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
-    private lateinit var siteIconUploadViewModel: SiteIconUploadViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
         viewModel = ViewModelProviders.of(this, viewModelFactory).get(MySiteViewModel::class.java)
-        siteIconUploadViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteIconUploadViewModel::class.java)
         dialogViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
     }
@@ -182,14 +198,53 @@ class ImprovedMySiteFragment : Fragment(),
                     }
                     is OpenMediaPicker -> {
                         mediaPickerLauncher.showSiteIconPicker(
-                                requireActivity(),
-                                action.site,
-                                RequestCodes.SITE_ICON_PICKER
+                                this,
+                                action.site
                         )
                     }
                     is OpenCropActivity -> {
                         startCropActivity(action.imageUri)
                     }
+                    is OpenActivityLog ->
+                        ActivityLauncher.viewActivityLogList(
+                                activity,
+                                action.site
+                        )
+                    is OpenScan -> TODO()
+                    is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
+                    is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
+                    is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
+                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(
+                            activity,
+                            action.site
+                    )
+                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(
+                            activity,
+                            action.site
+                    )
+                    is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
+                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(
+                            activity,
+                            action.site
+                    )
+                    is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
+                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(
+                            activity,
+                            action.site
+                    )
+                    is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
+                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(
+                            activity,
+                            action.site
+                    )
+                    is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
+                    is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
+                    StartWPComLoginForJetpackStats -> {
+                        val loginIntent = Intent(activity, LoginActivity::class.java)
+                        JETPACK_STATS.putInto(loginIntent)
+                        startActivityForResult(loginIntent, RequestCodes.DO_LOGIN)
+                    }
+                    is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
                     is OpenStatsScreen -> {
                         ActivityLauncher.viewBlogStats(activity, action.site)
                     }
@@ -224,7 +279,7 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
-        siteIconUploadViewModel.onUploadedItem.observe(viewLifecycleOwner, {
+        viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
                 when (itemUploadedModel) {
                     is ItemUploadedModel.PostUploaded -> {
@@ -263,9 +318,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     override fun onResume() {
         super.onResume()
-        selectedSiteRepository.updateSite((activity as? WPMainActivity)?.selectedSite)
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -301,8 +354,8 @@ class ImprovedMySiteFragment : Fragment(),
                 }
                 when {
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_ID) -> {
-                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0).toInt()
-                        selectedSiteRepository.updateSiteIconMediaId(mediaId, true)
+                        val mediaId = data.getLongExtra(MediaPickerConstants.EXTRA_MEDIA_ID, 0)
+                        viewModel.handleSelectedSiteIcon(mediaId)
                     }
                     data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS) -> {
                         val mediaUriStringsArray = data.getStringArrayExtra(
@@ -338,7 +391,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     private fun loadData(items: List<MySiteItem>) {
         if (recycler_view.adapter == null) {
-            recycler_view.adapter = MySiteAdapter(imageManager)
+            recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
         }
         val adapter = recycler_view.adapter as MySiteAdapter
         adapter.loadData(items)
@@ -348,7 +401,7 @@ class ImprovedMySiteFragment : Fragment(),
         snackbarSequencer.enqueue(
                 SnackbarItem(
                         Info(
-                                view = coordinator,
+                                view = coordinator_layout,
                                 textRes = holder.message,
                                 duration = Snackbar.LENGTH_LONG
                         ),

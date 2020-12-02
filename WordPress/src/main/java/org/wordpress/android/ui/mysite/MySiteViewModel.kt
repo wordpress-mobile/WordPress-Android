@@ -22,18 +22,51 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
+import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.ListItemAction.PEOPLE
+import org.wordpress.android.ui.mysite.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenConnectJetpackForStatsScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPagesScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPostsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStatsScreen
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartLoginForJetpackStats
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -68,12 +101,14 @@ class MySiteViewModel
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val siteInfoBlockBuilder: SiteInfoBlockBuilder,
+    private val siteItemsBuilder: SiteItemsBuilder,
     private val accountStore: AccountStore,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val wpMediaUtilsWrapper: WPMediaUtilsWrapper,
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
-    private val contextProvider: ContextProvider
+    private val contextProvider: ContextProvider,
+    private val siteIconUploadHandler: SiteIconUploadHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -87,32 +122,71 @@ class MySiteViewModel
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
+    val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
             selectedSiteRepository.showSiteIconProgressBar.distinct()
     ) { currentAvatarUrl, site, showSiteIconProgressBar ->
         val items = if (site != null) {
-            val siteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
-                    site,
-                    showSiteIconProgressBar ?: false,
-                    this::titleClick,
-                    this::iconClick,
-                    this::urlClick,
-                    this::switchSiteClick
+            val siteItems = mutableListOf<MySiteItem>()
+            siteItems.add(
+                    siteInfoBlockBuilder.buildSiteInfoBlock(
+                            site,
+                            showSiteIconProgressBar ?: false,
+                            this::titleClick,
+                            this::iconClick,
+                            this::urlClick,
+                            this::switchSiteClick
+                    )
             )
-            val quickActionsBlock = QuickActionsBlock(
-                    ListItemInteraction.create(site) { statsClick(site, true) },
-                    ListItemInteraction.create(site) { pagesClick(site, true) },
-                    ListItemInteraction.create(site) { postsClick(site, true) },
-                    ListItemInteraction.create(site) { mediaClick(site, true) },
-                    site.isSelfHostedAdmin || site.hasCapabilityEditPages
+            siteItems.add(
+                    QuickActionsBlock(
+                            ListItemInteraction.create(site) { statsClick(site, true) },
+                            ListItemInteraction.create(site) { pagesClick(site, true) },
+                            ListItemInteraction.create(site) { postsClick(site, true) },
+                            ListItemInteraction.create(site) { mediaClick(site, true) },
+                            site.isSelfHostedAdmin || site.hasCapabilityEditPages
+                    )
             )
-            listOf(siteInfoBlock, quickActionsBlock)
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
+            siteItems
         } else {
             listOf()
         }
         UiModel(currentAvatarUrl.orEmpty(), items)
+    }
+
+    private fun onItemClick(action: ListItemAction) {
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            val navigationAction = when (action) {
+                ACTIVITY_LOG -> OpenActivityLog(site)
+                SCAN -> OpenScan(site)
+                PLAN -> OpenPlan(site)
+                POSTS -> OpenPosts(site)
+                PAGES -> OpenPages(site)
+                ADMIN -> OpenAdmin(site)
+                PEOPLE -> OpenPeople(site)
+                SHARING -> OpenSharing(site)
+                SITE_SETTINGS -> OpenSiteSettings(site)
+                THEMES -> OpenThemes(site)
+                PLUGINS -> OpenPlugins(site)
+                STATS -> if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
+                    // If the user is not connected to WordPress.com, ask him to connect first.
+                    StartWPComLoginForJetpackStats
+                } else if (site.isWPCom || site.isJetpackInstalled && site
+                                .isJetpackConnected) {
+                    OpenStats(site)
+                } else {
+                    ConnectJetpackForStats(site)
+                }
+                MEDIA -> OpenMedia(site)
+                COMMENTS -> OpenComments(site)
+                VIEW_SITE -> OpenSite(site)
+                JETPACK_SETTINGS -> OpenJetpackSettings(site)
+            }
+            _onNavigation.postValue(Event(navigationAction))
+        } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -204,7 +278,8 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMediaScreen(site))
     }
 
-    fun refreshAccountAvatarUrl() {
+    fun refresh() {
+        selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
     }
 
@@ -260,6 +335,10 @@ class MySiteViewModel
         }
     }
 
+    fun handleSelectedSiteIcon(mediaId: Long) {
+        selectedSiteRepository.updateSiteIconMediaId(mediaId.toInt(), true)
+    }
+
     fun handleCropResult(croppedUri: Uri?, success: Boolean) {
         if (success && croppedUri != null) {
             analyticsTrackerWrapper.track(MY_SITE_ICON_CROPPED)
@@ -313,6 +392,11 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMeScreen)
     }
 
+    override fun onCleared() {
+        siteIconUploadHandler.clear()
+        super.onCleared()
+    }
+
     data class UiModel(
         val accountAvatarUrl: String,
         val items: List<MySiteItem>
@@ -333,6 +417,23 @@ class MySiteViewModel
         data class OpenSitePicker(val site: SiteModel) : NavigationAction()
         data class OpenMediaPicker(val site: SiteModel) : NavigationAction()
         data class OpenCropActivity(val imageUri: UriWrapper) : NavigationAction()
+        data class OpenActivityLog(val site: SiteModel) : NavigationAction()
+        data class OpenScan(val site: SiteModel) : NavigationAction()
+        data class OpenPlan(val site: SiteModel) : NavigationAction()
+        data class OpenPosts(val site: SiteModel) : NavigationAction()
+        data class OpenPages(val site: SiteModel) : NavigationAction()
+        data class OpenAdmin(val site: SiteModel) : NavigationAction()
+        data class OpenPeople(val site: SiteModel) : NavigationAction()
+        data class OpenSharing(val site: SiteModel) : NavigationAction()
+        data class OpenSiteSettings(val site: SiteModel) : NavigationAction()
+        data class OpenThemes(val site: SiteModel) : NavigationAction()
+        data class OpenPlugins(val site: SiteModel) : NavigationAction()
+        data class OpenMedia(val site: SiteModel) : NavigationAction()
+        data class OpenComments(val site: SiteModel) : NavigationAction()
+        object StartWPComLoginForJetpackStats : NavigationAction()
+        data class OpenStats(val site: SiteModel) : NavigationAction()
+        data class ConnectJetpackForStats(val site: SiteModel) : NavigationAction()
+        data class OpenJetpackSettings(val site: SiteModel) : NavigationAction()
         data class OpenStatsScreen(val site: SiteModel) : NavigationAction()
         data class OpenConnectJetpackForStatsScreen(val site: SiteModel) : NavigationAction()
         object StartLoginForJetpackStats : NavigationAction()

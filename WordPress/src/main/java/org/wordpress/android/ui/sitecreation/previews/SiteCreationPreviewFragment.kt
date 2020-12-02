@@ -80,6 +80,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
     override fun onPause() {
         super.onPause()
         serviceEventConnection?.disconnect(context, viewModel)
@@ -121,6 +126,7 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
                 sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
+                sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
                 sitePreviewWebView.loadUrl(url)
             }
         })
@@ -152,8 +158,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
         })
-
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {
@@ -290,6 +294,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onActivityCreated(savedInstanceState)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
     }
 
     override fun onWebViewPageLoaded() {

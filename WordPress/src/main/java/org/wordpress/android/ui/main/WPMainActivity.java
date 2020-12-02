@@ -1085,7 +1085,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 break;
             case RequestCodes.STORIES_PHOTO_PICKER:
             case RequestCodes.PHOTO_PICKER:
-            case RequestCodes.SITE_ICON_PICKER:
             case RequestCodes.DOMAIN_REGISTRATION:
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 break;

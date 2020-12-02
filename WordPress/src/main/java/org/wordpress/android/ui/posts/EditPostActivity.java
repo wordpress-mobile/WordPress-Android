@@ -2721,10 +2721,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
-                    uris = WPMediaUtils.retrieveMediaUris(data);
-                    mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
-                    for (Uri item : uris) {
-                        mEditorMedia.addNewMediaToEditorAsync(item, false);
+                    if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
+                        if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
+                            List<Uri> uriResults = convertStringArrayIntoUrisList(
+                                    Objects.requireNonNull(
+                                            data.getStringArrayExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)));
+                            for (Uri uri : uriResults) {
+                                mEditorMedia.addNewMediaToEditorAsync(uri, false);
+                            }
+                        }
+                    } else {
+                        uris = WPMediaUtils.retrieveMediaUris(data);
+                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+                        for (Uri item : uris) {
+                            mEditorMedia.addNewMediaToEditorAsync(item, false);
+                        }
                     }
                     break;
             }
@@ -2926,6 +2937,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    @Override public void onAddLibraryFileClicked(boolean allowMultipleSelection) {
+        mEditorPhotoPicker.setAllowMultipleSelection(allowMultipleSelection);
+        mMediaPickerLauncher
+                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -2976,7 +2993,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
-        WPMediaUtils.launchFileLibrary(this, allowMultipleSelection);
+        mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
     }
 
     @Override
@@ -3578,9 +3595,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void showJetpackSettings() {
-        Intent intent = new Intent(this, JetpackSecuritySettingsActivity.class);
-        intent.putExtra(WordPress.SITE, mSite);
-        startActivityForResult(intent, JetpackSecuritySettingsActivity.JETPACK_SECURITY_SETTINGS_REQUEST_CODE);
+        ActivityLauncher.viewJetpackSecuritySettingsForResult(this, mSite);
     }
 
     @Override

@@ -4,6 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
@@ -13,6 +14,7 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
 import org.junit.Assert.assertTrue
 import org.junit.Before
@@ -22,6 +24,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -29,8 +32,8 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.ui.activitylog.RewindStatusService
-import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
@@ -69,7 +72,8 @@ class ActivityLogViewModelTest {
             Date(),
             true,
             null,
-            null)
+            null
+    )
 
     val event = ActivityLogListItem.Event(
             "activityId",
@@ -94,7 +98,7 @@ class ActivityLogViewModelTest {
             null,
             Date(),
             null
-            )
+    )
 
     @Before
     fun setUp() = runBlocking<Unit> {
@@ -119,7 +123,7 @@ class ActivityLogViewModelTest {
         whenever(store.getRewindStatusForSite(site)).thenReturn(rewindStatusModel)
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
-        whenever(store.fetchActivities(any())).thenReturn(mock())
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
     }
 
     @Test
@@ -150,7 +154,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -165,11 +169,12 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedLoadsMoreDataIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
         reset(store)
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -179,7 +184,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() = runBlocking {
         val canLoadMore = false
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -195,7 +200,7 @@ class ActivityLogViewModelTest {
     fun onDataFetchedShowsFooterIfCannotLoadMoreAndIsFreeSite() = runBlocking {
         val canLoadMore = false
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -230,7 +235,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = runBlocking<Unit> {
         val canLoadMore = false
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -238,14 +243,14 @@ class ActivityLogViewModelTest {
 
         viewModel.onScrolledToBottom()
 
-        verify(store, never()).fetchActivities(any())
+        verify(store, never()).fetchActivities(anyOrNull())
     }
 
     @Test
     fun onDataFetchedGoesToTopWhenSomeRowsAffected() = runBlocking {
         assertTrue(moveToTopEvents.isEmpty())
 
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -256,7 +261,7 @@ class ActivityLogViewModelTest {
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() = runBlocking<Unit> {
         val canLoadMore = true
 
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -266,7 +271,7 @@ class ActivityLogViewModelTest {
     @Test
     fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
         viewModel.start(site)
 
@@ -316,10 +321,11 @@ class ActivityLogViewModelTest {
 
     @Test
     fun loadsNextPageOnScrollToBottom() = runBlocking {
-        whenever(store.fetchActivities(any())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
         viewModel.start(site)
         reset(store)
+        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -332,7 +338,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(false, viewModel.filtersVisibility.value)
+        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test
@@ -341,14 +347,31 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(true, viewModel.filtersVisibility.value)
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test
     fun onActivityTypeFilterClickShowsActivityTypeFilter() {
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(Unit, viewModel.showActivityTypeFilterDialog.value)
+        assertNotNull(viewModel.showActivityTypeFilterDialog.value)
+    }
+
+    @Test
+    fun onActivityTypeFilterClickRemoteSiteIdIsPassed() {
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(RemoteId(site.siteId), viewModel.showActivityTypeFilterDialog.value!!.siteId)
+    }
+
+    @Test
+    fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
+        val selectedItems = listOf(1, 4)
+        viewModel.onActivityTypesSelected(selectedItems)
+
+        viewModel.onActivityTypeFilterClicked()
+
+        assertEquals(selectedItems, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
@@ -365,8 +388,10 @@ class ActivityLogViewModelTest {
         birthday.set(1985, 8, 27)
 
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel("", "", null, "", "", "",
-                "", true, "", birthday.time)
+        val activity = ActivityLogModel(
+                "", "", null, "", "", "",
+                "", true, "", birthday.time
+        )
         list.add(activity)
         list.add(activity.copy())
 
