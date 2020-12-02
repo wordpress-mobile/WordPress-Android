@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.scan.threat
+package org.wordpress.android.fluxc.model.scan.threat
 
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -7,7 +7,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.UnitTestUtils
-import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Extension.ExtensionType
