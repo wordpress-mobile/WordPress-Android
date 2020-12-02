@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack
+package org.wordpress.android.ui.jetpack.rewind
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
@@ -38,8 +38,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.jetpack.rewind.RewindProgressChecker
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import java.util.Date
 

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack
+package org.wordpress.android.ui.jetpack.backup
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder
@@ -24,7 +24,7 @@ import org.wordpress.android.ui.jetpack.backup.BackupDownloadProgressChecker
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class BackupProgressCheckerTest {
+class BackupDownloadProgressCheckerTest {
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock lateinit var site: SiteModel
     private val restoreId = 1L

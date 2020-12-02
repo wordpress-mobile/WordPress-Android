@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack
+package org.wordpress.android.ui.jetpack.backup
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
@@ -32,13 +32,11 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadSta
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.jetpack.backup.BackupStatusService.BackupDownloadProgress
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadProgressChecker
-import org.wordpress.android.ui.jetpack.backup.BackupStatusService
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadStatusService.BackupDownloadProgress
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
-class BackupStatusServiceTest {
+class BackupDownloadStatusServiceTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
 
     private val backupDownloadStatusCaptor = argumentCaptor<FetchBackupDownloadStatePayload>()
@@ -48,7 +46,7 @@ class BackupStatusServiceTest {
     @Mock private lateinit var backupDownloadProgressChecker: BackupDownloadProgressChecker
     @Mock private lateinit var site: SiteModel
 
-    private lateinit var mBackupStatusService: BackupStatusService
+    private lateinit var backupDownloadStatusService: BackupDownloadStatusService
     private var backupDownloadAvailable: Boolean? = null
     private var backupDownloadProgress: BackupDownloadProgress? = null
     private var backupDownloadError: BackupDownloadError? = null
@@ -96,16 +94,16 @@ class BackupStatusServiceTest {
 
     @Before
     fun setUp() = runBlocking<Unit> {
-        mBackupStatusService = BackupStatusService(
+        backupDownloadStatusService = BackupDownloadStatusService(
                 activityLogStore,
                 backupDownloadProgressChecker,
                 TEST_SCOPE
         )
         backupDownloadAvailable = null
-        mBackupStatusService.backupDownloadAvailable.observeForever { backupDownloadAvailable = it }
-        mBackupStatusService.backupDownloadProgress.observeForever { backupDownloadProgress = it }
-        mBackupStatusService.backupDownloadError.observeForever { backupDownloadError = it }
-        mBackupStatusService.backupDownloadStatusFetchError.observeForever {
+        backupDownloadStatusService.backupDownloadAvailable.observeForever { backupDownloadAvailable = it }
+        backupDownloadStatusService.backupDownloadProgress.observeForever { backupDownloadProgress = it }
+        backupDownloadStatusService.backupDownloadError.observeForever { backupDownloadError = it }
+        backupDownloadStatusService.backupDownloadStatusFetchError.observeForever {
             backupDownloadStatusFetchError = it }
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
         whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
@@ -125,7 +123,7 @@ class BackupStatusServiceTest {
 
     @After
     fun tearDown() {
-        mBackupStatusService.stop()
+        backupDownloadStatusService.stop()
     }
 
     @Test
@@ -134,7 +132,7 @@ class BackupStatusServiceTest {
                 inProgressBackupDownloadStatusModel.copy(progress = null)
         )
 
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         assertEquals(backupDownloadAvailable, true)
     }
@@ -147,14 +145,14 @@ class BackupStatusServiceTest {
                 null
         )
 
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         assertEquals(backupDownloadAvailable, false)
     }
 
     @Test
     fun `triggers fetch when BackupDownloadStatus not available`() = runBlocking {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         assertFetchBackupDownloadStatusAction()
     }
@@ -162,7 +160,7 @@ class BackupStatusServiceTest {
     @Test
     fun `updates BackupDownloadStatus and restarts checker when BackupDownload not already running`() =
             runBlocking<Unit> {
-                mBackupStatusService.start(site)
+                backupDownloadStatusService.start(site)
                 whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
                         inProgressBackupDownloadStatusModel
                 )
@@ -171,7 +169,7 @@ class BackupStatusServiceTest {
                 )
                 reset(backupDownloadProgressChecker)
 
-                mBackupStatusService.requestStatusUpdate()
+                backupDownloadStatusService.requestStatusUpdate()
 
                 verify(backupDownloadProgressChecker).startNow(
                         site,
@@ -183,7 +181,7 @@ class BackupStatusServiceTest {
     fun `triggers BackupDownload and makes action unavailable`() = runBlocking {
         val rewindId = "10"
 
-        mBackupStatusService.backupDownload(rewindId, site, types)
+        backupDownloadStatusService.backupDownload(rewindId, site, types)
 
         assertBackupDownloadAction(rewindId)
         assertEquals(false, backupDownloadAvailable)
@@ -192,20 +190,20 @@ class BackupStatusServiceTest {
 
     @Test
     fun `cancels worker OnFetchErrorBackupDownloadState and emits error`() = runBlocking {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
         val error = BackupDownloadStatusError(BackupDownloadStatusErrorType.INVALID_RESPONSE, null)
         whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                 OnBackupDownloadStatusFetched(error, BACKUP_DOWNLOAD)
         )
 
-        mBackupStatusService.requestStatusUpdate()
+        backupDownloadStatusService.requestStatusUpdate()
 
         assertEquals(error, backupDownloadStatusFetchError)
     }
 
     @Test
     fun `when onBackupDownloadState in progress update state`() = runBlocking {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
                 inProgressBackupDownloadStatusModel
@@ -214,7 +212,7 @@ class BackupStatusServiceTest {
                 OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
-        mBackupStatusService.requestStatusUpdate()
+        backupDownloadStatusService.requestStatusUpdate()
 
         assertEquals(backupDownloadAvailable, false)
         assertEquals(backupDownloadProgress, BackupDownloadProgress(activityLogModel, progress))
@@ -222,7 +220,7 @@ class BackupStatusServiceTest {
 
     @Test
     fun `when onBackupDownloadState finished update state`() = runBlocking {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         val backupDownloadFinished = inProgressBackupDownloadStatusModel.copy(progress = null)
 
@@ -235,7 +233,7 @@ class BackupStatusServiceTest {
                 OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
-        mBackupStatusService.requestStatusUpdate()
+        backupDownloadStatusService.requestStatusUpdate()
 
         assertEquals(backupDownloadAvailable, true)
         assertEquals(backupDownloadProgress?.progress, null)
@@ -243,7 +241,7 @@ class BackupStatusServiceTest {
 
     @Test
     fun `when onBackupDownload error cancel worker and re-enable BackupDownloadStatus`() = runBlocking {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
 
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(
                 inProgressBackupDownloadStatusModel
@@ -260,7 +258,7 @@ class BackupStatusServiceTest {
 
         backupDownloadAvailable = null
 
-        mBackupStatusService.backupDownload(rewindId, site, types)
+        backupDownloadStatusService.backupDownload(rewindId, site, types)
 
         assertEquals(backupDownloadAvailable, false)
         assertEquals(error, backupDownloadError)
@@ -270,7 +268,7 @@ class BackupStatusServiceTest {
 
     @Test
     fun `onBackupDownloadFetchStatus start worker`() = runBlocking<Unit> {
-        mBackupStatusService.start(site)
+        backupDownloadStatusService.start(site)
         reset(backupDownloadProgressChecker)
 
         whenever(activityLogStore.backupDownload(any())).thenReturn(
@@ -281,7 +279,7 @@ class BackupStatusServiceTest {
                 )
         )
 
-        mBackupStatusService.backupDownload(rewindId, site, types)
+        backupDownloadStatusService.backupDownload(rewindId, site, types)
 
         verify(backupDownloadProgressChecker).start(site, downloadId)
     }

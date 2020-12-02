@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack
+package org.wordpress.android.ui.jetpack.rewind
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.inOrder

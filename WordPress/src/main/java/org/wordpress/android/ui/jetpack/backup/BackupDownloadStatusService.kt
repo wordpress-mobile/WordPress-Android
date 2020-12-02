@@ -23,7 +23,7 @@ import javax.inject.Singleton
 // todo: annmarie - add tracking key - may be rewindId const val REWIND_ID_TRACKING_KEY = "rewind_id"
 
 @Singleton
-class BackupStatusService @Inject constructor(
+class BackupDownloadStatusService @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val backupDownloadProgressChecker: BackupDownloadProgressChecker,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
