@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Extension.Exten
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType.UNKNOWN
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
@@ -16,17 +17,31 @@ import javax.inject.Inject
 
 class ThreatMapper @Inject constructor() {
     fun map(response: Threat): ThreatModel {
+        val id = response.id ?: 0L
+        val signature = response.signature ?: ""
+        val firstDetected = response.firstDetected ?: Date(0)
+
+        val status = ThreatStatus.fromValue(response.status)
+        val description = response.description ?: ""
+
+        val fixable = response.fixable?.let {
+            val fixType = FixType.fromValue(it.fixer)
+            if (fixType != UNKNOWN) {
+                Fixable(file = it.file, fixer = fixType, target = it.target)
+            } else {
+                null
+            }
+        }
+
         return when {
             response.fileName != null && response.diff != null -> {
                 CoreFileModificationThreatModel(
-                    id = response.id ?: 0L,
-                    signature = response.signature ?: "",
-                    description = response.description ?: "",
-                    status = ThreatStatus.fromValue(response.status),
-                    firstDetected = response.firstDetected ?: Date(0),
-                    fixable = response.fixable?.let {
-                        Fixable(file = it.file, fixer = FixType.fromValue(it.fixer), target = it.target)
-                    },
+                    id = id,
+                    signature = signature,
+                    description = description,
+                    status = status,
+                    firstDetected = firstDetected,
+                    fixable = fixable,
                     fixedOn = response.fixedOn,
                     fileName = response.fileName,
                     diff = response.diff
@@ -34,14 +49,12 @@ class ThreatMapper @Inject constructor() {
             }
             response.context != null -> {
                 FileThreatModel(
-                    id = response.id ?: 0L,
-                    signature = response.signature ?: "",
-                    description = response.description ?: "",
-                    status = ThreatStatus.fromValue(response.status),
-                    firstDetected = response.firstDetected ?: Date(0),
-                    fixable = response.fixable?.let {
-                        Fixable(file = it.file, fixer = FixType.fromValue(it.fixer), target = it.target)
-                    },
+                    id = id,
+                    signature = signature,
+                    description = description,
+                    status = status,
+                    firstDetected = firstDetected,
+                    fixable = fixable,
                     fixedOn = response.fixedOn,
                     fileName = response.fileName,
                     context = requireNotNull(response.context)
@@ -49,28 +62,24 @@ class ThreatMapper @Inject constructor() {
             }
             response.rows != null || response.signature?.contains(DATABASE_SIGNATURE) == true -> {
                 DatabaseThreatModel(
-                    id = response.id ?: 0L,
-                    signature = response.signature ?: "",
-                    description = response.description ?: "",
-                    status = ThreatStatus.fromValue(response.status),
-                    firstDetected = response.firstDetected ?: Date(0),
-                    fixable = response.fixable?.let {
-                        Fixable(file = it.file, fixer = FixType.fromValue(it.fixer), target = it.target)
-                    },
+                    id = id,
+                    signature = signature,
+                    description = description,
+                    status = status,
+                    firstDetected = firstDetected,
+                    fixable = fixable,
                     fixedOn = response.fixedOn,
                     rows = response.rows
                 )
             }
-            response.extension != null -> {
+            response.extension != null && ExtensionType.fromValue(response.extension.type) != ExtensionType.UNKNOWN -> {
                 VulnerableExtensionThreatModel(
-                    id = response.id ?: 0L,
-                    signature = response.signature ?: "",
-                    description = response.description ?: "",
-                    status = ThreatStatus.fromValue(response.status),
-                    firstDetected = response.firstDetected ?: Date(0),
-                    fixable = response.fixable?.let {
-                        Fixable(file = it.file, fixer = FixType.fromValue(it.fixer), target = it.target)
-                    },
+                    id = id,
+                    signature = signature,
+                    description = description,
+                    status = status,
+                    firstDetected = firstDetected,
+                    fixable = fixable,
                     fixedOn = response.fixedOn,
                     extension = Extension(
                         type = ExtensionType.fromValue(response.extension.type),
@@ -83,14 +92,12 @@ class ThreatMapper @Inject constructor() {
             }
             else -> {
                 GenericThreatModel(
-                    id = response.id ?: 0L,
-                    signature = response.signature ?: "",
-                    description = response.description ?: "",
-                    status = ThreatStatus.fromValue(response.status),
-                    firstDetected = response.firstDetected ?: Date(0),
-                    fixable = response.fixable?.let {
-                        Fixable(file = it.file, fixer = FixType.fromValue(it.fixer), target = it.target)
-                    },
+                    id = id,
+                    signature = signature,
+                    description = description,
+                    status = status,
+                    firstDetected = firstDetected,
+                    fixable = fixable,
                     fixedOn = response.fixedOn
                 )
             }
