@@ -56,7 +56,7 @@ class SiteItemsBuilder
                         secondaryIcon = R.drawable.ic_external_white_24dp,
                         onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick)
                 ),
-                siteListItemBuilder.buildAdminItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildAdminItemIfAvailable(site, onClick)
         )
     }
 }
