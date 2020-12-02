@@ -22,7 +22,7 @@ class BackupDownloadDetailsFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.domain_suggestions_fragment, container, false)
+        return inflater.inflate(R.layout.backup_download_details_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,9 +36,6 @@ class BackupDownloadDetailsFragment : Fragment() {
 
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(BackupDownloadDetailsViewModel::class.java)
-
-        val nonNullIntent = checkNotNull(nonNullActivity.intent)
-        val site = nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
 
         setupViews()
         setupObservers()
