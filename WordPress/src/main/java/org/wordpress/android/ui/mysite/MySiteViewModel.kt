@@ -359,15 +359,15 @@ class MySiteViewModel
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
     }
 
-    private fun getStatsNavigationActionForSite(site: SiteModel): NavigationAction {
-        return if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
-            // If the user is not connected to WordPress.com, ask him to connect first.
-            StartWPComLoginForJetpackStats
-        } else if (site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected) {
-            OpenStats(site)
-        } else {
-            ConnectJetpackForStats(site)
-        }
+    private fun getStatsNavigationActionForSite(site: SiteModel) = when {
+        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
+        !accountStore.hasAccessToken() && site.isJetpackConnected -> StartWPComLoginForJetpackStats
+
+        // If it's a WordPress.com or Jetpack site, show the Stats screen.
+        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> OpenStats(site)
+
+        // If it's a self-hosted site, ask to connect to Jetpack.
+        else -> ConnectJetpackForStats(site)
     }
 
     fun onAvatarPressed() {
