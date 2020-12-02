@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
+import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel;
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
@@ -431,6 +433,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BasicDialogViewModel.class)
     abstract ViewModel basicDialogViewModel(BasicDialogViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadViewModel.class)
+    abstract ViewModel backupDownloadViewModel(BackupDownloadViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadDetailsViewModel.class)
+    abstract ViewModel backupDownloadDetailsViewModel(BackupDownloadDetailsViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
