@@ -1,4 +1,8 @@
-Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.
-
-Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.
+* [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
+* [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
+* [**] Block Editor: Button block - Add link picker to the block settings [https://github.com/WordPress/gutenberg/pull/26206]
+* [***] Block Editor: Adding support for selecting different unit of value in Cover and Columns blocks [https://github.com/WordPress/gutenberg/pull/26161]
+* [*] Block Editor: Fix theme colors syncing with the editor [https://github.com/WordPress/gutenberg/pull/26821]
+* [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
+* [**] Reader: introduced a Follow/Unfollow button in comments screen to follow a post conversation and get notified by e-mail. Not supported for self-hosted sites not Jetpack connected. [https://github.com/wordpress-mobile/WordPress-Android/pull/13473]
 
