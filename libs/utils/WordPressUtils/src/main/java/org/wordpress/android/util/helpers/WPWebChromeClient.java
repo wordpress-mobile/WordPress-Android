@@ -3,24 +3,27 @@ package org.wordpress.android.util.helpers;
 import android.app.Activity;
 import android.text.TextUtils;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
-public class WPWebChromeClient extends WebChromeClient {
+import androidx.annotation.DrawableRes;
+
+
+public class WPWebChromeClient extends WebChromeClientWithVideoPoster {
     private final ProgressBar mProgressBar;
     private final Activity mActivity;
     private final boolean mAutoUpdateActivityTitle;
 
-    public WPWebChromeClient(Activity activity, ProgressBar progressBar) {
-        mActivity = activity;
-        mProgressBar = progressBar;
-        mAutoUpdateActivityTitle = true;
+    public WPWebChromeClient(Activity activity, View view, @DrawableRes int defaultPoster, ProgressBar progressBar) {
+        this(activity, view, defaultPoster, progressBar, true);
     }
 
     public WPWebChromeClient(Activity activity,
+                             View view,
+                             @DrawableRes int defaultPoster,
                              ProgressBar progressBar,
                              boolean autoUpdateActivityTitle) {
+        super(view, defaultPoster);
         mActivity = activity;
         mProgressBar = progressBar;
         mAutoUpdateActivityTitle = autoUpdateActivityTitle;
