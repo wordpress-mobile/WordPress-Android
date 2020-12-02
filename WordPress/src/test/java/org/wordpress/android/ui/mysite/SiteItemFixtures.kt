@@ -26,6 +26,11 @@ val PLAN_ITEM = ListItem(
         secondaryText = UiStringText(PLAN_NAME),
         onClick = ListItemInteraction.create(ListItemAction.PLAN, SITE_ITEM_ACTION)
 )
+val JETPACK_ITEM = ListItem(
+        R.drawable.ic_cog_white_24dp,
+        UiStringRes(R.string.my_site_btn_jetpack_settings),
+        onClick = ListItemInteraction.create(ListItemAction.JETPACK_SETTINGS, SITE_ITEM_ACTION)
+)
 val STATS_ITEM = ListItem(
         R.drawable.ic_stats_alt_white_24dp,
         UiStringRes(R.string.stats),

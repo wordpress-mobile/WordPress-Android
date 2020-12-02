@@ -34,6 +34,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActi
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
@@ -237,6 +238,7 @@ class ImprovedMySiteFragment : Fragment(),
                         JETPACK_STATS.putInto(loginIntent)
                         startActivityForResult(loginIntent, RequestCodes.DO_LOGIN)
                     }
+                    is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
                 }
             }
         })

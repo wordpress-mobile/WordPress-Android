@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 enum class ListItemAction {
     ACTIVITY_LOG,
     SCAN,
+    JETPACK_SETTINGS,
     PLAN,
     POSTS,
     PAGES,

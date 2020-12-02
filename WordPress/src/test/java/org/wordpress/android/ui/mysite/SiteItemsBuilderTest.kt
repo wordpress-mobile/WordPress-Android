@@ -42,6 +42,7 @@ class SiteItemsBuilderTest {
     fun `adds all the items in the correct order`() {
         setupHeaders(
                 addJetpackHeader = true,
+                addJetpackSettings = true,
                 addLookAndFeelHeader = true,
                 addConfigurationHeader = true,
                 addActivityLogItem = true,
@@ -64,6 +65,7 @@ class SiteItemsBuilderTest {
                 STATS_ITEM,
                 ACTIVITY_ITEM,
                 SCAN_ITEM,
+                JETPACK_ITEM,
                 PUBLISH_HEADER,
                 PAGES_ITEM,
                 POSTS_ITEM,
@@ -84,6 +86,7 @@ class SiteItemsBuilderTest {
 
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
+        addJetpackSettings: Boolean = false,
         addLookAndFeelHeader: Boolean = false,
         addConfigurationHeader: Boolean = false,
         addActivityLogItem: Boolean = false,
@@ -100,6 +103,11 @@ class SiteItemsBuilderTest {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
                     JETPACK_HEADER
+            )
+        }
+        if (addJetpackSettings) {
+            whenever(siteListItemBuilder.buildJetpackItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
+                    JETPACK_ITEM
             )
         }
         if (addLookAndFeelHeader) {

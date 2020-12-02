@@ -21,6 +21,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
 import org.wordpress.android.ui.mysite.ListItemAction.PAGES
 import org.wordpress.android.ui.mysite.ListItemAction.PEOPLE
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActi
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
@@ -160,6 +162,7 @@ class MySiteViewModel
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> OpenSite(site)
+                JETPACK_SETTINGS -> OpenJetpackSettings(site)
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
@@ -370,6 +373,7 @@ class MySiteViewModel
         object StartWPComLoginForJetpackStats : NavigationAction()
         data class OpenStats(val site: SiteModel) : NavigationAction()
         data class ConnectJetpackForStats(val site: SiteModel) : NavigationAction()
+        data class OpenJetpackSettings(val site: SiteModel) : NavigationAction()
     }
 
     companion object {
