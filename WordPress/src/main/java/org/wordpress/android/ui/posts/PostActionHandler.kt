@@ -68,7 +68,8 @@ class PostActionHandler(
     private val checkNetworkConnection: () -> Boolean,
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit,
-    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit
+    private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
+    private val copyPost: (SiteModel, PostModel) -> Unit
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -113,9 +114,7 @@ class PostActionHandler(
                     else -> trashPost(post)
                 }
             }
-            BUTTON_COPY -> {
-                // TODO
-            }
+            BUTTON_COPY -> copyPost(site, post)
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
