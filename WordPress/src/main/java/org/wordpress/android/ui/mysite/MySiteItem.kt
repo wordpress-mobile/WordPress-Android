@@ -3,13 +3,17 @@ package org.wordpress.android.ui.mysite
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
+import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
 sealed class MySiteItem(val type: Type) {
     enum class Type {
-        SITE_INFO_BLOCK, CATEGORY_HEADER, LIST_ITEM
+        SITE_INFO_BLOCK,
+        QUICK_ACTIONS_BLOCK,
+        CATEGORY_HEADER,
+        LIST_ITEM
     }
 
     data class SiteInfoBlock(
@@ -26,6 +30,14 @@ sealed class MySiteItem(val type: Type) {
             data class Visible(val url: String? = null) : IconState()
         }
     }
+
+    data class QuickActionsBlock(
+        val onStatsClick: ListItemInteraction,
+        val onPagesClick: ListItemInteraction,
+        val onPostsClick: ListItemInteraction,
+        val onMediaClick: ListItemInteraction,
+        val showPages: Boolean = true
+    ) : MySiteItem(QUICK_ACTIONS_BLOCK)
 
     data class CategoryHeader(val title: UiString) : MySiteItem(CATEGORY_HEADER)
 
