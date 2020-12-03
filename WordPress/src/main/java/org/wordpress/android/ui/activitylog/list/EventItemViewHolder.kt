@@ -35,12 +35,12 @@ class EventItemViewHolder(
         summary.text = activity.title
         text.text = activity.description
 
+        ColorUtils.setImageResourceWithTint(
+                actionButton,
+                activity.buttonIcon.drawable,
+                actionButton.context.getColorResIdFromAttribute(R.attr.colorPrimary)
+        )
         if (activity.isButtonVisible) {
-            ColorUtils.setImageResourceWithTint(
-                    actionButton,
-                    activity.buttonIcon.drawable,
-                    actionButton.context.getColorResIdFromAttribute(R.attr.colorPrimary)
-            )
             actionButton.visibility = View.VISIBLE
         } else {
             actionButton.visibility = View.GONE
