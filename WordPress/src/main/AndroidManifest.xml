@@ -641,6 +641,12 @@
             android:label="@string/activity_log_event"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!--Scan-->
+        <activity
+            android:name=".ui.scan.ScanActivity"
+            android:label="@string/scan"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!--Domain Registration-->
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
