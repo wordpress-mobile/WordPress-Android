@@ -170,6 +170,13 @@ class PostActionHandler(
         triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
     }
 
+    fun resolveConflictsAndEditPost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            performChecksAndEdit(site, post)
+        }
+    }
+
     fun moveTrashedPostToDraft(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
@@ -200,7 +207,9 @@ class PostActionHandler(
         showSnackbar.invoke(snackBarHolder)
     }
 
-    private fun editPostButtonAction(site: SiteModel, post: PostModel) {
+    private fun editPostButtonAction(site: SiteModel, post: PostModel) = performChecksAndEdit(site, post)
+
+    private fun performChecksAndEdit(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
@@ -226,7 +235,10 @@ class PostActionHandler(
     }
 
     private fun copyPost(site: SiteModel, post: PostModel) {
-        // TODO: Check if conflict or autosave revision checks should be made
+        if (doesPostHaveUnhandledConflict.invoke(post) || hasUnhandledAutoSave.invoke(post)) {
+            postListDialogHelper.showCopyConflictDialog(post)
+            return
+        }
         triggerPostListAction.invoke((PostListAction.CopyPost(site, post)))
     }
 
