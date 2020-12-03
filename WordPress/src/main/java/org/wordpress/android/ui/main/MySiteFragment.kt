@@ -1189,22 +1189,21 @@ class MySiteFragment : Fragment(),
             uploadUtilsWrapper.showSnackbarError(
                     requireActivity().findViewById<View>(R.id.coordinator),
                     snackbarMessage,
-                    string.story_saving_failed_quick_action_manage,
-                    View.OnClickListener { view: View? ->
-                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
-                        // is meant to be used for tracking purposes. Use it!
-                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
+                    string.story_saving_failed_quick_action_manage
+            ) {
+                // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                // is meant to be used for tracking purposes. Use it!
+                // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
 
-                        storiesTrackerHelper.trackStorySaveResultEvent(
-                                event,
-                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
+                storiesTrackerHelper.trackStorySaveResultEvent(
+                        event,
+                        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 
-                        )
-                        ActivityLauncher.viewStories(requireActivity(), selectedSite, event)
-                    }
-            )
+                )
+                ActivityLauncher.viewStories(requireActivity(), selectedSite, event)
+            }
         }
     }
 
