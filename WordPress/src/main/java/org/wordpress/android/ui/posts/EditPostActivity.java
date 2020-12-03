@@ -285,8 +285,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     public static final String EXTRA_REBLOG_POST_IMAGE = "reblogPostImage";
     public static final String EXTRA_REBLOG_POST_QUOTE = "reblogPostQuote";
     public static final String EXTRA_REBLOG_POST_CITATION = "reblogPostCitation";
-    public static final String EXTRA_TITLE = "postTitle";
-    public static final String EXTRA_CONTENT = "postContent";
+    public static final String EXTRA_PAGE_TITLE = "pageTitle";
+    public static final String EXTRA_PAGE_CONTENT = "pageContent";
     public static final String EXTRA_PAGE_TEMPLATE = "pageTemplate";
     private static final String STATE_KEY_EDITOR_FRAGMENT = "editorFragment";
     private static final String STATE_KEY_DROPPED_MEDIA_URIS = "stateKeyDroppedMediaUri";
@@ -2394,7 +2394,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (mIsPage || ACTION_COPY.equals(action)) {
-            setContent();
+            setPageContent();
         }
 
         // Set post title and content
@@ -2414,7 +2414,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 mEditorFragment.setTitle(mEditPostRepository.getTitle());
             } else if (mEditorFragment instanceof GutenbergEditorFragment) {
                 // don't avoid calling setTitle() for GutenbergEditorFragment so RN gets initialized
-                final String title = getIntent().getStringExtra(EXTRA_TITLE);
+                final String title = getIntent().getStringExtra(EXTRA_PAGE_TITLE);
                 if (title != null) {
                     mEditorFragment.setTitle(title);
                 } else {
@@ -2525,11 +2525,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     /**
-     * Sets the content
+     * Sets the page content
      */
-    private void setContent() {
+    private void setPageContent() {
         Intent intent = getIntent();
-        final String content = intent.getStringExtra(EXTRA_CONTENT);
+        final String content = intent.getStringExtra(EXTRA_PAGE_CONTENT);
         if (content != null && !content.isEmpty()) {
             mHasSetPostContent = true;
             mEditPostRepository.updateAsync(postModel -> {
