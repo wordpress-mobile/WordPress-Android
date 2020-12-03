@@ -682,27 +682,6 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
     }
 
-    /**
-     * Creates a new post by copying the title and content from an existing [post]
-     *
-     * @param activity the calling activity
-     * @param site     the current site
-     * @param post     the post to copy title and content from
-     * @param source   post creation source
-     */
-    public static void addNewPostForResult(
-            @NonNull Activity activity,
-            @NonNull SiteModel site,
-            @NonNull PostModel post,
-            @NonNull PagePostCreationSourcesDetail source
-    ) {
-        Intent editorIntent = new Intent(activity, EditPostActivity.class);
-        editorIntent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, post.getTitle());
-        editorIntent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, post.getContent());
-        editorIntent.setAction(EditPostActivity.ACTION_COPY);
-        addNewPostForResult(editorIntent, activity, site, false, source);
-    }
-
     public static void addNewStoryForResult(
             Activity activity,
             SiteModel site,

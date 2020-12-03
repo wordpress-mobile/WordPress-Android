@@ -113,7 +113,9 @@ class PostActionHandler(
                     else -> trashPost(post)
                 }
             }
-            BUTTON_COPY -> copyPost(site, post)
+            BUTTON_COPY -> {
+                // TODO
+            }
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
@@ -223,11 +225,6 @@ class PostActionHandler(
             UploadService.cancelQueuedPostUpload(post)
         }
         triggerPostListAction.invoke(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
-    }
-
-    private fun copyPost(site: SiteModel, post: PostModel) {
-        // TODO: Check if conflict or autosave revision checks should be made
-        triggerPostListAction.invoke((PostListAction.CopyPost(site, post)))
     }
 
     fun deletePost(localPostId: Int) {

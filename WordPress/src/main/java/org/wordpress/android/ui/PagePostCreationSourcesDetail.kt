@@ -5,8 +5,6 @@ enum class PagePostCreationSourcesDetail(val label: String) {
     POST_FROM_SHORTCUT("post-from-shortcut"),
     // post created from the posts list fab
     POST_FROM_POSTS_LIST("post-from-posts-list"),
-    // post created from the posts list with copy action
-    POST_FROM_POSTS_LIST_COPY("post-from-posts-list-copy"),
     // story created from the posts list fab
     STORY_FROM_POSTS_LIST("story-from-posts-list"),
     // page created from the pages list fab
