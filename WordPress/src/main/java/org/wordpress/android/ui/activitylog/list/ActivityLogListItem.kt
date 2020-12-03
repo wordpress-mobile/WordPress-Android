@@ -14,7 +14,7 @@ import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import java.util.Date
 
-sealed class  ActivityLogListItem(val type: ViewType) {
+sealed class ActivityLogListItem(val type: ViewType) {
     interface IActionableItem {
         val isButtonVisible: Boolean
     }

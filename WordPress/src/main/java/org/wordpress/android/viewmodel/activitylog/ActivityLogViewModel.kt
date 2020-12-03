@@ -187,8 +187,7 @@ class ActivityLogViewModel @Inject constructor(
             if (backupFeatureConfig.isEnabled()) {
                 // todo: annmarie implement expand/dismiss the more menu
                 _showMoreMenu.value = item
-            }
-            else {
+            } else {
                 _showRewindDialog.value = item
             }
         }
@@ -277,7 +276,9 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
-            val rewoundEvent = ActivityLogListItem.Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val rewoundEvent = ActivityLogListItem.Event(
+                    model = it,
+                    backupFeatureEnabled = backupFeatureConfig.isEnabled())
             ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(R.string.activity_log_currently_restoring_message,
                             rewoundEvent.formattedDate, rewoundEvent.formattedTime))
