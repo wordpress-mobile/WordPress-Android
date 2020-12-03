@@ -172,6 +172,8 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
 class MySiteFragment : Fragment(),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
