@@ -204,7 +204,7 @@ class ImprovedMySiteFragment : Fragment(),
                                 activity,
                                 action.site
                         )
-                    is OpenScan -> TODO()
+                    is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
                     is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
