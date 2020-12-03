@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.scan
+package org.wordpress.android.ui.jetpack.scan
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject

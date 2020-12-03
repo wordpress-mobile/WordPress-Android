@@ -70,7 +70,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.scan.ScanActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.scan
+package org.wordpress.android.ui.jetpack.scan
 
 import android.os.Bundle
 import android.view.MenuItem

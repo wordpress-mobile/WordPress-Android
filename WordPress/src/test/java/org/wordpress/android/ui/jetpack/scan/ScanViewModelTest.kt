@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.scan
+package org.wordpress.android.ui.jetpack.scan
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
