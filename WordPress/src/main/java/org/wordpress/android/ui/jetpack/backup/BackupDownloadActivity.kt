@@ -1,10 +1,11 @@
 package org.wordpress.android.ui.jetpack.backup
 
 import android.os.Bundle
+import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
-import kotlinx.android.synthetic.main.domain_suggestions_activity.*
+import kotlinx.android.synthetic.main.backup_download_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -30,6 +31,14 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         setupViewModel()
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == android.R.id.home) {
+            onBackPressed()
+            return true
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun setupViewModel() {
         viewModel = ViewModelProviders.of(this, viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
@@ -37,7 +46,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
 
         // todo: annmarie temporary start
         val fragment = BackupDownloadDetailsFragment.newInstance()
-        showFragment(fragment, BackupDownloadDetailsFragment.TAG)
+        showFragment(fragment, BackupDownloadDetailsFragment.TAG, slideIn = false, isRootFragment = true)
     }
 
     // todo: annmarie - decision pt: have activity/frag pairs or use the replace fragment approach
