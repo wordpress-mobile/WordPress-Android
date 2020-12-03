@@ -30,6 +30,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
+import org.wordpress.android.ui.scan.ScanViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
@@ -421,6 +422,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ActivityLogTypeFilterViewModel.class)
     abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanViewModel.class)
+    abstract ViewModel scanViewModel(ScanViewModel viewModel);
 
     @Binds
     @IntoMap
