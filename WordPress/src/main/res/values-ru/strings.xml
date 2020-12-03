@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-09 09:06:43+0000
+Translation-Revision-Date: 2020-11-23 17:11:40+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">К вашей истории не были добавлены один или несколько слайдов, на текущий момент истории не поддерживают GIF файлы. Выберите статическое изображение или видео для фона вместо GIF.</string>
+    <string name="dialog_edit_story_limited_message">Эта история редактировалась на другом устройстве. Возможности редактирования некоторых объектов могут быть ограничены.</string>
+    <string name="dialog_edit_story_unavailable_title">Нельзя отредактировать историю</string>
+    <string name="dialog_edit_story_unavailable_message">Невозможно загрузить медиафайлы этой истории. Проверьте ваше подключение к сети и попробуйте снова.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Нельзя отредактировать историю</string>
+    <string name="dialog_edit_story_unrecoverable_message">Невозможно найти медиафайлы этой истории на сайте.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF файлы не поддерживаются</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Медиафайл удалён. Попробуйте отредактировать историю.</string>
+    <string name="dialog_edit_story_limited_title">Ограниченное редактирование истории</string>
+    <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
+    <string name="hpp_error_subtitle">Нажмите повторить при появлении подключения к сети.</string>
+    <string name="hpp_retry_error">Проверьте подключение к Интернету и повторите попытку.</string>
+    <string name="hpp_choose_error">При выборе оформления произошла ошибка.</string>
+    <string name="delete_button_alt">Удалить</string>
+    <string name="label_next_button">Далее</string>
+    <string name="label_done_button">Готово</string>
+    <string name="dialog_discard_story_title_edit">Отменить изменения</string>
+    <string name="dialog_discard_story_message_edit">Сделанные изменения не будут сохранены.</string>
+    <string name="dialog_discard_story_ok_button_edit">Отбросить</string>
+    <string name="color_picker_label_text">Текст</string>
+    <string name="color_picker_label_background">Фон</string>
+    <string name="scan">Сканировать</string>
+    <string name="reader_discover_empty_title">Добро пожаловать!</string>
+    <string name="reader_discover_no_posts_title">Нет свежих записей</string>
+    <string name="reader_discover_no_posts_subtitle">Для расширения поиска попробуйте подписаться на больше тем</string>
+    <string name="reader_discover_no_posts_button_text">Подписаться на темы</string>
+    <string name="login_find_your_connected_email">Узнать адрес привязанной эл. почты</string>
+    <string name="continue_site_credentials">Продолжить с учетными данными магазина</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Вася Пупкин&lt;/b> ответил на вашу запись</string>
     <string name="login_prologue_third_subtitle_one">&lt;b>Юля Петрова&lt;/b> отмечает вашу запись как понравившуюся</string>
     <string name="login_prologue_third_subtitle_two">Вы сегодня получили &lt;b>50 отметок \"нравится\"&lt;/b> на сайте</string>
@@ -68,7 +96,7 @@ Language: ru
     <string name="media_insert_failed">Вставка мультимедиа не удалась.</string>
     <string name="reader_label_toolbar_back">Назад</string>
     <string name="reader_post_details_header_by_author_name">От автора</string>
-    <string name="reader_discover_empty_title">Подписывайтесь на темы для того, чтобы найти новые блоги</string>
+    <string name="reader_discover_empty_subtitle">Подписывайтесь на темы для того, чтобы найти новые блоги</string>
     <string name="reader_discover_empty_button_text">Начните</string>
     <string name="media_uploading_default">Загрузка медиафайлов</string>
     <string name="media_uploading_stock_library_photo">Загрузка стоковых медиафайлов</string>
@@ -98,7 +126,6 @@ Language: ru
     <string name="email_not_registered_wpcom">Не получается найти учётную запись WordPress.com для этого адреса email.</string>
     <string name="login_get_link_by_email">Получить ссылку для входа по email</string>
     <string name="reader_menu_report_post">Пожаловаться на запись</string>
-    <string name="gutenberg_native_angle">Угол</string>
     <string name="reader_welcome_banner">Добро пожаловать в Чтиво. Откройте миллионы блоков прямо у вас под рукой.</string>
     <string name="error_media_xmlrcp_server_error">Произошла внутренняя ошибка сервера</string>
     <string name="error_media_xmlrpc_not_allowed">Это действие недопустимо</string>
@@ -144,7 +171,6 @@ Language: ru
     <string name="label_frame_errored">с ошибкой</string>
     <string name="label_text_alignment_button">Изменить выравнивание текста</string>
     <string name="label_text_color_button">Изменить цвет текста</string>
-    <string name="menu_delete_page">Удалить слайд</string>
     <string name="dialog_discard_page_title">Удалить слайд истории?</string>
     <string name="dialog_discard_page_message">Этот слайд будет удален из истории.</string>
     <string name="dialog_discard_errored_page_message">Этот слайд ещё не сохранён. Если вы удалите его, то потеряете все сделанные правки.</string>
@@ -165,7 +191,6 @@ Language: ru
     <string name="flip_button_alt">Перевернуть камеру</string>
     <string name="flash_button_alt">Вспышка</string>
     <string name="stickers_button_alt">Наклейки</string>
-    <string name="more_button_alt">Еще</string>
     <string name="text_button_alt">Текст</string>
     <string name="sound_button_alt">Звук</string>
     <string name="label_control_flip_camera">Отразить</string>
@@ -176,8 +201,6 @@ Language: ru
     <string name="label_snackbar_loop_frame_saved">Сохранено в фотографиях</string>
     <string name="label_snackbar_share">ПОДЕЛИТЬСЯ</string>
     <string name="label_share_to">Поделиться с</string>
-    <string name="label_done">Готово</string>
-    <string name="label_control_publish">Далее</string>
     <string name="label_close_button">Закрыть</string>
     <string name="label_saved_icon">Сохранено</string>
     <string name="label_retry_icon">Повторить</string>
@@ -527,7 +550,6 @@ Language: ru
     <string name="login_discovery_error_ssl">Мы не смогли подключиться к сайту, поскольку имеется проблема с &lt;b>сертификатом SSL&lt;/b>. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="login_discovery_error_generic">Мы не смогли подключиться к сайту. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
     <string name="reader_following_display_name">Подписчик</string>
-    <string name="send_verification_email">Отправить письмо с подтверждением</string>
     <string name="enter_credentials_for_site">Войдите с именем пользователя и паролем для сайта %1$s</string>
     <string name="login_site_credentials_magic_link_label">Почти готово! Нужно только проверить адрес эл.почты подключения Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="login_discovery_error_xmlrpc">Мы не смогли подключиться к &lt;b>XMLRPC&lt;/b> сайта. Возможно потребуется обратиться в техподдержку хостинга, чтобы решить эту проблему.</string>
@@ -561,7 +583,6 @@ Language: ru
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Блок %s. Блок имеет неверное содержимое.</string>
     <string name="gutenberg_native_show_section">Показать раздел</string>
     <string name="gutenberg_native_sidebar_title_plugin">Плагин заголовка боковой панели</string>
-    <string name="gutenberg_native_size">Размер</string>
     <string name="gutenberg_native_cut_block">Вырезать блок</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Отсутствует приложения для обработки этого запроса. Пожалуйста, установите веб-браузер.</string>
     <string name="gutenberg_native_open_settings">Открыть настройки</string>

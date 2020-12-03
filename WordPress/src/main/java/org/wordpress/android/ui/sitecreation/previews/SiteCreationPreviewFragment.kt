@@ -4,7 +4,6 @@ import android.animation.Animator
 import android.animation.AnimatorListenerAdapter
 import android.animation.AnimatorSet
 import android.animation.ObjectAnimator
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.text.Spannable
@@ -14,7 +13,6 @@ import android.view.View
 import android.view.View.OnLayoutChangeListener
 import android.view.ViewGroup
 import android.view.animation.DecelerateInterpolator
-import android.webkit.WebView
 import androidx.annotation.LayoutRes
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -80,6 +78,11 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         serviceEventConnection = ServiceEventConnection(context, SiteCreationService::class.java, viewModel)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        viewModel.writeToBundle(outState)
+    }
+
     override fun onPause() {
         super.onPause()
         serviceEventConnection?.disconnect(context, viewModel)
@@ -121,11 +124,9 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         viewModel.preloadPreview.observe(this, Observer { url ->
             url?.let {
                 sitePreviewWebView.webViewClient = URLFilteredWebViewClient(url, this@SiteCreationPreviewFragment)
+                sitePreviewWebView.settings.userAgentString = WordPress.getUserAgent()
                 sitePreviewWebView.loadUrl(url)
             }
-        })
-        viewModel.hideGetStartedBar.observe(this, Observer<Unit> {
-            hideGetStartedBar(sitePreviewWebView)
         })
         viewModel.startCreateSiteService.observe(this, Observer { startServiceData ->
             startServiceData?.let {
@@ -152,8 +153,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
                 (requireActivity() as SitePreviewScreenListener).onSitePreviewScreenDismissed(createSiteState)
             }
         })
-
-        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState)
     }
 
     private fun initRetryButton() {
@@ -290,6 +289,8 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
         super.onActivityCreated(savedInstanceState)
 
         (requireActivity() as AppCompatActivity).supportActionBar?.hide()
+
+        viewModel.start(requireArguments()[ARG_DATA] as SiteCreationState, savedInstanceState)
     }
 
     override fun onWebViewPageLoaded() {
@@ -298,19 +299,6 @@ class SiteCreationPreviewFragment : SiteCreationBaseFormFragment(),
 
     override fun onWebViewReceivedError() {
         viewModel.onWebViewError()
-    }
-
-    // Hacky solution to https://github.com/wordpress-mobile/WordPress-Android/issues/8233
-    // Ideally we would hide "get started" bar on server side
-    @SuppressLint("SetJavaScriptEnabled")
-    private fun hideGetStartedBar(webView: WebView) {
-        webView.settings.javaScriptEnabled = true
-        val javascript = "document.querySelector('html').style.cssText += '; margin-top: 0 !important;';\n" +
-                "document.getElementById('wpadminbar').style.display = 'none';\n"
-
-        webView.evaluateJavascript(
-                javascript
-        ) { webView.settings.javaScriptEnabled = false }
     }
 
     override fun onHelp() {
