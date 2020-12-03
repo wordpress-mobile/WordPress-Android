@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
-import org.wordpress.android.ui.activitylog.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import java.util.Date
 

@@ -127,7 +127,7 @@ import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
 import org.wordpress.android.ui.stories.StoryComposerActivity
-import org.wordpress.android.ui.themes.ThemeBrowserActivity
+import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
@@ -201,6 +201,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
 
     private val selectedSite: SiteModel?
         get() {
@@ -380,7 +381,9 @@ class MySiteFragment : Fragment(),
             if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
                 requestNextStepOfActiveQuickStartTask()
             }
-            ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
+            if (themeBrowserUtils.isAccessible(selectedSite)) {
+                ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
+            }
         }
         row_people.setOnClickListener {
             ActivityLauncher.viewCurrentBlogPeople(
@@ -992,7 +995,7 @@ class MySiteFragment : Fragment(),
         scroll_view.visibility = View.VISIBLE
         actionable_empty_view.visibility = View.GONE
         toggleAdminVisibility(site)
-        val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
+        val themesVisibility = if (themeBrowserUtils.isAccessible(site)) View.VISIBLE else View.GONE
         my_site_look_and_feel_header.visibility = themesVisibility
         row_themes.visibility = themesVisibility
 

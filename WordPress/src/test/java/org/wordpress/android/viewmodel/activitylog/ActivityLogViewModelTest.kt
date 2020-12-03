@@ -32,8 +32,8 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.ui.activitylog.RewindStatusService
-import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
@@ -338,7 +338,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(false, viewModel.filtersVisibility.value)
+        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test
@@ -347,7 +347,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site)
 
-        assertEquals(true, viewModel.filtersVisibility.value)
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
 
     @Test

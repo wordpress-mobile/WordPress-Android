@@ -10,13 +10,13 @@
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:liftOnScrollTargetViewId="@+id/log_list_view">
+        android:layout_height="wrap_content">
 
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:theme="@style/WordPress.ActionBar" />
 
     </com.google.android.material.appbar.AppBarLayout>
