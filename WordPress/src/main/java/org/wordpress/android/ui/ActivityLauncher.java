@@ -697,8 +697,8 @@ public class ActivityLauncher {
             @NonNull PagePostCreationSourcesDetail source
     ) {
         Intent editorIntent = new Intent(activity, EditPostActivity.class);
-        editorIntent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, post.getTitle());
-        editorIntent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, post.getContent());
+        editorIntent.putExtra(EditPostActivity.EXTRA_TITLE, post.getTitle());
+        editorIntent.putExtra(EditPostActivity.EXTRA_CONTENT, post.getContent());
         editorIntent.setAction(EditPostActivity.ACTION_COPY);
         addNewPostForResult(editorIntent, activity, site, false, source);
     }
@@ -874,8 +874,8 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_TITLE, title);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         activity.startActivityForResult(intent, RequestCodes.EDIT_POST);
@@ -893,8 +893,8 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, false);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_TITLE, title);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_TITLE, title);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         intent.putExtra(AnalyticsUtils.EXTRA_CREATION_SOURCE_DETAIL, source);
         fragment.startActivityForResult(intent, RequestCodes.EDIT_POST);
@@ -910,7 +910,7 @@ public class ActivityLauncher {
         intent.putExtra(EditPostActivity.EXTRA_IS_PAGE, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PREVIEW, true);
         intent.putExtra(EditPostActivity.EXTRA_IS_PROMO, false);
-        intent.putExtra(EditPostActivity.EXTRA_PAGE_CONTENT, content);
+        intent.putExtra(EditPostActivity.EXTRA_CONTENT, content);
         intent.putExtra(EditPostActivity.EXTRA_PAGE_TEMPLATE, template);
         fragment.startActivityForResult(intent, RequestCodes.PREVIEW_POST);
     }
