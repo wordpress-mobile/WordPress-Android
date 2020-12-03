@@ -374,12 +374,6 @@
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
 
-    <!-- post confirm copy local post dialog -->
-    <string name="dialog_confirm_copy_local_title">Post sync conflict</string>
-    <string name="dialog_confirm_copy_local_message">The post you are trying to copy has two versions that are in conflict or you recently made changes but didn\'t save them.\nEdit the post first to resolve any conflict or proceed with copying the version from this app.</string>
-    <string name="dialog_confirm_copy_local_edit_button">Edit the post first</string>
-    <string name="dialog_confirm_copy_local_copy_button">Copy the version from this app</string>
-
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>

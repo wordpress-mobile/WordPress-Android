@@ -437,15 +437,6 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
-    private fun copyLocalPost(localPostId: Int) {
-        val post = postStore.getPostByLocalPostId(localPostId)
-        if (post != null) {
-            _postListAction.postValue(PostListAction.CopyPost(site, post))
-        } else {
-            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.error_post_does_not_exist))
-        }
-    }
-
     // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -457,8 +448,7 @@ class PostListMainViewModel @Inject constructor(
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
                 editRestoredAutoSavePost = this::editRestoredAutoSavePost,
-                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft,
-                resolveConflictsAndEditPost = postActionHandler::resolveConflictsAndEditPost
+                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft
         )
     }
 
@@ -466,8 +456,7 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost,
-                copyLocalPost = this::copyLocalPost
+                editLocalPost = this::editLocalPost
         )
     }
 
@@ -475,8 +464,7 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
                 instanceTag = instanceTag,
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost,
-                copyLocalPost = this::copyLocalPost
+                editLocalPost = this::editLocalPost
         )
     }
 

@@ -18,7 +18,6 @@ private const val CONFIRM_TRASH_POST_WITH_UNSAVED_CHANGES_DIALOG_TAG =
 private const val CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG = "CONFIRM_ON_CONFLICT_LOAD_REMOTE_POST_DIALOG_TAG"
 private const val CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG = "CONFIRM_ON_AUTOSAVE_REVISION_DIALOG_TAG"
 private const val CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG = "CONFIRM_SYNC_SCHEDULED_POST_DIALOG_TAG"
-private const val COPY_CONFLICT_DIALOG_TAG = "COPY_CONFLICT_DIALOG_TAG"
 private const val POST_TYPE = "post_type"
 
 /**
@@ -38,7 +37,6 @@ class PostListDialogHelper(
     private var localPostIdForConflictResolutionDialog: Int? = null
     private var localPostIdForAutosaveRevisionResolutionDialog: Int? = null
     private var localPostIdForScheduledPostSyncDialog: Int? = null
-    private var localPostIdForCopyConflictDialog: Int? = null
 
     fun showMoveTrashedPostToDraftDialog(post: PostModel) {
         val dialogHolder = DialogHolder(
@@ -139,18 +137,6 @@ class PostListDialogHelper(
         showDialog.invoke(dialogHolder)
     }
 
-    fun showCopyConflictDialog(post: PostModel) {
-        val dialogHolder = DialogHolder(
-                tag = COPY_CONFLICT_DIALOG_TAG,
-                title = UiStringRes(R.string.dialog_confirm_copy_local_title),
-                message = UiStringRes(R.string.dialog_confirm_copy_local_message),
-                positiveButton = UiStringRes(R.string.dialog_confirm_copy_local_edit_button),
-                negativeButton = UiStringRes(R.string.dialog_confirm_copy_local_copy_button)
-        )
-        localPostIdForCopyConflictDialog = post.id
-        showDialog.invoke(dialogHolder)
-    }
-
     fun onPositiveClickedForBasicDialog(
         instanceTag: String,
         trashPostWithLocalChanges: (Int) -> Unit,
@@ -159,8 +145,7 @@ class PostListDialogHelper(
         publishPost: (Int) -> Unit,
         updateConflictedPostWithRemoteVersion: (Int) -> Unit,
         editRestoredAutoSavePost: (Int) -> Unit,
-        moveTrashedPostToDraft: (Int) -> Unit,
-        resolveConflictsAndEditPost: (Int) -> Unit
+        moveTrashedPostToDraft: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog?.let {
@@ -196,10 +181,6 @@ class PostListDialogHelper(
                         UNPUBLISHED_REVISION_DIALOG_LOAD_UNPUBLISHED_VERSION_CLICKED,
                         mapOf(POST_TYPE to "post"))
             }
-            COPY_CONFLICT_DIALOG_TAG -> localPostIdForCopyConflictDialog?.let {
-                localPostIdForCopyConflictDialog = null
-                resolveConflictsAndEditPost(it)
-            }
             else -> throw IllegalArgumentException("Dialog's positive button click is not handled: $instanceTag")
         }
     }
@@ -207,8 +188,7 @@ class PostListDialogHelper(
     fun onNegativeClickedForBasicDialog(
         instanceTag: String,
         updateConflictedPostWithLocalVersion: (Int) -> Unit,
-        editLocalPost: (Int) -> Unit,
-        copyLocalPost: (Int) -> Unit
+        editLocalPost: (Int) -> Unit
     ) {
         when (instanceTag) {
             CONFIRM_DELETE_POST_DIALOG_TAG -> localPostIdForDeleteDialog = null
@@ -227,10 +207,6 @@ class PostListDialogHelper(
                 )
             }
             CONFIRM_RESTORE_TRASHED_POST_DIALOG_TAG -> localPostIdForMoveTrashedPostToDraftDialog = null
-            COPY_CONFLICT_DIALOG_TAG -> localPostIdForCopyConflictDialog?.let {
-                localPostIdForCopyConflictDialog = null
-                copyLocalPost(it)
-            }
             else -> throw IllegalArgumentException("Dialog's negative button click is not handled: $instanceTag")
         }
     }
@@ -238,8 +214,7 @@ class PostListDialogHelper(
     fun onDismissByOutsideTouchForBasicDialog(
         instanceTag: String,
         updateConflictedPostWithLocalVersion: (Int) -> Unit,
-        editLocalPost: (Int) -> Unit,
-        copyLocalPost: (Int) -> Unit
+        editLocalPost: (Int) -> Unit
     ) {
         // Cancel and outside touch dismiss works the same way for all, except for conflict and autosave revision
         // dialogs, for which tapping outside and actively tapping the "edit local" have different meanings
@@ -248,8 +223,7 @@ class PostListDialogHelper(
             onNegativeClickedForBasicDialog(
                     instanceTag = instanceTag,
                     updateConflictedPostWithLocalVersion = updateConflictedPostWithLocalVersion,
-                    editLocalPost = editLocalPost,
-                    copyLocalPost = copyLocalPost
+                    editLocalPost = editLocalPost
             )
         }
     }
