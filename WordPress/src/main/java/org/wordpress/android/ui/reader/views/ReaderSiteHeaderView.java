@@ -21,10 +21,11 @@ import org.wordpress.android.util.LocaleManager;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.PhotonUtils;
 import org.wordpress.android.util.PhotonUtils.Quality;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.UrlUtils;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
-import org.wordpress.android.util.image.ImageType;
 
 import javax.inject.Inject;
 
@@ -155,10 +156,9 @@ public class ReaderSiteHeaderView extends LinearLayout {
             txtDescription.setVisibility(View.GONE);
         }
 
-        if (blogInfo.hasImageUrl()) {
-            mImageManager.loadIntoCircle(blavatarImg, ImageType.BLAVATAR_CIRCULAR,
-                    PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
-        }
+        mImageManager.loadIntoCircle(blavatarImg,
+                SiteUtils.getSiteImageType(blogInfo.isWpForTeams, BlavatarShape.CIRCULAR),
+                PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
 
         txtFollowCount.setText(String.format(
                 LocaleManager.getSafeLocale(getContext()),
