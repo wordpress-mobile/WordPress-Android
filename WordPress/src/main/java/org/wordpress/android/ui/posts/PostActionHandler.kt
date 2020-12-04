@@ -69,7 +69,7 @@ class PostActionHandler(
     private val showSnackbar: (SnackbarMessageHolder) -> Unit,
     private val showToast: (ToastMessageHolder) -> Unit,
     private val triggerPreviewStateUpdate: (PostListRemotePreviewState, PostInfoType) -> Unit,
-    private val copyPost: (SiteModel, PostModel) -> Unit
+    private val copyPost: (SiteModel, PostModel, Boolean) -> Unit
 ) {
     private val criticalPostActionTracker = CriticalPostActionTracker(onStateChanged = {
         invalidateList.invoke()
@@ -114,7 +114,7 @@ class PostActionHandler(
                     else -> trashPost(post)
                 }
             }
-            BUTTON_COPY -> copyPost(site, post)
+            BUTTON_COPY -> copyPost(site, post, true)
             BUTTON_DELETE, BUTTON_DELETE_PERMANENTLY -> {
                 postListDialogHelper.showDeletePostConfirmationDialog(post)
             }
@@ -171,6 +171,13 @@ class PostActionHandler(
         triggerPostUploadAction.invoke(PublishPost(dispatcher, site, post))
     }
 
+    fun resolveConflictsAndEditPost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            performChecksAndEdit(site, post)
+        }
+    }
+
     fun moveTrashedPostToDraft(localPostId: Int) {
         val post = postStore.getPostByLocalPostId(localPostId)
         if (post != null) {
@@ -201,7 +208,9 @@ class PostActionHandler(
         showSnackbar.invoke(snackBarHolder)
     }
 
-    private fun editPostButtonAction(site: SiteModel, post: PostModel) {
+    private fun editPostButtonAction(site: SiteModel, post: PostModel) = performChecksAndEdit(site, post)
+
+    private fun performChecksAndEdit(site: SiteModel, post: PostModel) {
         // first of all, check whether this post is in Conflicted state with a more recent remote version
         if (doesPostHaveUnhandledConflict.invoke(post)) {
             postListDialogHelper.showConflictedPostResolutionDialog(post)
