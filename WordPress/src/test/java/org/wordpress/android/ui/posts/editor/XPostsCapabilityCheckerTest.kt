@@ -59,8 +59,8 @@ class XPostsCapabilityCheckerTest : BaseUnitTest() {
     private suspend fun testCapability(
         dbResponse: XPostsResult,
         apiResponse: XPostsResult?,
-        expectedCapability: Boolean)
-    {
+        expectedCapability: Boolean
+    ) {
         whenever(mockXPostsStore.getXPostsFromDb(mockSite)).thenReturn(dbResponse)
         if (apiResponse != null) {
             whenever(mockXPostsStore.fetchXPosts(mockSite)).thenReturn(apiResponse)

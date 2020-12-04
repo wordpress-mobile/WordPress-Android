@@ -27,7 +27,6 @@ class XPostsCapabilityChecker @Inject constructor(
                     true
             }
 
-
     suspend fun isCapable(site: SiteModel): Boolean =
             // Check db first in order to reduce unnecessary network calls
             when (val saved = xPostsStore.getXPostsFromDb(site)) {
