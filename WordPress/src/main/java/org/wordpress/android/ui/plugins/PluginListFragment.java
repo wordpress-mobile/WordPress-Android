@@ -19,7 +19,6 @@ import androidx.annotation.StringRes;
 import androidx.appcompat.content.res.AppCompatResources;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.DiffUtil;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -87,7 +86,7 @@ public class PluginListFragment extends Fragment {
         setHasOptionsMenu(mListType != PluginListType.SEARCH);
 
         // Use the same view model as the PluginBrowserActivity
-        mViewModel = ViewModelProviders.of(getActivity(), mViewModelFactory).get(PluginBrowserViewModel.class);
+        mViewModel = new ViewModelProvider(getActivity(), mViewModelFactory).get(PluginBrowserViewModel.class);
         setupObservers();
     }
 

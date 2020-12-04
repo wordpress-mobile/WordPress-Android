@@ -25,7 +25,6 @@ import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
@@ -164,8 +163,8 @@ public class EditPostSettingsFragment extends Fragment {
                 new ArrayList<>(Arrays.asList(getResources().getStringArray(R.array.post_format_keys)));
         mDefaultPostFormatNames = new ArrayList<>(Arrays.asList(getResources()
                 .getStringArray(R.array.post_format_display_names)));
-        mPublishedViewModel =
-                ViewModelProviders.of(getActivity(), mViewModelFactory).get(EditPostPublishSettingsViewModel.class);
+        mPublishedViewModel = new ViewModelProvider(getActivity(), mViewModelFactory)
+                .get(EditPostPublishSettingsViewModel.class);
     }
 
     @Override
