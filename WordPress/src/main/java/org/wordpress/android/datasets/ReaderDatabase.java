@@ -216,7 +216,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("ALTER TABLE tbl_posts ADD is_wpforteams_site BOOLEAN;");
                 currentVersion++;
             case 144:
-                db.execSQL("ALTER TABLE tbl_blog_info ADD is_wpforteams BOOLEAN;");
+                db.execSQL("ALTER TABLE tbl_blog_info ADD is_wp_for_teams BOOLEAN;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {
