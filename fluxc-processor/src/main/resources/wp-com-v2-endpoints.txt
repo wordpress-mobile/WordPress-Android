@@ -4,6 +4,9 @@
 
 /sites/$site/activity
 /sites/$site/rewind
+/sites/$site/rewind/downloads
+/sites/$site/scan
+/sites/$site/scan/enqueue
 
 /sites/$site/gutenberg
 
@@ -24,3 +27,5 @@
 /mobile/feature-announcements/
 
 /me/gutenberg/
+
+/experiments/$version#String/assignments/$platform#String
