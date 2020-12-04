@@ -36,6 +36,14 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
+import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -54,14 +62,6 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
-import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
-import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
-import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
-import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -83,6 +83,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
+    @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -118,7 +119,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mediaUtilsWrapper,
                 fluxCUtilsWrapper,
                 contextProvider,
-                siteIconUploadHandler
+                siteIconUploadHandler,
+                siteStoriesHandler
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
