@@ -54,7 +54,7 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
         viewModel = PostListMainViewModel(
                 dispatcher = dispatcher,
-                postStore = postStore,
+                postStore = mock(),
                 accountStore = mock(),
                 uploadStore = mock(),
                 mediaStore = mock(),
@@ -240,14 +240,12 @@ class PostListMainViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the user copies a post a copy of the post is opened for edit`() {
-        val copyPostId = 2
         val mockedPost = PostModel()
-        whenever(postStore.instantiatePostModel(any(), any(), any(), any(), any(), any(), any()))
-                .thenReturn(mockedPost.apply { setId(copyPostId) })
+        whenever(postStore.instantiatePostModel(any(), any(), any(), any(), any(), any(), any())).thenReturn(mockedPost)
         viewModel.copyPost(SiteModel(), mockedPost)
         val captor = ArgumentCaptor.forClass(PostListAction::class.java)
         verify(onPostListActionObserver).onChanged(captor.capture())
         assertThat(requireNotNull(captor.value is EditPost))
-        assertThat((captor.value as EditPost).post.id).isEqualTo(copyPostId)
+        assertThat((captor.value as EditPost).post).isEqualTo(mockedPost)
     }
 }
