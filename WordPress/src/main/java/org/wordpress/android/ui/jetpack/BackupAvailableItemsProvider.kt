@@ -16,7 +16,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class BackupAvailableItemsProvider @Inject constructor() {
-    fun getAvailableItems() : List<BackupAvailableItem> {
+    fun getAvailableItems(): List<BackupAvailableItem> {
         return listOf(
                 BackupAvailableItem(
                         THEMES,
