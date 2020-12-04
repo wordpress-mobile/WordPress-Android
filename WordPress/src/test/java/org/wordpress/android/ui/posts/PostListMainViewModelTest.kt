@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
 import com.nhaarman.mockitokotlin2.eq
@@ -14,7 +13,6 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
@@ -22,8 +20,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.PostStore
-import org.wordpress.android.ui.posts.PostListAction.EditPost
 import org.wordpress.android.ui.posts.PostListViewLayoutType.COMPACT
 import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -39,8 +35,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
     @Mock lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var savePostToDbUseCase: SavePostToDbUseCase
     @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
-    @Mock lateinit var postStore: PostStore
-    @Mock lateinit var onPostListActionObserver: Observer<PostListAction>
     private lateinit var viewModel: PostListMainViewModel
 
     @InternalCoroutinesApi
@@ -70,7 +64,6 @@ class PostListMainViewModelTest : BaseUnitTest() {
                 savePostToDbUseCase = savePostToDbUseCase,
                 wpStoriesFeatureConfig = wpStoriesFeatureConfig
         )
-        viewModel.postListAction.observeForever(onPostListActionObserver)
     }
 
     @Test
@@ -236,16 +229,5 @@ class PostListMainViewModelTest : BaseUnitTest() {
         viewModel.onFabLongPressed()
 
         assertThat(viewModel.onFabLongPressedForPostList.value?.peekContent()).isNotNull
-    }
-
-    @Test
-    fun `when the user copies a post a copy of the post is opened for edit`() {
-        val mockedPost = PostModel()
-        whenever(postStore.instantiatePostModel(any(), any(), any(), any(), any(), any(), any())).thenReturn(mockedPost)
-        viewModel.copyPost(SiteModel(), mockedPost)
-        val captor = ArgumentCaptor.forClass(PostListAction::class.java)
-        verify(onPostListActionObserver).onChanged(captor.capture())
-        assertThat(requireNotNull(captor.value is EditPost))
-        assertThat((captor.value as EditPost).post).isEqualTo(mockedPost)
     }
 }
