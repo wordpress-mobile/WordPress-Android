@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.photopicker
 
 import android.Manifest.permission
+import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -16,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_W
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_OPEN_WP_STORIES_CAPTURE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_PREVIEW_OPENED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MEDIA_PICKER_RECENT_MEDIA_SELECTED
+import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -41,6 +43,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiMode
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.BottomBarUiModel.BottomBar.NONE
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PopupMenuUiModel.PopupMenuItem
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -75,7 +78,8 @@ class PhotoPickerViewModel @Inject constructor(
     private val permissionsHandler: PermissionsHandler,
     private val tenorFeatureConfig: TenorFeatureConfig,
     private val resourceProvider: ResourceProvider,
-    private val copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
+    private val copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase,
+    private val getMediaModelUseCase: GetMediaModelUseCase
 ) : ScopedViewModel(mainDispatcher) {
     private val _navigateToPreview = MutableLiveData<Event<UriWrapper>>()
     private val _onInsert = MutableLiveData<Event<List<UriWrapper>>>()
@@ -478,6 +482,18 @@ class PhotoPickerViewModel @Inject constructor(
     }
 
     fun urisSelectedFromSystemPicker(uris: List<UriWrapper>) {
+        copySelectedUrisLocally(uris)
+    }
+
+    fun mediaIdsSelectedFromWPMediaPicker(mediaIds: List<Long>) {
+        launch {
+            val mediaModels = getMediaModelUseCase
+                    .loadMediaByRemoteId(requireNotNull(site), mediaIds)
+            copySelectedUrisLocally(mediaModels.map { UriWrapper(Uri.parse(it.url)) })
+        }
+    }
+
+    fun copySelectedUrisLocally(uris: List<UriWrapper>) {
         launch {
             _showProgressDialog.value = ProgressDialogUiModel.Visible(R.string.uploading_title) {
                 _showProgressDialog.postValue(ProgressDialogUiModel.Hidden)
