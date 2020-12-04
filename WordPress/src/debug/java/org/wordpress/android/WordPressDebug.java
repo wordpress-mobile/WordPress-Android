@@ -3,7 +3,6 @@ package org.wordpress.android;
 import android.os.StrictMode;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.work.Configuration;
 import androidx.work.WorkManager;
 
@@ -15,7 +14,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.UploadWorker;
 
-public class WordPressDebug extends WordPress implements Configuration.Provider {
+public class WordPressDebug extends WordPress {
     @Override
     public void onCreate() {
         super.onCreate();
@@ -26,14 +25,13 @@ public class WordPressDebug extends WordPress implements Configuration.Provider 
         Stetho.initializeWithDefaults(this);
     }
 
-    @NonNull
     @Override
-    public androidx.work.Configuration getWorkManagerConfiguration() {
-        UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
-        return (new androidx.work.Configuration.Builder())
+    protected void initWorkManager() {
+        Configuration config = (new Configuration.Builder())
                 .setMinimumLoggingLevel(Log.DEBUG)
-                .setWorkerFactory(factory)
+                .setWorkerFactory(new UploadWorker.Factory(mUploadStarter, mSiteStore))
                 .build();
+        WorkManager.initialize(this, config);
     }
 
     @Override
