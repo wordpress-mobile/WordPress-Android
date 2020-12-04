@@ -9,9 +9,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.fluxc.model.scan.ThreatModel
-import org.wordpress.android.fluxc.model.scan.ThreatModel.Extension
-import org.wordpress.android.fluxc.model.scan.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -30,6 +28,7 @@ import javax.inject.Singleton
 @Singleton
 class ScanRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    private val threatMapper: ThreatMapper,
     dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
@@ -96,27 +95,7 @@ class ScanRestClient(
         return ScanStateModel(
                 state = state,
                 reason = response.reason,
-                threats = response.threats?.map {
-                    ThreatModel(
-                            id = it.id,
-                            signature = it.signature,
-                            description = it.description,
-                            status = it.status,
-                            fixable = Fixable(
-                                    fixer = it.fixable?.fixer,
-                                    target = it.fixable?.target
-                            ),
-                            extension = Extension(
-                                    type = it.extension?.type,
-                                    slug = it.extension?.slug,
-                                    name = it.extension?.name,
-                                    version = it.extension?.version,
-                                    isPremium = it.extension?.isPremium ?: false
-                            ),
-                            firstDetected = it.firstDetected,
-                            fixedOn = it.fixedOn
-                    )
-                },
+                threats = response.threats?.map { threatMapper.map(it) },
                 hasCloud = response.hasCloud,
                 credentials = response.credentials?.map {
                     Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)

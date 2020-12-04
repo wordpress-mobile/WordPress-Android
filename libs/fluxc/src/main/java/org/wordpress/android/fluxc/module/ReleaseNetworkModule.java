@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper;
 import org.wordpress.android.fluxc.network.RetryOnRedirectBasicNetwork;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
@@ -220,8 +221,9 @@ public class ReleaseNetworkModule {
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AccessToken token, UserAgent userAgent,
-                                                WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                ThreatMapper threatMapper) {
+        return new ScanRestClient(wpComGsonRequestBuilder, threatMapper, dispatcher, appContext, requestQueue,
                 token, userAgent);
     }
 
