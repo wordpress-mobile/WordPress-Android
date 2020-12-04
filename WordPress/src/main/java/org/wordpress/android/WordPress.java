@@ -22,6 +22,7 @@ import android.util.AndroidRuntimeException;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.core.provider.FontRequest;
@@ -136,7 +137,8 @@ import kotlinx.coroutines.CoroutineScope;
 
 import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
 
-public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
+public class WordPress extends MultiDexApplication
+        implements HasAndroidInjector, LifecycleObserver, androidx.work.Configuration.Provider {
     public static final String SITE = "SITE";
     public static final String LOCAL_SITE_ID = "LOCAL_SITE_ID";
     public static final String REMOTE_SITE_ID = "REMOTE_SITE_ID";
@@ -344,8 +346,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
                 .build();
         mCredentialsClient.connect();
 
-        initWorkManager();
-
         // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
         // It will upload local draft or published posts with local changes to the server.
         UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
@@ -364,11 +364,11 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
     }
 
-    protected void initWorkManager() {
+    @NonNull
+    @Override
+    public androidx.work.Configuration getWorkManagerConfiguration() {
         UploadWorker.Factory factory = new UploadWorker.Factory(mUploadStarter, mSiteStore);
-        androidx.work.Configuration config =
-                (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
-        WorkManager.initialize(this, config);
+        return (new androidx.work.Configuration.Builder()).setWorkerFactory(factory).build();
     }
 
     // note that this is overridden in WordPressDebug
