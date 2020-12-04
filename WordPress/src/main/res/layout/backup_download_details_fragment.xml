@@ -54,56 +54,17 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backup_details_action_button"
+            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
             tools:text="Items included in this download"
             android:text="@string/backup_download_details_choose_items_header"/>
 
-        <!-- todo: annmarie - hmmm, I wonder if I should make this a RV, but it's hardcoded? -->
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_themes_container"
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/backup_details_secondary_header"
-            app:layout_constraintBottom_toTopOf="@+id/backup_details_plugins_container"
-            />
-
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_plugins_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_themes_container"
-            app:layout_constraintBottom_toTopOf="@+id/backup_details_media_container"
-            />
-
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_media_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_plugins_container"
-            app:layout_constraintBottom_toTopOf="@+id/backup_details_root_container"
-            />
-
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_root_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_media_container"
-            app:layout_constraintBottom_toTopOf="@+id/backup_details_content_container"
-            />
-
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_content_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_root_container"
-            app:layout_constraintBottom_toTopOf="@+id/backup_details_database_container"
-            />
-
-        <include layout="@layout/backup_details_choose_items"
-            android:id="@+id/backup_details_database_container"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_content_container"
-            app:layout_constraintBottom_toBottomOf="parent" />
-
+            app:layout_constraintBottom_toBottomOf="parent"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 </ScrollView>
