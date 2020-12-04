@@ -1,5 +1,6 @@
 package org.wordpress.android.fluxc.model.scan
 
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import java.util.Date
 
 data class ScanStateModel(
