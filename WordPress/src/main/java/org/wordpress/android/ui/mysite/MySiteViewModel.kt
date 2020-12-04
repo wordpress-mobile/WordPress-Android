@@ -40,6 +40,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
@@ -146,6 +147,7 @@ class MySiteViewModel
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
+            siteItems.add(DomainRegistrationBlock(ListItemInteraction.create { domainRegistrationClick(site) }))
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
             siteItems
         } else {
