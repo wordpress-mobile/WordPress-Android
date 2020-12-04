@@ -212,6 +212,8 @@ dependencies {
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
+    // GCMNetworkManager on api <= 22
+    implementation "androidx.work:work-gcm:$androidxWorkVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
