@@ -10,7 +10,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -83,7 +82,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -223,15 +221,12 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-                            mViewModel.onSwipeToRefresh();
-                        }
-                        updatePostAndComments();
+                findViewById(R.id.swipe_to_refresh),
+                () -> {
+                    if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+                        mViewModel.onSwipeToRefresh();
                     }
+                    updatePostAndComments();
                 }
         );
 
@@ -301,9 +296,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                v -> {
                     Bundle bundle = CommentFullScreenDialogFragment.Companion
                             .newBundle(mEditComment.getText().toString(),
                                     mEditComment.getSelectionStart(),
@@ -339,18 +332,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                         .build()
                         .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
                 }
-            }
         );
 
-        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
-            @Override public boolean onLongClick(View view) {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-                return true;
+        buttonExpand.setOnLongClickListener(view -> {
+            if (view.isHapticFeedbackEnabled()) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+            return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
     }
@@ -369,16 +359,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
     // to do a complete refresh we need to get updated post and new comments
     private void updatePostAndComments() {
-        ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result.isNewOrChanged()) {
-                    // get the updated post and pass it to the adapter
-                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
-                    if (post != null) {
-                        getCommentAdapter().setPost(post);
-                        mPost = post;
-                    }
+        ReaderPostActions.updatePost(mPost, result -> {
+            if (!isFinishing() && result.isNewOrChanged()) {
+                // get the updated post and pass it to the adapter
+                ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                if (post != null) {
+                    getCommentAdapter().setPost(post);
+                    mPost = post;
                 }
             }
         });
