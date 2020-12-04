@@ -255,7 +255,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       alpha: false,
       beta: false,
       final: true)
-    android_build_preflight() unless (options[:skip_prechecks])
+    android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
     version=android_get_release_version()
