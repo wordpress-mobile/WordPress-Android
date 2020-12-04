@@ -209,16 +209,15 @@ class PostListMainViewModel @Inject constructor(
     }
 
     fun copyPost(site: SiteModel, postToCopy: PostModel) {
-        // TODO: Analytics
         val post = postStore.instantiatePostModel(
-                    site,
-                    false,
-                    postToCopy.title,
-                    postToCopy.content,
-                    PostStatus.DRAFT.toString(),
-                    postToCopy.categoryIdList,
-                    postToCopy.postFormat
-            )
+                site,
+                false,
+                postToCopy.title,
+                postToCopy.content,
+                PostStatus.DRAFT.toString(),
+                postToCopy.categoryIdList,
+                postToCopy.postFormat
+        )
         _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
 
