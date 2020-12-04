@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
 import com.wellsql.generated.ActivityLogTable
+import com.wellsql.generated.BackupDownloadStatusTable
 import com.wellsql.generated.RewindStatusCredentialsTable
 import com.wellsql.generated.RewindStatusTable
 import com.yarolegovich.wellsql.SelectQuery
@@ -11,6 +12,7 @@ import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
 import org.wordpress.android.fluxc.tools.FormattableContentMapper
@@ -101,6 +103,21 @@ class ActivityLogSqlUtils
         return rewindStatusBuilder?.build(credentials?.map { it.build() })
     }
 
+    fun getBackupDownloadStatusForSite(site: SiteModel): BackupDownloadStatusModel? {
+        val downloadStatusBuilder = getBackupDownloadStatusBuilder(site)
+        return downloadStatusBuilder?.build()
+    }
+
+    fun replaceBackupDownloadStatus(site: SiteModel, backupDownloadStatusModel: BackupDownloadStatusModel) {
+        val backupDownloadStatusBuilder = backupDownloadStatusModel.toBuilder(site)
+        WellSql.delete(BackupDownloadStatusBuilder::class.java)
+                .where()
+                .equals(BackupDownloadStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+        WellSql.insert(backupDownloadStatusBuilder).execute()
+    }
+
     private fun getRewindStatusBuilder(site: SiteModel): RewindStatusBuilder? {
         return WellSql.select(RewindStatusBuilder::class.java)
                 .where()
@@ -116,6 +133,15 @@ class ActivityLogSqlUtils
                 .equals(RewindStatusCredentialsTable.REWIND_STATE_ID, rewindId)
                 .endWhere()
                 .asModel
+    }
+
+    private fun getBackupDownloadStatusBuilder(site: SiteModel): BackupDownloadStatusBuilder? {
+        return WellSql.select(BackupDownloadStatusBuilder::class.java)
+                .where()
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .asModel
+                .firstOrNull()
     }
 
     private fun ActivityLogModel.toBuilder(site: SiteModel): ActivityLogBuilder {
@@ -167,6 +193,21 @@ class ActivityLogSqlUtils
                 host = this.host,
                 port = this.port,
                 stillValid = this.stillValid
+        )
+    }
+
+    private fun BackupDownloadStatusModel.toBuilder(site: SiteModel): BackupDownloadStatusBuilder {
+        return BackupDownloadStatusBuilder(
+                localSiteId = site.id,
+                remoteSiteId = site.siteId,
+                downloadId = this.downloadId,
+                rewindId = this.rewindId,
+                backupPoint = this.backupPoint.time,
+                startedAt = this.startedAt.time,
+                progress = this.progress,
+                downloadCount = this.downloadCount,
+                validUntil = this.validUntil?.time,
+                url = this.url
         )
     }
 
@@ -287,6 +328,45 @@ class ActivityLogSqlUtils
 
         fun build(): Credentials {
             return Credentials(type, role, host, port, stillValid)
+        }
+    }
+
+    @Table(name = "BackupDownloadStatus")
+    data class BackupDownloadStatusBuilder(
+        @PrimaryKey
+        @Column private var mId: Int = -1,
+        @Column var localSiteId: Int,
+        @Column var remoteSiteId: Long,
+        @Column var downloadId: Long,
+        @Column var rewindId: String,
+        @Column var backupPoint: Long,
+        @Column var startedAt: Long,
+        @Column var progress: Int? = null,
+        @Column var downloadCount: Int? = null,
+        @Column var validUntil: Long? = null,
+        @Column var url: String? = null
+    ) : Identifiable {
+        constructor() : this(-1, 0, 0, 0, "", 0, 0)
+
+        override fun setId(id: Int) {
+            this.mId = id
+        }
+
+        override fun getId() = mId
+
+        fun build(): BackupDownloadStatusModel {
+            return BackupDownloadStatusModel(
+                    downloadId,
+                    rewindId,
+                    Date(backupPoint),
+                    Date(startedAt),
+                    progress,
+                    downloadCount,
+                    validUntil?.let {
+                        Date(it)
+                    },
+                    url
+            )
         }
     }
 }

@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 123
+        return 124
     }
 
     override fun getDbName(): String {
@@ -1338,6 +1338,19 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 122 -> migrate(version) {
                     db.execSQL("ALTER TABLE SiteModel ADD IS_WP_FOR_TEAMS_SITE BOOLEAN")
+                }
+                123 -> migrate(version) {
+                    db.execSQL(
+                        "CREATE TABLE ScanState (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "LOCAL_SITE_ID INTEGER,REMOTE_SITE_ID INTEGER," +
+                            "START_DATE INTEGER," +
+                            "DURATION INTEGER," +
+                            "PROGRESS INTEGER," +
+                            "SCAN_STATE TEXT," +
+                            "ERROR TEXT," +
+                            "INITIAL BOOLEAN," +
+                            "REASON TEXT)"
+                    )
                 }
             }
         }

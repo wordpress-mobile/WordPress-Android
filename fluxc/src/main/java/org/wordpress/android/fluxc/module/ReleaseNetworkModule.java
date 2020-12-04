@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.network.RetryOnRedirectBasicNetwork;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.network.OkHttpStack;
@@ -29,6 +30,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AppSecrets;
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.Authenticator;
 import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.encryptedlog.EncryptedLogRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.experiments.ExperimentRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.jetpacktunnel.JetpackRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaResponseUtils;
 import org.wordpress.android.fluxc.network.rest.wpcom.media.MediaRestClient;
@@ -77,9 +79,18 @@ public class ReleaseNetworkModule {
     private static final String DEFAULT_CACHE_DIR = "volley-fluxc";
     private static final int NETWORK_THREAD_POOL_SIZE = 10;
 
+    private RequestQueue newRetryOnRedirectRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
+        Network network = new RetryOnRedirectBasicNetwork(new OkHttpStack(okHttpClientBuilder));
+        return createRequestQueue(network, appContext);
+    }
+
     private RequestQueue newRequestQueue(OkHttpClient.Builder okHttpClientBuilder, Context appContext) {
-        File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
         Network network = new BasicNetwork(new OkHttpStack(okHttpClientBuilder));
+        return createRequestQueue(network, appContext);
+    }
+
+    private RequestQueue createRequestQueue(Network network, Context appContext) {
+        File cacheDir = new File(appContext.getCacheDir(), DEFAULT_CACHE_DIR);
         RequestQueue queue = new RequestQueue(new DiskBasedCache(cacheDir), network, NETWORK_THREAD_POOL_SIZE);
         queue.start();
         return queue;
@@ -91,6 +102,14 @@ public class ReleaseNetworkModule {
     public RequestQueue provideRequestQueue(@Named("regular") OkHttpClient.Builder okHttpClientBuilder,
                                             Context appContext) {
         return newRequestQueue(okHttpClientBuilder, appContext);
+    }
+
+    @Singleton
+    @Named("no-redirects")
+    @Provides
+    public RequestQueue provideNoRedirectsRequestQueue(@Named("no-redirects") OkHttpClient.Builder okHttpClientBuilder,
+                                                       Context appContext) {
+        return newRetryOnRedirectRequestQueue(okHttpClientBuilder, appContext);
     }
 
     @Singleton
@@ -192,18 +211,18 @@ public class ReleaseNetworkModule {
                                                               @Named("regular") RequestQueue requestQueue,
                                                               AccessToken token, UserAgent userAgent,
                                                               WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ActivityLogRestClient(dispatcher, wpComGsonRequestBuilder, appContext, requestQueue, token,
-                userAgent);
+        return new ActivityLogRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
     @Provides
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
-                                                       @Named("regular") RequestQueue requestQueue,
-                                                       AccessToken token, UserAgent userAgent,
-                                                       WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue, token,
-                userAgent);
+                                                @Named("regular") RequestQueue requestQueue,
+                                                AccessToken token, UserAgent userAgent,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                token, userAgent);
     }
 
     @Singleton
@@ -463,6 +482,16 @@ public class ReleaseNetworkModule {
                                                             WPComGsonRequestBuilder wpComGsonRequestBuilder) {
         return new StockMediaRestClient(wpComGsonRequestBuilder, mediaResponseUtils, dispatcher, appContext,
                 requestQueue, token, userAgent);
+    }
+
+    @Singleton
+    @Provides
+    public ExperimentRestClient provideExperimentRestClient(Context appContext, Dispatcher dispatcher,
+                                                            @Named("regular") RequestQueue requestQueue,
+                                                            AccessToken token, UserAgent userAgent,
+                                                            WPComGsonRequestBuilder wpComGsonRequestBuilder) {
+        return new ExperimentRestClient(wpComGsonRequestBuilder, appContext, dispatcher, requestQueue, token,
+                userAgent);
     }
 
     @Singleton

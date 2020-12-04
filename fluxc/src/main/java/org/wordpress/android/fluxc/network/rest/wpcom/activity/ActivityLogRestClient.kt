@@ -7,21 +7,29 @@ import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
-import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
-import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
-import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.AUTHORIZATION_REQUIRED
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadError
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadResultPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
+import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindErrorType
@@ -31,15 +39,15 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import javax.inject.Singleton
 
 @Singleton
-class ActivityLogRestClient
-constructor(
-    dispatcher: Dispatcher,
+class ActivityLogRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
@@ -57,11 +65,11 @@ constructor(
                 buildActivityPayload(activities, payload.site, totalItems, number, offset)
             }
             is Error -> {
-                val errorType = genericToError(
+                val errorType = NetworkErrorMapper.map(
                         response.error,
-                        ActivityLogErrorType.GENERIC_ERROR,
-                        ActivityLogErrorType.INVALID_RESPONSE,
-                        ActivityLogErrorType.AUTHORIZATION_REQUIRED
+                        GENERIC_ERROR,
+                        INVALID_RESPONSE,
+                        AUTHORIZATION_REQUIRED
                 )
                 val error = ActivityError(errorType, response.error.message)
                 FetchedActivityLogPayload(error, payload.site, number = number, offset = offset)
@@ -77,7 +85,7 @@ constructor(
                 buildRewindStatusPayload(response.data, site)
             }
             is Error -> {
-                val errorType = genericToError(
+                val errorType = NetworkErrorMapper.map(
                         response.error,
                         RewindStatusErrorType.GENERIC_ERROR,
                         RewindStatusErrorType.INVALID_RESPONSE,
@@ -103,15 +111,71 @@ constructor(
                 if (response.data.ok != true && (response.data.error != null && response.data.error.isNotEmpty())) {
                     RewindResultPayload(RewindError(API_ERROR, response.data.error), rewindId, site)
                 } else {
-                    ActivityLogStore.RewindResultPayload(rewindId, response.data.restore_id, site)
+                    RewindResultPayload(rewindId, response.data.restore_id, site)
                 }
             }
             is Error -> {
-                val error = ActivityLogStore.RewindError(genericToError(response.error,
-                        RewindErrorType.GENERIC_ERROR,
-                        RewindErrorType.INVALID_RESPONSE,
-                        RewindErrorType.AUTHORIZATION_REQUIRED), response.error.message)
-                ActivityLogStore.RewindResultPayload(error, rewindId, site)
+                val error = RewindError(NetworkErrorMapper.map(
+                                response.error,
+                                RewindErrorType.GENERIC_ERROR,
+                                RewindErrorType.INVALID_RESPONSE,
+                                RewindErrorType.AUTHORIZATION_REQUIRED
+                        ), response.error.message)
+                RewindResultPayload(error, rewindId, site)
+            }
+        }
+    }
+
+    suspend fun backupDownload(
+        site: SiteModel,
+        rewindId: String,
+        types: BackupDownloadRequestTypes
+    ): BackupDownloadResultPayload {
+        val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
+        val request = mapOf("rewindId" to rewindId, "types" to types)
+        val response =
+                wpComGsonRequestBuilder.syncPostRequest(this, url, null, request, BackupDownloadResponse::class.java)
+        return when (response) {
+            is Success -> {
+                BackupDownloadResultPayload(
+                        response.data.rewindId,
+                        response.data.downloadId,
+                        response.data.backupPoint,
+                        response.data.startedAt,
+                        response.data.progress,
+                        site)
+            }
+            is Error -> {
+                val error = BackupDownloadError(NetworkErrorMapper.map(response.error,
+                        BackupDownloadErrorType.GENERIC_ERROR,
+                        BackupDownloadErrorType.INVALID_RESPONSE,
+                        BackupDownloadErrorType.AUTHORIZATION_REQUIRED), response.error.message)
+                BackupDownloadResultPayload(error, rewindId, site)
+            }
+        }
+    }
+
+    suspend fun fetchBackupDownloadState(site: SiteModel): FetchedBackupDownloadStatePayload {
+        val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.url
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                mapOf(),
+                BackupDownloadStatusResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                buildBackupDownloadStatusPayload(response.data, site)
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
+                        BackupDownloadStatusErrorType.GENERIC_ERROR,
+                        BackupDownloadStatusErrorType.INVALID_RESPONSE,
+                        BackupDownloadStatusErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = BackupDownloadStatusError(errorType, response.error.message)
+                FetchedBackupDownloadStatePayload(error, site)
             }
         }
     }
@@ -231,20 +295,19 @@ constructor(
     private fun buildErrorPayload(site: SiteModel, errorType: RewindStatusErrorType) =
             FetchedRewindStatePayload(RewindStatusError(errorType), site)
 
-    private fun <T> genericToError(
-        error: WPComGsonNetworkError,
-        genericError: T,
-        invalidResponse: T,
-        authorizationRequired: T
-    ): T {
-        var errorType = genericError
-        if (error.isGeneric && error.type == BaseRequest.GenericErrorType.INVALID_RESPONSE) {
-            errorType = invalidResponse
-        }
-        if ("unauthorized" == error.apiError) {
-            errorType = authorizationRequired
-        }
-        return errorType
+    private fun buildBackupDownloadStatusPayload(response: BackupDownloadStatusResponse, site: SiteModel):
+            FetchedBackupDownloadStatePayload {
+        val statusModel = BackupDownloadStatusModel(
+                rewindId = response.rewindId,
+                downloadId = response.downloadId,
+                backupPoint = response.backupPoint,
+                startedAt = response.startedAt,
+                progress = response.progress,
+                downloadCount = response.downloadCount,
+                validUntil = response.validUntil,
+                url = response.url
+        )
+        return FetchedBackupDownloadStatePayload(statusModel, site)
     }
 
     class ActivitiesResponse(
@@ -308,4 +371,23 @@ constructor(
     }
 
     class RewindResponse(val restore_id: Long, val ok: Boolean?, val error: String?)
+
+    class BackupDownloadResponse(
+        val downloadId: Long,
+        val rewindId: String,
+        val backupPoint: String,
+        val startedAt: String,
+        val progress: Int
+    )
+
+    data class BackupDownloadStatusResponse(
+        val downloadId: Long,
+        val rewindId: String,
+        val backupPoint: Date,
+        val startedAt: Date,
+        val progress: Int?,
+        val downloadCount: Int?,
+        val validUntil: Date?,
+        val url: String?
+    )
 }

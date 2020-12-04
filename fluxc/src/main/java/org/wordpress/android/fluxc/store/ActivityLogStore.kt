@@ -7,12 +7,15 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ActivityLogAction
+import org.wordpress.android.fluxc.action.ActivityLogAction.BACKUP_DOWNLOAD
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient
@@ -52,6 +55,16 @@ class ActivityLogStore
                     emitChange(rewind(action.payload as RewindPayload))
                 }
             }
+            BACKUP_DOWNLOAD -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On BACKUP_DOWNLOAD") {
+                    emitChange(backupDownload(action.payload as BackupDownloadPayload))
+                }
+            }
+            FETCH_BACKUP_DOWNLOAD_STATE -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_BACKUP_DOWNLOAD_STATE") {
+                    emitChange(fetchBackupDownloadState(action.payload as FetchBackupDownloadStatePayload))
+                }
+            }
         }
     }
 
@@ -71,6 +84,10 @@ class ActivityLogStore
 
     fun getRewindStatusForSite(site: SiteModel): RewindStatusModel? {
         return activityLogSqlUtils.getRewindStatusForSite(site)
+    }
+
+    fun getBackupDownloadStatusForSite(site: SiteModel): BackupDownloadStatusModel? {
+        return activityLogSqlUtils.getBackupDownloadStatusForSite(site)
     }
 
     override fun onRegister() {
@@ -100,6 +117,21 @@ class ActivityLogStore
         return emitRewindResult(payload, REWIND)
     }
 
+    suspend fun backupDownload(backupDownloadPayload: BackupDownloadPayload): OnBackupDownload {
+        val payload = activityLogRestClient.backupDownload(
+                backupDownloadPayload.site,
+                backupDownloadPayload.rewindId,
+                backupDownloadPayload.types)
+        return emitBackupDownloadResult(payload, BACKUP_DOWNLOAD)
+    }
+
+    suspend fun fetchBackupDownloadState(
+        fetchBackupDownloadPayload: FetchBackupDownloadStatePayload
+    ): OnBackupDownloadStatusFetched {
+        val payload = activityLogRestClient.fetchBackupDownloadState(fetchBackupDownloadPayload.site)
+        return storeBackupDownloadState(payload, FETCH_BACKUP_DOWNLOAD_STATE)
+    }
+
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
         return if (payload.error != null) {
             OnActivityLogFetched(payload.error, action)
@@ -127,11 +159,40 @@ class ActivityLogStore
         }
     }
 
+    private fun storeBackupDownloadState(payload: FetchedBackupDownloadStatePayload, action: ActivityLogAction):
+            OnBackupDownloadStatusFetched {
+        return if (payload.error != null) {
+            OnBackupDownloadStatusFetched(payload.error, action)
+        } else {
+            if (payload.backupDownloadStatusModelResponse != null) {
+                activityLogSqlUtils.replaceBackupDownloadStatus(payload.site, payload.backupDownloadStatusModelResponse)
+            }
+            OnBackupDownloadStatusFetched(action)
+        }
+    }
+
     private fun emitRewindResult(payload: RewindResultPayload, action: ActivityLogAction): OnRewind {
         return if (payload.error != null) {
             OnRewind(payload.rewindId, payload.error, action)
         } else {
             OnRewind(rewindId = payload.rewindId, restoreId = payload.restoreId, causeOfChange = action)
+        }
+    }
+
+    private fun emitBackupDownloadResult(
+        payload: BackupDownloadResultPayload,
+        action: ActivityLogAction
+    ): OnBackupDownload {
+        return if (payload.error != null) {
+            OnBackupDownload(payload.rewindId, payload.error, action)
+        } else {
+            OnBackupDownload(
+                    rewindId = payload.rewindId,
+                    downloadId = payload.downloadId,
+                    backupPoint = payload.backupPoint,
+                    startedAt = payload.startedAt,
+                    progress = payload.progress,
+                    causeOfChange = action)
         }
     }
 
@@ -161,6 +222,28 @@ class ActivityLogStore
     ) : Store.OnChanged<RewindError>() {
         constructor(rewindId: String, error: RewindError, causeOfChange: ActivityLogAction) :
                 this(rewindId = rewindId, restoreId = null, causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnBackupDownload(
+        val rewindId: String,
+        val downloadId: Long? = null,
+        val backupPoint: String? = null,
+        val startedAt: String? = null,
+        val progress: Int = 0,
+        var causeOfChange: ActivityLogAction
+    ) : Store.OnChanged<BackupDownloadError>() {
+        constructor(rewindId: String, error: BackupDownloadError, causeOfChange: ActivityLogAction) :
+                this(rewindId = rewindId, downloadId = null, causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnBackupDownloadStatusFetched(var causeOfChange: ActivityLogAction) :
+            Store.OnChanged<BackupDownloadStatusError>() {
+        constructor(error: BackupDownloadStatusError, causeOfChange: ActivityLogAction) :
+                this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -219,6 +302,55 @@ class ActivityLogStore
         }
     }
 
+    class BackupDownloadPayload(
+        val site: SiteModel,
+        val rewindId: String,
+        val types: BackupDownloadRequestTypes
+    ) : Payload<BaseRequest.BaseNetworkError>()
+
+    class BackupDownloadResultPayload(
+        val rewindId: String,
+        val downloadId: Long? = null,
+        val backupPoint: String? = null,
+        val startedAt: String? = null,
+        val progress: Int = 0,
+        val site: SiteModel
+    ) : Payload<BackupDownloadError>() {
+        constructor(error: BackupDownloadError, rewindId: String, site: SiteModel) :
+                this(rewindId = rewindId, site = site) {
+            this.error = error
+        }
+    }
+
+    class FetchBackupDownloadStatePayload(val site: SiteModel) : Payload<BaseRequest.BaseNetworkError>()
+
+    class FetchedBackupDownloadStatePayload(
+        val backupDownloadStatusModelResponse: BackupDownloadStatusModel? = null,
+        val site: SiteModel
+    ) : Payload<BackupDownloadStatusError>() {
+        constructor(error: BackupDownloadStatusError, site: SiteModel) : this(site = site) {
+            this.error = error
+        }
+    }
+
+    data class RewindRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
+
+    data class BackupDownloadRequestTypes(
+        val themes: Boolean,
+        val plugins: Boolean,
+        val uploads: Boolean,
+        val sqls: Boolean,
+        val roots: Boolean,
+        val contents: Boolean
+    )
+
     // Errors
     enum class ActivityLogErrorType {
         GENERIC_ERROR,
@@ -230,7 +362,7 @@ class ActivityLogStore
         MISSING_PUBLISHED_DATE
     }
 
-    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : Store.OnChangedError
+    class ActivityError(var type: ActivityLogErrorType, var message: String? = null) : OnChangedError
 
     enum class RewindStatusErrorType {
         GENERIC_ERROR,
@@ -241,7 +373,7 @@ class ActivityLogStore
         MISSING_RESTORE_ID
     }
 
-    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : Store.OnChangedError
+    class RewindStatusError(var type: RewindStatusErrorType, var message: String? = null) : OnChangedError
 
     enum class RewindErrorType {
         GENERIC_ERROR,
@@ -251,14 +383,23 @@ class ActivityLogStore
         MISSING_STATE
     }
 
-    class RewindError(var type: RewindErrorType, var message: String? = null) : Store.OnChangedError
+    class RewindError(var type: RewindErrorType, var message: String? = null) : OnChangedError
 
-    data class RewindRequestTypes(
-        val themes: Boolean,
-        val plugins: Boolean,
-        val uploads: Boolean,
-        val sqls: Boolean,
-        val roots: Boolean,
-        val contents: Boolean
-    )
+    enum class BackupDownloadErrorType {
+        GENERIC_ERROR,
+        API_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class BackupDownloadError(var type: BackupDownloadErrorType, var message: String? = null) : OnChangedError
+
+    enum class BackupDownloadStatusErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class BackupDownloadStatusError(var type: BackupDownloadStatusErrorType, var message: String? = null) :
+            OnChangedError
 }
