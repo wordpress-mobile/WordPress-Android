@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-26 10:54:08+0000
+Translation-Revision-Date: 2020-12-04 09:54:09+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">Mindestens eine Folie wurde nicht zu deiner Story hinzugefügt, da Stories derzeit keine GIF-Dateien unterstützen. Bitte wähle stattdessen ein statisches Bild oder einen Videohintergrund aus.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF-Dateien werden nicht unterstützt</string>
+    <string name="dialog_edit_story_unrecoverable_message">Wir konnten die Medien für diese Story auf der Website nicht finden.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Story kann nicht bearbeitet werden</string>
+    <string name="dialog_edit_story_unavailable_message">Medien für diese Story können nicht geladen werden. Überprüfe deine Internetverbindung und versuche es dann erneut.</string>
+    <string name="dialog_edit_story_unavailable_title">Story kann nicht bearbeitet werden</string>
+    <string name="dialog_edit_story_limited_message">Diese Story wurde auf einem anderen Gerät bearbeitet und die Möglichkeiten, bestimmte Objekte zu bearbeiten, sind ggfs. eingeschränkt.</string>
+    <string name="dialog_edit_story_limited_title">Eingeschränkte Story-Bearbeitung</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Die Medien wurden entfernt. Versuche, deine Story zu bearbeiten.</string>
     <string name="delete_button_alt">Löschen</string>
     <string name="hpp_choose_error">Beim Auswählen des Designs ist ein Fehler aufgetreten.</string>
     <string name="label_next_button">Weiter</string>
@@ -32,7 +41,6 @@ Language: de
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollbares Block-Menü geschlossen.</string>
     <string name="hpp_skip_button">Überspringen</string>
     <string name="hpp_choose_button">Auswählen</string>
-    <string name="hpp_subtitle">Wähle ein Layout für deine Startseite aus, das dir gefällt. Du kannst es später jederzeit ändern oder anpassen.</string>
     <string name="hpp_title">Wähle ein Design</string>
     <string name="mlp_network_error_subtitle">Tippe auf „erneut versuchen“, wenn du wieder online bist oder erstelle über den Button unten eine leere Seite.</string>
     <string name="mlp_network_error_title">Layouts sind offline nicht verfügbar</string>
@@ -294,7 +302,6 @@ Language: de
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_try_a_starter_layout">Probiere ein Layout für Neueinsteiger aus</string>
-    <string name="gutenberg_native_insert_mention">Erwähnung einfügen</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tippe zweimal, um das Action Sheet mit den verfügbaren Optionen zu öffnen</string>
     <string name="site_settings_classic_blog">Klassischer Blog</string>
@@ -460,7 +467,6 @@ Language: de
     <string name="post_list_tab_scheduled_posts">Geplant</string>
     <string name="post_list_tab_published_posts">Veröffentlicht</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nicht verbunden</string>
-    <string name="my_site_select_domains_page_title">Website-Adresse</string>
     <string name="sharing_facebook_account_must_have_pages">Die Facebook-Verbindung findet keine Seiten. Publicize kann keine Verbindung zu Facebook-Profilen herstellen, nur zu öffentlichen Seiten.</string>
     <string name="notifications_tab_title_unread_notifications">Ungelesen</string>
     <string name="dlg_confirm_action_trash">Papierkorb</string>
@@ -960,7 +966,6 @@ Language: de
     <string name="new_site_creation_site_preview_content_description">Vorschau der Website anzeigen</string>
     <string name="notification_new_site_creation_failed">Es ist ein Problem aufgetreten</string>
     <string name="new_site_creation_empty_domain_list_message">Keine verfügbaren Adressen, die deiner Suche entsprechen.</string>
-    <string name="new_site_creation_domain_header_title">Wähl einen Domainnamen für deine Website aus.</string>
     <string name="site_creation_error_generic_subtitle">Fehler bei der Kommunikation mit dem Server, bitte versuche es erneut.</string>
     <string name="site_creation_error_generic_title">Es ist ein Problem aufgetreten</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Ein Problem ist aufgetreten</string>
@@ -1410,7 +1415,6 @@ Language: de
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 Beitrag mit 1 Datei nicht hochgeladen</string>
     <string name="untitled_in_parentheses">(Ohne Titel)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Website erstellen</string>
     <string name="notification_site_creation_created">Zum Fortfahren tippen.</string>
     <string name="notification_site_creation_title_success">Die Website wurde erstellt!</string>
@@ -1699,10 +1703,6 @@ Language: de
     <string name="post_status_draft">Entwurf</string>
     <string name="post_status_pending_review">Ausstehender Review</string>
     <string name="post_status_publish_post">Veröffentlichen</string>
-    <string name="change_location">Ort ändern</string>
-    <string name="remove_location">Ort entfernen</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Die Ortsauswahl kann nicht geöffnet werden, Google Play ist nicht verfügbar</string>
-    <string name="post_settings_location">Ort</string>
     <string name="now">Jetzt</string>
     <string name="post_settings_password_dialog_hint">Dieser Beitrag kann nur mithilfe dieses Passworts angezeigt werden.</string>
     <string name="post_settings_excerpt_dialog_hint">Auszüge sind optionale, selbst verfasste Zusammenfassungen deiner Inhalte.</string>

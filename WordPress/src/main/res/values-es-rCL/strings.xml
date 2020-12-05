@@ -116,7 +116,6 @@ Language: es_CL
     <string name="new_site_creation_search_domain_input_hint">Buscar Dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en Internet.</string>
     <string name="site_creation_error_generic_title">Hubo un problema</string>
-    <string name="new_site_creation_domain_header_title">Elige un nombre de dominio para tu sitio</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
     <string name="site_creation_error_generic_subtitle">Error al comunicarse con el servidor, inténtalo de nuevo</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Hubo un problema</string>
@@ -548,7 +547,6 @@ Language: es_CL
     <string name="media_file_posts_plural_only_not_uploaded">%1$d entradas no subidas</string>
     <string name="untitled_in_parentheses">(Sin título)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 página con 1 archivo no subido</string>
     <string name="media_file_pages_and_posts_mixed_not_uploaded_one_file">%1$d entradas/páginas con 1 archivo no subido</string>
     <string name="media_file_pages_plural_mixed_not_uploaded_one_file">%1$d páginas con 1 archivo no subido</string>
@@ -837,10 +835,6 @@ Language: es_CL
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Revisión pendiente</string>
     <string name="post_status_publish_post">Publicar</string>
-    <string name="change_location">Cambiar Ubicación</string>
-    <string name="post_settings_error_placepicker_missing_play_services">No se puede abrir el selector de ubicación, los servicios de Google Play no están disponibles</string>
-    <string name="remove_location">Quitar Ubicación</string>
-    <string name="post_settings_location">Ubicación</string>
     <string name="now">Ahora</string>
     <string name="post_settings_password_dialog_hint">Sólo aquellos con esta contraseña pueden ver esta entrada</string>
     <string name="post_settings_excerpt_dialog_hint">Los extractos son resúmenes hechos a mano de tu contenido.</string>

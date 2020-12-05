@@ -250,7 +250,6 @@ Language: sr_RS
     <string name="post_list_tab_published_posts">Објављено</string>
     <string name="create_post_page_fab_tooltip_contributors">Направите чланак</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Није повезано</string>
-    <string name="my_site_select_domains_page_title">Адреса сајта</string>
     <string name="notifications_tab_title_comments">Коментари</string>
     <string name="notifications_tab_title_follows">Праћења</string>
     <string name="notifications_tab_title_likes">Свиђања</string>
@@ -947,7 +946,6 @@ Language: sr_RS
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 чланак са 1 датотеком није отпремљен</string>
     <string name="untitled_in_parentheses">(Без наслова)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Направити веб локацију</string>
     <string name="notification_site_creation_created">Додирните за наставак.</string>
     <string name="notification_site_creation_title_success">Веб локација направљена!</string>
@@ -1172,9 +1170,6 @@ Language: sr_RS
     <string name="post_status_draft">Нацрт</string>
     <string name="post_status_pending_review">Чека рецензију</string>
     <string name="post_status_publish_post">Објави</string>
-    <string name="change_location">Промени локацију</string>
-    <string name="remove_location">Уклони локацију</string>
-    <string name="post_settings_location">Локација</string>
     <string name="now">Сада</string>
     <string name="post_settings_tags">Ознаке</string>
     <string name="post_settings_post_format">Облик чланка</string>

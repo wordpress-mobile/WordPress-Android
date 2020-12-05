@@ -32,7 +32,6 @@ Language: ku_TR
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuya biloka şemîtonkî hate girtin.</string>
     <string name="hpp_skip_button">Derbas bibe</string>
     <string name="hpp_choose_button">Hilbijêre</string>
-    <string name="hpp_subtitle">Raxistina serrûpelê ya tu jê hez dikî, hilbijêre. Tu dikarî piştre wê li gorî xwe bitaybetîne an jî biguherîne.</string>
     <string name="hpp_title">Sêwirekê hilbijêre</string>
     <string name="mlp_network_error_subtitle">Dema ku tu ji nû ve serhêl bû li dîsa biceribîneyê bitikîne an jî bi rêya bikaranîna bişkoka jêrîn rûpeleke vala biafirîne.</string>
     <string name="mlp_network_error_title">Di derhêlbûnê(offline) de raxistin ne berdest in</string>
@@ -297,7 +296,6 @@ Language: ku_TR
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Raxistina destpêkê biceribîne</string>
     <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
-    <string name="gutenberg_native_insert_mention">Behskirinê tevlî bike</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="pages_cannot_be_started">Em aniha nikarin rûpelan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
@@ -464,7 +462,6 @@ Language: ku_TR
     <string name="post_list_tab_published_posts">Weşandî</string>
     <string name="sharing_facebook_account_must_have_pages">Girêdana Facebookê nikare ti Rûpelan bibîne. Bangewazî, bi Profîlên Facebookê ve nayê girêdan, tenê dikare bi Rûpelên weşandî ve bê girêdan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nehatiye girêdan</string>
-    <string name="my_site_select_domains_page_title">Navnîşana Malperê</string>
     <string name="notifications_tab_title_likes">Ecibandin</string>
     <string name="notifications_tab_title_follows">Şopîner</string>
     <string name="notifications_tab_title_comments">Şîrove</string>
@@ -962,7 +959,6 @@ Language: ku_TR
     <string name="new_site_creation_create_site_button">Malperê Biafirîne</string>
     <string name="new_site_creation_search_domain_input_hint">Li Domainan Bigere</string>
     <string name="new_site_creation_domain_header_subtitle">Mirov di înternetê de ew ê te li vir bibînin.</string>
-    <string name="new_site_creation_domain_header_title">Ji bo malpera xwe navekî domainê hilbijêre</string>
     <string name="new_site_creation_empty_domain_list_message">Li gorî lêgerîna te ti navnîşan nehat dîtin</string>
     <string name="site_creation_error_generic_subtitle">Di têkîliya bi serverê re çewtî derket, ji kerema xwe dîsa biceribîne</string>
     <string name="site_creation_error_generic_title">Pirsgirêkek hebû</string>
@@ -1413,7 +1409,6 @@ Language: ku_TR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Şandiyek û dosyeyek nehatin hilxistin</string>
     <string name="untitled_in_parentheses">(Bêsernav)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Malperê biafirîne</string>
     <string name="notification_site_creation_created">Ji bo domandinê, bitepîne.</string>
     <string name="notification_site_creation_title_success">Malper hat afirandin!</string>
@@ -1704,10 +1699,6 @@ Language: ku_TR
     <string name="post_status_draft">Reşnivîs</string>
     <string name="post_status_pending_review">Li benda kontrolê ye</string>
     <string name="post_status_publish_post">Weşandî</string>
-    <string name="change_location">Cîgehê Biguherîne</string>
-    <string name="remove_location">Cîgehê Rake</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Bijêra Cîgehê nayê vekirin, Xizmetên Google Playê ne berdest in</string>
-    <string name="post_settings_location">Cîgeh</string>
     <string name="now">Aniha</string>
     <string name="post_settings_password_dialog_hint">Tenê kesên xwediyê vê pêborînê dikarin vê şandiyê bibînin</string>
     <string name="post_settings_excerpt_dialog_hint">Jêgirtin, kurteyên naveroka te yên ku bi destan hatine amadekirin e.</string>

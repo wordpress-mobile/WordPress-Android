@@ -11,7 +11,6 @@ Language: it
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu del blocco a scorrimento chiuso.</string>
     <string name="hpp_skip_button">Salta</string>
     <string name="hpp_choose_button">Scegli</string>
-    <string name="hpp_subtitle">Scegli il layout che preferisci per la tua homepage. Puoi personalizzarlo o modificarlo in un secondo momento.</string>
     <string name="hpp_title">Scegli un design</string>
     <string name="mlp_network_error_subtitle">Tocca Riprova quando sei di nuovo online o crea una pagina vuota utilizzando il pulsante sottostante.</string>
     <string name="mlp_network_error_title">Layout non disponibili in modalità offline</string>
@@ -274,7 +273,6 @@ Language: it
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova un layout di inizio</string>
     <string name="gutenberg_native_open_block_actions_menu">Apri menu azioni del blocco</string>
-    <string name="gutenberg_native_insert_mention">Inserisci riferimento</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tocca due volte per aprire il foglio in basso con le opzioni disponibili</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tocca due volte per aprire il foglio delle azioni con le opzioni disponibili</string>
     <string name="pages_cannot_be_started">Al momento non possiamo aprire le pagine. Riprova più tardi</string>
@@ -441,7 +439,6 @@ Language: it
     <string name="post_list_tab_published_posts">Pubblicato</string>
     <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Pubblicizza non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
-    <string name="my_site_select_domains_page_title">Indirizzo sito</string>
     <string name="notifications_tab_title_likes">Mi piace</string>
     <string name="notifications_tab_title_follows">Segue</string>
     <string name="notifications_tab_title_comments">Commenti</string>
@@ -939,7 +936,6 @@ Language: it
     <string name="new_site_creation_create_site_button">Crea il sito</string>
     <string name="new_site_creation_search_domain_input_hint">Cerca domini</string>
     <string name="new_site_creation_domain_header_subtitle">Ecco dove gli utenti ti troveranno su Internet.</string>
-    <string name="new_site_creation_domain_header_title">Scegli un nome di dominio per il tuo sito</string>
     <string name="new_site_creation_empty_domain_list_message">Nessun indirizzo corrispondente alla ricerca</string>
     <string name="site_creation_error_generic_subtitle">Errore di comunicazione con il server, prova di nuovo</string>
     <string name="site_creation_error_generic_title">Si è verificato un problema</string>
@@ -1390,7 +1386,6 @@ Language: it
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post con 1 file non caricato</string>
     <string name="untitled_in_parentheses">(senza titolo)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crea il sito</string>
     <string name="notification_site_creation_created">Tocca per continuare.</string>
     <string name="notification_site_creation_title_success">Sito creato.</string>
@@ -1681,10 +1676,6 @@ Language: it
     <string name="post_status_draft">Bozza</string>
     <string name="post_status_pending_review">In attesa di revisione</string>
     <string name="post_status_publish_post">Pubblica</string>
-    <string name="change_location">Cambia posizione</string>
-    <string name="remove_location">Rimuovi posizione</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Impossibile aprire Location Picker, Google Play Services non è disponibile</string>
-    <string name="post_settings_location">Posizione</string>
     <string name="now">Ora</string>
     <string name="post_settings_password_dialog_hint">Solo chi conosce questa password può visualizzare l\'articolo</string>
     <string name="post_settings_excerpt_dialog_hint">Gli estratti sono riepiloghi opzionali dei tuoi contenuti creati manualmente.</string>
