@@ -105,7 +105,6 @@
     "status": "PURCHASED",
     "package_name": "Small Flat Rate Box",
     "product_names": ["Polo", "T-Shirt"],
-    "product_ids": [10, 11],
     "receipt_item_id": 24212914,
     "created_date": 1589295663000,
     "main_receipt_id": 19680344,
