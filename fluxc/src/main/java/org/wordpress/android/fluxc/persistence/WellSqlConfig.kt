@@ -1359,7 +1359,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("DROP TABLE IF EXISTS WCLocations")
                     db.execSQL("CREATE TABLE WCLocations (" +
                             "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "PARENT_CODE TEXT," +
+                            "PARENT_CODE TEXT NOT NULL" +
                             "CODE TEXT NOT NULL," +
                             "NAME TEXT NOT NULL)"
                     )
