@@ -69,12 +69,12 @@ class ScanSqlUtils @Inject constructor() {
             remoteSiteId = site.siteId,
             state = state.value,
             startDate = startDate,
-            progress = progress,
-            initial = isInitial,
             duration = mostRecentStatus?.duration ?: 0,
+            progress = progress,
+            reason = reason,
             error = mostRecentStatus?.error ?: false,
-            hasCloud = hasCloud,
-            reason = reason
+            initial = isInitial,
+            hasCloud = hasCloud
         )
     }
 
@@ -87,11 +87,11 @@ class ScanSqlUtils @Inject constructor() {
         @Column var state: String,
         @Column var startDate: Long,
         @Column var duration: Int,
-        @Column var progress: Int,
-        @Column var reason: String?,
+        @Column var progress: Int? = null,
+        @Column var reason: String? = null,
         @Column var error: Boolean,
-        @Column var initial: Boolean,
-        @Column var hasCloud: Boolean
+        @Column var initial: Boolean? = null,
+        @Column var hasCloud: Boolean = false
     ) : Identifiable {
         constructor() : this(-1, 0, 0, "", 0, 0, 0, "", false, false, false)
 
@@ -102,7 +102,7 @@ class ScanSqlUtils @Inject constructor() {
         override fun getId() = id
 
         fun build(): ScanStateModel {
-            val stateForModel = State.fromValue(state) ?: State.UNKNOWN
+            val stateForModel = State.fromValue(state) ?: UNKNOWN
 
             var currentStatus: ScanProgressStatus? = null
             var mostRecentStatus: ScanProgressStatus? = null
@@ -130,7 +130,7 @@ class ScanSqlUtils @Inject constructor() {
 
             return ScanStateModel(
                 state = stateForModel,
-                hasCloud = this.hasCloud,
+                hasCloud = hasCloud,
                 mostRecentStatus = mostRecentStatus,
                 currentStatus = currentStatus,
                 reason = reason
