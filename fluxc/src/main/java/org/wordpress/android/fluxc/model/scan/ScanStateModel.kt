@@ -38,9 +38,9 @@ data class ScanStateModel(
 
     data class ScanProgressStatus(
         val startDate: Date,
-        val duration: Int = 0,
-        val progress: Int,
-        val error: Boolean = false,
-        val isInitial: Boolean
+        val duration: Int? = null,
+        val progress: Int? = null,
+        val error: Boolean? = null,
+        val isInitial: Boolean? = null
     )
 }
