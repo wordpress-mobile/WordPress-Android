@@ -38,7 +38,7 @@ class ThreatsMapperTest {
         val model = mapper.map(threat)
 
         assertTrue(model is GenericThreatModel)
-        model.apply {
+        model.baseThreatModel.apply {
             assertEquals(id, threat.id)
             assertEquals(signature, threat.signature)
             assertEquals(description, threat.description)
@@ -150,8 +150,8 @@ class ThreatsMapperTest {
 
         val model = mapper.map(threat)
 
-        assertNotNull(model.fixable)
-        assertEquals(model.fixable?.fixer, FixType.fromValue(threat.fixable?.fixer))
+        assertNotNull(model.baseThreatModel.fixable)
+        assertEquals(model.baseThreatModel.fixable?.fixer, FixType.fromValue(threat.fixable?.fixer))
     }
 
     @Test
@@ -161,7 +161,7 @@ class ThreatsMapperTest {
 
         val model = mapper.map(threat)
 
-        assertNull(model.fixable)
+        assertNull(model.baseThreatModel.fixable)
     }
 
     private fun getThreatFromJsonString(json: String): Threat {
