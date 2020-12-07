@@ -51,25 +51,10 @@ class RowsDeserializer : JsonDeserializer<List<Row>?> {
         key: String,
         rowJsonObject: JsonObject
     ): Row? {
-        var row: Row? = null
-
-        val rowNumber = try {
-            key.toInt()
-        } catch (ex: NumberFormatException) {
-            return null
-        }
-
-        val contentsForKey = rowJsonObject.get(key)
-        val contentsForKeyAsJsonObject = if (contentsForKey?.isJsonObject == true) {
-            contentsForKey.asJsonObject
-        } else {
-            null
-        }
-
-        contentsForKeyAsJsonObject?.let { contents ->
-            row = try {
+        return rowJsonObject.get(key)?.takeIf { it.isJsonObject }?.asJsonObject?.let { contents ->
+            try {
                 Row(
-                    rowNumber = rowNumber,
+                    rowNumber = key.toInt(),
                     id = contents.get(ID)?.asInt ?: 0,
                     description = contents.get(DESCRIPTION)?.asString,
                     code = contents.get(CODE)?.asString,
@@ -79,9 +64,10 @@ class RowsDeserializer : JsonDeserializer<List<Row>?> {
                 null
             } catch (ex: IllegalStateException) {
                 null
+            } catch (ex: NumberFormatException) {
+                null
             }
         }
-        return row
     }
 
     companion object {
