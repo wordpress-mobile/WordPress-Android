@@ -17,6 +17,50 @@ import javax.inject.Inject
 
 class ThreatMapper @Inject constructor() {
     fun map(response: Threat): ThreatModel {
+        val baseThreatModel = getBaseThreatModelFromResponse(response)
+
+        return when {
+            response.fileName != null && response.diff != null -> {
+                CoreFileModificationThreatModel(
+                    baseThreatModel = baseThreatModel,
+                    fileName = response.fileName,
+                    diff = response.diff
+                )
+            }
+            response.context != null -> {
+                FileThreatModel(
+                    baseThreatModel = baseThreatModel,
+                    fileName = response.fileName,
+                    context = requireNotNull(response.context)
+                )
+            }
+            response.rows != null || response.signature?.contains(DATABASE_SIGNATURE) == true -> {
+                DatabaseThreatModel(
+                    baseThreatModel = baseThreatModel,
+                    rows = response.rows
+                )
+            }
+            response.extension != null && ExtensionType.fromValue(response.extension.type) != ExtensionType.UNKNOWN -> {
+                VulnerableExtensionThreatModel(
+                    baseThreatModel = baseThreatModel,
+                    extension = Extension(
+                        type = ExtensionType.fromValue(response.extension.type),
+                        slug = response.extension.slug,
+                        name = response.extension.name,
+                        version = response.extension.version,
+                        isPremium = response.extension.isPremium ?: false
+                    )
+                )
+            }
+            else -> {
+                GenericThreatModel(
+                    baseThreatModel = baseThreatModel
+                )
+            }
+        }
+    }
+
+    private fun getBaseThreatModelFromResponse(response: Threat): BaseThreatModel {
         val id = response.id ?: 0L
         val signature = response.signature ?: ""
         val firstDetected = response.firstDetected ?: Date(0)
@@ -33,75 +77,15 @@ class ThreatMapper @Inject constructor() {
             }
         }
 
-        return when {
-            response.fileName != null && response.diff != null -> {
-                CoreFileModificationThreatModel(
-                    id = id,
-                    signature = signature,
-                    description = description,
-                    status = status,
-                    firstDetected = firstDetected,
-                    fixable = fixable,
-                    fixedOn = response.fixedOn,
-                    fileName = response.fileName,
-                    diff = response.diff
-                )
-            }
-            response.context != null -> {
-                FileThreatModel(
-                    id = id,
-                    signature = signature,
-                    description = description,
-                    status = status,
-                    firstDetected = firstDetected,
-                    fixable = fixable,
-                    fixedOn = response.fixedOn,
-                    fileName = response.fileName,
-                    context = requireNotNull(response.context)
-                )
-            }
-            response.rows != null || response.signature?.contains(DATABASE_SIGNATURE) == true -> {
-                DatabaseThreatModel(
-                    id = id,
-                    signature = signature,
-                    description = description,
-                    status = status,
-                    firstDetected = firstDetected,
-                    fixable = fixable,
-                    fixedOn = response.fixedOn,
-                    rows = response.rows
-                )
-            }
-            response.extension != null && ExtensionType.fromValue(response.extension.type) != ExtensionType.UNKNOWN -> {
-                VulnerableExtensionThreatModel(
-                    id = id,
-                    signature = signature,
-                    description = description,
-                    status = status,
-                    firstDetected = firstDetected,
-                    fixable = fixable,
-                    fixedOn = response.fixedOn,
-                    extension = Extension(
-                        type = ExtensionType.fromValue(response.extension.type),
-                        slug = response.extension.slug,
-                        name = response.extension.name,
-                        version = response.extension.version,
-                        isPremium = response.extension.isPremium ?: false
-                    )
-                )
-            }
-            else -> {
-                GenericThreatModel(
-                    id = id,
-                    signature = signature,
-                    description = description,
-                    status = status,
-                    firstDetected = firstDetected,
-                    fixable = fixable,
-                    fixedOn = response.fixedOn
-                )
-            }
-        }
+        return BaseThreatModel(
+            id = id,
+            signature = signature,
+            description = description,
+            status = status,
+            firstDetected = firstDetected,
+            fixable = fixable,
+            fixedOn = response.fixedOn
+        )
     }
 
     companion object {
