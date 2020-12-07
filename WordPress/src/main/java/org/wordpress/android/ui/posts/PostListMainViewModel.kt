@@ -223,6 +223,7 @@ class PostListMainViewModel @Inject constructor(
                 postToCopy.categoryIdList,
                 postToCopy.postFormat
         )
+        refreshAllLists()
         _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
 
