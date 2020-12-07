@@ -4,6 +4,7 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -18,6 +19,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -96,9 +98,12 @@ class MySiteViewModel
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val contextProvider: ContextProvider,
-    private val siteIconUploadHandler: SiteIconUploadHandler
+    private val siteIconUploadHandler: SiteIconUploadHandler,
+    private val scanStatusService: ScanStatusService
 ) : ScopedViewModel(mainDispatcher) {
+    private var currentSite: SiteModel? = null
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
+    private val _scanAvailable = MediatorLiveData<Boolean>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -114,9 +119,16 @@ class MySiteViewModel
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+            selectedSiteRepository.showSiteIconProgressBar.distinct(),
+            _scanAvailable
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, scanAvailable ->
         val items = if (site != null) {
+            if (site != currentSite) {
+                _scanAvailable.value = false
+                scanStatusService.stop()
+                scanStatusService.start(site)
+            }
+            currentSite = site
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
                     siteInfoBlockBuilder.buildSiteInfoBlock(
@@ -128,12 +140,18 @@ class MySiteViewModel
                             this::switchSiteClick
                     )
             )
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable ?: false))
             siteItems
         } else {
             listOf()
         }
         UiModel(currentAvatarUrl.orEmpty(), items)
+    }
+
+    init {
+        _scanAvailable.addSource(scanStatusService.scanAvailable) {
+            _scanAvailable.value = it == true
+        }
     }
 
     private fun onItemClick(action: ListItemAction) {
@@ -334,6 +352,7 @@ class MySiteViewModel
 
     override fun onCleared() {
         siteIconUploadHandler.clear()
+        scanStatusService.stop()
         super.onCleared()
     }
 
