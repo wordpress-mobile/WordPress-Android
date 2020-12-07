@@ -19,6 +19,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -83,6 +84,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
+    @Mock lateinit var scanStatusService: ScanStatusService
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -97,6 +99,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var siteInfoBlock: SiteInfoBlock
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
+    private val onScanAvailable = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
     @Before
@@ -105,6 +108,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
+        whenever(scanStatusService.scanAvailable).thenReturn(onScanAvailable)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -118,7 +122,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 mediaUtilsWrapper,
                 fluxCUtilsWrapper,
                 contextProvider,
-                siteIconUploadHandler
+                siteIconUploadHandler,
+                scanStatusService
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -165,6 +170,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteInfoBlock
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(scanStatusService.start(site)).thenAnswer {
+            onScanAvailable.postValue(false)
+        }
     }
 
     @Test
@@ -179,7 +187,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is contains header of selected site`() {
         onSiteChange.postValue(site)
 
-        assertThat(uiModels).hasSize(2)
+        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().items).hasSize(1)
         assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
@@ -536,6 +544,27 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
     }
 
+    @Test
+    fun `scan status service invoked to get scan availability status when site is changed`() {
+        onSiteChange.postValue(site)
+
+        verify(scanStatusService).start(site)
+    }
+
+    @Test
+    fun `site items builder invoked with the selected site's scan availability`() {
+        whenever(scanStatusService.start(site)).thenAnswer {
+            onScanAvailable.postValue(true)
+        }
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isScanAvailable = eq(true)
+        )
+    }
+
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
@@ -565,7 +594,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any())
 
         onSiteChange.postValue(site)
 
