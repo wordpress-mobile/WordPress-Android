@@ -404,6 +404,12 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
+        row_scan.setOnClickListener {
+            ActivityLauncher.viewScan(
+                    activity,
+                    selectedSite
+            )
+        }
         row_settings.setOnClickListener {
             ActivityLauncher.viewBlogSettingsForResult(
                     activity,
