@@ -87,8 +87,12 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
      * This stat is part of a funnel that provides critical information.  Before
      * making ANY modification to this stat please refer to: p4qSXL-35X-p2
      */
-    fun trackSiteCreated() {
-        tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+    fun trackSiteCreated(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+        } else {
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf("template" to template))
+        }
     }
 
     fun trackFlowExited() {
