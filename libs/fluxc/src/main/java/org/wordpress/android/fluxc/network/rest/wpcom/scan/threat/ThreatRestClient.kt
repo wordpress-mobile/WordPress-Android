@@ -31,7 +31,7 @@ class ThreatRestClient(
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchThreat(site: SiteModel, threat: ThreatModel): FetchedThreatPayload {
-        val url = WPCOMV2.sites.site(site.siteId).scan.threat.item(threat.id).url
+        val url = WPCOMV2.sites.site(site.siteId).scan.threat.item(threat.baseThreatModel.id).url
 
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), ThreatResponse::class.java)
         return when (response) {

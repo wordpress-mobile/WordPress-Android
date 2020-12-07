@@ -21,8 +21,10 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequest.WPComGsonNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -32,6 +34,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ThreatStore.FetchedThreatPayload
 import org.wordpress.android.fluxc.store.ThreatStore.ThreatErrorType
 import org.wordpress.android.fluxc.test
+import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
 class ThreatRestClientTest {
@@ -71,7 +74,10 @@ class ThreatRestClientTest {
 
         threatRestClient.fetchThreat(site, threat)
 
-        assertEquals(urlCaptor.firstValue, "$API_BASE_PATH/sites/${site.siteId}/scan/threat/${threat.id}/")
+        assertEquals(
+            urlCaptor.firstValue,
+            "$API_BASE_PATH/sites/${site.siteId}/scan/threat/${threat.baseThreatModel.id}/"
+        )
     }
 
     @Test
@@ -171,7 +177,16 @@ class ThreatRestClientTest {
             )
         ).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
-        whenever(threat.id).thenReturn(data?.threat?.id ?: threatId)
+
+        whenever(threat.baseThreatModel).thenReturn(
+            BaseThreatModel(
+                id = data?.threat?.id ?: threatId,
+                signature = "",
+                description = "",
+                status = ThreatStatus.fromValue(data?.threat?.status),
+                firstDetected = Date(0)
+            )
+        )
 
         val threatModel = mock<ThreatModel>()
         whenever(threatMapper.map(any())).thenReturn(threatModel)
