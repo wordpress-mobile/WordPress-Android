@@ -6,7 +6,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -109,9 +108,9 @@ class PrepublishingCategoriesFragment : Fragment(R.layout.prepublishing_categori
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingCategoriesViewModel::class.java)
-        parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+        parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
         startObserving()
         val siteModel = requireArguments().getSerializable(WordPress.SITE) as SiteModel

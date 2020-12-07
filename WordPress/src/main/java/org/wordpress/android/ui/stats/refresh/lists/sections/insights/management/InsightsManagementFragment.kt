@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -58,7 +57,7 @@ class InsightsManagementFragment : DaggerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, siteId: Int?) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory).get(InsightsManagementViewModel::class.java)
 
         viewModel.start(siteId)
 

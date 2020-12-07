@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.domain_suggestions_fragment.*
@@ -50,10 +49,10 @@ class DomainSuggestionsFragment : Fragment() {
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainSuggestionsViewModel::class.java)
 
         val nonNullIntent = checkNotNull(nonNullActivity.intent)

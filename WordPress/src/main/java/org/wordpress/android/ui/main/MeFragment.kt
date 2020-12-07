@@ -15,7 +15,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
@@ -137,7 +136,7 @@ class MeFragment : Fragment(), OnScrollToTopListener {
             }
         }
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MeViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MeViewModel::class.java)
         viewModel.showDisconnectDialog.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {

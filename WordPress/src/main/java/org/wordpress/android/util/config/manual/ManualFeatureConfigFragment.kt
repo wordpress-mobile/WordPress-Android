@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -31,7 +30,7 @@ class ManualFeatureConfigFragment : DaggerFragment() {
         recycler_view.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
         recycler_view.addItemDecoration(RecyclerItemDecoration(0, DisplayUtils.dpToPx(activity, 1)))
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(ManualFeatureConfigViewModel::class.java)
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             it?.let { uiState ->

@@ -37,7 +37,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -465,8 +464,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
-        mViewModel =
-                ViewModelProviders.of(this, mViewModelFactory).get(StorePostViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {

@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.page_parent_fragment.*
@@ -179,7 +178,7 @@ class PageParentFragment : Fragment() {
         pageId: Long,
         isFirstStart: Boolean
     ) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory)
+        viewModel = ViewModelProvider(activity, viewModelFactory)
                 .get(PageParentViewModel::class.java)
 
         setupObservers()
