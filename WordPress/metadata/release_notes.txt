@@ -1,8 +1,5 @@
-* [***] Site Creation: Adds an option to pick a home page design when creating a WordPress.com site.
-* [*] Posts Settings: removed deprecated location setting [https://github.com/wordpress-mobile/WordPress-Android/pull/13404]
-* [**] Block Editor: Button block - Add link picker to the block settings [https://github.com/WordPress/gutenberg/pull/26206]
-* [***] Block Editor: Adding support for selecting different unit of value in Cover and Columns blocks [https://github.com/WordPress/gutenberg/pull/26161]
-* [*] Block Editor: Fix theme colors syncing with the editor [https://github.com/WordPress/gutenberg/pull/26821]
-* [***] Stories: New feature for WordPress.com and Jetpack sites: Use photos and videos to create engaging and tappable fullscreen slideshows. [https://github.com/wordpress-mobile/WordPress-Android/pull/13459]
-* [**] Reader: introduced a Follow/Unfollow button in comments screen to follow a post conversation and get notified by e-mail. Not supported for self-hosted sites not Jetpack connected. [https://github.com/wordpress-mobile/WordPress-Android/pull/13473]
-
+We’re pleased to announce several new WordPress mobile app features: 
+- full-screen slideshows of photos or videos for WP.com and Jetpack sites; 
+- the option to pick a homepage design when creating a WP.com site; 
+- improved functionality for setting the dimensions of Cover and Columns;  
+- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).

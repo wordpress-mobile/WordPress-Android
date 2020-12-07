@@ -22,7 +22,6 @@ import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -400,8 +399,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mFloatingActionButton = findViewById(R.id.fab_button);
         mFabTooltip = findViewById(R.id.fab_tooltip);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
-        mMLPViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+        mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {

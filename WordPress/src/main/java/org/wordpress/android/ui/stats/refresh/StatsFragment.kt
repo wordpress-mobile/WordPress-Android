@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
@@ -85,7 +84,7 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
     ) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
 
         viewModel.onRestoreInstanceState(savedInstanceState)
 

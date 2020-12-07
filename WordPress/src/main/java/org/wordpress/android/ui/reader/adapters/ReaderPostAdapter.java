@@ -58,8 +58,10 @@ import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.GravatarUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -349,7 +351,8 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 .loadIntoCircle(holder.mImgAvatar, ImageType.AVATAR,
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
-        mImageManager.loadIntoCircle(holder.mImgBlavatar, ImageType.BLAVATAR_CIRCULAR,
+        mImageManager.loadIntoCircle(holder.mImgBlavatar,
+                SiteUtils.getSiteImageType(post.isWpForTeams, BlavatarShape.CIRCULAR),
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
