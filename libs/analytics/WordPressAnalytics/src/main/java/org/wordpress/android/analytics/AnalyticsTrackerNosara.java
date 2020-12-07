@@ -1144,6 +1144,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "stats_countries_view_more_tapped";
             case STATS_OVERVIEW_BAR_CHART_TAPPED:
                 return "stats_overview_bar_chart_tapped";
+            case STATS_OVERVIEW_ERROR:
+                return "stats_overview_error";
             case STATS_VIDEO_PLAYS_VIEW_MORE_TAPPED:
                 return "stats_video_plays_view_more_tapped";
             case STATS_VIDEO_PLAYS_VIDEO_TAPPED:
