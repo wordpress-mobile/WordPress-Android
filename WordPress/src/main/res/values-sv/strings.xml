@@ -1,11 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-09 09:31:21+0000
+Translation-Revision-Date: 2020-11-23 17:56:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="dialog_edit_story_unsupported_format_message">En eller flera bilder lades inte till i din berättelse eftersom berättelser för närvarande saknar stöd för GIF-filer. Välj en statisk bild eller en video som bakgrund i stället.</string>
+    <string name="dialog_edit_story_limited_message">Denna berättelse har redigerats på en annan typ av enhet och möjligheten att redigera vissa objekt kan vara begränsad.</string>
+    <string name="dialog_edit_story_unavailable_title">Det går inte att redigera berättelsen.</string>
+    <string name="dialog_edit_story_unavailable_message">Det går inte att hämta mediafilerna för denna berättelse. Kontrollera din internetanslutning och försök igen.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Det går inte att redigera berättelsen.</string>
+    <string name="dialog_edit_story_unrecoverable_message">Vi hittar inte mediafilerna för denna berättelse på webbplatsen.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF-filer stöds inte</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Mediafilerna har tagits bort. Försök att redigera din berättelse.</string>
+    <string name="dialog_edit_story_limited_title">Begränsad berättelseredigering</string>
+    <string name="hpp_error_title">Layouter är inte tillgängliga när du saknar internetförbindelse</string>
+    <string name="hpp_error_subtitle">Tryck på ”Försök igen” när du har förbindelse med internet igen.</string>
+    <string name="hpp_retry_error">Kontrollera din internet-anslutning och försök igen.</string>
+    <string name="hpp_choose_error">Ett fel uppstod när designen skulle aktiveras.</string>
+    <string name="delete_button_alt">Ta bort</string>
+    <string name="label_next_button">Nästa</string>
+    <string name="label_done_button">Klart</string>
+    <string name="dialog_discard_story_title_edit">Kasta ändringarna?</string>
+    <string name="dialog_discard_story_message_edit">Eventuella ändringar kommer inte att sparas.</string>
+    <string name="dialog_discard_story_ok_button_edit">Kasta</string>
+    <string name="color_picker_label_text">Text</string>
+    <string name="color_picker_label_background">Bakgrund</string>
+    <string name="scan">Skanna</string>
+    <string name="reader_discover_empty_title">Välkommen!</string>
+    <string name="reader_discover_no_posts_title">Inga nya inlägg</string>
+    <string name="reader_discover_no_posts_subtitle">Försök att följa fler ämnen för att söka bredare</string>
+    <string name="reader_discover_no_posts_button_text">Följ ämnen</string>
+    <string name="login_find_your_connected_email">Hitta din anslutna e-postadress</string>
+    <string name="continue_site_credentials">Fortsätt med butiksautentiseringsuppgifter</string>
     <string name="login_prologue_third_subtitle_two">Du har fått &lt;b>50 gilla-markeringar&lt;/b> på webbplatsen i dag</string>
     <string name="login_prologue_third_subtitle_three">&lt;b>Erik S&lt;/b> har svarat på ditt inlägg</string>
     <string name="login_prologue_third_subtitle_one">&lt;b>Anna S&lt;/b> gillade ditt inlägg</string>
@@ -68,7 +96,7 @@ Language: sv_SE
     <string name="media_insert_failed_with_reason">Infogning av media misslyckades: %s</string>
     <string name="reader_label_toolbar_back">Tillbaka</string>
     <string name="reader_discover_empty_button_text">Kom igång</string>
-    <string name="reader_discover_empty_title">Följ ämnen för att upptäcka nya bloggar</string>
+    <string name="reader_discover_empty_subtitle">Följ ämnen för att upptäcka nya bloggar</string>
     <string name="reader_post_details_header_by_author_name">Av</string>
     <string name="media_uploading_default">Laddar upp media</string>
     <string name="stats_referrer_popup_menu_open_website">Öppna webbplats</string>
@@ -102,7 +130,6 @@ Language: sv_SE
     <string name="error_media_xmlrpc_not_allowed">Din åtgärd är inte tillåten</string>
     <string name="error_media_xmlrcp_server_error">Ett internt serverfel inträffade</string>
     <string name="reader_welcome_banner">Välkommen till läsaren. Upptäck miljontals bloggar som finns smidigt tillgängliga.</string>
-    <string name="gutenberg_native_angle">Vinkel</string>
     <string name="gutenberg_native_select_a_layout">Välj en layout</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Obs: Kolumnlayouten kan variera mellan olika teman och skärmstorlekar</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Dölj</string>
@@ -144,7 +171,6 @@ Language: sv_SE
     <string name="label_frame_errored">med fel</string>
     <string name="label_text_alignment_button">Ändra textens justering</string>
     <string name="label_text_color_button">Ändra textfärg</string>
-    <string name="menu_delete_page">Ta bort bild</string>
     <string name="dialog_discard_page_title">Ta bort bild ur berättelse?</string>
     <string name="dialog_discard_page_message">Denna bild kommer att tas bort ur din berättelse.</string>
     <string name="dialog_discard_errored_page_message">Bilden är inte sparad än. Om du tar bort denna bild förlorar du eventuell bildredigering.</string>
@@ -165,7 +191,6 @@ Language: sv_SE
     <string name="capture_button_alt">Ta bild</string>
     <string name="flash_button_alt">Blixt</string>
     <string name="stickers_button_alt">Klistermärken</string>
-    <string name="more_button_alt">Mer</string>
     <string name="text_button_alt">Text</string>
     <string name="sound_button_alt">Ljud</string>
     <string name="label_control_flip_camera">Vänd</string>
@@ -177,8 +202,6 @@ Language: sv_SE
     <string name="label_snackbar_loop_frame_saved">Sparat till foton</string>
     <string name="label_snackbar_share">DELA</string>
     <string name="label_share_to">Dela till</string>
-    <string name="label_done">Klart</string>
-    <string name="label_control_publish">Nästa</string>
     <string name="label_close_button">Stäng</string>
     <string name="label_saved_icon">Sparat</string>
     <string name="label_retry_icon">Försök igen</string>
@@ -527,7 +550,6 @@ Language: sv_SE
     <string name="login_discovery_error_ssl">Vi kunde inte nå din webbplats på grund av ett problem med &lt;b>SSL-certifikatet&lt;/b>. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="login_discovery_error_generic">Vi kunde inte nå din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
     <string name="reader_following_display_name">Följer</string>
-    <string name="send_verification_email">Skicka verifieringsmeddelande via e-post</string>
     <string name="enter_credentials_for_site">Logga in med dina inloggningsuppgifter för webbplatsen %1$s</string>
     <string name="login_site_credentials_magic_link_label">Nästan klart! Vi behöver bara bekräfta den e-postadress du har registrerad hos Jetpack &lt;b>%1$s&lt;/b></string>
     <string name="login_discovery_error_xmlrpc">Vi kunde inte nå filen &lt;b>XMLRPC&lt;/b> på din webbplats. För att lösa detta behöver du kontakta ditt webbhotell.</string>
@@ -561,7 +583,6 @@ Language: sv_SE
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
     <string name="gutenberg_native_show_section">Visa sektion</string>
     <string name="gutenberg_native_sidebar_title_plugin">Tillägg för sidopanelrubrik</string>
-    <string name="gutenberg_native_size">Storlek</string>
     <string name="gutenberg_native_cut_block">Klipp ut blocket</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Det finns inget program som kan hantera denna begäran. Installera ett webbläsarprogram.</string>
     <string name="gutenberg_native_open_settings">Öppna inställningar</string>

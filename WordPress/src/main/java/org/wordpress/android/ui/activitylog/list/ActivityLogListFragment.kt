@@ -8,7 +8,6 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -29,6 +28,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -63,7 +63,7 @@ class ActivityLogListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
@@ -119,13 +119,16 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
-            uiHelpers.updateVisibility(date_range_picker, visibility)
-            uiHelpers.updateVisibility(activity_type_filter, visibility)
+        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiHelpers.updateVisibility(filters_bar, uiState.visibility)
+            if (uiState is FiltersShown) {
+                date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+                activity_type_filter.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            }
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
-            showActivityTypeFilterDialog(remoteSiteId)
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
+            showActivityTypeFilterDialog(event.siteId, event.initialSelection)
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
@@ -181,8 +184,9 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
+                .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {

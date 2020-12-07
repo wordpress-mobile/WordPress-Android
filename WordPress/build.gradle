@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-259"
+            versionName "alpha-261"
         }
-        versionCode 960
+        versionCode 965
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -98,9 +98,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.2-rc-2"
+                versionName "16.3-rc-2"
             }
-            versionCode 959
+            versionCode 964
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -122,7 +122,6 @@ android {
             dimension "buildType"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
-            buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
@@ -213,6 +212,8 @@ dependencies {
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
+    // GCMNetworkManager on api <= 22
+    implementation "androidx.work:work-gcm:$androidxWorkVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
@@ -220,6 +221,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    // ProcessLifecycleOwner
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'

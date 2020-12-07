@@ -6,7 +6,6 @@ import android.content.DialogInterface
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import dagger.android.support.AndroidSupportInjection
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
@@ -44,7 +43,7 @@ class BasicDialog : AppCompatDialogFragment() {
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
         val builder = MaterialAlertDialogBuilder(requireActivity())
         builder.setMessage(model.message)

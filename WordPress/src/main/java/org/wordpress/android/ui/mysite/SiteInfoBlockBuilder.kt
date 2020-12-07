@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -21,12 +22,14 @@ class SiteInfoBlockBuilder
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
         val siteIcon = if (!showSiteIconProgressBar && !site.iconUrl.isNullOrEmpty()) {
-            SiteUtils.getSiteIconUrl(
+            IconState.Visible(SiteUtils.getSiteIconUrl(
                     site,
                     resourceProvider.getDimensionPixelSize(R.dimen.blavatar_sz_small)
-            )
+            ))
+        } else if (showSiteIconProgressBar) {
+            IconState.Progress
         } else {
-            null
+            IconState.Visible()
         }
         return SiteInfoBlock(
                 blogTitle,

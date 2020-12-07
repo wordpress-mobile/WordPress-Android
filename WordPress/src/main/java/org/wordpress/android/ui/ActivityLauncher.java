@@ -70,6 +70,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -542,12 +543,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
-        if (ThemeBrowserActivity.isAccessible(site)) {
-            Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
-        }
+        Intent intent = new Intent(context, ThemeBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
@@ -604,6 +603,16 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
+    }
+
+    public static void viewScan(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -1213,6 +1222,12 @@ public class ActivityLauncher {
         intent = new Intent(activity, LoginActivity.class);
         LoginMode.WPCOM_LOGIN_DEEPLINK.putInto(intent);
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
+    public static void loginForJetpackStats(Fragment fragment) {
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
+        LoginMode.JETPACK_STATS.putInto(intent);
+        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
     /*

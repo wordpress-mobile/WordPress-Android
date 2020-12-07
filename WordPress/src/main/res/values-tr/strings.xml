@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-13 14:54:11+0000
+Translation-Revision-Date: 2020-11-26 16:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="color_picker_label_background">Arka plan</string>
+    <string name="color_picker_label_text">Metin</string>
+    <string name="dialog_discard_story_ok_button_edit">Vazgeç</string>
+    <string name="dialog_discard_story_message_edit">Yapılan değişiklikler kaydedilmeyecek.</string>
+    <string name="dialog_discard_story_title_edit">Değişiklikler iptal edilsin mi?</string>
+    <string name="label_done_button">Tamamlandı</string>
+    <string name="label_next_button">Sonraki</string>
+    <string name="delete_button_alt">Sil</string>
+    <string name="hpp_choose_error">Tasarım seçilirken bir hata oluştu.</string>
+    <string name="hpp_retry_error">Lütfen internet bağlantınızı kontrol edip tekrar deneyin.</string>
+    <string name="hpp_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene\'ye dokunun.</string>
+    <string name="hpp_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
+    <string name="continue_site_credentials">Mağaza kimlik bilgileriyle devam edin</string>
+    <string name="login_find_your_connected_email">Bağlı e-postanızı bulun</string>
+    <string name="reader_discover_no_posts_button_text">Takip edilen konular</string>
+    <string name="reader_discover_no_posts_subtitle">Arama kapsamını genişletmek için daha fazla konuyu takip etmeyi deneyin</string>
+    <string name="reader_discover_no_posts_title">Yeni yazı yok</string>
+    <string name="reader_discover_empty_title">Hoş geldiniz!</string>
+    <string name="scan">Tarama</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> yazınıza yanıt verdi</string>
+    <string name="login_prologue_third_subtitle_two">Bugün sitenizde &lt;b>50 beğeni&lt;/b> aldınız</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> yazınızı beğendi</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Kaydırılabilir blok menüsü açıldı. Bir blok seçin.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
     <string name="hpp_skip_button">Atla</string>
@@ -39,6 +61,7 @@ Language: tr
     <string name="login_prologue_title_fourth">Kapsamlı analizlerle kitlenizin nasıl büyüdüğünü izleyin.</string>
     <string name="login_prologue_title_second">Güçlü düzenleyici ile hareket halindeyken yazı gönderebilirsiniz.</string>
     <string name="login_prologue_title_first">Dünyanın en popüler web sitesi oluşturucusuna hoş geldiniz.</string>
+    <string name="login_prologue_title_third">Yorumları ve bildirimleri gerçek zamanlı olarak görün.</string>
     <string name="media_loading_failed">Medya yükleme başarısız oldu</string>
     <string name="reader_discover_recommended_blogs_header">Takip edilecek siteler</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Her sürümde daha fazla blok eklemek için elimizden geleni yapıyoruz.</string>
@@ -64,7 +87,6 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
-    <string name="reader_discover_empty_title">Yeni bloglar keşfetmek için konular takip edin</string>
     <string name="reader_post_details_header_by_author_name">gönderen:</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>
@@ -95,7 +117,6 @@ Language: tr
     <string name="media_browse_for_items">Öğelere göz atın</string>
     <string name="reader_menu_report_post">Bu yazıyı bildir</string>
     <string name="reader_welcome_banner">Okuyucuya hoş geldiniz. Parmaklarınızın ucunda milyonlarca blogu keşfedin.</string>
-    <string name="gutenberg_native_angle">Açı</string>
     <string name="error_media_xmlrcp_server_error">Dahili sunucu hatası oluştu</string>
     <string name="error_media_xmlrpc_not_allowed">Eyleminize izin verilmiyor</string>
     <string name="show_n_hidden_items_desc">%1$s daha fazla öğe</string>
@@ -143,7 +164,6 @@ Language: tr
     <string name="dialog_discard_errored_page_message">Bu slayt henüz kaydedilmedi. Bu slaytı silerseniz yaptığınız tüm düzenlemeleri kaybedersiniz.</string>
     <string name="dialog_discard_page_message">Bu slayt öykünüzden kaldırılacak.</string>
     <string name="dialog_discard_page_title">Öykü slaytı silinsin mi?</string>
-    <string name="menu_delete_page">Slaytı sil</string>
     <string name="label_text_color_button">Metin rengini değiştir</string>
     <string name="label_text_alignment_button">Metin hizalamasını değiştir</string>
     <string name="label_frame_errored">hata oluştu</string>
@@ -153,8 +173,6 @@ Language: tr
     <string name="label_retry_icon">Tekrar dene</string>
     <string name="label_saved_icon">Kaydedildi</string>
     <string name="label_close_button">Kapat</string>
-    <string name="label_control_publish">Sonraki</string>
-    <string name="label_done">Bitti</string>
     <string name="label_share_to">Şununla paylaş:</string>
     <string name="label_snackbar_share">PAYLAŞ</string>
     <string name="label_snackbar_loop_frame_saved">Fotoğraflara kaydedildi</string>
@@ -165,7 +183,6 @@ Language: tr
     <string name="label_control_flip_camera">Ters Çevir</string>
     <string name="sound_button_alt">Ses</string>
     <string name="text_button_alt">Metin</string>
-    <string name="more_button_alt">Daha Fazla</string>
     <string name="stickers_button_alt">Çıkartmalar</string>
     <string name="flash_button_alt">Flaş</string>
     <string name="flip_button_alt">Kamerayı çevir</string>
@@ -525,7 +542,6 @@ Language: tr
     <string name="login_discovery_error_xmlrpc">Sitenizdeki &lt;b>XMLRPC dosyasına&lt;/b> erişemedik. Bu sorunu çözmek için sunucunuza ulaşmanız gerekecektir.</string>
     <string name="login_site_credentials_magic_link_label">Çok az kaldı! Sadece Jetpack bağlantılı e-posta adresinizi doğrulamamız gerekiyor&lt;b>%1$s&lt;/b></string>
     <string name="enter_credentials_for_site">%1$s site kimlik bilginizle giriş yapın</string>
-    <string name="send_verification_email">Doğrulama e-postası gönder</string>
     <string name="reader_following_display_name">Takip Ediliyor</string>
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
     <string name="enter_site_credentials_instead">Site kimlik bilgileriyle giriş yapın.</string>
@@ -552,7 +568,6 @@ Language: tr
     <string name="gutenberg_native_tap_here_to_show_help">Yardımı görüntülemek için buraya dokunun</string>
     <string name="gutenberg_native_take_a_video">Video Çek</string>
     <string name="gutenberg_native_take_a_photo_or_video">Fotoğraf veya Video Çek</string>
-    <string name="gutenberg_native_size">Boyut</string>
     <string name="gutenberg_native_sidebar_title_plugin">Kenar çubuğu başlık eklentisi</string>
     <string name="gutenberg_native_show_section">Bölümü göster</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">%s bloğu. Bu blok geçersiz içerik barındırıyor</string>
