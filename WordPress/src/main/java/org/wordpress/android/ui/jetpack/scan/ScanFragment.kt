@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
@@ -24,6 +23,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ScanViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ScanViewModel::class.java)
     }
 }
