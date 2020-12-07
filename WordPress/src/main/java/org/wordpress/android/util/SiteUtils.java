@@ -22,6 +22,8 @@ import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.helpers.Version;
+import org.wordpress.android.util.image.BlavatarShape;
+import org.wordpress.android.util.image.ImageType;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -246,6 +248,36 @@ public class SiteUtils {
     public static String getSiteIconUrl(SiteModel site, int size) {
         return PhotonUtils.getPhotonImageUrl(site.getIconUrl(), size, size, PhotonUtils.Quality.HIGH,
                 site.isPrivateWPComAtomic());
+    }
+
+    public static ImageType getSiteImageType(boolean isP2, BlavatarShape shape) {
+        ImageType type = ImageType.BLAVATAR;
+        if (isP2) {
+            switch (shape) {
+                case SQUARE:
+                    type = ImageType.P2_BLAVATAR;
+                    break;
+                case SQUARE_WITH_ROUNDED_CORNERES:
+                    type = ImageType.P2_BLAVATAR_ROUNDED_CORNERS;
+                    break;
+                case CIRCULAR:
+                    type = ImageType.P2_BLAVATAR_CIRCULAR;
+                    break;
+            }
+        } else {
+            switch (shape) {
+                case SQUARE:
+                    type = ImageType.BLAVATAR;
+                    break;
+                case SQUARE_WITH_ROUNDED_CORNERES:
+                    type = ImageType.BLAVATAR_ROUNDED_CORNERS;
+                    break;
+                case CIRCULAR:
+                    type = ImageType.BLAVATAR_CIRCULAR;
+                    break;
+            }
+        }
+        return type;
     }
 
     public static SiteAccessibilityInfo getAccessibilityInfoFromSite(@NotNull SiteModel site) {

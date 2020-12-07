@@ -34,6 +34,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
@@ -188,7 +189,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(3)
-        assertThat(uiModels.last().items).hasSize(1)
+        assertThat(uiModels.last().items).hasSize(2)
         assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
 
@@ -412,6 +413,130 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `quick actions are not shown when no site is selected`() {
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().items).doesNotHaveAnyElementsOfTypes(QuickActionsBlock::class.java)
+    }
+
+    @Test
+    fun `quick actions does not show pages button when site doesn't have the required capability`() {
+        site.hasCapabilityEditPages = false
+
+        onSiteChange.postValue(site)
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNotNull
+        assertThat(quickActionsBlock?.showPages).isFalse
+    }
+
+    @Test
+    fun `quick action stats click opens stats screen when user is logged in and site is WPCOM`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsWPCom(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
+    fun `quick action stats click opens stats screen when user is logged in and site is Jetpack`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
+    fun `quick action stats click opens connect jetpack screen when user is logged in and site is self-hosted`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `quick action stats click starts login when user is not logged in and site is Jetpack`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `quick action stats click opens connect jetpack screen when user is not logged in and site is self-hosted`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action posts click opens posts screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onPostsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenPosts(site))
+    }
+
+    @Test
+    fun `quick action media click opens media screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onMediaClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenMedia(site))
+    }
+
+    @Test
+    fun `handling successful login result opens stats screen`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.handleSuccessfulLoginResult()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
     fun `activity item click emits OpenActivity navigation event`() {
         invokeItemClickAction(ACTIVITY_LOG)
 
@@ -568,6 +693,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
+
+    private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {

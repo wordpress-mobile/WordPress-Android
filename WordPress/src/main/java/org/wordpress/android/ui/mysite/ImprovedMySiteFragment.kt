@@ -23,11 +23,9 @@ import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
-import org.wordpress.android.login.LoginMode.JETPACK_STATS
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
-import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
@@ -181,63 +179,27 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
-                    is OpenMeScreen -> {
-                        ActivityLauncher.viewMeActivityForResult(activity)
-                    }
-                    is OpenSitePicker -> {
-                        ActivityLauncher.showSitePickerForResult(activity, action.site)
-                    }
-                    is OpenSite -> {
-                        ActivityLauncher.viewCurrentSite(activity, action.site, true)
-                    }
-                    is OpenMediaPicker -> {
-                        mediaPickerLauncher.showSiteIconPicker(
-                                this,
-                                action.site
-                        )
-                    }
-                    is OpenCropActivity -> {
-                        startCropActivity(action.imageUri)
-                    }
-                    is OpenActivityLog ->
-                        ActivityLauncher.viewActivityLogList(
-                                activity,
-                                action.site
-                        )
+                    is OpenMeScreen -> ActivityLauncher.viewMeActivityForResult(activity)
+                    is OpenSitePicker -> ActivityLauncher.showSitePickerForResult(activity, action.site)
+                    is OpenSite -> ActivityLauncher.viewCurrentSite(activity, action.site, true)
+                    is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
+                    is OpenCropActivity -> startCropActivity(action.imageUri)
+                    is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
                     is OpenPages -> ActivityLauncher.viewCurrentBlogPages(requireActivity(), action.site)
-                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(
-                            activity,
-                            action.site
-                    )
-                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(
-                            activity,
-                            action.site
-                    )
+                    is OpenAdmin -> ActivityLauncher.viewBlogAdmin(activity, action.site)
+                    is OpenPeople -> ActivityLauncher.viewCurrentBlogPeople(activity, action.site)
                     is OpenSharing -> ActivityLauncher.viewBlogSharing(activity, action.site)
-                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(
-                            activity,
-                            action.site
-                    )
+                    is OpenSiteSettings -> ActivityLauncher.viewBlogSettingsForResult(activity, action.site)
                     is OpenThemes -> ActivityLauncher.viewCurrentBlogThemes(activity, action.site)
-                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(
-                            activity,
-                            action.site
-                    )
+                    is OpenPlugins -> ActivityLauncher.viewPluginBrowser(activity, action.site)
                     is OpenMedia -> ActivityLauncher.viewCurrentBlogMedia(activity, action.site)
-                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(
-                            activity,
-                            action.site
-                    )
+                    is OpenComments -> ActivityLauncher.viewCurrentBlogComments(activity, action.site)
                     is OpenStats -> ActivityLauncher.viewBlogStats(activity, action.site)
                     is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
-                    StartWPComLoginForJetpackStats -> {
-                        val loginIntent = Intent(activity, LoginActivity::class.java)
-                        JETPACK_STATS.putInto(loginIntent)
-                        startActivityForResult(loginIntent, RequestCodes.DO_LOGIN)
-                    }
+                    is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
                     is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
                 }
             }
@@ -321,6 +283,9 @@ class ImprovedMySiteFragment : Fragment(),
             return
         }
         when (requestCode) {
+            RequestCodes.DO_LOGIN -> if (resultCode == Activity.RESULT_OK) {
+                viewModel.handleSuccessfulLoginResult()
+            }
             RequestCodes.SITE_ICON_PICKER -> {
                 if (resultCode != Activity.RESULT_OK) {
                     return

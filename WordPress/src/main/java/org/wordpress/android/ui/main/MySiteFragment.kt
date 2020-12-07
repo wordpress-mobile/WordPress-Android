@@ -160,6 +160,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -1016,7 +1017,7 @@ class MySiteFragment : Fragment(),
         my_site_configuration_header.visibility = settingsVisibility
         imageManager.load(
                 my_site_blavatar,
-                BLAVATAR,
+                SiteUtils.getSiteImageType(site.isWpForTeamsSite, SQUARE),
                 SiteUtils.getSiteIconUrl(site, blavatarSz)
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)

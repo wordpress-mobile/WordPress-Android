@@ -14,6 +14,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_SHOT_NEW
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -36,6 +40,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
@@ -67,6 +72,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -140,6 +146,15 @@ class MySiteViewModel
                             this::switchSiteClick
                     )
             )
+            siteItems.add(
+                    QuickActionsBlock(
+                            ListItemInteraction.create { quickActionStatsClick(site) },
+                            ListItemInteraction.create { quickActionPagesClick(site) },
+                            ListItemInteraction.create { quickActionPostsClick(site) },
+                            ListItemInteraction.create { quickActionMediaClick(site) },
+                            site.isSelfHostedAdmin || site.hasCapabilityEditPages
+                    )
+            )
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable ?: false))
             siteItems
         } else {
@@ -168,15 +183,7 @@ class MySiteViewModel
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
-                STATS -> if (!accountStore.hasAccessToken() && site.isJetpackConnected) {
-                    // If the user is not connected to WordPress.com, ask him to connect first.
-                    StartWPComLoginForJetpackStats
-                } else if (site.isWPCom || site.isJetpackInstalled && site
-                                .isJetpackConnected) {
-                    OpenStats(site)
-                } else {
-                    ConnectJetpackForStats(site)
-                }
+                STATS -> getStatsNavigationActionForSite(site)
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> OpenSite(site)
@@ -238,6 +245,26 @@ class MySiteViewModel
 
     private fun switchSiteClick(site: SiteModel) {
         _onNavigation.value = Event(OpenSitePicker(site))
+    }
+
+    private fun quickActionStatsClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
+        _onNavigation.value = Event(getStatsNavigationActionForSite(site))
+    }
+
+    private fun quickActionPagesClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
+        _onNavigation.value = Event(OpenPages(site))
+    }
+
+    private fun quickActionPostsClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
+        _onNavigation.value = Event(OpenPosts(site))
+    }
+
+    private fun quickActionMediaClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
+        _onNavigation.value = Event(OpenMedia(site))
     }
 
     fun refresh() {
@@ -317,6 +344,10 @@ class MySiteViewModel
         }
     }
 
+    fun handleSuccessfulLoginResult() {
+        selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStats(site)) }
+    }
+
     private fun startSiteIconUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
@@ -344,6 +375,17 @@ class MySiteViewModel
         val uri = Uri.Builder().path(file.path).build()
         val mimeType = contextProvider.getContext().contentResolver.getType(uri)
         return fluxCUtilsWrapper.mediaModelFromLocalUri(uri, mimeType, site.id)
+    }
+
+    private fun getStatsNavigationActionForSite(site: SiteModel) = when {
+        // If the user is not logged in and the site is already connected to Jetpack, ask to login.
+        !accountStore.hasAccessToken() && site.isJetpackConnected -> StartWPComLoginForJetpackStats
+
+        // If it's a WordPress.com or Jetpack site, show the Stats screen.
+        site.isWPCom || site.isJetpackInstalled && site.isJetpackConnected -> OpenStats(site)
+
+        // If it's a self-hosted site, ask to connect to Jetpack.
+        else -> ConnectJetpackForStats(site)
     }
 
     fun onAvatarPressed() {
