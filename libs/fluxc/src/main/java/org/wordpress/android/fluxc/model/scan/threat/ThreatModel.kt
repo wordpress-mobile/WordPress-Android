@@ -1,92 +1,41 @@
 package org.wordpress.android.fluxc.model.scan.threat
 
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import java.util.Date
 
-sealed class ThreatModel(
-    open var id: Long,
-    open var signature: String,
-    open var description: String,
-    open var status: ThreatStatus,
-    open var firstDetected: Date,
+data class BaseThreatModel(
+    val id: Long,
+    val signature: String,
+    val description: String,
+    val status: ThreatStatus,
+    val firstDetected: Date,
+    val fixable: Fixable? = null,
+    val fixedOn: Date? = null
+)
 
-    open var fixable: Fixable? = null,
-    open var fixedOn: Date? = null
-) {
+sealed class ThreatModel {
+    abstract val baseThreatModel: BaseThreatModel
+
     data class GenericThreatModel(
-        override var id: Long,
-        override var signature: String,
-        override var description: String,
-        override var status: ThreatStatus,
-        override var firstDetected: Date,
-        override var fixable: Fixable? = null,
-        override var fixedOn: Date? = null
-    ) : ThreatModel(
-        id = id,
-        signature = signature,
-        description = description,
-        status = status,
-        firstDetected = firstDetected,
-        fixable = fixable,
-        fixedOn = fixedOn
-    )
+        override val baseThreatModel: BaseThreatModel
+    ) : ThreatModel()
 
     data class CoreFileModificationThreatModel(
-        override var id: Long,
-        override var signature: String,
-        override var description: String,
-        override var status: ThreatStatus,
-        override var firstDetected: Date,
-        override var fixable: Fixable? = null,
-        override var fixedOn: Date? = null,
+        override val baseThreatModel: BaseThreatModel,
         val fileName: String,
         val diff: String
-    ) : ThreatModel(
-        id = id,
-        signature = signature,
-        description = description,
-        status = status,
-        firstDetected = firstDetected,
-        fixable = fixable,
-        fixedOn = fixedOn
-    )
+    ) : ThreatModel()
 
     data class VulnerableExtensionThreatModel(
-        override var id: Long,
-        override var signature: String,
-        override var description: String,
-        override var status: ThreatStatus,
-        override var firstDetected: Date,
-        override var fixable: Fixable? = null,
-        override var fixedOn: Date? = null,
+        override val baseThreatModel: BaseThreatModel,
         val extension: Extension
-    ) : ThreatModel(
-        id = id,
-        signature = signature,
-        description = description,
-        status = status,
-        firstDetected = firstDetected,
-        fixable = fixable,
-        fixedOn = fixedOn
-    )
+    ) : ThreatModel()
 
     data class DatabaseThreatModel(
-        override var id: Long,
-        override var signature: String,
-        override var description: String,
-        override var status: ThreatStatus,
-        override var firstDetected: Date,
-        override var fixable: Fixable? = null,
-        override var fixedOn: Date? = null,
+        override val baseThreatModel: BaseThreatModel,
         val rows: List<Row>? = null
-    ) : ThreatModel(
-        id = id,
-        signature = signature,
-        description = description,
-        status = status,
-        firstDetected = firstDetected,
-        fixable = fixable,
-        fixedOn = fixedOn
-    ) {
+    ) : ThreatModel() {
         data class Row(
             val id: Int,
             val rowNumber: Int,
@@ -97,24 +46,10 @@ sealed class ThreatModel(
     }
 
     data class FileThreatModel(
-        override var id: Long,
-        override var signature: String,
-        override var description: String,
-        override var status: ThreatStatus,
-        override var firstDetected: Date,
-        override var fixable: Fixable? = null,
-        override var fixedOn: Date? = null,
+        override val baseThreatModel: BaseThreatModel,
         val fileName: String? = null,
         val context: ThreatContext
-    ) : ThreatModel(
-        id = id,
-        signature = signature,
-        description = description,
-        status = status,
-        firstDetected = firstDetected,
-        fixable = fixable,
-        fixedOn = fixedOn
-    ) {
+    ) : ThreatModel() {
         data class ThreatContext(
             val lines: List<ContextLine>
         ) {
