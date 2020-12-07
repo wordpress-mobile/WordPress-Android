@@ -15,6 +15,7 @@ public class ReaderBlog {
 
     public boolean isPrivate;
     public boolean isJetpack;
+    public boolean isWpForTeams;
     public boolean isFollowing;
     public boolean isNotificationsEnabled;
     public int numSubscribers;
@@ -53,6 +54,10 @@ public class ReaderBlog {
             JSONObject jsonIcon = jsonSite.optJSONObject("icon");
             if (jsonIcon != null) {
                 blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
+            }
+            JSONObject jsonOptions = jsonSite.optJSONObject("options");
+            if (jsonOptions != null) {
+                blog.isWpForTeams = JSONUtils.getBool(jsonOptions, "is_wpforteams_site");
             }
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
