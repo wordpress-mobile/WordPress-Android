@@ -5,7 +5,6 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_fullscreen_error_with_retry.*
@@ -61,8 +60,8 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
-        parentViewModel = ViewModelProviders.of(requireParentFragment()).get(ReaderViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
+        parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
         startObserving()
     }
 

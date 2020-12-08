@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.backup_download_details_fragment.*
@@ -53,10 +52,10 @@ class BackupDownloadDetailsFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        parentViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        parentViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadDetailsViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->

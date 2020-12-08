@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.plans_list_fragment.*
@@ -58,7 +57,7 @@ class PlansListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PlansViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PlansViewModel::class.java)
         setObservers()
         viewModel.create()
     }

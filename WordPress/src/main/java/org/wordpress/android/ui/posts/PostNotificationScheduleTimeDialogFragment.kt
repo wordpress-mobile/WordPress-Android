@@ -6,7 +6,6 @@ import android.os.Bundle
 import android.widget.RadioGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -30,9 +29,9 @@ class PostNotificationScheduleTimeDialogFragment : DialogFragment() {
         )
 
         when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            EDIT_POST -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 

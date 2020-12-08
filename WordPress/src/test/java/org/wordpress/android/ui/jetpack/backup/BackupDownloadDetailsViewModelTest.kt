@@ -33,11 +33,11 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start()
 
-        assertThat(uiStates[0]).isInstanceOf(UiState.Content::class.java)
+        assertThat(uiStates[0]).isInstanceOf(Content::class.java)
     }
 
     @Test
-    fun `item is unchecked, when it is clicked on`() = test {
+    fun `given item is checked, when item is clicked, then item gets unchecked`() = test {
         val uiStates = initObservers().uiStates
 
         viewModel.start()
@@ -48,7 +48,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `item is checked, when it is clicked on twice `() = test {
+    fun `given item is unchecked, when item is clicked, then item gets checked`() = test {
         val uiStates = initObservers().uiStates
 
         viewModel.start()

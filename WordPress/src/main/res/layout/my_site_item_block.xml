@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?><!--Publish-->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/MySiteListRowLayout"
+    android:gravity="center_vertical">
+
+    <ImageView
+        android:id="@+id/my_site_item_primary_icon"
+        style="@style/MySiteListRowIcon"
+        android:importantForAccessibility="no"
+        tools:src="@drawable/ic_plans_white_24dp" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/my_site_item_primary_text"
+        style="@style/MySiteListRowTextView"
+        tools:text="@string/plan" />
+
+    <ImageView
+        android:id="@+id/my_site_item_secondary_icon"
+        style="@style/MySiteListRowSecondaryIcon"
+        android:importantForAccessibility="no"
+        android:src="@drawable/ic_external_white_24dp" />
+
+    <org.wordpress.android.widgets.WPTextView
+        android:id="@+id/my_site_item_secondary_text"
+        style="@style/MySiteListRowSecondaryTextView"
+        android:gravity="end"
+        android:paddingEnd="0dp"
+        android:paddingStart="0dp"
+        android:textAlignment="viewEnd"
+        tools:ignore="RtlSymmetry"
+        tools:text="@string/plan" />
+
+</LinearLayout>
