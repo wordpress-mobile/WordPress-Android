@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.utils.NetworkErrorMapper
-import java.util.Date
 import javax.inject.Singleton
 
 @Singleton
@@ -103,18 +102,18 @@ class ScanRestClient(
                 },
                 mostRecentStatus = response.mostRecentStatus?.let {
                     ScanProgressStatus(
-                            startDate = it.startDate ?: Date(0),
+                            startDate = it.startDate,
                             duration = it.duration ?: 0,
-                            progress = it.progress,
-                            error = it.error,
-                            isInitial = it.isInitial
+                            progress = it.progress ?: 0,
+                            error = it.error ?: false,
+                            isInitial = it.isInitial ?: false
                     )
                 },
                 currentStatus = response.currentStatus?.let {
                     ScanProgressStatus(
-                            startDate = it.startDate ?: Date(0),
-                            progress = it.progress,
-                            isInitial = it.isInitial
+                            startDate = it.startDate,
+                            progress = it.progress ?: 0,
+                            isInitial = it.isInitial ?: false
                     )
                 }
         )
