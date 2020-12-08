@@ -2,7 +2,8 @@ package org.wordpress.android.fluxc.network.rest.wpcom.scan.threat
 
 import com.google.gson.annotations.JsonAdapter
 import com.google.gson.annotations.SerializedName
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatContext
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel.Row
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
 import java.util.Date
 
 data class Threat(
@@ -17,7 +18,7 @@ data class Threat(
     @SerializedName("context") @JsonAdapter(ThreatContextDeserializer::class) val context: ThreatContext?,
     @SerializedName("filename") val fileName: String?,
     @SerializedName("diff") val diff: String?,
-    @SerializedName("rows") val rows: String?
+    @SerializedName("rows") @JsonAdapter(RowsDeserializer::class) val rows: List<Row>?
 ) {
     data class Fixable(
         @SerializedName("file") val file: String?,

@@ -1352,8 +1352,11 @@ open class WellSqlConfig : DefaultWellConfig {
                             "REASON TEXT)"
                     )
                 }
-                125 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                124 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCOrderModel ADD FEE_LINES TEXT")
+                }
+                125 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCShippingLabelModel ADD PRODUCT_IDS TEXT")
                 }
                 126 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCLocations")
