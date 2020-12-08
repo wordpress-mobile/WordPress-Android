@@ -84,6 +84,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
+    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -120,7 +121,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 fluxCUtilsWrapper,
                 contextProvider,
                 siteIconUploadHandler,
-                siteStoriesHandler
+                siteStoriesHandler,
+                domainRegistrationHandler
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
