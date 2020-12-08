@@ -20,6 +20,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
@@ -159,25 +161,15 @@ class ActivityLogListFragment : Fragment() {
             log_list_view.scrollToPosition(0)
         })
 
-        viewModel.showMoreMenu.observe(viewLifecycleOwner, Observer {
-            if (it is ActivityLogListItem.Event) {
-                displayMoreMenuDialog(it)
-            }
-        })
+        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(requireActivity())
+                    is ShowRestore -> displayRewindDialog(event) }
+                }
+            })
     }
 
-    private fun displayMoreMenuDialog(item: ActivityLogListItem.Event) {
-        val dialog = BasicFragmentDialog()
-        item.rewindId?.let {
-            dialog.initialize(it,
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.backup_download_details_header),
-                    getString(R.string.cancel))
-            dialog.show(requireFragmentManager(), it)
-        }
-    }
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
@@ -231,10 +223,17 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onActionButtonClicked(item)
     }
 
+    private fun onSecondaryActionClicked(
+        secondaryAction: ActivityLogListItem.SecondaryAction,
+        item: ActivityLogListItem
+    ): Boolean {
+        return viewModel.onSecondaryActionClicked(secondaryAction, item)
+    }
+
     private fun setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
         if (log_list_view.adapter == null) {
-            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
+            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked, this::onSecondaryActionClicked)
             log_list_view.adapter = adapter
         } else {
             adapter = log_list_view.adapter as ActivityLogAdapter

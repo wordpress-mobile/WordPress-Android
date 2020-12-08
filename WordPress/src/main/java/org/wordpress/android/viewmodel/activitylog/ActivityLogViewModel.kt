@@ -15,13 +15,18 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -93,6 +98,11 @@ class ActivityLogViewModel @Inject constructor(
     val showSnackbarMessage: LiveData<String>
         get() = _showSnackbarMessage
 
+    private val _navigationEvents =
+            MutableLiveData<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents>>()
+    val navigationEvents: LiveData<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents>>
+        get() = _navigationEvents
+
     private val isLoadingInProgress: Boolean
         get() = eventListStatus.value == LOADING_MORE ||
                 eventListStatus.value == ActivityLogListStatus.FETCHING
@@ -125,10 +135,6 @@ class ActivityLogViewModel @Inject constructor(
             }
         }
     }
-
-    private val _showMoreMenu = SingleLiveEvent<ActivityLogListItem>()
-    val showMoreMenu: LiveData<ActivityLogListItem>
-        get() = _showMoreMenu
 
     lateinit var site: SiteModel
 
@@ -182,15 +188,29 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
+    // todo: annmarie - Remove once the feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is Event) {
-            if (backupFeatureConfig.isEnabled()) {
-                // todo: annmarie implement expand/dismiss the more menu
-                _showMoreMenu.value = item
-            } else {
-                _showRewindDialog.value = item
-            }
+            _showRewindDialog.value = item
         }
+    }
+
+    fun onSecondaryActionClicked(
+        secondaryAction: ActivityLogListItem.SecondaryAction,
+        item: ActivityLogListItem
+    ): Boolean {
+        if (item is Event) {
+            val navigationEvent = when (secondaryAction) {
+                RESTORE -> {
+                    ShowRestore(item)
+                }
+                DOWNLOAD_BACKUP -> {
+                    ShowBackupDownload(item)
+                }
+            }
+            _navigationEvents.value = org.wordpress.android.viewmodel.Event(navigationEvent)
+        }
+        return true
     }
 
     fun dateRangePickerClicked() {
@@ -276,7 +296,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
-            val rewoundEvent = ActivityLogListItem.Event(
+            val rewoundEvent = Event(
                     model = it,
                     backupFeatureEnabled = backupFeatureConfig.isEnabled())
             ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
@@ -288,7 +308,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun requestEventsUpdate(isLoadingMore: Boolean) {
         if (canRequestEventsUpdate(isLoadingMore)) {
-            val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
+            val newStatus = if (isLoadingMore) LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.value = newStatus
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
             launch {

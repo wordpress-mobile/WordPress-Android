@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
@@ -48,8 +47,6 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     }
 
     override fun onNegativeClicked(instanceTag: String) {
-        // todo: annmarie - this is temporary to expose backup feature
-        ActivityLauncher.showBackupDownload(this)
     }
 
     private fun passRewindConfirmation(rewindId: String) {
