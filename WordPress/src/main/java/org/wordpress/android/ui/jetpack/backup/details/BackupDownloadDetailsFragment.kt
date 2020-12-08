@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel
@@ -30,10 +29,10 @@ class BackupDownloadDetailsFragment : Fragment() {
         val nonNullActivity = requireActivity()
         (nonNullActivity.application as WordPress).component().inject(this)
 
-        parentViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        parentViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadDetailsViewModel::class.java)
 
         setupViews()
