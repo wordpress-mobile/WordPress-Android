@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 127
+        return 128
     }
 
     override fun getDbName(): String {
@@ -1358,19 +1358,28 @@ open class WellSqlConfig : DefaultWellConfig {
                 125 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCShippingLabelModel ADD PRODUCT_IDS TEXT")
                 }
-                126 -> migrate(version) {
+                126 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCLocations")
+                    db.execSQL("CREATE TABLE WCLocations (" +
+                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                            "PARENT_CODE TEXT NOT NULL" +
+                            "CODE TEXT NOT NULL," +
+                            "NAME TEXT NOT NULL)"
+                    )
+                }
+                127 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS ScanState")
                     db.execSQL(
-                            "CREATE TABLE ScanState (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                                    "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
-                                    "START_DATE INTEGER NOT NULL," +
-                                    "DURATION INTEGER NOT NULL," +
-                                    "PROGRESS INTEGER," +
-                                    "STATE TEXT NOT NULL," +
-                                    "ERROR BOOLEAN NOT NULL," +
-                                    "INITIAL BOOLEAN," +
-                                    "REASON TEXT, " +
-                                    "HAS_CLOUD BOOLEAN NOT NULL)"
+                        "CREATE TABLE ScanState (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
+                                "START_DATE INTEGER NOT NULL," +
+                                "DURATION INTEGER NOT NULL," +
+                                "PROGRESS INTEGER," +
+                                "STATE TEXT NOT NULL," +
+                                "ERROR BOOLEAN NOT NULL," +
+                                "INITIAL BOOLEAN," +
+                                "REASON TEXT, " +
+                                "HAS_CLOUD BOOLEAN NOT NULL)"
                     )
                 }
             }
