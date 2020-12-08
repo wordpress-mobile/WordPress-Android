@@ -164,6 +164,7 @@ class ActivityLogListFragment : Fragment() {
             it.applyIfNotHandled {
                 when (this) {
                     is ShowBackupDownload -> ActivityLauncher.showBackupDownload(requireActivity())
+                    // todo: annmarie replace with the ActivityLauncher for showing restore details
                     is ShowRestore -> displayRewindDialog(event) }
                 }
             })
