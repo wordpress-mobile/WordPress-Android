@@ -16,8 +16,7 @@ import javax.inject.Inject
 
 class ActivityLogListActivity : LocaleAwareActivity(),
         BasicFragmentDialog.BasicDialogPositiveClickInterface,
-        BasicFragmentDialog.BasicDialogNegativeClickInterface
-{
+        BasicFragmentDialog.BasicDialogNegativeClickInterface {
     @Inject lateinit var backupFeatureConfig: BackupFeatureConfig
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
