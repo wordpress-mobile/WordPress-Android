@@ -166,6 +166,8 @@ import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
@@ -461,6 +463,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ActivityLogListFragment object);
 
     void inject(ActivityLogDetailFragment object);
+
+    void inject(ScanActivity object);
+
+    void inject(ScanFragment object);
 
     void inject(PluginListFragment object);
 
