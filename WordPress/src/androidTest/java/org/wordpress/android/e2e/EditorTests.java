@@ -1,7 +1,6 @@
 package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
-import android.view.accessibility.AccessibilityNodeInfo;
 
 import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.rule.ActivityTestRule;
@@ -9,11 +8,7 @@ import androidx.test.rule.GrantPermissionRule;
 
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult;
 import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultType;
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityInfoCheck;
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityInfoCheckResult;
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityViewCheckResult;
 
-import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 import org.hamcrest.Matchers;
 import org.junit.Before;
@@ -33,13 +28,9 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesCheckNames;
-import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesInfos;
 import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
-import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesViews;
 import static junit.framework.TestCase.assertTrue;
 import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
