@@ -123,12 +123,13 @@ constructor(
             val lastDayDate = statsDateFormatter.parseStatsDate(granularity, lastDayData.period)
             if (lastDayDate.before(yesterday.time)) {
                 val currentCalendar = localeManagerWrapper.getCurrentCalendar()
+                val lastItemAge = ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0)
                 analyticsTracker.track(
                         STATS_OVERVIEW_ERROR,
                         mapOf(
                                 "stats_last_date" to statsDateFormatter.printStatsDate(lastDayDate),
                                 "stats_current_date" to statsDateFormatter.printStatsDate(currentCalendar.time),
-                                "stats_age_in_days" to ceil((currentCalendar.timeInMillis - lastDayDate.time) / 86400000.0).toInt(),
+                                "stats_age_in_days" to lastItemAge.toInt(),
                                 "is_jetpack_connected" to site.isJetpackConnected,
                                 "is_atomic" to site.isWPComAtomic,
                                 "action_source" to if (fetched) "remote" else "cached"
