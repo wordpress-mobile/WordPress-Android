@@ -9,6 +9,7 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_CROPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED
@@ -108,7 +109,8 @@ class MySiteViewModel
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val siteStoriesHandler: SiteStoriesHandler
+    private val siteStoriesHandler: SiteStoriesHandler,
+    private val domainRegistrationHandler: DomainRegistrationHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -126,8 +128,9 @@ class MySiteViewModel
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+            selectedSiteRepository.showSiteIconProgressBar.distinct(),
+            domainRegistrationHandler.isDomainCreditAvailable.distinct()
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
         val items = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -149,7 +152,10 @@ class MySiteViewModel
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
-            siteItems.add(DomainRegistrationBlock(ListItemInteraction.create { domainRegistrationClick(site) }))
+            if (isDomainCreditAvailable == true) {
+                analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
+                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
+            }
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
             siteItems
         } else {
@@ -389,6 +395,7 @@ class MySiteViewModel
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
+        domainRegistrationHandler.clear()
         super.onCleared()
     }
 
