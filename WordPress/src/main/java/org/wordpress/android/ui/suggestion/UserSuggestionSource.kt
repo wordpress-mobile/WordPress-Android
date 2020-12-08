@@ -34,6 +34,7 @@ class UserSuggestionSource @Inject constructor(
 
     init {
         postSavedSuggestions(false)
+        isFetching = true
         connectionManager.bindToService()
         eventBusWrapper.register(this)
     }
