@@ -136,10 +136,10 @@ class MySiteViewModel
             )
             siteItems.add(
                     QuickActionsBlock(
-                            ListItemInteraction.create { quickActionStatsClick(site) },
-                            ListItemInteraction.create { quickActionPagesClick(site) },
-                            ListItemInteraction.create { quickActionPostsClick(site) },
-                            ListItemInteraction.create { quickActionMediaClick(site) },
+                            ListItemInteraction.create(site, this::quickActionStatsClick),
+                            ListItemInteraction.create(site, this::quickActionPagesClick),
+                            ListItemInteraction.create(site, this::quickActionPostsClick),
+                            ListItemInteraction.create(site, this::quickActionMediaClick),
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
