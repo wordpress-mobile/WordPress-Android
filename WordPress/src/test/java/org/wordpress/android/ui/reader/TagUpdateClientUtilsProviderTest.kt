@@ -24,7 +24,7 @@ class TagUpdateClientUtilsProviderTest {
 
     @Test
     fun `getRestClientForTagUpdate return the expected client version`() {
-        assertThat(clientProvider.getRestClientForTagUpdate()).isEqualTo(WordPress.getRestClientUtilsV1_2())
+        assertThat(clientProvider.getRestClientForTagUpdate()).isEqualTo(WordPress.getRestClientUtilsV1_3())
     }
 
     @Test
