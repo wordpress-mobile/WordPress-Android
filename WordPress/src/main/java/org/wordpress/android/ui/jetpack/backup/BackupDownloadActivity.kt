@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.backup_download_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -40,7 +39,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
         viewModel.start()
 

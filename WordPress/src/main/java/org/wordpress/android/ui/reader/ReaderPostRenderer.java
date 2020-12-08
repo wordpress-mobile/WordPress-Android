@@ -492,6 +492,10 @@ public class ReaderPostRenderer {
                 "(gallery-group) ([\\s\"'])",
                 "(tiled-gallery-item) ([\\s\"'])");
         String contentCustomised = content;
+
+        // removes background-color property from original content
+        contentCustomised = contentCustomised.replaceAll("\\s*(background-color)\\s*:\\s*.+?\\s*;\\s*", "");
+
         for (String classToAmend : classAmendRegexes) {
             contentCustomised = contentCustomised.replaceAll(classToAmend, "$1 " + galleryOnlyClass + "$2");
         }

@@ -22,7 +22,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -193,7 +192,7 @@ class MediaPickerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MediaPickerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(MediaPickerViewModel::class.java)
         setHasOptionsMenu(true)
     }
 

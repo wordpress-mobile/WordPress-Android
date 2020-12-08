@@ -8,7 +8,6 @@ import android.os.Bundle
 import android.text.format.DateFormat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.EDIT_POST
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
@@ -26,9 +25,9 @@ class PostTimePickerDialogFragment : DialogFragment() {
         )
 
         when (publishSettingsFragmentType) {
-            EDIT_POST -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            EDIT_POST -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(EditPostPublishSettingsViewModel::class.java)
-            PREPUBLISHING_NUDGES -> viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+            PREPUBLISHING_NUDGES -> viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                     .get(PrepublishingPublishSettingsViewModel::class.java)
         }
 

@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.LayoutParams
@@ -148,7 +148,7 @@ class StatsViewAllFragment : DaggerFragment() {
         statsSiteProvider.start(siteId)
 
         val viewModelFactory = viewModelFactoryBuilder.build(type, granularity)
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewAllViewModel::class.java)
 
         val selectedDate = if (savedInstanceState == null) {
             nonNullIntent.getParcelableExtra(ARGS_SELECTED_DATE) as SelectedDate?

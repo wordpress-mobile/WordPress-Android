@@ -20,6 +20,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnSiteChanged
 import org.wordpress.android.fluxc.store.SiteStore.SiteError
@@ -64,6 +65,7 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
     @Mock private lateinit var bundle: Bundle
+    @Mock private lateinit var quickStartStore: QuickStartStore
     @Mock private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var urlUtils: UrlUtilsWrapper
@@ -73,7 +75,6 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var onHelpedClickedObserver: Observer<Unit>
     @Mock private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
     @Mock private lateinit var onOkClickedObserver: Observer<CreateSiteState>
-    @Mock private lateinit var hideGetStartedObserver: Observer<Unit>
     @Mock private lateinit var preloadPreviewObserver: Observer<String>
 
     private lateinit var viewModel: SitePreviewViewModel
@@ -84,6 +85,7 @@ class SitePreviewViewModelTest {
         viewModel = SitePreviewViewModel(
                 dispatcher,
                 siteStore,
+                quickStartStore,
                 fetchWpComUseCase,
                 networkUtils,
                 urlUtils,
@@ -96,7 +98,6 @@ class SitePreviewViewModelTest {
         viewModel.onHelpClicked.observeForever(onHelpedClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
         viewModel.onOkButtonClicked.observeForever(onOkClickedObserver)
-        viewModel.hideGetStartedBar.observeForever(hideGetStartedObserver)
         viewModel.preloadPreview.observeForever(preloadPreviewObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
@@ -204,13 +205,6 @@ class SitePreviewViewModelTest {
     fun `on OK click is propagated`() {
         viewModel.onOkButtonClicked()
         assertThat(viewModel.onOkButtonClicked.value).isEqualTo(SiteNotCreated)
-    }
-
-    @Test
-    fun `hide GetStartedBar on UrlLoaded`() {
-        initViewModel()
-        viewModel.onUrlLoaded()
-        verify(hideGetStartedObserver).onChanged(null)
     }
 
     @Test

@@ -114,7 +114,6 @@ class WPMainActivityViewModel @Inject constructor(
                     actionType = CREATE_NEW_STORY,
                     iconRes = R.drawable.ic_story_icon_24dp,
                     labelRes = R.string.my_site_bottom_sheet_add_story,
-                    tagRes = R.string.my_site_bottom_sheet_story_tag_new,
                     onClickAction = ::onCreateActionClicked
             ))
         }
