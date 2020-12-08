@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.posts
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
@@ -24,16 +23,11 @@ import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient
 import org.wordpress.android.fluxc.persistence.PostSqlUtils
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.PostListAction.EditPost
-import org.wordpress.android.ui.posts.PostListViewLayoutType.STANDARD
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
-import org.wordpress.android.viewmodel.Event
 
 class PostListMainViewModelCopyPostTest : BaseUnitTest() {
     @Mock lateinit var site: SiteModel
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var postSqlUtils: PostSqlUtils
-    @Mock lateinit var editPostRepository: EditPostRepository
-    @Mock lateinit var prefs: AppPrefsWrapper
     @Mock lateinit var onPostListActionObserver: Observer<PostListAction>
 
     private lateinit var viewModel: PostListMainViewModel
@@ -64,7 +58,7 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
                 uploadStore = mock(),
                 mediaStore = mock(),
                 networkUtilsWrapper = mock(),
-                prefs = prefs,
+                prefs = mock(),
                 previewStateHelper = mock(),
                 analyticsTracker = mock(),
                 mainDispatcher = Dispatchers.Unconfined,
@@ -80,10 +74,6 @@ class PostListMainViewModelCopyPostTest : BaseUnitTest() {
         whenever(postSqlUtils.insertPostForResult(any())).thenAnswer { invocation ->
             (invocation.arguments[0] as PostModel).apply { setId(copyPostId) }
         }
-        whenever(editPostRepository.postChanged).thenReturn(MutableLiveData(Event(PostModel())))
-        whenever(prefs.postListViewLayoutType).thenReturn(STANDARD)
-
-        viewModel.start(site, mock(), mock(), editPostRepository, mock())
     }
 
     @Test
