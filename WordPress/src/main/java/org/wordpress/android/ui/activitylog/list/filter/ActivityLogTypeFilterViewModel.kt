@@ -70,7 +70,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
         return withContext(bgDispatcher) {
             // TODO malinjir replace the hardcoded header title
-            val headerListItem = ListItemUiState.SectionHeader(UiStringText("Test"))
+            val headerListItem = ListItemUiState.SectionHeader(
+                    UiStringRes(R.string.activity_log_activity_type_filter_header)
+            )
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
