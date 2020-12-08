@@ -2,6 +2,7 @@ package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
 
+import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
@@ -36,6 +37,7 @@ public class EditorTests extends BaseTest {
 
     @Before
     public void setUp() {
+        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false);
         logoutIfNecessary();
         wpLogin();
 
