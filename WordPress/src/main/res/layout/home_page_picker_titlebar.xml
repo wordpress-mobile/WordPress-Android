@@ -1,21 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <ImageButton
-        android:id="@+id/backButton"
+    <FrameLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/negative_margin_medium"
-        android:backgroundTint="@color/transparent"
-        android:contentDescription="@string/navigate_back_desc"
-        android:src="@drawable/ic_arrow_left_white_24dp"
-        android:tint="?attr/colorOnSurface" />
+        android:layout_height="match_parent">
 
+        <ImageButton
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/negative_margin_medium"
+            android:backgroundTint="@color/transparent"
+            android:contentDescription="@string/navigate_back_desc"
+            android:src="@drawable/ic_arrow_left_white_24dp"
+            android:tint="?attr/colorOnSurface" />
+
+        <!-- Dummy view to center title -->
+        <TextView
+            style="@style/HomePagePickerSkipButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/hpp_skip_button"
+            android:visibility="invisible" />
+    </FrameLayout>
     <TextView
         android:id="@+id/title"
         style="@style/ModalLayoutPickerHeader"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/hpp_title" />
 
@@ -26,4 +40,4 @@
         android:layout_height="wrap_content"
         android:layout_gravity="end"
         android:text="@string/hpp_skip_button" />
-</FrameLayout>
+</LinearLayout>
