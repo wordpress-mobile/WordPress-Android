@@ -86,11 +86,11 @@ class ScanSqlUtils @Inject constructor() {
         @Column var remoteSiteId: Long,
         @Column var state: String,
         @Column var startDate: Long,
-        @Column var duration: Int,
-        @Column var progress: Int? = null,
+        @Column var duration: Int = 0,
+        @Column var progress: Int = 0,
         @Column var reason: String? = null,
-        @Column var error: Boolean,
-        @Column var initial: Boolean? = null,
+        @Column var error: Boolean = false,
+        @Column var initial: Boolean = false,
         @Column var hasCloud: Boolean = false
     ) : Identifiable {
         constructor() : this(-1, 0, 0, "", 0, 0, 0, "", false, false, false)
