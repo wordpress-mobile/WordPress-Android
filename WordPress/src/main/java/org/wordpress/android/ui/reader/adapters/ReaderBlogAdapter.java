@@ -19,6 +19,8 @@ import org.wordpress.android.models.ReaderBlogList;
 import org.wordpress.android.ui.reader.ReaderInterfaces;
 import org.wordpress.android.ui.reader.actions.ReaderActions.ActionListener;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
@@ -31,6 +33,7 @@ import org.wordpress.android.util.image.ImageType;
 
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.EnumSet;
 import java.util.Locale;
 
 import javax.inject.Inject;
@@ -217,6 +220,8 @@ public class ReaderBlogAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                 ToastUtils.showToast(context, errResId);
                 followButton.setIsFollowed(!isAskingToFollow);
                 blog.isFollowing = !isAskingToFollow;
+            } else {
+                ReaderUpdateServiceStarter.startService(followButton.getContext(), EnumSet.of(UpdateTask.TAGS));
             }
         };
 

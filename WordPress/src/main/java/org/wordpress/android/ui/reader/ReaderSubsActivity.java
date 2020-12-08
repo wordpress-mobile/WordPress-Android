@@ -48,10 +48,11 @@ import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
-import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -296,13 +297,21 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (TextUtils.isEmpty(entry)) {
             return;
         }
+        URI uri;
+        try {
+            uri = new URI(entry);
+        } catch (URISyntaxException e) {
+            e.printStackTrace();
+            showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
+            return;
+        }
 
-        // normalize the url and prepend protocol if not supplied
-        final String normUrl;
-        if (!entry.contains("://")) {
-            normUrl = UrlUtils.normalizeUrl("http://" + entry);
+        // normalize the url and prepend protocol and www if not supplied
+        String normUrl = uri.getHost();
+        if (normUrl.startsWith("www.")) {
+            normUrl = "http://" + normUrl;
         } else {
-            normUrl = UrlUtils.normalizeUrl(entry);
+            normUrl = "http://www." + normUrl;
         }
 
         // if this isn't a valid URL, add original entry as a tag
@@ -417,6 +426,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     EditTextUtils.hideSoftInput(mEditAdd);
                     showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                    performUpdate();
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }
