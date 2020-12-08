@@ -221,7 +221,8 @@ class PostListMainViewModel @Inject constructor(
                 postToCopy.content,
                 PostStatus.DRAFT.toString(),
                 postToCopy.categoryIdList,
-                postToCopy.postFormat
+                postToCopy.postFormat,
+                true
         )
         _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
