@@ -2,7 +2,6 @@ package org.wordpress.android.e2e;
 
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.rule.ActivityTestRule;
-import androidx.test.espresso.accessibility.AccessibilityChecks;
 
 import org.junit.After;
 import org.junit.Before;
@@ -29,7 +28,6 @@ public class LoginTests extends BaseTest {
 
     @Before
     public void setUp() {
-        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false);
         logoutIfNecessary();
     }
 

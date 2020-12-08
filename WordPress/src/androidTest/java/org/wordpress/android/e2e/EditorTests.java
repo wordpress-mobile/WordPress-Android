@@ -2,15 +2,9 @@ package org.wordpress.android.e2e;
 
 import android.Manifest.permission;
 
-import androidx.test.espresso.accessibility.AccessibilityChecks;
 import androidx.test.rule.ActivityTestRule;
 import androidx.test.rule.GrantPermissionRule;
 
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult;
-import com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResult.AccessibilityCheckResultType;
-
-import org.hamcrest.Matcher;
-import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
@@ -28,10 +22,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.Espresso.pressBack;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static com.google.android.apps.common.testing.accessibility.framework.AccessibilityCheckResultUtils.matchesTypes;
 import static junit.framework.TestCase.assertTrue;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.is;
 import static org.wordpress.android.support.WPSupportUtils.checkViewHasText;
 import static org.wordpress.android.support.WPSupportUtils.sleep;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToNotBeDisplayed;
@@ -45,11 +36,6 @@ public class EditorTests extends BaseTest {
 
     @Before
     public void setUp() {
-        Matcher<? super AccessibilityCheckResult> speakableTextMatcher =
-                Matchers.allOf(matchesTypes(
-                        anyOf(is(AccessibilityCheckResultType.INFO), is(AccessibilityCheckResultType.WARNING))));
-        AccessibilityChecks.enable().setRunChecksFromRootView(true).setThrowExceptionForErrors(false)
-                           .setSuppressingResultMatcher(speakableTextMatcher);
         logoutIfNecessary();
         wpLogin();
 
