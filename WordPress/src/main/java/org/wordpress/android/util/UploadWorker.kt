@@ -69,7 +69,7 @@ fun enqueueUploadWorkRequestForSite(site: SiteModel): Pair<WorkRequest, Operatio
             .setConstraints(getUploadConstraints())
             .setInputData(workDataOf(WordPress.LOCAL_SITE_ID to site.id))
             .build()
-    val operation = WorkManager.getInstance().enqueueUniqueWork(
+    val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniqueWork(
             "auto-upload-" + site.id,
             ExistingWorkPolicy.KEEP, request
     )
@@ -80,7 +80,7 @@ fun enqueuePeriodicUploadWorkRequestForAllSites(): Pair<WorkRequest, Operation> 
     val request = PeriodicWorkRequestBuilder<UploadWorker>(8, HOURS, 6, HOURS)
             .setConstraints(getUploadConstraints())
             .build()
-    val operation = WorkManager.getInstance().enqueueUniquePeriodicWork(
+    val operation = WorkManager.getInstance(WordPress.getContext()).enqueueUniquePeriodicWork(
             "periodic auto-upload",
             ExistingPeriodicWorkPolicy.KEEP, request
     )

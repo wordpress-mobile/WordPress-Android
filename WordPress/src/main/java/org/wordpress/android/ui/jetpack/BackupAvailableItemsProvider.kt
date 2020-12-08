@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.jetpack
 
 import androidx.annotation.StringRes
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.MEDIA_UPLOADS
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.ROOTS
@@ -20,27 +20,27 @@ class BackupAvailableItemsProvider @Inject constructor() {
         return listOf(
                 BackupAvailableItem(
                         THEMES,
-                        string.backup_item_themes
+                        R.string.backup_item_themes
                 ),
                 BackupAvailableItem(
                         PLUGINS,
-                        string.backup_item_plugins
+                        R.string.backup_item_plugins
                 ),
                 BackupAvailableItem(
                         MEDIA_UPLOADS,
-                        string.backup_item_media_uploads
+                        R.string.backup_item_media_uploads
                 ),
                 BackupAvailableItem(
                         SQLS,
-                        string.backup_item_sqls
+                        R.string.backup_item_sqls
                 ),
                 BackupAvailableItem(
                         ROOTS,
-                        string.backup_item_roots
+                        R.string.backup_item_roots
                 ),
                 BackupAvailableItem(
                         CONTENTS,
-                        string.backup_item_contents
+                        R.string.backup_item_contents
                 )
         )
     }

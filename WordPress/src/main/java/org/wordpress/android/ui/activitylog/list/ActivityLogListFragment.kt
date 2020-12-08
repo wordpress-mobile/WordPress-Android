@@ -8,7 +8,6 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -64,7 +63,7 @@ class ActivityLogListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)

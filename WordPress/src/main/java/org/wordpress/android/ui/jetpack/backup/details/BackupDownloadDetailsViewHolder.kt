@@ -10,15 +10,15 @@ import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsView
 import org.wordpress.android.ui.utils.UiHelpers
 
 sealed class BackupDownloadDetailsViewHolder(
-    internal val parent: ViewGroup,
-    @LayoutRes layout: Int
+    @LayoutRes layout: Int,
+    parent: ViewGroup
 ) : RecyclerView.ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     abstract fun onBind(uiState: ListItemUiState)
 
     class BackupDownloadDetailsListItemViewHolder(
         parentView: ViewGroup,
         private val uiHelpers: UiHelpers
-    ) : BackupDownloadDetailsViewHolder(parentView, R.layout.backup_details_list_item) {
+    ) : BackupDownloadDetailsViewHolder(R.layout.backup_details_list_item, parentView) {
         private val container = itemView.item_container
         private val checkbox = itemView.checkbox
         private val label = itemView.checkbox_label
