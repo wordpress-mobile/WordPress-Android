@@ -21,8 +21,10 @@ class XPostsSuggestionSource @Inject constructor(
 ) : SuggestionSource, CoroutineScope {
     override val coroutineContext: CoroutineContext = bgDispatcher + Job()
 
-    private val _suggestions = MutableLiveData<List<Suggestion>>()
-    override val suggestions: LiveData<List<Suggestion>> = _suggestions
+    private val _suggestions = MutableLiveData<SuggestionResult>()
+    override val suggestionData: LiveData<SuggestionResult> = _suggestions
+
+    private var fetchJob: Job? = null
 
     init {
         launch {
@@ -30,7 +32,7 @@ class XPostsSuggestionSource @Inject constructor(
                 is XPostsResult.Result -> {
                     val xPostSuggestions = suggestionsFromResult(result)
                     if (xPostSuggestions.isNotEmpty()) {
-                        _suggestions.postValue(xPostSuggestions)
+                        _suggestions.postValue(SuggestionResult(xPostSuggestions, false))
                     }
                 }
             }
@@ -44,15 +46,24 @@ class XPostsSuggestionSource @Inject constructor(
                     .sortedBy { it.value }
 
     override fun refreshSuggestions() {
-        launch {
-            when (val result = xPostsStore.fetchXPosts(site)) {
-                is XPostsResult.Result -> {
-                    val xPosts = suggestionsFromResult(result)
-                    _suggestions.postValue(xPosts)
+        if (fetchJob?.isActive != true) {
+            fetchJob = launch {
+                val result = when (val fetchResult = xPostsStore.fetchXPosts(site)) {
+                    is XPostsResult.Result -> {
+                        val xPosts = suggestionsFromResult(fetchResult)
+                        SuggestionResult(xPosts, false)
+                    }
+                    XPostsResult.Unknown -> {
+                        val previousXposts = suggestionData.value?.suggestions ?: emptyList()
+                        SuggestionResult(previousXposts, true)
+                    }
                 }
+                _suggestions.postValue(result)
             }
         }
     }
+
+    override fun isFetchInProgress(): Boolean = fetchJob?.isActive == true
 
     override fun onCleared() { /* Do nothing */ }
 }

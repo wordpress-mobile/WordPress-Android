@@ -12,6 +12,8 @@ import junit.framework.Assert.assertTrue
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
+import org.mockito.ArgumentMatchers.anyString
 import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
@@ -31,7 +33,7 @@ class SuggestionViewModelTest {
     @Mock lateinit var mockResourceProvider: ResourceProvider
     @Mock lateinit var mockNetworkUtils: NetworkUtilsWrapper
     @Mock lateinit var mockSite: SiteModel
-    @Mock lateinit var mockLiveData: LiveData<List<Suggestion>>
+    @Mock lateinit var mockLiveData: LiveData<SuggestionResult>
     @Mock lateinit var mockSuggestionSource: SuggestionSource
 
     @InjectMocks lateinit var viewModel: SuggestionViewModel
@@ -46,7 +48,7 @@ class SuggestionViewModelTest {
         whenever(mockResourceProvider.getString(R.string.suggestion_xpost)).thenReturn(xpostSuggestionTypeString)
         whenever(mockResourceProvider.getString(R.string.suggestion_user)).thenReturn(userSuggestionTypeString)
 
-        whenever(mockSuggestionSource.suggestions).thenReturn(mockLiveData)
+        whenever(mockSuggestionSource.suggestionData).thenReturn(mockLiveData)
     }
 
     @Test
@@ -103,14 +105,14 @@ class SuggestionViewModelTest {
 
     private fun stubEmptyViewStateText() {
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(mockResourceProvider.getString(R.string.loading)).thenReturn("")
+        whenever(mockResourceProvider.getString(anyInt(), anyString())).thenReturn("")
     }
 
     @Test
     fun `getEmptyViewState text no matching suggestions if suggestions available`() {
         initViewModel()
         val nonEmptyList = listOf(mock<Suggestion>())
-        whenever(mockLiveData.value).thenReturn(nonEmptyList)
+        whenever(mockLiveData.value).thenReturn(SuggestionResult(nonEmptyList, false))
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_no_matching, viewModel.suggestionTypeString))
                 .thenReturn(expectedText)
@@ -120,10 +122,22 @@ class SuggestionViewModelTest {
     }
 
     @Test
-    fun `getEmptyViewState text no suggestions of type if has network and suggestions list empty`() {
+    fun `getEmptyViewState problem text if has network, suggestions list empty, and fetch error`() {
         initViewModel()
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(mockLiveData.value).thenReturn(emptyList())
+        whenever(mockLiveData.value).thenReturn(SuggestionResult(emptyList(), true))
+        val expectedText = "expected_text"
+        whenever(mockResourceProvider.getString(R.string.suggestion_problem)).thenReturn(expectedText)
+
+        val actual = viewModel.getEmptyViewState(emptyList())
+        assertEquals(expectedText, actual.string)
+    }
+
+    @Test
+    fun `getEmptyViewState text no suggestions of type if has network, suggestions list empty, and NO fetch error`() {
+        initViewModel()
+        whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
+        whenever(mockLiveData.value).thenReturn(SuggestionResult(emptyList(), false))
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_none, viewModel.suggestionTypeString))
                 .thenReturn(expectedText)
@@ -136,7 +150,7 @@ class SuggestionViewModelTest {
     fun `getEmptyViewState text loading if has network and suggestions have never been received`() {
         initViewModel()
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(true)
-        whenever(mockLiveData.value).thenReturn(null)
+        whenever(mockSuggestionSource.isFetchInProgress()).thenReturn(true)
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.loading))
                 .thenReturn(expectedText)
@@ -148,7 +162,7 @@ class SuggestionViewModelTest {
     @Test
     fun `getEmptyViewState text no internet if no suggestions available and network unavailable`() {
         initViewModel()
-        whenever(mockLiveData.value).thenReturn(emptyList())
+        whenever(mockLiveData.value).thenReturn(SuggestionResult(emptyList(), false))
         whenever(mockNetworkUtils.isNetworkAvailable()).thenReturn(false)
         val expectedText = "expected_text"
         whenever(mockResourceProvider.getString(R.string.suggestion_no_connection))

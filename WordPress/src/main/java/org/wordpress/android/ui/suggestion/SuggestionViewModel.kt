@@ -24,8 +24,8 @@ class SuggestionViewModel @Inject constructor(
 ) : ViewModel() {
     private lateinit var suggestionSource: SuggestionSource
     private lateinit var type: SuggestionType
-    val suggestions: LiveData<List<Suggestion>>
-        get() = suggestionSource.suggestions
+    val suggestionData: LiveData<SuggestionResult>
+        get() = suggestionSource.suggestionData
 
     val suggestionPrefix: Char by lazy {
         when (type) {
@@ -62,19 +62,32 @@ class SuggestionViewModel @Inject constructor(
     }
 
     fun getEmptyViewState(displayedSuggestions: List<Suggestion>?): EmptyViewState {
-        val hasSuggestions = suggestions.value?.isNotEmpty() == true
+        val hasSuggestions = suggestionData.value?.suggestions?.isNotEmpty() == true
 
         val text = when {
-            hasSuggestions -> resourceProvider.getString(R.string.suggestion_no_matching, suggestionTypeString)
-            networkUtils.isNetworkAvailable() -> {
-                val hasSuggestionUpdate = suggestions.value != null
-                if (hasSuggestionUpdate) {
-                    resourceProvider.getString(R.string.suggestion_none, suggestionTypeString)
-                } else {
+            hasSuggestions -> {
+                // Displaying the empty view even though we have suggestions means that the user is filtering out
+                // all the suggestions.
+                resourceProvider.getString(R.string.suggestion_no_matching, suggestionTypeString)
+            }
+            networkUtils.isNetworkAvailable() -> when {
+                suggestionSource.isFetchInProgress() -> {
                     resourceProvider.getString(R.string.loading)
                 }
+                suggestionData.value?.hadFetchError == true -> {
+                    resourceProvider.getString(R.string.suggestion_problem)
+                }
+                else -> {
+                    // We have a suggestion update that we know was empty (because we already checked
+                    // `hasSuggestions` in the parent when statement), and there wasn't a fetch error,
+                    // so notify the user that there are no suggestions available
+                    resourceProvider.getString(R.string.suggestion_none, suggestionTypeString)
+                }
             }
-            else -> resourceProvider.getString(R.string.suggestion_no_connection)
+            else -> {
+                // Only provide this error message if we cannot provide any better information
+                resourceProvider.getString(R.string.suggestion_no_connection)
+            }
         }
 
         val visibility = if (displayedSuggestions?.isNotEmpty() == true) View.GONE else View.VISIBLE

@@ -140,8 +140,8 @@ class SuggestionActivity : LocaleAwareActivity() {
             showDropdownOnTouch()
         }
 
-        viewModel.suggestions.observe(this, { suggestions ->
-            suggestionAdapter?.suggestionList = suggestions
+        viewModel.suggestionData.observe(this, { suggestionResult ->
+            suggestionAdapter?.suggestionList = suggestionResult.suggestions
 
             // Calling forceFiltering is needed to force the suggestions list to always
             // immediately refresh when there is new data

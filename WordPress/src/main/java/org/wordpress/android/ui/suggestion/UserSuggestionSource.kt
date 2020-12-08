@@ -27,8 +27,10 @@ class UserSuggestionSource @Inject constructor(
     override val coroutineContext: CoroutineContext = bgDispatcher + Job()
     private val connectionManager = SuggestionServiceConnectionManager(context, site.siteId)
 
-    private val _suggestions = MutableLiveData<List<Suggestion>>()
-    override val suggestions: LiveData<List<Suggestion>> = _suggestions
+    private val _suggestions = MutableLiveData<SuggestionResult>()
+    override val suggestionData: LiveData<SuggestionResult> = _suggestions
+
+    private var isFetching: Boolean = false
 
     init {
         postSavedSuggestions(false)
@@ -44,12 +46,13 @@ class UserSuggestionSource @Inject constructor(
 
             // Only send empty suggestions if they are recent
             if (suggestions.isNotEmpty() || suggestionsWereJustUpdated) {
-                _suggestions.postValue(suggestions)
+                _suggestions.postValue(SuggestionResult(suggestions, false))
             }
         }
     }
 
     override fun refreshSuggestions() {
+        isFetching = true
         connectionManager.apply {
             unbindFromService()
             bindToService()
@@ -59,9 +62,12 @@ class UserSuggestionSource @Inject constructor(
     @Subscribe
     fun onEventMainThread(event: SuggestionNameListUpdated) {
         if (event.mRemoteBlogId == site.siteId) {
+            isFetching = false
             postSavedSuggestions(true)
         }
     }
+
+    override fun isFetchInProgress(): Boolean = isFetching
 
     override fun onCleared() {
         eventBusWrapper.unregister(this)
