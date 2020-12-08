@@ -1374,7 +1374,7 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
                                 "START_DATE INTEGER," +
                                 "DURATION INTEGER NOT NULL," +
-                                "PROGRESS INTEGER NOT NULL,," +
+                                "PROGRESS INTEGER NOT NULL," +
                                 "STATE TEXT NOT NULL," +
                                 "ERROR BOOLEAN NOT NULL," +
                                 "INITIAL BOOLEAN NOT NULL," +
