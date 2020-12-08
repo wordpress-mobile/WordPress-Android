@@ -47,9 +47,9 @@ class ScanSqlUtils @Inject constructor() {
 
     private fun ScanStateModel.toBuilder(site: SiteModel): ScanStateBuilder {
         val startDate = when (state) {
-            IDLE -> mostRecentStatus?.startDate?.time ?: 0
-            SCANNING -> currentStatus?.startDate?.time ?: 0
-            PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
+            IDLE -> mostRecentStatus?.startDate?.time
+            SCANNING -> currentStatus?.startDate?.time
+            PROVISIONING, UNAVAILABLE, UNKNOWN -> null
         }
 
         val progress = when (state) {
@@ -85,7 +85,7 @@ class ScanSqlUtils @Inject constructor() {
         @Column var localSiteId: Int,
         @Column var remoteSiteId: Long,
         @Column var state: String,
-        @Column var startDate: Long,
+        @Column var startDate: Long? = null,
         @Column var duration: Int = 0,
         @Column var progress: Int = 0,
         @Column var reason: String? = null,
@@ -110,14 +110,14 @@ class ScanSqlUtils @Inject constructor() {
             when (stateForModel) {
                 SCANNING -> {
                     currentStatus = ScanProgressStatus(
-                        startDate = Date(startDate),
+                        startDate = startDate?.let { Date(it) },
                         progress = progress,
                         isInitial = initial
                     )
                 }
                 IDLE -> {
                     mostRecentStatus = ScanProgressStatus(
-                        startDate = Date(startDate),
+                        startDate = startDate?.let { Date(it) },
                         duration = duration,
                         progress = progress,
                         error = error,
