@@ -24,7 +24,7 @@ class StoriesMediaPickerResultHandler
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     val onNavigation = _onNavigation as LiveData<Event<SiteNavigationAction>>
 
-    /* return true if MediaPickerResult was handled */
+    @Deprecated("Use rather the other handle method and the live data navigation.")
     fun handleMediaPickerResultForStories(
         data: Intent,
         activity: Activity?,

@@ -8,7 +8,6 @@ import com.wordpress.stories.compose.frame.StorySaveEvents
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryRepository
-import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
@@ -52,7 +51,7 @@ class SiteStoriesHandler
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: StorySaveResult) {
-        EventBus.getDefault().removeStickyEvent(event)
+        eventBusWrapper.removeStickyEvent(event)
         if (!event.isSuccess()) {
             // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
             val errorText = String.format(
@@ -91,7 +90,7 @@ class SiteStoriesHandler
 
     @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStorySaveStart(event: StorySaveProcessStart) {
-        EventBus.getDefault().removeStickyEvent(event)
+        eventBusWrapper.removeStickyEvent(event)
         val snackbarMessage = String.format(
                 resourceProvider.getString(R.string.story_saving_snackbar_started),
                 StoryRepository.getStoryAtIndex(event.storyIndex).title

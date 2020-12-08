@@ -383,7 +383,7 @@ class MySiteViewModel
         super.onCleared()
     }
 
-    fun onStoriesPhotoPicker(data: Intent) {
+    fun handleStoriesPhotoPickerResult(data: Intent) {
         selectedSiteRepository.getSelectedSite()?.let {
             siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
         }

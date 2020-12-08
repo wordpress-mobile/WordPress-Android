@@ -60,7 +60,6 @@ import org.wordpress.android.ui.photopicker.MediaPickerLauncher
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.posts.BasicDialogViewModel
 import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
-import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -87,7 +86,6 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
 
@@ -343,7 +341,7 @@ class ImprovedMySiteFragment : Fragment(),
             }
             RequestCodes.STORIES_PHOTO_PICKER,
             RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                viewModel.onStoriesPhotoPicker(data)
+                viewModel.handleStoriesPhotoPickerResult(data)
             }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
