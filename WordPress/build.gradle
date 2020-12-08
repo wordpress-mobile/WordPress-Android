@@ -212,6 +212,8 @@ dependencies {
     implementation "androidx.preference:preference:$preferenceVersion"
     implementation "androidx.work:work-runtime:$androidxWorkVersion"
     implementation "androidx.work:work-runtime-ktx:$androidxWorkVersion"
+    // GCMNetworkManager on api <= 22
+    implementation "androidx.work:work-gcm:$androidxWorkVersion"
 
     implementation "androidx.constraintlayout:constraintlayout:$constraintLayoutVersion"
 
@@ -219,6 +221,8 @@ dependencies {
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion"
     // LiveData
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion"
+    // ProcessLifecycleOwner
+    implementation "androidx.lifecycle:lifecycle-process:$lifecycleVersion"
 
     testImplementation("androidx.arch.core:core-testing:$androidxArchCoreVersion", {
         exclude group: 'com.android.support', module: 'support-compat'

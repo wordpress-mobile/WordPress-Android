@@ -28,6 +28,7 @@ import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ViewUtilsKt;
+import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -312,7 +313,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         final SiteViewHolder holder = (SiteViewHolder) viewHolder;
         holder.mTxtTitle.setText(site.getBlogNameOrHomeURL());
         holder.mTxtDomain.setText(site.mHomeURL);
-        mImageManager.loadImageWithCorners(holder.mImgBlavatar, ImageType.BLAVATAR_ROUNDED_CORNERS, site.mBlavatarUrl,
+        mImageManager.loadImageWithCorners(holder.mImgBlavatar, site.getBlavatarType(), site.mBlavatarUrl,
                 DisplayUtils.dpToPx(holder.itemView.getContext(), 4));
 
         if ((site.mLocalId == mCurrentLocalId && !mIsMultiSelectEnabled
@@ -768,6 +769,7 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
         private final String mBlogName;
         private final String mHomeURL;
         private final String mBlavatarUrl;
+        private final ImageType mBlavatarType;
         private boolean mIsHidden;
         private boolean mIsRecentPick;
 
@@ -777,6 +779,8 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             mBlogName = SiteUtils.getSiteNameOrHomeURL(siteModel);
             mHomeURL = SiteUtils.getHomeURLOrHostName(siteModel);
             mBlavatarUrl = SiteUtils.getSiteIconUrl(siteModel, mBlavatarSz);
+            mBlavatarType = SiteUtils.getSiteImageType(
+                    siteModel.isWpForTeamsSite(), BlavatarShape.SQUARE_WITH_ROUNDED_CORNERES);
             mIsHidden = !siteModel.isVisible();
         }
 
@@ -805,6 +809,10 @@ public class SitePickerAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
 
         public String getBlavatarUrl() {
             return mBlavatarUrl;
+        }
+
+        public ImageType getBlavatarType() {
+            return mBlavatarType;
         }
 
         public long getSiteId() {

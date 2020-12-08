@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
@@ -57,8 +56,8 @@ class SiteCreationActivity : LocaleAwareActivity(),
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
         setContentView(R.layout.site_creation_activity)
-        mainViewModel = ViewModelProviders.of(this, viewModelFactory).get(SiteCreationMainVM::class.java)
-        hppViewModel = ViewModelProviders.of(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
+        mainViewModel = ViewModelProvider(this, viewModelFactory).get(SiteCreationMainVM::class.java)
+        hppViewModel = ViewModelProvider(this, viewModelFactory).get(HomePagePickerViewModel::class.java)
         mainViewModel.start(savedInstanceState)
         hppViewModel.loadSavedState(savedInstanceState)
 

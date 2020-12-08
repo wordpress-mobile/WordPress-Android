@@ -157,6 +157,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -169,6 +170,8 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
 class MySiteFragment : Fragment(),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
@@ -396,6 +399,12 @@ class MySiteFragment : Fragment(),
         }
         row_activity_log.setOnClickListener {
             ActivityLauncher.viewActivityLogList(
+                    activity,
+                    selectedSite
+            )
+        }
+        row_scan.setOnClickListener {
+            ActivityLauncher.viewScan(
                     activity,
                     selectedSite
             )
@@ -1007,7 +1016,7 @@ class MySiteFragment : Fragment(),
         my_site_configuration_header.visibility = settingsVisibility
         imageManager.load(
                 my_site_blavatar,
-                BLAVATAR,
+                SiteUtils.getSiteImageType(site.isWpForTeamsSite, SQUARE),
                 SiteUtils.getSiteIconUrl(site, blavatarSz)
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)

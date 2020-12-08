@@ -75,7 +75,6 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var onHelpedClickedObserver: Observer<Unit>
     @Mock private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
     @Mock private lateinit var onOkClickedObserver: Observer<CreateSiteState>
-    @Mock private lateinit var hideGetStartedObserver: Observer<Unit>
     @Mock private lateinit var preloadPreviewObserver: Observer<String>
 
     private lateinit var viewModel: SitePreviewViewModel
@@ -99,7 +98,6 @@ class SitePreviewViewModelTest {
         viewModel.onHelpClicked.observeForever(onHelpedClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
         viewModel.onOkButtonClicked.observeForever(onOkClickedObserver)
-        viewModel.hideGetStartedBar.observeForever(hideGetStartedObserver)
         viewModel.preloadPreview.observeForever(preloadPreviewObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
@@ -207,13 +205,6 @@ class SitePreviewViewModelTest {
     fun `on OK click is propagated`() {
         viewModel.onOkButtonClicked()
         assertThat(viewModel.onOkButtonClicked.value).isEqualTo(SiteNotCreated)
-    }
-
-    @Test
-    fun `hide GetStartedBar on UrlLoaded`() {
-        initViewModel()
-        viewModel.onUrlLoaded()
-        verify(hideGetStartedObserver).onChanged(null)
     }
 
     @Test

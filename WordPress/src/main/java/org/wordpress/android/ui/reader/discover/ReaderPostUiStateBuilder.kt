@@ -44,7 +44,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.GravatarUtilsWrapper
+import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UrlUtilsWrapper
+import org.wordpress.android.util.image.BlavatarShape.CIRCULAR
 import org.wordpress.android.util.image.ImageType.AVATAR
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import javax.inject.Inject
@@ -233,6 +235,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
                 dateLine = buildDateLine(post),
                 avatarOrBlavatarUrl = buildAvatarOrBlavatarUrl(post),
                 isAuthorAvatarVisible = isP2Post,
+                blavatarType = SiteUtils.getSiteImageType(isP2Post, CIRCULAR),
                 authorAvatarUrl = gravatarUtilsWrapper.fixGravatarUrlWithResource(
                         post.postAvatar,
                         R.dimen.avatar_sz_medium

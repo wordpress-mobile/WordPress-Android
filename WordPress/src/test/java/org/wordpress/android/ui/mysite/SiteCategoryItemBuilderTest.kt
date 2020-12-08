@@ -28,7 +28,7 @@ class SiteCategoryItemBuilderTest {
 
     @Test
     fun `returns jetpack header when site is jetpack, WPCom, can manage options and is not atomic`() {
-        setupJetpackHeader(isJetpackConnected = true, isWpCom = true, canManageOptions = true, isAtomic = false)
+        setupJetpackHeader(isJetpackConnected = true, isAtomic = false)
 
         val lookAndFeelHeader = siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)
 
@@ -38,24 +38,6 @@ class SiteCategoryItemBuilderTest {
     @Test
     fun `does not return jetpack header when site is not jetpack`() {
         setupJetpackHeader(isJetpackConnected = false)
-
-        val lookAndFeelHeader = siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack header when site is not WPCom`() {
-        setupJetpackHeader(isWpCom = false)
-
-        val lookAndFeelHeader = siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)
-
-        assertThat(lookAndFeelHeader).isNull()
-    }
-
-    @Test
-    fun `does not return jetpack header when site can manage options`() {
-        setupJetpackHeader(canManageOptions = false)
 
         val lookAndFeelHeader = siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)
 
@@ -127,14 +109,10 @@ class SiteCategoryItemBuilderTest {
 
     private fun setupJetpackHeader(
         isJetpackConnected: Boolean = true,
-        isAtomic: Boolean = false,
-        isWpCom: Boolean = true,
-        canManageOptions: Boolean = true
+        isAtomic: Boolean = false
     ) {
         whenever(siteModel.isJetpackConnected).thenReturn(isJetpackConnected)
         whenever(siteModel.isWPComAtomic).thenReturn(isAtomic)
-        whenever(siteUtilsWrapper.isAccessedViaWPComRest(siteModel)).thenReturn(isWpCom)
-        whenever(siteModel.hasCapabilityManageOptions).thenReturn(canManageOptions)
     }
 
     private fun setupConfigurationHeader(
