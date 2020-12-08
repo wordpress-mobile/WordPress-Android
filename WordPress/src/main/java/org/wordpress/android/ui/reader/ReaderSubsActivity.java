@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -52,8 +53,6 @@ import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -298,21 +297,13 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         if (TextUtils.isEmpty(entry)) {
             return;
         }
-        URI uri;
-        try {
-            uri = new URI(UrlUtils.addUrlSchemeIfNeeded(entry, false));
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-            showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
-            return;
-        }
 
-        // normalize the url and prepend protocol and www if not supplied
-        String normUrl = uri.getHost();
-        if (normUrl.startsWith("www.")) {
-            normUrl = "http://" + normUrl;
+        // normalize the url and prepend protocol if not supplied
+        final String normUrl;
+        if (!entry.contains("://")) {
+            normUrl = UrlUtils.normalizeUrl("http://" + entry);
         } else {
-            normUrl = "http://www." + normUrl;
+            normUrl = UrlUtils.normalizeUrl(entry);
         }
 
         // if this isn't a valid URL, add original entry as a tag
@@ -427,7 +418,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     EditTextUtils.hideSoftInput(mEditAdd);
                     showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
-                    performUpdate();
+                    // update tags if the site we added belongs to a tag we don't yet have
+                    performUpdate(EnumSet.of(UpdateTask.TAGS));
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }

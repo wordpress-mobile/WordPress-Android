@@ -29,6 +29,7 @@ import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.net.HttpURLConnection;
+import java.net.URI;
 import java.util.Map;
 
 public class ReaderBlogActions {
@@ -204,10 +205,19 @@ public class ReaderBlogActions {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
+        // site URL in the subscription path needs to start with http://www. to cover all the cases
+        String subscriptionUrlHost = URI.create(feedUrl).getHost();
+        String subscriptionUrl;
+        if (subscriptionUrlHost.startsWith("www.")) {
+            subscriptionUrl = "http://" + subscriptionUrlHost;
+        } else {
+            subscriptionUrl = "http://www." + subscriptionUrlHost;
+        }
+
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String path = "read/following/mine/"
                             + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
-                            + UrlUtils.urlEncode(feedUrl);
+                            + UrlUtils.urlEncode(subscriptionUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
