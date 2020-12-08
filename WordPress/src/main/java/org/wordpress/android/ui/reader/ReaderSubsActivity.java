@@ -48,6 +48,7 @@ import org.wordpress.android.ui.reader.views.ReaderFollowButton;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
+import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.widgets.WPSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 
@@ -299,7 +300,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
         }
         URI uri;
         try {
-            uri = new URI(entry);
+            uri = new URI(UrlUtils.addUrlSchemeIfNeeded(entry, false));
         } catch (URISyntaxException e) {
             e.printStackTrace();
             showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
