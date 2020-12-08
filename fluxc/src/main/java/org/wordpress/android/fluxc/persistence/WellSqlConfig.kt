@@ -1372,12 +1372,12 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL(
                         "CREATE TABLE ScanState (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                 "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
-                                "START_DATE INTEGER NOT NULL," +
+                                "START_DATE INTEGER," +
                                 "DURATION INTEGER NOT NULL," +
-                                "PROGRESS INTEGER," +
+                                "PROGRESS INTEGER NOT NULL,," +
                                 "STATE TEXT NOT NULL," +
                                 "ERROR BOOLEAN NOT NULL," +
-                                "INITIAL BOOLEAN," +
+                                "INITIAL BOOLEAN NOT NULL," +
                                 "REASON TEXT, " +
                                 "HAS_CLOUD BOOLEAN NOT NULL)"
                     )
