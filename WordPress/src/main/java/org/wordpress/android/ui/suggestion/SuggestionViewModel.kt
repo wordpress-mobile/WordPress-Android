@@ -47,6 +47,7 @@ class SuggestionViewModel @Inject constructor(
             if (supportsSuggestions(site)) {
                 this.type = type
                 suggestionSource = suggestionSourceProvider.get(type, site)
+                suggestionSource.initialize()
                 true
             } else {
                 AppLog.e(T.EDITOR, "Attempting to initialize suggestions for an unsupported site")

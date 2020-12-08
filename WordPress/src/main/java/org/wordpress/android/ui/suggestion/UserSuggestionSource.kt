@@ -32,7 +32,7 @@ class UserSuggestionSource @Inject constructor(
 
     private var isFetching: Boolean = false
 
-    init {
+    override fun initialize() {
         postSavedSuggestions(false)
         isFetching = true
         connectionManager.bindToService()

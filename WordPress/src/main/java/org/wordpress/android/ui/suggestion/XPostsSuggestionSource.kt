@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.suggestion
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -24,9 +25,10 @@ class XPostsSuggestionSource @Inject constructor(
     private val _suggestions = MutableLiveData<SuggestionResult>()
     override val suggestionData: LiveData<SuggestionResult> = _suggestions
 
-    private var fetchJob: Job? = null
+    @VisibleForTesting
+    var fetchJob: Job? = null
 
-    init {
+    override fun initialize() {
         launch {
             when (val result = xPostsStore.getXPostsFromDb(site)) {
                 is XPostsResult.Result -> {
