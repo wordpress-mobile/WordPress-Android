@@ -47,9 +47,9 @@ class ScanSqlUtils @Inject constructor() {
 
     private fun ScanStateModel.toBuilder(site: SiteModel): ScanStateBuilder {
         val startDate = when (state) {
-            IDLE -> mostRecentStatus?.startDate?.time ?: 0
-            SCANNING -> currentStatus?.startDate?.time ?: 0
-            PROVISIONING, UNAVAILABLE, UNKNOWN -> 0
+            IDLE -> mostRecentStatus?.startDate?.time
+            SCANNING -> currentStatus?.startDate?.time
+            PROVISIONING, UNAVAILABLE, UNKNOWN -> null
         }
 
         val progress = when (state) {
@@ -69,12 +69,12 @@ class ScanSqlUtils @Inject constructor() {
             remoteSiteId = site.siteId,
             state = state.value,
             startDate = startDate,
-            progress = progress,
-            initial = isInitial,
             duration = mostRecentStatus?.duration ?: 0,
+            progress = progress,
+            reason = reason,
             error = mostRecentStatus?.error ?: false,
-            hasCloud = hasCloud,
-            reason = reason
+            initial = isInitial,
+            hasCloud = hasCloud
         )
     }
 
@@ -85,13 +85,13 @@ class ScanSqlUtils @Inject constructor() {
         @Column var localSiteId: Int,
         @Column var remoteSiteId: Long,
         @Column var state: String,
-        @Column var startDate: Long,
-        @Column var duration: Int,
-        @Column var progress: Int,
-        @Column var reason: String?,
-        @Column var error: Boolean,
-        @Column var initial: Boolean,
-        @Column var hasCloud: Boolean
+        @Column var startDate: Long? = null,
+        @Column var duration: Int = 0,
+        @Column var progress: Int = 0,
+        @Column var reason: String? = null,
+        @Column var error: Boolean = false,
+        @Column var initial: Boolean = false,
+        @Column var hasCloud: Boolean = false
     ) : Identifiable {
         constructor() : this(-1, 0, 0, "", 0, 0, 0, "", false, false, false)
 
@@ -102,7 +102,7 @@ class ScanSqlUtils @Inject constructor() {
         override fun getId() = id
 
         fun build(): ScanStateModel {
-            val stateForModel = State.fromValue(state) ?: State.UNKNOWN
+            val stateForModel = State.fromValue(state) ?: UNKNOWN
 
             var currentStatus: ScanProgressStatus? = null
             var mostRecentStatus: ScanProgressStatus? = null
@@ -110,14 +110,14 @@ class ScanSqlUtils @Inject constructor() {
             when (stateForModel) {
                 SCANNING -> {
                     currentStatus = ScanProgressStatus(
-                        startDate = Date(startDate),
+                        startDate = startDate?.let { Date(it) },
                         progress = progress,
                         isInitial = initial
                     )
                 }
                 IDLE -> {
                     mostRecentStatus = ScanProgressStatus(
-                        startDate = Date(startDate),
+                        startDate = startDate?.let { Date(it) },
                         duration = duration,
                         progress = progress,
                         error = error,
@@ -130,7 +130,7 @@ class ScanSqlUtils @Inject constructor() {
 
             return ScanStateModel(
                 state = stateForModel,
-                hasCloud = this.hasCloud,
+                hasCloud = hasCloud,
                 mostRecentStatus = mostRecentStatus,
                 currentStatus = currentStatus,
                 reason = reason

@@ -10,7 +10,7 @@ data class ScanStateResponse(
     @SerializedName("threats") val threats: List<Threat>?,
     @SerializedName("credentials") val credentials: List<Credentials>?,
     @SerializedName("reason") val reason: String?,
-    @SerializedName("has_cloud") val hasCloud: Boolean,
+    @SerializedName("has_cloud") val hasCloud: Boolean?,
     @SerializedName("most_recent") val mostRecentStatus: ScanProgressStatus?,
     @SerializedName("current") val currentStatus: ScanProgressStatus?
 ) : Response {
@@ -25,10 +25,10 @@ data class ScanStateResponse(
     )
 
     data class ScanProgressStatus(
-        @SerializedName("duration") val duration: Int,
-        @SerializedName("progress") val progress: Int,
-        @SerializedName("error") val error: Boolean,
-        @SerializedName("timestamp") val startDate: Date,
-        @SerializedName("is_initial") val isInitial: Boolean
+        @SerializedName("duration") val duration: Int?,
+        @SerializedName("progress") val progress: Int?,
+        @SerializedName("error") val error: Boolean?,
+        @SerializedName("timestamp") val startDate: Date?,
+        @SerializedName("is_initial") val isInitial: Boolean?
     )
 }
