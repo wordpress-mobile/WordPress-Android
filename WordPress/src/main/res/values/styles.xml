@@ -1441,7 +1441,5 @@
     <style name="HomePagePickerSkipButton" parent="Widget.MaterialComponents.Button.TextButton">
         <item name="android:textColor">@color/blue_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
-        <item name="maxLines">1</item>
-        <item name="android:ellipsize">end</item>
     </style>
 </resources>
