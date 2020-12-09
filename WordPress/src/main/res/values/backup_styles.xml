@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!-- TextViews -->
-    <style name="BackupTextView" parent="android:Widget.TextView">
+    <style name="Backup.TextView" parent="android:Widget.TextView">
         <item name="android:fontFamily">serif</item>
     </style>
-    <style name="Backup.Details.Header" parent="BackupTextView">
+    <style name="Backup.Details.Header" parent="Backup.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>
@@ -14,7 +14,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="Backup.Details.SecondaryHeader" parent="BackupTextView">
+    <style name="Backup.Details.SecondaryHeader" parent="Backup.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
@@ -25,7 +25,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textStyle">bold</item>
     </style>
-    <style name="Backup.Details.Description" parent="BackupTextView">
+    <style name="Backup.Details.Description" parent="Backup.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_small</item>
@@ -42,5 +42,13 @@
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+    <style name="Backup.Details.ListItem.Label" parent="Backup.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:includeFontPadding">false</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:textColor">?attr/colorOnSurface</item>
     </style>
 </resources>
