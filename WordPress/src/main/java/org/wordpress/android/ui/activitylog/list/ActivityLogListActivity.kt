@@ -52,6 +52,7 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+        // Unused
     }
 
     private fun passRewindConfirmation(rewindId: String) {

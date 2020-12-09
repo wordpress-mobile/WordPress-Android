@@ -125,6 +125,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
     }
 
     enum class SecondaryAction(val itemId: Long) {
-        RESTORE(0), DOWNLOAD_BACKUP(1)
+        RESTORE(0),
+        DOWNLOAD_BACKUP(1);
     }
 }
