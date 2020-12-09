@@ -148,5 +148,5 @@ class HomePagePickerFragment : Fragment() {
         }
     }
 
-    private fun isPhoneLandscape() = displayUtils.isLandscape() && !displayUtils.isTablet()
+    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 }
