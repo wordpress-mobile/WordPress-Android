@@ -144,6 +144,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
@@ -3377,7 +3378,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            handleRemoteAutoSave(event.isError(), mEditPostRepository.getPost());
+            handleRemotePreviewUploadResult(event.isError(), mEditPostRepository.getPost(),
+                    RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
         }
     }
 
@@ -3403,7 +3405,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Nullable
-    private PostImmutableModel handleRemoteAutoSave(boolean isError, PostImmutableModel post) {
+    private void handleRemotePreviewUploadResult(boolean isError, PostImmutableModel post,
+                                                 RemotePreviewLogicHelper.RemotePreviewType param) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
@@ -3413,9 +3416,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     EditPostActivity.this,
                     mSite,
                     post,
-                    mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                            ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-                            : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                    param
             );
             updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
         } else if (isError || isRemoteAutoSaveError()) {
@@ -3424,7 +3425,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
             mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
-        return post;
     }
 
     @SuppressWarnings("unused")
@@ -3445,7 +3445,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else {
                 mEditPostRepository.set(() -> {
-                    handleRemoteAutoSave(event.isError(), post);
+                    handleRemotePreviewUploadResult(event.isError(), post, RemotePreviewType.REMOTE_PREVIEW);
                     return post;
                 });
             }
