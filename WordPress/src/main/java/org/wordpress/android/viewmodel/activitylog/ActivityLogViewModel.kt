@@ -19,7 +19,6 @@ import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
@@ -32,6 +31,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -99,8 +99,8 @@ class ActivityLogViewModel @Inject constructor(
         get() = _showSnackbarMessage
 
     private val _navigationEvents =
-            MutableLiveData<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents>>()
-    val navigationEvents: LiveData<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents>>
+            MutableLiveData<Event<ActivityLogNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
         get() = _navigationEvents
 
     private val isLoadingInProgress: Boolean
@@ -183,14 +183,14 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
-        if (item is Event) {
+        if (item is ActivityLogListItem.Event) {
             _showItemDetail.value = item
         }
     }
 
     // todo: annmarie - Remove once the feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
-        if (item is Event) {
+        if (item is ActivityLogListItem.Event) {
             _showRewindDialog.value = item
         }
     }
@@ -199,7 +199,7 @@ class ActivityLogViewModel @Inject constructor(
         secondaryAction: ActivityLogListItem.SecondaryAction,
         item: ActivityLogListItem
     ): Boolean {
-        if (item is Event) {
+        if (item is ActivityLogListItem.Event) {
             val navigationEvent = when (secondaryAction) {
                 RESTORE -> {
                     ShowRestore(item)
@@ -266,8 +266,8 @@ class ActivityLogViewModel @Inject constructor(
             moveToTop = eventListStatus.value != LOADING_MORE
         }
         eventList.forEach { model ->
-            val currentItem = Event(model, disableActions, backupFeatureConfig.isEnabled())
-            val lastItem = items.lastOrNull() as? Event
+            val currentItem = ActivityLogListItem.Event(model, disableActions, backupFeatureConfig.isEnabled())
+            val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(Header(currentItem.formattedDate))
             }
@@ -296,7 +296,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
-            val rewoundEvent = Event(
+            val rewoundEvent = ActivityLogListItem.Event(
                     model = it,
                     backupFeatureEnabled = backupFeatureConfig.isEnabled())
             ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
@@ -328,7 +328,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun showRewindStartedMessage() {
         rewindStatusService.rewindingActivity?.let {
-            val event = Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val event = ActivityLogListItem. Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
@@ -340,7 +340,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun showRewindFinishedMessage() {
         val item = rewindStatusService.rewindingActivity
         if (item != null) {
-            val event = Event(model = item, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val event = ActivityLogListItem.Event(model = item, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value =
                     resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message,
                             event.formattedDate,
