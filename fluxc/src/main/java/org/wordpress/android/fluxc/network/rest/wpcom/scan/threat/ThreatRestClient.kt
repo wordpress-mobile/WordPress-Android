@@ -6,7 +6,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
@@ -30,8 +29,8 @@ class ThreatRestClient(
     accessToken: AccessToken,
     userAgent: UserAgent
 ) : BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
-    suspend fun fetchThreat(site: SiteModel, threat: ThreatModel): FetchedThreatPayload {
-        val url = WPCOMV2.sites.site(site.siteId).scan.threat.item(threat.baseThreatModel.id).url
+    suspend fun fetchThreat(site: SiteModel, threatId: Long): FetchedThreatPayload {
+        val url = WPCOMV2.sites.site(site.siteId).scan.threat.item(threatId).url
 
         val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), ThreatResponse::class.java)
         return when (response) {
