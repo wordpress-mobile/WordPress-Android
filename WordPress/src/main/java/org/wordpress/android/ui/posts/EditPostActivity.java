@@ -3444,10 +3444,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     });
                 }
             } else {
-                mEditPostRepository.set(() -> {
-                    handleRemotePreviewUploadResult(event.isError(), post, RemotePreviewType.REMOTE_PREVIEW);
-                    return post;
-                });
+                mEditPostRepository.set(() -> post);
+                handleRemotePreviewUploadResult(event.isError(), post, RemotePreviewType.REMOTE_PREVIEW);
             }
         }
     }
