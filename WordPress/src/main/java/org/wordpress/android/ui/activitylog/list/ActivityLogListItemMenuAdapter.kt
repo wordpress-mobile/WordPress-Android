@@ -33,13 +33,14 @@ class ActivityLogListItemMenuAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
-        var view = convertView
         val holder: ActivityListItemMenuHolder
-        if (view == null) {
+        val view: View
+        if (convertView == null) {
             view = inflater.inflate(R.layout.activity_log_list_item_menu_item, parent, false)
-            holder = ActivityListItemMenuHolder(view!!)
+            holder = ActivityListItemMenuHolder(view)
             view.tag = holder
         } else {
+            view = convertView
             holder = view.tag as ActivityListItemMenuHolder
         }
 
