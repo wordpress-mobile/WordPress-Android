@@ -93,6 +93,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
+    private val siteId = 1
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
@@ -156,6 +157,7 @@ class MySiteViewModelTest : BaseUnitTest() {
             }
         }
         site = SiteModel()
+        site.id = siteId
         site.url = siteUrl
         site.name = siteName
         site.iconUrl = siteIcon

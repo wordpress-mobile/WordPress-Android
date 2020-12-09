@@ -110,7 +110,7 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val scanStatusService: ScanStatusService
 ) : ScopedViewModel(mainDispatcher) {
-    private var currentSite: SiteModel? = null
+    private var currentSiteId: Int = 0
     private val _scanAvailable = MediatorLiveData<Boolean>()
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -131,12 +131,12 @@ class MySiteViewModel
             selectedSiteRepository.showSiteIconProgressBar.distinct(),
             _scanAvailable
     ) { currentAvatarUrl, site, showSiteIconProgressBar, scanAvailable ->
-        site?.takeIf { site != currentSite }?.let {
+        site?.takeIf { site.id != currentSiteId }?.let {
             _scanAvailable.value = false
-            scanStatusService.stop()
-            scanStatusService.start(site)
-            currentSite = site
+            requestScanAvailableStatus(site)
+            currentSiteId = site.id
         }
+
         val items = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -170,6 +170,11 @@ class MySiteViewModel
         _scanAvailable.addSource(scanStatusService.scanAvailable) {
             _scanAvailable.value = it == true
         }
+    }
+
+    private fun requestScanAvailableStatus(site: SiteModel) {
+        scanStatusService.stop()
+        scanStatusService.start(site)
     }
 
     private fun onItemClick(action: ListItemAction) {
