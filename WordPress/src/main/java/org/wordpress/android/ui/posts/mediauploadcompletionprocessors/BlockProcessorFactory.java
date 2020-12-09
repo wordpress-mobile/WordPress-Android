@@ -5,6 +5,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.AUDIO;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.COVER;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.FILE;
 import static org.wordpress.android.ui.posts.mediauploadcompletionprocessors.MediaBlockType.GALLERY;
@@ -39,6 +40,7 @@ class BlockProcessorFactory {
         mMediaBlockTypeBlockProcessorMap.put(COVER, new CoverBlockProcessor(localId, mediaFile,
                 mMediaUploadCompletionProcessor));
         mMediaBlockTypeBlockProcessorMap.put(FILE, new FileBlockProcessor(localId, mediaFile));
+        mMediaBlockTypeBlockProcessorMap.put(AUDIO, new AudioBlockProcessor(localId, mediaFile));
 
         return this;
     }
