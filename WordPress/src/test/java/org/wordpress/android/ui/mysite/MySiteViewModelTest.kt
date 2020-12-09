@@ -697,7 +697,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `snackbar is shown and correct event is tracked when handling successful domain registration result without email`() {
+    fun `snackbar is shown and event is tracked when handling successful domain registration result without email`() {
         viewModel.handleSuccessfulDomainRegistrationResult(null)
 
         verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
@@ -708,7 +708,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `snackbar is shown and correct event is tracked when handling successful domain registration result with email`() {
+    fun `snackbar is shown and event is tracked when handling successful domain registration result with email`() {
         viewModel.handleSuccessfulDomainRegistrationResult(emailAddress)
 
         verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
