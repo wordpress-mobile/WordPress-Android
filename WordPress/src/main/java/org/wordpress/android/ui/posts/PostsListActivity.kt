@@ -19,7 +19,6 @@ import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.google.android.material.snackbar.Snackbar
@@ -232,7 +231,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun initCreateMenuViewModel() {
-        postListCreateMenuViewModel = ViewModelProviders.of(this, viewModelFactory)
+        postListCreateMenuViewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PostListCreateMenuViewModel::class.java)
 
         postListCreateMenuViewModel.isBottomSheetShowing.observe(this, Observer { event ->
@@ -276,7 +275,7 @@ class PostsListActivity : LocaleAwareActivity(),
     }
 
     private fun initViewModel(initPreviewState: PostListRemotePreviewState, currentBottomSheetPostId: LocalId) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListMainViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PostListMainViewModel::class.java)
         viewModel.start(site, initPreviewState, currentBottomSheetPostId, editPostRepository, this)
 
         viewModel.viewState.observe(this, Observer { state ->

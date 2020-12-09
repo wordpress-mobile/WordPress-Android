@@ -15,7 +15,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.site_settings_homepage_dialog.view.*
 import org.wordpress.android.R
@@ -59,7 +58,7 @@ class HomepageSettingsDialog : DialogFragment() {
         builder.setNegativeButton(R.string.cancel) { _, _ -> }
         builder.setView(view)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(HomepageSettingsViewModel::class.java)
         viewModel.uiState.observe(this, Observer { uiState ->
             uiState?.let {

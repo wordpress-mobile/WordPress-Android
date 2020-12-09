@@ -37,25 +37,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -64,6 +45,24 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.T
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
@@ -85,13 +84,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
+    @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var scanStatusService: ScanStatusService
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
-    private lateinit var navigationActions: MutableList<NavigationAction>
+    private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
@@ -124,6 +124,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 fluxCUtilsWrapper,
                 contextProvider,
                 siteIconUploadHandler,
+                siteStoriesHandler,
                 scanStatusService
         )
         uiModels = mutableListOf()

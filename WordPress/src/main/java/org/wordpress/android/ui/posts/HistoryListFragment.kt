@@ -9,7 +9,6 @@ import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.history_list_fragment.*
@@ -61,7 +60,7 @@ class HistoryListFragment : Fragment() {
 
         (requireActivity().application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java)
     }
 
     override fun onAttach(context: Context) {
@@ -89,7 +88,7 @@ class HistoryListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(HistoryViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(HistoryViewModel::class.java)
         viewModel.create(
                 localPostId = arguments?.getInt(KEY_POST_LOCAL_ID) ?: 0,
                 site = arguments?.get(KEY_SITE) as SiteModel

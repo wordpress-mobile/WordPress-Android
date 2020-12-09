@@ -13,7 +13,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -66,7 +65,7 @@ class SubfilterPageFragment : DaggerFragment() {
 
         val category = arguments?.getSerializable(CATEGORY_KEY) as SubfilterCategory
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
         viewModel.start(category)
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
@@ -77,7 +76,7 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        subFilterViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        subFilterViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(SubFilterViewModel::class.java)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {

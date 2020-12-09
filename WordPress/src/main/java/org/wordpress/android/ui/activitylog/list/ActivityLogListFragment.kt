@@ -8,7 +8,6 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -64,7 +63,7 @@ class ActivityLogListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
@@ -158,8 +157,26 @@ class ActivityLogListFragment : Fragment() {
         viewModel.moveToTop.observe(this, Observer {
             log_list_view.scrollToPosition(0)
         })
+
+        viewModel.showMoreMenu.observe(viewLifecycleOwner, Observer {
+            if (it is ActivityLogListItem.Event) {
+                displayMoreMenuDialog(it)
+            }
+        })
     }
 
+    private fun displayMoreMenuDialog(item: ActivityLogListItem.Event) {
+        val dialog = BasicFragmentDialog()
+        item.rewindId?.let {
+            dialog.initialize(it,
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
+                    getString(R.string.activity_log_rewind_site),
+                    getString(R.string.backup_download_details_header),
+                    getString(R.string.cancel))
+            dialog.show(requireFragmentManager(), it)
+        }
+    }
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
