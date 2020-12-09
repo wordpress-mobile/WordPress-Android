@@ -96,24 +96,24 @@ class ScanRestClient(
                 state = state,
                 reason = response.reason,
                 threats = response.threats?.map { threatMapper.map(it) },
-                hasCloud = response.hasCloud,
+                hasCloud = response.hasCloud ?: false,
                 credentials = response.credentials?.map {
                     Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
                 },
                 mostRecentStatus = response.mostRecentStatus?.let {
                     ScanProgressStatus(
                             startDate = it.startDate,
-                            duration = it.duration,
-                            progress = it.progress,
-                            error = it.error,
-                            isInitial = it.isInitial
+                            duration = it.duration ?: 0,
+                            progress = it.progress ?: 0,
+                            error = it.error ?: false,
+                            isInitial = it.isInitial ?: false
                     )
                 },
                 currentStatus = response.currentStatus?.let {
                     ScanProgressStatus(
                             startDate = it.startDate,
-                            progress = it.progress,
-                            isInitial = it.isInitial
+                            progress = it.progress ?: 0,
+                            isInitial = it.isInitial ?: false
                     )
                 }
         )
