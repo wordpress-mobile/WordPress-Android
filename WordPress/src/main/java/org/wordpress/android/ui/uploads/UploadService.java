@@ -247,6 +247,7 @@ public class UploadService extends Service {
 
     private void unpackPostIntent(@NonNull Intent intent) {
         PostModel post = mPostStore.getPostByLocalPostId(intent.getIntExtra(KEY_LOCAL_POST_ID, 0));
+        AppLog.d(T.MAIN, "malinjir: unpacking post intent: " + post.getTitle());
         if (post != null) {
             boolean shouldTrackAnalytics = intent.getBooleanExtra(KEY_SHOULD_TRACK_ANALYTICS, false);
             if (shouldTrackAnalytics) {

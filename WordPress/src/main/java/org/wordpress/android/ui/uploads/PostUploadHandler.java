@@ -278,6 +278,8 @@ public class PostUploadHandler implements UploadHandler<PostModel>, OnAutoSavePo
 
             RemotePostPayload payload = new RemotePostPayload(mPost, mSite);
 
+            AppLog.d(T.MAIN, "malinjir: upload handler: " + mPost.getTitle());
+
             switch (mUploadActionUseCase.getUploadAction(mPost)) {
                 case UPLOAD:
                     AppLog.d(T.POSTS, "PostUploadHandler - UPLOAD. Post: " + mPost.getTitle());

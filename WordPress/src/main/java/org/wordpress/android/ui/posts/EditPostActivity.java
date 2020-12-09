@@ -1777,14 +1777,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
             if (result == Updated.INSTANCE) {
                 SaveOnExitException exception = SaveOnExitException.Companion.build(isAutosavePending);
-                if (BuildConfig.DEBUG) {
-                    throw new RuntimeException(
-                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
-                    );
-                } else {
+//                if (BuildConfig.DEBUG) {
+//                    throw new RuntimeException(
+//                            "Debug build crash: " + exception.getMessage() + " This only crashes on debug builds."
+//                    );
+//                } else {
                     mCrashLogging.reportException(exception, T.EDITOR.toString());
                     AppLog.e(T.EDITOR, exception.getMessage());
-                }
+//                }
             } else {
                 AppLog.d(T.EDITOR, "Post had no unsaved changes when exiting the editor.");
             }
@@ -1795,6 +1795,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         try {
             String title = (String) mEditorFragment.getTitle();
             String content = (String) mEditorFragment.getContent(oldContent);
+            AppLog.d(T.MAIN, "malinjir: updating from editor: " + title);
             return new PostFields(title, content);
         } catch (EditorFragmentNotAddedException e) {
             AppLog.e(T.EDITOR, "Impossible to save the post, we weren't able to update it.");
@@ -2260,6 +2261,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     mEditorFragment.setImageLoader(mImageLoader);
 
                     mEditorFragment.getTitleOrContentChanged().observe(EditPostActivity.this, editable -> {
+                        AppLog.d(T.MAIN, "malinjir: change in editor detected.");
                         mViewModel.savePostWithDelay();
                     });
 
@@ -3378,6 +3380,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
+            AppLog.d(T.MAIN, "malinjir: onpostchanged: " + mEditPostRepository.getTitle());
             if (isRemotePreviewingFromEditor()) {
                 handleRemotePreviewUploadResult(event.isError(),
                         RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
@@ -3432,6 +3435,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onPostUploaded(OnPostUploaded event) {
         final PostModel post = event.post;
+        AppLog.d(T.MAIN, "malinjir: postuploaded: " + post.getTitle());
+        AppLog.d(T.MAIN, "malinjir: postuploaded - repo: " + mEditPostRepository.getTitle());
         if (post != null && post.getId() == mEditPostRepository.getId()) {
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed

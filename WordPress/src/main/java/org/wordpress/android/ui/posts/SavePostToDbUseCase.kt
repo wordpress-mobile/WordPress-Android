@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.post.PostStatus
 import org.wordpress.android.ui.notifications.utils.PendingDraftsNotificationsUtilsWrapper
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import javax.inject.Inject
 
@@ -45,6 +47,7 @@ class SavePostToDbUseCase
             post.setDateLocallyChanged(dateTimeUtils.currentTimeInIso8601())
             handlePendingDraftNotifications(postRepository)
             postRepository.savePostSnapshot()
+            AppLog.d(MAIN, "malinjir: Right before the post is saved into db: " + post.title)
             dispatcher.dispatch(PostActionBuilder.newUpdatePostAction(post))
         }
     }
