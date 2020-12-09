@@ -97,7 +97,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -784,8 +783,6 @@ class MySiteFragment : Fragment(),
                 ActivityLauncher.viewBlogStats(activity, selectedSite)
             }
             RequestCodes.SITE_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                // reset comments status filter
-                AppPrefs.setCommentsStatusFilter(ALL)
                 // reset domain credit flag - it will be checked in onSiteChanged
                 isDomainCreditAvailable = false
             }
