@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
+import com.wordpress.stories.compose.frame.FrameSaveNotifier;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -44,6 +47,7 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -98,6 +102,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_INDEX;
+import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -1048,6 +1053,22 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(KEY_STORY_SAVE_RESULT, event);
+        intent.putExtra(WordPress.SITE, site);
+
+        // we need to have a way to cancel the related error notification when the user comes
+        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
+        // errored story but the error notification will remain existing in the system dashboard)
+        intent.setAction(String.valueOf(FrameSaveNotifier.getNotificationIdForError(
+                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                event.getStoryIndex()
+        )));
+
+        activity.startActivity(intent);
+    }
+
     public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
         AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
@@ -1308,5 +1329,10 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
         context.startActivity(intent);
+    }
+
+    public static void showBackupDownload(Activity activity) {
+        Intent intent = new Intent(activity, BackupDownloadActivity.class);
+        activity.startActivity(intent);
     }
 }

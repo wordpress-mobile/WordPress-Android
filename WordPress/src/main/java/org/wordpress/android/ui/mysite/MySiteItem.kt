@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.DrawableRes
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
+import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
@@ -12,6 +13,7 @@ sealed class MySiteItem(val type: Type) {
     enum class Type {
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
+        DOMAIN_REGISTRATION_BLOCK,
         CATEGORY_HEADER,
         LIST_ITEM
     }
@@ -38,6 +40,8 @@ sealed class MySiteItem(val type: Type) {
         val onMediaClick: ListItemInteraction,
         val showPages: Boolean = true
     ) : MySiteItem(QUICK_ACTIONS_BLOCK)
+
+    data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
     data class CategoryHeader(val title: UiString) : MySiteItem(CATEGORY_HEADER)
 

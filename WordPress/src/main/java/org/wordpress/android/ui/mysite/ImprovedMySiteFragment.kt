@@ -25,30 +25,37 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
+import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
+import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -200,6 +207,32 @@ class ImprovedMySiteFragment : Fragment(),
                     is ConnectJetpackForStats -> ActivityLauncher.viewConnectJetpackForStats(activity, action.site)
                     is StartWPComLoginForJetpackStats -> ActivityLauncher.loginForJetpackStats(this)
                     is OpenJetpackSettings -> ActivityLauncher.viewJetpackSecuritySettings(activity, action.site)
+                    is OpenStories -> ActivityLauncher.viewStories(activity, action.site, action.event)
+                    is AddNewStory ->
+                        ActivityLauncher.addNewStoryForResult(
+                                activity,
+                                action.site,
+                                action.source
+                        )
+                    is AddNewStoryWithMediaIds ->
+                        ActivityLauncher.addNewStoryWithMediaIdsForResult(
+                                activity,
+                                action.site,
+                                action.source,
+                                action.mediaIds.toLongArray()
+                        )
+                    is AddNewStoryWithMediaUris ->
+                        ActivityLauncher.addNewStoryWithMediaUrisForResult(
+                                activity,
+                                action.site,
+                                action.source,
+                                action.mediaUris.toTypedArray()
+                        )
+                    is OpenDomainRegistration -> ActivityLauncher.viewDomainRegistrationActivityForResult(
+                            activity,
+                            action.site,
+                            CTA_DOMAIN_CREDIT_REDEMPTION
+                    )
                 }
             }
         })
@@ -313,6 +346,10 @@ class ImprovedMySiteFragment : Fragment(),
                     }
                 }
             }
+            RequestCodes.STORIES_PHOTO_PICKER,
+            RequestCodes.PHOTO_PICKER -> if (resultCode == Activity.RESULT_OK) {
+                viewModel.handleStoriesPhotoPickerResult(data)
+            }
             UCrop.REQUEST_CROP -> {
                 if (resultCode == UCrop.RESULT_ERROR) {
                     AppLog.e(
@@ -322,6 +359,9 @@ class ImprovedMySiteFragment : Fragment(),
                     )
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
+            }
+            RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
+                viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
         }
     }

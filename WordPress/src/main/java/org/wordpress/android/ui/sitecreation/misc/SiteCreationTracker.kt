@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
 import javax.inject.Inject
@@ -45,16 +46,37 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         )
     }
 
-    fun trackPreviewLoading() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+    fun trackPreviewLoading(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
+                    mapOf("template" to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewShown() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+    fun trackPreviewWebviewShown(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
+                    mapOf("template" to template)
+            )
+        }
     }
 
-    fun trackPreviewWebviewFullyLoaded() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+    fun trackPreviewWebviewFullyLoaded(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
+        } else {
+            tracker.track(
+                    AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
+                    mapOf("template" to template)
+            )
+        }
     }
 
     fun trackPreviewOkButtonTapped() {
@@ -65,8 +87,12 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
      * This stat is part of a funnel that provides critical information.  Before
      * making ANY modification to this stat please refer to: p4qSXL-35X-p2
      */
-    fun trackSiteCreated() {
-        tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+    fun trackSiteCreated(template: String?) {
+        if (template == null || template == defaultTemplateSlug) {
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
+        } else {
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf("template" to template))
+        }
     }
 
     fun trackFlowExited() {

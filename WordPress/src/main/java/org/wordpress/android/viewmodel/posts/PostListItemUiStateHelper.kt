@@ -44,6 +44,7 @@ import org.wordpress.android.viewmodel.posts.PostListItemType.PostListItemUiStat
 import org.wordpress.android.viewmodel.uistate.ProgressBarUiState
 import org.wordpress.android.widgets.PostListButtonType
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD
+import org.wordpress.android.widgets.PostListButtonType.BUTTON_COPY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_DELETE_PERMANENTLY
 import org.wordpress.android.widgets.PostListButtonType.BUTTON_EDIT
@@ -351,6 +352,7 @@ class PostListItemUiStateHelper @Inject constructor(
                 postStatus == PUBLISHED &&
                 !isLocalDraft &&
                 !isLocallyChanged
+        val canShowCopy = postStatus == PUBLISHED || postStatus == DRAFT
         val canShowViewButton = !canRetryUpload && postStatus != PostStatus.TRASHED
         val canShowPublishButton = canRetryUpload || canPublishPost
         val buttonTypes = ArrayList<PostListButtonType>()
@@ -398,6 +400,10 @@ class PostListItemUiStateHelper @Inject constructor(
 
         if (canShowStats) {
             buttonTypes.add(BUTTON_STATS)
+        }
+
+        if (canShowCopy) {
+            buttonTypes.add(BUTTON_COPY)
         }
 
         return buttonTypes
