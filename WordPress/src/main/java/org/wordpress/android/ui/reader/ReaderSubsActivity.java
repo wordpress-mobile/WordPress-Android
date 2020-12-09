@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.reader;
 
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
