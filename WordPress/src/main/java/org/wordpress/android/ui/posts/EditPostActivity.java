@@ -3378,8 +3378,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            handleRemotePreviewUploadResult(event.isError(), mEditPostRepository.getPost(),
-                    RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
+            handleRemotePreviewUploadResult(event.isError(), RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
         }
     }
 
@@ -3405,8 +3404,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Nullable
-    private void handleRemotePreviewUploadResult(boolean isError, PostImmutableModel post,
-                                                 RemotePreviewLogicHelper.RemotePreviewType param) {
+    private void handleRemotePreviewUploadResult(boolean isError, RemotePreviewLogicHelper.RemotePreviewType param) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
@@ -3415,10 +3413,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ActivityLauncher.previewPostOrPageForResult(
                     EditPostActivity.this,
                     mSite,
-                    post,
+                    mEditPostRepository.getPost(),
                     param
             );
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
@@ -3445,7 +3443,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
             } else {
                 mEditPostRepository.set(() -> post);
-                handleRemotePreviewUploadResult(event.isError(), post, RemotePreviewType.REMOTE_PREVIEW);
+                handleRemotePreviewUploadResult(event.isError(), RemotePreviewType.REMOTE_PREVIEW);
             }
         }
     }
