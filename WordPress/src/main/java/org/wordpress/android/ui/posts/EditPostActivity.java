@@ -3378,7 +3378,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            handleRemotePreviewUploadResult(event.isError(), RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
+            if (isRemotePreviewingFromEditor()) {
+                handleRemotePreviewUploadResult(event.isError(),
+                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
+            }
         }
     }
 
