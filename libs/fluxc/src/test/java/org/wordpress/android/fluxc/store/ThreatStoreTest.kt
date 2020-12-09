@@ -11,7 +11,6 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.action.ThreatAction
 import org.wordpress.android.fluxc.generated.ThreatActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.ThreatRestClient
 import org.wordpress.android.fluxc.store.ThreatStore.FetchThreatPayload
 import org.wordpress.android.fluxc.store.ThreatStore.FetchedThreatPayload
@@ -25,8 +24,8 @@ class ThreatStoreTest {
     @Mock private lateinit var threatRestClient: ThreatRestClient
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
-    @Mock private lateinit var threatModel: ThreatModel
     private lateinit var threatStore: ThreatStore
+    private val threatId: Long = 1L
 
     @Before
     fun setUp() {
@@ -39,13 +38,13 @@ class ThreatStoreTest {
 
     @Test
     fun `fetch threat triggers rest client`() = test {
-        val payload = FetchThreatPayload(siteModel, threatModel)
-        whenever(threatRestClient.fetchThreat(siteModel, threatModel)).thenReturn(FetchedThreatPayload(null, siteModel))
+        val payload = FetchThreatPayload(siteModel, threatId)
+        whenever(threatRestClient.fetchThreat(siteModel, threatId)).thenReturn(FetchedThreatPayload(null, siteModel))
 
         val action = ThreatActionBuilder.newFetchThreatAction(payload)
         threatStore.onAction(action)
 
-        verify(threatRestClient).fetchThreat(siteModel, threatModel)
+        verify(threatRestClient).fetchThreat(siteModel, threatId)
     }
 
     @Test
@@ -53,9 +52,9 @@ class ThreatStoreTest {
         val error = ThreatError(ThreatErrorType.INVALID_RESPONSE, "error")
 
         val payload = FetchedThreatPayload(error, siteModel)
-        whenever(threatRestClient.fetchThreat(siteModel, threatModel)).thenReturn(payload)
+        whenever(threatRestClient.fetchThreat(siteModel, threatId)).thenReturn(payload)
 
-        val fetchAction = ThreatActionBuilder.newFetchThreatAction(FetchThreatPayload(siteModel, threatModel))
+        val fetchAction = ThreatActionBuilder.newFetchThreatAction(FetchThreatPayload(siteModel, threatId))
         threatStore.onAction(fetchAction)
 
         val expectedEventWithError = ThreatStore.OnThreatFetched(payload.error, ThreatAction.FETCH_THREAT)

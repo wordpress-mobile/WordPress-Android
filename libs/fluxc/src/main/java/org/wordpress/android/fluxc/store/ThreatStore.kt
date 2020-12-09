@@ -39,7 +39,7 @@ class ThreatStore @Inject constructor(
     }
 
     suspend fun fetchThreat(fetchThreatPayload: FetchThreatPayload): OnThreatFetched {
-        val payload = threatRestClient.fetchThreat(fetchThreatPayload.site, fetchThreatPayload.threatModel)
+        val payload = threatRestClient.fetchThreat(fetchThreatPayload.site, fetchThreatPayload.threatId)
         return if (payload.error != null) {
             OnThreatFetched(payload.error, FETCH_THREAT)
         } else {
@@ -60,7 +60,7 @@ class ThreatStore @Inject constructor(
     // Payloads
     class FetchThreatPayload(
         val site: SiteModel,
-        val threatModel: ThreatModel
+        val threatId: Long
     ) : Payload<BaseNetworkError>()
 
     class FetchedThreatPayload(
