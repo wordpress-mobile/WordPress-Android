@@ -3377,7 +3377,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            mEditPostRepository.replace(postModel -> handleRemoteAutoSave(event.isError(), postModel));
+            handleRemoteAutoSave(event.isError(), mEditPostRepository.getPost());
         }
     }
 
@@ -3403,7 +3403,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Nullable
-    private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
+    private PostImmutableModel handleRemoteAutoSave(boolean isError, PostImmutableModel post) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
@@ -3444,7 +3444,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     });
                 }
             } else {
-                mEditPostRepository.set(() -> handleRemoteAutoSave(event.isError(), post));
+                mEditPostRepository.set(() -> {
+                    handleRemoteAutoSave(event.isError(), post);
+                    return post;
+                });
             }
         }
     }
