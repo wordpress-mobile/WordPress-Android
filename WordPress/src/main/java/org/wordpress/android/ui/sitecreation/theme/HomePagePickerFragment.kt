@@ -114,7 +114,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupUi() {
-        title?.setVisible(isPhoneLandscape())
+        title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
