@@ -36,7 +36,8 @@ enum class PostListButtonType constructor(
             R.drawable.ic_undo_white_24dp,
             R.attr.wpColorWarningDark
     ),
-    BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0);
+    BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG(15, 0, 0, 0),
+    BUTTON_COPY(16, R.string.button_copy, R.drawable.ic_copy_white_24dp, R.attr.colorOnSurface);
 
     companion object {
         fun fromInt(value: Int): PostListButtonType? = values().firstOrNull { it.value == value }

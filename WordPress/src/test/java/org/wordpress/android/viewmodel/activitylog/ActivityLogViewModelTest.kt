@@ -38,7 +38,9 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAULT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
@@ -53,6 +55,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
+    @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
@@ -84,7 +87,9 @@ class ActivityLogViewModelTest {
             true,
             null,
             Date(),
-            true
+            true,
+            DEFAULT,
+            false
     )
     val activity = ActivityLogModel(
             "activityId",
@@ -107,6 +112,7 @@ class ActivityLogViewModelTest {
                 rewindStatusService,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
+                backupFeatureConfig,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -215,9 +221,9 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true)
-        val second = Event(activityLogList[1], true)
-        val third = Event(activityLogList[2], true)
+        val first = Event(activityLogList[0], true, false)
+        val second = Event(activityLogList[1], true, false)
+        val third = Event(activityLogList[2], true, false)
         activityLogListItems.add(Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.content.Intent
 import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.StringRes
@@ -8,6 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_CROPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
@@ -22,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -38,31 +43,33 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.ConnectJetpackForStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenActivityLog
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenAdmin
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenComments
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenCropActivity
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenJetpackSettings
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMedia
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMediaPicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPages
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPeople
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPlugins
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenPosts
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenScan
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSharing
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSiteSettings
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenStats
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenThemes
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMediaPicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPeople
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource.ANDROID_CAMERA
@@ -80,6 +87,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.distinct
+import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -102,26 +110,29 @@ class MySiteViewModel
     private val mediaUtilsWrapper: MediaUtilsWrapper,
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val contextProvider: ContextProvider,
-    private val siteIconUploadHandler: SiteIconUploadHandler
+    private val siteIconUploadHandler: SiteIconUploadHandler,
+    private val siteStoriesHandler: SiteStoriesHandler,
+    private val domainRegistrationHandler: DomainRegistrationHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
-    private val _onNavigation = MutableLiveData<Event<NavigationAction>>()
+    private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
 
-    val onSnackbarMessage = _onSnackbarMessage as LiveData<Event<SnackbarMessageHolder>>
+    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
-    val onNavigation = _onNavigation as LiveData<Event<NavigationAction>>
+    val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+            selectedSiteRepository.showSiteIconProgressBar.distinct(),
+            domainRegistrationHandler.isDomainCreditAvailable.distinct()
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
         val items = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -143,6 +154,10 @@ class MySiteViewModel
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
+            if (isDomainCreditAvailable == true) {
+                analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
+                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
+            }
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
             siteItems
         } else {
@@ -249,6 +264,11 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMedia(site))
     }
 
+    private fun domainRegistrationClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+        _onNavigation.value = Event(OpenDomainRegistration(site))
+    }
+
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
@@ -330,6 +350,11 @@ class MySiteViewModel
         selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStats(site)) }
     }
 
+    fun handleSuccessfulDomainRegistrationResult(email: String?) {
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
+    }
+
     private fun startSiteIconUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
@@ -376,7 +401,15 @@ class MySiteViewModel
 
     override fun onCleared() {
         siteIconUploadHandler.clear()
+        siteStoriesHandler.clear()
+        domainRegistrationHandler.clear()
         super.onCleared()
+    }
+
+    fun handleStoriesPhotoPickerResult(data: Intent) {
+        selectedSiteRepository.getSelectedSite()?.let {
+            siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
+        }
     }
 
     data class UiModel(
@@ -392,31 +425,6 @@ class MySiteViewModel
         val isMultiline: Boolean,
         val isInputEnabled: Boolean
     )
-
-    sealed class NavigationAction {
-        object OpenMeScreen : NavigationAction()
-        data class OpenSite(val site: SiteModel) : NavigationAction()
-        data class OpenSitePicker(val site: SiteModel) : NavigationAction()
-        data class OpenMediaPicker(val site: SiteModel) : NavigationAction()
-        data class OpenCropActivity(val imageUri: UriWrapper) : NavigationAction()
-        data class OpenActivityLog(val site: SiteModel) : NavigationAction()
-        data class OpenScan(val site: SiteModel) : NavigationAction()
-        data class OpenPlan(val site: SiteModel) : NavigationAction()
-        data class OpenPosts(val site: SiteModel) : NavigationAction()
-        data class OpenPages(val site: SiteModel) : NavigationAction()
-        data class OpenAdmin(val site: SiteModel) : NavigationAction()
-        data class OpenPeople(val site: SiteModel) : NavigationAction()
-        data class OpenSharing(val site: SiteModel) : NavigationAction()
-        data class OpenSiteSettings(val site: SiteModel) : NavigationAction()
-        data class OpenThemes(val site: SiteModel) : NavigationAction()
-        data class OpenPlugins(val site: SiteModel) : NavigationAction()
-        data class OpenMedia(val site: SiteModel) : NavigationAction()
-        data class OpenComments(val site: SiteModel) : NavigationAction()
-        object StartWPComLoginForJetpackStats : NavigationAction()
-        data class OpenStats(val site: SiteModel) : NavigationAction()
-        data class ConnectJetpackForStats(val site: SiteModel) : NavigationAction()
-        data class OpenJetpackSettings(val site: SiteModel) : NavigationAction()
-    }
 
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
