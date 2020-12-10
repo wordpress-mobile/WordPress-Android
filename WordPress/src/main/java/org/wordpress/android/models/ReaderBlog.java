@@ -166,7 +166,7 @@ public class ReaderBlog {
     }
 
     /*
-     * returns true if this is a P2 or A8C sites
+     * returns true if this is a P2 or A8C site
      */
     public boolean isP2orA8C() {
         return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
