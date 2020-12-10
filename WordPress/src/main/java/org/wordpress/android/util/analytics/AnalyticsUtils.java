@@ -675,7 +675,7 @@ public class AnalyticsUtils {
         }
 
         static AnalyticsSiteType fromReaderPost(ReaderPost readerPost) {
-            if (readerPost.isWpForTeams) {
+            if (readerPost.isP2orA8C()) {
                 return P2;
             }
 
