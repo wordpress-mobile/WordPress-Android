@@ -163,7 +163,10 @@ class ActivityLogListFragment : Fragment() {
         viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled {
                 when (this) {
-                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(requireActivity())
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(
+                            requireActivity(),
+                            viewModel.site,
+                            event.activityId)
                     // todo: annmarie replace with the ActivityLauncher for showing restore details
                     is ShowRestore -> displayRewindDialog(event) }
                 }
