@@ -55,7 +55,7 @@ allprojects {
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
         // FIXME: This is a debug repo. Remove it before merging.
         maven { url "https://dl.bintray.com/mokagio/maven" }
-        maven { url "https://jitpack.io" }
+        // maven { url "https://jitpack.io" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
             // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
