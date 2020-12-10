@@ -81,10 +81,13 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    implementation (project(':@wordpress_react-native-bridge')) {
-        exclude group: "com.android.volley"
-        exclude group: 'com.google.code.findbugs'
-    }
+    // The version value here is the same as the one in the repo's root
+    // build.gradle
+    implementation "com.github.wordpress-mobile.gutenberg-mobiled:react-native-bridge:20201210-144401"
+    // implementation (project(':@wordpress_react-native-bridge')) {
+    //     exclude group: "com.android.volley"
+    //     exclude group: 'com.google.code.findbugs'
+    // }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
