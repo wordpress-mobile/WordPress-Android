@@ -32,7 +32,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val date: Date,
         override val isButtonVisible: Boolean,
         val buttonIcon: Icon,
-        val isProgressBarVisible: Boolean = false
+        val isProgressBarVisible: Boolean = false,
+        val showMoreMenu: Boolean = false
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val formattedTime: String = date.toFormattedTimeString()
@@ -49,7 +50,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.rewindID,
                 model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = if (backupFeatureEnabled) MORE else HISTORY
+                buttonIcon = if (backupFeatureEnabled) MORE else HISTORY,
+                showMoreMenu = backupFeatureEnabled
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()
@@ -120,5 +122,10 @@ sealed class ActivityLogListItem(val type: ViewType) {
             private val map = values().associateBy(Icon::value)
             fun fromValue(value: String?) = map[value] ?: DEFAULT
         }
+    }
+
+    enum class SecondaryAction(val itemId: Long) {
+        RESTORE(0),
+        DOWNLOAD_BACKUP(1);
     }
 }
