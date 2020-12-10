@@ -191,6 +191,16 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/tags/");
     }
 
+    public boolean isP2() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/following/p2");
+    }
+
+    public boolean isA8C() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/a8c");
+    }
+
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/list/");

@@ -2471,9 +2471,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         AnalyticsTracker.Stat stat;
         if (tag.isTagTopic()) {
-            stat = AnalyticsTracker.Stat.READER_TAG_LOADED;
+            stat = Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
-            stat = AnalyticsTracker.Stat.READER_LIST_LOADED;
+            stat = Stat.READER_LIST_LOADED;
+        } else if (tag.isP2()) {
+            stat = Stat.READER_P2_SHOWN;
+        } else if (tag.isA8C()) {
+            stat = Stat.READER_A8C_SHOWN;
         } else {
             return;
         }
