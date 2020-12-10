@@ -90,5 +90,17 @@ if (localBuilds.exists()) {
             }
         }
     }
+
+    // Not sure what to use in place of :WordPressUtils here. Leaving it for
+    // now.
+    //
+    // if (ext.has("localGutenberMobilePath")) {
+    //     includeBuild(ext.localGutenberMobilePath) {
+    //         dependencySubstitution {
+    //             println "Substituting gutenberg-mobile with the local build"
+    //             substitute module("$gradle.ext.gutenbergMobileBinaryPath:WordPressUtils") with project(':WordPressUtils')
+    //         }
+    //     }
+    // }
 }
 
