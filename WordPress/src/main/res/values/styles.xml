@@ -100,9 +100,6 @@
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
-    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
-    </style>
-
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
         <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
@@ -110,8 +107,17 @@
         <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
         <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
         <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
+        <!--    Days of week header    -->
+        <item name="textAppearanceBody2">@style/WordPress.TextAppearance.MaterialCalendarDaysOfWeek</item>
+        <!-- Grid day items  -->
+        <item name="materialCalendarDay">@style/WordPress.MaterialCalendarDayTextView</item>
         <!-- Used to color the cancel button which doesn't use any overridable styles -->
         <item name="colorOnPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar.Fullscreen">
+        <!-- Grid selected day item  -->
+        <item name="daySelectedStyle">@style/WordPress.MaterialCalendarSelectedDay</item>
     </style>
 
     <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
@@ -141,6 +147,18 @@
     <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
         <item name="android:visibility">visible</item>
         <item name="android:background">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.MaterialCalendarDaysOfWeek" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarDayTextView" parent="Widget.MaterialComponents.MaterialCalendar.DayTextView">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarSelectedDay" parent="Widget.MaterialComponents.MaterialCalendar.Day.Selected">
+        <item name="itemTextColor">?attr/colorOnSecondary</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
