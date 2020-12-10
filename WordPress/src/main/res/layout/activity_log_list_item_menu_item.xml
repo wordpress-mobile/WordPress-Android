@@ -17,7 +17,7 @@
         tools:src="@drawable/ic_history_white_24dp"
         tools:tint="@color/primary" />
 
-    <org.wordpress.android.widgets.WPTextView
+    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
