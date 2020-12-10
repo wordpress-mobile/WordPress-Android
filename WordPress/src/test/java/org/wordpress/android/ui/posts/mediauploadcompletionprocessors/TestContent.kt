@@ -6,8 +6,10 @@ object TestContent {
     const val siteUrl = "https://wordpress.org"
     const val localImageUrl = "file://Screenshot-1-1.png"
     const val localImageUrl2 = "file://Screenshot-1-2.png"
+    const val localAudioUrl = "file://test-song.mp3"
     const val remoteImageUrl = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg"
     const val remoteImageUrl2 = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/12/img_20191202_094944-19.jpg"
+    const val remoteAudioUrl = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2020/11/test-song.mp3"
     private const val remoteImageUrlBlogLink = "http://onetwoonetwothisisjustatest.home.blog/pexels-photo-1671668/"
     private const val remoteImageUrlWithSize = "https://onetwoonetwothisisjustatesthome.files.wordpress.com/2019/11/pexels-photo-1671668.jpg?w=1024"
     private const val remoteImageUrl2BlogLink = "http://onetwoonetwothisisjustatest.home.blog/?attachment_id=369"
@@ -571,6 +573,13 @@ object TestContent {
 <div class="wp-block-file"><a href="$remoteImageUrl">Test image</a><a href="$remoteImageUrl" class="wp-block-file__button" download>Download</a></div>
 <!-- /wp:file -->
     """
+    const val oldAudioBlock = """<!-- wp:audio {"id":${localMediaId}} -->
+<figure class="wp-block-audio"><audio controls src="$localAudioUrl"></audio></figure>
+<!-- /wp:audio -->"""
+
+    const val newAudioBlock = """<!-- wp:audio {"id":${remoteMediaId}} -->
+<figure class="wp-block-audio"><audio controls src="$remoteAudioUrl"></audio></figure>
+<!-- /wp:audio -->"""
 
     const val oldPostImage = paragraphBlock + oldImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
     const val newPostImage = paragraphBlock + newImageBlock + newVideoBlock + newMediaTextBlock + newGalleryBlock
