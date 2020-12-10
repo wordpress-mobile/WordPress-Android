@@ -1,9 +1,12 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -12,15 +15,32 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
+import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
+import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
+import org.wordpress.android.ui.mysite.ListItemAction.PAGES
+import org.wordpress.android.ui.mysite.ListItemAction.PLAN
+import org.wordpress.android.ui.mysite.ListItemAction.PLUGINS
+import org.wordpress.android.ui.mysite.ListItemAction.POSTS
+import org.wordpress.android.ui.mysite.ListItemAction.SCAN
+import org.wordpress.android.ui.mysite.ListItemAction.SHARING
+import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
+import org.wordpress.android.ui.mysite.ListItemAction.STATS
+import org.wordpress.android.ui.mysite.ListItemAction.THEMES
+import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenMeScreen
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSite
-import org.wordpress.android.ui.mysite.MySiteViewModel.NavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -29,38 +49,92 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.T
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPlugins
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPosts
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenScan
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSharing
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSite
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSitePicker
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
+import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.FluxCUtilsWrapper
+import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
+    @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var accountStore: AccountStore
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var wpMediaUtilsWrapper: WPMediaUtilsWrapper
+    @Mock lateinit var mediaUtilsWrapper: MediaUtilsWrapper
+    @Mock lateinit var fluxCUtilsWrapper: FluxCUtilsWrapper
+    @Mock lateinit var contextProvider: ContextProvider
+    @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
+    @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
+    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
-    private lateinit var navigationActions: MutableList<NavigationAction>
+    private lateinit var navigationActions: MutableList<SiteNavigationAction>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
+    private val emailAddress = "test@email.com"
     private lateinit var site: SiteModel
     private lateinit var siteInfoBlock: SiteInfoBlock
+    private val onSiteChange = MutableLiveData<SiteModel>()
+    private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
+    private val isDomainCreditAvailable = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
     @Before
     fun setUp() {
+        onSiteChange.value = null
+        onShowSiteIconProgressBar.value = null
+        isDomainCreditAvailable.value = null
+        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
+        whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
+        whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
         viewModel = MySiteViewModel(
-                TEST_DISPATCHER,
                 networkUtilsWrapper,
+                TEST_DISPATCHER,
+                TEST_DISPATCHER,
                 analyticsTrackerWrapper,
                 siteInfoBlockBuilder,
-                accountStore
+                siteItemsBuilder,
+                accountStore,
+                selectedSiteRepository,
+                wpMediaUtilsWrapper,
+                mediaUtilsWrapper,
+                fluxCUtilsWrapper,
+                contextProvider,
+                siteIconUploadHandler,
+                siteStoriesHandler,
+                domainRegistrationHandler
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -97,7 +171,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         siteInfoBlock = SiteInfoBlock(
                 siteName,
                 siteUrl,
-                siteIcon,
+                IconState.Visible(siteIcon),
                 null,
                 mock(),
                 mock(),
@@ -111,7 +185,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is empty with no selected site`() {
-        viewModel.updateSite(null)
+        onSiteChange.postValue(null)
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().items).isEmpty()
@@ -119,11 +193,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is contains header of selected site`() {
-        viewModel.updateSite(site)
+        onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(2)
-        assertThat(uiModels.last().items).hasSize(1)
-        assertThat(uiModels.last().items.first() as SiteInfoBlock).isEqualTo(uiModels.last().items[0] as SiteInfoBlock)
+        assertThat(uiModels.last().items).hasSize(2)
+        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
 
     @Test
@@ -146,8 +220,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(TITLE_CLICK)
 
         assertThat(textInputDialogModels).isEmpty()
-        assertThat(snackbars).containsOnly(SnackbarMessageHolder(
-                UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
+        assertThat(snackbars).containsOnly(
+                SnackbarMessageHolder(
+                        UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint)
+                )
         )
     }
 
@@ -252,6 +328,27 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `on site name chosen updates title if network available `() {
+        val title = "updated site name"
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+
+        viewModel.onSiteNameChosen(title)
+
+        verify(selectedSiteRepository).updateTitle(title)
+    }
+
+    @Test
+    fun `on site name chosen shows snackbar if network not available `() {
+        val title = "updated site name"
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        viewModel.onSiteNameChosen(title)
+
+        verify(selectedSiteRepository, never()).updateTitle(any())
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringRes(R.string.error_update_site_title_network)))
+    }
+
+    @Test
     fun `site block url click opens site`() {
         invokeSiteInfoBlockAction(URL_CLICK)
 
@@ -275,7 +372,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
@@ -285,8 +382,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is the same`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(3)
     }
@@ -295,11 +392,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if new value is empty`() {
         setupAccount(buildAccountWithAvatarUrl(avatarUrl))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         setupAccount(buildAccountWithAvatarUrl(null))
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()
@@ -309,7 +406,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `account avatar url value is emitted after refresh even if account is null`() {
         setupAccount(null)
 
-        viewModel.refreshAccountAvatarUrl()
+        viewModel.refresh()
 
         assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().accountAvatarUrl).isEmpty()
@@ -322,9 +419,313 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(OpenMeScreen)
     }
 
+    @Test
+    fun `quick actions are not shown when no site is selected`() {
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().items).doesNotHaveAnyElementsOfTypes(QuickActionsBlock::class.java)
+    }
+
+    @Test
+    fun `quick actions does not show pages button when site doesn't have the required capability`() {
+        site.hasCapabilityEditPages = false
+
+        onSiteChange.postValue(site)
+
+        val quickActionsBlock = findQuickActionsBlock()
+
+        assertThat(quickActionsBlock).isNotNull
+        assertThat(quickActionsBlock?.showPages).isFalse
+    }
+
+    @Test
+    fun `quick action stats click opens stats screen when user is logged in and site is WPCOM`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsWPCom(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
+    fun `quick action stats click opens stats screen when user is logged in and site is Jetpack`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
+    fun `quick action stats click opens connect jetpack screen when user is logged in and site is self-hosted`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `quick action stats click starts login when user is not logged in and site is Jetpack`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(true)
+        site.setIsJetpackConnected(true)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `quick action stats click opens connect jetpack screen when user is not logged in and site is self-hosted`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+
+        site.setIsJetpackInstalled(false)
+        site.setIsJetpackConnected(false)
+
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        assertThat(navigationActions).containsOnly(ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action posts click opens posts screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onPostsClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenPosts(site))
+    }
+
+    @Test
+    fun `quick action media click opens media screen`() {
+        onSiteChange.postValue(site)
+
+        findQuickActionsBlock()?.onMediaClick?.click()
+
+        assertThat(navigationActions).containsOnly(OpenMedia(site))
+    }
+
+    @Test
+    fun `handling successful login result opens stats screen`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        viewModel.handleSuccessfulLoginResult()
+
+        assertThat(navigationActions).containsOnly(OpenStats(site))
+    }
+
+    @Test
+    fun `activity item click emits OpenActivity navigation event`() {
+        invokeItemClickAction(ACTIVITY_LOG)
+
+        assertThat(navigationActions).containsExactly(OpenActivityLog(site))
+    }
+
+    @Test
+    fun `scan item click emits OpenScan navigation event`() {
+        invokeItemClickAction(SCAN)
+
+        assertThat(navigationActions).containsExactly(OpenScan(site))
+    }
+
+    @Test
+    fun `plan item click emits OpenPlan navigation event`() {
+        invokeItemClickAction(PLAN)
+
+        assertThat(navigationActions).containsExactly(OpenPlan(site))
+    }
+
+    @Test
+    fun `posts item click emits OpenPosts navigation event`() {
+        invokeItemClickAction(POSTS)
+
+        assertThat(navigationActions).containsExactly(OpenPosts(site))
+    }
+
+    @Test
+    fun `pages item click emits OpenPages navigation event`() {
+        invokeItemClickAction(PAGES)
+
+        assertThat(navigationActions).containsExactly(OpenPages(site))
+    }
+
+    @Test
+    fun `admin item click emits OpenAdmin navigation event`() {
+        invokeItemClickAction(ADMIN)
+
+        assertThat(navigationActions).containsExactly(OpenAdmin(site))
+    }
+
+    @Test
+    fun `sharing item click emits OpenSharing navigation event`() {
+        invokeItemClickAction(SHARING)
+
+        assertThat(navigationActions).containsExactly(OpenSharing(site))
+    }
+
+    @Test
+    fun `site settings item click emits OpenSiteSettings navigation event`() {
+        invokeItemClickAction(SITE_SETTINGS)
+
+        assertThat(navigationActions).containsExactly(OpenSiteSettings(site))
+    }
+
+    @Test
+    fun `themes item click emits OpenThemes navigation event`() {
+        invokeItemClickAction(THEMES)
+
+        assertThat(navigationActions).containsExactly(OpenThemes(site))
+    }
+
+    @Test
+    fun `plugins item click emits OpenPlugins navigation event`() {
+        invokeItemClickAction(PLUGINS)
+
+        assertThat(navigationActions).containsExactly(OpenPlugins(site))
+    }
+
+    @Test
+    fun `media item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(MEDIA)
+
+        assertThat(navigationActions).containsExactly(OpenMedia(site))
+    }
+
+    @Test
+    fun `comments item click emits OpenMedia navigation event`() {
+        invokeItemClickAction(COMMENTS)
+
+        assertThat(navigationActions).containsExactly(OpenComments(site))
+    }
+
+    @Test
+    fun `view site item click emits OpenSite navigation event`() {
+        invokeItemClickAction(VIEW_SITE)
+
+        assertThat(navigationActions).containsExactly(OpenSite(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is WPCom and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsWPCom(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click emits OpenStats navigation event if site is Jetpack and has access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+        site.setIsJetpackConnected(true)
+        site.setIsJetpackInstalled(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click emits StartWPComLoginForJetpackStats if site is Jetpack and doesn't have access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(true)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(StartWPComLoginForJetpackStats)
+    }
+
+    @Test
+    fun `stats item click emits ConnectJetpackForStats if neither Jetpack, nor WPCom and no access token`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(false)
+        site.setIsJetpackConnected(false)
+        site.setIsWPCom(false)
+
+        invokeItemClickAction(STATS)
+
+        assertThat(navigationActions).containsExactly(ConnectJetpackForStats(site))
+    }
+
+    @Test
+    fun `domain registration item click opens domain registration`() {
+        onSiteChange.postValue(site)
+        isDomainCreditAvailable.postValue(true)
+
+        findDomainRegistrationBlock()?.onClick?.click()
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+
+        assertThat(navigationActions).containsOnly(OpenDomainRegistration(site))
+    }
+
+    @Test
+    fun `correct event is tracked when domain registration item is shown`() {
+        onSiteChange.postValue(site)
+        isDomainCreditAvailable.postValue(true)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+    }
+
+    @Test
+    fun `snackbar is shown and event is tracked when handling successful domain registration result without email`() {
+        viewModel.handleSuccessfulDomainRegistrationResult(null)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+
+        val message = UiStringRes(R.string.my_site_verify_your_email_without_email)
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
+    }
+
+    @Test
+    fun `snackbar is shown and event is tracked when handling successful domain registration result with email`() {
+        viewModel.handleSuccessfulDomainRegistrationResult(emailAddress)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+
+        val message = UiStringResWithParams(string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
+    }
+
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
+
+    private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
+
+    private fun findDomainRegistrationBlock() =
+            uiModels.last().items.find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {
@@ -339,10 +740,24 @@ class MySiteViewModelTest : BaseUnitTest() {
             siteInfoBlock
         }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())
 
-        viewModel.updateSite(site)
+        onSiteChange.postValue(site)
 
         assertThat(clickAction).isNotNull()
         clickAction!!.invoke(site)
+    }
+
+    private fun invokeItemClickAction(action: ListItemAction) {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        var clickAction: ((ListItemAction) -> Unit)? = null
+        doAnswer {
+            clickAction = it.getArgument(1)
+            listOf<MySiteItem>()
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any())
+
+        onSiteChange.postValue(site)
+
+        assertThat(clickAction).isNotNull()
+        clickAction!!.invoke(action)
     }
 
     private enum class SiteInfoBlockAction {

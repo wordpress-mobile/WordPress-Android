@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -49,7 +48,7 @@ class ActivityLogDetailFragment : Fragment() {
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
         activity?.let { activity ->
-            viewModel = ViewModelProviders.of(activity, viewModelFactory)
+            viewModel = ViewModelProvider(activity, viewModelFactory)
                     .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
 
             val intent = activity.intent

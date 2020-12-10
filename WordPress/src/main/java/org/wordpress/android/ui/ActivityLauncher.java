@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
+import com.wordpress.stories.compose.frame.FrameSaveNotifier;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -44,6 +47,7 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -70,6 +74,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -97,6 +102,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_INDEX;
+import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -542,12 +548,10 @@ public class ActivityLauncher {
     }
 
     public static void viewCurrentBlogThemes(Context context, SiteModel site) {
-        if (ThemeBrowserActivity.isAccessible(site)) {
-            Intent intent = new Intent(context, ThemeBrowserActivity.class);
-            intent.putExtra(WordPress.SITE, site);
-            context.startActivity(intent);
-            AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
-        }
+        Intent intent = new Intent(context, ThemeBrowserActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        context.startActivity(intent);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.THEMES_ACCESSED_THEMES_BROWSER, site);
     }
 
     public static void viewCurrentBlogPeople(Context context, SiteModel site) {
@@ -604,6 +608,16 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
+    }
+
+    public static void viewScan(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
@@ -1039,6 +1053,22 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(KEY_STORY_SAVE_RESULT, event);
+        intent.putExtra(WordPress.SITE, site);
+
+        // we need to have a way to cancel the related error notification when the user comes
+        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
+        // errored story but the error notification will remain existing in the system dashboard)
+        intent.setAction(String.valueOf(FrameSaveNotifier.getNotificationIdForError(
+                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                event.getStoryIndex()
+        )));
+
+        activity.startActivity(intent);
+    }
+
     public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
         AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
@@ -1215,6 +1245,12 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.DO_LOGIN);
     }
 
+    public static void loginForJetpackStats(Fragment fragment) {
+        Intent intent = new Intent(fragment.getActivity(), LoginActivity.class);
+        LoginMode.JETPACK_STATS.putInto(intent);
+        fragment.startActivityForResult(intent, RequestCodes.DO_LOGIN);
+    }
+
     /*
      * open the passed url in the device's external browser
      */
@@ -1293,5 +1329,10 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
         context.startActivity(intent);
+    }
+
+    public static void showBackupDownload(Activity activity) {
+        Intent intent = new Intent(activity, BackupDownloadActivity.class);
+        activity.startActivity(intent);
     }
 }

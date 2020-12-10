@@ -22,12 +22,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
-import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
 import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
-import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -99,7 +97,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -126,8 +123,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isT
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
-import org.wordpress.android.ui.stories.StoryComposerActivity
-import org.wordpress.android.ui.themes.ThemeBrowserActivity
+import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
 import org.wordpress.android.ui.uploads.UploadService.UploadMediaSuccessEvent
@@ -160,6 +156,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
+import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.util.image.ImageType.USER
@@ -172,6 +169,8 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
 class MySiteFragment : Fragment(),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
@@ -201,6 +200,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
 
     private val selectedSite: SiteModel?
         get() {
@@ -380,7 +380,9 @@ class MySiteFragment : Fragment(),
             if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
                 requestNextStepOfActiveQuickStartTask()
             }
-            ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
+            if (themeBrowserUtils.isAccessible(selectedSite)) {
+                ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
+            }
         }
         row_people.setOnClickListener {
             ActivityLauncher.viewCurrentBlogPeople(
@@ -396,6 +398,12 @@ class MySiteFragment : Fragment(),
         }
         row_activity_log.setOnClickListener {
             ActivityLauncher.viewActivityLogList(
+                    activity,
+                    selectedSite
+            )
+        }
+        row_scan.setOnClickListener {
+            ActivityLauncher.viewScan(
                     activity,
                     selectedSite
             )
@@ -775,8 +783,6 @@ class MySiteFragment : Fragment(),
                 ActivityLauncher.viewBlogStats(activity, selectedSite)
             }
             RequestCodes.SITE_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                // reset comments status filter
-                AppPrefs.setCommentsStatusFilter(ALL)
                 // reset domain credit flag - it will be checked in onSiteChanged
                 isDomainCreditAvailable = false
             }
@@ -986,7 +992,7 @@ class MySiteFragment : Fragment(),
         scroll_view.visibility = View.VISIBLE
         actionable_empty_view.visibility = View.GONE
         toggleAdminVisibility(site)
-        val themesVisibility = if (ThemeBrowserActivity.isAccessible(site)) View.VISIBLE else View.GONE
+        val themesVisibility = if (themeBrowserUtils.isAccessible(site)) View.VISIBLE else View.GONE
         my_site_look_and_feel_header.visibility = themesVisibility
         row_themes.visibility = themesVisibility
 
@@ -1007,7 +1013,7 @@ class MySiteFragment : Fragment(),
         my_site_configuration_header.visibility = settingsVisibility
         imageManager.load(
                 my_site_blavatar,
-                BLAVATAR,
+                SiteUtils.getSiteImageType(site.isWpForTeamsSite, SQUARE),
                 SiteUtils.getSiteIconUrl(site, blavatarSz)
         )
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
@@ -1189,37 +1195,21 @@ class MySiteFragment : Fragment(),
             uploadUtilsWrapper.showSnackbarError(
                     requireActivity().findViewById<View>(R.id.coordinator),
                     snackbarMessage,
-                    string.story_saving_failed_quick_action_manage,
-                    View.OnClickListener { view: View? ->
-                        val intent = Intent(
-                                requireActivity(),
-                                StoryComposerActivity::class.java
-                        )
-                        intent.putExtra(KEY_STORY_SAVE_RESULT, event)
-                        intent.putExtra(WordPress.SITE, selectedSite)
+                    string.story_saving_failed_quick_action_manage
+            ) {
+                // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                // is meant to be used for tracking purposes. Use it!
+                // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
 
-                        // we need to have a way to cancel the related error notification when the user comes
-                        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
-                        // errored story but the error notification will remain existing in the system dashboard)
-                        intent.action = getNotificationIdForError(
-                                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
-                                event.storyIndex
-                        ).toString() + ""
+                storiesTrackerHelper.trackStorySaveResultEvent(
+                        event,
+                        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 
-                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
-                        // is meant to be used for tracking purposes. Use it!
-                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
-
-                        storiesTrackerHelper.trackStorySaveResultEvent(
-                                event,
-                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
-
-                        )
-                        startActivity(intent)
-                    }
-            )
+                )
+                ActivityLauncher.viewStories(requireActivity(), selectedSite, event)
+            }
         }
     }
 
@@ -1585,7 +1575,7 @@ class MySiteFragment : Fragment(),
     }
 
     override fun onTextInputDialogDismissed(callbackId: Int) {
-        if (callbackId == site_info_container.title.id) {
+        if (callbackId == site_info_container?.title?.id) {
             showQuickStartNoticeIfNecessary()
             updateQuickStartContainer()
         }

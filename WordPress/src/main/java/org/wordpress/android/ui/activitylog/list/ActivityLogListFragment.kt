@@ -8,7 +8,6 @@ import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -20,6 +19,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
@@ -29,6 +30,7 @@ import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.DateRange
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -63,7 +65,7 @@ class ActivityLogListFragment : Fragment() {
 
         (nonNullActivity.application as WordPress).component()?.inject(this)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ActivityLogViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ActivityLogViewModel::class.java)
 
         val site = if (savedInstanceState == null) {
             val nonNullIntent = checkNotNull(nonNullActivity.intent)
@@ -119,13 +121,16 @@ class ActivityLogListFragment : Fragment() {
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersVisibility.observe(viewLifecycleOwner, Observer { visibility ->
-            uiHelpers.updateVisibility(date_range_picker, visibility)
-            uiHelpers.updateVisibility(activity_type_filter, visibility)
+        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
+            uiHelpers.updateVisibility(filters_bar, uiState.visibility)
+            if (uiState is FiltersShown) {
+                date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+                activity_type_filter.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            }
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { remoteSiteId ->
-            showActivityTypeFilterDialog(remoteSiteId)
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
+            showActivityTypeFilterDialog(event.siteId, event.initialSelection)
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
@@ -154,6 +159,15 @@ class ActivityLogListFragment : Fragment() {
         viewModel.moveToTop.observe(this, Observer {
             log_list_view.scrollToPosition(0)
         })
+
+        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(requireActivity())
+                    // todo: annmarie replace with the ActivityLauncher for showing restore details
+                    is ShowRestore -> displayRewindDialog(event) }
+                }
+            })
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
@@ -181,8 +195,9 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId).show(parentFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
+                .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
@@ -208,10 +223,17 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onActionButtonClicked(item)
     }
 
+    private fun onSecondaryActionClicked(
+        secondaryAction: ActivityLogListItem.SecondaryAction,
+        item: ActivityLogListItem
+    ): Boolean {
+        return viewModel.onSecondaryActionClicked(secondaryAction, item)
+    }
+
     private fun setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
         if (log_list_view.adapter == null) {
-            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
+            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked, this::onSecondaryActionClicked)
             log_list_view.adapter = adapter
         } else {
             adapter = log_list_view.adapter as ActivityLogAdapter

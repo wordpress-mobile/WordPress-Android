@@ -641,6 +641,12 @@
             android:label="@string/activity_log_event"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!--Scan-->
+        <activity
+            android:name=".ui.jetpack.scan.ScanActivity"
+            android:label="@string/scan"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!--Domain Registration-->
         <activity
             android:name=".ui.domains.DomainRegistrationActivity"
@@ -661,6 +667,12 @@
 
         <activity
             android:name=".ui.posts.JetpackSecuritySettingsActivity"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack backup -->
+        <activity
+            android:name=".ui.jetpack.backup.BackupDownloadActivity"
+            android:label="@string/backup_download"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->

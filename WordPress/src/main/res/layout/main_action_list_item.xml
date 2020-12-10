@@ -12,37 +12,11 @@
         android:contentDescription="@null"
         style="@style/MainBottomSheetRowIcon"/>
 
-    <LinearLayout
+    <com.google.android.material.textview.MaterialTextView
         android:gravity="start"
         android:layout_toEndOf="@+id/action_icon"
-        android:layout_centerVertical="true"
-        android:layout_alignParentEnd="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/MainBottomSheetRowTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="start"
-            android:id="@+id/action_title"
-            tools:text="@string/my_site_bottom_sheet_add_post" />
-
-        <com.google.android.material.textview.MaterialTextView
-            style="@style/MainBottomSheetRowTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/action_tag"
-            android:textAppearance="?attr/textAppearanceBody2"
-            android:textColor="?attr/colorOnPrimarySurface"
-            android:backgroundTint="?attr/colorError"
-            android:background="@drawable/bg_rectangle_red_50_radius_2dp"
-            android:paddingStart="@dimen/margin_medium"
-            android:paddingTop="@dimen/margin_extra_small"
-            android:paddingEnd="@dimen/margin_medium"
-            android:paddingBottom="@dimen/margin_extra_small"
-            tools:text="@string/my_site_bottom_sheet_story_tag_new" />
-
-    </LinearLayout>
+        android:id="@+id/action_title"
+        style="@style/MainBottomSheetRowTextView"
+        tools:text="@string/my_site_bottom_sheet_add_post" />
 
 </RelativeLayout>

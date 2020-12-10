@@ -9,13 +9,16 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -26,14 +29,25 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var remoteSiteId: RemoteId
+    private lateinit var parentViewModel: ActivityLogViewModel
+    private lateinit var initialSelection: List<Int>
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(remoteSiteId: RemoteId) {
+    private val _dismissDialog = MutableLiveData<Event<Unit>>()
+    val dismissDialog: LiveData<Event<Unit>> = _dismissDialog
+
+    fun start(
+        remoteSiteId: RemoteId,
+        parentViewModel: ActivityLogViewModel,
+        initialSelection: List<Int>
+    ) {
         if (isStarted) return
         isStarted = true
         this.remoteSiteId = remoteSiteId
+        this.parentViewModel = parentViewModel
+        this.initialSelection = initialSelection
 
         fetchAvailableActivityTypes()
     }
@@ -60,8 +74,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
-                        ListItemUiState.ActivityType(id = it.id, title = UiStringText(it.toString()))
-                                .apply { onClick = { onItemClicked(it.id) } }
+                        ListItemUiState.ActivityType(
+                                id = it.id,
+                                title = UiStringText(it.toString()),
+                                onClick = { onItemClicked(it.id) },
+                                checked = initialSelection.contains(it.id)
+                        )
                     }
             Content(
                     listOf(headerListItem) + activityTypeListItems,
@@ -77,7 +95,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         (_uiState.value as? Content)?.let { content ->
             val updatedList = content.items.map { itemUiState ->
                 if (itemUiState is ListItemUiState.ActivityType && itemUiState.id == itemId) {
-                    itemUiState.copy(checked = !itemUiState.checked).apply { onClick = itemUiState.onClick }
+                    itemUiState.copy(checked = !itemUiState.checked)
                 } else {
                     itemUiState
                 }
@@ -87,6 +105,8 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun onApplyClicked() {
+        parentViewModel.onActivityTypesSelected(getSelectedActivityTypeIds())
+        _dismissDialog.value = Event(Unit)
     }
 
     private fun onRetryClicked() {
@@ -108,6 +128,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 }
             }
 
+    private fun getSelectedActivityTypeIds(): List<Int> =
+            (_uiState.value as Content).items
+                    .filterIsInstance(ActivityType::class.java)
+                    .filter { it.checked }
+                    .map { it.id }
+
     sealed class UiState {
         open val contentVisibility = false
         open val loadingVisibility = false
@@ -120,6 +146,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
         data class Error(val retryAction: Action) : UiState() {
             override val errorVisibility = true
+
             // TODO malinjir replace strings according to design
             val errorTitle: UiString = UiStringRes(R.string.error)
             val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
@@ -143,10 +170,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         data class ActivityType(
             val id: Int,
             val title: UiString,
-            val checked: Boolean = false
-        ) : ListItemUiState() {
-            lateinit var onClick: (() -> Unit)
-        }
+            val checked: Boolean = false,
+            val onClick: (() -> Unit)
+        ) : ListItemUiState()
     }
 
     data class Action(val label: UiString) {

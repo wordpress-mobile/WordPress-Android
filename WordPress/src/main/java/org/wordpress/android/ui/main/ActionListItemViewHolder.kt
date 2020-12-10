@@ -24,7 +24,6 @@ class ActionListItemViewHolder(
     fun bind(action: CreateAction) {
         val actionIcon: ImageView = this.itemView.findViewById(R.id.action_icon)
         val actionTitle: TextView = this.itemView.findViewById(R.id.action_title)
-        val actionTag: TextView = this.itemView.findViewById(R.id.action_tag)
         val actionRowContainer: ViewGroup = this.itemView.findViewById(R.id.action_row_container)
 
         if (action.iconRes > 0) {
@@ -47,13 +46,6 @@ class ActionListItemViewHolder(
             actionTitle.visibility = View.GONE
         }
 
-        if (action.tagRes > 0) {
-            actionTag.setText(action.tagRes)
-            actionTag.visibility = View.VISIBLE
-        } else {
-            actionTag.visibility = View.GONE
-        }
-
         if (action.onClickAction == null) {
             this.itemView.setOnClickListener(null)
             this.itemView.isClickable = false
@@ -69,7 +61,7 @@ class ActionListItemViewHolder(
                     dimen.quick_start_focus_point_size
             )
             actionRowContainer.post {
-                val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
+                val verticalOffset = -focusPointSize / 2
                 QuickStartUtils.addQuickStartFocusPointAboveTheView(
                         actionRowContainer, actionTitle,
                         verticalOffset, 0
