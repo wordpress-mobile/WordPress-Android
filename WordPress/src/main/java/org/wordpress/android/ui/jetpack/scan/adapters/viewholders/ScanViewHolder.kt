@@ -13,5 +13,5 @@ abstract class ScanViewHolder(
     parent: ViewGroup,
     override val containerView: View = LayoutInflater.from(parent.context).inflate(layout, parent, false)
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-    abstract fun onBind(uiState: ScanListItemState)
+    abstract fun onBind(itemUiState: ScanListItemState)
 }
