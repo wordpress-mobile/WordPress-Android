@@ -95,12 +95,13 @@
         <item name="layoutPickerBackground">@color/white</item>
 
         <!-- Material Date Range Picker -->
-        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
         <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
         <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
