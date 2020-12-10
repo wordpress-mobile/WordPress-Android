@@ -45,7 +45,10 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    suspend fun getMySubscriptionToPost(blogId: Long, postId: Long): PostSubscribersCallResult = suspendCoroutine { cont ->
+    suspend fun getMySubscriptionToPost(
+        blogId: Long,
+        postId: Long
+    ): PostSubscribersCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/posts/$postId/subscribers/mine"
 
         val listener = Listener { jsonObject ->
@@ -91,7 +94,10 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    suspend fun unsubscribeMeFromPost(blogId: Long, postId: Long): PostSubscribersCallResult = suspendCoroutine { cont ->
+    suspend fun unsubscribeMeFromPost(
+        blogId: Long,
+        postId: Long
+    ): PostSubscribersCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/posts/$postId/subscribers/mine/delete"
 
         val listener = Listener { jsonObject ->

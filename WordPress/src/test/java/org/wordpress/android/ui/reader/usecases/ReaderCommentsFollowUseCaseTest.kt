@@ -74,7 +74,9 @@ class ReaderCommentsFollowUseCaseTest {
 
         val flow = followCommentsUseCase.getMySubscriptionToPost(blogId, postId, false)
 
-        assertThat(flow.toList()).isEqualTo(listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection))))
+        assertThat(flow.toList()).isEqualTo(
+                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+        )
     }
 
     @Test
@@ -89,7 +91,8 @@ class ReaderCommentsFollowUseCaseTest {
     @Test
     fun `getMySubscriptionToPost emits expected state when can follow with success`() = test {
         whenever(postSubscribersApiCallsProvider.getCanFollowComments(anyLong())).thenReturn(true)
-        whenever(postSubscribersApiCallsProvider.getMySubscriptionToPost(anyLong(), anyLong())).thenReturn(PostSubscribersCallResult.Success(true))
+        whenever(postSubscribersApiCallsProvider.getMySubscriptionToPost(anyLong(), anyLong()))
+                .thenReturn(PostSubscribersCallResult.Success(true))
 
         val flow = followCommentsUseCase.getMySubscriptionToPost(blogId, postId, false)
 
@@ -126,12 +129,15 @@ class ReaderCommentsFollowUseCaseTest {
 
         val flow = followCommentsUseCase.setMySubscriptionToPost(blogId, postId, true)
 
-        assertThat(flow.toList()).isEqualTo(listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection))))
+        assertThat(flow.toList()).isEqualTo(
+                listOf(Loading, Failure(blogId, postId, UiStringRes(string.error_network_connection)))
+        )
     }
 
     @Test
     fun `setMySubscriptionToPost emits expected state when subscribing with success`() = test {
-        whenever(postSubscribersApiCallsProvider.subscribeMeToPost(anyLong(), anyLong())).thenReturn(PostSubscribersCallResult.Success(true))
+        whenever(postSubscribersApiCallsProvider.subscribeMeToPost(anyLong(), anyLong()))
+                .thenReturn(PostSubscribersCallResult.Success(true))
 
         val flow = followCommentsUseCase.setMySubscriptionToPost(blogId, postId, true)
 
