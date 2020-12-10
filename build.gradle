@@ -7,6 +7,9 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.buildGutenbergMobileJSBundle = 1
     ext.wordPressUtilsVersion = '1.30.1'
+    // FIXE: This is a debug version on mokagio's fork. Switch to the official
+    // one before merging!
+    ext.gutenbergMobileVersion = '20201210-144401'
 
     repositories {
         google()
@@ -50,6 +53,8 @@ allprojects {
         google()
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
+        // FIXME: This is a debug repo. Remove it before merging.
+        maven { url "https://dl.bintray.com/mokagio/maven" }
         maven { url "https://jitpack.io" }
 
         if (rootProject.ext.buildGutenbergFromSource) {
