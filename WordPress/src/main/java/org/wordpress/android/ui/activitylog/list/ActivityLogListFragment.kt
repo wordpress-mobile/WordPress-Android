@@ -176,6 +176,7 @@ class ActivityLogListFragment : Fragment() {
     private fun showDateRangePicker(initialDateRange: DateRange?) {
         val picker = MaterialDatePicker.Builder
                 .dateRangePicker()
+                .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
                 .setCalendarConstraints(
                         CalendarConstraints.Builder()
                                 .setValidator(DateValidatorPointBackward.now())
