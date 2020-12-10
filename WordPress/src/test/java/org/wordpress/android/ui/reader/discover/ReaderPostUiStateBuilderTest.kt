@@ -977,7 +977,7 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
-        post.organization = if(isp2Post) P2 else NO_ORGANIZATION
+        post.organization = if (isp2Post) P2 else NO_ORGANIZATION
         post.blogName = blogName
         post.authorFirstName = authorFirstName
         post.authorName = authorName
