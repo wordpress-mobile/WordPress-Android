@@ -8,8 +8,8 @@
 
     <ImageView
         android:id="@+id/scan_state_icon"
-        android:layout_width="@dimen/scan_status_icon_size"
-        android:layout_height="@dimen/scan_status_icon_size"
+        android:layout_width="@dimen/scan_state_icon_size"
+        android:layout_height="@dimen/scan_state_icon_size"
         android:layout_marginTop="@dimen/margin_extra_medium_large"
         android:contentDescription="@string/scan_state_icon"
         app:layout_constraintStart_toStartOf="parent"
