@@ -9,6 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_CROPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_GALLERY_PICKED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.MY_SITE_ICON_REMOVED
@@ -40,6 +43,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
@@ -48,6 +52,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenJetpackSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
@@ -82,6 +87,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.distinct
+import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -105,7 +111,8 @@ class MySiteViewModel
     private val fluxCUtilsWrapper: FluxCUtilsWrapper,
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
-    private val siteStoriesHandler: SiteStoriesHandler
+    private val siteStoriesHandler: SiteStoriesHandler,
+    private val domainRegistrationHandler: DomainRegistrationHandler
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -123,8 +130,9 @@ class MySiteViewModel
     val uiModel: LiveData<UiModel> = merge(
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar ->
+            selectedSiteRepository.showSiteIconProgressBar.distinct(),
+            domainRegistrationHandler.isDomainCreditAvailable.distinct()
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
         val items = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -146,6 +154,10 @@ class MySiteViewModel
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
+            if (isDomainCreditAvailable == true) {
+                analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
+                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
+            }
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
             siteItems
         } else {
@@ -252,6 +264,11 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMedia(site))
     }
 
+    private fun domainRegistrationClick(site: SiteModel) {
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+        _onNavigation.value = Event(OpenDomainRegistration(site))
+    }
+
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
         _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
@@ -333,6 +350,11 @@ class MySiteViewModel
         selectedSiteRepository.getSelectedSite()?.let { site -> _onNavigation.value = Event(OpenStats(site)) }
     }
 
+    fun handleSuccessfulDomainRegistrationResult(email: String?) {
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+        _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(getEmailValidationMessage(email))))
+    }
+
     private fun startSiteIconUpload(filePath: String) {
         if (TextUtils.isEmpty(filePath)) {
             _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.error_locating_image))))
@@ -380,6 +402,7 @@ class MySiteViewModel
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
+        domainRegistrationHandler.clear()
         super.onCleared()
     }
 
