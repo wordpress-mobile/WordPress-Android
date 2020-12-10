@@ -10,12 +10,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 @InternalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var scanStatusService: ScanStatusService
 
     private lateinit var viewModel: ScanViewModel
 
     @Before
     fun setUp() {
-        viewModel = ScanViewModel()
+        viewModel = ScanViewModel(scanStatusService)
         viewModel.site = site
     }
 

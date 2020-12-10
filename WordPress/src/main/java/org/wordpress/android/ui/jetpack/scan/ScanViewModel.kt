@@ -2,15 +2,32 @@ package org.wordpress.android.ui.jetpack.scan
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleThreatsFound
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleThreatsNotFound
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanning
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
 
-class ScanViewModel @Inject constructor() : ViewModel() {
+class ScanViewModel @Inject constructor(
+    private val scanStatusService: ScanStatusService
+) : ViewModel() {
     private var isStarted = false
+    private var lastScanState: State? = null
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val scanStateObserver = Observer<ScanStateModel> {
+        if (it.state != lastScanState) {
+            lastScanState = it.state
+            _uiState.value = buildContentUiState(it)
+        }
+    }
 
     lateinit var site: SiteModel
 
@@ -19,16 +36,39 @@ class ScanViewModel @Inject constructor() : ViewModel() {
             return
         }
         this.site = site
+        init()
         isStarted = true
     }
 
-    sealed class UiState {
-        open val contentVisibility = false
+    private fun init() {
+        scanStatusService.scanState.observeForever(scanStateObserver)
+        scanStatusService.start(site)
+    }
 
-        data class Content(
-            val items: List<ScanListItemState>
-        ) : UiState() {
-            override val contentVisibility = true
+    private fun buildContentUiState(scanStateModel: ScanStateModel): Content {
+        val scanStateItem = when (scanStateModel.state) {
+            State.IDLE -> {
+                scanStateModel.threats?.let {
+                    ScanIdleThreatsFound
+                } ?: ScanIdleThreatsNotFound
+            }
+            State.SCANNING -> {
+                ScanScanning
+            }
+            State.PROVISIONING, State.UNAVAILABLE, State.UNKNOWN -> {
+                ScanIdleThreatsNotFound // TODO: ashiagr TBD or filter out
+            }
         }
+        return Content(listOf(scanStateItem))
+    }
+
+    override fun onCleared() {
+        scanStatusService.scanState.removeObserver(scanStateObserver)
+        scanStatusService.stop()
+        super.onCleared()
+    }
+
+    sealed class UiState {
+        data class Content(val items: List<ScanListItemState>) : UiState()
     }
 }

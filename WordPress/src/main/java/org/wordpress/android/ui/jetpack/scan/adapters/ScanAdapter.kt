@@ -4,6 +4,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ViewType
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanStateViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanViewHolder
@@ -44,7 +45,12 @@ class ScanAdapter(private val uiHelpers: UiHelpers) : Adapter<ScanViewHolder>() 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-            return false // TODO: ashiagr
+            return when {
+                oldItem is ScanState && newItem is ScanState -> // TODO: ashiagr revisit
+                    oldItem.scanTitle == newItem.scanTitle &&
+                        oldItem.scanDescription == newItem.scanDescription
+                else -> false
+            }
         }
 
         override fun getOldListSize() = oldList.size

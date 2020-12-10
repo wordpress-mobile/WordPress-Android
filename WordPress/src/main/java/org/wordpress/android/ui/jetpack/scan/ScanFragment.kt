@@ -37,8 +37,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = ScanAdapter(uiHelpers)
-        recycler_view.adapter?.setHasStableIds(true)
+        val scanAdapter = ScanAdapter(uiHelpers)
+        scanAdapter.setHasStableIds(true)
+        recycler_view.adapter = scanAdapter
     }
 
     private fun initViewModel(site: SiteModel) {
