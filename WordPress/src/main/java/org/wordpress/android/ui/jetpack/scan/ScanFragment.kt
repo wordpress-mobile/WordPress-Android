@@ -21,19 +21,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component()?.inject(this)
-
-        val site = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            nonNullIntent.getSerializableExtra(WordPress.SITE) as SiteModel
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-        }
-
+        initDagger()
         initAdapter()
-        initViewModel(site)
+        initViewModel(getSite(savedInstanceState))
+    }
+
+    private fun initDagger() {
+        (requireActivity().application as WordPress).component()?.inject(this)
     }
 
     private fun initAdapter() {
@@ -61,6 +55,14 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun refreshContentScreen(content: Content) {
         ((recycler_view.adapter) as ScanAdapter).update(content.items)
+    }
+
+    private fun getSite(savedInstanceState: Bundle?): SiteModel {
+        return if (savedInstanceState == null) {
+            requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
+        } else {
+            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
