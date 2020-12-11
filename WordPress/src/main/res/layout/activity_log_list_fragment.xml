@@ -5,36 +5,10 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <HorizontalScrollView
-        android:id="@+id/filters_bar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:scrollIndicators="none"
-        android:visibility="gone"
-        tools:targetApi="m">
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/date_range_picker"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-
-            <com.google.android.material.chip.Chip
-                android:id="@+id/activity_type_filter"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
-        </LinearLayout>
-    </HorizontalScrollView>
-
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/actionable_empty_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/filters_bar"
         android:visibility="gone"
         app:aevImage="@drawable/img_illustration_empty_results_216dp"
         app:aevSubtitle="@string/activity_log_empty_subtitle"
@@ -44,8 +18,7 @@
     <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
         android:id="@+id/swipe_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@id/filters_bar">
+        android:layout_height="match_parent">
 
         <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
             android:id="@+id/log_list_view"
