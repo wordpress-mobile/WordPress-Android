@@ -17,6 +17,7 @@ import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDow
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment
+import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject
@@ -107,7 +108,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
         val fragment = when (target.wizardStep) {
             DETAILS -> BackupDownloadDetailsFragment.newInstance()
-            PROGRESS -> BackupDownloadDetailsFragment.newInstance()
+            PROGRESS -> BackupDownloadProgressFragment.newInstance()
             COMPLETE -> BackupDownloadDetailsFragment.newInstance()
         }
         slideInFragment(fragment, target.wizardStep.toString())
