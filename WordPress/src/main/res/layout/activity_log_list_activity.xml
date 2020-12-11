@@ -24,6 +24,8 @@
             android:id="@+id/filters_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingBottom="@dimen/margin_medium"
+            android:paddingTop="@dimen/margin_medium"
             android:scrollIndicators="none"
             android:visibility="gone"
             app:layout_scrollFlags="noScroll"
@@ -48,7 +50,8 @@
                 <com.google.android.material.chip.Chip
                     android:id="@+id/date_range_picker"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    android:layout_marginEnd="@dimen/margin_medium" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/activity_type_filter"
