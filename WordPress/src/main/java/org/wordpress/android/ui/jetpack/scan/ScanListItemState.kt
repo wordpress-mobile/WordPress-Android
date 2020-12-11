@@ -9,28 +9,31 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 sealed class ScanListItemState(val type: ViewType) {
     open fun longId(): Long = hashCode().toLong()
 
-    sealed class ScanState(
-        @DrawableRes val scanIcon: Int,
-        val scanTitle: UiString,
-        val scanDescription: UiString
-    ) : ScanListItemState(SCAN_STATE) { // TODO: Fine-tune states
-        object ScanIdleThreatsFound : ScanState(
-            scanIcon = R.drawable.ic_scan_idle_threats_found,
-            scanTitle = UiStringRes(R.string.scan_idle_threats_found_title),
-            scanDescription = UiStringRes(R.string.scan_idle_threats_found_description) // TODO: ashiagr dynamic text
-        )
+    // TODO: ashiagr fine-tune states, dynamic texts, add button states
+    sealed class ScanState : ScanListItemState(SCAN_STATE) {
+        @DrawableRes open val scanIcon: Int = R.drawable.ic_scan_scanning
+        open val scanTitle: UiString = UiStringRes(R.string.scan_scanning_title)
+        open val scanDescription: UiString = UiStringRes(R.string.scan_scanning_description)
 
-        object ScanIdleThreatsNotFound : ScanState(
-            scanIcon = R.drawable.ic_scan_idle_threats_not_found,
-            scanTitle = UiStringRes(R.string.scan_idle_no_threats_found_title),
-            scanDescription = UiStringRes(R.string.scan_idle_no_threats_found_description)
-        )
+        sealed class ScanIdleState : ScanState() {
+            data class ThreatsFound(
+                @DrawableRes override val scanIcon: Int = R.drawable.ic_scan_idle_threats_found,
+                override val scanTitle: UiString = UiStringRes(R.string.scan_idle_threats_found_title),
+                override val scanDescription: UiString = UiStringRes(R.string.scan_idle_threats_found_description)
+            ) : ScanState()
 
-        object ScanScanning : ScanState(
-            scanIcon = R.drawable.ic_scan_scanning,
-            scanTitle = UiStringRes(R.string.scan_scanning_title),
-            scanDescription = UiStringRes(R.string.scan_scanning_description)
-        )
+            data class ThreatsNotFound(
+                @DrawableRes override val scanIcon: Int = R.drawable.ic_scan_idle_threats_not_found,
+                override val scanTitle: UiString = UiStringRes(R.string.scan_idle_no_threats_found_title),
+                override val scanDescription: UiString = UiStringRes(R.string.scan_idle_no_threats_found_description)
+            ) : ScanState()
+        }
+
+        data class ScanScanningState(
+            @DrawableRes override val scanIcon: Int = R.drawable.ic_scan_scanning,
+            override val scanTitle: UiString = UiStringRes(R.string.scan_scanning_title),
+            override val scanDescription: UiString = UiStringRes(R.string.scan_scanning_description)
+        ) : ScanState()
     }
 
     enum class ViewType(val id: Int) {

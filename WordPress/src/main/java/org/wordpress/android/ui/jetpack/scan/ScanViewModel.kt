@@ -7,9 +7,8 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleThreatsFound
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleThreatsNotFound
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanning
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
 
@@ -45,19 +44,11 @@ class ScanViewModel @Inject constructor(
         scanStatusService.start(site)
     }
 
-    private fun buildContentUiState(scanStateModel: ScanStateModel): Content {
-        val scanStateItem = when (scanStateModel.state) {
-            State.IDLE -> {
-                scanStateModel.threats?.let {
-                    ScanIdleThreatsFound
-                } ?: ScanIdleThreatsNotFound
-            }
-            State.SCANNING -> {
-                ScanScanning
-            }
-            State.PROVISIONING, State.UNAVAILABLE, State.UNKNOWN -> {
-                ScanIdleThreatsNotFound // TODO: ashiagr TBD or filter out
-            }
+    private fun buildContentUiState(model: ScanStateModel): Content {
+        val scanStateItem = when (model.state) {
+            State.IDLE -> model.threats?.let { ScanIdleState.ThreatsFound() } ?: ScanIdleState.ThreatsNotFound()
+            State.SCANNING -> ScanScanningState()
+            State.PROVISIONING, State.UNAVAILABLE, State.UNKNOWN -> ScanScanningState() // TODO: ashiagr filter out
         }
         return Content(listOf(scanStateItem))
     }
@@ -68,7 +59,7 @@ class ScanViewModel @Inject constructor(
         super.onCleared()
     }
 
-    sealed class UiState {
+    sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<ScanListItemState>) : UiState()
     }
 }
