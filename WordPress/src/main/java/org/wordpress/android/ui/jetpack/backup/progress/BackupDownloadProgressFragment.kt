@@ -36,4 +36,5 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
         fun newInstance(): BackupDownloadProgressFragment {
             return BackupDownloadProgressFragment()
         }
+    }
 }
