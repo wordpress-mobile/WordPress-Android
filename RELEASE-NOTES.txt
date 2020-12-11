@@ -3,6 +3,7 @@
 * [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
 * [**] Posts List: Adds duplicate post functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13521]
 * [*] Block Editor: Fix Gallery block uploads when the editor is closed [https://github.com/wordpress-mobile/WordPress-Android/pull/13570]
+* [*] Block Editor: Remove popup informing user that they will be using the block editor by default [https://github.com/wordpress-mobile/WordPress-Android/pull/13593]
 
 16.3
 -----
