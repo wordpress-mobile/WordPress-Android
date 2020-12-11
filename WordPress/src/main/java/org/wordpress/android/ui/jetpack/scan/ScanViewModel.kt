@@ -27,15 +27,15 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    lateinit var site: SiteModel
+    private lateinit var site: SiteModel
 
     fun start(site: SiteModel) {
         if (isStarted) {
             return
         }
+        isStarted = true
         this.site = site
         init()
-        isStarted = true
     }
 
     private fun init() {
