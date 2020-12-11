@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.backup_download_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel
+import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Error
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
@@ -58,7 +59,7 @@ class BackupDownloadDetailsFragment : Fragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadDetailsViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             when (uiState) {
                 is Loading -> ToastUtils.showToast(requireContext(), "Implement loading")
                 is Content -> showContent(uiState)
@@ -66,6 +67,7 @@ class BackupDownloadDetailsFragment : Fragment() {
             }
         })
 
+        parentViewModel.setTitle(R.string.backup_download_details_page_title)
         viewModel.start()
     }
 

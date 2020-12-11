@@ -37,6 +37,7 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
+private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -113,15 +114,15 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(viewLifecycleOwner, Observer {
+        viewModel.events.observe(viewLifecycleOwner, {
             reloadEvents(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(viewLifecycleOwner, Observer { listStatus ->
+        viewModel.eventListStatus.observe(viewLifecycleOwner, { listStatus ->
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(filters_bar, uiState.visibility)
             if (uiState is FiltersShown) {
                 date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
@@ -129,44 +130,45 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
             showActivityTypeFilterDialog(event.siteId, event.initialSelection)
         })
 
-        viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.showDateRangePicker.observe(viewLifecycleOwner, { event ->
             showDateRangePicker(event.initialSelection)
         })
 
-        viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
+        viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
             }
         })
 
-        viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer {
+        viewModel.showRewindDialog.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 displayRewindDialog(it)
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { message ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }
         })
 
-        viewModel.moveToTop.observe(this, Observer {
+        viewModel.moveToTop.observe(this, {
             log_list_view.scrollToPosition(0)
         })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+        viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 when (this) {
-                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                             requireActivity(),
                             viewModel.site,
-                            event.activityId)
+                            event.activityId,
+                            BACKUP_DOWNLOAD_REQUEST_CODE)
                     // todo: annmarie replace with the ActivityLauncher for showing restore details
                     is ShowRestore -> displayRewindDialog(event) }
                 }
