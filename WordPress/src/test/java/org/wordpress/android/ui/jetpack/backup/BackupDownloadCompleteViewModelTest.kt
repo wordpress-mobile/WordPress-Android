@@ -6,18 +6,18 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressViewModel
+import org.wordpress.android.ui.jetpack.backup.complete.BackupDownloadCompleteViewModel
 
 @RunWith(MockitoJUnitRunner::class)
-class BackupDownloadProgressViewModelTest {
+class BackupDownloadCompleteViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    private lateinit var viewModel: BackupDownloadProgressViewModel
+    private lateinit var viewModel: BackupDownloadCompleteViewModel
 
     @Before
     fun setUp() {
-        viewModel = BackupDownloadProgressViewModel()
+        viewModel = BackupDownloadCompleteViewModel()
     }
 
     @Test
