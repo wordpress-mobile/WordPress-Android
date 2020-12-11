@@ -72,15 +72,9 @@ public class SiteUtils {
                 for (SiteModel site : siteStore.getSites()) {
                     // Show "phase 2" dialog on sites that get switched from aztec to gutenberg
                     if (TextUtils.equals(site.getMobileEditor(), AZTEC_EDITOR_NAME)) {
-                        AppPrefs.setShowGutenbergInfoPopupPhase2ForNewPosts(site.getUrl(), true);
                         // Will show the popup again, even if it was displayed in the past
                         AppPrefs.setGutenbergInfoPopupDisplayed(site.getUrl(), false);
                         continue;
-                    }
-
-                    // Show "phase 1" dialog on sites that get switched from "empty" (no pref) to gutenberg
-                    if (TextUtils.isEmpty(site.getMobileEditor())) {
-                        AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
                     }
                 }
 
@@ -117,13 +111,6 @@ public class SiteUtils {
             if (!NetworkUtils.isNetworkAvailable(WordPress.getContext())) {
                 // If the network is not available, abort. We can't update the remote setting.
                 return;
-            }
-
-            // Force the dialog to be shown on updated sites
-            for (SiteModel site : siteStore.getSites()) {
-                if (TextUtils.isEmpty(site.getMobileEditor())) {
-                    AppPrefs.setShowGutenbergInfoPopupForTheNewPosts(site.getUrl(), true);
-                }
             }
 
             // Track and enable and  Gutenberg for all sites using a single network call. Ideally we would track this

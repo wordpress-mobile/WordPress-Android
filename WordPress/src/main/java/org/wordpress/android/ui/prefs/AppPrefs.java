@@ -123,8 +123,6 @@ public class AppPrefs {
         AVATAR_VERSION,
         GUTENBERG_DEFAULT_FOR_NEW_POSTS,
         USER_IN_GUTENBERG_ROLLOUT_GROUP,
-        SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
-        SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
         GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
@@ -772,26 +770,6 @@ public class AppPrefs {
         SharedPreferences.Editor editor = prefs().edit();
         editor.putStringSet(key.name(), newUrls);
         editor.apply();
-    }
-
-    public static boolean shouldShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL) {
-        return getShowGutenbergInfoPopupForTheNewPosts(
-                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2, siteURL);
-    }
-
-    public static void setShowGutenbergInfoPopupPhase2ForNewPosts(String siteURL, boolean show) {
-        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
-                siteURL, show);
-    }
-
-    public static boolean shouldShowGutenbergInfoPopupForTheNewPosts(String siteURL) {
-        return getShowGutenbergInfoPopupForTheNewPosts(
-                DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS, siteURL);
-    }
-
-    public static void setShowGutenbergInfoPopupForTheNewPosts(String siteURL, boolean show) {
-        setShowGutenbergInfoPopupForTheNewPosts(DeletablePrefKey.SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
-                siteURL, show);
     }
 
     public static boolean isGutenbergInfoPopupDisplayed(String siteURL) {
