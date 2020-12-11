@@ -1643,10 +1643,19 @@ public class EditPostActivity extends LocaleAwareActivity implements
             return;
         }
 
+        boolean showPopup = AppPrefs.shouldShowGutenbergInfoPopupForTheNewPosts(mSite.getUrl());
+        boolean showRolloutPopupPhase2 = AppPrefs.shouldShowGutenbergInfoPopupPhase2ForNewPosts(mSite.getUrl());
+
         if (TextUtils.isEmpty(mSite.getMobileEditor()) && !mIsNewPost) {
             SiteUtils.enableBlockEditor(mDispatcher, mSite);
             AnalyticsUtils.trackWithSiteDetails(Stat.EDITOR_GUTENBERG_ENABLED, mSite,
                     BlockEditorEnabledSource.ON_BLOCK_POST_OPENING.asPropertyMap());
+        }
+
+        if (showPopup) {
+            showGutenbergInformativeDialog();
+        } else if (showRolloutPopupPhase2) {
+            showGutenbergRolloutV2InformativeDialog();
         }
     }
 
