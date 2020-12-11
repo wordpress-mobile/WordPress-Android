@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
@@ -16,7 +15,7 @@ class ScanViewModel @Inject constructor(
     private val scanStatusService: ScanStatusService
 ) : ViewModel() {
     private var isStarted = false
-    private var lastScanState: State? = null
+    private var lastScanState: ScanStateModel.State? = null
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -46,9 +45,12 @@ class ScanViewModel @Inject constructor(
 
     private fun buildContentUiState(model: ScanStateModel): Content {
         val scanStateItem = when (model.state) {
-            State.IDLE -> model.threats?.let { ScanIdleState.ThreatsFound() } ?: ScanIdleState.ThreatsNotFound()
-            State.SCANNING -> ScanScanningState()
-            State.PROVISIONING, State.UNAVAILABLE, State.UNKNOWN -> ScanScanningState() // TODO: ashiagr filter out
+            ScanStateModel.State.IDLE ->
+                model.threats?.let { ScanIdleState.ThreatsFound() }
+                    ?: ScanIdleState.ThreatsNotFound()
+            ScanStateModel.State.SCANNING -> ScanScanningState()
+            ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
+                ScanScanningState() // TODO: ashiagr filter out
         }
         return Content(listOf(scanStateItem))
     }
