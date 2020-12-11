@@ -6,7 +6,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment
 import javax.inject.Inject
 
 class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progress_fragment) {
