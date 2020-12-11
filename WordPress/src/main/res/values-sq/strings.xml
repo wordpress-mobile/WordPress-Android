@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 16:26:01+0000
+Translation-Revision-Date: 2020-12-06 08:37:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Emër kartele</string>
+    <string name="gutenberg_native_file_block_settings">Rregullime blloku kartelash</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">S’u arrit të ngarkohen kartela.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">S’u arrit të ruhen kartela.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="gutenberg_native_edit_file">Përpunoni kartelën</string>
+    <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
+    <string name="gutenberg_native_choose_a_file">ZGJIDHNI NJË KARTELË</string>
+    <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
+    <string name="my_site_bottom_sheet_story_tag_new">E re</string>
+    <string name="my_site_btn_jetpack_settings">Rregullime Jetpack-u</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Biseda ndiqet</string>
+    <string name="reader_btn_follow_comments">Ndiqe bisedën</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">S’u bë dot shpajtimi nga komentet për këtë postim</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">S’u bë dot pajtimi te komentet për këtë postim</string>
+    <string name="reader_follow_comments_get_status_error">Gabim në sjellje gjendjeje pajtimi për këtë postim</string>
+    <string name="reader_follow_comments_unsubscribe_success">U shpajtua me sukses nga komentet</string>
+    <string name="reader_follow_comments_subscribe_success">U pajtua me sukses te komentet</string>
+    <string name="reader_follow_comments_bad_format_response">U mor përgjigje e pavlefshme</string>
+    <string name="reader_follow_comments_null_response">S’u mor përgjigje</string>
+    <string name="activity_log_activity_type_filter_clear">Spastroje</string>
+    <string name="activity_log_activity_type_filter_apply">Aplikoje</string>
     <string name="dialog_edit_story_unsupported_format_message">Një ose disa diapozitiva nuk janë shtuar te Artikulli juaj, ngaqë Artikujt nuk mbulojnë kartela GIF, hëpërhë. Ju lutemi, në vend të tyre, zgjidhni një figurë statike ose një sfond video.</string>
     <string name="dialog_edit_story_unsupported_format_title">Kartelat GIF nuk mbulohen</string>
     <string name="dialog_edit_story_unrecoverable_message">S’gjetëm dot te sajti median për këtë artikull.</string>
@@ -41,6 +63,7 @@ Language: sq_AL
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
     <string name="hpp_skip_button">Anashkaloje</string>
     <string name="hpp_choose_button">Zgjidhni</string>
+    <string name="hpp_subtitle">Zgjidhni skemën e parapëlqyer për faqen tuaj hyrëse. Mund ta përpunoni dhe përshtatni.</string>
     <string name="hpp_title">Zgjidhni një skemë</string>
     <string name="mlp_network_error_subtitle">Prekni &lt;code>Retry&lt;/code>, kur të jeni prapë të lidhur, ose krijoni një faqe të zbrazët duke përdorur butonin më poshtë.</string>
     <string name="mlp_network_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>

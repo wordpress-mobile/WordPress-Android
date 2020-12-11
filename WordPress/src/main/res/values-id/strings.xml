@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-04 08:54:10+0000
+Translation-Revision-Date: 2020-12-10 17:55:01+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nama file</string>
+    <string name="gutenberg_native_file_block_settings">Pengaturan blok Berkas</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Gagal mengunggah file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Gagal menyimpan file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_edit_file">Sunting file</string>
+    <string name="gutenberg_native_copy_file_url">Salin URL file</string>
+    <string name="gutenberg_native_choose_a_file">PILIH FILE</string>
+    <string name="new_site_creation_domain_header_title">Pilih domain</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Baru</string>
+    <string name="my_site_btn_jetpack_settings">Pengaturan Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Mengikuti Percakapan</string>
+    <string name="reader_btn_follow_comments">Ikuti Percakapan</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
+    <string name="reader_follow_comments_get_status_error">Terjadi error saat mengambil data status langganan untuk pos</string>
+    <string name="reader_follow_comments_unsubscribe_success">Berhasil berhenti berlangganan komentar</string>
+    <string name="reader_follow_comments_subscribe_success">Berhasil berlangganan komentar</string>
+    <string name="reader_follow_comments_bad_format_response">Respons yang diterima tidak valid</string>
+    <string name="reader_follow_comments_null_response">Tidak ada respons yang diterima</string>
+    <string name="activity_log_activity_type_filter_clear">Hapus</string>
+    <string name="activity_log_activity_type_filter_apply">Terapkan</string>
     <string name="dialog_edit_story_unsupported_format_message">Satu slide atau lebih belum ditambahkan ke Cerita Anda karena saat ini Cerita tidak mendukung file GIF. Sebagai gantinya, pilih gambar statis atau latar belakang video.</string>
     <string name="dialog_edit_story_unsupported_format_title">File GIF tidak didukung</string>
     <string name="dialog_edit_story_unrecoverable_message">Kami tidak dapat menemukan media untuk cerita ini pada situs.</string>
@@ -41,6 +63,7 @@ Language: id
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
     <string name="hpp_skip_button">Lewati</string>
     <string name="hpp_choose_button">Pilih</string>
+    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda dapat menyunting dan menyesuaikannya nanti.</string>
     <string name="hpp_title">Pilih desain</string>
     <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>

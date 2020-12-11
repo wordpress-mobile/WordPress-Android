@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-04 08:54:10+0000
+Translation-Revision-Date: 2020-12-07 21:43:39+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Dosya adı</string>
+    <string name="gutenberg_native_file_block_settings">Dosya blok ayarları</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Dosyaların yüklenmesi başarısız.\nSeçenekler için dokunun.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Dosyalar kaydedilemedi.\nSeçenekler için dokunun.</string>
+    <string name="gutenberg_native_edit_file">Dosyayı düzenle</string>
+    <string name="gutenberg_native_copy_file_url">Dosya adresini kopyala</string>
+    <string name="gutenberg_native_choose_a_file">DOSYA SEÇ</string>
+    <string name="new_site_creation_domain_header_title">Bir alan adı seçin</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Yeni</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack ayarları</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Sohbet takip ediliyor</string>
+    <string name="reader_btn_follow_comments">Sohbeti takip et</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
+    <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
+    <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
+    <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
+    <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
+    <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
+    <string name="activity_log_activity_type_filter_clear">Temizle</string>
+    <string name="activity_log_activity_type_filter_apply">Uygula</string>
     <string name="dialog_edit_story_unsupported_format_message">Öyküler şu anda GIF dosyalarını desteklemediği için bir veya daha fazla slayt öykünüze eklenmedi. Lütfen bunun yerine statik bir resim veya video arka planı seçin.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF dosyaları desteklenmez</string>
     <string name="dialog_edit_story_unrecoverable_message">Bu öykü için medyayı sitede bulamadık.</string>
@@ -41,6 +63,7 @@ Language: tr
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
     <string name="hpp_skip_button">Atla</string>
     <string name="hpp_choose_button">Seç</string>
+    <string name="hpp_subtitle">En sevdiğiniz ana sayfa düzenini seçin. Daha sonra özelleştirebilir ve değiştirebilirsiniz.</string>
     <string name="hpp_title">Bir tasarım seçin</string>
     <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
     <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
@@ -95,6 +118,7 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
+    <string name="reader_discover_empty_subtitle">Yeni bloglar keşfetmek için konular takip edin</string>
     <string name="reader_post_details_header_by_author_name">gönderen:</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>

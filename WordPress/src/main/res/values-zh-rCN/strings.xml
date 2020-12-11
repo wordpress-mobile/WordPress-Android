@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 11:51:24+0000
+Translation-Revision-Date: 2020-12-10 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_file_name">文件名</string>
+    <string name="gutenberg_native_file_block_settings">文件区块设置</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">无法上传文件。\n请轻点以查看选项。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">无法保存文件。\n请轻点以查看选项。</string>
+    <string name="gutenberg_native_edit_file">编辑文件</string>
+    <string name="gutenberg_native_copy_file_url">复制文件 URL</string>
+    <string name="gutenberg_native_choose_a_file">选择文件</string>
+    <string name="new_site_creation_domain_header_title">选择域</string>
+    <string name="my_site_bottom_sheet_story_tag_new">新建</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 设置</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">已关注对话</string>
+    <string name="reader_btn_follow_comments">关注对话</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">无法取消订阅本博客的评论</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">无法订阅本博客的评论</string>
+    <string name="reader_follow_comments_get_status_error">获取博客订阅状态时出错</string>
+    <string name="reader_follow_comments_unsubscribe_success">已成功取消订阅评论</string>
+    <string name="reader_follow_comments_subscribe_success">已成功订阅评论</string>
+    <string name="reader_follow_comments_bad_format_response">收到无效响应</string>
+    <string name="reader_follow_comments_null_response">未收到任何响应</string>
+    <string name="activity_log_activity_type_filter_clear">清除</string>
+    <string name="activity_log_activity_type_filter_apply">应用</string>
     <string name="dialog_edit_story_unsupported_format_message">您的故事没有添加一张或多张幻灯片，因为故事目前不支持GIF文件。 请选择静态图片或视频背景。</string>
     <string name="dialog_edit_story_unsupported_format_title">不支持GIF文件</string>
     <string name="dialog_edit_story_unrecoverable_message">我们在网站上找不到该故事的媒体。</string>
@@ -41,6 +63,7 @@ Language: zh_CN
     <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
     <string name="hpp_skip_button">跳过</string>
     <string name="hpp_choose_button">选择</string>
+    <string name="hpp_subtitle">选择您喜欢的主页布局。 您可以稍后对其进行编辑和自定义。</string>
     <string name="hpp_title">选择设计</string>
     <string name="mlp_network_error_subtitle">重新上线后，点击“重试”，或使用下面的按钮创建空白页。</string>
     <string name="mlp_network_error_title">离线时布局不可用</string>

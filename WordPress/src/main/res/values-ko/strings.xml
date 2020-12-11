@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-01 02:14:33+0000
+Translation-Revision-Date: 2020-12-07 03:20:33+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
@@ -63,6 +63,7 @@ Language: ko_KR
     <string name="gutenberg_native_scrollable_block_menu_closed">스크롤 할 수 있는 블록 메뉴를 닫았습니다.</string>
     <string name="hpp_skip_button">건너뛰기</string>
     <string name="hpp_choose_button">선택하기</string>
+    <string name="hpp_subtitle">좋아하는 홈페이지 레이아웃을 고르세요. 사용자 정의하거나 나중에 바꿀 수 있습니다.</string>
     <string name="hpp_title">디자인 선택하기</string>
     <string name="mlp_network_error_subtitle">온라인으로 돌아가면 재시도를 누르거나 아래의 단추를 이용하여 빈 페이지를 만드세요.</string>
     <string name="mlp_network_error_title">레이아웃은 오프라인 중에 사용할 수 없습니다</string>

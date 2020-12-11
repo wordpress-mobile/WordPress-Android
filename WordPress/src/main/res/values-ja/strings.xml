@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-03 09:54:09+0000
+Translation-Revision-Date: 2020-12-10 14:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_file_name">ファイル名</string>
+    <string name="gutenberg_native_file_block_settings">ファイルブロック設定</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">ファイルの保存に失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_edit_file">ファイルを編集</string>
+    <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
+    <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
+    <string name="new_site_creation_domain_header_title">ドメインを選択</string>
+    <string name="my_site_bottom_sheet_story_tag_new">新規</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">フォロー中の会話</string>
+    <string name="reader_btn_follow_comments">会話をフォローする</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">この投稿のコメントをフォロー解除できませんでした</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">この投稿のコメントをフォローできませんでした</string>
+    <string name="reader_follow_comments_get_status_error">投稿の購読ステータスを取得中にエラーが発生しました</string>
+    <string name="reader_follow_comments_unsubscribe_success">コメントの購読を正常に解除しました</string>
+    <string name="reader_follow_comments_subscribe_success">コメントの購読を正常に登録しました</string>
+    <string name="reader_follow_comments_bad_format_response">無効な応答を受信しました</string>
+    <string name="reader_follow_comments_null_response">応答がありませんでした</string>
+    <string name="activity_log_activity_type_filter_clear">クリア</string>
+    <string name="activity_log_activity_type_filter_apply">適用</string>
     <string name="dialog_edit_story_unsupported_format_message">1つ以上のスライドがストーリーに追加されていません。現在、ストーリーでは GIF ファイルがサポートされていないためです。 代わりに静的画像または動画の背景を選択してください。</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF ファイルはサポートされていません</string>
     <string name="dialog_edit_story_unrecoverable_message">このストーリーのメディアがサイトにありませんでした。</string>
@@ -41,6 +63,7 @@ Language: ja_JP
     <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
     <string name="hpp_skip_button">スキップ</string>
     <string name="hpp_choose_button">選択</string>
+    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後で編集およびカスタマイズできます。</string>
     <string name="hpp_title">デザインを選択</string>
     <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
     <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
