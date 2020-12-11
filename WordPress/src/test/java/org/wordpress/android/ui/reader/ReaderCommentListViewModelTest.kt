@@ -75,17 +75,28 @@ class ReaderCommentListViewModelTest : BaseUnitTest() {
 
     @Test
     fun `onSwipeToRefresh updates follow conversation status`() = test {
-        val stateChanged = FollowStateChanged(blogId, postId, true)
+        var stateChanged = FollowStateChanged(blogId, postId, true, true)
         doAnswer {
             followStatusUpdate.postValue(stateChanged)
         }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
 
         setupObserversAndStart()
 
+        requireNotNull(uiState).let {
+            assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.animate).isFalse()
+        }
+
+        stateChanged = FollowStateChanged(blogId, postId, true, false)
+        doAnswer {
+            followStatusUpdate.postValue(stateChanged)
+        }.whenever(followCommentsHandler).handleFollowCommentsStatusRequest(anyLong(), anyLong(), anyBoolean())
+
         viewModel.onSwipeToRefresh()
 
         requireNotNull(uiState).let {
             assertThat(it.type).isEqualTo(VISIBLE_WITH_STATE)
+            assertThat(it.animate).isTrue()
         }
     }
 
