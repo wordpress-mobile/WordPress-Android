@@ -24,7 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_state_icon"
-        tools:text="Don't worry about a thing" />
+        tools:text="@string/scan_idle_no_threats_found_title" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/scan_state_description"
@@ -34,6 +34,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_state_title"
-        tools:text="The last Jetpack scan ran 7 hours ago and everything looked great. Run a manual scan now or wait for Jetpack to scan your site later today." />
+        tools:text="@string/scan_idle_no_threats_found_title" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
