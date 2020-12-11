@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-26 16:54:09+0000
+Translation-Revision-Date: 2020-12-07 21:43:39+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Dosya adı</string>
+    <string name="gutenberg_native_file_block_settings">Dosya blok ayarları</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Dosyaların yüklenmesi başarısız.\nSeçenekler için dokunun.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Dosyalar kaydedilemedi.\nSeçenekler için dokunun.</string>
+    <string name="gutenberg_native_edit_file">Dosyayı düzenle</string>
+    <string name="gutenberg_native_copy_file_url">Dosya adresini kopyala</string>
+    <string name="gutenberg_native_choose_a_file">DOSYA SEÇ</string>
+    <string name="new_site_creation_domain_header_title">Bir alan adı seçin</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Yeni</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack ayarları</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Sohbet takip ediliyor</string>
+    <string name="reader_btn_follow_comments">Sohbeti takip et</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
+    <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
+    <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
+    <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
+    <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
+    <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
+    <string name="activity_log_activity_type_filter_clear">Temizle</string>
+    <string name="activity_log_activity_type_filter_apply">Uygula</string>
+    <string name="dialog_edit_story_unsupported_format_message">Öyküler şu anda GIF dosyalarını desteklemediği için bir veya daha fazla slayt öykünüze eklenmedi. Lütfen bunun yerine statik bir resim veya video arka planı seçin.</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF dosyaları desteklenmez</string>
+    <string name="dialog_edit_story_unrecoverable_message">Bu öykü için medyayı sitede bulamadık.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Öykü düzenlenemiyor</string>
+    <string name="dialog_edit_story_unavailable_message">Bu öykü için medya yüklenemiyor. İnternet bağlantınızı kontrol edin ve bir süre sonra tekrar deneyin.</string>
+    <string name="dialog_edit_story_unavailable_title">Öykü düzenlenemiyor</string>
+    <string name="dialog_edit_story_limited_message">Bu öykü farklı bir cihazda düzenlendi ve belirli nesneleri düzenleme yeteneği sınırlı olabilir.</string>
+    <string name="dialog_edit_story_limited_title">Sınırlı Öykü Düzenleme</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Ortam kaldırıldı. Öykünüzü düzenlemeyi deneyin.</string>
     <string name="color_picker_label_background">Arka plan</string>
     <string name="color_picker_label_text">Metin</string>
     <string name="dialog_discard_story_ok_button_edit">Vazgeç</string>
@@ -32,7 +63,7 @@ Language: tr
     <string name="gutenberg_native_scrollable_block_menu_closed">Kaydırılabilir blok menüsü kapandı.</string>
     <string name="hpp_skip_button">Atla</string>
     <string name="hpp_choose_button">Seç</string>
-    <string name="hpp_subtitle">Favori ana sayfa düzeninizi seçin. Daha sonra özelleştirebilir ya da değiştirebilirsiniz.</string>
+    <string name="hpp_subtitle">En sevdiğiniz ana sayfa düzenini seçin. Daha sonra özelleştirebilir ve değiştirebilirsiniz.</string>
     <string name="hpp_title">Bir tasarım seçin</string>
     <string name="mlp_network_error_subtitle">Tekrar çevrimiçi olduğunuzda yeniden dene seçeneğine dokunun veya aşağıdaki düğmeyi kullanarak boş bir sayfa oluşturun.</string>
     <string name="mlp_network_error_title">Çevrimdışıyken düzenler kullanılamaz</string>
@@ -87,6 +118,7 @@ Language: tr
     <string name="photo_picker_wordpress_media_library">WordPress Ortam Kütüphanesi\'nden seçin</string>
     <string name="reader_label_toolbar_back">Geri</string>
     <string name="reader_discover_empty_button_text">Başlayın</string>
+    <string name="reader_discover_empty_subtitle">Yeni bloglar keşfetmek için konular takip edin</string>
     <string name="reader_post_details_header_by_author_name">gönderen:</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Bu yönlendiren, istenmeyen posta olarak işaretlenemez</string>
     <string name="stats_referrer_popup_unmark_as_spam">İstenmeyen posta işaretini kaldır</string>
@@ -296,7 +328,6 @@ Language: tr
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Başlangıç düzenini deneyin</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
-    <string name="gutenberg_native_insert_mention">Bahsetme ekle</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Uygun seçenekleri içeren Eylem Sayfasını açmak için iki kez dokunun</string>
     <string name="site_settings_posts_page">Yazılar sayfası</string>
@@ -463,7 +494,6 @@ Language: tr
     <string name="post_list_tab_published_posts">Yayımlandı</string>
     <string name="sharing_facebook_account_must_have_pages">Facebook bağlantısı hiçbir sayfa bulamıyor. Duyuru, Facebook profillerine bağlanamaz, yalnızca yayınlanan sayfalara bağlanabilir.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Bağlı değil</string>
-    <string name="my_site_select_domains_page_title">Site adresi</string>
     <string name="notifications_tab_title_likes">Beğeniler</string>
     <string name="notifications_tab_title_follows">Takipçiler</string>
     <string name="notifications_tab_title_comments">Yorumlar</string>
@@ -961,7 +991,6 @@ Language: tr
     <string name="cancel_new_site_wizard_content_description">Site Oluşturma Sihirbazını İptal Et</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Yeni sitenizi oluşturuyoruz</string>
     <string name="new_site_creation_domain_header_subtitle">Bu, insanların sizi internette bulacakları yerdir.</string>
-    <string name="new_site_creation_domain_header_title">Siteniz için bir alan adı seçin</string>
     <string name="new_site_creation_empty_domain_list_message">Aramanızla eşleşen hiçbir adres bulunamadı</string>
     <string name="site_creation_error_generic_subtitle">Sunucu ile iletişim kurulurken hata oluştu, lütfen tekrar deneyin</string>
     <string name="site_creation_error_generic_title">Bir hata oluştu</string>
@@ -1409,7 +1438,6 @@ Language: tr
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 dosya ile 1 sayfa karşıya yüklenmedi</string>
     <string name="untitled_in_parentheses">(İsimsiz)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 dosya ile 1 yazı karşıya yüklenmedi</string>
     <string name="media_file_posts_plural_mixed_not_uploaded_one_file">1 dosya ile %1$d yazı karşıya yüklenmedi</string>
     <string name="media_file_pages_and_posts_mixed_not_uploaded_one_file">1 dosya ile %1$d yazı/sayfa karşıya yüklenmedi</string>
@@ -1703,10 +1731,6 @@ Language: tr
     <string name="post_status_draft">Taslak</string>
     <string name="post_status_pending_review">İnceleme bekliyor</string>
     <string name="post_status_publish_post">Yayımlanmış</string>
-    <string name="change_location">Konumu değiştir</string>
-    <string name="remove_location">Konumu kaldır</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Konum seçicisi açılamıyor, Google Play servisleri uygun durumda değil</string>
-    <string name="post_settings_location">Konum</string>
     <string name="now">Şimdi</string>
     <string name="post_settings_password_dialog_hint">Sadee parolaya sahip olanlar bu yazıyı görüntüleyebilirler</string>
     <string name="post_settings_excerpt_dialog_hint">Özetler içeriğinizin içinden özel olarak el ile hazırlanmış kısa içeriklerdir.</string>
