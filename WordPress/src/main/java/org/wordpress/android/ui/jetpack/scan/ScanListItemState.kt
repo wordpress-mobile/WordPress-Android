@@ -7,13 +7,13 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class ScanListItemState(val type: ViewType) {
-    open fun longId(): Long = hashCode().toLong()
+    fun longId() = hashCode().toLong()
 
     // TODO: ashiagr fine-tune states, dynamic texts, add button states
     sealed class ScanState : ScanListItemState(SCAN_STATE) {
-        @DrawableRes open val scanIcon: Int = R.drawable.ic_scan_scanning
-        open val scanTitle: UiString = UiStringRes(R.string.scan_scanning_title)
-        open val scanDescription: UiString = UiStringRes(R.string.scan_scanning_description)
+        abstract val scanIcon: Int
+        abstract val scanTitle: UiString
+        abstract val scanDescription: UiString
 
         sealed class ScanIdleState : ScanState() {
             data class ThreatsFound(
