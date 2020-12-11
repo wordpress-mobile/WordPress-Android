@@ -4060,4 +4060,20 @@
             column="28"/>
     </issue>
 
+    <issue
+        id="ResourceType"
+        severity="Error"
+        message="Expected a color resource id (`R.color.`) but received an RGB integer"
+        category="Correctness"
+        priority="7"
+        summary="Wrong Resource Type"
+        explanation="Ensures that resource id&apos;s passed to APIs are of the right type; for example, calling `Resources.getColor(R.string.name)` is wrong."
+        errorLine1="        return new SwipeToRefreshHelper(swipeRefreshLayout, listener, backgroundColor, primaryProgressColor,"
+        errorLine2="                                                                      ~~~~~~~~~~~~~~~">
+        <location
+            file="../WordPress/src/main/java/org/wordpress/android/util/WPSwipeToRefreshHelper.java"
+            line="33"
+            column="71"/>
+    </issue>
+
 </issues>
