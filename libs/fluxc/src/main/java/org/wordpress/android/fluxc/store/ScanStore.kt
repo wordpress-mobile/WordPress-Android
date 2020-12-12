@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
+import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 class ScanStore @Inject constructor(
     private val scanRestClient: ScanRestClient,
     private val scanSqlUtils: ScanSqlUtils,
+    private val threatSqlUtils: ThreatSqlUtils,
     private val coroutineEngine: CoroutineEngine,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
@@ -61,6 +63,7 @@ class ScanStore @Inject constructor(
         } else {
             if (payload.scanStateModel != null) {
                 scanSqlUtils.replaceScanState(payload.site, payload.scanStateModel)
+                threatSqlUtils.replaceThreatsForSite(payload.site, payload.scanStateModel.threats ?: emptyList())
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
