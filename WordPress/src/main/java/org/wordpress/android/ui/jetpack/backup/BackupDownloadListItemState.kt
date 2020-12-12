@@ -58,7 +58,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         ) : IconState()
     }
 
-    sealed class ActionButtonState() : BackupDownloadListItemState(ACTION_BUTTON) {
+    sealed class ActionButtonState : BackupDownloadListItemState(ACTION_BUTTON) {
         abstract val text: UiString
         abstract val contentDescription: UiString
 
