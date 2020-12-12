@@ -53,16 +53,19 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
 
         data class DetailsIconState(
             @DrawableRes override val icon: Int = R.drawable.ic_get_app_24dp,
-            override val contentDescription: UiString = UiStringRes(R.string.backup_download_details_icon_content_description)
+            override val contentDescription: UiString =
+                    UiStringRes(R.string.backup_download_details_icon_content_description)
         ) : IconState()
     }
 
     sealed class ActionButtonState() : BackupDownloadListItemState(ACTION_BUTTON) {
         abstract val text: UiString
         abstract val contentDescription: UiString
+
         data class DetailsActionButtonState(
             override val text: UiString = UiStringRes(R.string.backup_download_details_action_button),
-            override val contentDescription: UiString = UiStringRes(R.string.backup_download_details_action_button_content_description),
+            override val contentDescription: UiString =
+                    UiStringRes(R.string.backup_download_details_action_button_content_description),
             val onClick: () -> Unit
         ) : ActionButtonState()
     }
@@ -71,7 +74,8 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         val availableItemType: BackupAvailableItemType,
         val label: UiString,
         val checked: Boolean = false,
-        val onClick: (() -> Unit)) : BackupDownloadListItemState(CHECKBOX)
+        val onClick: (() -> Unit)
+    ) : BackupDownloadListItemState(CHECKBOX)
 
     enum class ViewType(val id: Int) {
         IMAGE(0),
