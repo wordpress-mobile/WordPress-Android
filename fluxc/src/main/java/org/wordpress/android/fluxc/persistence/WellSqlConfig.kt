@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 128
+        return 129
     }
 
     override fun getDbName(): String {
@@ -1380,6 +1380,21 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "INITIAL BOOLEAN NOT NULL," +
                                 "REASON TEXT, " +
                                 "HAS_CLOUD BOOLEAN NOT NULL)"
+                    )
+                }
+                128 -> migrate(version) {
+                    db.execSQL(
+                        "CREATE TABLE ThreatModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
+                                "THREAT_ID INTEGER," +
+                                "SIGNATURE TEXT NOT NULL," +
+                                "DESCRIPTION TEXT NOT NULL," +
+                                "STATUS TEXT NOT NULL," +
+                                "FIRST_DETECTED INTEGER," +
+                                "FIXED_ON INTEGER," +
+                                "FIXABLE_FILE TEXT," +
+                                "FIXABLE_FIXER TEXT," +
+                                "FIXABLE_TARGET TEXT)"
                     )
                 }
             }
