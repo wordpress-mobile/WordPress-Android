@@ -13,7 +13,6 @@ import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.Anal
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.AnalyticsFollowCommentsGenericError.NO_NETWORK
 import org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.FollowCommentsState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider
-import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult.Failure
 import org.wordpress.android.ui.reader.utils.PostSubscribersApiCallsProvider.PostSubscribersCallResult.Success
 import org.wordpress.android.ui.utils.UiString
@@ -22,7 +21,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
-import kotlin.coroutines.suspendCoroutine
 
 class ReaderCommentsFollowUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -44,16 +42,12 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
             } else {
-                val canFollowComments: Boolean = suspendCoroutine { continuation ->
-                    postSubscribersApiCallsProvider.getCanFollowComments(blogId, continuation)
-                }
+                val canFollowComments = postSubscribersApiCallsProvider.getCanFollowComments(blogId)
 
                 if (!canFollowComments) {
                     emit(FollowCommentsState.FollowCommentsNotAllowed)
                 } else {
-                    val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
-                        postSubscribersApiCallsProvider.getMySubscriptionToPost(blogId, postId, continuation)
-                    }
+                    val status = postSubscribersApiCallsProvider.getMySubscriptionToPost(blogId, postId)
 
                     when (status) {
                         is Success -> {
@@ -90,12 +84,10 @@ class ReaderCommentsFollowUseCase @Inject constructor(
             emit(FollowCommentsState.Failure(blogId, postId, UiStringRes(R.string.error_network_connection)))
             properties.addFollowActionResult(ERROR, NO_NETWORK.errorMessage)
         } else {
-            val status: PostSubscribersCallResult = suspendCoroutine { continuation ->
-                if (subscribe) {
-                    postSubscribersApiCallsProvider.subscribeMeToPost(blogId, postId, continuation)
-                } else {
-                    postSubscribersApiCallsProvider.unsubscribeMeFromPost(blogId, postId, continuation)
-                }
+            val status = if (subscribe) {
+                postSubscribersApiCallsProvider.subscribeMeToPost(blogId, postId)
+            } else {
+                postSubscribersApiCallsProvider.unsubscribeMeFromPost(blogId, postId)
             }
 
             when (status) {
