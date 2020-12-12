@@ -61,7 +61,7 @@ sealed class ThreatModel {
         }
     }
 
-    enum class ThreatStatus(val value: String?) {
+    enum class ThreatStatus(val value: String) {
         FIXED("fixed"),
         IGNORED("ignored"),
         CURRENT("current"),
