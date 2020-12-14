@@ -1,0 +1,5 @@
+16.3:
+Wir freuen uns sehr, mehrere neue Funktionen für die WordPress-Mobil-App vorzustellen:
+- Vollbild-Diashows von Fotos oder Videos für WP.com- und Jetpack-Websites;
+- Die Option, bei Erstellung einer WP.com-Website ein Design für die Startseite auszuwählen;
+- Und einen Button zum Folgen/Nicht mehr folgen für die Kommentarfunktion einer Website (nicht unterstützt für selbst gehostete Websites, die nicht mit Jetpack verbunden sind).
