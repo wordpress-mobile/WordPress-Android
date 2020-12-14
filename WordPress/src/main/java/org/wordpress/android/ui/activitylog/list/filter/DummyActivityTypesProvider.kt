@@ -13,10 +13,15 @@ class DummyActivityTypesProvider @Inject constructor() {
         delay(1000)
         return DummyAvailableActivityTypesResponse(
                 false, listOf(
-                DummyActivityType(1, "Dummy Users"),
-                DummyActivityType(2, "Dummy Backup"),
-                DummyActivityType(3, "Dummy Comments"),
-                DummyActivityType(4, "Dummy Posts")
+                DummyActivityType(1, "Users"),
+                DummyActivityType(2, "Backup"),
+                DummyActivityType(3, "Comments"),
+                DummyActivityType(4, "Posts"),
+                DummyActivityType(5, "Pages"),
+                DummyActivityType(6, "Plugins"),
+                DummyActivityType(7, "Scans"),
+                DummyActivityType(8, "Media"),
+                DummyActivityType(9, "Widgets")
         )
         )
     }
@@ -26,5 +31,9 @@ class DummyActivityTypesProvider @Inject constructor() {
         val activityTypes: List<DummyActivityType> = listOf()
     )
 
-    data class DummyActivityType(val id: Int, val name: String)
+    data class DummyActivityType(val id: Int, val name: String) {
+        override fun toString(): String {
+            return "$name ($id) (dummy)"
+        }
+    }
 }
