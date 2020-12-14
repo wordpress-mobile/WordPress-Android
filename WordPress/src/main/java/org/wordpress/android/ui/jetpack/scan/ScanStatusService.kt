@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.UNKNOWN
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
+import org.wordpress.android.fluxc.store.ThreatStore
 import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.ScanFeatureConfig
 import javax.inject.Inject
@@ -22,6 +23,7 @@ import javax.inject.Singleton
 class ScanStatusService
 @Inject constructor(
     private val scanStore: ScanStore,
+    private val threatStore: ThreatStore,
     private val scanFeatureConfig: ScanFeatureConfig,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
@@ -66,10 +68,11 @@ class ScanStatusService
     }
 
     private fun reloadScanState(): Boolean {
-        site?.let {
-            val state = scanStore.getScanStateForSite(it)
-            state?.let {
-                updateScanState(state)
+        site?.let { site ->
+            val state = scanStore.getScanStateForSite(site)
+            state?.let { scanState ->
+                val threatsForSite = threatStore.getThreatsForSite(site)
+                updateScanState(scanState.copy(threats = threatsForSite.takeIf { it.isNotEmpty() }))
                 return true
             }
         }
