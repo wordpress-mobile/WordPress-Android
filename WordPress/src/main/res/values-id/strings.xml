@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-27 10:54:08+0000
+Translation-Revision-Date: 2020-12-10 17:55:01+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nama file</string>
+    <string name="gutenberg_native_file_block_settings">Pengaturan blok Berkas</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Gagal mengunggah file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Gagal menyimpan file.\nKetuk untuk melihat pilihan.</string>
+    <string name="gutenberg_native_edit_file">Sunting file</string>
+    <string name="gutenberg_native_copy_file_url">Salin URL file</string>
+    <string name="gutenberg_native_choose_a_file">PILIH FILE</string>
+    <string name="new_site_creation_domain_header_title">Pilih domain</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Baru</string>
+    <string name="my_site_btn_jetpack_settings">Pengaturan Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Mengikuti Percakapan</string>
+    <string name="reader_btn_follow_comments">Ikuti Percakapan</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
+    <string name="reader_follow_comments_get_status_error">Terjadi error saat mengambil data status langganan untuk pos</string>
+    <string name="reader_follow_comments_unsubscribe_success">Berhasil berhenti berlangganan komentar</string>
+    <string name="reader_follow_comments_subscribe_success">Berhasil berlangganan komentar</string>
+    <string name="reader_follow_comments_bad_format_response">Respons yang diterima tidak valid</string>
+    <string name="reader_follow_comments_null_response">Tidak ada respons yang diterima</string>
+    <string name="activity_log_activity_type_filter_clear">Hapus</string>
+    <string name="activity_log_activity_type_filter_apply">Terapkan</string>
+    <string name="dialog_edit_story_unsupported_format_message">Satu slide atau lebih belum ditambahkan ke Cerita Anda karena saat ini Cerita tidak mendukung file GIF. Sebagai gantinya, pilih gambar statis atau latar belakang video.</string>
+    <string name="dialog_edit_story_unsupported_format_title">File GIF tidak didukung</string>
+    <string name="dialog_edit_story_unrecoverable_message">Kami tidak dapat menemukan media untuk cerita ini pada situs.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Tidak dapat menyunting Cerita</string>
+    <string name="dialog_edit_story_unavailable_message">Tidak dapat memuat media untuk cerita ini. Periksa koneksi internet Anda dan coba lagi nanti.</string>
+    <string name="dialog_edit_story_unavailable_title">Tidak dapat menyunting Cerita</string>
+    <string name="dialog_edit_story_limited_message">Cerita ini disunting pada perangkat yang berbeda dan kemampuan untuk mengedit objek tertentu mungkin terbatas.</string>
+    <string name="dialog_edit_story_limited_title">Penyuntingan Cerita Terbatas</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media telah dihapus. Coba sunting Cerita Anda.</string>
     <string name="color_picker_label_background">Latar Belakang</string>
     <string name="color_picker_label_text">Teks</string>
     <string name="dialog_discard_story_ok_button_edit">Batal</string>
@@ -32,7 +63,7 @@ Language: id
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu blok yang dapat digulir tertutup.</string>
     <string name="hpp_skip_button">Lewati</string>
     <string name="hpp_choose_button">Pilih</string>
-    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda selalu dapat menyesuaikan atau mengubahnya nanti.</string>
+    <string name="hpp_subtitle">Pilih tata letak halaman beranda favorit Anda. Anda dapat menyunting dan menyesuaikannya nanti.</string>
     <string name="hpp_title">Pilih desain</string>
     <string name="mlp_network_error_subtitle">Ketuk coba lagi setelah Anda kembali online atau buat halaman kosong dengan tombol di bawah ini.</string>
     <string name="mlp_network_error_title">Tata letak tidak tersedia saat offline</string>
@@ -295,7 +326,6 @@ Language: id
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
     <string name="gutenberg_native_try_a_starter_layout">Coba tampilan pengantar</string>
-    <string name="gutenberg_native_insert_mention">Sertakan penyebutan</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ketuk dua kali untuk membuka Lembar Bawah dengan opsi yang tersedia</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ketuk dua kali untuk membuka Lembar Tindakan dengan opsi yang tersedia</string>
     <string name="pages_cannot_be_started">Saat ini kami tidak dapat membuka halaman. Harap coba lagi nanti</string>
@@ -462,7 +492,6 @@ Language: id
     <string name="post_list_tab_published_posts">Dipublikasikan</string>
     <string name="sharing_facebook_account_must_have_pages">Koneksi Facebook tidak dapat menemukan Halaman apa pun. Publikasikan tidak dapat terhubung ke Profil Facebook, hanya Halaman yang dipublikasikan.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Tidak Terhubung</string>
-    <string name="my_site_select_domains_page_title">Alamat Situs</string>
     <string name="notifications_tab_title_likes">Suka</string>
     <string name="notifications_tab_title_follows">Mengikuti</string>
     <string name="notifications_tab_title_comments">Komentar</string>
@@ -960,7 +989,6 @@ Language: id
     <string name="new_site_creation_create_site_button">Buat Situs</string>
     <string name="new_site_creation_search_domain_input_hint">Cari Domain</string>
     <string name="new_site_creation_domain_header_subtitle">Di sinilah orang akan menemukan Anda di internet.</string>
-    <string name="new_site_creation_domain_header_title">Pilih nama domain untuk situs Anda</string>
     <string name="new_site_creation_empty_domain_list_message">Tidak ada alamat yang cocok dengan pencarian Anda</string>
     <string name="site_creation_error_generic_subtitle">Terjadi error saat berkomunikasi dengan server, harap coba lagi</string>
     <string name="site_creation_error_generic_title">Ada masalah</string>
@@ -1411,7 +1439,6 @@ Language: id
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 pos dengan 1 file belum diunggah</string>
     <string name="untitled_in_parentheses">(Tidak Berjudul)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Buat situs</string>
     <string name="notification_site_creation_created">Ketuk untuk melanjutkan.</string>
     <string name="notification_site_creation_title_success">Situs telah dibuat!</string>
@@ -1701,10 +1728,6 @@ Language: id
     <string name="post_status_draft">Konsep</string>
     <string name="post_status_pending_review">Menunggu peninjauan</string>
     <string name="post_status_publish_post">Publikasikan</string>
-    <string name="change_location">Ubah Lokasi</string>
-    <string name="remove_location">Hapus Lokasi</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Tidak dapat membuka Pemilih Lokasi, Layanan Google Play tidak tersedia</string>
-    <string name="post_settings_location">Lokasi</string>
     <string name="now">Sekarang</string>
     <string name="post_settings_password_dialog_hint">Hanya yang mengetahui kata sandi ini yang dapat melihat pos ini</string>
     <string name="post_settings_excerpt_dialog_hint">Kutipan merupakan ringkasan pilihan opsional dari konten Anda.</string>
