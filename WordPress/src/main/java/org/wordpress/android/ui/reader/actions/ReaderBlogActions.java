@@ -29,7 +29,6 @@ import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 
 import java.net.HttpURLConnection;
-import java.net.URI;
 import java.util.Map;
 
 public class ReaderBlogActions {
@@ -173,12 +172,19 @@ public class ReaderBlogActions {
                 // note we attempt to follow even when the look up fails (blogInfo = null) because that
                 // endpoint doesn't perform feed discovery, whereas the endpoint to follow a feed does
                 long feedIdToFollow = blogInfo != null ? blogInfo.feedId : 0;
-                String feedUrlToFollow = (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
-                internalFollowFeed(
-                        feedIdToFollow,
-                        feedUrlToFollow,
-                        true,
-                        actionListener);
+
+                if (feedIdToFollow != 0) {
+                    // when possible we will try to follow feed by it's ID
+                    followFeedById(feedIdToFollow, true, actionListener);
+                } else {
+                    String feedUrlToFollow =
+                            (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
+                    internalFollowFeed(
+                            feedIdToFollow,
+                            feedUrlToFollow,
+                            true,
+                            actionListener);
+                }
             }
         });
     }
@@ -205,19 +211,10 @@ public class ReaderBlogActions {
             AnalyticsTracker.track(AnalyticsTracker.Stat.READER_BLOG_UNFOLLOWED);
         }
 
-        // site URL in the subscription path needs to start with http://www. to cover all the cases
-        String subscriptionUrlHost = URI.create(feedUrl).getHost();
-        String subscriptionUrl;
-        if (subscriptionUrlHost.startsWith("www.")) {
-            subscriptionUrl = "http://" + subscriptionUrlHost;
-        } else {
-            subscriptionUrl = "http://www." + subscriptionUrlHost;
-        }
-
         final String actionName = (isAskingToFollow ? "follow" : "unfollow");
         final String path = "read/following/mine/"
                             + (isAskingToFollow ? "new?source=android&url=" : "delete?url=")
-                            + UrlUtils.urlEncode(subscriptionUrl);
+                            + UrlUtils.urlEncode(feedUrl);
 
         com.wordpress.rest.RestRequest.Listener listener = new RestRequest.Listener() {
             @Override
