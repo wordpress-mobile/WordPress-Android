@@ -20,7 +20,7 @@ class ReaderRecommendedBlogsCardViewHolder(
 
     init {
         recommended_blogs.adapter = recommendedBlogsAdapter
-        parentView.context.getDrawable(R.drawable.discover_list_divider)?.let {
+        parentView.context.getDrawable(R.drawable.default_list_divider)?.let {
             recommended_blogs.addItemDivider(it)
         } ?: AppLog.w(AppLog.T.READER, "Discover list divider null")
     }
