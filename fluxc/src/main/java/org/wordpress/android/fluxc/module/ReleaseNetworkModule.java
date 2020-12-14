@@ -10,6 +10,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import org.wordpress.android.fluxc.Dispatcher;
+import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper;
 import org.wordpress.android.fluxc.network.RetryOnRedirectBasicNetwork;
 import org.wordpress.android.fluxc.network.HTTPAuthManager;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
@@ -40,6 +41,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient;
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.ThreatRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient;
@@ -220,10 +222,23 @@ public class ReleaseNetworkModule {
     public ScanRestClient provideScanRestClient(Context appContext, Dispatcher dispatcher,
                                                 @Named("regular") RequestQueue requestQueue,
                                                 AccessToken token, UserAgent userAgent,
-                                                WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ScanRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                ThreatMapper threatMapper) {
+        return new ScanRestClient(wpComGsonRequestBuilder, threatMapper, dispatcher, appContext, requestQueue,
                 token, userAgent);
     }
+
+    @Singleton
+    @Provides
+    public ThreatRestClient provideThreatRestClient(Context appContext, Dispatcher dispatcher,
+                                                @Named("regular") RequestQueue requestQueue,
+                                                AccessToken token, UserAgent userAgent,
+                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                ThreatMapper threatMapper) {
+        return new ThreatRestClient(wpComGsonRequestBuilder, threatMapper, dispatcher, appContext, requestQueue,
+                token, userAgent);
+    }
+
 
     @Singleton
     @Provides
