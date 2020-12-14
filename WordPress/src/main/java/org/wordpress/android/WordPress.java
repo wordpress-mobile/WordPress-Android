@@ -242,6 +242,89 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         return mBitmapCache;
     }
 
+    private void asyncInit(long startDate) {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                AppLog.i(T.UTILS, "init-measure STARTING ASYNC INIT()" + (SystemClock.elapsedRealtime() - startDate));
+                initWpDb();
+                enableHttpResponseCache(mContext);
+
+                AppRatingDialog.INSTANCE.init(mContext);
+
+                // EventBus setup
+                EventBus.TAG = "WordPress-EVENT";
+                EventBus.builder()
+                        .logNoSubscriberMessages(false)
+                        .sendNoSubscriberEvent(false)
+                        .throwSubscriberException(true)
+                        .installDefaultEventBus();
+
+
+                RestClientUtils.setUserAgent(getUserAgent());
+
+                mZendeskHelper.setupZendesk(mContext, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
+                        BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
+
+                // initialize our ApplicationLifecycleMonitor, which is the App's LifecycleObserver implementation
+                mApplicationLifecycleMonitor = new ApplicationLifecycleMonitor();
+                ProcessLifecycleOwner.get().getLifecycle().addObserver(WordPress.this);
+
+                initAnalytics(SystemClock.elapsedRealtime() - startDate);
+
+                createNotificationChannelsOnSdk26();
+
+                // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
+                // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
+                // Note: if removed, this will cause crashes on Android < 21
+                AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+                AppThemeUtils.Companion.setAppTheme(mContext);
+
+                // verify media is sanitized
+                sanitizeMediaUploadStateForSite();
+
+                // remove expired lists
+                mDispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(new RemoveExpiredListsPayload()));
+
+                // setup the Credentials Client so we can clean it up on wpcom logout
+                mCredentialsClient = new GoogleApiClient.Builder(mContext)
+                        .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                            @Override
+                            public void onConnected(@Nullable Bundle bundle) {
+                            }
+
+                            @Override
+                            public void onConnectionSuspended(int i) {
+                            }
+                        })
+                        .addApi(Auth.CREDENTIALS_API)
+                        .build();
+                mCredentialsClient.connect();
+
+                initWorkManager();
+
+                // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
+                // It will upload local draft or published posts with local changes to the server.
+                UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
+
+                mSystemNotificationsTracker.checkSystemNotificationsState();
+                ImageEditorInitializer.Companion.init(
+                        mImageManager,
+                        mImageEditorTracker,
+                        mImageEditorFileUtils,
+                        mDefaultScope
+                );
+
+                initEmojiCompat();
+                mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
+                mStoryMediaSaveUploadBridge.init(mContext);
+                ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
+
+                AppLog.i(T.UTILS, "init-measure FINISHING ASYNC INIT()" + (SystemClock.elapsedRealtime() - startDate));
+            }
+        }).start();
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();
@@ -258,14 +341,15 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         component().inject(this);
         mDispatcher.register(this);
 
-        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
-        mCrashLogging.start(getContext());
-        mEncryptedLogging.start();
-
         // Init static fields from dagger injected singletons, for legacy Actions and Utilities
         sRequestQueue = mRequestQueue;
         sImageLoader = mImageLoader;
         sOAuthAuthenticator = mOAuthAuthenticator;
+        versionName = PackageUtils.getVersionName(this);
+
+        // Start crash logging and upload any encrypted logs that were queued but not yet uploaded
+        mCrashLogging.start(getContext());
+        mEncryptedLogging.start();
 
         ProfilingUtils.start("App Startup");
 
@@ -283,85 +367,15 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         });
         AppLog.i(T.UTILS, "WordPress.onCreate");
 
-        versionName = PackageUtils.getVersionName(this);
-        initWpDb();
-        enableHttpResponseCache(mContext);
-
-        AppRatingDialog.INSTANCE.init(this);
-
-        // EventBus setup
-        EventBus.TAG = "WordPress-EVENT";
-        EventBus.builder()
-                .logNoSubscriberMessages(false)
-                .sendNoSubscriberEvent(false)
-                .throwSubscriberException(true)
-                .installDefaultEventBus();
-
-
-        RestClientUtils.setUserAgent(getUserAgent());
-
-        mZendeskHelper.setupZendesk(this, BuildConfig.ZENDESK_DOMAIN, BuildConfig.ZENDESK_APP_ID,
-                BuildConfig.ZENDESK_OAUTH_CLIENT_ID);
-
         MemoryAndConfigChangeMonitor memoryAndConfigChangeMonitor = new MemoryAndConfigChangeMonitor();
         registerComponentCallbacks(memoryAndConfigChangeMonitor);
 
-        // initialize our ApplicationLifecycleMonitor, which is the App's LifecycleObserver implementation
-        mApplicationLifecycleMonitor = new ApplicationLifecycleMonitor();
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(this);
+        asyncInit(startDate);
 
         // Make the UploadStarter observe the app process so it can auto-start uploads
         mUploadStarter.activateAutoUploading((ProcessLifecycleOwner) ProcessLifecycleOwner.get());
 
-        initAnalytics(SystemClock.elapsedRealtime() - startDate);
-
-        createNotificationChannelsOnSdk26();
-
-        // Allows vector drawable from resources (in selectors for instance) on Android < 21 (can cause issues
-        // with memory usage and the use of Configuration). More information: http://bit.ly/2H1KTQo
-        // Note: if removed, this will cause crashes on Android < 21
-        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
-        AppThemeUtils.Companion.setAppTheme(this);
-
-        // verify media is sanitized
-        sanitizeMediaUploadStateForSite();
-
-        // remove expired lists
-        mDispatcher.dispatch(ListActionBuilder.newRemoveExpiredListsAction(new RemoveExpiredListsPayload()));
-
-        // setup the Credentials Client so we can clean it up on wpcom logout
-        mCredentialsClient = new GoogleApiClient.Builder(this)
-                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
-                    @Override
-                    public void onConnected(@Nullable Bundle bundle) {
-                    }
-
-                    @Override
-                    public void onConnectionSuspended(int i) {
-                    }
-                })
-                .addApi(Auth.CREDENTIALS_API)
-                .build();
-        mCredentialsClient.connect();
-
-        initWorkManager();
-
-        // Enqueue our periodic upload work request. The UploadWorkRequest will be called even if the app is closed.
-        // It will upload local draft or published posts with local changes to the server.
-        UploadWorkerKt.enqueuePeriodicUploadWorkRequestForAllSites();
-
-        mSystemNotificationsTracker.checkSystemNotificationsState();
-        ImageEditorInitializer.Companion.init(
-                mImageManager,
-                mImageEditorTracker,
-                mImageEditorFileUtils,
-                mDefaultScope
-        );
-
-        initEmojiCompat();
-        mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
-        mStoryMediaSaveUploadBridge.init(this);
-        ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
+        AppLog.i(T.UTILS, "init-measure FINISHING onCreate()" + (SystemClock.elapsedRealtime() - startDate));
     }
 
     protected void initWorkManager() {
