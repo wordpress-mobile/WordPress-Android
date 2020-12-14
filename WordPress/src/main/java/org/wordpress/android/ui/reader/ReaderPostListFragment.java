@@ -99,6 +99,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter;
 import org.wordpress.android.ui.reader.services.post.ReaderPostServiceStarter.UpdateAction;
 import org.wordpress.android.ui.reader.services.search.ReaderSearchServiceStarter;
+import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
@@ -130,6 +131,7 @@ import org.wordpress.android.widgets.WPDialogSnackbar;
 import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -952,6 +954,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             mRecyclerView.setRefreshing(false);
             return;
         }
+
+        // Update the tags on post refresh since following some sites (like P2) will change followed tags and blogs
+        ReaderUpdateServiceStarter.startService(getContext(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
 
         if (mFirstLoad) {
             // let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData
