@@ -32,7 +32,6 @@ Language: pl
     <string name="hpp_choose_button">Wybierz</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Otwarto przewijalne menu blokowe. Wybierz blok.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Zamknięto przewijalne menu blokowe. </string>
-    <string name="hpp_subtitle">Wybierz swój ulubiony szablon dla strony głównej. Możesz go dostosować lub zmienić w późniejszym czasie.</string>
     <string name="hpp_title">Wybierz wzór</string>
     <string name="prepublishing_nudges_add_category_button">Dodaj kategorię</string>
     <string name="prepublishing_nudges_toolbar_title_categories">Kategorie</string>
@@ -293,7 +292,6 @@ Language: pl
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
     <string name="gutenberg_native_try_a_starter_layout">Wypróbuj układ startowy</string>
-    <string name="gutenberg_native_insert_mention">Wstaw wzmiankę</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
@@ -459,7 +457,6 @@ Language: pl
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
     <string name="post_list_tab_published_posts">Opublikowano</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Nie połączono</string>
-    <string name="my_site_select_domains_page_title">Adres witryny</string>
     <string name="sharing_facebook_account_must_have_pages">Połączenie z Facebookiem nie może odnaleźć żadnych Stron. Publicize nie może połączyć się z profilami Facebooka, tylko z publikowanymi Stronami.</string>
     <string name="notifications_tab_title_likes">Polubienia</string>
     <string name="notifications_tab_title_follows">Obserwuje</string>
@@ -958,7 +955,6 @@ Language: pl
     <string name="new_site_creation_create_site_button">Tworzenie nowej witryny</string>
     <string name="new_site_creation_search_domain_input_hint">Przeszukaj domeny</string>
     <string name="new_site_creation_domain_header_subtitle">To tu ludzie odnajdą ciebie w internecie.</string>
-    <string name="new_site_creation_domain_header_title">Wybierz nazwę domeny dla swojej witryny</string>
     <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
     <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>
     <string name="site_creation_error_generic_title">Wystąpił problem</string>
@@ -1409,7 +1405,6 @@ Language: pl
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Nie przesłano 1 wpisu z 1 plikiem</string>
     <string name="untitled_in_parentheses">(bez tytułu)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Utwórz witrynę</string>
     <string name="notification_site_creation_created">Stuknij aby kontynuować.</string>
     <string name="notification_site_creation_title_success">Utworzono witrynę!</string>
@@ -1699,12 +1694,8 @@ Language: pl
     <string name="post_status_draft">Szkic</string>
     <string name="post_status_post_private">Prywatny</string>
     <string name="post_status_pending_review">Oczekuje na przegląd</string>
-    <string name="change_location">Zmień lokalizację</string>
-    <string name="remove_location">Usuń lokalizację</string>
     <string name="post_status_publish_post">Opublikuj</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Nie można było otworzyć selektora lokalizacji, usługi Google Play są niedostępne</string>
     <string name="now">Teraz</string>
-    <string name="post_settings_location">Lokalizacja</string>
     <string name="post_settings_password_dialog_hint">Tylko osoby posiadające hasło mogą czytać ten wpis</string>
     <string name="post_settings_excerpt_dialog_hint">Zajawki to opcjonalne, ręcznie przygotowane podsumowania twoich treści.</string>
     <string name="post_settings_slug_dialog_hint">Nazwa uproszczona to tytuł wpisu w postaci przyjaznego adresu URL</string>

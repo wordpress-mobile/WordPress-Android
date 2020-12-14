@@ -44,7 +44,6 @@ Language: gl_ES
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Proba un deseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
-    <string name="gutenberg_native_insert_mention">Insertar unha mención</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dúas veces pata abrir a folla de acción coas opcións dispoñibles</string>
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
@@ -209,7 +208,6 @@ Language: gl_ES
     <string name="post_list_tab_published_posts">Publicada</string>
     <string name="sharing_facebook_account_must_have_pages">A conexión con Facebook non pode encontrar ningunha páxina. «Difundir» non pode conectar con perfís de Facebook, só con páxinas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non conectado</string>
-    <string name="my_site_select_domains_page_title">Enderezo do sitio</string>
     <string name="notifications_tab_title_likes">Gústame</string>
     <string name="notifications_tab_title_follows">Seguimentos</string>
     <string name="notifications_tab_title_comments">Comentarios</string>
@@ -697,7 +695,6 @@ Language: gl_ES
     <string name="new_site_creation_create_site_button">Crear sitio</string>
     <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí é onde a xente te encontra en Internet.</string>
-    <string name="new_site_creation_domain_header_title">Selecciona un nome de dominio para o teu sitio</string>
     <string name="new_site_creation_empty_domain_list_message">Non hai direccións dispoñibles que coincidan coa túa busca</string>
     <string name="site_creation_error_generic_subtitle">Erro durante a comunicación co servidor. Inténtao de novo</string>
     <string name="site_creation_error_generic_title">Houbo un problema</string>
@@ -1145,7 +1142,6 @@ Language: gl_ES
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 entrada con 1 arquivo sen subir</string>
     <string name="untitled_in_parentheses">(sen título)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
     <string name="notification_site_creation_title_success">Sitio creado!</string>
@@ -1431,10 +1427,6 @@ Language: gl_ES
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Pendente de revisión</string>
     <string name="post_status_publish_post">Publicar</string>
-    <string name="change_location">Cambiar ubicación</string>
-    <string name="remove_location">Borrar ubicación</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Non se puido abrir o selector de ubicación, Google Play Services non está dispoñible</string>
-    <string name="post_settings_location">Ubicación</string>
     <string name="now">Agora</string>
     <string name="post_settings_password_dialog_hint">Só os que teñan este contrasinal poden ver esta entrada</string>
     <string name="post_settings_excerpt_dialog_hint">Os extractos son resumos opcionais do contido feitos a man.</string>
