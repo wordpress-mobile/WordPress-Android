@@ -24,7 +24,6 @@ import org.wordpress.android.util.image.ImageType;
 
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.clickOnViewWithTag;
-import static org.wordpress.android.support.WPSupportUtils.dialogExistsWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.getCurrentActivity;
 import static org.wordpress.android.support.WPSupportUtils.getTranslatedString;
 import static org.wordpress.android.support.WPSupportUtils.idleFor;
@@ -38,7 +37,6 @@ import static org.wordpress.android.support.WPSupportUtils.swipeDownOnView;
 import static org.wordpress.android.support.WPSupportUtils.swipeLeftOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeRightOnViewPager;
 import static org.wordpress.android.support.WPSupportUtils.swipeUpOnView;
-import static org.wordpress.android.support.WPSupportUtils.tapButtonInDialogWithTitle;
 import static org.wordpress.android.support.WPSupportUtils.waitForAtLeastOneElementWithIdToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.waitForElementToBeDisplayedWithoutFailure;
@@ -116,11 +114,6 @@ public class WPScreenshotTest extends BaseTest {
 
         PostsListPage.scrollToTop();
         PostsListPage.tapPostWithName(name);
-
-        if (dialogExistsWithTitle(getTranslatedString(R.string.dialog_gutenberg_informative_title))) {
-            tapButtonInDialogWithTitle(getTranslatedString(R.string.dialog_button_ok));
-        }
-
 
         waitForElementToBeDisplayed(R.id.editor_activity);
 
