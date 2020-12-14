@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="@dimen/mlp_layouts_row_height"
     android:layout_marginTop="@dimen/margin_extra_large"
-    android:background="?attr/categoriesBackground">
+    android:background="?attr/layoutPickerBackground">
 
     <com.facebook.shimmer.ShimmerFrameLayout
         android:layout_width="match_parent"

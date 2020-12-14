@@ -12,6 +12,7 @@ import android.view.View
 import android.view.animation.AccelerateDecelerateInterpolator
 import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
+import org.wordpress.android.ui.reader.views.ReaderFollowButtonType.FOLLOW_SITE
 
 /**
  * Follow button used in reader detail
@@ -23,6 +24,7 @@ class ReaderFollowButton @JvmOverloads constructor(
 ) : MaterialButton(context, attrs, defStyleAttr) {
     private var isFollowed = false
     private var showCaption = false
+    private var followButtonType = FOLLOW_SITE
 
     init {
         initView(context, attrs)
@@ -34,10 +36,21 @@ class ReaderFollowButton @JvmOverloads constructor(
         attrs?.let {
             val array = context.theme.obtainStyledAttributes(attrs, R.styleable.ReaderFollowButton, 0, 0)
             showCaption = array.getBoolean(R.styleable.ReaderFollowButton_wpShowFollowButtonCaption, true)
+
+            try {
+                val buttonTypeValue = array.getInteger(R.styleable.ReaderFollowButton_wpReaderFollowButtonType, -1)
+                if (buttonTypeValue != -1) {
+                    followButtonType = ReaderFollowButtonType.fromInt(buttonTypeValue)
+                }
+            } finally {
+                array.recycle()
+            }
         }
         if (!showCaption) {
             hideCaptionAndEnlargeIcon(context)
         }
+
+        updateFollowTextAndIcon()
     }
 
     private fun hideCaptionAndEnlargeIcon(context: Context) {
@@ -49,13 +62,13 @@ class ReaderFollowButton @JvmOverloads constructor(
 
     private fun updateFollowTextAndIcon() {
         if (showCaption) {
-            setText(if (isFollowed) R.string.reader_btn_unfollow else R.string.reader_btn_follow)
+            setText(if (isFollowed) followButtonType.captionFollowing else followButtonType.captionFollow)
         }
         isSelected = isFollowed
         val drawableId = if (isFollowed) {
-            R.drawable.ic_reader_following_white_24dp
+            followButtonType.iconFollowing
         } else {
-            R.drawable.ic_reader_follow_white_24dp
+            followButtonType.iconFollow
         }
         icon = context.resources.getDrawable(drawableId, context.theme)
     }

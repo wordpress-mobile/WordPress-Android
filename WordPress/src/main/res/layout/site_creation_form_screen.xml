@@ -9,6 +9,7 @@
         android:id="@+id/appbar_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="?attr/layoutPickerBackground"
         app:liftOnScrollTargetViewId="@+id/site_creation_nested_scroll_view">
 
         <com.google.android.material.appbar.MaterialToolbar

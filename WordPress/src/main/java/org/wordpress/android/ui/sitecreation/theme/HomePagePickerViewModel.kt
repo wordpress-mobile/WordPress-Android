@@ -48,8 +48,14 @@ class HomePagePickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _previewState: MutableLiveData<PreviewUiState> = MutableLiveData()
+    val previewState: LiveData<PreviewUiState> = _previewState
+
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
+
+    private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
+    val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
 
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
@@ -57,6 +63,11 @@ class HomePagePickerViewModel @Inject constructor(
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    }
+
+    sealed class DesignPreviewAction {
+        object Dismiss : DesignPreviewAction()
+        class Show(val template: String, val demoUrl: String) : DesignPreviewAction()
     }
 
     init {
@@ -121,7 +132,47 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onPreviewTapped() {
-        // TODO
+        (uiState.value as? UiState.Content)?.let { state ->
+            layouts.firstOrNull {
+                it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
+            }?.let { layout ->
+                val template = layout.slug!!
+                analyticsTracker.trackSiteDesignPreviewViewed(template)
+                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
+                return
+            }
+        }
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error previewing design")
+        updateUiState(UiState.Error(toast = R.string.hpp_choose_error))
+    }
+
+    fun onDismissPreview() {
+        _onPreviewActionPressed.value = DesignPreviewAction.Dismiss
+    }
+
+    fun onPreviewChooseTapped() {
+        onDismissPreview()
+        onChooseTapped()
+    }
+
+    fun onPreviewLoading(template: String) {
+        if (networkUtils.isNetworkAvailable()) {
+            _previewState.value = PreviewUiState.Loading
+            analyticsTracker.trackSiteDesignPreviewLoading(template)
+        } else {
+            _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
+            analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Preview error")
+        }
+    }
+
+    fun onPreviewLoaded(template: String) {
+        _previewState.value = PreviewUiState.Loaded
+        analyticsTracker.trackSiteDesignPreviewLoaded(template)
+    }
+
+    fun onPreviewError() {
+        _previewState.value = PreviewUiState.Error()
+        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Preview error")
     }
 
     fun onChooseTapped() {
@@ -232,5 +283,11 @@ class HomePagePickerViewModel @Inject constructor(
 
         class Error(@StringRes val toast: Int? = null) :
                 UiState(errorViewVisible = true, isHeaderVisible = true, isDescriptionVisible = false)
+    }
+
+    sealed class PreviewUiState {
+        object Loading : PreviewUiState()
+        object Loaded : PreviewUiState()
+        class Error(@StringRes val toast: Int? = null) : PreviewUiState()
     }
 }

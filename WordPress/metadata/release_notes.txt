@@ -1,4 +1,5 @@
-Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.
-
-Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.
-
+We’re pleased to announce several new WordPress mobile app features: 
+- full-screen slideshows of photos or videos for WP.com and Jetpack sites; 
+- the option to pick a homepage design when creating a WP.com site; 
+- improved functionality for setting the dimensions of Cover and Columns;  
+- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).

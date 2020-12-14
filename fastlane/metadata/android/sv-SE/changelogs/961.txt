@@ -1,5 +1,0 @@
-16.2:
-Förbättringar i blockredigeraren: Högre prestanda överlag. Det märker du när du skapar ett nytt inlägg. Vi har även förbättrat bildblocket, med bättre stöd för uppladdning av flera bilder åt gången.
-
-Andra förbättringar och rättelser: Appen använder en ny mediaväljare när du väljer filer för inlägg, webbplatsikon, Gravatar m.m. Vi har också rättat ett fel för webbplatser på webbhotell med HTTP där utvalda bilder inte visades i inläggslistan.
-

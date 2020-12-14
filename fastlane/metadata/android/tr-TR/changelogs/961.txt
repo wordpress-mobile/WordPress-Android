@@ -1,4 +1,0 @@
-16.2:
-Blok düzenleyici: Yeni bir gönderi başlattığınızda fark edebileceğiniz gibi genel performans iyileştirildi.  Görüntü bloğu artık birden çok görüntüyü yüklemek için daha iyi desteğe sahip.
-
-Daha fazla güncelleme: Dosya seçerken artık uygulamanızda yeni bir Medya Seçici kullanılıyor. Ayrıca, HTTP üzerinde tamamen kendi kendine barındırılan sitelerde, öne çıkan görsellerin Yayınlar Listesinde görüntülenmesini engelleyen bir hata düzeltildi.

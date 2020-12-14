@@ -29,6 +29,7 @@ import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoListUiMode
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.PhotoPickerUiState
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel.SoftAskViewUiModel
 import org.wordpress.android.ui.posts.editor.media.CopyMediaToAppStorageUseCase
+import org.wordpress.android.ui.posts.editor.media.GetMediaModelUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -50,6 +51,7 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
     @Mock lateinit var context: Context
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var copyMediaToAppStorageUseCase: CopyMediaToAppStorageUseCase
+    @Mock lateinit var getMediaModelUseCase: GetMediaModelUseCase
     private lateinit var viewModel: PhotoPickerViewModel
     private var uiStates = mutableListOf<PhotoPickerUiState>()
     private var navigateEvents = mutableListOf<Event<UriWrapper>>()
@@ -71,7 +73,8 @@ class PhotoPickerViewModelTest : BaseUnitTest() {
                 permissionsHandler,
                 tenorFeatureConfig,
                 resourceProvider,
-                copyMediaToAppStorageUseCase
+                copyMediaToAppStorageUseCase,
+                getMediaModelUseCase
         )
         uiStates.clear()
         firstItem = PhotoPickerItem(1, uriWrapper1, false)

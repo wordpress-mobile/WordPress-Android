@@ -92,7 +92,55 @@
         <item name="categoriesButtonBackground">@color/mlp_categories_button_background</item>
         <item name="categoriesButtonBackgroundSelected">@color/grey_900</item>
         <item name="mlpDividerColor">@color/grey_300</item>
-        <item name="categoriesBackground">@color/white</item>
+        <item name="layoutPickerBackground">@color/white</item>
+
+        <!-- Material Date Range Picker -->
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
+    </style>
+
+    <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
+        <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
+        <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
+        <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
+        <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
+        <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
+        <!-- Used to color the cancel button which doesn't use any overridable styles -->
+        <item name="colorOnPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderTitle" parent="Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderLayout" parent="Widget.MaterialComponents.MaterialCalendar.HeaderLayout">
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection.Fullscreen">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
+        <item name="android:tint">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderConfirmButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderConfirmButton">
+        <item name="android:textColor">@color/on_surface_button_selector</item>
+        <item name="rippleColor">@color/on_surface_button_selector</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
+        <item name="android:visibility">visible</item>
+        <item name="android:background">?attr/colorOnSurface</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -961,16 +1009,13 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
-    <style name="SiteCreationHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
-        <item name="android:layout_marginBottom">@dimen/margin_small</item>
-        <item name="android:fontFamily">sans-serif-medium</item>
-    </style>
-
     <style name="SiteCreationHeaderSubtitle" parent="SiteCreationHeaderBaseTextStyle">
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
-    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderTitle">
+    <style name="SiteCreationPreviewHeaderTitle" parent="SiteCreationHeaderBaseTextStyle">
+        <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="android:text">@string/new_site_creation_preview_title</item>
     </style>
@@ -1225,6 +1270,10 @@
         <item name="android:windowAnimationStyle">@style/FullScreenDialogFragmentAnimation</item>
     </style>
 
+    <style name="WordPress.FullscreenDialog">
+        <item name="android:windowIsFloating">false</item>
+    </style>
+
     <!-- Overload of Aztec theme -->
     <style name="FormatBarButton">
         <item name="android:minWidth">@dimen/format_bar_height</item>
@@ -1370,7 +1419,9 @@
     <style name="ModalLayoutPickerCategoryEmoji" parent="ModalLayoutPickerText">
         <item name="android:layout_width">@dimen/mlp_categories_emoji_size</item>
         <item name="android:layout_height">@dimen/mlp_categories_emoji_size</item>
-        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_medium</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_extra_extra_small</item>
+        <item name="autoSizeTextType">uniform</item>
         <item name="android:layout_marginStart">@dimen/mlp_category_horizontal_margin</item>
         <item name="android:layout_marginEnd">@dimen/mlp_category_horizontal_central_margin</item>
         <item name="android:textAppearance">?attr/textAppearanceBody2</item>
