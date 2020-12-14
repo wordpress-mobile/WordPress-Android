@@ -5,8 +5,10 @@
 /sites/$site/activity
 /sites/$site/rewind
 /sites/$site/rewind/downloads
+
 /sites/$site/scan
 /sites/$site/scan/enqueue
+/sites/$site/scan/threat/$threat_id
 
 /sites/$site/gutenberg
 
