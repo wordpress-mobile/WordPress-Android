@@ -1,0 +1,5 @@
+16.3:
+Estamos felizes em anunciar diversos novos recursos no aplicativo WordPress:
+- slideshow em tela cheia de fotos ou vídeos de sites do WP.com e Jetpack;
+- possibilidade de selecionar um modelo para a página inicial ao criar um site no WP.com;
+- e um botão para seguir ou parar de seguir comentários em sites (não é suportado em sites auto-hospedados não conectados ao Jetpack).

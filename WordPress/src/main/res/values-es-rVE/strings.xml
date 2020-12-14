@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 09:01:37+0000
+Translation-Revision-Date: 2020-11-30 18:35:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nombre del archivo</string>
+    <string name="gutenberg_native_file_block_settings">Ajustes del archivo del bloque</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Fallo al subir los archivos.\nPor favor, toca para ver las opciones.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Fallo al guardar los medios.\nPor favor, toca para ver las opciones.</string>
+    <string name="gutenberg_native_edit_file">Editar el archivo</string>
+    <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
+    <string name="gutenberg_native_choose_a_file">ELEGIR UN ARCHIVO</string>
+    <string name="new_site_creation_domain_header_title">Elige un dominio</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Nuevo</string>
+    <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Siguiendo la conversación</string>
+    <string name="reader_btn_follow_comments">Seguir la conversación</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">No se ha podido anular la suscripción a los comentarios de esta entrada</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">No se ha podido crear la suscripción a los comentarios de esta entrada</string>
+    <string name="reader_follow_comments_get_status_error">Error al recuperar el estado de suscripción para la entrada</string>
+    <string name="reader_follow_comments_unsubscribe_success">Cancelada correctamente la suscripción a los comentarios</string>
+    <string name="reader_follow_comments_subscribe_success">Suscrito correctamente a los comentarios</string>
+    <string name="reader_follow_comments_bad_format_response">Respuesta recibida no válida</string>
+    <string name="reader_follow_comments_null_response">No se ha recibido ninguna respuesta</string>
+    <string name="activity_log_activity_type_filter_clear">Vaciar</string>
+    <string name="activity_log_activity_type_filter_apply">Aplicar </string>
     <string name="dialog_edit_story_unsupported_format_message">Una o más diapositivas no se han añadido a tu historia porque en este momento las historias no son compatibles con archivos GIF. Por favor, elige una imagen estática o un vídeo de fondo en su lugar.</string>
     <string name="dialog_edit_story_unsupported_format_title">Los archivos GIF no son compatibles</string>
     <string name="dialog_edit_story_unrecoverable_message">No hemos podido encontrar en el sitio los medios para esta historia.</string>
@@ -41,7 +63,7 @@ Language: es_VE
     <string name="gutenberg_native_scrollable_block_menu_closed">Se ha cerrado el menú de bloques desplazable.</string>
     <string name="hpp_skip_button">Omitir</string>
     <string name="hpp_choose_button">Elegir</string>
-    <string name="hpp_subtitle">Elige tu diseño de página de inicio favorito. Puedes personalizarlo o cambiarlo más tarde.</string>
+    <string name="hpp_subtitle">Elige tu diseño favorito de página de inicio. Puedes editarlo y personalizarlo más tarde.</string>
     <string name="hpp_title">Elige un diseño</string>
     <string name="mlp_network_error_subtitle">Toca «Reintentar» cuando vuelvas a estar en línea o crea una página en blanco usando el botón a continuación.</string>
     <string name="mlp_network_error_title">Los diseños no están disponibles sin conexión</string>
@@ -306,7 +328,6 @@ Language: es_VE
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
-    <string name="gutenberg_native_insert_mention">Insertar una mención</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces para abrir la hoja de acción con las opciones disponibles</string>
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
@@ -473,7 +494,6 @@ Language: es_VE
     <string name="post_list_tab_published_posts">Publicada</string>
     <string name="sharing_facebook_account_must_have_pages">La conexión de Facebook no puede encontrar ninguna página. «Divulgar» no se puede conectar con los perfiles de Facebook, solo con las páginas publicadas.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">No conectado</string>
-    <string name="my_site_select_domains_page_title">Dirección del sitio</string>
     <string name="notifications_tab_title_likes">Me gusta</string>
     <string name="notifications_tab_title_follows">Seguimientos</string>
     <string name="notifications_tab_title_comments">Comentarios</string>
@@ -971,7 +991,6 @@ Language: es_VE
     <string name="new_site_creation_create_site_button">Crear sitio</string>
     <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en Internet.</string>
-    <string name="new_site_creation_domain_header_title">Selecciona un nombre de dominio para tu sitio</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
     <string name="site_creation_error_generic_subtitle">Error durante la comunicación con el servidor. Inténtalo de nuevo</string>
     <string name="site_creation_error_generic_title">Hubo un problema</string>
@@ -1422,7 +1441,6 @@ Language: es_VE
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 entrada con 1 archivo sin subir</string>
     <string name="untitled_in_parentheses">(sin título)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crear sitio</string>
     <string name="notification_site_creation_created">Toca para continuar.</string>
     <string name="notification_site_creation_title_success">¡Sitio creado!</string>
@@ -1713,10 +1731,6 @@ Language: es_VE
     <string name="post_status_draft">Borrador</string>
     <string name="post_status_pending_review">Pendiente de revisión</string>
     <string name="post_status_publish_post">Publicar</string>
-    <string name="change_location">Cambiar ubicación</string>
-    <string name="remove_location">Borrar ubicación</string>
-    <string name="post_settings_error_placepicker_missing_play_services">No se ha podido abrir el selector de ubicación, no  disponible Google Play Services</string>
-    <string name="post_settings_location">Ubicación</string>
     <string name="now">Ahora</string>
     <string name="post_settings_password_dialog_hint">Solo los que tengan esta contraseña pueden ver esta entrada</string>
     <string name="post_settings_excerpt_dialog_hint">Los extractos son resúmenes opcionales del contenido hechos a mano.</string>

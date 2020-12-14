@@ -1,4 +1,0 @@
-16.2:
-Editor a blocchi: Abbiamo migliorato le prestazioni complessive, cosa che puoi notare quando avvii un nuovo post. Il blocco Immagine ora ha un migliore supporto per il caricamento di più immagini.
-
-Altri aggiornamenti: La tua app utilizza un nuovo selezionatore di contenuti quando selezioni i file. Abbiamo anche corretto un bug sui siti ospitati personalmente puri su HTTP che interessava le immagini in evidenza nell'elenco degli articoli.

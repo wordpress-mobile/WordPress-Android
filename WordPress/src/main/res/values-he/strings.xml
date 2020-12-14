@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 11:54:08+0000
+Translation-Revision-Date: 2020-12-10 15:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="gutenberg_native_file_name">שם קובץ</string>
+    <string name="gutenberg_native_file_block_settings">הגדרות של בלוק הקובץ</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">העלאת קבצים נכשלה.\nיש להקיש לאפשרויות.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">שמירת הקבצים נכשלה.\nיש להקיש לאפשרויות.</string>
+    <string name="gutenberg_native_edit_file">לערוך קובץ</string>
+    <string name="gutenberg_native_copy_file_url">להעתיק כתובת URL של קובץ</string>
+    <string name="gutenberg_native_choose_a_file">לבחור קובץ</string>
+    <string name="new_site_creation_domain_header_title">לבחור דומיין</string>
+    <string name="my_site_bottom_sheet_story_tag_new">חדש</string>
+    <string name="my_site_btn_jetpack_settings">הגדרות Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">הופעל מעקב אחר השיחה</string>
+    <string name="reader_btn_follow_comments">לעקוב אחר השיחה</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">לא ניתן היה לבטל את ההרשמה מהתגובות לפוסט זה</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">לא ניתן היה להירשם לתגובות לפוסט זה</string>
+    <string name="reader_follow_comments_get_status_error">שגיאה בהבאת מצב ההרשמה לפוסט</string>
+    <string name="reader_follow_comments_unsubscribe_success">ביטלת בהצלחה את ההרשמה לתגובות</string>
+    <string name="reader_follow_comments_subscribe_success">נרשמת בהצלחה לתגובות</string>
+    <string name="reader_follow_comments_bad_format_response">התקבלה תגובה לא חוקית</string>
+    <string name="reader_follow_comments_null_response">לא התקבלו תגובות</string>
+    <string name="activity_log_activity_type_filter_clear">לנקות</string>
+    <string name="activity_log_activity_type_filter_apply">להחיל</string>
+    <string name="dialog_edit_story_unsupported_format_message">לפחות שקופית אחת לא נוספה לסטורי שלך מאחר שסטוריז לא תומכים בקובצי GIF כרגע. במקום, יש לבחור תמונה סטטית או וידאו לרקע.</string>
+    <string name="dialog_edit_story_unsupported_format_title">קובצי GIF לא נתמכים</string>
+    <string name="dialog_edit_story_unrecoverable_message">מצטערים, לא הצלחנו למצוא את המדיה לסטורי באתר זה.</string>
+    <string name="dialog_edit_story_unrecoverable_title">אין אפשרות לערוך את הסטורי</string>
+    <string name="dialog_edit_story_unavailable_message">לא ניתן לטעון את המדיה לסטורי הזה. יש לבדוק את החיבור שלך לאינטרנט ולנסות שוב עוד מעט.</string>
+    <string name="dialog_edit_story_unavailable_title">אין אפשרות לערוך את הסטורי</string>
+    <string name="dialog_edit_story_limited_message">הסטורי הזה נערך במכשיר שונה והאפשרות לערוך אובייקטים מסוימים עלולה להיות מוגבלת.</string>
+    <string name="dialog_edit_story_limited_title">עריכה מוגבלת של הסטורי</string>
+    <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. מומלץ לנסות לערוך את הסטורי שלך.</string>
     <string name="color_picker_label_background">רקע</string>
     <string name="color_picker_label_text">טקסט</string>
     <string name="dialog_discard_story_ok_button_edit">ביטול</string>
@@ -32,7 +63,7 @@ Language: he_IL
     <string name="gutenberg_native_scrollable_block_menu_closed">תפריט בלוק לגלילה סגור.</string>
     <string name="hpp_skip_button">לדלג</string>
     <string name="hpp_choose_button">לבחור</string>
-    <string name="hpp_subtitle">יש לבחור את הפריסה המועדפת עליך לעמוד הבית. אפשר להתאים אישית או לשנות אותה מאוחר יותר.</string>
+    <string name="hpp_subtitle">יש לבחור את הפריסה המועדפת עליך לעמוד הבית. אפשר לערוך ולהתאימה אישית מאוחר יותר.</string>
     <string name="hpp_title">לבחור עיצוב</string>
     <string name="mlp_network_error_subtitle">יש להקיש כדי לנסות שוב במצב מקוון או ליצור עמוד ריק בעזרת הכפתור למטה.</string>
     <string name="mlp_network_error_title">הפריסות אינן זמינות במצב לא מקוון</string>
@@ -292,7 +323,6 @@ Language: he_IL
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">לנסות את הפריסה למתחילים</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
-    <string name="gutenberg_native_insert_mention">להוסיף אזכור</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות עם האפשרויות הזמינות</string>
     <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
@@ -459,7 +489,6 @@ Language: he_IL
     <string name="post_list_tab_published_posts">פורסם</string>
     <string name="sharing_facebook_account_must_have_pages">החיבור עם פייסבוק לא הצליח למצוא דפים. השיתוף האוטומטי לא יכול להתחבר אל פרופילים בפייסבוק, רק לדפים שפורסמו.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">לא מחובר</string>
-    <string name="my_site_select_domains_page_title">כתובת האתר</string>
     <string name="notifications_tab_title_likes">לייקים</string>
     <string name="notifications_tab_title_follows">עוקבים</string>
     <string name="notifications_tab_title_comments">תגובות</string>
@@ -955,7 +984,6 @@ Language: he_IL
     <string name="new_site_creation_create_site_button">יצירת אתר</string>
     <string name="new_site_creation_search_domain_input_hint">חיפוש דומיינים</string>
     <string name="new_site_creation_domain_header_subtitle">כאן הגולשים ימצאו אותך באינטרנט.</string>
-    <string name="new_site_creation_domain_header_title">בחירת דומיין לאתר שלך</string>
     <string name="new_site_creation_empty_domain_list_message">לא נמצאו כתובות זמינות שתואמות לחיפוש שלך</string>
     <string name="site_creation_error_generic_subtitle">שגיאה בתקשורת עם השרת, יש לנסות שוב</string>
     <string name="site_creation_error_generic_title">הייתה בעיה</string>
@@ -1404,7 +1432,6 @@ Language: he_IL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">פוסט אחד עם קובץ אחד לא הועלה</string>
     <string name="untitled_in_parentheses">(ללא כותרת)</string>
     <string name="at_username">‎@‎%s‎</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">יצירת אתר</string>
     <string name="notification_site_creation_created">יש להקיש להמשך.</string>
     <string name="notification_site_creation_title_success">האתר נוצר!</string>
@@ -1694,10 +1721,6 @@ Language: he_IL
     <string name="post_status_draft">טיוטה</string>
     <string name="post_status_pending_review">ממתין לתצוגה מקדימה</string>
     <string name="post_status_publish_post">פרסום</string>
-    <string name="change_location">שינוי מיקום</string>
-    <string name="remove_location">הסרת מיקום</string>
-    <string name="post_settings_error_placepicker_missing_play_services">לא ניתן לפתוח את בוחר המיקום, השירותים של Google Play לא זמינים</string>
-    <string name="post_settings_location">מיקום</string>
     <string name="now">עכשיו</string>
     <string name="post_settings_password_dialog_hint">רק משתמשים עם סיסמה יכולים לראות את הפוסט הנוכחי</string>
     <string name="post_settings_excerpt_dialog_hint">תקצירים הם סיכומים אופציונליים, \"בעבודת יד\", של התוכן שלך.</string>
