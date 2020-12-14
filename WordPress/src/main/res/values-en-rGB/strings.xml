@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-23 17:02:01+0000
+Translation-Revision-Date: 2020-11-30 18:12:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_file_name">File name</string>
+    <string name="gutenberg_native_file_block_settings">File block settings</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Failed to upload files.\nPlease tap for options.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Failed to save files.\nPlease tap for options.</string>
+    <string name="gutenberg_native_edit_file">Edit file</string>
+    <string name="gutenberg_native_copy_file_url">Copy file URL</string>
+    <string name="gutenberg_native_choose_a_file">CHOOSE A FILE</string>
+    <string name="new_site_creation_domain_header_title">Choose a domain</string>
+    <string name="my_site_bottom_sheet_story_tag_new">New</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Following conversation</string>
+    <string name="reader_btn_follow_comments">Follow conversation</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
+    <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
+    <string name="reader_follow_comments_unsubscribe_success">Successfully unsubscribed from the comments</string>
+    <string name="reader_follow_comments_subscribe_success">Successfully subscribed to the comments</string>
+    <string name="reader_follow_comments_bad_format_response">Invalid response received</string>
+    <string name="reader_follow_comments_null_response">No response received</string>
+    <string name="activity_log_activity_type_filter_clear">Clear</string>
+    <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
@@ -41,7 +63,7 @@ Language: en_GB
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrollable block menu closed.</string>
     <string name="hpp_skip_button">Skip</string>
     <string name="hpp_choose_button">Choose</string>
-    <string name="hpp_subtitle">Pick your favourite homepage layout. You can customise or change it later.</string>
+    <string name="hpp_subtitle">Pick your favourite homepage layout. You can edit and customise it later.</string>
     <string name="hpp_title">Choose a design</string>
     <string name="mlp_network_error_subtitle">Tap retry when you\'re back online, or create a blank page using the button below.</string>
     <string name="mlp_network_error_title">Layouts not available while offline</string>
@@ -306,7 +328,6 @@ Language: en_GB
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Try a starter layout</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
-    <string name="gutenberg_native_insert_mention">Insert mention</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Double tap to open Bottom Sheet with available options</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Double tap to open Action Sheet with available options</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
@@ -473,7 +494,6 @@ Language: en_GB
     <string name="post_list_tab_published_posts">Published</string>
     <string name="sharing_facebook_account_must_have_pages">The Facebook connection cannot find any Pages. Publicise cannot connect to Facebook Profiles, only published Pages.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Not Connected</string>
-    <string name="my_site_select_domains_page_title">Site Address</string>
     <string name="notifications_tab_title_likes">Likes</string>
     <string name="notifications_tab_title_follows">Follows</string>
     <string name="notifications_tab_title_comments">Comments</string>
@@ -971,7 +991,6 @@ Language: en_GB
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
-    <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_empty_domain_list_message">No available addresses matching your search</string>
     <string name="site_creation_error_generic_subtitle">Error communicating with the server, please try again</string>
     <string name="site_creation_error_generic_title">There was a problem</string>
@@ -1422,7 +1441,6 @@ Language: en_GB
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post with 1 file not uploaded</string>
     <string name="untitled_in_parentheses">(Untitled)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="notification_site_creation_created">Tap to continue.</string>
     <string name="notification_site_creation_title_success">Site created!</string>
@@ -1713,10 +1731,6 @@ Language: en_GB
     <string name="post_status_draft">Draft</string>
     <string name="post_status_pending_review">Pending review</string>
     <string name="post_status_publish_post">Publish</string>
-    <string name="change_location">Change Location</string>
-    <string name="remove_location">Remove Location</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Can\'t open the Location Picker, Google Play Services is not available</string>
-    <string name="post_settings_location">Location</string>
     <string name="now">Now</string>
     <string name="post_settings_password_dialog_hint">Only those with this password can view this post</string>
     <string name="post_settings_excerpt_dialog_hint">Excerpts are optional hand-crafted summaries of your content.</string>

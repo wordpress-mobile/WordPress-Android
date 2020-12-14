@@ -2958,6 +2958,7 @@
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
+    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>

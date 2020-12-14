@@ -1,4 +1,0 @@
-16.2 :
-Éditeur de blocs : nous avons amélioré les performances globales. Vous le remarquerez lorsque vous créerez un article. Le bloc Image offre désormais une meilleure prise en charge pour le chargement de plusieurs images.
-
-Plus de mises à jour : votre application utilise un nouveau sélecteur de média lorsque vous sélectionnez des fichiers. Nous avons également résolu un bug au niveau des sites auto-hébergés en HTTP, qui concernait les images mises en avant dans la Liste d’articles.

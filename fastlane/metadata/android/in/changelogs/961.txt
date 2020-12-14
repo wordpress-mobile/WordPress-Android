@@ -1,4 +1,0 @@
-16.2:
-Editor blok: Kami telah meningkatkan performa secara keseluruhan, yang mungkin dapat Anda rasakan saat mulai membuat pos baru. Sekarang blok Gambar memiliki dukungan lebih baik untuk mengunggah gambar dalam jumlah banyak. 
-
-Pembaruan lainnya: Aplikasi Anda menggunakan Pemilih Media baru saat Anda memilih file. Kami juga memperbaiki bug pada situs hosting sendiri di HTTP yang memengaruhi gambar andalan pada Daftar Pos.

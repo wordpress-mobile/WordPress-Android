@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 10:54:08+0000
+Translation-Revision-Date: 2020-12-10 14:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="gutenberg_native_file_name">ファイル名</string>
+    <string name="gutenberg_native_file_block_settings">ファイルブロック設定</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">ファイルの保存に失敗しました。\nタップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_edit_file">ファイルを編集</string>
+    <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
+    <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
+    <string name="new_site_creation_domain_header_title">ドメインを選択</string>
+    <string name="my_site_bottom_sheet_story_tag_new">新規</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">フォロー中の会話</string>
+    <string name="reader_btn_follow_comments">会話をフォローする</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">この投稿のコメントをフォロー解除できませんでした</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">この投稿のコメントをフォローできませんでした</string>
+    <string name="reader_follow_comments_get_status_error">投稿の購読ステータスを取得中にエラーが発生しました</string>
+    <string name="reader_follow_comments_unsubscribe_success">コメントの購読を正常に解除しました</string>
+    <string name="reader_follow_comments_subscribe_success">コメントの購読を正常に登録しました</string>
+    <string name="reader_follow_comments_bad_format_response">無効な応答を受信しました</string>
+    <string name="reader_follow_comments_null_response">応答がありませんでした</string>
+    <string name="activity_log_activity_type_filter_clear">クリア</string>
+    <string name="activity_log_activity_type_filter_apply">適用</string>
+    <string name="dialog_edit_story_unsupported_format_message">1つ以上のスライドがストーリーに追加されていません。現在、ストーリーでは GIF ファイルがサポートされていないためです。 代わりに静的画像または動画の背景を選択してください。</string>
+    <string name="dialog_edit_story_unsupported_format_title">GIF ファイルはサポートされていません</string>
+    <string name="dialog_edit_story_unrecoverable_message">このストーリーのメディアがサイトにありませんでした。</string>
+    <string name="dialog_edit_story_unrecoverable_title">ストーリーを編集できません</string>
+    <string name="dialog_edit_story_unavailable_message">このストーリーのメディアを読み込めません。 ネットワーク接続を確認して、もう一度お試しください。</string>
+    <string name="dialog_edit_story_unavailable_title">ストーリーを編集できません</string>
+    <string name="dialog_edit_story_limited_message">このストーリーは別の端末で編集されており、特定のオブジェクトを編集する機能が制限される可能性があります。</string>
+    <string name="dialog_edit_story_limited_title">制限されたストーリー編集</string>
+    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーの編集をお試しください。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">テキスト</string>
     <string name="dialog_discard_story_ok_button_edit">保存しない</string>
@@ -32,7 +63,7 @@ Language: ja_JP
     <string name="gutenberg_native_scrollable_block_menu_closed">スクロール可能なブロックメニューが閉じられました。</string>
     <string name="hpp_skip_button">スキップ</string>
     <string name="hpp_choose_button">選択</string>
-    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後でカスタマイズまたは変更できます。</string>
+    <string name="hpp_subtitle">お気に入りのホームページのレイアウトを選択します。 後で編集およびカスタマイズできます。</string>
     <string name="hpp_title">デザインを選択</string>
     <string name="mlp_network_error_subtitle">オンラインに戻ったら「再試行」をタップするか、以下のボタンを使用して白紙のページを作成します。</string>
     <string name="mlp_network_error_title">レイアウトはオフラインでは利用できません</string>
@@ -296,7 +327,6 @@ Language: ja_JP
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">スターターレイアウトを試す</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
-    <string name="gutenberg_native_insert_mention">メンションを挿入</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">ダブルタップして「アクションシート」と利用可能オプションを開く</string>
     <string name="pages_cannot_be_started">現在、一時的にページを開けません。後ほどもう一度お試しください</string>
@@ -463,7 +493,6 @@ Language: ja_JP
     <string name="post_list_tab_published_posts">公開済み</string>
     <string name="sharing_facebook_account_must_have_pages">Facebook との連携でページが見つかりません。パブリサイズで Facebook のプロフィールに連携できません。連携できるのは公開されているページのみです。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">接続されていません</string>
-    <string name="my_site_select_domains_page_title">サイトのアドレス</string>
     <string name="notifications_tab_title_likes">いいね</string>
     <string name="notifications_tab_title_follows">フォロー</string>
     <string name="notifications_tab_title_comments">コメント</string>
@@ -961,7 +990,6 @@ Language: ja_JP
     <string name="new_site_creation_create_site_button">サイトを作成</string>
     <string name="new_site_creation_search_domain_input_hint">ドメインを検索</string>
     <string name="new_site_creation_domain_header_subtitle">ドメインとは、インターネット上で閲覧者があなたを見つける場所です</string>
-    <string name="new_site_creation_domain_header_title">サイトのドメイン名を選択してください</string>
     <string name="new_site_creation_empty_domain_list_message">検索条件一致する利用可能なアドレスはありません</string>
     <string name="site_creation_error_generic_subtitle">サーバーエラーです。もう一度お試しください</string>
     <string name="site_creation_error_generic_title">問題が発生しました</string>
@@ -1412,7 +1440,6 @@ Language: ja_JP
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1投稿、1ファイルが未アップロード</string>
     <string name="untitled_in_parentheses">(無題)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f、%2$f</string>
     <string name="site_creation_domain_finish_button">サイトの作成</string>
     <string name="notification_site_creation_created">続行するにはタップしてください。</string>
     <string name="notification_site_creation_title_success">サイトが作成されました。</string>
@@ -1703,10 +1730,6 @@ Language: ja_JP
     <string name="post_status_draft">下書き</string>
     <string name="post_status_pending_review">レビュー待ち</string>
     <string name="post_status_publish_post">公開</string>
-    <string name="change_location">場所を変更</string>
-    <string name="remove_location">場所を削除</string>
-    <string name="post_settings_error_placepicker_missing_play_services">場所ピッカーを開けません。Google Play サービスはご利用いただけません</string>
-    <string name="post_settings_location">場所</string>
     <string name="now">今すぐ</string>
     <string name="post_settings_password_dialog_hint">パスワードを知っているユーザーのみが、この投稿を表示できます</string>
     <string name="post_settings_excerpt_dialog_hint">抜粋は、手動で書かれたコンテンツの要約です (オプション)。</string>

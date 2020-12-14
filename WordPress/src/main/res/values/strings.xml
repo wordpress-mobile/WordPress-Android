@@ -1032,6 +1032,7 @@
     <string name="activity_log_rewind_site">Rewind Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
+    <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
     <string name="activity_log_date_range_filter_label">Date range</string>
@@ -2969,6 +2970,7 @@
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
+    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
