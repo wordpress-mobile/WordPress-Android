@@ -162,11 +162,7 @@ Language: ms
     <string name="post_status_draft">Draf</string>
     <string name="post_status_pending_review">Menunggu tinjauan</string>
     <string name="post_status_post_private">Persendirian</string>
-    <string name="change_location">Tukar Lokasi</string>
     <string name="post_status_publish_post">Terbit</string>
-    <string name="remove_location">Buang Lokasi</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Tidak boleh membuka Pemetik Lokasi, Google Play Service tidak didapati</string>
-    <string name="post_settings_location">Lokasi</string>
     <string name="now">Sekarang</string>
     <string name="post_settings_password_dialog_hint">Hanya mereka dengan kata laluan ini boleh melihat kiriman ini</string>
     <string name="post_settings_excerpt_dialog_hint">Petikan adalah ringkasan kandungan anda yang dibuat sendiri dan tidak diwajibkan.</string>

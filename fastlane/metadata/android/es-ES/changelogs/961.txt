@@ -1,4 +1,0 @@
-16.2:
-Editor de bloques: Hemos mejorado el rendimiento general, que podrás notar al iniciar una nueva entrada. El bloque de imágenes ahora tiene mejor compatibilidad para subir múltiples imágenes.
-
-Más actualizaciones: Tu aplicación usa un nuevo selector de medios cuando seleccionas archivos. También hemos corregido un fallo en los sitios autoalojados en HTTP puro que afectaba a las imágenes destacadas en la lista de entradas.

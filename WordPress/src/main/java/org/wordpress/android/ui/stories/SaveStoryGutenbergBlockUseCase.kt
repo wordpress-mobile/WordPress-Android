@@ -101,9 +101,10 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         while (storyBlockStartIndex > -1 && storyBlockStartIndex < content.length) {
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
+                val storyBlockEndIndex = content.indexOf(HEADING_END, storyBlockStartIndex)
                 val jsonString: String = content.substring(
                         storyBlockStartIndex + HEADING_START.length,
-                        content.indexOf(HEADING_END))
+                        storyBlockEndIndex)
                 content = listener.doWithMediaFilesJson(content, jsonString)
                 storyBlockStartIndex += HEADING_START.length
             }

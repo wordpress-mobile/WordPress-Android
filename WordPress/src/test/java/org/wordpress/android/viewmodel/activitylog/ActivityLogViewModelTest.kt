@@ -13,6 +13,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
+import org.assertj.core.api.Assertions
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -32,13 +33,20 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAULT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
@@ -53,6 +61,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
+    @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
@@ -61,6 +70,8 @@ class ActivityLogViewModelTest {
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private var snackbarMessages: MutableList<String?> = mutableListOf()
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
+    private var navigationEvents:
+            MutableList<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents?>> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
     private var rewindProgress = MutableLiveData<RewindProgress>()
@@ -84,7 +95,9 @@ class ActivityLogViewModelTest {
             true,
             null,
             Date(),
-            true
+            true,
+            DEFAULT,
+            false
     )
     val activity = ActivityLogModel(
             "activityId",
@@ -107,6 +120,7 @@ class ActivityLogViewModelTest {
                 rewindStatusService,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
+                backupFeatureConfig,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -116,6 +130,7 @@ class ActivityLogViewModelTest {
         viewModel.showRewindDialog.observeForever { rewindDialogs.add(it) }
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
+        viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
         fetchActivityLogCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
@@ -215,9 +230,9 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true)
-        val second = Event(activityLogList[1], true)
-        val third = Event(activityLogList[2], true)
+        val first = Event(activityLogList[0], true, false)
+        val second = Event(activityLogList[1], true, false)
+        val third = Event(activityLogList[2], true, false)
         activityLogListItems.add(Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
@@ -372,6 +387,20 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypeFilterClicked()
 
         assertEquals(selectedItems, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
+    }
+
+    @Test
+    fun onSecondaryActionClickRestoreNavigationEventIsShowRestore() {
+        viewModel.onSecondaryActionClicked(RESTORE, event)
+
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
+    }
+
+    @Test
+    fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
+        viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
+
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
