@@ -4,23 +4,20 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:padding="@dimen/margin_extra_large">
 
     <ImageView
         android:id="@+id/scan_state_icon"
-        android:layout_width="@dimen/scan_state_icon_size"
-        android:layout_height="@dimen/scan_state_icon_size"
-        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        style="@style/Scan.State.Icon"
         android:contentDescription="@string/scan_state_icon"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_scan_idle_threats_not_found" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/scan_state_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:textStyle="bold"
+        style="@style/Scan.State.Header"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_state_icon"
@@ -28,12 +25,28 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/scan_state_description"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_extra_large"
+        style="@style/Scan.State.Description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/scan_state_title"
         tools:text="@string/scan_idle_no_threats_found_title" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/fix_all_button"
+        style="@style/Scan.PrimaryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/scan_state_description"
+        tools:visibility="visible"
+        tools:text="@string/threats_fix_all" />
+
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/scan_button"
+        style="@style/Scan.SecondaryButton"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/fix_all_button"
+        tools:visibility="visible"
+        tools:text="@string/scan_again" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ViewType
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanStateViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsHeaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 
 class ScanAdapter(private val uiHelpers: UiHelpers) : Adapter<ScanViewHolder>() {
@@ -16,6 +19,8 @@ class ScanAdapter(private val uiHelpers: UiHelpers) : Adapter<ScanViewHolder>() 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScanViewHolder {
         return when (viewType) {
             ViewType.SCAN_STATE.id -> ScanStateViewHolder(uiHelpers, parent)
+            ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
+            ViewType.THREAT.id -> ThreatViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
@@ -49,6 +54,7 @@ class ScanAdapter(private val uiHelpers: UiHelpers) : Adapter<ScanViewHolder>() 
                 oldItem is ScanState && newItem is ScanState -> // TODO: ashiagr revisit
                     oldItem.scanTitle == newItem.scanTitle &&
                         oldItem.scanDescription == newItem.scanDescription
+                oldItem is ThreatItemState && newItem is ThreatItemState -> oldItem.threatId == newItem.threatId
                 else -> false
             }
         }
