@@ -398,7 +398,7 @@ public class LoginSiteAddressFragment extends LoginBaseDiscoveryFragment impleme
             showError(R.string.invalid_site_url_message);
         } else if (!siteInfo.isWordPress) {
             // Not a WordPress site
-            showError(R.string.enter_wordpress_site);
+            mLoginListener.handleSiteAddressError(siteInfo);
         } else {
             mLoginListener.gotConnectedSiteInfo(
                     siteInfo.url,
