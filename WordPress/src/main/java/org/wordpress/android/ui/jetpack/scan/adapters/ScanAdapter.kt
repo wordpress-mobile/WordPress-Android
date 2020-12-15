@@ -17,6 +17,10 @@ class ScanAdapter(
 ) : Adapter<ScanViewHolder>() {
     private val items = mutableListOf<ScanListItemState>()
 
+    init {
+        setHasStableIds(true)
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScanViewHolder {
         return when (viewType) {
             ViewType.SCAN_STATE.id -> ScanStateViewHolder(imageManager, uiHelpers, parent)

@@ -5,7 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.scan_fragment.recycler_view
+import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -33,9 +33,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initAdapter() {
-        val scanAdapter = ScanAdapter(imageManager, uiHelpers)
-        scanAdapter.setHasStableIds(true)
-        recycler_view.adapter = scanAdapter
+        recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel(site: SiteModel) {
