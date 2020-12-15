@@ -473,6 +473,10 @@ class PhotoPickerFragment : Fragment() {
         viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
     }
 
+    fun mediaIdsSelectedFromWPMediaPicker(mediaIds: List<Long>) {
+        viewModel.mediaIdsSelectedFromWPMediaPicker(mediaIds)
+    }
+
     companion object {
         private const val KEY_LAST_TAPPED_ICON = "last_tapped_icon"
         private const val KEY_SELECTED_POSITIONS = "selected_positions"

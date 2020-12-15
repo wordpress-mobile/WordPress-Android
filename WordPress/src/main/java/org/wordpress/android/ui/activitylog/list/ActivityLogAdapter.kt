@@ -11,7 +11,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType
 
 class ActivityLogAdapter(
     private val itemClickListener: (ActivityLogListItem) -> Unit,
-    private val rewindClickListener: (ActivityLogListItem) -> Unit
+    private val rewindClickListener: (ActivityLogListItem) -> Unit,
+    private val secondaryActionClickListener: (ActivityLogListItem.SecondaryAction, ActivityLogListItem) -> Boolean
 ) : Adapter<ActivityLogViewHolder>() {
     private val list = mutableListOf<ActivityLogListItem>()
 
@@ -58,7 +59,8 @@ class ActivityLogAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityLogViewHolder {
         return when (viewType) {
             ViewType.PROGRESS.id -> ProgressItemViewHolder(parent)
-            ViewType.EVENT.id -> EventItemViewHolder(parent, itemClickListener, rewindClickListener)
+            ViewType.EVENT.id -> EventItemViewHolder(
+                    parent, itemClickListener, rewindClickListener, secondaryActionClickListener)
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.LOADING.id -> LoadingItemViewHolder(parent)

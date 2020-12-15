@@ -1,4 +1,0 @@
-16.2:
-Block-Editor: Wir haben die allgemeine Performance verbessert, was dir vielleicht auffallen wird, wenn du das nächste Mal einen Beitrag beginnst. Der Bildblock verfügt nun über besseren Support beim Hochladen mehrerer Bilder.
-
-Weitere Updates: Deine App nutzt beim Auswählen der Dateien eine neue Medienauswahl.  Wir haben auch einen Bug auf den rein selbstverwalteten Websites auf HTTP beseitigt, der sich negativ auf die Beitragsbilder in den Beitragslisten ausgewirkt hat.

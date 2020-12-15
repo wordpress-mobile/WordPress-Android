@@ -12,10 +12,10 @@ it on [Google Play](https://play.google.com/store/apps/details?id=org.wordpress.
 1. Install npm using [Node Version Manager](https://github.com/nvm-sh/nvm)(nvm), as described in step one from the [Block Editor Quickstart guide](https://developer.wordpress.org/block-editor/tutorials/devenv/#quickstart)
 1. `git clone --recurse-submodules git@github.com:wordpress-mobile/WordPress-Android.git` in the folder of your preference.
 Or if you already have the project cloned, initialize and update the submodules:
-```
-git submodule init
-git submodule update
-```
+    ```
+    git submodule init
+    git submodule update
+    ```
 1. `cd WordPress-Android` to enter the working directory.
 1. `cp gradle.properties-example gradle.properties` to set up the sample app credentials file.
 1. `git submodule update --init --recursive`  to pull the submodules (optionally use `--depth=1 --recommend-shallow` flags to skip pulling full submodules' history).

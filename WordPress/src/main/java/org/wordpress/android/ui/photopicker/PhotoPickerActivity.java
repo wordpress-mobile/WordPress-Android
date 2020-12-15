@@ -325,12 +325,7 @@ public class PhotoPickerActivity extends LocaleAwareActivity
         if (mediaIds != null && mediaIds.size() > 0) {
             if (mBrowserType == MediaBrowserType.WP_STORIES_MEDIA_PICKER) {
                 // TODO WPSTORIES add TRACKS (see how it's tracked below? maybe do along the same lines)
-                Intent data = new Intent()
-                        .putExtra(MediaBrowserActivity.RESULT_IDS, ListUtils.toLongArray(mediaIds))
-                        .putExtra(ARG_BROWSER_TYPE, mBrowserType)
-                        .putExtra(MediaPickerConstants.EXTRA_MEDIA_SOURCE, source.name());
-                setResult(RESULT_OK, data);
-                finish();
+                getPickerFragment().mediaIdsSelectedFromWPMediaPicker(mediaIds);
             } else {
                 // if user chose a featured image, track image picked event
                 if (mBrowserType == MediaBrowserType.FEATURED_IMAGE_PICKER) {

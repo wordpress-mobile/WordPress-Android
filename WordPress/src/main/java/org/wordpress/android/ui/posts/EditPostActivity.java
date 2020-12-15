@@ -144,6 +144,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
@@ -1321,10 +1322,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
-            savePostAndOptionallyFinish(true, false);
+            performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+                @Override public void doWhenNoStoriesBeingSaved() {
+                    savePostAndOptionallyFinish(true, false);
+                }
+            });
         }
 
         return true;
+    }
+
+    interface DoWhenNoStoriesBeingSavedCallback {
+        void doWhenNoStoriesBeingSaved();
+    }
+
+    private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
+        if (mWPStoriesFeatureConfig.isEnabled()) {
+            if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
+                callback.doWhenNoStoriesBeingSaved();
+            } else {
+                // Oops! A story is still being saved, let's wait
+                ToastUtils.showToast(EditPostActivity.this,
+                        getString(R.string.toast_edit_story_update_in_progress_title));
+            }
+        } else {
+            callback.doWhenNoStoriesBeingSaved();
+        }
     }
 
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
@@ -1498,7 +1521,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1610,12 +1633,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
                 uploadPost(false);
@@ -2013,6 +2036,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         };
     }
 
+    private void checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet() {
+        performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+            @Override public void doWhenNoStoriesBeingSaved() {
+                showPrepublishingNudgeBottomSheet();
+            }
+        });
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
@@ -2305,7 +2336,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled(),
+                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
@@ -3377,7 +3408,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            mEditPostRepository.replace(postModel -> handleRemoteAutoSave(event.isError(), postModel));
+            if (isRemotePreviewingFromEditor()) {
+                handleRemotePreviewUploadResult(event.isError(),
+                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
+            }
         }
     }
 
@@ -3403,7 +3437,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Nullable
-    private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
+    private void handleRemotePreviewUploadResult(boolean isError, RemotePreviewLogicHelper.RemotePreviewType param) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
@@ -3412,19 +3446,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ActivityLauncher.previewPostOrPageForResult(
                     EditPostActivity.this,
                     mSite,
-                    post,
-                    mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                            ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-                            : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                    mEditPostRepository.getPost(),
+                    param
             );
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
             mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
-        return post;
     }
 
     @SuppressWarnings("unused")
@@ -3444,7 +3475,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     });
                 }
             } else {
-                mEditPostRepository.set(() -> handleRemoteAutoSave(event.isError(), post));
+                mEditPostRepository.set(() -> post);
+                handleRemotePreviewUploadResult(event.isError(), RemotePreviewType.REMOTE_PREVIEW);
             }
         }
     }

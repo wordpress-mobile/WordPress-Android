@@ -680,7 +680,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WebViewClient webViewClient = createWebViewClient(allowedURL);
 
         mWebView.setWebViewClient(webViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+        mWebView.setWebChromeClient(new WPWebChromeClient(
+                this,
+                mWebView,
+                R.drawable.media_movieclip,
+                (ProgressBar) findViewById(R.id.progress_bar)
+        ));
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {

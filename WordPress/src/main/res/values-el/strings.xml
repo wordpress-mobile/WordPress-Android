@@ -284,7 +284,6 @@ Language: el_GR
     <string name="uploading_subtitle_mixed_page_singular_media_one">1 σελίδα και 1 αρχείο απομένουν</string>
     <string name="untitled_in_parentheses">(Χωρίς τίτλο)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Δημιουργία ενός ιστότοπου</string>
     <string name="username_changer_action">Αποθήκευση</string>
     <string name="username_changer_dismiss_button_positive">Απόρριψη</string>
@@ -451,10 +450,7 @@ Language: el_GR
     <string name="post_status_draft">Προσχέδιο</string>
     <string name="post_status_pending_review">Εκκρεμής αναθεώρηση</string>
     <string name="post_status_post_private">Ιδιωτικό</string>
-    <string name="remove_location">Αφαίρεση Τοποθεσίας</string>
-    <string name="change_location">Αλλαγή Τοποθεσίας</string>
     <string name="post_status_publish_post">Δημοσίευση</string>
-    <string name="post_settings_location">Τοποθεσία</string>
     <string name="now">Τώρα</string>
     <string name="post_settings_tags">Ετικέτες</string>
     <string name="post_settings_slug">Σύντομο Όνομα</string>
