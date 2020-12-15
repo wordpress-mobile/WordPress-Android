@@ -10,6 +10,6 @@ enum class Organization(val orgId: Int) {
         private val map = values().associateBy(Organization::orgId)
 
         @JvmStatic
-        fun fromOrgId(type: Int) = map[type] ?: UNKNOWN
+        fun fromOrgId(orgId: Int) = map[orgId] ?: UNKNOWN
     }
 }
