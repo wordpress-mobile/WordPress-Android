@@ -98,8 +98,11 @@ dependencies {
     // FIXME: hermes is a dependency required by React Native.  Ideally, we'd
     // have this as part of the Gutenberg AAR, but right now this seems to do
     // the job of getting the editor to load.
-    debugImplementation files("./libs/hermes-debug.aar")
-    releaseImplementation files("./libs/hermes-release.aar")
+    //
+    // debugImplementation files("./libs/hermes-debug.aar")
+    // releaseImplementation files("./libs/hermes-release.aar")
+    debugCompileOnly files("./libs/hermes-debug.aar")
+    releaseCompileOnly files("./libs/hermes-debug.aar")
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"
