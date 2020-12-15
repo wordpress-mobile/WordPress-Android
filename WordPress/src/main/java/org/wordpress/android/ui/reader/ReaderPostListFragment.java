@@ -955,8 +955,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
             return;
         }
 
-        // Update the tags on post refresh since following some sites (like P2) will change followed tags and blogs
-        ReaderUpdateServiceStarter.startService(getContext(), EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        if (forced) {
+            // Update the tags on post refresh since following some sites (like P2) will change followed tags and blogs
+            ReaderUpdateServiceStarter.startService(getContext(),
+                    EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
+        }
 
         if (mFirstLoad) {
             // let onResume() take care of this logic, as the FilteredRecyclerView.FilterListener onLoadData
