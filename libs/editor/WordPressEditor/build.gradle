@@ -41,6 +41,9 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 29
+        // FIXME: This can't be removed just yet becasue the project source
+        // uses it at
+        // WordPressEditor/src/main/java/org/wordpress/android/editor/gutenberg/GutenbergContainerFragment.java:116
         buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", (rootProject.ext.has("buildGutenbergFromSource") ? rootProject.ext.buildGutenbergFromSource : false).toString()
     }
     compileOptions {
