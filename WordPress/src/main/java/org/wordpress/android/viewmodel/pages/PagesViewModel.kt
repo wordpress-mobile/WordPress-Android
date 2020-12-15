@@ -597,6 +597,7 @@ class PagesViewModel
             SET_PARENT -> "set_parent"
             MOVE_TO_DRAFT -> "move_to_draft"
             MOVE_TO_TRASH -> "move_to_bin"
+            COPY -> "copy"
             else -> return
         }
         val properties = mutableMapOf("option_name" to menu as Any)
