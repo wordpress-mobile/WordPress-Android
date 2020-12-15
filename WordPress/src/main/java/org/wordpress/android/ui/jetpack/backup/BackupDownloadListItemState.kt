@@ -3,11 +3,6 @@ package org.wordpress.android.ui.jetpack.backup
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadListItemState.ViewType.ACTION_BUTTON
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadListItemState.ViewType.CHECKBOX
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadListItemState.ViewType.DESCRIPTION
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadListItemState.ViewType.HEADER
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadListItemState.ViewType.SUBHEADER
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -16,7 +11,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 sealed class BackupDownloadListItemState(val type: ViewType) {
     open fun longId(): Long = hashCode().toLong()
 
-    sealed class HeaderState : BackupDownloadListItemState(HEADER) {
+    sealed class HeaderState : BackupDownloadListItemState(ViewType.HEADER) {
         abstract val text: UiString
 
         data class DetailsHeaderState(
@@ -24,7 +19,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         ) : HeaderState()
     }
 
-    sealed class SubHeaderState : BackupDownloadListItemState(SUBHEADER) {
+    sealed class SubHeaderState : BackupDownloadListItemState(ViewType.SUBHEADER) {
         abstract val text: UiString
 
         data class DetailsSubHeaderState(
@@ -32,7 +27,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         ) : SubHeaderState()
     }
 
-    sealed class DescriptionState : BackupDownloadListItemState(DESCRIPTION) {
+    sealed class DescriptionState : BackupDownloadListItemState(ViewType.DESCRIPTION) {
         abstract val text: UiString
 
         data class DetailsSubHeaderState(
@@ -47,7 +42,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         }
     }
 
-    sealed class IconState : BackupDownloadListItemState(DESCRIPTION) {
+    sealed class IconState : BackupDownloadListItemState(ViewType.DESCRIPTION) {
         abstract val icon: Int
         abstract val contentDescription: UiString
 
@@ -58,7 +53,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         ) : IconState()
     }
 
-    sealed class ActionButtonState : BackupDownloadListItemState(ACTION_BUTTON) {
+    sealed class ActionButtonState : BackupDownloadListItemState(ViewType.ACTION_BUTTON) {
         abstract val text: UiString
         abstract val contentDescription: UiString
 
@@ -75,7 +70,7 @@ sealed class BackupDownloadListItemState(val type: ViewType) {
         val label: UiString,
         val checked: Boolean = false,
         val onClick: (() -> Unit)
-    ) : BackupDownloadListItemState(CHECKBOX)
+    ) : BackupDownloadListItemState(ViewType.CHECKBOX)
 
     enum class ViewType(val id: Int) {
         IMAGE(0),
