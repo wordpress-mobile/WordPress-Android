@@ -50,6 +50,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.T
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -715,6 +716,35 @@ class MySiteViewModelTest : BaseUnitTest() {
         val message = UiStringResWithParams(string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
 
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
+    }
+
+    @Test
+    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
+    }
+
+    @Test
+    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
+    }
+
+    @Test
+    fun `add new site press is handled correctly`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        viewModel.onAddSitePressed()
+
+        assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
