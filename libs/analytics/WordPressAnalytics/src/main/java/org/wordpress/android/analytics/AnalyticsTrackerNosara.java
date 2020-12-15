@@ -480,6 +480,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
                 predefinedEventProperties.put("button", "find_out_more");
                 break;
+            case READER_ARTICLE_COMMENTED_ON:
+                predefinedEventProperties.put("replying_to", "post");
+                break;
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
+                predefinedEventProperties.put("replying_to", "comment");
+                break;
         }
 
         final String user;
@@ -638,6 +644,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ACCESSED:
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
                 return "reader_article_commented_on";
             case READER_ARTICLE_COMMENTS_OPENED:
                 return "reader_article_comments_opened";
@@ -1941,6 +1948,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_spammed";
             case COMMENT_BATCH_TRASHED:
                 return "comment_batch_trashed";
+            case COMMENT_BATCH_DELETED:
+                return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
         }
