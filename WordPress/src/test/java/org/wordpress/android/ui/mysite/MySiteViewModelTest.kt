@@ -41,6 +41,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -72,6 +73,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -93,6 +95,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -134,7 +137,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 contextProvider,
                 siteIconUploadHandler,
                 siteStoriesHandler,
-                domainRegistrationHandler
+                domainRegistrationHandler,
+                displayUtilsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -188,7 +192,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(null)
 
         assertThat(uiModels).hasSize(2)
-        assertThat(uiModels.last().items).isEmpty()
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
     }
 
     @Test
@@ -196,8 +200,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(2)
-        assertThat(uiModels.last().items).hasSize(2)
-        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
+        assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
+
+        assertThat(getLastItems()).hasSize(2)
+        assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
     @Test
@@ -417,13 +423,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onAvatarPressed()
 
         assertThat(navigationActions).containsOnly(OpenMeScreen)
-    }
-
-    @Test
-    fun `quick actions are not shown when no site is selected`() {
-        onSiteChange.postValue(null)
-
-        assertThat(uiModels.last().items).doesNotHaveAnyElementsOfTypes(QuickActionsBlock::class.java)
     }
 
     @Test
@@ -722,10 +721,12 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
 
-    private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
+    private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =
-            uiModels.last().items.find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+            getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+
+    private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {
