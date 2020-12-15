@@ -81,9 +81,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    // The version value here is the same as the one in the repo's root
-    // build.gradle
-    implementation "com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge:20201210-144401"
+    implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
     // implementation (project(':@wordpress_react-native-bridge')) {
     //     exclude group: "com.android.volley"
     //     exclude group: 'com.google.code.findbugs'
