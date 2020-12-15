@@ -186,6 +186,7 @@ sealed class PageItem(open val type: Type) {
         SET_PARENT(R.id.set_parent),
         SET_AS_HOMEPAGE(R.id.set_as_homepage),
         SET_AS_POSTS_PAGE(R.id.set_as_posts_page),
+        COPY(R.id.copy),
         PUBLISH_NOW(R.id.publish_now),
         MOVE_TO_DRAFT(R.id.move_to_draft),
         DELETE_PERMANENTLY(R.id.delete_permanently),
