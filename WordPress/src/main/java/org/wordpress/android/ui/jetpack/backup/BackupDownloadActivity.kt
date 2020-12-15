@@ -80,7 +80,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
                 val (backupDownloadCreated, _) = when (backupDownloadWizardState) {
                     // teh request was canceled
                     is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress ->  Pair(true, backupDownloadWizardState.activityId)
+                    is BackupDownloadInProgress -> Pair(true, backupDownloadWizardState.activityId)
                     is BackupDownloadCompleted -> Pair(true, backupDownloadWizardState.activityId)
                 }
                 // todo: annmarie what information do I need to send back - just to kick off status
