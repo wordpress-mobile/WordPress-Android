@@ -60,8 +60,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
 
-        viewModel.navigationTargetObservable
-                .observe(this, { target ->
+        viewModel.navigationTargetObservable.observe(this, { target ->
                     target?.let {
                         showStep(target)
                     }
@@ -78,13 +77,10 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         viewModel.wizardFinishedObservable.observe(this, { backupDownloadWizardState ->
             backupDownloadWizardState?.let {
                 val intent = Intent()
-                val (backupDownloadCreated, activityId) = when (backupDownloadWizardState) {
+                val (backupDownloadCreated, _) = when (backupDownloadWizardState) {
                     // teh request was canceled
                     is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress -> {
-                        // The request is in progress and user didn't want to wait around
-                        Pair(true, backupDownloadWizardState.activityId)
-                    }
+                    is BackupDownloadInProgress ->  Pair(true, backupDownloadWizardState.activityId)
                     is BackupDownloadCompleted -> Pair(true, backupDownloadWizardState.activityId)
                 }
                 // todo: annmarie what information do I need to send back - just to kick off status
