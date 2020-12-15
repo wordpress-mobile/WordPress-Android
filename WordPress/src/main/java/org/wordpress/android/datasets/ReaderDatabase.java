@@ -214,10 +214,10 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 db.execSQL("DROP TABLE IF EXISTS tbl_recommended_blogs;");
                 currentVersion++;
             case 143:
-                db.execSQL("ALTER TABLE tbl_posts ADD is_wpforteams_site BOOLEAN;");
+                // removed additions of deprecated tbl_posts.is_wpforteams_site
                 currentVersion++;
             case 144:
-                db.execSQL("ALTER TABLE tbl_blog_info ADD is_wp_for_teams BOOLEAN;");
+                // removed additions of deprecated tbl_blog_info.is_wp_for_teams
                 currentVersion++;
             case 145:
                 db.execSQL("ALTER TABLE tbl_blog_info ADD organization_id INTEGER;");
