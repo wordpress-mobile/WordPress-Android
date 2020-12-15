@@ -14,4 +14,6 @@ class DisplayUtilsWrapper @Inject constructor(private val contextProvider: Conte
 
     fun isTablet() = DisplayUtils.isTablet(contextProvider.getContext()) ||
             DisplayUtils.isXLargeTablet(contextProvider.getContext())
+
+    fun getDisplayPixelHeight() = DisplayUtils.getDisplayPixelHeight(contextProvider.getContext())
 }
