@@ -79,6 +79,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -112,7 +113,8 @@ class MySiteViewModel
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
-    private val domainRegistrationHandler: DomainRegistrationHandler
+    private val domainRegistrationHandler: DomainRegistrationHandler,
+    private val displayUtilsWrapper: DisplayUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
@@ -133,7 +135,7 @@ class MySiteViewModel
             selectedSiteRepository.showSiteIconProgressBar.distinct(),
             domainRegistrationHandler.isDomainCreditAvailable.distinct()
     ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
-        val items = if (site != null) {
+        val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
                     siteInfoBlockBuilder.buildSiteInfoBlock(
@@ -159,11 +161,13 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
-            siteItems
+            State.SiteSelected(siteItems)
         } else {
-            listOf()
+            // Hide actionable empty view image when screen height is under 600 pixels.
+            val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+            State.NoSites(shouldShowImage)
         }
-        UiModel(currentAvatarUrl.orEmpty(), items)
+        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
     private fun onItemClick(action: ListItemAction) {
@@ -414,8 +418,13 @@ class MySiteViewModel
 
     data class UiModel(
         val accountAvatarUrl: String,
-        val items: List<MySiteItem>
+        val state: State
     )
+
+    sealed class State {
+        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class NoSites(val shouldShowImage: Boolean) : State()
+    }
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
