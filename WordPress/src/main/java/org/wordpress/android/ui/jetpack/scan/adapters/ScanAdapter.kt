@@ -9,13 +9,17 @@ import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ViewType
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanStateViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ScanViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 
-class ScanAdapter(private val uiHelpers: UiHelpers) : Adapter<ScanViewHolder>() {
+class ScanAdapter(
+    private val imageManager: ImageManager,
+    private val uiHelpers: UiHelpers
+) : Adapter<ScanViewHolder>() {
     private val items = mutableListOf<ScanListItemState>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ScanViewHolder {
         return when (viewType) {
-            ViewType.SCAN_STATE.id -> ScanStateViewHolder(uiHelpers, parent)
+            ViewType.SCAN_STATE.id -> ScanStateViewHolder(imageManager, uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

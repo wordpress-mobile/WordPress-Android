@@ -12,9 +12,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ScanFragment : Fragment(R.layout.scan_fragment) {
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanViewModel
@@ -31,7 +33,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initAdapter() {
-        val scanAdapter = ScanAdapter(uiHelpers)
+        val scanAdapter = ScanAdapter(imageManager, uiHelpers)
         scanAdapter.setHasStableIds(true)
         recycler_view.adapter = scanAdapter
     }
