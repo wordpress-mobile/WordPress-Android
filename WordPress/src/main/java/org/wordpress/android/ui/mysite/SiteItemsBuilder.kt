@@ -26,7 +26,6 @@ class SiteItemsBuilder
                 siteListItemBuilder.buildScanItemIfAvailable(onClick),
                 siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_publish)),
-                siteListItemBuilder.buildPagesItemIfAvailable(site, onClick),
                 ListItem(
                         R.drawable.ic_posts_white_24dp,
                         UiStringRes(R.string.my_site_btn_blog_posts),
@@ -37,6 +36,7 @@ class SiteItemsBuilder
                         UiStringRes(R.string.media),
                         onClick = ListItemInteraction.create(ListItemAction.MEDIA, onClick)
                 ),
+                siteListItemBuilder.buildPagesItemIfAvailable(site, onClick),
                 ListItem(
                         R.drawable.ic_comment_white_24dp,
                         UiStringRes(R.string.my_site_btn_comments),
