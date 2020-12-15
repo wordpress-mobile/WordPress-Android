@@ -14,8 +14,7 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val nonNullActivity = requireActivity()
-        (nonNullActivity.application as WordPress).component().inject(this)
+        initDagger()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -23,11 +22,13 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
         initViewModel()
     }
 
+    private fun initDagger() {
+        (requireActivity().application as WordPress).component().inject(this)
+    }
+
     private fun initViewModel() {
-        viewModel = ViewModelProvider(
-                this,
-                viewModelFactory
-        ).get(BackupDownloadCompleteViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory)
+                .get(BackupDownloadCompleteViewModel::class.java)
     }
 
     companion object {

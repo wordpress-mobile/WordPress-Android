@@ -1332,15 +1332,8 @@ public class ActivityLauncher {
         context.startActivity(intent);
     }
 
-    public static void showBackupDownloadForResult(
-            Activity activity,
-            SiteModel site,
-            String activityId,
-            int resultCode) {
-        if (site == null) {
-            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
-            return;
-        }
+    public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
+                                                   int resultCode) {
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
