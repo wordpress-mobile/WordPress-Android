@@ -785,8 +785,11 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
             return;
         }
 
-        AnalyticsUtils.trackWithReaderPostDetails(
-                AnalyticsTracker.Stat.READER_ARTICLE_COMMENTED_ON, mPost);
+        if (mReplyToCommentId != 0) {
+            AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_ARTICLE_COMMENT_REPLIED_TO, mPost);
+        } else {
+            AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_ARTICLE_COMMENTED_ON, mPost);
+        }
 
         mSubmitReplyBtn.setEnabled(false);
         mEditComment.setEnabled(false);
@@ -812,8 +815,6 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                     getCommentAdapter().refreshPost();
                     setReplyToCommentId(0, false);
                     mEditComment.getAutoSaveTextHelper().clearSavedText(mEditComment);
-                    AnalyticsUtils.trackCommentActionWithReaderPostDetails(Stat.COMMENT_REPLIED_TO,
-                            AnalyticsCommentActionSource.READER, mPost);
                 } else {
                     mEditComment.setText(commentText);
                     mSubmitReplyBtn.setEnabled(true);
