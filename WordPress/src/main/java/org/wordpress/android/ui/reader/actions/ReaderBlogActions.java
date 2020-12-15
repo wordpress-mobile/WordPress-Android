@@ -172,19 +172,12 @@ public class ReaderBlogActions {
                 // note we attempt to follow even when the look up fails (blogInfo = null) because that
                 // endpoint doesn't perform feed discovery, whereas the endpoint to follow a feed does
                 long feedIdToFollow = blogInfo != null ? blogInfo.feedId : 0;
-
-                if (feedIdToFollow != 0) {
-                    // when possible we will try to follow feed by it's ID
-                    followFeedById(feedIdToFollow, true, actionListener);
-                } else {
-                    String feedUrlToFollow =
-                            (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
-                    internalFollowFeed(
-                            feedIdToFollow,
-                            feedUrlToFollow,
-                            true,
-                            actionListener);
-                }
+                String feedUrlToFollow = (blogInfo != null && blogInfo.hasFeedUrl()) ? blogInfo.getFeedUrl() : feedUrl;
+                internalFollowFeed(
+                        feedIdToFollow,
+                        feedUrlToFollow,
+                        true,
+                        actionListener);
             }
         });
     }
