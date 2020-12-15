@@ -47,6 +47,9 @@ import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment;
+import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressFragment;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -166,8 +169,6 @@ import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
-import org.wordpress.android.ui.jetpack.scan.ScanActivity;
-import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
@@ -625,6 +626,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BackupDownloadActivity object);
 
     void inject(BackupDownloadDetailsFragment object);
+
+    void inject(BackupDownloadProgressFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
