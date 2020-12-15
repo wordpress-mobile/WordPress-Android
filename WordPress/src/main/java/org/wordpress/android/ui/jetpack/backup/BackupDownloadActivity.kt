@@ -62,12 +62,11 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadViewModel::class.java)
 
-        viewModel.navigationTargetObservable
-                .observe(this, { target ->
-                    target?.let {
-                        showStep(target)
-                    }
-                })
+        viewModel.navigationTargetObservable.observe(this, { target ->
+            target?.let {
+                showStep(target)
+            }
+        })
 
         viewModel.screenTitleObservable.observe(this, { title ->
             supportActionBar?.title = getString(title)
@@ -75,19 +74,15 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             this.title = getString(title)
         })
 
-        // todo: annmarie - may there are more states?
         // Canceled, Running, Complete -> (Running = kick off status)
-        viewModel.wizardFinishedObservable.observe(this, { backupDownloadWizardState ->
-            backupDownloadWizardState?.let {
+        viewModel.wizardFinishedObservable.observe(this, {
+            it.applyIfNotHandled {
                 val intent = Intent()
-                val (backupDownloadCreated, activityId) = when (backupDownloadWizardState) {
+                val (backupDownloadCreated, _) = when (this) {
                     // teh request was canceled
                     is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress -> {
-                        // The request is in progress and user didn't want to wait around
-                        Pair(true, backupDownloadWizardState.activityId)
-                    }
-                    is BackupDownloadCompleted -> Pair(true, backupDownloadWizardState.activityId)
+                    is BackupDownloadInProgress -> Pair(true, activityId)
+                    is BackupDownloadCompleted -> Pair(true, activityId)
                 }
                 // todo: annmarie what information do I need to send back - just to kick off status
                 // intent.putExtra(SOME_KEY_THAT_DESCRIBES_THE_ID, activityId )

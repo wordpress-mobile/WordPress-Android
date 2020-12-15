@@ -8,24 +8,20 @@ enum class BackupDownloadStep : WizardStep {
     DETAILS, PROGRESS, COMPLETE;
 
     companion object {
-        fun fromString(input: String): BackupDownloadStep {
-            return when (input) {
-                "backup_download_details" -> DETAILS
-                "backup_download_progress" -> PROGRESS
-                "backup_download_complete" -> COMPLETE
-                else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
-            }
+        fun fromString(input: String): BackupDownloadStep = when (input) {
+            "backup_download_details" -> DETAILS
+            "backup_download_progress" -> PROGRESS
+            "backup_download_complete" -> COMPLETE
+            else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
         }
     }
 }
 
 @Singleton
 class BackupDownloadStepsProvider @Inject constructor() {
-    fun getSteps(): List<BackupDownloadStep> {
-        return listOf(
-                BackupDownloadStep.fromString("backup_download_details"),
-                BackupDownloadStep.fromString("backup_download_progress"),
-                BackupDownloadStep.fromString("backup_download_complete")
-        )
-    }
+    fun getSteps() = listOf(
+            BackupDownloadStep.fromString("backup_download_details"),
+            BackupDownloadStep.fromString("backup_download_progress"),
+            BackupDownloadStep.fromString("backup_download_complete")
+    )
 }
