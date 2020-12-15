@@ -1933,6 +1933,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_deleted";
             case COMMENT_FOLLOW_CONVERSATION:
                 return "comment_follow_conversation";
+            case COMMENT_BATCH_APPROVED:
+                return "comment_batch_approved";
+            case COMMENT_BATCH_UNAPPROVED:
+                return "comment_batch_unapproved";
+            case COMMENT_BATCH_SPAMMED:
+                return "comment_batch_spammed";
+            case COMMENT_BATCH_TRASHED:
+                return "comment_batch_trashed";
+            case COMMENT_EDITOR_OPENED:
+                return "comment_editor_opened";
         }
         return null;
     }
