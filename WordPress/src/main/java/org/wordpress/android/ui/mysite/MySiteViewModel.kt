@@ -47,6 +47,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -401,6 +402,10 @@ class MySiteViewModel
 
     fun onAvatarPressed() {
         _onNavigation.value = Event(OpenMeScreen)
+    }
+
+    fun onAddSitePressed() {
+        _onNavigation.value = Event(AddNewSite(accountStore.hasAccessToken()))
     }
 
     override fun onCleared() {

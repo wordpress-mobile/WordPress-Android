@@ -27,9 +27,11 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
@@ -143,6 +145,8 @@ class ImprovedMySiteFragment : Fragment(),
             }
         }
 
+        actionable_empty_view.button.setOnClickListener { viewModel.onAddSitePressed() }
+
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -238,6 +242,7 @@ class ImprovedMySiteFragment : Fragment(),
                             action.site,
                             CTA_DOMAIN_CREDIT_REDEMPTION
                     )
+                    is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
                 }
             }
         })
