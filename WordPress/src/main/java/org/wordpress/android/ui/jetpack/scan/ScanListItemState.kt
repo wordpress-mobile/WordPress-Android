@@ -47,8 +47,16 @@ sealed class ScanListItemState(val type: ViewType) {
         ViewType.THREATS_HEADER
     )
 
-    data class ThreatItemState(val threatId: Long, val description: String) : ScanListItemState(ViewType.THREAT) {
-        constructor(model: ThreatModel) : this(model.baseThreatModel.id, model.baseThreatModel.description)
+    // TODO: ashiagr fix threat title, description actual texts based on threat types
+    data class ThreatItemState(val threatId: Long, val title: String, val description: String) : ScanListItemState(
+        ViewType.THREAT
+    ) {
+        constructor(model: ThreatModel) : this(
+            model.baseThreatModel.id,
+            model.baseThreatModel.description,
+            model.baseThreatModel.description
+        )
+
         override fun longId() = threatId.hashCode().toLong()
     }
 
