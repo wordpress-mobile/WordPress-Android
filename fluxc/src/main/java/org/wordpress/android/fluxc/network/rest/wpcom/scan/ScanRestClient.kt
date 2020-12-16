@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -44,10 +45,10 @@ class ScanRestClient(
             }
             is Error -> {
                 val errorType = NetworkErrorMapper.map(
-                        response.error,
-                        ScanStateErrorType.GENERIC_ERROR,
-                        ScanStateErrorType.INVALID_RESPONSE,
-                        ScanStateErrorType.AUTHORIZATION_REQUIRED
+                    response.error,
+                    ScanStateErrorType.GENERIC_ERROR,
+                    ScanStateErrorType.INVALID_RESPONSE,
+                    ScanStateErrorType.AUTHORIZATION_REQUIRED
                 )
                 val error = ScanStateError(errorType, response.error.message)
                 FetchedScanStatePayload(error, site)
@@ -82,43 +83,68 @@ class ScanRestClient(
     }
 
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
-        val scanStateModel = mapResponseToScanStateModel(response)
-        scanStateModel?.let {
-            return FetchedScanStatePayload(scanStateModel, site)
-        }
-        return buildErrorPayload(site, ScanStateErrorType.INVALID_RESPONSE)
-    }
-
-    private fun mapResponseToScanStateModel(response: ScanStateResponse): ScanStateModel? {
-        val state = State.fromValue(response.state) ?: return null
-
-        return ScanStateModel(
-                state = state,
-                reason = response.reason,
-                threats = response.threats?.map { threatMapper.map(it) },
-                hasCloud = response.hasCloud,
-                credentials = response.credentials?.map {
-                    Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
-                },
-                mostRecentStatus = response.mostRecentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            duration = it.duration,
-                            progress = it.progress,
-                            error = it.error,
-                            isInitial = it.isInitial
-                    )
-                },
-                currentStatus = response.currentStatus?.let {
-                    ScanProgressStatus(
-                            startDate = it.startDate,
-                            progress = it.progress,
-                            isInitial = it.isInitial
-                    )
-                }
+        val state = State.fromValue(response.state) ?: return buildErrorPayload(
+            site,
+            ScanStateErrorType.INVALID_RESPONSE
         )
+        var error: ScanStateErrorType? = null
+        val threatModels = response.threats?.mapNotNull { threat ->
+            val threatModel = when {
+                threat.id == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_ID
+                    null
+                }
+                threat.signature == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_SIGNATURE
+                    null
+                }
+                threat.firstDetected == null -> {
+                    error = ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED
+                    null
+                }
+                else -> {
+                    val threatStatus = ThreatStatus.fromValue(threat.status)
+                    if (threatStatus != ThreatStatus.UNKNOWN) {
+                        threatMapper.map(threat)
+                    } else {
+                        error = ScanStateErrorType.INVALID_RESPONSE
+                        null
+                    }
+                }
+            }
+            threatModel
+        }
+        error?.let {
+            return buildErrorPayload(site, it)
+        }
+        val scanStateModel = ScanStateModel(
+            state = state,
+            reason = response.reason,
+            threats = threatModels,
+            hasCloud = response.hasCloud ?: false,
+            credentials = response.credentials?.map {
+                Credentials(it.type, it.role, it.host, it.port, it.user, it.path, it.stillValid)
+            },
+            mostRecentStatus = response.mostRecentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    duration = it.duration ?: 0,
+                    progress = it.progress ?: 0,
+                    error = it.error ?: false,
+                    isInitial = it.isInitial ?: false
+                )
+            },
+            currentStatus = response.currentStatus?.let {
+                ScanProgressStatus(
+                    startDate = it.startDate,
+                    progress = it.progress ?: 0,
+                    isInitial = it.isInitial ?: false
+                )
+            }
+        )
+        return FetchedScanStatePayload(scanStateModel, site)
     }
 
     private fun buildErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
-            FetchedScanStatePayload(ScanStateError(errorType), site)
+        FetchedScanStatePayload(ScanStateError(errorType), site)
 }
