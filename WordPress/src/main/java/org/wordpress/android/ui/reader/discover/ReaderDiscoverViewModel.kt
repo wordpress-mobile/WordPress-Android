@@ -73,6 +73,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
+    private var isScreenVisible = false
 
     private lateinit var parentViewModel: ReaderViewModel
 
@@ -424,6 +425,10 @@ class ReaderDiscoverViewModel @Inject constructor(
         launch {
             readerDiscoverDataProvider.refreshCards()
         }
+    }
+
+    fun updateScreenVisibility(isScreenVisible: Boolean) {
+        this.isScreenVisible = isScreenVisible
     }
 
     sealed class DiscoverUiState(

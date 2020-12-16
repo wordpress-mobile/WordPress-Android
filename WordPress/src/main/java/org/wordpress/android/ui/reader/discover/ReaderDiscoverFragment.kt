@@ -60,6 +60,16 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     private lateinit var parentViewModel: ReaderViewModel
 
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateScreenVisibility(true)
+    }
+
+    override fun onPause() {
+        viewModel.updateScreenVisibility(false)
+        super.onPause()
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
