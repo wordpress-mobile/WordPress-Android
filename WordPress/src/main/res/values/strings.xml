@@ -1031,6 +1031,7 @@
     <string name="activity_log_activity_type_filter_clear">Clear</string>
     <string name="activity_log_date_range_filter_label">Date range</string>
     <string name="activity_log_activity_type_filter_label">Activity type</string>
+    <string name="activity_log_activity_type_filter_active_label">Activity type (%s)</string>
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>

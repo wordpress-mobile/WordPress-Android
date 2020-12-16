@@ -29,6 +29,7 @@ import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgres
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
@@ -174,7 +175,7 @@ class ActivityLogViewModel @Inject constructor(
         _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
             FiltersShown(
                     createDateRangeFilterLabel(),
-                    UiStringRes(R.string.activity_log_activity_type_filter_label),
+                    createActivityTypeFilterLabel(),
                     currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                     currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
             )
@@ -184,11 +185,23 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun createDateRangeFilterLabel(): UiString {
-        currentDateRangeFilter?.let {
-            return UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second)))
-        }
+        return currentDateRangeFilter?.let {
+            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second)))
+        } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
+    }
 
-        return UiStringRes(R.string.activity_log_date_range_filter_label)
+    private fun createActivityTypeFilterLabel(): UiString {
+        return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
+             if (it.size == 1) {
+                // TODO malinjir replace it[0] with translated name of the activity type
+                UiStringText("${it[0]}")
+            } else {
+                UiStringResWithParams(
+                        R.string.activity_log_activity_type_filter_active_label,
+                        listOf(UiStringText("${it.size}"))
+                )
+            }
+        } ?: UiStringRes(R.string.activity_log_activity_type_filter_label)
     }
 
     fun onPullToRefresh() {
