@@ -19,7 +19,6 @@ import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleEventObservable
-import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 const val KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY = "key_backup_download_activity_id_key"
