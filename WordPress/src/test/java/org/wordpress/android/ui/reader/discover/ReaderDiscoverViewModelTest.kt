@@ -21,6 +21,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTag
@@ -64,10 +65,10 @@ import org.wordpress.android.ui.reader.repository.ReaderDiscoverDataProvider
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_FIRST_PAGE
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks.REQUEST_MORE
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
-import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
+import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -597,6 +598,52 @@ class ReaderDiscoverViewModelTest {
         (viewModel.uiState.value as RequestFailedUiState).action.invoke()
         // Assert
         verify(readerDiscoverDataProvider).refreshCards()
+    }
+
+    /* TRACK - READER_DISCOVER_CONTENT_PRESENTED */
+
+    @Test
+    fun `given screen is not visible, when discover feed succeeds, then do not track content presented`() = test {
+        // Arrange
+        init()
+        viewModel.updateScreenVisibility(false)
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        // Assert
+        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+    }
+
+    @Test
+    fun `given screen is visible, when discover feed succeeds, then do track content presented`() = test {
+        // Arrange
+        init()
+        viewModel.updateScreenVisibility(true)
+        // Act
+        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        // Assert
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+    }
+
+    @Test
+    fun `given screen is not visible, when communication channel errors, then do not track content presented`() = test {
+        // Arrange
+        init()
+        viewModel.updateScreenVisibility(false)
+        // Act
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Assert
+        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+    }
+
+    @Test
+    fun `given screen is visible, when communication channel errors, then do track content presented`() = test {
+        // Arrange
+        init()
+        viewModel.updateScreenVisibility(true)
+        // Act
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Assert
+        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
