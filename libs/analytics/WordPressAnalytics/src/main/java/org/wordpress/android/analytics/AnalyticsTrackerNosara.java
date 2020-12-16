@@ -673,6 +673,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_suggested_site_visited";
             case READER_SUGGESTED_SITE_TOGGLE_FOLLOW:
                 return "reader_suggested_site_toggle_follow";
+            case READER_DISCOVER_CONTENT_PRESENTED:
+                return "reader_discover_content_presented";
             case READER_ARTICLE_VISITED:
                 return "reader_article_visited";
             case READER_DISCOVER_VIEWED:
