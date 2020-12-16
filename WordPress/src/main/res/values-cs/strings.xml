@@ -471,7 +471,6 @@ Language: cs_CZ
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 příspěvek s 1 souborem nenahrán </string>
     <string name="untitled_in_parentheses">(bez názvu)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Vytvořit stránku</string>
     <string name="notification_site_creation_created">Dotkněte se pro pokračování.</string>
     <string name="notification_site_creation_title_success">Web vytvořen!</string>
@@ -758,10 +757,6 @@ Language: cs_CZ
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Čeká na schválení</string>
     <string name="post_status_publish_post">Publikovat</string>
-    <string name="change_location">Změnit polohu</string>
-    <string name="remove_location">Odstranit polohu</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Nelze otevřít výběr místa, služby Google Play nejsou k dispozici</string>
-    <string name="post_settings_location">Poloha</string>
     <string name="now">Teď</string>
     <string name="post_settings_password_dialog_hint">Pouze čtenáři s tímto heslem si mohou tento příspěvek přečíst</string>
     <string name="post_settings_excerpt_dialog_hint">Stručný obsah je volitelný ručně vytvořený souhrn obsahu.</string>

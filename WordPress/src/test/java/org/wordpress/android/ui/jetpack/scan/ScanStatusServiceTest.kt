@@ -23,6 +23,9 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.UNAVAILABLE
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
+import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
+import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType.AUTHORIZATION_REQUIRED
+import org.wordpress.android.test
 import org.wordpress.android.util.ScanFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -81,6 +84,18 @@ class ScanStatusServiceTest {
     fun emitsScanNotAvailableOnStartWhenScanIsNotAvailable() {
         val unknownScanStateModel = scanStateModel.copy(state = UNAVAILABLE)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(unknownScanStateModel)
+
+        scanStatusService.start(site)
+
+        assertEquals(false, scanAvailable)
+    }
+
+    @Test
+    fun emitsScanNotAvailableOnError() = test {
+        whenever(scanStore.fetchScanState(any())).thenReturn(
+            OnScanStateFetched(ScanStateError(AUTHORIZATION_REQUIRED), FETCH_SCAN_STATE)
+        )
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
 
         scanStatusService.start(site)
 

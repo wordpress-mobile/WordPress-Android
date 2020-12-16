@@ -1359,6 +1359,9 @@
         <item name="android:textAppearance">?attr/textAppearanceHeadline6</item>
         <item name="fontFamily">serif</item>
         <item name="android:textStyle">bold</item>
+        <item name="autoSizeMaxTextSize">@dimen/text_sz_extra_large</item>
+        <item name="autoSizeMinTextSize">@dimen/text_sz_extra_extra_small</item>
+        <item name="autoSizeTextType">uniform</item>
     </style>
 
     <style name="ModalLayoutPickerTitle" parent="ModalLayoutPickerText">
@@ -1368,6 +1371,7 @@
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:paddingTop">@dimen/mlp_titles_top_margin</item>
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+        <item name="android:maxLines">3</item>
         <item name="fontFamily">serif</item>
     </style>
 

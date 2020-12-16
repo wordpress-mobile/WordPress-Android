@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import androidx.recyclerview.widget.DiffUtil
 import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
@@ -21,6 +22,7 @@ class MySiteAdapterDiffCallback(
         return oldItem.type == updatedItem.type && when {
             oldItem is SiteInfoBlock && updatedItem is SiteInfoBlock -> true
             oldItem is QuickActionsBlock && updatedItem is QuickActionsBlock -> true
+            oldItem is DomainRegistrationBlock && updatedItem is DomainRegistrationBlock -> true
             oldItem is CategoryHeader && updatedItem is CategoryHeader -> oldItem.title == updatedItem.title
             oldItem is ListItem && updatedItem is ListItem -> oldItem.primaryText == updatedItem.primaryText
             else -> throw NotImplementedException("Diff not implemented yet")

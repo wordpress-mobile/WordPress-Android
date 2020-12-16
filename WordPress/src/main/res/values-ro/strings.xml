@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 08:38:35+0000
+Translation-Revision-Date: 2020-12-01 09:09:16+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nume fișier</string>
+    <string name="gutenberg_native_file_block_settings">Setări bloc fișier</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Încărcarea fișierelor a eșuat.\nTe rog atinge pentru opțiuni.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Salvarea fișierelor a eșuat.\nTe rog atinge pentru opțiuni.</string>
+    <string name="gutenberg_native_edit_file">Editează fișierul</string>
+    <string name="gutenberg_native_copy_file_url">Copiază URL-ul fișierului</string>
+    <string name="gutenberg_native_choose_a_file">ALEGE UN FIȘIER</string>
+    <string name="new_site_creation_domain_header_title">Alege un domeniu</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Nou</string>
+    <string name="my_site_btn_jetpack_settings">Setări Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Urmăresc conversația</string>
+    <string name="reader_btn_follow_comments">Urmărește conversația</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Nu am putut face dezabonarea la comentarii pentru acest articol</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Nu am putut face abonarea la comentarii pentru acest articol</string>
+    <string name="reader_follow_comments_get_status_error">Eroare la aducerea stării abonamentului pentru articol</string>
+    <string name="reader_follow_comments_unsubscribe_success">Te-ai dezabonat cu succes de la comentarii</string>
+    <string name="reader_follow_comments_subscribe_success">Te-ai abonat cu succes la comentarii</string>
+    <string name="reader_follow_comments_bad_format_response">Am primit un răspuns invalid</string>
+    <string name="reader_follow_comments_null_response">Nu am primit niciun răspuns</string>
+    <string name="activity_log_activity_type_filter_clear">Șterge</string>
+    <string name="activity_log_activity_type_filter_apply">Aplică</string>
     <string name="dialog_edit_story_unsupported_format_message">Nu au fost adăugate diapozitive în narațiunea ta deoarece narațiunile nu acceptă fișiere GIF. Te rog alege în schimb o imagine statică sau un fundal video.</string>
     <string name="dialog_edit_story_unsupported_format_title">Fișierele GIF nu sunt acceptate</string>
     <string name="dialog_edit_story_unrecoverable_message">Nu am putut găsi pe sit conținut media pentru această narațiune.</string>
@@ -41,7 +63,7 @@ Language: ro
     <string name="gutenberg_native_scrollable_block_menu_closed">Meniul de blocuri care poate fi derulat este închis.</string>
     <string name="hpp_skip_button">Sari</string>
     <string name="hpp_choose_button">Alege</string>
-    <string name="hpp_subtitle">Alege aranjamentul preferat pentru prima pagină. Îl poți personaliza sau modifica mai târziu.</string>
+    <string name="hpp_subtitle">Alege aranjamentul preferat pentru prima pagină. Îl poți edita sau personaliza mai târziu.</string>
     <string name="hpp_title">Alege un design</string>
     <string name="mlp_network_error_subtitle">Atinge reîncearcă când ești din nou online sau creează o pagină goală folosind butonul de mai jos.</string>
     <string name="mlp_network_error_title">Aranjamentele nu sunt disponibile când ești offline</string>
@@ -306,7 +328,6 @@ Language: ro
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Încearcă un aranjament de început</string>
     <string name="gutenberg_native_open_block_actions_menu">Deschide meniul acțiuni blocuri</string>
-    <string name="gutenberg_native_insert_mention">Inserează mențiunea</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Atinge de două ori pentru a deschide Foaia de jos cu opțiunile disponibile</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Atinge de două ori pentru a deschide Foaia acțiuni cu opțiunile disponibile</string>
     <string name="pages_cannot_be_started">Nu putem deschide paginile în acest moment. Te rog reîncearcă mai târziu.</string>
@@ -473,7 +494,6 @@ Language: ro
     <string name="post_list_tab_published_posts">Publicate</string>
     <string name="sharing_facebook_account_must_have_pages">Conexiunea Facebook nu găsește nicio pagină. Publicitatea nu se poate conecta la profilurile Facebook, ci numai la pagini Facebook publicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Neconectat</string>
-    <string name="my_site_select_domains_page_title">Adresă sit</string>
     <string name="notifications_tab_title_likes">Aprecieri</string>
     <string name="notifications_tab_title_follows">Urmăriri</string>
     <string name="notifications_tab_title_comments">Comentarii</string>
@@ -971,7 +991,6 @@ Language: ro
     <string name="new_site_creation_create_site_button">Crează situl</string>
     <string name="new_site_creation_search_domain_input_hint">Caută domenii</string>
     <string name="new_site_creation_domain_header_subtitle">Aici vei fi găsit pe internet.</string>
-    <string name="new_site_creation_domain_header_title">Alege un nume de domeniu pentru situl tău</string>
     <string name="new_site_creation_empty_domain_list_message">Nu se potrivește nicio adresă disponibilă cu căutarea ta</string>
     <string name="site_creation_error_generic_subtitle">Eroare de comunicare cu serverul, te rog încercă din nou</string>
     <string name="site_creation_error_generic_title">A fost o problemă</string>
@@ -1422,7 +1441,6 @@ Language: ro
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">Un articol cu un fișier neîncărcat</string>
     <string name="untitled_in_parentheses">(fără titlu)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Creează situl</string>
     <string name="notification_site_creation_created">Atinge pentru a continua.</string>
     <string name="notification_site_creation_title_success">Sit creat!</string>
@@ -1713,10 +1731,6 @@ Language: ro
     <string name="post_status_draft">Ciornă</string>
     <string name="post_status_pending_review">Revizie în așteptare</string>
     <string name="post_status_publish_post">Publică</string>
-    <string name="change_location">Schimbă locația</string>
-    <string name="remove_location">Înlătură locația</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Nu pot deschide selectorul de locație, serviciile Google Play nu sunt disponibile</string>
-    <string name="post_settings_location">Locație</string>
     <string name="now">Acum</string>
     <string name="post_settings_password_dialog_hint">Numai cei care au această parolă pot vedea acest articol</string>
     <string name="post_settings_excerpt_dialog_hint">Rezumatele sunt scurte expuneri manuale, opționale, ale conținutului tău.</string>

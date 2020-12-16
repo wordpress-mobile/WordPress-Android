@@ -45,4 +45,5 @@ sealed class SiteNavigationAction {
         val source: PagePostCreationSourcesDetail,
         val mediaUris: List<String>
     ) : SiteNavigationAction()
+    data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
 }

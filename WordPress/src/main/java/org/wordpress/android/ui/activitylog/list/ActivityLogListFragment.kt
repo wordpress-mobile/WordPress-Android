@@ -6,7 +6,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +18,8 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
@@ -35,6 +36,7 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
+private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -111,15 +113,15 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(viewLifecycleOwner, Observer {
+        viewModel.events.observe(viewLifecycleOwner, {
             reloadEvents(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(viewLifecycleOwner, Observer { listStatus ->
+        viewModel.eventListStatus.observe(viewLifecycleOwner, { listStatus ->
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(filters_bar, uiState.visibility)
             if (uiState is FiltersShown) {
                 date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
@@ -127,56 +129,51 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
             showActivityTypeFilterDialog(event.siteId, event.initialSelection)
         })
 
-        viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.showDateRangePicker.observe(viewLifecycleOwner, { event ->
             showDateRangePicker(event.initialSelection)
         })
 
-        viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
+        viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
             }
         })
 
-        viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer {
+        viewModel.showRewindDialog.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 displayRewindDialog(it)
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { message ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }
         })
 
-        viewModel.moveToTop.observe(this, Observer {
+        viewModel.moveToTop.observe(this, {
             log_list_view.scrollToPosition(0)
         })
 
-        viewModel.showMoreMenu.observe(viewLifecycleOwner, Observer {
-            if (it is ActivityLogListItem.Event) {
-                displayMoreMenuDialog(it)
-            }
-        })
+        viewModel.navigationEvents.observe(viewLifecycleOwner, {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            event.activityId,
+                            BACKUP_DOWNLOAD_REQUEST_CODE)
+                    // todo: annmarie replace with the ActivityLauncher for showing restore details
+                    is ShowRestore -> displayRewindDialog(event) }
+                }
+            })
     }
 
-    private fun displayMoreMenuDialog(item: ActivityLogListItem.Event) {
-        val dialog = BasicFragmentDialog()
-        item.rewindId?.let {
-            dialog.initialize(it,
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
-                    getString(R.string.activity_log_rewind_site),
-                    getString(R.string.backup_download_details_header),
-                    getString(R.string.cancel))
-            dialog.show(requireFragmentManager(), it)
-        }
-    }
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
@@ -230,10 +227,17 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onActionButtonClicked(item)
     }
 
+    private fun onSecondaryActionClicked(
+        secondaryAction: ActivityLogListItem.SecondaryAction,
+        item: ActivityLogListItem
+    ): Boolean {
+        return viewModel.onSecondaryActionClicked(secondaryAction, item)
+    }
+
     private fun setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
         if (log_list_view.adapter == null) {
-            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked)
+            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked, this::onSecondaryActionClicked)
             log_list_view.adapter = adapter
         } else {
             adapter = log_list_view.adapter as ActivityLogAdapter

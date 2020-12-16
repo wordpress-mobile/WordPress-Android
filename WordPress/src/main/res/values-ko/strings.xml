@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-27 01:33:15+0000
+Translation-Revision-Date: 2020-12-07 03:20:33+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_file_name">파일 이름</string>
+    <string name="gutenberg_native_file_block_settings">파일 블록 설정</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">파일 업로드를 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">파일 저장을 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
+    <string name="gutenberg_native_edit_file">파일 편집하기</string>
+    <string name="gutenberg_native_copy_file_url">파일 URL 복사하기</string>
+    <string name="gutenberg_native_choose_a_file">파일 선택하기</string>
+    <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
+    <string name="my_site_bottom_sheet_story_tag_new">신규</string>
+    <string name="my_site_btn_jetpack_settings">젯팩 설정</string>
+    <string name="my_site_header_jetpack">젯팩</string>
+    <string name="reader_btn_following_comments">대화 팔로우 중</string>
+    <string name="reader_btn_follow_comments">대화 팔로우하기</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">이 글에 대한 댓글을 구독 해제할 수 없습니다</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">이 글에 대한 댓글을 구독할 수 없습니다</string>
+    <string name="reader_follow_comments_get_status_error">글에 대한 구독상태를 가져오는데 오류가 있습니다</string>
+    <string name="reader_follow_comments_unsubscribe_success">댓글을 성공적으로 구독 해제했습니다</string>
+    <string name="reader_follow_comments_subscribe_success">이 댓글을 성공적으로 구독했습니다</string>
+    <string name="reader_follow_comments_bad_format_response">유효하지 않은 반응을 받았습니다</string>
+    <string name="reader_follow_comments_null_response">받은 응답이 없습니다</string>
+    <string name="activity_log_activity_type_filter_clear">지우기</string>
+    <string name="activity_log_activity_type_filter_apply">적용하기</string>
     <string name="dialog_edit_story_unsupported_format_message">하나 또는 그 이상의 슬라이드는 지금 이야기가 GIF 파일을 지원하지 않기에 이야기에 추가할 수 없습니다. 정지한 이미지 또는 비디오 배경을 대신 선택하시기 바랍니다.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF 파일을 지원하지 않습니다</string>
     <string name="dialog_edit_story_unrecoverable_message">사이트의 이 이야기에 대한 미디어를 찾을 수 없습니다.</string>
@@ -306,7 +328,6 @@ Language: ko_KR
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
-    <string name="gutenberg_native_insert_mention">언급 넣기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 동작 시트를 열기</string>
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
@@ -473,7 +494,6 @@ Language: ko_KR
     <string name="post_list_tab_published_posts">게시됨</string>
     <string name="sharing_facebook_account_must_have_pages">페이스북 연결에서 페이지를 찾을 수 없습니다. 배포 기능은 페이스북 프로필에 연결할 수 없으며 게시된 페이지에만 연결할 수 있습니다.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">연결되지 않음</string>
-    <string name="my_site_select_domains_page_title">사이트 주소</string>
     <string name="notifications_tab_title_likes">좋아요</string>
     <string name="notifications_tab_title_follows">팔로우</string>
     <string name="notifications_tab_title_comments">댓글</string>
@@ -971,7 +991,6 @@ Language: ko_KR
     <string name="new_site_creation_create_site_button">사이트 생성</string>
     <string name="new_site_creation_search_domain_input_hint">도메인 검색</string>
     <string name="new_site_creation_domain_header_subtitle">사람들이 인터넷에서 회원님을 찾을 수 있는 곳입니다.</string>
-    <string name="new_site_creation_domain_header_title">사이트의 도메인 네임 선택</string>
     <string name="new_site_creation_empty_domain_list_message">검색 내용과 일치하는 주소가 없습니다.</string>
     <string name="site_creation_error_generic_subtitle">서버와 통신하는 동안 오류가 발생했습니다. 다시 시도하세요.</string>
     <string name="site_creation_error_generic_title">문제가 발생했습니다.</string>
@@ -1422,7 +1441,6 @@ Language: ko_KR
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1개의 파일이 포함된 1개의 글이 업로드되지 않음</string>
     <string name="untitled_in_parentheses">(제목 없음)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%f, %f</string>
     <string name="site_creation_domain_finish_button">사이트 생성</string>
     <string name="notification_site_creation_created">계속하려면 누르세요.</string>
     <string name="notification_site_creation_title_success">사이트를 생성했습니다!</string>
@@ -1713,10 +1731,6 @@ Language: ko_KR
     <string name="post_status_draft">임시글</string>
     <string name="post_status_pending_review">검토 대기 중</string>
     <string name="post_status_publish_post">발행</string>
-    <string name="change_location">위치 변경</string>
-    <string name="remove_location">위치 제거</string>
-    <string name="post_settings_error_placepicker_missing_play_services">위치 선택기를 열 수 없습니다. Google Play 서비스를 사용할 수 없습니다</string>
-    <string name="post_settings_location">위치</string>
     <string name="now">지금</string>
     <string name="post_settings_password_dialog_hint">이 암호를 아는 사용자만 이 글을 볼 수 있습니다</string>
     <string name="post_settings_excerpt_dialog_hint">원하는 경우 내 콘텐츠를 직접 요약한 발췌본을 작성할 수 있습니다.</string>

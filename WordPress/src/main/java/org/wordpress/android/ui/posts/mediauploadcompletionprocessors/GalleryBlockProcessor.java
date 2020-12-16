@@ -48,10 +48,10 @@ public class GalleryBlockProcessor extends BlockProcessor {
             Element parent = targetImg.parent();
             if (parent != null && parent.is("a") && mLinkTo != null) {
                 switch (mLinkTo) {
-                    case "media":
+                    case "file":
                         parent.attr("href", mRemoteUrl);
                         break;
-                    case "attachment":
+                    case "post":
                         parent.attr("href", mAttachmentPageUrl);
                         break;
                     default:

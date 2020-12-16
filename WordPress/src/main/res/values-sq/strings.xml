@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 16:26:01+0000
+Translation-Revision-Date: 2020-12-06 08:37:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Emër kartele</string>
+    <string name="gutenberg_native_file_block_settings">Rregullime blloku kartelash</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">S’u arrit të ngarkohen kartela.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">S’u arrit të ruhen kartela.\nJu lutemi, prekeni për mundësi.</string>
+    <string name="gutenberg_native_edit_file">Përpunoni kartelën</string>
+    <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
+    <string name="gutenberg_native_choose_a_file">ZGJIDHNI NJË KARTELË</string>
+    <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
+    <string name="my_site_bottom_sheet_story_tag_new">E re</string>
+    <string name="my_site_btn_jetpack_settings">Rregullime Jetpack-u</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Biseda ndiqet</string>
+    <string name="reader_btn_follow_comments">Ndiqe bisedën</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">S’u bë dot shpajtimi nga komentet për këtë postim</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">S’u bë dot pajtimi te komentet për këtë postim</string>
+    <string name="reader_follow_comments_get_status_error">Gabim në sjellje gjendjeje pajtimi për këtë postim</string>
+    <string name="reader_follow_comments_unsubscribe_success">U shpajtua me sukses nga komentet</string>
+    <string name="reader_follow_comments_subscribe_success">U pajtua me sukses te komentet</string>
+    <string name="reader_follow_comments_bad_format_response">U mor përgjigje e pavlefshme</string>
+    <string name="reader_follow_comments_null_response">S’u mor përgjigje</string>
+    <string name="activity_log_activity_type_filter_clear">Spastroje</string>
+    <string name="activity_log_activity_type_filter_apply">Aplikoje</string>
     <string name="dialog_edit_story_unsupported_format_message">Një ose disa diapozitiva nuk janë shtuar te Artikulli juaj, ngaqë Artikujt nuk mbulojnë kartela GIF, hëpërhë. Ju lutemi, në vend të tyre, zgjidhni një figurë statike ose një sfond video.</string>
     <string name="dialog_edit_story_unsupported_format_title">Kartelat GIF nuk mbulohen</string>
     <string name="dialog_edit_story_unrecoverable_message">S’gjetëm dot te sajti median për këtë artikull.</string>
@@ -41,7 +63,7 @@ Language: sq_AL
     <string name="gutenberg_native_scrollable_block_menu_closed">Menuja e blloqeve u mbyll.</string>
     <string name="hpp_skip_button">Anashkaloje</string>
     <string name="hpp_choose_button">Zgjidhni</string>
-    <string name="hpp_subtitle">Zgjidhni skemën e parapëlqyer për faqen tuaj hyrëse. Mund ta përshtatni ose ndryshoni më vonë.</string>
+    <string name="hpp_subtitle">Zgjidhni skemën e parapëlqyer për faqen tuaj hyrëse. Mund ta përpunoni dhe përshtatni.</string>
     <string name="hpp_title">Zgjidhni një skemë</string>
     <string name="mlp_network_error_subtitle">Prekni &lt;code>Retry&lt;/code>, kur të jeni prapë të lidhur, ose krijoni një faqe të zbrazët duke përdorur butonin më poshtë.</string>
     <string name="mlp_network_error_title">S’mund të kihen skema, teksa jeni jashtë linje</string>
@@ -305,7 +327,6 @@ Language: sq_AL
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Provoni një skemë sa për fillim</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
-    <string name="gutenberg_native_insert_mention">Futni përmendje</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Poshtme me mundësitë e gatshme</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Veprimeve me mundësitë e gatshme</string>
     <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
@@ -472,7 +493,6 @@ Language: sq_AL
     <string name="post_list_tab_published_posts">Botuar</string>
     <string name="sharing_facebook_account_must_have_pages">Lidhja Facebook s’gjen dot ndonjë Faqe. Publicize s’mund të lidhet me Profile Facebook, vetëm me Faqe të botuara.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">I palidhur</string>
-    <string name="my_site_select_domains_page_title">Adresë Sajti</string>
     <string name="notifications_tab_title_likes">Pëlqime</string>
     <string name="notifications_tab_title_follows">Ndjekje</string>
     <string name="notifications_tab_title_comments">Komente</string>
@@ -970,7 +990,6 @@ Language: sq_AL
     <string name="new_site_creation_create_site_button">Krijoje Sajtin</string>
     <string name="new_site_creation_search_domain_input_hint">Kërkoni te Përkatësitë</string>
     <string name="new_site_creation_domain_header_subtitle">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
-    <string name="new_site_creation_domain_header_title">Zgjidhni emër përkatësie për sajtin tuaj</string>
     <string name="new_site_creation_empty_domain_list_message">S’ka adresa me përputhje me kërkimin tuaj</string>
     <string name="site_creation_error_generic_subtitle">Gabim gjatë komunikimit me shërbyesin, ju lutemi, riprovoni</string>
     <string name="site_creation_error_generic_title">Pati një problem</string>
@@ -1421,7 +1440,6 @@ Language: sq_AL
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 postim me 1 kartelë të pangarkuar</string>
     <string name="untitled_in_parentheses">(Pa titull)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Krijoje sajtin</string>
     <string name="notification_site_creation_created">Prekeni që të vazhdohet.</string>
     <string name="notification_site_creation_title_success">Sajti u krijua!</string>
@@ -1712,10 +1730,6 @@ Language: sq_AL
     <string name="post_status_draft">Skicë</string>
     <string name="post_status_pending_review">Në pritje të shqyrtimit</string>
     <string name="post_status_publish_post">Botojeni</string>
-    <string name="change_location">Ndryshoni Vendndodhje</string>
-    <string name="remove_location">Hiqe Vendndodhjen</string>
-    <string name="post_settings_error_placepicker_missing_play_services">S’hapet dot Location Picker, Google Play Services s’është i passhëm</string>
-    <string name="post_settings_location">Vendndodhje</string>
     <string name="now">Tani</string>
     <string name="post_settings_password_dialog_hint">Vetëm ata me këtë fjalëkalim mund të shohin këtë postim</string>
     <string name="post_settings_excerpt_dialog_hint">Copëzat janë përmbledhje opsionale të lëndës tuaj, hartuar dorazi.</string>

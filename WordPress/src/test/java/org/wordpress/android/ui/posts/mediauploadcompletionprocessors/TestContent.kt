@@ -176,7 +176,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,${localMediaId},369]} -->
+    const val oldGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"post","ids":[203,${localMediaId},369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -193,7 +193,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"attachment","ids":[203,${remoteMediaId},369]} -->
+    const val newGalleryBlockIdsNotFirst = """<!-- wp:gallery {"linkTo":"post","ids":[203,${remoteMediaId},369]} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -294,7 +294,7 @@ object TestContent {
 <!-- /wp:video -->
 """
 
-    const val oldGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"media"} -->
+    const val oldGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"file"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -311,7 +311,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"media"} -->
+    const val newGalleryBlockLinkToMediaFile = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"file"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -328,7 +328,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val oldGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"attachment"} -->
+    const val oldGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${localMediaId},369],"linkTo":"post"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
@@ -345,7 +345,7 @@ object TestContent {
 <!-- /wp:gallery -->
 """
 
-    const val newGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"attachment"} -->
+    const val newGalleryBlockLinkToAttachmentPage = """<!-- wp:gallery {"ids":[203,${remoteMediaId},369],"linkTo":"post"} -->
 <figure class="wp-block-gallery columns-3 is-cropped">
   <ul class="blocks-gallery-grid">
     <li class="blocks-gallery-item">
