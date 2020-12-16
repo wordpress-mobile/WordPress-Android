@@ -143,6 +143,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         }
                     }
                 }
+                trackContentPresented()
             }
         }
 
@@ -256,6 +257,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     )
                 }
             }
+            trackContentPresented()
         }
     }
 
@@ -426,6 +428,12 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun updateScreenVisibility(isScreenVisible: Boolean) {
         this.isScreenVisible = isScreenVisible
+    }
+
+    private fun trackContentPresented() {
+        if (isScreenVisible) {
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        }
     }
 
     sealed class DiscoverUiState(
