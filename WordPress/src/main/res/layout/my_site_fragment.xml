@@ -182,7 +182,6 @@
                         </RelativeLayout>
 
                         <Space
-                            android:id="@+id/middle_quick_action_spacing"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
@@ -202,6 +201,7 @@
                         </RelativeLayout>
 
                         <Space
+                            android:id="@+id/middle_quick_action_spacing"
                             android:layout_width="wrap_content"
                             android:layout_height="match_parent"
                             android:layout_weight="1" />
