@@ -1,4 +1,0 @@
-We’re pleased to announce several new WordPress mobile app features: 
-- full-screen slideshows of photos or videos for WP.com and Jetpack sites; 
-- the option to pick a homepage design when creating a WP.com site;  
-- and a Follow/Unfollow button for a site’s comments section (not supported for self-hosted sites that aren’t connected to Jetpack).

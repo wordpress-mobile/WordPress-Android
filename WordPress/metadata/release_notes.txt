@@ -1,5 +1,6 @@
-We’re pleased to announce several new WordPress mobile app features: 
-- full-screen slideshows of photos or videos for WP.com and Jetpack sites; 
-- the option to pick a homepage design when creating a WP.com site; 
-- improved functionality for setting the dimensions of Cover and Columns;  
-- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).
+* [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
+* [**] Posts List: Adds duplicate post functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13521]
+* [*] Block Editor: Fix Gallery block uploads when the editor is closed [https://github.com/wordpress-mobile/WordPress-Android/pull/13570]
+* [**] Block Editor: Fixed an issue where a block would disappear when deleting all of the text inside without requiring the extra backspace to remove the block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2877]
+* [***] Block Editor: New Block: File [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2835]
+
