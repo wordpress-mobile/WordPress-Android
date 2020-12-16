@@ -71,6 +71,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private var isScreenVisible = false
+    private var isContentPresentedTrackedOnce = false
 
     private lateinit var parentViewModel: ReaderViewModel
 
@@ -431,8 +432,11 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     private fun trackContentPresented() {
-        if (isScreenVisible) {
-            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        if (!isContentPresentedTrackedOnce) {
+            isContentPresentedTrackedOnce = true
+            if (isScreenVisible) {
+                analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+            }
         }
     }
 
