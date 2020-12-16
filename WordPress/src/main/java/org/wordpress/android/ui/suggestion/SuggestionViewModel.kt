@@ -4,6 +4,7 @@ import android.view.View
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.SuggestionType.Users
@@ -14,13 +15,15 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class SuggestionViewModel @Inject constructor(
     private val suggestionSourceProvider: SuggestionSourceProvider,
     private val resourceProvider: ResourceProvider,
-    private val networkUtils: NetworkUtilsWrapper
+    private val networkUtils: NetworkUtilsWrapper,
+    private val analyticsTracker: AnalyticsTrackerWrapper
 ) : ViewModel() {
     private lateinit var suggestionSource: SuggestionSource
     private lateinit var type: SuggestionType
@@ -123,6 +126,18 @@ class SuggestionViewModel @Inject constructor(
             }
             NotExactlyOneAvailable(message)
         }
+    }
+
+    fun trackExit(withSuggestion: Boolean) {
+        val trackingSuggestionType = when (type) {
+            XPosts -> "xpost"
+            Users -> "user"
+        }
+        val properties = mapOf(
+                "did_select_suggestion" to withSuggestion,
+                "suggestion_type" to trackingSuggestionType
+        )
+        analyticsTracker.track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, properties)
     }
 
     override fun onCleared() {

@@ -18,6 +18,7 @@ import org.mockito.InjectMocks
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.networking.ConnectionChangeReceiver.ConnectionChangeEvent
 import org.wordpress.android.ui.suggestion.FinishAttempt.NotExactlyOneAvailable
@@ -25,6 +26,7 @@ import org.wordpress.android.ui.suggestion.FinishAttempt.OnlyOneAvailable
 import org.wordpress.android.ui.suggestion.SuggestionType.Users
 import org.wordpress.android.ui.suggestion.SuggestionType.XPosts
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -32,6 +34,7 @@ class SuggestionViewModelTest {
     @Mock lateinit var mockSuggestionSourceProvider: SuggestionSourceProvider
     @Mock lateinit var mockResourceProvider: ResourceProvider
     @Mock lateinit var mockNetworkUtils: NetworkUtilsWrapper
+    @Mock lateinit var mockAnalyticsTracker: AnalyticsTrackerWrapper
     @Mock lateinit var mockSite: SiteModel
     @Mock lateinit var mockLiveData: LiveData<SuggestionResult>
     @Mock lateinit var mockSuggestionSource: SuggestionSource
@@ -236,6 +239,62 @@ class SuggestionViewModelTest {
 
         val expected = OnlyOneAvailable(mockSuggestion.value)
         assertEquals(expected, actual)
+    }
+
+    @Test
+    fun `trackExit xpost suggestion true`() {
+        initViewModel(XPosts)
+
+        val withSuggestion = true
+        viewModel.trackExit(withSuggestion)
+
+        val props = mapOf(
+                "did_select_suggestion" to withSuggestion,
+                "suggestion_type" to "xpost"
+        )
+        verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
+    }
+
+    @Test
+    fun `trackExit xpost suggestion false`() {
+        initViewModel(XPosts)
+
+        val withSuggestion = false
+        viewModel.trackExit(withSuggestion)
+
+        val props = mapOf(
+                "did_select_suggestion" to withSuggestion,
+                "suggestion_type" to "xpost"
+        )
+        verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
+    }
+
+    @Test
+    fun `trackExit user suggestion true`() {
+        initViewModel(Users)
+
+        val withSuggestion = true
+        viewModel.trackExit(withSuggestion)
+
+        val props = mapOf(
+                "did_select_suggestion" to withSuggestion,
+                "suggestion_type" to "user"
+        )
+        verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
+    }
+
+    @Test
+    fun `trackExit user suggestion false`() {
+        initViewModel(Users)
+
+        val withSuggestion = false
+        viewModel.trackExit(withSuggestion)
+
+        val props = mapOf(
+                "did_select_suggestion" to withSuggestion,
+                "suggestion_type" to "user"
+        )
+        verify(mockAnalyticsTracker).track(AnalyticsTracker.Stat.SUGGESTION_SESSION_FINISHED, props)
     }
 
     private fun initViewModel(type: SuggestionType = XPosts): Boolean {
