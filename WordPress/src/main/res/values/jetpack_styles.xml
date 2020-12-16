@@ -15,7 +15,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Backup.Download.SubHeader" parent="Backup.TextView">
+    <style name="Backup.Download.SecondaryHeader" parent="Backup.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_large</item>
