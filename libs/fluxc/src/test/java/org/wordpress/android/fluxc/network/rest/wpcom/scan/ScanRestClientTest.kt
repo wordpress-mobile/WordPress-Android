@@ -212,19 +212,57 @@ class ScanRestClientTest {
 
         val payload = scanRestClient.fetchScanState(site)
 
-        assertEmittedScanStatusError(payload, ScanStateErrorType.GENERIC_ERROR)
+        assertEmittedScanStateError(payload, ScanStateErrorType.GENERIC_ERROR)
     }
 
     @Test
     fun `fetch scan state dispatches error on wrong state`() = test {
         val successResponseJson = UnitTestUtils.getStringFromResourceFile(javaClass, JP_COMPLETE_SCAN_IDLE_JSON)
         val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
-
-        initFetchScanState(scanResponse?.copy(state = "wrong"))
+        initFetchScanState(scanResponse.copy(state = "wrong"))
 
         val payload = scanRestClient.fetchScanState(site)
 
-        assertEmittedScanStatusError(payload, ScanStateErrorType.INVALID_RESPONSE)
+        assertEmittedScanStateError(payload, ScanStateErrorType.INVALID_RESPONSE)
+    }
+
+    @Test
+    fun `fetch scan state dispatches error on missing threat id`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
+        val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
+        val threatWithIdNotSet = requireNotNull(scanResponse.threats?.get(0)).copy(id = null)
+        initFetchScanState(scanResponse.copy(threats = listOf(threatWithIdNotSet)))
+
+        val payload = scanRestClient.fetchScanState(site)
+
+        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_ID)
+    }
+
+    @Test
+    fun `fetch scan state dispatches error on missing threat signature`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
+        val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
+        val threatWithSignatureNotSet = requireNotNull(scanResponse.threats?.get(0)).copy(signature = null)
+        initFetchScanState(scanResponse.copy(threats = listOf(threatWithSignatureNotSet)))
+
+        val payload = scanRestClient.fetchScanState(site)
+
+        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_SIGNATURE)
+    }
+
+    @Test
+    fun `fetch scan state dispatches error on missing threat first detected`() = test {
+        val successResponseJson =
+            UnitTestUtils.getStringFromResourceFile(javaClass, JP_SCAN_DAILY_SCAN_IDLE_WITH_THREATS_JSON)
+        val scanResponse = getScanStateResponseFromJsonString(successResponseJson)
+        val threatWithFirstDetectedNotSet = requireNotNull(scanResponse.threats?.get(0)).copy(firstDetected = null)
+        initFetchScanState(scanResponse.copy(threats = listOf(threatWithFirstDetectedNotSet)))
+
+        val payload = scanRestClient.fetchScanState(site)
+
+        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED)
     }
 
     @Test
@@ -266,7 +304,7 @@ class ScanRestClientTest {
         }
     }
 
-    private fun assertEmittedScanStatusError(payload: FetchedScanStatePayload, errorType: ScanStateErrorType) {
+    private fun assertEmittedScanStateError(payload: FetchedScanStatePayload, errorType: ScanStateErrorType) {
         with(payload) {
             assertEquals(site, this@ScanRestClientTest.site)
             assertTrue(isError)
