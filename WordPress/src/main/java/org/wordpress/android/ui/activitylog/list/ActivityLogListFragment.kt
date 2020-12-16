@@ -137,6 +137,14 @@ class ActivityLogListFragment : Fragment() {
                         requireContext(),
                         uiState.activityTypeLabel
                 )
+
+                requireActivity().date_range_picker.isCloseIconVisible = uiState.clearDateRangeFilterClicked != null
+                requireActivity().date_range_picker
+                        .setOnCloseIconClickListener { uiState.clearDateRangeFilterClicked?.invoke() }
+
+                requireActivity().activity_type_filter.isCloseIconVisible = uiState.clearActivityTypeFilterClicked != null
+                requireActivity().activity_type_filter
+                        .setOnCloseIconClickListener { uiState.clearActivityTypeFilterClicked?.invoke() }
             }
         })
 
