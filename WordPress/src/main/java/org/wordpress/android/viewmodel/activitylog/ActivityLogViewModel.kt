@@ -176,7 +176,7 @@ class ActivityLogViewModel @Inject constructor(
                     createDateRangeFilterLabel(),
                     UiStringRes(R.string.activity_log_activity_type_filter_label),
                     currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
-                    currentActivityTypeFilter?.let { ::onClearActivityTypeFilterClicked }
+                    currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
             )
         } else {
             FiltersHidden
@@ -248,11 +248,12 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onActivityTypesSelected(activityTypeIds: List<Int>) {
         currentActivityTypeFilter = activityTypeIds
+        refreshFiltersUiState()
         // TODO malinjir: refetch/load data
     }
 
     fun onClearActivityTypeFilterClicked() {
-        currentDateRangeFilter = null
+        currentActivityTypeFilter = listOf()
         refreshFiltersUiState()
         // TODO malinjir: refetch/load data
     }
