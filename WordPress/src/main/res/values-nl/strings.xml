@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-23 21:16:49+0000
+Translation-Revision-Date: 2020-11-30 20:02:41+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_choose_a_file">KIES EEN BESTAND</string>
+    <string name="gutenberg_native_copy_file_url">Kopieer bestands URL</string>
+    <string name="gutenberg_native_edit_file">Bewerk bestand</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Opslaan van bestanden mislukt.\nTik voor opties.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Uploaden van bestanden mislukt.\nTik voor opties.</string>
+    <string name="gutenberg_native_file_block_settings">Bestand blokkeerinstellingen</string>
+    <string name="gutenberg_native_file_name">Bestandsnaam</string>
+    <string name="reader_follow_comments_unsubscribe_success">Met succes uitgeschreven van de reacties</string>
+    <string name="reader_follow_comments_get_status_error">Fout bij het ophalen van de abonneringstatus voor bericht</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Kon niet abonneren op reacties voor dit bericht</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Kon niet uitschrijven van reacties voor dit bericht</string>
+    <string name="reader_btn_follow_comments">Volg conversatie</string>
+    <string name="reader_btn_following_comments">Conversatie wordt gevolgd</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack Instellingen</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Nieuw</string>
+    <string name="new_site_creation_domain_header_title">Kies een domein</string>
+    <string name="activity_log_activity_type_filter_apply">Toepassen</string>
+    <string name="activity_log_activity_type_filter_clear">Wissen</string>
+    <string name="reader_follow_comments_null_response">Geen antwoord ontvangen</string>
+    <string name="reader_follow_comments_bad_format_response">Ongeldig antwoord ontvangen</string>
+    <string name="reader_follow_comments_subscribe_success">Met succes geabonneerd op de reacties</string>
     <string name="dialog_edit_story_unsupported_format_message">Een of meer slides zijn niet toegevoegd aan je verhaal omdat verhalen geen GIF bestanden ondersteunen op dit moment. Kies in plaats daarvan een statische afbeelding of video achtergrond.</string>
     <string name="dialog_edit_story_limited_message">Dit verhaal is bewerkt op een ander apparaat en de mogelijkheid om bepaalde objecten te bewerken kan beperkt zijn.</string>
     <string name="dialog_edit_story_unavailable_title">Kan het verhaal niet bewerken</string>
@@ -41,7 +63,7 @@ Language: nl
     <string name="hpp_skip_button">Overslaan</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Scrolbaar blokmenu gesloten.</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Scrolbaar blokmenu geopend. Selecteer een blok.</string>
-    <string name="hpp_subtitle">Kies je favoriete homepage-opmaak. Je kan deze later altijd nog aanpassen of wijzigen.</string>
+    <string name="hpp_subtitle">Kies je favoriete homepage lay-out. Je kan deze bewerken of later altijd nog aanpassen.</string>
     <string name="prepublishing_nudges_home_categories_not_set">Niet ingesteld</string>
     <string name="prepublishing_nudges_toolbar_title_add_categories">Nieuwe categorie toevoegen</string>
     <string name="prepublishing_nudges_add_category_button">Categorie toevoegen</string>
@@ -306,7 +328,6 @@ Language: nl
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Probeer een starter lay-out</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
-    <string name="gutenberg_native_insert_mention">Voeg vermelding in</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltik om actieblad te openen met beschikbare opties</string>
     <string name="pages_cannot_be_started">We kunnen momenteel geen pagina\'s openen. Probeer het later opnieuw</string>
@@ -473,7 +494,6 @@ Language: nl
     <string name="post_list_tab_published_posts">Gepubliceerd</string>
     <string name="sharing_facebook_account_must_have_pages">De Facebook-verbinding kan geen pagina\'s vinden. Publicize kan geen verbinding maken met Facebook-profielen, alleen met gepubliceerde pagina\'s.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Niet verbonden</string>
-    <string name="my_site_select_domains_page_title">Websiteadres</string>
     <string name="notifications_tab_title_likes">Waarderingen</string>
     <string name="notifications_tab_title_follows">Volgt</string>
     <string name="notifications_tab_title_comments">Commentaar</string>
@@ -974,7 +994,6 @@ Language: nl
     <string name="new_site_creation_empty_domain_list_message">Geen beschikbare adressen die overeenkomen met uw  zoekopdracht</string>
     <string name="site_creation_error_generic_subtitle">Fout bij communicatie met de server. Probeer het opnieuw</string>
     <string name="site_creation_error_generic_title">Er was een probleem</string>
-    <string name="new_site_creation_domain_header_title">Kies een domeinnaam voor je site</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Er was een probleem</string>
     <string name="site_creation_segments_subtitle">Hiermee kunnen aanbevelingen maken. Maar je zit nergens aan vast - alle sites blijven zich ontwikkelen!</string>
     <string name="site_creation_segments_title">Vertel ons wat voor soort site je zou willen maken</string>
@@ -1422,7 +1441,6 @@ Language: nl
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 bericht met 1 bestand niet geüpload</string>
     <string name="untitled_in_parentheses">(Zonder titel)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Site maken</string>
     <string name="username_changer_action">Opslaan</string>
     <string name="content_description_add_avatar">Voeg avatar toe </string>
@@ -1713,10 +1731,6 @@ Language: nl
     <string name="post_status_draft">Concept</string>
     <string name="post_status_pending_review">Beoordeling in behandeling</string>
     <string name="post_status_publish_post">Publiceren</string>
-    <string name="change_location">Locatie wijzigen</string>
-    <string name="remove_location">Locatie verwijderen</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Kan locatiekiezer niet openen; Google Play Services is niet beschikbaar</string>
-    <string name="post_settings_location">Locatie</string>
     <string name="now">Nu</string>
     <string name="post_settings_password_dialog_hint">Alleen personen met dit wachtwoord kunnen dit bericht bekijken.</string>
     <string name="post_settings_excerpt_dialog_hint">Samenvattingen zijn optionele, handgemaakte overzichten van je content.</string>

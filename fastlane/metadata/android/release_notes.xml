@@ -1,109 +1,127 @@
 <ar>
-16.2:
-تحسينات محرِّر المكوّن: لقد قمنا بتحسين الأداء العام والسرعة، والذي قد تلاحظه عند فتح المحرِّر لإنشاء مقالة جديدة. لقد قمنا أيضًا بتحسين مكوّن الصورة، مع دعم أفضل لتحميل صور متعددة.
-
-تحديثات وإصلاحات أخرى: يستخدم تطبيقك الآن منتقي وسائط جديدًا عند تحديد ملفات للمقالات وأيقونة موقعك وصورتك الرمزية وغيرها من الأماكن الأخرى. لقد أصلحنا أيضًا خطأً في مواقع مستضافة ذاتيًا خالصة على HTTP الذي منع الصور المميزة من الظهور في قائمة المقالات.
-
+16.3:
+يسعدنا الإعلان عن العديد من الميزات الجديدة لتطبيق ووردبريس على الهاتف المحمول ألا وهي:
+- عروض شرائح بوضع ملء الشاشة للصور أو مقاطع الفيديو لمواقع WP.com و Jetpack؛
+- والخيار لاختيار تصميم الصفحة الرئيسية عند إنشاء موقع WP.com؛
+- وظائف محسَّنة لتعيين أبعاد الغلاف والأعمدة؛
+- وزر المتابعة / إلغاء المتابعة لقسم تعليقات الموقع، ما يسمح للمستخدمين بتعقٌّب محادثة ما وإخطارهم بالتحديثات عبر البريد الإلكتروني (غير مدعوم للمواقع المستضافة ذاتيًا غير المتصلة بـ Jetpack).
 </ar>
 <de-DE>
-16.2:
-Block-Editor: Wir haben die allgemeine Performance verbessert, was dir vielleicht auffallen wird, wenn du das nächste Mal einen Beitrag beginnst. Der Bildblock verfügt nun über besseren Support beim Hochladen mehrerer Bilder.
-
-Weitere Updates: Deine App nutzt beim Auswählen der Dateien eine neue Medienauswahl.  Wir haben auch einen Bug auf den rein selbstverwalteten Websites auf HTTP beseitigt, der sich negativ auf die Beitragsbilder in den Beitragslisten ausgewirkt hat.
+16.3:
+Wir freuen uns sehr, mehrere neue Funktionen für die WordPress-Mobil-App vorzustellen:
+- Vollbild-Diashows von Fotos oder Videos für WP.com- und Jetpack-Websites;
+- Die Option, bei Erstellung einer WP.com-Website ein Design für die Startseite auszuwählen;
+- Und einen Button zum Folgen/Nicht mehr folgen für die Kommentarfunktion einer Website (nicht unterstützt für selbst gehostete Websites, die nicht mit Jetpack verbunden sind).
 </de-DE>
 <en-US>
-16.2:
-Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.
-
-Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.
-
+16.3:
+We’re pleased to announce several new WordPress mobile app features:
+- full-screen slideshows of photos or videos for WP.com and Jetpack sites;
+- the option to pick a homepage design when creating a WP.com site;
+- improved functionality for setting the dimensions of Cover and Columns;
+- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).
 </en-US>
 <es-ES>
-16.2:
-Editor de bloques: Hemos mejorado el rendimiento general, que podrás notar al iniciar una nueva entrada. El bloque de imágenes ahora tiene mejor compatibilidad para subir múltiples imágenes.
-
-Más actualizaciones: Tu aplicación usa un nuevo selector de medios cuando seleccionas archivos. También hemos corregido un fallo en los sitios autoalojados en HTTP puro que afectaba a las imágenes destacadas en la lista de entradas.
+16.3:
+Estamos encantados de anunciar varias nuevas características de la aplicación móvil para WordPress:
+- Presentaciones de diapositivas a pantalla completa de fotos o vídeos para los sitios de WP.com y Jetpack;
+- La opción para elegir un diseño de página de inicio al crear un sitio en WP.com;
+- Y un botón par seguir/dejar de seguir para la sección de comentarios de un sitio (no compatible con los sitios autoalojados que no estén conectados a Jetpack).
 </es-ES>
 <fr-CA>
-16.2 :
-Éditeur de blocs : nous avons amélioré les performances globales. Vous le remarquerez lorsque vous créerez un article. Le bloc Image offre désormais une meilleure prise en charge pour le chargement de plusieurs images.
-
-Plus de mises à jour : votre application utilise un nouveau sélecteur de média lorsque vous sélectionnez des fichiers. Nous avons également résolu un bug au niveau des sites auto-hébergés en HTTP, qui concernait les images mises en avant dans la Liste d’articles.
+16.3 :
+Nous sommes heureux d’annoncer l’ajout de plusieurs nouvelles fonctionnalités à l’application mobile WordPress :
+- diaporama photos ou vidéo en plein écran pour les sites WP.com et Jetpack ;
+- possibilité de choisir le design d’une page d’accueil lors de la création d’un site WP.com ;
+- bouton S’abonner/Se désabonner de la section Commentaires d’un site (non pris en charge pour les sites auto-hébergés non connectés à Jetpack).
 </fr-CA>
 <fr-FR>
-16.2 :
-Éditeur de blocs : nous avons amélioré les performances globales. Vous le remarquerez lorsque vous créerez un article. Le bloc Image offre désormais une meilleure prise en charge pour le chargement de plusieurs images.
-
-Plus de mises à jour : votre application utilise un nouveau sélecteur de média lorsque vous sélectionnez des fichiers. Nous avons également résolu un bug au niveau des sites auto-hébergés en HTTP, qui concernait les images mises en avant dans la Liste d’articles.
+16.3 :
+Nous sommes heureux d’annoncer l’ajout de plusieurs nouvelles fonctionnalités à l’application mobile WordPress :
+- diaporama photos ou vidéo en plein écran pour les sites WP.com et Jetpack ;
+- possibilité de choisir le design d’une page d’accueil lors de la création d’un site WP.com ;
+- bouton S’abonner/Se désabonner de la section Commentaires d’un site (non pris en charge pour les sites auto-hébergés non connectés à Jetpack).
 </fr-FR>
 <iw-IL>
-16.2:
-עורך הבלוקים: שיפרנו את הביצועים באופן כללי, כפי שאפשר לראות כשיוצרים פוסט חדש. שיפרנו גם את בלוק התמונה עם תמיכה טובה יותר בהעלאה של מספר תמונות במקביל.
-
-עדכונים ותיקונים נוספים: הוספנו לאפליקציה בורר מדיה חדש לבחירת קבצים לפוסטים, לסמל האתר שלך, ל-Gravatar ולמיקומים אחרים. כמו כן תיקנו באג באתרים באחסון עצמי ב-HTTP שמנע תצוגה של תמונות מרכזיות ברשימת הפוסטים.
-
+16.3:
+אנחנו שמחים להכריז על כמה אפשרויות חדשות באפליקציה לנייד של WordPress:
+- מצגות במסך מלא של תמונות או סרטונים באתרים של WP.com ושל Jetpack;
+- האפשרות לבחור עיצוב לעמוד הבית כאשר יוצרים אתר WP.com;
+- פונקציונליות משופרת בהגדרת הממדים של הכיסוי והטורים;
+- וכפתור 'לעקוב/לבטל מעקב' במקטע התגובות של האתר כדי לאפשר למשתמשים לעקוב אחר השיחה ולקבל עדכונים באימייל (לא נתמך באתרים באחסון עצמי שלא מחוברים אל Jetpack).
 </iw-IL>
 <in>
-16.2:
-Editor blok: Kami telah meningkatkan performa secara keseluruhan, yang mungkin dapat Anda rasakan saat mulai membuat pos baru. Sekarang blok Gambar memiliki dukungan lebih baik untuk mengunggah gambar dalam jumlah banyak. 
-
-Pembaruan lainnya: Aplikasi Anda menggunakan Pemilih Media baru saat Anda memilih file. Kami juga memperbaiki bug pada situs hosting sendiri di HTTP yang memengaruhi gambar andalan pada Daftar Pos.
+16.3:
+Dengan gembira kami umumkan beberapa fitur baru aplikasi seluler WordPress:
+- slideshow foto atau video layar penuh untuk WP.com dan situs Jetpack;
+- opsi desain halaman saat membuat situs WP.com;
+- dan tombol Ikuti/Batal Mengikuti untuk bagian komentar situs (tidak didukung untuk situs hosting sendiri yang tidak terhubung ke Jetpack).
 </in>
-<it-IT>
-16.2:
-Editor a blocchi: Abbiamo migliorato le prestazioni complessive, cosa che puoi notare quando avvii un nuovo post. Il blocco Immagine ora ha un migliore supporto per il caricamento di più immagini.
-
-Altri aggiornamenti: La tua app utilizza un nuovo selezionatore di contenuti quando selezioni i file. Abbiamo anche corretto un bug sui siti ospitati personalmente puri su HTTP che interessava le immagini in evidenza nell'elenco degli articoli.
-</it-IT>
 <ja-JP>
-16.2 : 
-ブロックエディターの向上 : 全体的なパフォーマンスと速度を向上しました。これは、エディターを開いて新しい投稿を開始するときに気づくかもしれません。 また、画像ブロックでの複数の画像のアップロードのサポートを強化しました。
-
-その他の更新と修正 : アプリで、投稿、ファビコン、Gravatar などの場所でファイルを選択する際に、新しいメディア選択ツールが使用されるようになりました。 また、投稿リストのアイキャッチ画像が表示されない原因となっていた、HTTP 上の純インストール型のサイトの問題を修正しました。
-
+16.3:
+WordPress モバイルアプリの新しい機能をお知らせします。
+- WP.com および Jetpack サイトの写真または動画のフルスクリーンスライドショー
+- WP.com サイトの作成時にホームページのデザインを選択するオプション
+- カバーと列のサイズを設定する機能の改善
+- サイトのコメントセクションのフォロー/フォロー解除ボタンで、ユーザーは会話の追跡や更新情報のメール通知が可能に (Jetpack に接続されていないインストール型のサイトはサポートされていません)。
 </ja-JP>
 <ko-KR>
-16.2:
-블록 편집기 개선: 전체적으로 성능과 속도를 개선했어요. 새 글을 만들기 위해 편집기를 열면 알림을 받을 수 있어요. 다중 이미지 업로드를 더 잘 지원하도록 이미지 블록을 개선했어요.
-
-다른 업데이트와 수정: 이제 앱은 글, 아이콘, 그라바타, 그리고 다른 장소에 사용할 파일을 선택할 때, 새 미디어 선택기를 사용해요. 또한 온전한 자체 호스팅 사이트에서 글록목에 보이는 대표 이미지를 방해하는 HTTP의 버그도 역시 수정했어요.
-
+16.3:
+새 워드프레스 모바일 앱 기능을 알리게되어 기쁩니다:
+- WP.com과 젯팩 사이트에 대한 사진이나 비디오의 전체화면 슬라이드쇼;
+- WP.com 사이트를 만들 때 홈페이지 디자인을 선택할 수 있는 옵션;
+- 표지나 컬럼의 크기를 설정하기 위한 기능을 개선;
+- 그리고 이용자가 대화를 추적하고 업데이트 이메일로 알림을 받을 수 있는, 사이트 댓글 구역에 대한 팔로우/언팔로우 버튼 (젯팩을 연결하지 않은 자체 호스팅에는 지원하지 않습니다).
 </ko-KR>
 <nl-NL>
-16.2:
-Blok-editor: we hebben de algehele prestaties verbeterd, wat je wellicht merkt wanneer je een nieuw bericht start. Het afbeeldingsblok heeft nu betere ondersteuning voor het uploaden van meerdere afbeeldingen.
-
-Meer updates: je app gebruikt een nieuwe mediakiezer wanneer je bestanden selecteert. We hebben ook een bug gerepareerd op puur door jezelf gehoste sites op HTTP die de uitgelichte afbeeldingen in de berichtenlijst beïnvloedde.
+16.3:
+We zijn verheugd verschillende nieuwe functies van de mobiele WordPress app aan te kondigen:
+- slide-voorstellingen op volledig scherm van foto's of video's voor WP.com en Jetpack sites;
+- de optie om een homepage-ontwerp te kiezen bij het maken van een WP.com site;
+- en een knop Volgen/Ontvolgen voor de reacties sectie van een site (niet ondersteund voor door jezelf gehoste sites die niet zijn verbonden met Jetpack).
 </nl-NL>
+<pt-BR>
+16.3:
+Estamos felizes em anunciar diversos novos recursos no aplicativo WordPress:
+- slideshow em tela cheia de fotos ou vídeos de sites do WP.com e Jetpack;
+- possibilidade de selecionar um modelo para a página inicial ao criar um site no WP.com;
+- e um botão para seguir ou parar de seguir comentários em sites (não é suportado em sites auto-hospedados não conectados ao Jetpack).
+</pt-BR>
 <ru-RU>
-16.2:
-Редактор блоков: Улучшения производительности, особенно при создании новой записи. Улучшен блок изображения, лучшая поддержка загрузки множественных изображений
-
-Другое: Использование нового инстремента выбора медиафайлов для записей, значка сайта, Gravatar и др. Исправлена ошибка для самостоятельно размещенных сайтов с HTTP, изображение записи не показывалось в списке записей.
-
-
+16.3:
+Мы рады объявить о нескольких новых функциях мобильного приложения WordPress:
+- полноэкранные слайд-шоу из фото или видео для сайтов WP.com и Jetpack;
+- возможность выбрать дизайн домашней страницы при создании сайта WP.com;
+- улучшен функционал настройки размеров обложки и столбцов;
+- кнопка "Подписаться / отменить подписку" для комментариев сайта, позволяющая пользователям отслеживать беседу и получать уведомления  по электронной почте (для автономных сайтов требуется Jetpack).
 </ru-RU>
 <sv-SE>
-16.2:
-Förbättringar i blockredigeraren: Högre prestanda överlag. Det märker du när du skapar ett nytt inlägg. Vi har även förbättrat bildblocket, med bättre stöd för uppladdning av flera bilder åt gången.
-
-Andra förbättringar och rättelser: Appen använder en ny mediaväljare när du väljer filer för inlägg, webbplatsikon, Gravatar m.m. Vi har också rättat ett fel för webbplatser på webbhotell med HTTP där utvalda bilder inte visades i inläggslistan.
-
+16.3:
+Vi har glädjen att presentera en rad nya funktioner i WordPress mobilapp:
+- fullskärms bildspel med foton och video för webbplatser hos WP.com de med Jetpack,
+- möjlighet att välja startsidesdesign när du skapar en webbplats hos WP.com,
+- och en knapp för att följa och sluta följa kommentarsektionen på en webbplats (stöds inte för webbplats på egen server/webbhotell om den inte är ansluten till Jetpack).
 </sv-SE>
 <tr-TR>
-16.2:
-Blok düzenleyici: Yeni bir gönderi başlattığınızda fark edebileceğiniz gibi genel performans iyileştirildi.  Görüntü bloğu artık birden çok görüntüyü yüklemek için daha iyi desteğe sahip.
-
-Daha fazla güncelleme: Dosya seçerken artık uygulamanızda yeni bir Medya Seçici kullanılıyor. Ayrıca, HTTP üzerinde tamamen kendi kendine barındırılan sitelerde, öne çıkan görsellerin Yayınlar Listesinde görüntülenmesini engelleyen bir hata düzeltildi.
+16.3:
+Bir kaç yeni WordPress mobil uygulama özelliğini bildirmekten mutluluk duyuyoruz:
+- WP.com ve Jetpack siteleri için tam ekran fotoğraf ve video slayt gösterileri;
+- bir WP.com sitesi oluştururken ana sayfa tasarımı seçme seçeneği;
+- ve sitenin yorumlar bölümü için, kullanıcıların sohbeti takip edebildikleri ve e-posta ile bildirim alabildikleri bir takip et/takipten çık düğmesi (Jetpack bağlantısı olmayan özel barındırma sunucularında desteklenmiyor.)
 </tr-TR>
 <zh-CN>
-16.2：区块编辑器的增强功能：我们提高了整体性能和速度，当您打开编辑器创建新帖子时，您可能会注意到。我们还改进了“图片”区块，并更好地支持上传多张图片。其他更新和修复：现在，当您选择用于文章，网站图标，Gravatar和其他位置的文件时，您的应用程序将使用新的媒体选择器。我们还修复了HTTP上纯自托管网站上的错误，该错误使特色图片无法显示在文章列表中。
-
+16.3：
+我们非常高兴宣布 WordPress 移动应用程序推出了几项新功能：
+- WP.com 和 Jetpack 网站可以全屏播放照片或视频幻灯片；
+- 创建 WP.com 站点时可以选择主页设计；
+- 改进了封面和栏目尺寸的设置功能；-
+ 以及网站评论部分的“关注/取消关注”按钮，让用户可以跟踪对话并通过电子邮件接收更新通知（未关联至 Jetpack 的自托管网站不支持）。
 </zh-CN>
 <zh-TW>
-16.2：
-區塊編輯器增強功能：我們已提高整體效能和速度，當你開啟編輯器撰寫新文章時，可能就會注意到這點。 我們也改善了圖片區塊，現在提供上傳多個圖片的支援。
-
-其他更新和修正：現在為文章、網站圖示、Gravatar 和其他地方選擇檔案時，應用程式將使用新的媒體選擇器。 我們也修正了 HTTP 上純自助託管網站出現的錯誤，文章清單中的特色圖片不會再無法顯示。
-
+16.3：
+很高興在此宣佈幾項 WordPress 行動應用程式全新功能：
+- WP.com 和 Jetpack 網站的全螢幕相片或影片投影片功能；
+- 建立 WP.com 網站時可選擇是否挑選首頁設計；
+改善封面和欄位尺寸的設定功能；
+- 另外，網站留言區段新增「追蹤/停止追蹤」按鈕，讓使用者能夠追蹤討論情況，並接收更新電子郵件通知 (不支援未連結 Jetpack 的自助託管網站)。
 </zh-TW>

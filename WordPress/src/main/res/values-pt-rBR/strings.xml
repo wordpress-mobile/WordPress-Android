@@ -1,11 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-10-30 18:25:25+0000
+Translation-Revision-Date: 2020-12-04 19:18:17+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nome do arquivo</string>
+    <string name="gutenberg_native_file_block_settings">Configurações do bloco Arquivo</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Falha ao enviar arquivos.\nToque para ver mais opções.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Falha ao salvar arquivos.\nToque para ver mais opções.</string>
+    <string name="gutenberg_native_edit_file">Editar arquivo</string>
+    <string name="gutenberg_native_copy_file_url">Copiar URL do arquivo</string>
+    <string name="gutenberg_native_choose_a_file">Escolha um arquivo</string>
+    <string name="new_site_creation_domain_header_title">Escolha um domínio</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Novo</string>
+    <string name="my_site_btn_jetpack_settings">Configurações do Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Seguindo a conversa</string>
+    <string name="reader_btn_follow_comments">Seguir conversa</string>
+    <string name="reader_follow_comments_get_status_error">Erro ao coletar o status da assinatura do post</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Não foi possível cancelar a inscrição dos comentários deste post</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Não foi possível inscrever-se nos comentários deste post</string>
+    <string name="reader_follow_comments_unsubscribe_success">Inscrição nos comentários cancelada</string>
+    <string name="activity_log_activity_type_filter_clear">Limpar</string>
+    <string name="activity_log_activity_type_filter_apply">Aplicar</string>
+    <string name="reader_follow_comments_subscribe_success">Inscrição nos comentários concluída</string>
+    <string name="reader_follow_comments_bad_format_response">Resposta inválida recebida</string>
+    <string name="reader_follow_comments_null_response">Nenhuma resposta recebida</string>
+    <string name="dialog_edit_story_unsupported_format_message">Um ou mais slide não foi adicionado ao seu Story por que este recurso não suporte arquivos GIF no momento. Escolha uma imagem estática ou vídeo de fundo.</string>
+    <string name="dialog_edit_story_unsupported_format_title">Arquivos gif não são compatíveis</string>
+    <string name="dialog_edit_story_unrecoverable_message">Não conseguimos encontrar a mídia para este story no site.</string>
+    <string name="dialog_edit_story_unrecoverable_title">Não é possível editar o story</string>
+    <string name="dialog_edit_story_unavailable_message">Não foi possível enviar a mídia para este story. Verifique sua conexão de internet e tente novamente.</string>
+    <string name="dialog_edit_story_unavailable_title">Não é possível editar o story</string>
+    <string name="dialog_edit_story_limited_message">Este story foi editado em outro dispositivo e a possibilidade de edição de certos objetos pode estar limitada.</string>
+    <string name="dialog_edit_story_limited_title">Edição limitada de story</string>
+    <string name="cannot_retry_deleted_media_item_fatal">A mídia foi removida. Tente editar o Story novamente.</string>
+    <string name="color_picker_label_background">Fundo</string>
+    <string name="color_picker_label_text">Texto</string>
+    <string name="dialog_discard_story_ok_button_edit">Descartar</string>
+    <string name="dialog_discard_story_message_edit">Qualquer alteração feita não será salva.</string>
+    <string name="dialog_discard_story_title_edit">Descartar alterações?</string>
+    <string name="label_done_button">Concluído</string>
+    <string name="label_next_button">Seguinte</string>
+    <string name="delete_button_alt">Excluir</string>
+    <string name="hpp_choose_error">Ocorreu um erro durante a seleção do design.</string>
+    <string name="hpp_retry_error">Verifique sua conexão com a internet e tente novamente.</string>
+    <string name="hpp_error_subtitle">Toque em tentar novamente quando estiver online.</string>
+    <string name="hpp_error_title">Modelos não estão disponíveis off-line</string>
+    <string name="reader_discover_no_posts_title">Nenhum post recente</string>
+    <string name="reader_discover_no_posts_button_text">Seguir tópicos</string>
+    <string name="login_find_your_connected_email">Encontre o e-mail conectado</string>
+    <string name="scan">Examinar</string>
+    <string name="reader_discover_empty_title">Desejamos boas-vindas!</string>
+    <string name="continue_site_credentials">Prosseguir com as informações salvas</string>
+    <string name="reader_discover_no_posts_subtitle">Tente seguir mais assuntos para melhorar a pesquisa</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> respondeu seu post</string>
+    <string name="login_prologue_third_subtitle_two">Você recebeu &lt;b>50 curtidas&lt;/b> em seu site hoje</string>
+    <string name="login_prologue_third_subtitle_one">&lt;b>Madison Ruiz&lt;/b> curtiu seu post</string>
+    <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu de blocos aberto. Escolha um bloco.</string>
+    <string name="gutenberg_native_scrollable_block_menu_closed">Menu de blocos fechado.</string>
+    <string name="hpp_skip_button">Pular</string>
+    <string name="hpp_choose_button">Escolher</string>
+    <string name="hpp_subtitle">Escolha seu modelo preferido para a página inicial. Você poderá personalizar ou alterá-lo depois.</string>
+    <string name="hpp_title">Escolha um design</string>
+    <string name="mlp_network_error_title">Modelos não estão disponíveis off-line</string>
+    <string name="mlp_error_subtitle">Toque em tentar novamente ou crie uma página vazia usando o botão abaixo.</string>
+    <string name="mlp_error_title">Modelos não estão disponíveis devido um erro</string>
+    <string name="prepublishing_nudges_add_category_button">Adicionar categoria</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Adicionar nova categoria</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Categorias</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Não definido</string>
+    <string name="prepublishing_nudges_categories_action">Categorias</string>
+    <string name="mlp_network_error_subtitle">Toque em tentar novamente quando estiver online ou crie uma página vazia usando o botão abaixo.</string>
+    <string name="login_prologue_fifth_caption_three">Museus em Londres</string>
+    <string name="login_prologue_fifth_caption_one">Minhas 10 cafeterias preferidas</string>
+    <string name="login_prologue_fifth_tag_six">Política</string>
+    <string name="login_prologue_fifth_tag_five">Música</string>
+    <string name="login_prologue_fifth_tag_four">Jardinagem</string>
+    <string name="login_prologue_fifth_tag_three">Futebol</string>
+    <string name="login_prologue_fifth_tag_two">Culinária</string>
+    <string name="login_prologue_fifth_tag_one">Arte</string>
+    <string name="login_prologue_fifth_subtitle_three">Novidades sobre Rock n\' Roll</string>
+    <string name="login_prologue_fifth_subtitle_two">Novidades da internet</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="login_prologue_fifth_caption_two">Os melhores fãs do mundo</string>
+    <string name="login_prologue_second_subtitle_two">Me inspiro muito no trabalho do fotógrafo. Vou tentar uma dessas técnicas em meu próximo</string>
+    <string name="login_prologue_second_subtitle_one">Inspirando-se</string>
+    <string name="login_prologue_title_fifth">Siga seus sites favoritos e descubra novas leituras.</string>
+    <string name="login_prologue_title_fourth">Veja seu público-alvo aumentar usando análises detalhadas.</string>
+    <string name="login_prologue_title_third">Veja comentários e notificações em tempo real.</string>
+    <string name="login_prologue_title_second">Com o editor avançado, você publica seus posts de onde estiver.</string>
+    <string name="login_prologue_title_first">Desejamos boas-vindas ao criador de sites mais popular do mundo.</string>
+    <string name="media_loading_failed">O envio da mídia falhou</string>
+    <string name="reader_discover_recommended_blogs_header">Sites para seguir</string>
     <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Estamos trabalhando arduamente para adicionar mais blocos a cada lançamento.</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' não é totalmente suportado</string>
     <string name="gutenberg_native_help_button">Botão de ajuda</string>
@@ -29,6 +118,7 @@ Language: pt_BR
     <string name="photo_picker_wordpress_media_library">Escolher da biblioteca de mídias do WordPress</string>
     <string name="reader_label_toolbar_back">Voltar</string>
     <string name="reader_discover_empty_button_text">Comece agora</string>
+    <string name="reader_discover_empty_subtitle">Siga tópicos para descobrir novos blogs</string>
     <string name="reader_post_details_header_by_author_name">Por</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Este referenciador não pode ser marcado como spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Desmarcar como spam</string>
@@ -151,6 +241,7 @@ Language: pt_BR
     <string name="gutenberg_native_choose_image_or_video">Escolher imagem ou vídeo</string>
     <string name="gutenberg_native_choose_image">Escolher imagem</string>
     <string name="gutenberg_native_block_removed">Bloco removido</string>
+    <string name="enter_your_site_address">Digite o endereço de seu site</string>
     <string name="continue_with_wpcom">Continuar com WordPress.com</string>
     <string name="signup_confirmation_title">Confirmação de inscrição</string>
     <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
@@ -237,7 +328,6 @@ Language: pt_BR
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
     <string name="gutenberg_native_try_a_starter_layout">Experimente começar com um modelo</string>
-    <string name="gutenberg_native_insert_mention">Inserir menção</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toque duas vezes para abrir a janela de ações com as opções disponíveis</string>
     <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
@@ -402,7 +492,6 @@ Language: pt_BR
     <string name="post_list_tab_scheduled_posts">Agendado</string>
     <string name="post_list_tab_published_posts">Publicado</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Não conectado</string>
-    <string name="my_site_select_domains_page_title">Endereço do site</string>
     <string name="post_list_tab_trashed_posts">Na lixeira</string>
     <string name="sharing_facebook_account_must_have_pages">A conexão com o Facebook não encontrou nenhuma página. O Publicize não consegue se conectar a perfis do Facebook, apenas a páginas públicas.</string>
     <string name="notifications_tab_title_likes">Curtidas</string>
@@ -902,7 +991,6 @@ Language: pt_BR
     <string name="site_created_but_not_fetched_snackbar_message">Parece que sua conexão está lenta. Se você não encontrar seu site na lista, tente atualizar a tela.</string>
     <string name="cancel_new_site_wizard_content_description">Cancelar o guia de criação do site</string>
     <string name="new_site_creation_domain_header_subtitle">É onde as pessoas encontrarão seu site na internet.</string>
-    <string name="new_site_creation_domain_header_title">Escolha um nome de domínio para seu site</string>
     <string name="new_site_creation_empty_domain_list_message">Nenhum endereço disponível corresponde à sua pesquisa</string>
     <string name="site_creation_error_generic_subtitle">Erro de comunicação com o servidor. Tente novamente.</string>
     <string name="site_creation_error_generic_title">Ocorreu um problema</string>
@@ -1353,7 +1441,6 @@ Language: pt_BR
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 página com 1 arquivo não enviado</string>
     <string name="media_file_posts_plural_mixed_not_uploaded_one_file">%1$d posts com 1 arquivo não enviado</string>
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post com 1 arquivo não enviado</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Criar site</string>
     <string name="notification_site_creation_created">Toque para continuar.</string>
     <string name="notification_site_creation_title_success">Site criado!</string>
@@ -1644,11 +1731,7 @@ Language: pt_BR
     <string name="post_status_draft">Rascunho</string>
     <string name="post_status_pending_review">Revisão pendente</string>
     <string name="post_status_publish_post">Publicar</string>
-    <string name="change_location">Alterar localização</string>
-    <string name="remove_location">Remover localização</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Não foi possível abrir o selecionador de localização. O Google Play Services não está disponível</string>
     <string name="now">Agora</string>
-    <string name="post_settings_location">Localização</string>
     <string name="post_settings_password_dialog_hint">Somente usuários com essa senha podem ver este post</string>
     <string name="post_settings_excerpt_dialog_hint">Resumos são sumários opcionais do seu conteúdo, escritos separadamente.</string>
     <string name="post_settings_slug_dialog_hint">O slug é a versão para URL amigável do título do post.</string>

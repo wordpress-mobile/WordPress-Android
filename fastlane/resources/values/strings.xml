@@ -302,6 +302,7 @@
     <string name="button_discard">Discard</string>
     <string name="button_retry">Retry</string>
     <string name="button_move_to_draft">Move to Draft</string>
+    <string name="button_copy">Duplicate</string>
 
     <!-- post uploads -->
     <string name="upload_failed_param">Upload failed for \"%s\"</string>
@@ -372,6 +373,12 @@
     <string name="dialog_confirm_autosave_body_second_part">From this app\nSaved on %s\n\nFrom another device\nSaved on %s\n</string>
     <string name="dialog_confirm_autosave_restore_button">The version from another device</string>
     <string name="dialog_confirm_autosave_dont_restore_button">The version from this app</string>
+
+    <!-- post confirm copy local post dialog -->
+    <string name="dialog_confirm_copy_local_title">Post sync conflict</string>
+    <string name="dialog_confirm_copy_local_message">The post you are trying to copy has two versions that are in conflict or you recently made changes but didn\'t save them.\nEdit the post first to resolve any conflict or proceed with copying the version from this app.</string>
+    <string name="dialog_confirm_copy_local_edit_button">Edit the post first</string>
+    <string name="dialog_confirm_copy_local_copy_button">Copy the version from this app</string>
 
     <!-- trash post with local changes dialog -->
     <string name="dialog_confirm_trash_losing_local_changes_title">Local changes</string>
@@ -1025,8 +1032,14 @@
     <string name="activity_log_rewind_site">Rewind Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
+    <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
+    <string name="activity_log_date_range_filter_label">Date range</string>
+    <string name="activity_log_activity_type_filter_label">Activity type</string>
+    <!-- activity log list popup menu -->
+    <string name="activity_log_item_menu_restore_label">Restore to this point</string>
+    <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
     <!-- scan -->
     <string name="scan">Scan</string>
@@ -1959,7 +1972,6 @@
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_add_page">Site page</string>
     <string name="my_site_bottom_sheet_add_story">Story post</string>
-    <string name="my_site_bottom_sheet_story_tag_new">New</string>
 
     <!-- site picker -->
     <string name="site_picker_title">Choose site</string>
@@ -2958,6 +2970,7 @@
     <string name="dialog_edit_story_unrecoverable_message">We couldn\'t find the media for this story on the site.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF files not supported</string>
     <string name="dialog_edit_story_unsupported_format_message">One or more slides have not been added to your Story because Stories don\'t support GIF files at the moment. Please choose a static image or video background instead.</string>
+    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
     <string name="capture_button_alt">Capture</string>
     <string name="flip_button_alt">Flip camera</string>
     <string name="flash_button_alt">Flash</string>
@@ -3074,6 +3087,7 @@
     <!-- translators: title for "Blog" page template -->
     <string name="gutenberg_native_blog" tools:ignore="UnusedResources">Blog</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
+    <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Choose file</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
     <string name="gutenberg_native_choose_image_or_video" tools:ignore="UnusedResources">Choose image or video</string>
@@ -3124,6 +3138,7 @@
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <!-- translators: sample content for "Team" page template -->
     <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a" tools:ignore="UnusedResources">Email me: &lt;a href=\"mailto:mail@example.com\"&gt;mail@example.com&lt;/a&gt;</string>
+    <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
@@ -3299,4 +3314,20 @@ translators: sample content for "Services" page template -->
     <string name="dialog_discard_story_ok_button_edit">Discard</string>
     <string name="color_picker_label_text">Text</string>
     <string name="color_picker_label_background">Background</string>
+
+    <!-- Jetpack backup download -->
+    <string name="backup_download">Backup Download</string>
+    <string name="backup_download_details_page_title">Download Backup</string>
+    <string name="backup_download_details_header">Create downloadable backup</string>
+    <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
+    <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
+    <string name="backup_download_details_action_button">Create downloadable file</string>
+    <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
+
+    <string name="backup_item_themes">WordPress Themes</string>
+    <string name="backup_item_plugins">WordPress Plugins</string>
+    <string name="backup_item_media_uploads">Media Uploads</string>
+    <string name="backup_item_roots">WordPress root (includes wp-config php and any non WordPress files)</string>
+    <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
+    <string name="backup_item_sqls">Site database (SQL)</string>
 </resources>

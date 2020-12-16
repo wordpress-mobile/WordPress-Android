@@ -20,7 +20,7 @@ class ThumbDimensionProvider @Inject constructor(
         get() = min(getPixels(dimen.hpp_maximum_container_width), displayUtilsWrapper.getDisplayPixelWidth())
 
     private val isTabletOrLandscape: Boolean
-        get() = displayUtilsWrapper.isTablet() || displayUtilsWrapper.isLandscape()
+        get() = displayUtilsWrapper.isTablet() || displayUtilsWrapper.isLandscapeBySize()
 
     /**
      * We calculate the columns by dividing the container width (without the margins) by the card width. The horizontal

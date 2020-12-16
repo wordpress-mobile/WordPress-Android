@@ -1,8 +1,15 @@
+16.5
+-----
+ 
 16.4
 -----
 * [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
 * [**] Posts List: Adds duplicate post functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13521]
 * [*] Block Editor: Fix Gallery block uploads when the editor is closed [https://github.com/wordpress-mobile/WordPress-Android/pull/13570]
+* [*] Block Editor: Remove popup informing user that they will be using the block editor by default [https://github.com/wordpress-mobile/WordPress-Android/pull/13593]
+* [**] Block Editor: Fixed an issue where a block would disappear when deleting all of the text inside without requiring the extra backspace to remove the block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2877]
+* [***] Block Editor: New Block: File [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2835]
+
 
 16.3
 -----
