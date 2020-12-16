@@ -192,7 +192,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun createActivityTypeFilterLabel(): UiString {
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
-             if (it.size == 1) {
+            if (it.size == 1) {
                 // TODO malinjir replace it[0] with translated name of the activity type
                 UiStringText("${it[0]}")
             } else {

@@ -516,17 +516,16 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf(1,2))
+        viewModel.onActivityTypesSelected(listOf(1, 2))
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_active_label,
-                                listOf(UiStringText("2")))
+                                listOf(UiStringText("2"))
+                        )
                 )
     }
-
-
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(store).fetchActivities(fetchActivityLogCaptor.capture())
