@@ -7,9 +7,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_PULL_TO_REFRESH
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.models.discover.ReaderDiscoverCard.InterestsYouMayLikeCard
@@ -264,7 +261,7 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private fun onReaderTagClicked(tag: String) {
         launch(ioDispatcher) {
-            analyticsTrackerWrapper.track(READER_DISCOVER_TOPIC_TAPPED)
+            analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_TOPIC_TAPPED)
             val readerTag = readerUtilsWrapper.getTagFromTagName(tag, FOLLOWED)
             _navigationEvents.postValue(Event(ShowPostsByTag(readerTag)))
         }
@@ -343,7 +340,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             if (closeToEndIndex > 0) {
                 val isCardCloseToEnd: Boolean = it.getOrNull(closeToEndIndex) == item
                 if (isCardCloseToEnd) {
-                    analyticsTrackerWrapper.track(READER_DISCOVER_PAGINATED)
+                    analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_DISCOVER_PAGINATED)
                     launch(ioDispatcher) { readerDiscoverDataProvider.loadMoreCards() }
                 }
             }
@@ -412,7 +409,7 @@ class ReaderDiscoverViewModel @Inject constructor(
     }
 
     fun swipeToRefresh() {
-        analyticsTrackerWrapper.track(READER_PULL_TO_REFRESH)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_PULL_TO_REFRESH)
         swipeToRefreshTriggered = true
         launch {
             readerDiscoverDataProvider.refreshCards()
