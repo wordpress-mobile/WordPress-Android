@@ -144,7 +144,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                         }
                     }
                 }
-                trackContentPresented()
+                trackContentPresentedOnce()
             }
         }
 
@@ -258,7 +258,7 @@ class ReaderDiscoverViewModel @Inject constructor(
                     )
                 }
             }
-            trackContentPresented()
+            trackContentPresentedOnce()
         }
     }
 
@@ -431,7 +431,7 @@ class ReaderDiscoverViewModel @Inject constructor(
         this.isScreenVisible = isScreenVisible
     }
 
-    private fun trackContentPresented() {
+    private fun trackContentPresentedOnce() {
         if (!isContentPresentedTrackedOnce) {
             isContentPresentedTrackedOnce = true
             if (isScreenVisible) {
