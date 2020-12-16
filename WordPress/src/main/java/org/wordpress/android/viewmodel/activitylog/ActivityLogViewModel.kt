@@ -26,8 +26,10 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAc
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
@@ -50,6 +52,7 @@ class ActivityLogViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
+    private val dateUtils: DateUtils,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -170,12 +173,20 @@ class ActivityLogViewModel @Inject constructor(
     private fun refreshFiltersUiState() {
         _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
             FiltersShown(
-                    UiStringRes(R.string.activity_log_date_range_filter_label),
+                    createDateRangeFilterLabel(),
                     UiStringRes(R.string.activity_log_activity_type_filter_label)
             )
         } else {
             FiltersHidden
         }
+    }
+
+    private fun createDateRangeFilterLabel(): UiString {
+        currentDateRangeFilter?.let {
+            return UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second)))
+        }
+
+        return UiStringRes(R.string.activity_log_date_range_filter_label);
     }
 
     fun onPullToRefresh() {
@@ -219,6 +230,7 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onDateRangeSelected(dateRange: DateRange?) {
         currentDateRangeFilter = dateRange
+        refreshFiltersUiState()
         // TODO malinjir: refetch/load data
     }
 
