@@ -114,6 +114,7 @@
         <item name="materialCalendarDay">@style/WordPress.MaterialCalendarDayTextView</item>
         <!-- Used to color the cancel button which doesn't use any overridable styles -->
         <item name="colorOnPrimary">?attr/colorOnSurface</item>
+        <item name="android:background">?attr/colorSurface</item>
     </style>
 
     <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar.Fullscreen">
@@ -135,6 +136,7 @@
     <style name="WordPress.MaterialCalendarHeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection.Fullscreen">
         <item name="android:textColor">?attr/colorOnSurface</item>
         <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="WordPress.MaterialCalendarHeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
