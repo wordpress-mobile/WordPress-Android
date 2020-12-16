@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -605,45 +606,66 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `given screen is not visible, when discover feed succeeds, then do not track content presented`() = test {
         // Arrange
-        init()
         viewModel.updateScreenVisibility(false)
         // Act
-        fakeDiscoverFeed.value = createDummyReaderCardsList()
+        init()
         // Assert
-        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        verify(analyticsTrackerWrapper, times(0)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
     }
 
     @Test
     fun `given screen is visible, when discover feed succeeds, then do track content presented`() = test {
         // Arrange
-        init()
         viewModel.updateScreenVisibility(true)
+        // Act
+        init()
+        // Assert
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+    }
+
+    @Test
+    fun `given already tracked, when discover feed succeeds, then do not track content presented again`() = test {
+        // Arrange
+        viewModel.updateScreenVisibility(true)
+        init()
         // Act
         fakeDiscoverFeed.value = createDummyReaderCardsList()
         // Assert
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
     }
 
     @Test
     fun `given screen is not visible, when communication channel errors, then do not track content presented`() = test {
         // Arrange
-        init()
         viewModel.updateScreenVisibility(false)
+        init()
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        verify(analyticsTrackerWrapper, never()).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        verify(analyticsTrackerWrapper, times(0)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
     }
 
     @Test
     fun `given screen is visible, when communication channel errors, then do track content presented`() = test {
         // Arrange
-        init()
         viewModel.updateScreenVisibility(true)
+        init()
         // Act
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Assert
-        verify(analyticsTrackerWrapper).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
+    }
+
+    @Test
+    fun `given already tracked, when communication channel errors, then do not track content presented again`() = test {
+        // Arrange
+        viewModel.updateScreenVisibility(true)
+        init()
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Act
+        fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
+        // Assert
+        verify(analyticsTrackerWrapper, times(1)).track(AnalyticsTracker.Stat.READER_DISCOVER_CONTENT_PRESENTED)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
