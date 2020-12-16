@@ -9,7 +9,6 @@ import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ButtonAction
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.setVisible
 
 class ScanStateViewHolder(
     private val imageManager: ImageManager,
@@ -33,10 +32,7 @@ class ScanStateViewHolder(
         button: MaterialButton,
         action: ButtonAction?
     ) {
-        action?.let {
-            button.text = uiHelpers.getTextOfUiString(itemView.context, action.title)
-            button.setVisible(action.visibility)
-            button.setOnClickListener { action.onClicked.invoke() }
-        } ?: button.setVisible(false)
+        uiHelpers.setTextOrHide(button, action?.title)
+        button.setOnClickListener { action?.onClicked?.invoke() }
     }
 }
