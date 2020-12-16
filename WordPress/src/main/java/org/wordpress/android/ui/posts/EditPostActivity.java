@@ -2972,6 +2972,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
+    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher
+                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -3023,6 +3028,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+    }
+
+    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
     }
 
     @Override
