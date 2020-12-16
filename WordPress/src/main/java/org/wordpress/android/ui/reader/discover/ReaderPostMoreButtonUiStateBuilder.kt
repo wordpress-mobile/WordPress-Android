@@ -16,6 +16,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -92,6 +93,30 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             labelColor = R.attr.colorSecondary,
                             iconRes = R.drawable.ic_reader_follow_white_24dp,
                             isSelected = false,
+                            onClicked = onButtonClicked
+                    )
+            )
+        }
+
+        if (readerPostTableWrapper.isPostSeen(post)) {
+            menuItems.add(
+                    SecondaryAction(
+                            type = TOGGLE_SEEN_STATUS,
+                            label = UiStringRes(R.string.reader_menu_mark_as_unseen),
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
+                            iconRes = R.drawable.ic_not_visible_white_24dp,
+                            isSelected = true,
+                            onClicked = onButtonClicked
+                    )
+            )
+        } else {
+            menuItems.add(
+                    SecondaryAction(
+                            type = TOGGLE_SEEN_STATUS,
+                            label = UiStringRes(R.string.reader_menu_mark_as_seen),
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
+                            iconRes = R.drawable.ic_visible_white_24dp,
+                            isSelected = true,
                             onClicked = onButtonClicked
                     )
             )
