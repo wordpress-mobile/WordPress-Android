@@ -10,16 +10,17 @@ import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ButtonAction
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
+import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 @Reusable
 class ScanStateListItemBuilder @Inject constructor(
+    private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider
 ) {
@@ -62,7 +63,11 @@ class ScanStateListItemBuilder @Inject constructor(
 
     private fun mapToThreatsNotFound(scanStateModel: ScanStateModel, onScanButtonClicked: () -> Unit) =
         ScanIdleState.ThreatsNotFound(
-            scanDescription = scanStateModel.mostRecentStatus?.startDate?.time?.let { buildLastScanDescription(it) }
+            scanDescription = scanStateModel.mostRecentStatus?.startDate?.time?.let {
+                buildLastScanDescription(
+                    it
+                )
+            }
                 ?: UiStringRes(R.string.scan_idle_manual_scan_description),
             scanAction = buildScanButtonAction(R.string.scan_now, onScanButtonClicked)
         )
@@ -80,13 +85,15 @@ class ScanStateListItemBuilder @Inject constructor(
     )
 
     private fun buildLastScanDescription(timeInMs: Long): UiStringResWithParams {
-        val durationInMs = System.currentTimeMillis() - timeInMs
-
-        val hours = TimeUnit.MILLISECONDS.toHours(durationInMs)
-        val minutes = TimeUnit.MILLISECONDS.toMinutes(durationInMs)
+        val durationInMs = dateProvider.getCurrentDate().time - timeInMs
+        val hours = durationInMs / ONE_HOUR
+        val minutes = durationInMs / ONE_MINUTE
         val displayDuration = when {
-            hours > 0 -> UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("$hours")))
-            minutes > 0 -> UiStringResWithParams(R.string.scan_in_minutes_ago, listOf(UiStringText("$minutes")))
+            hours > 0 -> UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("${hours.toInt()}")))
+            minutes > 0 -> UiStringResWithParams(
+                R.string.scan_in_minutes_ago,
+                listOf(UiStringText("${minutes.toInt()}"))
+            )
             else -> UiStringRes(R.string.scan_in_few_seconds)
         }
 
@@ -104,4 +111,9 @@ class ScanStateListItemBuilder @Inject constructor(
                 "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
             )
     )
+
+    companion object {
+        private const val ONE_MINUTE = 60 * 1000L
+        private const val ONE_HOUR = 60 * ONE_MINUTE
+    }
 }

@@ -8,11 +8,9 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers.any
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -22,18 +20,23 @@ import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
+import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
+private const val DUMMY_CURRENT_TIME = 10000000L
+private const val ONE_MINUTE = 60 * 1000L
+private const val ONE_HOUR = 60 * ONE_MINUTE
+
 @InternalCoroutinesApi
-@RunWith(MockitoJUnitRunner::class)
 class ScanStateListItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: ScanStateListItemBuilder
 
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var dateProvider: DateProvider
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
 
@@ -51,9 +54,10 @@ class ScanStateListItemBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = ScanStateListItemBuilder(htmlMessageUtils, resourceProvider)
+        builder = ScanStateListItemBuilder(dateProvider, htmlMessageUtils, resourceProvider)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
         whenever(site.name).thenReturn((""))
+        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
 
     @Test
@@ -127,10 +131,11 @@ class ScanStateListItemBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds last scan description for ThreatsNotFound`() {
+    fun `builds last scan done seconds ago description for ThreatsNotFound`() {
         // Given
+        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
         val scanStateModelWithNoThreats = scanStateModelWithNoThreats.copy(
-            mostRecentStatus = ScanProgressStatus(startDate = Date())
+            mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - 10))
         )
         // Act
         val threatsNotFoundState = mapToScanState(scanStateModelWithNoThreats)
@@ -141,6 +146,35 @@ class ScanStateListItemBuilderTest : BaseUnitTest() {
         assertThat((scanDescription.params[0] as UiStringRes).stringRes).isEqualTo(R.string.scan_in_few_seconds)
         assertThat((scanDescription.params[1] as UiStringRes).stringRes)
             .isEqualTo(R.string.scan_idle_manual_scan_description)
+    }
+
+    @Test
+    fun `builds last scan done hours ago description with hours ago substring for ThreatsNotFound`() {
+        // Given
+        val scanStateModelWithNoThreats = scanStateModelWithNoThreats.copy(
+            mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_HOUR))
+        )
+        // Act
+        val threatsNotFoundState = mapToScanState(scanStateModelWithNoThreats)
+        // Assert
+        val scanDescription = threatsNotFoundState.scanDescription as UiStringResWithParams
+        assertThat(scanDescription.stringRes).isEqualTo(R.string.scan_idle_last_scan_description)
+        assertThat((scanDescription.params[0] as UiStringResWithParams).stringRes).isEqualTo(R.string.scan_in_hours_ago)
+    }
+
+    @Test
+    fun `builds last scan done minutes ago description with minutes ago substring for ThreatsNotFound`() {
+        // Given
+        val scanStateModelWithNoThreats = scanStateModelWithNoThreats.copy(
+            mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_MINUTE))
+        )
+        // Act
+        val threatsNotFoundState = mapToScanState(scanStateModelWithNoThreats)
+        // Assert
+        val scanDescription = threatsNotFoundState.scanDescription as UiStringResWithParams
+        assertThat(scanDescription.stringRes).isEqualTo(R.string.scan_idle_last_scan_description)
+        assertThat((scanDescription.params[0] as UiStringResWithParams).stringRes)
+            .isEqualTo(R.string.scan_in_minutes_ago)
     }
 
     @Test
