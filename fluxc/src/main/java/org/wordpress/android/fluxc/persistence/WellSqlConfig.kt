@@ -1383,6 +1383,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 128 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS ThreatModel")
                     db.execSQL(
                         "CREATE TABLE ThreatModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
                                 "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
@@ -1394,7 +1395,12 @@ open class WellSqlConfig : DefaultWellConfig {
                                 "FIXED_ON INTEGER," +
                                 "FIXABLE_FILE TEXT," +
                                 "FIXABLE_FIXER TEXT," +
-                                "FIXABLE_TARGET TEXT)"
+                                "FIXABLE_TARGET TEXT," +
+                                "FILE_NAME TEXT," +
+                                "DIFF TEXT," +
+                                "EXTENSION TEXT," +
+                                "ROWS TEXT," +
+                                "CONTEXT TEXT)"
                     )
                 }
             }

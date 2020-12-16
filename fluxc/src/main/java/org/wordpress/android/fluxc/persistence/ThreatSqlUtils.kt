@@ -1,5 +1,7 @@
 package org.wordpress.android.fluxc.persistence
 
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 import com.wellsql.generated.ThreatModelTable
 import com.yarolegovich.wellsql.WellSql
 import com.yarolegovich.wellsql.core.Identifiable
@@ -7,17 +9,19 @@ import com.yarolegovich.wellsql.core.annotation.Column
 import com.yarolegovich.wellsql.core.annotation.PrimaryKey
 import com.yarolegovich.wellsql.core.annotation.Table
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class ThreatSqlUtils @Inject constructor() {
+class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val threatMapper: ThreatMapper) {
     fun replaceThreatsForSite(site: SiteModel, threatModels: List<ThreatModel>) {
         WellSql.delete(ThreatBuilder::class.java)
             .where()
@@ -33,10 +37,33 @@ class ThreatSqlUtils @Inject constructor() {
             .equals(ThreatModelTable.LOCAL_SITE_ID, site.id)
             .endWhere()
             .asModel
-            .map { it.build() }
+            .map { it.build(gson, threatMapper) }
     }
 
     private fun ThreatModel.toBuilder(site: SiteModel): ThreatBuilder {
+        var fileName: String? = null
+        var diff: String? = null
+        var extension: String? = null
+        var rows: String? = null
+        var context: String? = null
+
+        when (this) {
+            is CoreFileModificationThreatModel -> {
+                fileName = this.fileName
+                diff = this.diff
+            }
+            is VulnerableExtensionThreatModel -> {
+                extension = gson.toJson(this.extension).toString()
+            }
+            is DatabaseThreatModel -> {
+                rows = gson.toJson(this.rows).toString()
+            }
+            is FileThreatModel -> {
+                context = gson.toJson(this.context).toString()
+            }
+            else -> { // Do Nothing
+            }
+        }
         return ThreatBuilder(
             threatId = baseThreatModel.id,
             localSiteId = site.id,
@@ -48,7 +75,12 @@ class ThreatSqlUtils @Inject constructor() {
             fixedOn = baseThreatModel.fixedOn?.time,
             fixableFile = baseThreatModel.fixable?.file,
             fixableFixer = baseThreatModel.fixable?.fixer?.value,
-            fixableTarget = baseThreatModel.fixable?.target
+            fixableTarget = baseThreatModel.fixable?.target,
+            fileName = fileName,
+            diff = diff,
+            extension = extension,
+            rows = rows,
+            context = context
         )
     }
 
@@ -66,7 +98,12 @@ class ThreatSqlUtils @Inject constructor() {
         @Column var fixedOn: Long? = null,
         @Column var fixableFile: String? = null,
         @Column var fixableFixer: String? = null,
-        @Column var fixableTarget: String? = null
+        @Column var fixableTarget: String? = null,
+        @Column var fileName: String? = null,
+        @Column var diff: String? = null,
+        @Column var extension: String? = null,
+        @Column var rows: String? = null,
+        @Column var context: String? = null
     ) : Identifiable {
         constructor() : this(-1, 0, 0, 0, "", "", "", 0, 0, "", "", "")
 
@@ -76,26 +113,28 @@ class ThreatSqlUtils @Inject constructor() {
 
         override fun getId() = id
 
-        fun build(): ThreatModel {
-            val fixable: Fixable? = fixableFixer?.let {
-                Fixable(
-                    file = fixableFile,
-                    fixer = Fixable.FixType.fromValue(it),
-                    target = fixableTarget
-                )
-            }
-
-            val baseThreatModel = BaseThreatModel(
+        fun build(gson: Gson, threatMapper: ThreatMapper): ThreatModel {
+            val threat = Threat(
                 id = threatId,
                 signature = signature,
                 description = description,
-                status = ThreatStatus.fromValue(status),
+                status = status,
                 firstDetected = Date(firstDetected),
-                fixable = fixable,
-                fixedOn = fixedOn?.let { Date(it) }
+                fixable = fixableFixer?.let { Threat.Fixable(file = fixableFile, fixer = it, target = fixableTarget) },
+                fixedOn = fixedOn?.let { Date(it) },
+                fileName = fileName,
+                diff = diff,
+                extension = extension?.let { gson.fromJson(extension, Threat.Extension::class.java) },
+                rows = rows?.let {
+                    gson.fromJson<List<DatabaseThreatModel.Row>>(
+                        rows,
+                        object : TypeToken<List<DatabaseThreatModel.Row?>?>() {}.type
+                    )
+                },
+                context = context?.let { gson.fromJson(context, FileThreatModel.ThreatContext::class.java) }
             )
 
-            return GenericThreatModel(baseThreatModel)
+            return threatMapper.map(threat)
         }
     }
 }
