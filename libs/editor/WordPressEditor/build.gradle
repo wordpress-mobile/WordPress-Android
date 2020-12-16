@@ -95,14 +95,50 @@ dependencies {
     //     exclude group: 'com.google.code.findbugs'
     // }
 
-    // FIXME: hermes is a dependency required by React Native.  Ideally, we'd
+    // FIXME: hermes is a dependency required by React Native. Ideally, we'd
     // have this as part of the Gutenberg AAR, but right now this seems to do
     // the job of getting the editor to load.
     //
+    // This works from the app, but assembleDebug fails with:
+    //
+    // > Task :libs:editor:WordPressEditor:bundleDebugAar FAILED
+    // FAILURE: Build failed with an exception.
+    //
+    // * What went wrong:
+    // Execution failed for task ':libs:editor:WordPressEditor:bundleDebugAar'.
+    // > Direct local .aar file dependencies are not supported when building an AAR. The resulting AAR would be broken because the classes and Android resources from any local .aar file dependencies would not be packaged in the resulting AAR. Previous versions of the Android Gradle Plugin produce broken AARs in this case too (despite not throwing this error). The following direct local .aar file dependencies of the :libs:editor:WordPressEditor project caused this error: /Users/gio/Developer/a8c/wpandroid/libs/editor/WordPressEditor/libs/hermes-debug.aar
+    //
     // debugImplementation files("./libs/hermes-debug.aar")
     // releaseImplementation files("./libs/hermes-release.aar")
+    //
+    // Same for
+    //
+    // debugApi files("./libs/hermes-debug.aar")
+    // releaseApi files("./libs/hermes-release.aar")
+    //
+    // Same for
+    //
+    // debugApi fileTree(dir: "./libs", include: ['hermes-debug.aar'])
+    // releaseApi fileTree(dir: "./libs", include: ['hermes-release.aar'])
+    //
+    // This works for assembleDebug, but the app then can't find Hermes, with
+    // error:
+    //
+    // E/SoLoader: couldn't find DSO to load: libhermes.so
+    // E/AndroidRuntime: FATAL EXCEPTION: create_react_context
+    // Process: org.wordpress.android, PID: 30632
+    // java.lang.UnsatisfiedLinkError: couldn't find DSO to load: libhermes.so
+    //     at com.facebook.soloader.SoLoader.doLoadLibraryBySoName(SoLoader.java:738)
+    //     at com.facebook.soloader.SoLoader.loadLibraryBySoName(SoLoader.java:591)
+    //     at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:529)
+    //     at com.facebook.soloader.SoLoader.loadLibrary(SoLoader.java:484)
+    //     at com.facebook.hermes.reactexecutor.HermesExecutor.<clinit>(HermesExecutor.java:20)
+    //     at com.facebook.hermes.reactexecutor.HermesExecutorFactory.create(HermesExecutorFactory.java:27)
+    //     at com.facebook.react.ReactInstanceManager$5.run(ReactInstanceManager.java:952)
+    //     at java.lang.Thread.run(Thread.java:923)
+    //
     debugCompileOnly files("./libs/hermes-debug.aar")
-    releaseCompileOnly files("./libs/hermes-debug.aar")
+    releaseCompileOnly files("./libs/hermes-release.aar")
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"

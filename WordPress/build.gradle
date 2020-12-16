@@ -339,6 +339,16 @@ dependencies {
     implementation (project(path:':libs:editor:WordPressEditor')) {
         exclude group: 'org.wordpress', module: 'utils' 
     }
+    // WordPressEditor requires Hermes because of React Native.
+    //
+    // Duplicating the dependency and using compileOnly in the WordPressEditor
+    // build.gradle is the only solution I found so far to be able to both run
+    // the app without the editor crashing because it can't find Hermes and
+    // assembling the WordPress app AAR without a "Direct local .aar
+    // dependencies are not supported" error
+    debugRuntimeOnly files('./../libs/editor/WordPressEditor/libs/hermes-debug.aar')
+    releaseRuntimeOnly files('./../libs/editor/WordPressEditor/libs/hermes-release.aar')
+
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
