@@ -1,11 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 10:54:08+0000
+Translation-Revision-Date: 2020-12-10 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="gutenberg_native_file_name">檔案名稱</string>
+    <string name="gutenberg_native_file_block_settings">檔案區塊設定</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">上傳檔案失敗。\n請點選以顯示選項。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">存檔失敗。\n請點選以顯示選項。</string>
+    <string name="gutenberg_native_edit_file">編輯檔案</string>
+    <string name="gutenberg_native_copy_file_url">複製檔案 URL</string>
+    <string name="gutenberg_native_choose_a_file">選擇檔案</string>
+    <string name="new_site_creation_domain_header_title">選擇網域</string>
+    <string name="my_site_bottom_sheet_story_tag_new">新增</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">我追蹤的討論</string>
+    <string name="reader_btn_follow_comments">追蹤討論</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">無法取消訂閱這篇文章的留言</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">無法訂閱這篇文章的留言</string>
+    <string name="reader_follow_comments_get_status_error">擷取文章訂閱狀態時發生錯誤</string>
+    <string name="reader_follow_comments_unsubscribe_success">已成功取消訂閱留言</string>
+    <string name="reader_follow_comments_subscribe_success">已成功訂閱留言</string>
+    <string name="reader_follow_comments_bad_format_response">收到無效回應</string>
+    <string name="reader_follow_comments_null_response">未收到回應</string>
+    <string name="activity_log_activity_type_filter_clear">清除</string>
+    <string name="activity_log_activity_type_filter_apply">套用</string>
+    <string name="dialog_edit_story_unsupported_format_message">一或多張投影片並未加入你的限時動態，因為「限時動態」功能目前不支援 GIF 檔案。 請改為選擇靜態圖片或影片背景。</string>
+    <string name="dialog_edit_story_unsupported_format_title">不支援 GIF 檔案</string>
+    <string name="dialog_edit_story_unrecoverable_message">我們無法在網站上找到這個限時動態使用的媒體。</string>
+    <string name="dialog_edit_story_unrecoverable_title">無法編輯限時動態</string>
+    <string name="dialog_edit_story_unavailable_message">無法載入這個限時動態的媒體 請檢查你的網際網路連線，並稍後再試一次。</string>
+    <string name="dialog_edit_story_unavailable_title">無法編輯限時動態</string>
+    <string name="dialog_edit_story_limited_message">這個限時動態已在不同裝置上編輯過，因此特定物件的編輯功能可能受到限制。</string>
+    <string name="dialog_edit_story_limited_title">限時動態編輯功能受限</string>
+    <string name="cannot_retry_deleted_media_item_fatal">媒體已移除。 請嘗試編輯你的限時動態。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">文字</string>
     <string name="dialog_discard_story_ok_button_edit">捨棄</string>
@@ -32,7 +63,7 @@ Language: zh_TW
     <string name="gutenberg_native_scrollable_block_menu_closed">已關閉可捲動的區塊選單。</string>
     <string name="hpp_skip_button">跳過</string>
     <string name="hpp_choose_button">選擇</string>
-    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你之後可以隨時自訂或變更。</string>
+    <string name="hpp_subtitle">選擇你喜愛的首頁版面配置。 你可於稍後加以編輯及自訂。</string>
     <string name="hpp_title">選擇一款設計</string>
     <string name="mlp_network_error_subtitle">請在重新上線時點選重試，或是使用下方按鈕建立空白頁面。</string>
     <string name="mlp_network_error_title">版面配置在離線時無法使用</string>
@@ -193,6 +224,8 @@ Language: zh_TW
     <string name="mlp_choose_layout_subtitle">首先請從各種預先製作的頁面版面配置挑選。 或從空白頁面開始也可以。</string>
     <string name="mlp_choose_layout_title">選擇版面配置</string>
     <string name="prepublishing_nudges_story_title_hint">新增故事標題</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">建立文章或限時動態</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">建立文章、頁面或限時動態</string>
     <string name="quick_start_dialog_create_new_post_message_short">點選 %1$s「建立」。 %2$s 然後選取&lt;b>「網誌文章」&lt;/b></string>
     <string name="photo_picker_choose_file">從裝置中選擇</string>
     <string name="my_site_bottom_sheet_add_story">故事文章</string>
@@ -293,7 +326,6 @@ Language: zh_TW
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">試用入門版面配置</string>
     <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
-    <string name="gutenberg_native_insert_mention">插入標記</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">按兩下以開啟含有可用選項的操作工作表</string>
     <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
@@ -460,7 +492,6 @@ Language: zh_TW
     <string name="post_list_tab_published_posts">已發佈</string>
     <string name="sharing_facebook_account_must_have_pages">Facebook 連結找不到任何頁面。Publicize 無法連結至 Facebook 個人檔案，只能連結至已發表的頁面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未連線</string>
-    <string name="my_site_select_domains_page_title">網站位址</string>
     <string name="notifications_tab_title_likes">按讚數</string>
     <string name="notifications_tab_title_follows">關注者</string>
     <string name="notifications_tab_title_comments">留言</string>
@@ -951,7 +982,6 @@ Language: zh_TW
     <string name="new_site_creation_create_site_button">建立網站</string>
     <string name="new_site_creation_search_domain_input_hint">搜尋網域</string>
     <string name="new_site_creation_domain_header_subtitle">這是人們在網際網路上找到你的地方。</string>
-    <string name="new_site_creation_domain_header_title">選擇網站的網域名稱</string>
     <string name="new_site_creation_empty_domain_list_message">找不到你搜尋的網址</string>
     <string name="site_creation_error_generic_subtitle">與伺服器通訊時發生錯誤，請再試一次</string>
     <string name="site_creation_error_generic_title">發生問題</string>
@@ -1395,7 +1425,6 @@ Language: zh_TW
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">無法上傳 1 篇文章和 1 個檔案</string>
     <string name="untitled_in_parentheses">(未命名)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f，%2$f</string>
     <string name="site_creation_domain_finish_button">建立網站</string>
     <string name="notification_site_creation_created">點選以繼續。</string>
     <string name="notification_site_creation_title_success">網站已建立！</string>
@@ -1683,10 +1712,6 @@ Language: zh_TW
     <string name="post_status_draft">草稿</string>
     <string name="post_status_pending_review">待審中</string>
     <string name="post_status_publish_post">發佈</string>
-    <string name="change_location">變更位置</string>
-    <string name="remove_location">移除位置</string>
-    <string name="post_settings_error_placepicker_missing_play_services">無法開啟位置挑選器，Google Play 服務無法使用</string>
-    <string name="post_settings_location">位置</string>
     <string name="now">立即</string>
     <string name="post_settings_password_dialog_hint">只有知道密碼的使用者可檢視這篇文章</string>
     <string name="post_settings_excerpt_dialog_hint">文章摘要是指選擇性手動摘錄的內容。</string>
@@ -2192,6 +2217,7 @@ Language: zh_TW
     <string name="reader_short_like_count_multi">%s 個讚</string>
     <string name="reader_short_like_count_one">1 個讚</string>
     <string name="reader_short_like_count_none">讚</string>
+    <string name="reader_label_follow_count">%,d 個追蹤我的人</string>
     <string name="reader_menu_tags">編輯主題和網站</string>
     <string name="reader_title_post_detail">讀者文章</string>
     <string name="notifications_push_summary">在裝置上顯示通知的相關設定。</string>

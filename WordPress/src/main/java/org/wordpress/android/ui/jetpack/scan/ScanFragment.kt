@@ -16,9 +16,11 @@ import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SCAN
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ScanFragment : Fragment(R.layout.scan_fragment) {
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanViewModel
@@ -48,9 +50,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initAdapter() {
-        val scanAdapter = ScanAdapter(uiHelpers)
-        scanAdapter.setHasStableIds(true)
-        recycler_view.adapter = scanAdapter
+        recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
         recycler_view.itemAnimator = null
     }
 
@@ -62,12 +62,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun setupObservers() {
         viewModel.uiState.observe(
-            viewLifecycleOwner,
-            Observer { uiState ->
-                if (uiState is Content) {
-                    refreshContentScreen(uiState)
+                viewLifecycleOwner,
+                Observer { uiState ->
+                    if (uiState is Content) {
+                        refreshContentScreen(uiState)
+                    }
                 }
-            }
         )
     }
 

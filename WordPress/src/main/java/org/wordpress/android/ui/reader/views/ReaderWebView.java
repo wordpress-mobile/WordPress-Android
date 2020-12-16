@@ -11,17 +11,18 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
-import android.webkit.WebChromeClient;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.ui.WPWebView;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.UrlUtils;
 import org.wordpress.android.util.WPUrlUtils;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 import java.io.IOException;
 import java.net.HttpURLConnection;
@@ -260,6 +261,8 @@ public class ReaderWebView extends WPWebView {
             mReaderWebView = readerWebView;
         }
 
+
+
         @Override
         public void onPageFinished(WebView view, String url) {
             if (mReaderWebView.hasPageFinishedListener()) {
@@ -312,12 +315,13 @@ public class ReaderWebView extends WPWebView {
         }
     }
 
-    private static class ReaderWebChromeClient extends WebChromeClient {
+    private static class ReaderWebChromeClient extends WebChromeClientWithVideoPoster {
         private final ReaderWebView mReaderWebView;
         private View mCustomView;
         private CustomViewCallback mCustomViewCallback;
 
         ReaderWebChromeClient(ReaderWebView readerWebView) {
+            super(readerWebView, R.drawable.media_movieclip);
             if (readerWebView == null) {
                 throw new IllegalArgumentException("ReaderWebChromeClient requires readerWebView");
             }

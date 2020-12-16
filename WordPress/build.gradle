@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-261"
+            versionName "alpha-262"
         }
-        versionCode 965
+        versionCode 967
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -98,9 +98,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.3-rc-2"
+                versionName "16.3"
             }
-            versionCode 964
+            versionCode 968
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -313,21 +313,28 @@ dependencies {
 
     implementation("$gradle.ext.fluxCBinaryPath:fluxc:$fluxCVersion") {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils'
     }
 
     implementation ('com.github.indexos.media-for-mobile:android:43a9026f0973a2f0a74fa813132f6a16f7499c3a')
 
-    implementation project(path:':libs:utils:WordPressUtils')
-    testImplementation project(path:':libs:utils:WordPressUtils')
-    debugImplementation project(path:':libs:utils:WordPressUtils')
+    implementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
+    testImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
+    debugImplementation "$gradle.ext.wputilsBinaryPath:$wordPressUtilsVersion"
     implementation (project(path:':libs:networking:WordPressNetworking')) {
         exclude group: "com.android.volley"
+        exclude group: 'org.wordpress', module: 'utils' 
     }
-    implementation project(path:':libs:analytics:WordPressAnalytics')
-    implementation project(path:':libs:editor:WordPressEditor')
+    implementation (project(path:':libs:analytics:WordPressAnalytics')) {
+        exclude group: 'org.wordpress', module: 'utils' 
+    }
+    implementation (project(path:':libs:editor:WordPressEditor')) {
+        exclude group: 'org.wordpress', module: 'utils' 
+    }
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
+        exclude group: 'org.wordpress', module: 'utils' 
     }
 
     implementation (group: 'com.zendesk', name: 'support', version: '5.0.1') {
@@ -363,12 +370,14 @@ dependencies {
 
     implementation "org.jsoup:jsoup:1.10.3"
     implementation 'androidx.emoji:emoji:1.0.0'
+
+    // Enables accessibility checks in Espresso
+    androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
 }
 
 configurations.all {
     // Exclude packaged wordpress sub projects, force the use of the source project
     // (eg. use :libs:utils:WordPressUtils instead of 'org.wordpress:utils')
-    exclude group: 'org.wordpress', module: 'utils'
     exclude group: 'org.wordpress', module: 'analytics'
 }
 

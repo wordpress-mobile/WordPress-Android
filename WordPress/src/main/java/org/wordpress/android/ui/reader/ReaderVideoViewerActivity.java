@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.View;
-import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.widget.ProgressBar;
 
@@ -12,6 +11,7 @@ import androidx.annotation.NonNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.util.helpers.WebChromeClientWithVideoPoster;
 
 /**
  * Full screen landscape video player for the reader
@@ -33,7 +33,7 @@ public class ReaderVideoViewerActivity extends LocaleAwareActivity {
         mWebView.getSettings().setJavaScriptEnabled(true);
         mWebView.getSettings().setUserAgentString(WordPress.getUserAgent());
 
-        mWebView.setWebChromeClient(new WebChromeClient() {
+        mWebView.setWebChromeClient(new WebChromeClientWithVideoPoster(mWebView, R.drawable.media_movieclip) {
             public void onProgressChanged(WebView view, int progress) {
                 if (progress == 100) {
                     mProgress.setVisibility(View.GONE);

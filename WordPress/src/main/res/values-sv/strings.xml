@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-23 17:56:20+0000
+Translation-Revision-Date: 2020-11-30 20:50:01+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Filnamn</string>
+    <string name="gutenberg_native_edit_file">Redigera fil</string>
+    <string name="gutenberg_native_choose_a_file">VÄLJ EN FIL</string>
+    <string name="gutenberg_native_copy_file_url">Kopiera filens URL</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Kunde inte spara filerna.\nTryck för att visa alternativ.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Kunde inte ladda upp filerna.\nTryck för att visa alternativ.</string>
+    <string name="gutenberg_native_file_block_settings">Inställningar för filblock</string>
+    <string name="new_site_creation_domain_header_title">Välj en domän</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_follow_comments_unsubscribe_success">Prenumeration på kommentarer har avslutats</string>
+    <string name="reader_follow_comments_get_status_error">Ett fel inträffade när prenumerationsstatusen för inlägget skulle hämtas</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Det gick inte att prenumerera på kommentarer till detta inlägg</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Det gick inte att avsluta prenumerationen på kommentarer till detta inlägg</string>
+    <string name="reader_btn_follow_comments">Följ konversation</string>
+    <string name="reader_btn_following_comments">Följer konversation</string>
+    <string name="my_site_btn_jetpack_settings">Inställningar för Jetpack</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Ny</string>
+    <string name="activity_log_activity_type_filter_clear">Rensa</string>
+    <string name="activity_log_activity_type_filter_apply">Utför</string>
+    <string name="reader_follow_comments_null_response">Inget svar har tagits emot</string>
+    <string name="reader_follow_comments_bad_format_response">Ett ogiltigt svar har tagits emot</string>
+    <string name="reader_follow_comments_subscribe_success">Prenumeration på kommentarer har startats</string>
     <string name="dialog_edit_story_unsupported_format_message">En eller flera bilder lades inte till i din berättelse eftersom berättelser för närvarande saknar stöd för GIF-filer. Välj en statisk bild eller en video som bakgrund i stället.</string>
     <string name="dialog_edit_story_limited_message">Denna berättelse har redigerats på en annan typ av enhet och möjligheten att redigera vissa objekt kan vara begränsad.</string>
     <string name="dialog_edit_story_unavailable_title">Det går inte att redigera berättelsen.</string>
@@ -308,7 +330,6 @@ Language: sv_SE
     <string name="gutenberg_native_open_block_actions_menu">Öppna menyn för blockåtgärder</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltryck för att öppna åtgärdsbladet med tillgängliga alternativ</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltryck för att öppna det nedre arket med tillgänliga alternativ</string>
-    <string name="gutenberg_native_insert_mention">Infoga omnämnande</string>
     <string name="suggestion_invalid_user">”%s är inte en giltig användare”</string>
     <string name="site_settings_select_page">Välj sida</string>
     <string name="site_settings_static_homepage">Statisk startsida</string>
@@ -473,7 +494,6 @@ Language: sv_SE
     <string name="post_list_tab_published_posts">Publicerade</string>
     <string name="sharing_facebook_account_must_have_pages">Facebook-kopplingen hittar inga sidor. Publicize kan inte kopplas till Facebook-profiler, utan endast till publicerade sidor.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Inte ansluten</string>
-    <string name="my_site_select_domains_page_title">Webbplatsadress</string>
     <string name="notifications_tab_title_likes">Gillamarkeringar</string>
     <string name="notifications_tab_title_follows">Följer</string>
     <string name="notifications_tab_title_comments">Kommentarer</string>
@@ -971,7 +991,6 @@ Language: sv_SE
     <string name="new_site_creation_create_site_button">Skapa webbplats</string>
     <string name="new_site_creation_search_domain_input_hint">Sök domäner</string>
     <string name="new_site_creation_domain_header_subtitle">Det är där andra människor hittar dig på internet.</string>
-    <string name="new_site_creation_domain_header_title">Välj ett domännamn för din webbplats</string>
     <string name="new_site_creation_empty_domain_list_message">Det inns ingen adress som matchar din sökning</string>
     <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>
     <string name="site_creation_error_generic_title">Ett fel har inträffat</string>
@@ -1416,7 +1435,6 @@ Language: sv_SE
     <string name="media_file_posts_plural_mixed_not_uploaded_files_plural">%1$d inlägg med %2$d filer laddades inte upp</string>
     <string name="media_file_posts_plural_only_not_uploaded">%1$d inlägg laddades inte upp</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%f, %f</string>
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">1 sida med 1 fil laddades inte upp</string>
     <string name="media_file_pages_and_posts_mixed_not_uploaded_one_file">%1$d inlägg/sidor med 1 fil laddades inte upp</string>
     <string name="media_file_pages_plural_mixed_not_uploaded_one_file">%1$d sidor med 1 fil laddades inte upp</string>
@@ -1713,10 +1731,6 @@ Language: sv_SE
     <string name="post_status_draft">Utkast</string>
     <string name="post_status_pending_review">Väntar på granskning</string>
     <string name="post_status_publish_post">Publicera</string>
-    <string name="change_location">Ändra plats</string>
-    <string name="remove_location">Ta bort plats</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Det går inte att öppna platsväljaren, Tjänsten Google Play är inte tillgänglig</string>
-    <string name="post_settings_location">Plats</string>
     <string name="now">Nu</string>
     <string name="post_settings_password_dialog_hint">Man behöver lösenord för att se detta inlägg</string>
     <string name="post_settings_excerpt_dialog_hint">Utdrag är valfria handskrivna sammanfattningar av ditt innehåll.</string>

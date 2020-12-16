@@ -85,22 +85,6 @@
     </issue>
 
     <issue
-        id="ExifInterface"
-        severity="Warning"
-        message="Avoid using `android.media.ExifInterface`; use `android.support.media.ExifInterface` from the support library instead"
-        category="Correctness"
-        priority="6"
-        summary="Using `android.media.ExifInterface`"
-        explanation="The `android.media.ExifInterface` implementation has some known security bugs in older versions of Android. There is a new implementation available of this library in the support library, which is preferable."
-        errorLine1="import android.media.ExifInterface;"
-        errorLine2="       ~~~~~~~~~~~~~~~~~~~~~~~~~~~">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ImageUtils.java"
-            line="17"
-            column="8"/>
-    </issue>
-
-    <issue
         id="LocaleFolder"
         severity="Warning"
         message="The locale folder &quot;`he`&quot; should be called &quot;`iw`&quot; instead; see the `java.util.Locale` documentation"
@@ -227,43 +211,9 @@
         errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
         quickfix="studio">
         <location
-            file="../libs/utils/WordPressUtils/build.gradle"
-            line="7"
-            column="9"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        severity="Warning"
-        message="A newer version of com.android.tools.build:gradle than 3.2.1 is available: 3.3.0"
-        category="Correctness"
-        priority="4"
-        summary="Obsolete Gradle Dependency"
-        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="        classpath &apos;com.android.tools.build:gradle:3.3.2&apos;"
-        errorLine2="        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
             file="../libs/login/WordPressLoginFlow/build.gradle"
             line="7"
             column="9"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        severity="Warning"
-        message="A newer version of com.android.support:design than 27.1.1 is available: 28.0.0"
-        category="Correctness"
-        priority="4"
-        summary="Obsolete Gradle Dependency"
-        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="    implementation &apos;com.android.support:design:27.1.1&apos;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/build.gradle"
-            line="23"
-            column="5"/>
     </issue>
 
     <issue
@@ -280,23 +230,6 @@
         <location
             file="../libs/analytics/WordPressAnalytics/build.gradle"
             line="23"
-            column="5"/>
-    </issue>
-
-    <issue
-        id="GradleDependency"
-        severity="Warning"
-        message="A newer version of com.android.support:recyclerview-v7 than 27.1.1 is available: 28.0.0"
-        category="Correctness"
-        priority="4"
-        summary="Obsolete Gradle Dependency"
-        explanation="This detector looks for usages of libraries where the version you are using is not the current stable release. Using older versions is fine, and there are cases where you deliberately want to stick with an older version. However, you may simply not be aware that a more recent version is available, and that is what this lint check helps find."
-        errorLine1="    implementation &apos;com.android.support:recyclerview-v7:27.1.1&apos;"
-        errorLine2="    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/build.gradle"
-            line="24"
             column="5"/>
     </issue>
 
@@ -501,108 +434,6 @@
         explanation="This check looks for X509TrustManager implementations whose `checkServerTrusted` or `checkClientTrusted` methods do nothing (thus trusting any certificate chain) which could result in insecure network traffic caused by trusting arbitrary TLS/SSL certificates presented by peers.">
         <location
             file="../org/jsoup/helper/HttpConnection$Response$2.class"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is never &lt; 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.JELLY_BEAN_MR1) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/DeviceUtils.java"
-            line="52"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is always >= 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/DeviceUtils.java"
-            line="144"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is always >= 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="    private static final boolean HAS_EMOJI = SDK_INT >= VERSION_CODES.JELLY_BEAN;"
-        errorLine2="                                             ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/EmoticonsUtils.java"
-            line="19"
-            column="46"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is always >= 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        final boolean isKitKat = Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT;"
-        errorLine2="                                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/MediaUtils.java"
-            line="440"
-            column="34"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is never &lt; 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (Build.VERSION.SDK_INT &lt; Build.VERSION_CODES.JELLY_BEAN_MR1) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/NetworkUtils.java"
-            line="79"
-            column="13"/>
-    </issue>
-
-    <issue
-        id="ObsoleteSdkInt"
-        severity="Error"
-        message="Unnecessary; SDK_INT is always >= 21"
-        category="Performance"
-        priority="6"
-        summary="Obsolete SDK_INT Version Check"
-        explanation="This check flags version checks that are not necessary, because the `minSdkVersion` (or surrounding known API level) is already at least as high as the version checked for.&#xA;&#xA;Similarly, it also looks for resources in `-vNN` folders, such as `values-v14` where the version qualifier is less than or equal to the `minSdkVersion`, where the contents should be merged into the best folder."
-        errorLine1="        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR1) {"
-        errorLine2="            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~"
-        quickfix="studio">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/ViewUtils.java"
-            line="27"
-            column="13"/>
     </issue>
 
     <issue
@@ -2772,22 +2603,6 @@
     <issue
         id="ClickableViewAccessibility"
         severity="Error"
-        message="Custom view `CustomSwipeRefreshLayout` overrides `onTouchEvent` but not `performClick`"
-        category="Accessibility"
-        priority="6"
-        summary="Accessibility in Custom Views"
-        explanation="If a `View` that overrides `onTouchEvent` or uses an `OnTouchListener` does not also implement `performClick` and call it when clicks are detected, the `View` may not handle accessibility actions properly. Logic handling the click actions should ideally be placed in `View#performClick` as some accessibility services invoke `performClick` when a click action should occur."
-        errorLine1="    public boolean onTouchEvent(MotionEvent event) {"
-        errorLine2="                   ~~~~~~~~~~~~">
-        <location
-            file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/widgets/CustomSwipeRefreshLayout.java"
-            line="21"
-            column="20"/>
-    </issue>
-
-    <issue
-        id="ClickableViewAccessibility"
-        severity="Error"
         message="Custom view `RippleToggleButton` overrides `onTouchEvent` but not `performClick`"
         category="Accessibility"
         priority="6"
@@ -4243,6 +4058,22 @@
             file="../libs/utils/WordPressUtils/src/main/java/org/wordpress/android/util/MediaUtils.java"
             line="111"
             column="28"/>
+    </issue>
+
+    <issue
+        id="ResourceType"
+        severity="Error"
+        message="Expected a color resource id (`R.color.`) but received an RGB integer"
+        category="Correctness"
+        priority="7"
+        summary="Wrong Resource Type"
+        explanation="Ensures that resource id&apos;s passed to APIs are of the right type; for example, calling `Resources.getColor(R.string.name)` is wrong."
+        errorLine1="        return new SwipeToRefreshHelper(swipeRefreshLayout, listener, backgroundColor, primaryProgressColor,"
+        errorLine2="                                                                      ~~~~~~~~~~~~~~~">
+        <location
+            file="../WordPress/src/main/java/org/wordpress/android/util/WPSwipeToRefreshHelper.java"
+            line="33"
+            column="71"/>
     </issue>
 
 </issues>

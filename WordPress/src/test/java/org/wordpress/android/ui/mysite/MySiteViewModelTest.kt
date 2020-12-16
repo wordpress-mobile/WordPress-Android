@@ -15,7 +15,11 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -34,6 +38,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.SITE_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.STATS
 import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
+import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
@@ -49,6 +54,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForSta
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMedia
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenPages
@@ -65,6 +71,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -85,6 +93,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var contextProvider: ContextProvider
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
+    @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     @Mock lateinit var scanStatusService: ScanStatusService
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -97,10 +106,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val siteUrl = "http://site.com"
     private val siteIcon = "http://site.com/icon.jpg"
     private val siteName = "Site"
+    private val emailAddress = "test@email.com"
     private lateinit var site: SiteModel
     private lateinit var siteInfoBlock: SiteInfoBlock
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
+    private val isDomainCreditAvailable = MutableLiveData<Boolean>()
     private val onScanAvailable = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
@@ -108,8 +119,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun setUp() {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
+        isDomainCreditAvailable.value = null
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
+        whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
         whenever(scanStatusService.scanAvailable).thenReturn(onScanAvailable)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -126,6 +139,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 contextProvider,
                 siteIconUploadHandler,
                 siteStoriesHandler,
+                domainRegistrationHandler,
                 scanStatusService
         )
         uiModels = mutableListOf()
@@ -673,6 +687,48 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `domain registration item click opens domain registration`() {
+        onSiteChange.postValue(site)
+        isDomainCreditAvailable.postValue(true)
+
+        findDomainRegistrationBlock()?.onClick?.click()
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
+
+        assertThat(navigationActions).containsOnly(OpenDomainRegistration(site))
+    }
+
+    @Test
+    fun `correct event is tracked when domain registration item is shown`() {
+        onSiteChange.postValue(site)
+        isDomainCreditAvailable.postValue(true)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_PROMPT_SHOWN)
+    }
+
+    @Test
+    fun `snackbar is shown and event is tracked when handling successful domain registration result without email`() {
+        viewModel.handleSuccessfulDomainRegistrationResult(null)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+
+        val message = UiStringRes(R.string.my_site_verify_your_email_without_email)
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
+    }
+
+    @Test
+    fun `snackbar is shown and event is tracked when handling successful domain registration result with email`() {
+        viewModel.handleSuccessfulDomainRegistrationResult(emailAddress)
+
+        verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
+
+        val message = UiStringResWithParams(string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
+    }
+
+    @Test
     fun `scan status service invoked to get scan availability status when site is changed`() {
         onSiteChange.postValue(site)
 
@@ -698,6 +754,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
 
     private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
+
+    private fun findDomainRegistrationBlock() =
+            uiModels.last().items.find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {

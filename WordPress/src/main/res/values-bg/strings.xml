@@ -144,11 +144,7 @@ Language: bg
     <string name="post_status_pending_review">Очаква коментар</string>
     <string name="post_status_post_private">Лична</string>
     <string name="post_status_draft">Чернова</string>
-    <string name="change_location">Промяна на местоположението</string>
-    <string name="remove_location">Премахване на местоположението</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Не мога да отворя избора на местоположение, Google Play Services не са достъпни.</string>
     <string name="post_status_publish_post">Публикуване</string>
-    <string name="post_settings_location">Местоположение</string>
     <string name="now">Сега</string>
     <string name="post_settings_password_dialog_hint">Само тези с паролата ще могат да видят публикацията</string>
     <string name="post_settings_excerpt_dialog_hint">Откъсът е незадължително кратко резюме на текста.</string>

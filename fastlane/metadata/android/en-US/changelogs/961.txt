@@ -1,5 +1,0 @@
-16.2:
-Block editor enhancements: We’ve improved the overall performance and speed, which you might notice when you open the editor to create a new post. We’ve also improved the Image block, with better support for uploading multiple images.
-
-Other updates and fixes: Your app now uses a new Media Picker when you select files for posts, your site icon, Gravatar, and other places. We also fixed a bug on pure self-hosted sites on HTTP that prevented featured images from displaying in the Posts List.
-

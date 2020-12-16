@@ -13,13 +13,13 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.VolleyUtils
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
-import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 class PostSubscribersApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
-    fun getCanFollowComments(blogId: Long, cont: Continuation<Boolean>) {
+    suspend fun getCanFollowComments(blogId: Long): Boolean = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/"
 
         val listener = Listener { jsonObject ->
@@ -45,7 +45,10 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    fun getMySubscriptionToPost(blogId: Long, postId: Long, cont: Continuation<PostSubscribersCallResult>) {
+    suspend fun getMySubscriptionToPost(
+        blogId: Long,
+        postId: Long
+    ): PostSubscribersCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/posts/$postId/subscribers/mine"
 
         val listener = Listener { jsonObject ->
@@ -68,7 +71,7 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    fun subscribeMeToPost(blogId: Long, postId: Long, cont: Continuation<PostSubscribersCallResult>) {
+    suspend fun subscribeMeToPost(blogId: Long, postId: Long): PostSubscribersCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/posts/$postId/subscribers/new"
 
         val listener = Listener { jsonObject ->
@@ -91,7 +94,10 @@ class PostSubscribersApiCallsProvider @Inject constructor(
         )
     }
 
-    fun unsubscribeMeFromPost(blogId: Long, postId: Long, cont: Continuation<PostSubscribersCallResult>) {
+    suspend fun unsubscribeMeFromPost(
+        blogId: Long,
+        postId: Long
+    ): PostSubscribersCallResult = suspendCoroutine { cont ->
         val endPointPath = "/sites/$blogId/posts/$postId/subscribers/mine/delete"
 
         val listener = Listener { jsonObject ->

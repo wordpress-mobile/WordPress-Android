@@ -128,7 +128,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateTitleVisibility(visible: Boolean) {
         val actionBar = (requireActivity() as? AppCompatActivity)?.supportActionBar
-        actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscape() || visible) // Always visible in landscape
+        actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscapeBySize() || visible)
     }
 
     private fun getSegmentIdFromArguments(): Long? = arguments?.getLong(EXTRA_SEGMENT_ID)

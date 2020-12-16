@@ -8,9 +8,11 @@ import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ButtonAction
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 
 class ScanStateViewHolder(
+    private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : ScanViewHolder(R.layout.scan_list_scan_state_item, parent) {
@@ -18,7 +20,7 @@ class ScanStateViewHolder(
         val scanState = itemUiState as ScanState
         val context = itemView.context
 
-        scan_state_icon.setImageResource(scanState.scanIcon)
+        imageManager.load(scan_state_icon, scanState.scanIcon)
         bindButtonAction(scan_button, scanState.scanAction)
         bindButtonAction(fix_all_button, scanState.fixAllAction)
         with(uiHelpers) {

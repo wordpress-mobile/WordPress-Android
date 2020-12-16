@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-25 11:51:24+0000
+Translation-Revision-Date: 2020-12-10 13:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="gutenberg_native_file_name">文件名</string>
+    <string name="gutenberg_native_file_block_settings">文件区块设置</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">无法上传文件。\n请轻点以查看选项。</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">无法保存文件。\n请轻点以查看选项。</string>
+    <string name="gutenberg_native_edit_file">编辑文件</string>
+    <string name="gutenberg_native_copy_file_url">复制文件 URL</string>
+    <string name="gutenberg_native_choose_a_file">选择文件</string>
+    <string name="new_site_creation_domain_header_title">选择域</string>
+    <string name="my_site_bottom_sheet_story_tag_new">新建</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack 设置</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">已关注对话</string>
+    <string name="reader_btn_follow_comments">关注对话</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">无法取消订阅本博客的评论</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">无法订阅本博客的评论</string>
+    <string name="reader_follow_comments_get_status_error">获取博客订阅状态时出错</string>
+    <string name="reader_follow_comments_unsubscribe_success">已成功取消订阅评论</string>
+    <string name="reader_follow_comments_subscribe_success">已成功订阅评论</string>
+    <string name="reader_follow_comments_bad_format_response">收到无效响应</string>
+    <string name="reader_follow_comments_null_response">未收到任何响应</string>
+    <string name="activity_log_activity_type_filter_clear">清除</string>
+    <string name="activity_log_activity_type_filter_apply">应用</string>
     <string name="dialog_edit_story_unsupported_format_message">您的故事没有添加一张或多张幻灯片，因为故事目前不支持GIF文件。 请选择静态图片或视频背景。</string>
     <string name="dialog_edit_story_unsupported_format_title">不支持GIF文件</string>
     <string name="dialog_edit_story_unrecoverable_message">我们在网站上找不到该故事的媒体。</string>
@@ -41,7 +63,7 @@ Language: zh_CN
     <string name="gutenberg_native_scrollable_block_menu_closed">滚动区块菜单关闭。</string>
     <string name="hpp_skip_button">跳过</string>
     <string name="hpp_choose_button">选择</string>
-    <string name="hpp_subtitle">选择您喜欢的主页布局。 您以后可以随时定制或更改。</string>
+    <string name="hpp_subtitle">选择您喜欢的主页布局。 您可以稍后对其进行编辑和自定义。</string>
     <string name="hpp_title">选择设计</string>
     <string name="mlp_network_error_subtitle">重新上线后，点击“重试”，或使用下面的按钮创建空白页。</string>
     <string name="mlp_network_error_title">离线时布局不可用</string>
@@ -306,7 +328,6 @@ Language: zh_CN
     <string name="pages_item_subtitle">%1$s· %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">试用初学者布局</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
-    <string name="gutenberg_native_insert_mention">插入提及</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">双击以打开带有可用选项的操作表页</string>
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
@@ -473,7 +494,6 @@ Language: zh_CN
     <string name="post_list_tab_published_posts">已发布</string>
     <string name="sharing_facebook_account_must_have_pages">Facebook 连接无法找到任何页面。Publicize 无法连接到 Facebook 个人资料，只能连接到已发布的页面。</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">未连接</string>
-    <string name="my_site_select_domains_page_title">站点地址</string>
     <string name="notifications_tab_title_likes">赞</string>
     <string name="notifications_tab_title_follows">关注</string>
     <string name="notifications_tab_title_comments">评论</string>
@@ -971,7 +991,6 @@ Language: zh_CN
     <string name="new_site_creation_create_site_button">创建站点</string>
     <string name="new_site_creation_search_domain_input_hint">搜索域</string>
     <string name="new_site_creation_domain_header_subtitle">人们可以通过此域名在互联网上找到您。</string>
-    <string name="new_site_creation_domain_header_title">为您的站点选择一个域名</string>
     <string name="new_site_creation_empty_domain_list_message">没有与您的搜索内容相匹配的地址</string>
     <string name="site_creation_error_generic_subtitle">与服务器通信时出错，请重试</string>
     <string name="site_creation_error_generic_title">出现问题</string>
@@ -1422,7 +1441,6 @@ Language: zh_CN
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 篇文章和 1 个文件未上传</string>
     <string name="untitled_in_parentheses">（无标题）</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f，%2$f</string>
     <string name="site_creation_domain_finish_button">创建站点</string>
     <string name="notification_site_creation_created">轻按以继续。</string>
     <string name="notification_site_creation_title_success">站点已创建！</string>
@@ -1713,10 +1731,6 @@ Language: zh_CN
     <string name="post_status_draft">草稿</string>
     <string name="post_status_pending_review">待审核</string>
     <string name="post_status_publish_post">发布</string>
-    <string name="change_location">更改位置</string>
-    <string name="remove_location">删除位置</string>
-    <string name="post_settings_error_placepicker_missing_play_services">无法打开位置选取器，「Google Play 服务」不可用</string>
-    <string name="post_settings_location">位置</string>
     <string name="now">现在</string>
     <string name="post_settings_password_dialog_hint">只有知道此密码的用户才能查看这篇文章</string>
     <string name="post_settings_excerpt_dialog_hint">摘录是您内容的概要，可以手动编写，也可自动生成。</string>

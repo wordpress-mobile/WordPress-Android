@@ -17,16 +17,12 @@ class ScanViewModel @Inject constructor(
     private val scanStateListItemBuilder: ScanStateListItemBuilder
 ) : ViewModel() {
     private var isStarted = false
-    private var lastScanState: ScanStateModel.State? = null
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
     private val scanStateObserver = Observer<ScanStateModel> {
-        if (it.state != lastScanState) {
-            lastScanState = it.state
-            _uiState.value = buildContentUiState(it)
-        }
+        _uiState.value = buildContentUiState(it)
     }
 
     lateinit var site: SiteModel
