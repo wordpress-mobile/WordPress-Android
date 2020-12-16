@@ -73,7 +73,9 @@ class ScanStatusService
     }
 
     private fun updateScanState(scanState: ScanStateModel?) {
-        _scanAvailable.value = scanState?.state != UNAVAILABLE && scanState?.state != UNKNOWN
+        _scanAvailable.value = scanState?.state != UNAVAILABLE &&
+            scanState?.state != UNKNOWN &&
+            _scanStateFetchError.value == null
     }
 
     private fun onScanStateFetched(scanStateError: ScanStateError?, isError: Boolean) {
