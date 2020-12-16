@@ -15,7 +15,6 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T.SCAN
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -46,7 +45,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
             itemDecorator.setDrawable(it)
             recycler_view.addItemDecoration(itemDecorator)
-        } ?: AppLog.w(SCAN, "List divider null")
+        } ?: AppLog.w(AppLog.T.UTILS, "List divider null") // TODO: ashiagr add T.SCAN to AppLog in utils library
     }
 
     private fun initAdapter() {
@@ -62,12 +61,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun setupObservers() {
         viewModel.uiState.observe(
-                viewLifecycleOwner,
-                Observer { uiState ->
-                    if (uiState is Content) {
-                        refreshContentScreen(uiState)
-                    }
+            viewLifecycleOwner,
+            Observer { uiState ->
+                if (uiState is Content) {
+                    refreshContentScreen(uiState)
                 }
+            }
         )
     }
 
