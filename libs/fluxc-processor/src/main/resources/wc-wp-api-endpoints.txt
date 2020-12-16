@@ -12,7 +12,7 @@
 /products/shipping_classes
 /products/shipping_classes/<id>/
 /products/attributes/
-/products/attributes/<product_attribute_id>
+/products/attributes/<attribute_id>
 
 /products/reviews/
 /products/reviews/<id>/
