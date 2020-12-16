@@ -51,12 +51,18 @@
                     android:id="@+id/date_range_picker"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="@dimen/margin_medium" />
+                    android:layout_marginEnd="@dimen/margin_medium"
+                    app:chipBackgroundColor="?attr/colorSurface"
+                    app:chipStrokeColor="@color/neutral_10"
+                    app:chipStrokeWidth="@dimen/divider_size" />
 
                 <com.google.android.material.chip.Chip
                     android:id="@+id/activity_type_filter"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
+                    android:layout_height="wrap_content"
+                    app:chipBackgroundColor="?attr/colorSurface"
+                    app:chipStrokeColor="@color/neutral_10"
+                    app:chipStrokeWidth="@dimen/divider_size" />
             </LinearLayout>
         </HorizontalScrollView>
 
