@@ -3,12 +3,14 @@ package org.wordpress.android.ui.jetpack.backup
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
+import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.DETAILS
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.PROGRESS
@@ -54,8 +56,8 @@ class BackupDownloadViewModel @Inject constructor(
     private val _wizardFinishedObservable = MutableLiveData<Event<BackupDownloadWizardState>>()
     val wizardFinishedObservable: LiveData<Event<BackupDownloadWizardState>> = _wizardFinishedObservable
 
-    private val _screenTitleObservable = SingleLiveEvent<@StringRes Int>()
-    val screenTitleObservable: LiveData<Int> = _screenTitleObservable
+    private val _toolbarStateObservable = MutableLiveData<ToolbarState>()
+    val toolbarStateObservable: LiveData<ToolbarState> = _toolbarStateObservable
 
     private val _exitFlowObservable = MutableLiveData<Event<Unit>>()
     val exitFlowObservable: LiveData<Event<Unit>> = _exitFlowObservable
@@ -107,8 +109,8 @@ class BackupDownloadViewModel @Inject constructor(
         _exitFlowObservable.value = Event(Unit)
     }
 
-    fun setTitle(@StringRes title: Int) {
-        _screenTitleObservable.value = title
+    fun setToolbarState(toolbarState: ToolbarState) {
+        _toolbarStateObservable.value = toolbarState
     }
 
     sealed class BackupDownloadWizardState : Parcelable {
@@ -120,5 +122,15 @@ class BackupDownloadViewModel @Inject constructor(
 
         @Parcelize
         data class BackupDownloadCompleted(val activityId: String) : BackupDownloadWizardState()
+    }
+
+    sealed class ToolbarState {
+        abstract val title: Int
+        abstract val icon: Int
+
+        data class DetailsToolbarState(
+            @StringRes override val title: Int = R.string.backup_download_details_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
+        ) : ToolbarState()
     }
 }
