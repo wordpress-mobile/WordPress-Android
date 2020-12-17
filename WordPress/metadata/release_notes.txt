@@ -1,6 +1,8 @@
-* [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
-* [**] Posts List: Adds duplicate post functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13521]
-* [*] Block Editor: Fix Gallery block uploads when the editor is closed [https://github.com/wordpress-mobile/WordPress-Android/pull/13570]
-* [**] Block Editor: Fixed an issue where a block would disappear when deleting all of the text inside without requiring the extra backspace to remove the block. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2877]
-* [***] Block Editor: New Block: File [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2835]
+What’s New:
+
+Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.
+
+Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.
+
+My Site: We also fixed a crash that occurred while editing your site title.
 
