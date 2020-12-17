@@ -8,9 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.ToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState
 import org.wordpress.android.util.wizard.WizardManager
 
 @RunWith(MockitoJUnitRunner::class)
