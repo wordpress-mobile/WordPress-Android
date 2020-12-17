@@ -698,6 +698,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_reader_tag_followed";
             case READER_TAG_LOADED:
                 return "reader_tag_loaded";
+            case READER_P2_SHOWN:
+                return "reader_p2_shown";
+            case READER_A8C_SHOWN:
+                return "reader_a8c_shown";
             case READER_TAG_PREVIEWED:
                 return "reader_tag_previewed";
             case READER_SEARCH_LOADED:
