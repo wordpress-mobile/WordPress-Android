@@ -53,13 +53,22 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
                 diff = this.diff
             }
             is VulnerableExtensionThreatModel -> {
-                extension = gson.toJson(this.extension).toString()
+                with(this.extension) {
+                    extension = gson.toJson(
+                        Threat.Extension(
+                            type = type.value,
+                            slug = slug,
+                            name = name,
+                            version = version,
+                            isPremium = isPremium
+                        )
+                    )
+                }
             }
-            is DatabaseThreatModel -> {
-                rows = gson.toJson(this.rows).toString()
-            }
+            is DatabaseThreatModel -> rows = gson.toJson(this.rows)
             is FileThreatModel -> {
-                context = gson.toJson(this.context).toString()
+                fileName = this.fileName
+                context = gson.toJson(this.context)
             }
             else -> { // Do Nothing
             }
@@ -120,7 +129,13 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
                 description = description,
                 status = status,
                 firstDetected = Date(firstDetected),
-                fixable = fixableFixer?.let { Threat.Fixable(file = fixableFile, fixer = it, target = fixableTarget) },
+                fixable = fixableFixer?.let {
+                    Threat.Fixable(
+                        file = fixableFile,
+                        fixer = it,
+                        target = fixableTarget
+                    )
+                },
                 fixedOn = fixedOn?.let { Date(it) },
                 fileName = fileName,
                 diff = diff,
