@@ -381,7 +381,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
-        val selectedItems = listOf(1, 4)
+        val selectedItems = listOf("1", "4")
         viewModel.onActivityTypesSelected(selectedItems)
 
         viewModel.onActivityTypeFilterClicked()

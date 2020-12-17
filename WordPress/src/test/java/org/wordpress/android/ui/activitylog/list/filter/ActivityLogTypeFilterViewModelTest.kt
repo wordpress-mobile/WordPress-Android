@@ -11,25 +11,29 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITY_TYPES
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
+import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityTypesFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
-import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
-import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyAvailableActivityTypesResponse
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 
 @InternalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
-    @Mock private lateinit var dummyActivityTypesProvider: DummyActivityTypesProvider
     @Mock private lateinit var parentViewModel: ActivityLogViewModel
+    @Mock private lateinit var activityLogStore: ActivityLogStore
 
     @Before
     fun setUp() {
-        viewModel = ActivityLogTypeFilterViewModel(dummyActivityTypesProvider, TEST_DISPATCHER, TEST_DISPATCHER)
+        viewModel = ActivityLogTypeFilterViewModel(activityLogStore, TEST_DISPATCHER, TEST_DISPATCHER)
     }
 
     @Test
@@ -47,7 +51,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         startVM()
 
-        verify(dummyActivityTypesProvider).fetchAvailableActivityTypes(anyOrNull())
+        verify(activityLogStore).fetchActivityTypes(anyOrNull())
     }
 
     @Test
@@ -85,7 +89,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
 
-        verify(dummyActivityTypesProvider, times(2)).fetchAvailableActivityTypes(anyOrNull())
+        verify(activityLogStore, times(2)).fetchActivityTypes(anyOrNull())
     }
 
     @Test
@@ -172,12 +176,12 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Test
     fun `items are checked, when the user opens the screen with active activity type filter`() = test {
         val uiStates = init().uiStates
-        val initialSelection = listOf(1, 4)
+        val initialSelection = listOf("1", "4")
 
         startVM(initialSelection = initialSelection)
 
         assertThat((uiStates.last() as Content).items.filterIsInstance(ActivityType::class.java)
-                        .filter { it.checked }.map { it.id }
+                .filter { it.checked }.map { it.id }
         ).containsExactlyElementsOf(initialSelection)
     }
 
@@ -191,23 +195,28 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
             dismissDialogEvents.add(it.peekContent())
         }
 
-        whenever(dummyActivityTypesProvider.fetchAvailableActivityTypes(anyOrNull()))
+        whenever(activityLogStore.fetchActivityTypes(anyOrNull()))
                 .thenReturn(
                         if (successResponse) {
-                            DummyAvailableActivityTypesResponse(false, generateActivityTypes(activityTypeCount))
+                            OnActivityTypesFetched(
+                                    FETCH_ACTIVITY_TYPES,
+                                    0L,
+                                    generateActivityTypes(activityTypeCount),
+                                    activityTypeCount
+                            )
                         } else {
-                            DummyAvailableActivityTypesResponse(true, listOf())
+                            OnActivityTypesFetched(0L, ActivityTypesError(GENERIC_ERROR), FETCH_ACTIVITY_TYPES)
                         }
                 )
         return Observers(uiStates, dismissDialogEvents)
     }
 
-    private fun startVM(initialSelection: List<Int> = listOf()) {
+    private fun startVM(initialSelection: List<String> = listOf()) {
         viewModel.start(RemoteId(0L), parentViewModel, initialSelection)
     }
 
-    private fun generateActivityTypes(count: Int): List<DummyActivityType> {
-        return (1..count).asSequence().map { DummyActivityType(it, it.toString()) }.toList()
+    private fun generateActivityTypes(count: Int): List<ActivityTypeModel> {
+        return (1..count).asSequence().map { ActivityTypeModel("$it", it.toString(), count) }.toList()
     }
 
     private data class Observers(
