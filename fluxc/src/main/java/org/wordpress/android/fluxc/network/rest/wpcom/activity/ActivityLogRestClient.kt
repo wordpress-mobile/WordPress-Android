@@ -2,11 +2,14 @@ package org.wordpress.android.fluxc.network.rest.wpcom.activity
 
 import android.content.Context
 import com.android.volley.RequestQueue
+import com.google.gson.annotations.JsonAdapter
+import org.wordpress.android.fluxc.BuildConfig
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
@@ -21,6 +24,8 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType.INVALID_RESPONSE
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
@@ -29,6 +34,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusEr
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityTypesResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindError
@@ -180,6 +186,35 @@ class ActivityLogRestClient(
         }
     }
 
+    suspend fun fetchActivityTypes(remoteSiteId: Long, after: Date?, before: Date?): FetchedActivityTypesResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).activity.count.group.url
+        val params = mutableMapOf<String, String>()
+        addDateRangeParams(params, after, before)
+
+        val response = wpComGsonRequestBuilder.syncGetRequest(
+                this,
+                url,
+                mapOf(),
+                ActivityTypesResponse::class.java
+        )
+        return when (response) {
+            is Success -> {
+                // TODO malinjir implement
+                FetchedActivityTypesResultPayload(remoteSiteId)
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
+                        ActivityTypesErrorType.GENERIC_ERROR,
+                        ActivityTypesErrorType.INVALID_RESPONSE,
+                        ActivityTypesErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = ActivityTypesError(errorType, response.error.message)
+                FetchedActivityTypesResultPayload(error, remoteSiteId)
+            }
+        }
+    }
+
     private fun buildParams(
         offset: Int,
         number: Int,
@@ -191,12 +226,20 @@ class ActivityLogRestClient(
                 "number" to number.toString()
         )
 
-        payload.after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
-        payload.before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
+        addDateRangeParams(params, payload.after, payload.before)
         payload.groups.forEachIndexed { index, value ->
             params["group[$index]"] = value
         }
         return params
+    }
+
+    private fun addDateRangeParams(
+        params: MutableMap<String, String>,
+        after: Date? = null,
+        before: Date? = null
+    ) {
+        after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
+        before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
     }
 
     private fun buildActivityPayload(
@@ -390,4 +433,19 @@ class ActivityLogRestClient(
         val validUntil: Date?,
         val url: String?
     )
+
+    data class ActivityTypesResponse(
+        @JsonAdapter(ActivityTypesDeserializer::class) val groups: Groups?,
+        val totalItems: Int?
+    ) {
+        data class Groups(
+             val activityTypes: List<ActivityType>
+        )
+
+        data class ActivityType(
+            val key: String?,
+            val name: String?,
+            val count: Int?
+        )
+    }
 }
