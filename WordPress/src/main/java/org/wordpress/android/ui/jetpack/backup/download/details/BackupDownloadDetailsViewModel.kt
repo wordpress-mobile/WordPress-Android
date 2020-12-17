@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup.details
+package org.wordpress.android.ui.jetpack.backup.download.details
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -11,7 +11,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItem
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ScopedViewModel

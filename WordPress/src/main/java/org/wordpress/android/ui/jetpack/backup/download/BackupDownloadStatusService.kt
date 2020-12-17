@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

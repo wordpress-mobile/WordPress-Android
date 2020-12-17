@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup.complete
+package org.wordpress.android.ui.jetpack.backup.download.progress
 
 import android.os.Bundle
 import android.view.View
@@ -8,9 +8,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import javax.inject.Inject
 
-class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complete_fragment) {
+class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progress_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: BackupDownloadCompleteViewModel
+    private lateinit var viewModel: BackupDownloadProgressViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,13 +28,13 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory)
-                .get(BackupDownloadCompleteViewModel::class.java)
+                .get(BackupDownloadProgressViewModel::class.java)
     }
 
     companion object {
-        const val TAG = "BACKUP_DOWNLOAD_COMPLETE_FRAGMENT"
-        fun newInstance(): BackupDownloadCompleteFragment {
-            return BackupDownloadCompleteFragment()
+        const val TAG = "BACKUP_DOWNLOAD_PROGRESS_FRAGMENT"
+        fun newInstance(): BackupDownloadProgressFragment {
+            return BackupDownloadProgressFragment()
         }
     }
 }

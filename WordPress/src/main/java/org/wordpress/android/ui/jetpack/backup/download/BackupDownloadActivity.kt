@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import android.app.Activity
 import android.content.Intent
@@ -10,15 +10,15 @@ import kotlinx.android.synthetic.main.backup_download_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.COMPLETE
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.DETAILS
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.PROGRESS
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
-import org.wordpress.android.ui.jetpack.backup.complete.BackupDownloadCompleteFragment
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment
-import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressFragment
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsFragment
+import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteFragment
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import javax.inject.Inject

@@ -1,9 +1,9 @@
-package org.wordpress.android.ui.jetpack.backup.complete
+package org.wordpress.android.ui.jetpack.backup.download.progress
 
 import androidx.lifecycle.ViewModel
 import javax.inject.Inject
 
-class BackupDownloadCompleteViewModel @Inject constructor() : ViewModel() {
+class BackupDownloadProgressViewModel @Inject constructor() : ViewModel() {
     private var isStarted = false
 
     fun start() {

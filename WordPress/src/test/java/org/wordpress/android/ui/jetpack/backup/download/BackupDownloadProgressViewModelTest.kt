@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.junit.Before
@@ -6,7 +6,7 @@ import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressViewModel
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel
 
 @RunWith(MockitoJUnitRunner::class)
 class BackupDownloadProgressViewModelTest {

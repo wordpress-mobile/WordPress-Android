@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup.details
+package org.wordpress.android.ui.jetpack.backup.download.details
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -11,11 +11,11 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.backup_download_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Error
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Loading
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Error
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Loading
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject

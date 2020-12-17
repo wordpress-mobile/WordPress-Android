@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.delay

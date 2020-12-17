@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup.details
+package org.wordpress.android.ui.jetpack.backup.download.details
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.backup_details_list_item.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.ListItemUiState
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.ListItemUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
 sealed class BackupDownloadDetailsViewHolder(

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -8,9 +8,9 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 
 @InternalCoroutinesApi
 class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
@@ -44,7 +44,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         ((uiStates.last() as Content).items[1]).onClick.invoke()
 
-        assertThat(((uiStates.last() as Content).items[1]).checked).isFalse()
+        assertThat(((uiStates.last() as Content).items[1]).checked).isFalse
     }
 
     @Test
@@ -56,7 +56,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
         ((uiStates.last() as Content).items[1]).onClick.invoke()
         ((uiStates.last() as Content).items[1]).onClick.invoke()
 
-        assertThat(((uiStates.last() as Content).items[1]).checked).isTrue()
+        assertThat(((uiStates.last() as Content).items[1]).checked).isTrue
     }
 
     private fun initObservers(): Observers {

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,9 +11,9 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.COMPLETE
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.DETAILS
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep.PROGRESS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
