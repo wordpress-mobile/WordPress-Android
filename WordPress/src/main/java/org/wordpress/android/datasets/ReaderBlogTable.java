@@ -47,6 +47,7 @@ public class ReaderBlogTable {
                    + " is_notifications_enabled INTEGER DEFAULT 0,"
                    + " date_updated TEXT,"
                    + " is_wp_for_teams INTEGER DEFAULT 0,"
+                   + " unseen_count INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (blog_id)"
                    + ")");
     }
@@ -116,6 +117,7 @@ public class ReaderBlogTable {
         blogInfo.isNotificationsEnabled = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_notifications_enabled")));
         blogInfo.numSubscribers = c.getInt(c.getColumnIndex("num_followers"));
         blogInfo.isWpForTeams = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_wp_for_teams")));
+        blogInfo.numUnseenPosts = c.getInt(c.getColumnIndex("unseen_count"));
 
         return blogInfo;
     }
@@ -126,8 +128,8 @@ public class ReaderBlogTable {
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
                      + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, "
-                     + "  is_following, is_notifications_enabled, num_followers, date_updated, is_wp_for_teams)"
-                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14)";
+                     + "  is_following, is_notifications_enabled, num_followers, date_updated, is_wp_for_teams, unseen_count)"
+                     + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {
             stmt.bindLong(1, blogInfo.blogId);
@@ -144,6 +146,7 @@ public class ReaderBlogTable {
             stmt.bindLong(12, blogInfo.numSubscribers);
             stmt.bindString(13, DateTimeUtils.iso8601FromDate(new Date()));
             stmt.bindLong(14, SqlUtils.boolToSql(blogInfo.isWpForTeams));
+            stmt.bindLong(15, blogInfo.numUnseenPosts);
             stmt.execute();
         } finally {
             SqlUtils.closeStatement(stmt);

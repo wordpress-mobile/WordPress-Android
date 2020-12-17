@@ -19,6 +19,7 @@ public class ReaderBlog {
     public boolean isFollowing;
     public boolean isNotificationsEnabled;
     public int numSubscribers;
+    public int numUnseenPosts;
 
     private String mName;
     private String mDescription;
@@ -81,6 +82,10 @@ public class ReaderBlog {
             blog.isPrivate = JSONUtils.getBool(json, "is_private");
             blog.isFollowing = JSONUtils.getBool(json, "is_following");
             blog.numSubscribers = json.optInt("subscribers_count");
+        }
+
+        if (json.has("unseen_count")) {
+            blog.numUnseenPosts = json.optInt("unseen_count");
         }
 
         // blogId will be empty for feeds, so set it to the feedId (consistent with /read/ endpoints)
@@ -183,6 +188,7 @@ public class ReaderBlog {
                && this.isFollowing == blogInfo.isFollowing
                && this.isPrivate == blogInfo.isPrivate
                && this.numSubscribers == blogInfo.numSubscribers
+               && this.numUnseenPosts == blogInfo.numUnseenPosts
                && this.getName().equals(blogInfo.getName())
                && this.getDescription().equals(blogInfo.getDescription())
                && this.getUrl().equals(blogInfo.getUrl())
