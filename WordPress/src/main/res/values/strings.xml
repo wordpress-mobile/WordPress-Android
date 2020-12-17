@@ -3321,7 +3321,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
-    <string name="backup_item_roots">WordPress root (includes wp-config php and any non WordPress files)</string>
+    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
 </resources>
