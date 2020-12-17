@@ -49,9 +49,9 @@ class DateUtils @Inject constructor(
         )
     }
 
-    fun formatDateRange(from: Long, to: Long): String {
-        return DateUtils.formatDateRange(contextProvider.getContext(), from, to, DateUtils.FORMAT_ABBREV_MONTH)
-    }
+    fun formatDateRange(from: Long, to: Long): String =
+            DateUtils.formatDateRange(contextProvider.getContext(), from, to, DateUtils.FORMAT_ABBREV_MONTH)
+
 
     private fun getDateTimeFlags(): Int {
         var flags = 0
