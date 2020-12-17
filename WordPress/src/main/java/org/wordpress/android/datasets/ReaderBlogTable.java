@@ -128,7 +128,8 @@ public class ReaderBlogTable {
         }
         String sql = "INSERT OR REPLACE INTO tbl_blog_info"
                      + " (blog_id, feed_id, blog_url, image_url, feed_url, name, description, is_private, is_jetpack, "
-                     + "  is_following, is_notifications_enabled, num_followers, date_updated, organization_id, unseen_count)"
+                     + "  is_following, is_notifications_enabled, num_followers, date_updated, "
+                     + "  organization_id, unseen_count)"
                      + " VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10, ?11, ?12, ?13, ?14, ?15)";
         SQLiteStatement stmt = ReaderDatabase.getWritableDb().compileStatement(sql);
         try {

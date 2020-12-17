@@ -46,9 +46,9 @@ class SubFilterDiffCallback(
             val oldSiteContent = oldList[oldItemPosition] as Site
             val newSiteContent = newList[newItemPosition] as Site
 
-            isSelectedStateSame
-            && oldSiteContent.showUnseenCount == newSiteContent.showUnseenCount
-            && oldSiteContent.unseenCount == newSiteContent.unseenCount
+            isSelectedStateSame &&
+            oldSiteContent.showUnseenCount == newSiteContent.showUnseenCount &&
+            oldSiteContent.unseenCount == newSiteContent.unseenCount
         } else {
             isSelectedStateSame
         }
