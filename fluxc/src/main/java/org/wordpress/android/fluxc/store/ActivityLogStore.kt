@@ -391,7 +391,10 @@ class ActivityLogStore
         val activityTypeModels: List<ActivityTypeModel>,
         val totalItems: Int = 0
     ) : Payload<ActivityTypesError>() {
-        constructor(error: ActivityTypesError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId, activityTypeModels = listOf()) {
+        constructor(error: ActivityTypesError, remoteSiteId: Long) : this(
+                remoteSiteId = remoteSiteId,
+                activityTypeModels = listOf()
+        ) {
             this.error = error
         }
     }
