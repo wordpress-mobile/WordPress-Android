@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiString
@@ -85,7 +84,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                     .map {
                         ListItemUiState.ActivityType(
                                 id = it.key,
-                                title = UiStringText(it.toString()),
+                                title = UiStringText("${it.name} (${it.count})"),
                                 onClick = { onItemClicked(it.key) },
                                 checked = initialSelection.contains(it.key)
                         )
@@ -139,7 +138,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
 
     private fun getSelectedActivityTypeIds(): List<String> =
             (_uiState.value as Content).items
-                    .filterIsInstance(ActivityType::class.java)
+                    .filterIsInstance(ListItemUiState.ActivityType::class.java)
                     .filter { it.checked }
                     .map { it.id }
 
