@@ -372,7 +372,6 @@ class ActivityLogRestClient(
         )
     }
 
-
     class ActivitiesResponse(
         val totalItems: Int?,
         val summary: String?,
@@ -459,7 +458,7 @@ class ActivityLogRestClient(
         val totalItems: Int?
     ) {
         data class Groups(
-             val activityTypes: List<ActivityType>
+            val activityTypes: List<ActivityType>
         )
 
         data class ActivityType(

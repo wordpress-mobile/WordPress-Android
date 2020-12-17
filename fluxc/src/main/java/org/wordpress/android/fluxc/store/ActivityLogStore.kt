@@ -69,7 +69,7 @@ class ActivityLogStore
             }
             FETCH_ACTIVITY_TYPES -> {
                 coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_ACTIVITY_TYPES") {
-                     emitChange(fetchActivityTypes(action.payload as FetchActivityTypesPayload))
+                    emitChange(fetchActivityTypes(action.payload as FetchActivityTypesPayload))
                 }
             }
         }
@@ -389,7 +389,7 @@ class ActivityLogStore
     class FetchedActivityTypesResultPayload(
         val remoteSiteId: Long,
         val activityTypeModels: List<ActivityTypeModel>? = null,
-        val totalItems: Int = 0,
+        val totalItems: Int = 0
     ) : Payload<ActivityTypesError>() {
         constructor(error: ActivityTypesError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId) {
             this.error = error
