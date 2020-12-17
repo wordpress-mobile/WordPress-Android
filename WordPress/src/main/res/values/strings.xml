@@ -386,12 +386,6 @@
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
 
-    <!-- gutenberg informative dialog -->
-    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -3323,6 +3317,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
+    <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>

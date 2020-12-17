@@ -74,6 +74,17 @@ class BackupDownloadDetailsFragment : Fragment() {
         ((recycler_view.adapter) as BackupDownloadDetailsAdapter).update(content.items)
     }
 
+    // todo: annmarie -(REMOVE) this dummy method references layout files that lint says aren't
+    // used, but they will be in the next PR because there were too many changes for 1 PR
+    private fun dummyAccess() {
+        val buttonLayoutId = R.layout.backup_download_list_button_item
+        val checkboxLayoutId = R.layout.backup_download_list_checkbox_item
+        val descriptionLayoutId = R.layout.backup_download_list_description_item
+        val headerLayoutId = R.layout.backup_download_list_header_item
+        val subheaderLayoutId = R.layout.backup_download_list_subheader_item
+        val imageLayoutId = R.layout.backup_download_list_image_item
+    }
+
     companion object {
         const val TAG = "BACKUP_DOWNLOAD_DETAILS_FRAGMENT"
         fun newInstance(): BackupDownloadDetailsFragment {
