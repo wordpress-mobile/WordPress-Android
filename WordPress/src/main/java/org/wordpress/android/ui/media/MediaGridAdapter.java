@@ -261,12 +261,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
-    @Override
-    public void onViewRecycled(GridViewHolder holder) {
-        super.onViewRecycled(holder);
-        holder.mImageView.setTag(R.id.media_grid_file_path_id, null);
-    }
-
     public ArrayList<Integer> getSelectedItems() {
         return mSelectedItems;
     }
@@ -473,7 +467,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             AppLog.w(AppLog.T.MEDIA, "MediaGridAdapter > No path to video thumbnail");
             return;
         }
-        imageView.setTag(R.id.media_grid_file_path_id, filePath);
         // see if we have a cached thumbnail before retrieving it
         Bitmap bitmap = WordPress.getBitmapCache().get(filePath);
         if (bitmap != null) {
@@ -496,11 +489,6 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
                         // create a copy since the original bitmap may by automatically recycled
                         bitmap = bitmap.copy(bitmap.getConfig(), true);
                         WordPress.getBitmapCache().put(filePath, bitmap);
-                        if (imageView.getTag(R.id.media_grid_file_path_id) instanceof String
-                            && (imageView.getTag(R.id.media_grid_file_path_id)).equals(filePath)) {
-                            imageView.setTag(R.id.media_grid_file_path_id, null);
-                            notifyItemChanged(position);
-                        }
                     }
                 });
     }
