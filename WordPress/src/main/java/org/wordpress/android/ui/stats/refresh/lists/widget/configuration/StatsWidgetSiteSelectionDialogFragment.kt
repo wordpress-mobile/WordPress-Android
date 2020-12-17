@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatDialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -36,7 +35,7 @@ class StatsWidgetSiteSelectionDialogFragment : AppCompatDialogFragment() {
         alertDialogBuilder.setNegativeButton(R.string.cancel) { _, _ -> }
         alertDialogBuilder.setCancelable(true)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
         viewModel.sites.observe(this, Observer {
             (requireDialog().recycler_view.adapter as? StatsWidgetSiteAdapter)?.update(it ?: listOf())

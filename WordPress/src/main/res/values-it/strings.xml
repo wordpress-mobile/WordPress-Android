@@ -1,17 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-19 15:54:08+0000
+Translation-Revision-Date: 2020-12-10 12:54:11+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="gutenberg_native_file_name">Nome file</string>
+    <string name="gutenberg_native_file_block_settings">Impostazioni del blocco file</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Impossibile caricare i file.\nTocca per le opzioni.</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Impossibile salvare i file.\nTocca per le opzioni.</string>
+    <string name="gutenberg_native_edit_file">Modifica file</string>
+    <string name="gutenberg_native_copy_file_url">Copia URL file</string>
+    <string name="gutenberg_native_choose_a_file">SCEGLI UN FILE</string>
+    <string name="new_site_creation_domain_header_title">Scegli un dominio</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Nuovo</string>
+    <string name="my_site_btn_jetpack_settings">Impostazioni di Jetpack</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Segui la conversazione</string>
+    <string name="reader_btn_follow_comments">Segui conversazione</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Impossibile annullare l\'abbonamento dai commenti per questo articolo</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Impossibile abbonarsi dai commenti per questo articolo</string>
+    <string name="reader_follow_comments_get_status_error">Errore durante il recupero dello stato dell\'abbonamento per l\'articolo</string>
+    <string name="reader_follow_comments_unsubscribe_success">Annullamento dell\'abbonamento dai commenti completato</string>
+    <string name="reader_follow_comments_subscribe_success">Abbonamento ai commenti completato</string>
+    <string name="reader_follow_comments_bad_format_response">Risposta non valida ricevuta</string>
+    <string name="reader_follow_comments_null_response">Nessuna risposta ricevuta</string>
+    <string name="activity_log_activity_type_filter_clear">Pulisci</string>
+    <string name="activity_log_activity_type_filter_apply">Applica</string>
+    <string name="dialog_edit_story_unsupported_format_title">File GIF non supportati</string>
+    <string name="dialog_edit_story_unrecoverable_title">Impossibile modificare la storia</string>
+    <string name="dialog_edit_story_unavailable_title">Impossibile modificare la storia</string>
+    <string name="color_picker_label_background">Sfondo</string>
+    <string name="color_picker_label_text">Testo</string>
+    <string name="dialog_discard_story_message_edit">Nessuna delle modifiche effettuate verrà salvata.</string>
+    <string name="dialog_discard_story_title_edit">Annullare le modifiche?</string>
+    <string name="delete_button_alt">Elimina</string>
+    <string name="reader_discover_no_posts_title">Nessun articolo recente</string>
+    <string name="reader_discover_empty_title">Benvenuto!</string>
+    <string name="login_prologue_third_subtitle_three">&lt;b>Johan Brandt&lt;/b> ha risposto al tuo articolo</string>
     <string name="login_prologue_third_subtitle_two">Oggi hai ricevuto &lt;b>50 Mi piace&lt;/b> al tuo sito</string>
+    <string name="login_prologue_third_subtitle_one">A &lt;b>Madison Ruiz&lt;/b> è piaciuto il tuo articolo</string>
     <string name="gutenberg_native_scrollable_block_menu_opened_select_a_block">Menu del blocco a scorrimento aperto. Seleziona un blocco.</string>
     <string name="gutenberg_native_scrollable_block_menu_closed">Menu del blocco a scorrimento chiuso.</string>
     <string name="hpp_skip_button">Salta</string>
     <string name="hpp_choose_button">Scegli</string>
-    <string name="hpp_subtitle">Scegli il layout che preferisci per la tua homepage. Puoi personalizzarlo o modificarlo in un secondo momento.</string>
+    <string name="hpp_subtitle">Scegli il layout che preferisci per la tua homepage. Puoi modificarlo e personalizzarlo in seguito.</string>
     <string name="hpp_title">Scegli un design</string>
     <string name="mlp_network_error_subtitle">Tocca Riprova quando sei di nuovo online o crea una pagina vuota utilizzando il pulsante sottostante.</string>
     <string name="mlp_network_error_title">Layout non disponibili in modalità offline</string>
@@ -47,6 +81,7 @@ Language: it
     <string name="gutenberg_native_s_is_not_fully_supported">\"%s\" non è pienamente supportato</string>
     <string name="gutenberg_native_help_button">Pulsante di assistenza</string>
     <string name="gutenberg_native_edit_using_web_editor">Modifica utilizzando l\'editor web</string>
+    <string name="gutenberg_native_choose_images">Scegli immagini</string>
     <string name="stories_intro_create_story_post_label">Crea articolo della storia</string>
     <string name="stories_intro_description_second">Vengono pubblicati come un nuovo articolo del blog sul sito, quindi il pubblico non perderà nulla.</string>
     <string name="stories_intro_title_second">Gli articoli della storia non scompaiono</string>
@@ -65,6 +100,7 @@ Language: it
     <string name="photo_picker_wordpress_media_library">Scegli dalla Libreria multimediale di WordPress</string>
     <string name="reader_label_toolbar_back">Indietro</string>
     <string name="reader_discover_empty_button_text">Inizia ora</string>
+    <string name="reader_discover_empty_subtitle">Segui gli argomenti per scoprire nuovi blog</string>
     <string name="reader_post_details_header_by_author_name">Da</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">Questo referrer non può essere contrassegnato come spam</string>
     <string name="stats_referrer_popup_unmark_as_spam">Annulla contrassegno come spam</string>
@@ -274,7 +310,6 @@ Language: it
     <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova un layout di inizio</string>
     <string name="gutenberg_native_open_block_actions_menu">Apri menu azioni del blocco</string>
-    <string name="gutenberg_native_insert_mention">Inserisci riferimento</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tocca due volte per aprire il foglio in basso con le opzioni disponibili</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tocca due volte per aprire il foglio delle azioni con le opzioni disponibili</string>
     <string name="pages_cannot_be_started">Al momento non possiamo aprire le pagine. Riprova più tardi</string>
@@ -441,7 +476,6 @@ Language: it
     <string name="post_list_tab_published_posts">Pubblicato</string>
     <string name="sharing_facebook_account_must_have_pages">La connessione a Facebook non riesce a trovare alcuna pagina. Pubblicizza non può connettersi ai profili Facebook, bensì solo alle pagine pubblicate.</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Non collegato</string>
-    <string name="my_site_select_domains_page_title">Indirizzo sito</string>
     <string name="notifications_tab_title_likes">Mi piace</string>
     <string name="notifications_tab_title_follows">Segue</string>
     <string name="notifications_tab_title_comments">Commenti</string>
@@ -641,7 +675,7 @@ Language: it
     <string name="dialog_confirm_autosave_body_second_part">Da quest\'app\nSalvato su %s\n\nDa un altro dispositivo\nSalvato su %s\n</string>
     <string name="dialog_confirm_autosave_body_first_part">Di recente hai apportato modifiche a questo articolo ma non le hai salvate. Scegli una versione da caricare:\n\n</string>
     <string name="dialog_confirm_autosave_title">Quale versione desideri modificare?</string>
-    <string name="button_delete_permanently">Cancella definitivamente</string>
+    <string name="button_delete_permanently">Elimina definitivamente</string>
     <string name="post_waiting_for_connection_draft_cancel">Non salveremo le ultime modifiche alla tua bozza.</string>
     <string name="post_waiting_for_connection_scheduled_cancel">Non pianificheremo queste modifiche.</string>
     <string name="post_waiting_for_connection_pending_cancel">Non invieremo queste modifiche per la revisione. </string>
@@ -939,7 +973,6 @@ Language: it
     <string name="new_site_creation_create_site_button">Crea il sito</string>
     <string name="new_site_creation_search_domain_input_hint">Cerca domini</string>
     <string name="new_site_creation_domain_header_subtitle">Ecco dove gli utenti ti troveranno su Internet.</string>
-    <string name="new_site_creation_domain_header_title">Scegli un nome di dominio per il tuo sito</string>
     <string name="new_site_creation_empty_domain_list_message">Nessun indirizzo corrispondente alla ricerca</string>
     <string name="site_creation_error_generic_subtitle">Errore di comunicazione con il server, prova di nuovo</string>
     <string name="site_creation_error_generic_title">Si è verificato un problema</string>
@@ -1059,7 +1092,7 @@ Language: it
     <string name="pages_empty_published">Non hai ancora pubblicato nessuna pagina</string>
     <string name="pages_search_suggestion">Cerca pagine</string>
     <string name="pages_empty_search_result">Nessuna pagina corrispondente alla ricerca</string>
-    <string name="pages_delete_permanently">Cancella definitivamente</string>
+    <string name="pages_delete_permanently">Elimina definitivamente</string>
     <string name="pages_move_to_trash">Sposta nel cestino</string>
     <string name="pages_move_to_draft">Sposta in bozze</string>
     <string name="pages_set_parent">Imposta genitore</string>
@@ -1390,7 +1423,6 @@ Language: it
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 post con 1 file non caricato</string>
     <string name="untitled_in_parentheses">(senza titolo)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Crea il sito</string>
     <string name="notification_site_creation_created">Tocca per continuare.</string>
     <string name="notification_site_creation_title_success">Sito creato.</string>
@@ -1681,16 +1713,12 @@ Language: it
     <string name="post_status_draft">Bozza</string>
     <string name="post_status_pending_review">In attesa di revisione</string>
     <string name="post_status_publish_post">Pubblica</string>
-    <string name="change_location">Cambia posizione</string>
-    <string name="remove_location">Rimuovi posizione</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Impossibile aprire Location Picker, Google Play Services non è disponibile</string>
-    <string name="post_settings_location">Posizione</string>
     <string name="now">Ora</string>
     <string name="post_settings_password_dialog_hint">Solo chi conosce questa password può visualizzare l\'articolo</string>
     <string name="post_settings_excerpt_dialog_hint">Gli estratti sono riepiloghi opzionali dei tuoi contenuti creati manualmente.</string>
     <string name="post_settings_slug_dialog_hint">L\'abbreviazione è la versione URL friendly del titolo dell\'articolo.</string>
     <string name="post_settings_post_format">Formato articoli</string>
-    <string name="post_settings_tags">tag</string>
+    <string name="post_settings_tags">Tag</string>
     <string name="post_settings_slug">Abbreviazione</string>
     <string name="post_settings_excerpt">Riassunto</string>
     <string name="post_settings_not_set">Non impostato</string>
@@ -2187,7 +2215,7 @@ Language: it
     <string name="notifications_empty_comments">Nessun commento per ora</string>
     <string name="notifications_empty_unread">Tutto è completamente aggiornato!</string>
     <string name="reader_short_comment_count_multi">%s commenti</string>
-    <string name="reader_short_comment_count_one">1 Commento</string>
+    <string name="reader_short_comment_count_one">1 commento</string>
     <string name="reader_hint_comment_on_post">Rispondi all’articolo…</string>
     <string name="reader_discover_visit_blog">Visite %s</string>
     <string name="reader_discover_attribution_blog">Pubblicato originariamente su %s</string>
@@ -2499,7 +2527,7 @@ Language: it
     <string name="quickpress_add_error">Il nome breve non può essere vuoto</string>
     <string name="pages_private">Privato</string>
     <string name="title">Titolo</string>
-    <string name="tags_separate_with_commas">Separa i tag con una virgola</string>
+    <string name="tags_separate_with_commas">Separa i tag con delle virgole</string>
     <string name="categories">Categorie</string>
     <string name="dlg_deleting_comments">Eliminazione commenti</string>
     <string name="sdcard_title">Scheda SD necessaria</string>

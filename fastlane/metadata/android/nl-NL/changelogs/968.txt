@@ -1,0 +1,5 @@
+16.3:
+We zijn verheugd verschillende nieuwe functies van de mobiele WordPress app aan te kondigen:
+- slide-voorstellingen op volledig scherm van foto's of video's voor WP.com en Jetpack sites;
+- de optie om een homepage-ontwerp te kiezen bij het maken van een WP.com site;
+- en een knop Volgen/Ontvolgen voor de reacties sectie van een site (niet ondersteund voor door jezelf gehoste sites die niet zijn verbonden met Jetpack).

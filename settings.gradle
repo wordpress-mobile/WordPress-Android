@@ -11,7 +11,6 @@ include ':photoeditor'
 project(':photoeditor').projectDir = new File(rootProject.projectDir, 'libs/stories-android/photoeditor')
 
 include ':libs:image-editor:ImageEditor'
-include ':libs:utils:WordPressUtils'
 include ':libs:networking:WordPressNetworking'
 include ':libs:analytics:WordPressAnalytics'
 include ':libs:editor:WordPressEditor'
@@ -56,6 +55,7 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 }
 
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
+gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -77,6 +77,15 @@ if (localBuilds.exists()) {
             dependencySubstitution {
                 println "Substituting fluxc with the local build"
                 substitute module("$gradle.ext.fluxCBinaryPath:fluxc") with project(':fluxc')
+            }
+        }
+    }
+
+    if (ext.has("localWPUtilsPath")) {
+        includeBuild(ext.localWPUtilsPath) {
+            dependencySubstitution {
+                println "Substituting wputils with the local build"
+                substitute module("$gradle.ext.wputilsBinaryPath:WordPressUtils") with project(':WordPressUtils')
             }
         }
     }

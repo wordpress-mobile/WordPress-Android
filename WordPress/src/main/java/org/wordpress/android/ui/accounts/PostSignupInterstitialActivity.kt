@@ -3,7 +3,6 @@ package org.wordpress.android.ui.accounts
 import android.os.Bundle
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.post_signup_interstitial_default.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -28,7 +27,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
 
         setContentView(R.layout.post_signup_interstitial_activity)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PostSignupInterstitialViewModel::class.java)
 
         viewModel.onInterstitialShown()

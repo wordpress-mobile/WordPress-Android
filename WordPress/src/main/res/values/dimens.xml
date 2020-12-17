@@ -414,6 +414,9 @@
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
 
+    <!-- scan -->
+    <dimen name="scan_state_icon_size">40dp</dimen>
+
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>
@@ -589,6 +592,7 @@
     <dimen name="hpp_maximum_container_width">728dp</dimen>
     <dimen name="hpp_subtitle_width">350dp</dimen>
     <dimen name="hpp_button_max_width">244dp</dimen>
+    <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 
     <!-- Login Prologue -->
     <dimen name="login_prologue_content_area">320dp</dimen>

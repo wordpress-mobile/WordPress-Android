@@ -464,7 +464,6 @@ Language: sk
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">1 príspevok s 1 súborom neboli nahrané</string>
     <string name="untitled_in_parentheses">(Bez názvu)</string>
     <string name="at_username">\@%s</string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Vytvoriť webovú stránku</string>
     <string name="notification_site_creation_created">Klepnutím pokračujte.</string>
     <string name="notification_site_creation_title_success">Webová stránka bola vytvorená!</string>
@@ -754,10 +753,6 @@ Language: sk
     <string name="post_status_draft">Koncept</string>
     <string name="post_status_pending_review">Nepotvrdená recenzia</string>
     <string name="post_status_publish_post">Zverejniť</string>
-    <string name="change_location">Zmeniť polohu</string>
-    <string name="remove_location">Odstrániť polohu</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Nemožno otvoriť Location Picker, Google Play Services nie je dostupné.</string>
-    <string name="post_settings_location">Poloha</string>
     <string name="now">Teraz</string>
     <string name="post_settings_password_dialog_hint">Len tí, ktorí majú heslo môžu vidieť článok.</string>
     <string name="post_settings_excerpt_dialog_hint">Zhrnutia sú nepovinné ručne vyrobené zhrnutia vášho obsahu.</string>

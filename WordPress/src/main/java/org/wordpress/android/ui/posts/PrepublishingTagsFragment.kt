@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
@@ -83,7 +82,7 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
         viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->

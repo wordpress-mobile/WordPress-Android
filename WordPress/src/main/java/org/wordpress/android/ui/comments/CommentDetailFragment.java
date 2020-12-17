@@ -639,6 +639,8 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
         if (!isAdded() || mComment == null) {
             return;
         }
+        AnalyticsUtils.trackCommentActionWithSiteDetails(Stat.COMMENT_EDITOR_OPENED,
+                mCommentSource.toAnalyticsCommentActionSource(), mSite);
         // IMPORTANT: don't use getActivity().startActivityForResult() or else onActivityResult()
         // won't be called in this fragment
         // https://code.google.com/p/android/issues/detail?id=15394#c45

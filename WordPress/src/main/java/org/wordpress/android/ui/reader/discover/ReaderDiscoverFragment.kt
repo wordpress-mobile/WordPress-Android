@@ -7,7 +7,6 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -86,8 +85,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
-        parentViewModel = ViewModelProviders.of(requireParentFragment()).get(ReaderViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
+        parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
         viewModel.uiState.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is ContentUiState -> {

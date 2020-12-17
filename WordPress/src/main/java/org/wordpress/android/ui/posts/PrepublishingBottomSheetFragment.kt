@@ -14,7 +14,6 @@ import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.post_prepublishing_bottom_sheet.*
@@ -146,7 +145,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
 
         viewModel.navigationTarget.observe(this, Observer { event ->

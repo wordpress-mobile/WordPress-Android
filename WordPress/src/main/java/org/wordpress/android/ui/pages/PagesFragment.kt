@@ -24,7 +24,6 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.viewpager.widget.ViewPager.OnPageChangeListener
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.pages_fragment.*
@@ -283,8 +282,8 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     }
 
     private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
-        mlpViewModel = ViewModelProviders.of(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
+        viewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
+        mlpViewModel = ViewModelProvider(activity, viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
 
         setupObservers(activity)
 

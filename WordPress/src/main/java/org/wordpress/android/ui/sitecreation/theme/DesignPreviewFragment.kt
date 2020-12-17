@@ -11,7 +11,6 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
 import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.errorView
 import org.wordpress.android.R
@@ -61,7 +60,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
         viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
             when (state) {

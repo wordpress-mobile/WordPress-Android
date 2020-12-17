@@ -19,4 +19,6 @@ class SiteUtilsWrapper @Inject constructor() {
             SiteUtils.getAccessibilityInfoFromSite(site)
 
     fun isAccessedViaWPComRest(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
+    fun onFreePlan(site: SiteModel): Boolean = SiteUtils.onFreePlan(site)
+    fun hasCustomDomain(site: SiteModel): Boolean = SiteUtils.hasCustomDomain(site)
 }

@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.post_prepublishing_home_fragment.*
 import org.wordpress.android.R
@@ -71,7 +70,7 @@ class PrepublishingHomeFragment : Fragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingHomeViewModel::class.java)
 
         viewModel.storyTitleUiState.observe(viewLifecycleOwner, Observer { storyTitleUiState ->

@@ -12,9 +12,7 @@ class SiteCategoryItemBuilder
 @Inject constructor(private val themeBrowserUtils: ThemeBrowserUtils, private val siteUtilsWrapper: SiteUtilsWrapper) {
     fun buildJetpackCategoryIfAvailable(site: SiteModel): MySiteItem? {
         val jetpackSettingsVisible = site.isJetpackConnected && // jetpack is installed and connected
-                !site.isWPComAtomic &&
-                siteUtilsWrapper.isAccessedViaWPComRest(site) && // is using .com login
-                site.hasCapabilityManageOptions // has permissions to manage the site
+                !site.isWPComAtomic // isn't atomic site
         return if (jetpackSettingsVisible) {
             CategoryHeader(UiStringRes(R.string.my_site_header_jetpack))
         } else null

@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_widget_configure_fragment.*
 import org.wordpress.android.R
@@ -70,11 +69,11 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val nonNullActivity = requireActivity()
-        viewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        viewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(StatsWidgetConfigureViewModel::class.java)
-        siteSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        siteSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(StatsSiteSelectionViewModel::class.java)
-        colorSelectionViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        colorSelectionViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(StatsColorSelectionViewModel::class.java)
         nonNullActivity.setResult(AppCompatActivity.RESULT_CANCELED)
 

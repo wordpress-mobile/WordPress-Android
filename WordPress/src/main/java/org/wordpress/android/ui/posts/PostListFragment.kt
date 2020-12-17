@@ -10,7 +10,6 @@ import android.widget.ProgressBar
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
@@ -99,7 +98,7 @@ class PostListFragment : ViewPagerFragment() {
             recyclerView?.id = R.id.posts_search_recycler_view_id
         }
 
-        mainViewModel = ViewModelProviders.of(nonNullActivity, viewModelFactory)
+        mainViewModel = ViewModelProvider(nonNullActivity, viewModelFactory)
                 .get(PostListMainViewModel::class.java)
 
         mainViewModel.viewLayoutType.observe(viewLifecycleOwner, Observer { optionaLayoutType ->
@@ -134,7 +133,7 @@ class PostListFragment : ViewPagerFragment() {
 
         val postListViewModelConnector = mainViewModel.getPostListViewModelConnector(postListType)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PostListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PostListViewModel::class.java)
 
         val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
         val contentSpacing = nonNullActivity.resources.getDimensionPixelSize(R.dimen.content_margin)

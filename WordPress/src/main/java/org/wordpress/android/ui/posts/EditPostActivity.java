@@ -37,7 +37,6 @@ import androidx.fragment.app.FragmentStatePagerAdapter;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
@@ -146,6 +145,7 @@ import org.wordpress.android.ui.posts.InsertMediaDialog.InsertMediaCallback;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Editor;
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome;
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.PreviewLogicOperationResult;
+import org.wordpress.android.ui.posts.RemotePreviewLogicHelper.RemotePreviewType;
 import org.wordpress.android.ui.posts.editor.EditorActionsProvider;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPicker;
 import org.wordpress.android.ui.posts.editor.EditorPhotoPickerListener;
@@ -300,8 +300,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
-    private static final String TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG = "tag_gb_rollout_v2_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -469,8 +467,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         mDispatcher.register(this);
-        mViewModel =
-                ViewModelProviders.of(this, mViewModelFactory).get(StorePostViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(StorePostViewModel.class);
         setContentView(R.layout.new_edit_post_activity);
 
         if (savedInstanceState == null) {
@@ -1328,10 +1325,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
-            savePostAndOptionallyFinish(true, false);
+            performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+                @Override public void doWhenNoStoriesBeingSaved() {
+                    savePostAndOptionallyFinish(true, false);
+                }
+            });
         }
 
         return true;
+    }
+
+    interface DoWhenNoStoriesBeingSavedCallback {
+        void doWhenNoStoriesBeingSaved();
+    }
+
+    private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
+        if (mWPStoriesFeatureConfig.isEnabled()) {
+            if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
+                callback.doWhenNoStoriesBeingSaved();
+            } else {
+                // Oops! A story is still being saved, let's wait
+                ToastUtils.showToast(EditPostActivity.this,
+                        getString(R.string.toast_edit_story_update_in_progress_title));
+            }
+        } else {
+            callback.doWhenNoStoriesBeingSaved();
+        }
     }
 
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
@@ -1505,7 +1524,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1617,12 +1636,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
                 uploadPost(false);
@@ -1631,27 +1650,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showGutenbergInformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                mEditPostRepository.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
-                        : getString(R.string.dialog_gutenberg_informative_description_post),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void showGutenbergRolloutV2InformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                getString(R.string.dialog_gutenberg_informative_description_v2),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
@@ -2020,6 +2030,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         };
     }
 
+    private void checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet() {
+        performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+            @Override public void doWhenNoStoriesBeingSaved() {
+                showPrepublishingNudgeBottomSheet();
+            }
+        });
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
@@ -2324,7 +2342,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled(),
+                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
@@ -3405,7 +3423,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 AppLog.e(T.POSTS, "REMOTE_AUTO_SAVE_POST failed: " + event.error.type + " - " + event.error.message);
             }
             mEditPostRepository.loadPostByLocalPostId(mEditPostRepository.getId());
-            mEditPostRepository.replace(postModel -> handleRemoteAutoSave(event.isError(), postModel));
+            if (isRemotePreviewingFromEditor()) {
+                handleRemotePreviewUploadResult(event.isError(),
+                        RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE);
+            }
         }
     }
 
@@ -3431,7 +3452,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Nullable
-    private PostModel handleRemoteAutoSave(boolean isError, PostModel post) {
+    private void handleRemotePreviewUploadResult(boolean isError, RemotePreviewLogicHelper.RemotePreviewType param) {
         // We are in the process of remote previewing a post from the editor
         if (!isError && isUploadingPostForPreview()) {
             // We were uploading post for preview and we got no error:
@@ -3440,19 +3461,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
             ActivityLauncher.previewPostOrPageForResult(
                     EditPostActivity.this,
                     mSite,
-                    post,
-                    mPostLoadingState == PostLoadingState.UPLOADING_FOR_PREVIEW
-                            ? RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW
-                            : RemotePreviewLogicHelper.RemotePreviewType.REMOTE_PREVIEW_WITH_REMOTE_AUTO_SAVE
+                    mEditPostRepository.getPost(),
+                    param
             );
-            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, post);
+            updatePostLoadingAndDialogState(PostLoadingState.PREVIEWING, mEditPostRepository.getPost());
         } else if (isError || isRemoteAutoSaveError()) {
             // We got an error from the uploading or from the remote auto save of a post: show snackbar error
             updatePostLoadingAndDialogState(PostLoadingState.NONE);
             mUploadUtilsWrapper.showSnackbarError(findViewById(R.id.editor_activity),
                     getString(R.string.remote_preview_operation_error));
         }
-        return post;
     }
 
     @SuppressWarnings("unused")
@@ -3472,7 +3490,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     });
                 }
             } else {
-                mEditPostRepository.set(() -> handleRemoteAutoSave(event.isError(), post));
+                mEditPostRepository.set(() -> post);
+                handleRemotePreviewUploadResult(event.isError(), RemotePreviewType.REMOTE_PREVIEW);
             }
         }
     }

@@ -203,8 +203,28 @@ class PostListMainViewModel @Inject constructor(
                 checkNetworkConnection = this::checkNetworkConnection,
                 showSnackbar = { _snackBarMessage.postValue(it) },
                 showToast = { _toastMessage.postValue(it) },
-                triggerPreviewStateUpdate = this::updatePreviewAndDialogState
+                triggerPreviewStateUpdate = this::updatePreviewAndDialogState,
+                copyPost = this::copyPost
         )
+    }
+
+    fun copyPost(site: SiteModel, postToCopy: PostModel, performChecks: Boolean = false) {
+        if (performChecks && (postConflictResolver.doesPostHaveUnhandledConflict(postToCopy) ||
+                        postConflictResolver.hasUnhandledAutoSave(postToCopy))) {
+            postListDialogHelper.showCopyConflictDialog(postToCopy)
+            return
+        }
+        val post = postStore.instantiatePostModel(
+                site,
+                false,
+                postToCopy.title,
+                postToCopy.content,
+                PostStatus.DRAFT.toString(),
+                postToCopy.categoryIdList,
+                postToCopy.postFormat,
+                true
+        )
+        _postListAction.postValue(PostListAction.EditPost(site, post, loadAutoSaveRevision = false))
     }
 
     /**
@@ -437,6 +457,15 @@ class PostListMainViewModel @Inject constructor(
         }
     }
 
+    private fun copyLocalPost(localPostId: Int) {
+        val post = postStore.getPostByLocalPostId(localPostId)
+        if (post != null) {
+            copyPost(site, post)
+        } else {
+            _snackBarMessage.value = SnackbarMessageHolder(UiStringRes(R.string.error_post_does_not_exist))
+        }
+    }
+
     // BasicFragmentDialog Events
 
     fun onPositiveClickedForBasicDialog(instanceTag: String) {
@@ -448,7 +477,8 @@ class PostListMainViewModel @Inject constructor(
                 publishPost = postActionHandler::publishPost,
                 updateConflictedPostWithRemoteVersion = postConflictResolver::updateConflictedPostWithRemoteVersion,
                 editRestoredAutoSavePost = this::editRestoredAutoSavePost,
-                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft
+                moveTrashedPostToDraft = postActionHandler::moveTrashedPostToDraft,
+                resolveConflictsAndEditPost = postActionHandler::resolveConflictsAndEditPost
         )
     }
 
@@ -456,7 +486,8 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onNegativeClickedForBasicDialog(
                 instanceTag = instanceTag,
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost
+                editLocalPost = this::editLocalPost,
+                copyLocalPost = this::copyLocalPost
         )
     }
 
@@ -464,7 +495,8 @@ class PostListMainViewModel @Inject constructor(
         postListDialogHelper.onDismissByOutsideTouchForBasicDialog(
                 instanceTag = instanceTag,
                 updateConflictedPostWithLocalVersion = postConflictResolver::updateConflictedPostWithLocalVersion,
-                editLocalPost = this::editLocalPost
+                editLocalPost = this::editLocalPost,
+                copyLocalPost = this::copyLocalPost
         )
     }
 

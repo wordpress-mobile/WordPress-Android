@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_log_type_filter_fragment.*
@@ -80,10 +79,10 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(ActivityLogTypeFilterViewModel::class.java)
 
-        val parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+        val parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(ActivityLogViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->

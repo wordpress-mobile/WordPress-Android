@@ -241,11 +241,12 @@ ENV["validate_translations"]="lintVanillaRelease"
   # This lane builds the final release of the app and uploads it
   # -----------------------------------------------------------------------------------
   # Usage:
-  # bundle exec fastlane build_and_upload_release [skip_confirm:<skip confirm>] [create_release:<Create release on GH> ]
+  # bundle exec fastlane build_and_upload_release [skip_confirm:<skip confirm>] [skip_prechecks:<skip prechecks>] [create_release:<Create release on GH> ]
   #
   # Example:
   # bundle exec fastlane build_and_upload_release
   # bundle exec fastlane build_and_upload_release skip_confirm:true
+  # bundle exec fastlane build_and_upload_release skip_prechecks:true
   # bundle exec fastlane build_and_upload_release create_release:true 
   #####################################################################################
   desc "Builds and updates for distribution"
@@ -254,7 +255,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       alpha: false,
       beta: false,
       final: true)
-    android_build_preflight()
+    android_build_preflight() unless options[:skip_prechecks]
 
     # Create the file names
     version=android_get_release_version()

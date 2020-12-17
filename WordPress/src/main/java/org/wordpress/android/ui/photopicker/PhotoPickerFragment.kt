@@ -15,7 +15,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.photo_picker_fragment.*
@@ -91,7 +90,7 @@ class PhotoPickerFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(PhotoPickerViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -472,6 +471,10 @@ class PhotoPickerFragment : Fragment() {
 
     fun urisSelectedFromSystemPicker(uris: List<Uri>) {
         viewModel.urisSelectedFromSystemPicker(uris.map { UriWrapper(it) })
+    }
+
+    fun mediaIdsSelectedFromWPMediaPicker(mediaIds: List<Long>) {
+        viewModel.mediaIdsSelectedFromWPMediaPicker(mediaIds)
     }
 
     companion object {

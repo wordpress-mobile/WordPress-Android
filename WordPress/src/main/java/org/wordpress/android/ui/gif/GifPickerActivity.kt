@@ -11,7 +11,7 @@ import android.widget.RelativeLayout
 import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.SearchView.OnQueryTextListener
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import kotlinx.android.synthetic.main.media_picker_activity.*
 import org.wordpress.android.R
@@ -69,7 +69,7 @@ class GifPickerActivity : LocaleAwareActivity() {
         val requestCode = intent.getIntExtra(KEY_REQUEST_CODE, 0)
         isMultiSelectEnabled = requestCode == RequestCodes.GIF_PICKER_MULTI_SELECT
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(GifPickerViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(GifPickerViewModel::class.java)
         viewModel.start(site, isMultiSelectEnabled)
 
         // We are intentionally reusing this layout since the UI is very similar.

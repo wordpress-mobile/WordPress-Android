@@ -21,7 +21,7 @@ commands:
     steps:
       - run:
           name: Setup gradle.properties
-          command: cp gradle.properties-example gradle.properties && cp libs/utils/WordPressUtils/gradle.properties-example libs/utils/WordPressUtils/gradle.properties
+          command: cp gradle.properties-example gradle.properties 
   update-gradle-memory:
       parameters:
         jvmargs:
@@ -130,11 +130,6 @@ jobs:
           environment:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD=1 ./gradlew testVanillaRelease --stacktrace --no-daemon
-      - run:
-          name: Test WordPressUtils
-          environment:
-            SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
-          command: cd libs/utils && ./gradlew --stacktrace testReleaseUnitTest
       - run:
           name: Test WordPressProcessors
           environment:
@@ -601,12 +596,6 @@ workflows:
           requires:
             - gutenberg-bundle-build
       - Installable Build:
-          requires:
-            - gutenberg-bundle-build
-          filters:
-            branches:
-              ignore: /pull\/[0-9]+/
-      - WordPressUtils Connected Tests:
           requires:
             - gutenberg-bundle-build
           filters:

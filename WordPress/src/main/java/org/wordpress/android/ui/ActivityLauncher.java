@@ -13,6 +13,9 @@ import androidx.annotation.Nullable;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
+import com.wordpress.stories.compose.frame.FrameSaveNotifier;
+import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult;
+
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
@@ -44,6 +47,7 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -70,6 +74,7 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -99,6 +104,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_INDEX;
+import static com.wordpress.stories.util.BundleUtilsKt.KEY_STORY_SAVE_RESULT;
 import static org.wordpress.android.analytics.AnalyticsTracker.ACTIVITY_LOG_ACTIVITY_ID_KEY;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.POST_LIST_ACCESS_ERROR;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_DETAIL_REBLOGGED;
@@ -108,6 +114,7 @@ import static org.wordpress.android.editor.gutenberg.GutenbergEditorFragment.ARG
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG_EDIT_IMAGE_DATA;
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
+import static org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -606,6 +613,16 @@ public class ActivityLauncher {
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
+    public static void viewScan(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {
         Intent intent = new Intent(activity, BlogPreferencesActivity.class);
         intent.putExtra(WordPress.SITE, site);
@@ -1039,6 +1056,22 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewStories(Activity activity, SiteModel site, StorySaveResult event) {
+        Intent intent = new Intent(activity, StoryComposerActivity.class);
+        intent.putExtra(KEY_STORY_SAVE_RESULT, event);
+        intent.putExtra(WordPress.SITE, site);
+
+        // we need to have a way to cancel the related error notification when the user comes
+        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
+        // errored story but the error notification will remain existing in the system dashboard)
+        intent.setAction(String.valueOf(FrameSaveNotifier.getNotificationIdForError(
+                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
+                event.getStoryIndex()
+        )));
+
+        activity.startActivity(intent);
+    }
+
     public static void viewJetpackSecuritySettingsForResult(Activity activity, SiteModel site) {
         AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_SECURITY_SETTINGS_VIEWED);
         Intent intent = new Intent(activity, JetpackSecuritySettingsActivity.class);
@@ -1302,5 +1335,13 @@ public class ActivityLauncher {
         Intent intent = getMainActivityInNewStack(context);
         intent.putExtra(WPMainActivity.ARG_OPEN_PAGE, WPMainActivity.ARG_PAGES);
         context.startActivity(intent);
+    }
+
+    public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
+                                                   int resultCode) {
+        Intent intent = new Intent(activity, BackupDownloadActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
+        activity.startActivityForResult(intent, resultCode);
     }
 }

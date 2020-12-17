@@ -22,7 +22,6 @@ import androidx.core.app.RemoteInput;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
@@ -144,6 +143,7 @@ import static org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVari
 import static org.wordpress.android.login.LoginAnalyticsListener.CreatedAccountSource.EMAIL;
 import static org.wordpress.android.push.NotificationsProcessingService.ARG_NOTIFICATION_TYPE;
 import static org.wordpress.android.ui.JetpackConnectionSource.NOTIFICATIONS;
+import static org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL;
 
 /**
  * Main activity which hosts sites, reader, me and notifications pages
@@ -400,8 +400,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mFloatingActionButton = findViewById(R.id.fab_button);
         mFabTooltip = findViewById(R.id.fab_tooltip);
 
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPMainActivityViewModel.class);
-        mMLPViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPMainActivityViewModel.class);
+        mMLPViewModel = new ViewModelProvider(this, mViewModelFactory).get(ModalLayoutPickerViewModel.class);
 
         // Setup Observers
         mViewModel.getFabUiState().observe(this, fabUiState -> {
@@ -1056,6 +1056,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
                         AppPrefs.setLastSkippedQuickStartTask(null);
+                        AppPrefs.setCommentsStatusFilter(ALL); // reset comments status filter
                         mPrivateAtomicCookie.clearCookie();
                     }
                 }

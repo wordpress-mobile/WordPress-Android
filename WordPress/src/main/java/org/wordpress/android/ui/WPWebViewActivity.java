@@ -29,7 +29,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.appcompat.widget.TooltipCompat;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
 import com.google.android.material.snackbar.Snackbar;
@@ -284,7 +283,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     }
 
     private void initViewModel(WPWebViewUsageCategory webViewUsageCategory) {
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(WPWebViewViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(WPWebViewViewModel.class);
         mViewModel.getUiState().observe(this, new Observer<WebPreviewUiState>() {
             @Override public void onChanged(@Nullable WebPreviewUiState webPreviewUiState) {
                 if (webPreviewUiState != null) {
@@ -681,7 +680,12 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
         WebViewClient webViewClient = createWebViewClient(allowedURL);
 
         mWebView.setWebViewClient(webViewClient);
-        mWebView.setWebChromeClient(new WPWebChromeClient(this, (ProgressBar) findViewById(R.id.progress_bar)));
+        mWebView.setWebChromeClient(new WPWebChromeClient(
+                this,
+                mWebView,
+                R.drawable.media_movieclip,
+                (ProgressBar) findViewById(R.id.progress_bar)
+        ));
     }
 
     protected WebViewClient createWebViewClient(List<String> allowedURL) {

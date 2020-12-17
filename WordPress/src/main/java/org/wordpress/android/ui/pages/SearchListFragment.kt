@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
@@ -58,9 +57,9 @@ class SearchListFragment : Fragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
-        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+        val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(SearchListViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(SearchListViewModel::class.java)
         viewModel.start(pagesViewModel)
 
         setupObservers()

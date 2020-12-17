@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import androidx.recyclerview.widget.RecyclerView
@@ -72,10 +71,10 @@ class PageListFragment : ViewPagerFragment() {
     }
 
     private fun initializeViewModels(activity: FragmentActivity) {
-        val pagesViewModel = ViewModelProviders.of(activity, viewModelFactory).get(PagesViewModel::class.java)
+        val pagesViewModel = ViewModelProvider(activity, viewModelFactory).get(PagesViewModel::class.java)
 
         val listType = arguments?.getSerializable(typeKey) as PageListType
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(listType.name, PageListViewModel::class.java)
 
         viewModel.start(listType, pagesViewModel)

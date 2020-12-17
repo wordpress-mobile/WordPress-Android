@@ -22,12 +22,10 @@ import androidx.fragment.app.Fragment
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.buildSnackbarErrorMessage
-import com.wordpress.stories.compose.frame.FrameSaveNotifier.Companion.getNotificationIdForError
 import com.wordpress.stories.compose.frame.StorySaveEvents.Companion.allErrorsInResult
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveProcessStart
 import com.wordpress.stories.compose.frame.StorySaveEvents.StorySaveResult
 import com.wordpress.stories.compose.story.StoryRepository.getStoryAtIndex
-import com.wordpress.stories.util.KEY_STORY_SAVE_RESULT
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
@@ -99,7 +97,6 @@ import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
@@ -126,7 +123,6 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts.Companion.isT
 import org.wordpress.android.ui.quickstart.QuickStartNoticeDetails
 import org.wordpress.android.ui.stories.StoriesMediaPickerResultHandler
 import org.wordpress.android.ui.stories.StoriesTrackerHelper
-import org.wordpress.android.ui.stories.StoryComposerActivity
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadService.UploadErrorEvent
@@ -173,6 +169,8 @@ import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
 
+@Deprecated("This class is being refactored, if you implement any change, please also update " +
+        "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
 class MySiteFragment : Fragment(),
         OnScrollToTopListener,
         BasicDialogPositiveClickInterface,
@@ -400,6 +398,12 @@ class MySiteFragment : Fragment(),
         }
         row_activity_log.setOnClickListener {
             ActivityLauncher.viewActivityLogList(
+                    activity,
+                    selectedSite
+            )
+        }
+        row_scan.setOnClickListener {
+            ActivityLauncher.viewScan(
                     activity,
                     selectedSite
             )
@@ -779,8 +783,6 @@ class MySiteFragment : Fragment(),
                 ActivityLauncher.viewBlogStats(activity, selectedSite)
             }
             RequestCodes.SITE_PICKER -> if (resultCode == Activity.RESULT_OK) {
-                // reset comments status filter
-                AppPrefs.setCommentsStatusFilter(ALL)
                 // reset domain credit flag - it will be checked in onSiteChanged
                 isDomainCreditAvailable = false
             }
@@ -1193,37 +1195,21 @@ class MySiteFragment : Fragment(),
             uploadUtilsWrapper.showSnackbarError(
                     requireActivity().findViewById<View>(R.id.coordinator),
                     snackbarMessage,
-                    string.story_saving_failed_quick_action_manage,
-                    View.OnClickListener { view: View? ->
-                        val intent = Intent(
-                                requireActivity(),
-                                StoryComposerActivity::class.java
-                        )
-                        intent.putExtra(KEY_STORY_SAVE_RESULT, event)
-                        intent.putExtra(WordPress.SITE, selectedSite)
+                    string.story_saving_failed_quick_action_manage
+            ) {
+                // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
+                // is meant to be used for tracking purposes. Use it!
+                // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
+                //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
+                //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
 
-                        // we need to have a way to cancel the related error notification when the user comes
-                        // from tapping on MANAGE on the snackbar (otherwise they'll be able to discard the
-                        // errored story but the error notification will remain existing in the system dashboard)
-                        intent.action = getNotificationIdForError(
-                                StoryComposerActivity.BASE_FRAME_MEDIA_ERROR_NOTIFICATION_ID,
-                                event.storyIndex
-                        ).toString() + ""
+                storiesTrackerHelper.trackStorySaveResultEvent(
+                        event,
+                        STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 
-                        // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
-                        // is meant to be used for tracking purposes. Use it!
-                        // TODO add NotificationType.MEDIA_SAVE_ERROR param later when integrating with WPAndroid
-                        //        val notificationType = NotificationType.MEDIA_SAVE_ERROR
-                        //        notificationIntent.putExtra(ARG_NOTIFICATION_TYPE, notificationType)
-
-                        storiesTrackerHelper.trackStorySaveResultEvent(
-                                event,
-                                STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
-
-                        )
-                        startActivity(intent)
-                    }
-            )
+                )
+                ActivityLauncher.viewStories(requireActivity(), selectedSite, event)
+            }
         }
     }
 
