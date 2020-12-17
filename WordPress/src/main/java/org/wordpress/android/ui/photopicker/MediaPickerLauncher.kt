@@ -212,6 +212,32 @@ class MediaPickerLauncher @Inject constructor(
         }
     }
 
+    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val mediaPickerSetup = MediaPickerSetup(
+                    primaryDataSource = DEVICE,
+                    availableDataSources = setOf(),
+                    canMultiselect = canMultiselect,
+                    requiresStoragePermissions = true,
+                    allowedTypes = mutableSetOf(AUDIO),
+                    cameraSetup = HIDDEN,
+                    systemPickerEnabled = true,
+                    editingEnabled = true,
+                    queueResults = false,
+                    defaultSearchView = false,
+                    title = R.string.photo_picker_choose_file
+            )
+            val intent = MediaPickerActivity.buildIntent(
+                    activity,
+                    mediaPickerSetup
+            )
+            activity.startActivityForResult(
+                    intent,
+                    RequestCodes.FILE_LIBRARY
+            )
+        }
+    }
+
     fun viewWPMediaLibraryPickerForResult(activity: Activity, site: SiteModel, browserType: MediaBrowserType) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val intent = MediaPickerActivity.buildIntent(

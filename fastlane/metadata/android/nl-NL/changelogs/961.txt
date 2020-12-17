@@ -1,4 +1,0 @@
-16.2:
-Blok-editor: we hebben de algehele prestaties verbeterd, wat je wellicht merkt wanneer je een nieuw bericht start. Het afbeeldingsblok heeft nu betere ondersteuning voor het uploaden van meerdere afbeeldingen.
-
-Meer updates: je app gebruikt een nieuwe mediakiezer wanneer je bestanden selecteert. We hebben ook een bug gerepareerd op puur door jezelf gehoste sites op HTTP die de uitgelichte afbeeldingen in de berichtenlijst beïnvloedde.

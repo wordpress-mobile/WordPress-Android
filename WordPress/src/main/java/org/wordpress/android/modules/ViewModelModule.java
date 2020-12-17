@@ -6,8 +6,11 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel;
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel;
+import org.wordpress.android.ui.jetpack.backup.complete.BackupDownloadCompleteViewModel;
+import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel;
+import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressViewModel;
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
@@ -32,7 +35,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
@@ -449,6 +451,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BackupDownloadDetailsViewModel.class)
     abstract ViewModel backupDownloadDetailsViewModel(BackupDownloadDetailsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadProgressViewModel.class)
+    abstract ViewModel backupDownloadProgressViewModel(BackupDownloadProgressViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadCompleteViewModel.class)
+    abstract ViewModel backupDownloadCompleteViewModel(BackupDownloadCompleteViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

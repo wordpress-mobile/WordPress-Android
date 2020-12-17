@@ -35,6 +35,8 @@ import org.wordpress.android.models.ReaderPostDiscoverData.DiscoverType.SITE_PIC
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.test
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
+import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
@@ -975,7 +977,7 @@ class ReaderPostUiStateBuilderTest {
         whenever(post.getFeaturedImageForDisplay(anyInt(), anyInt())).thenReturn(featuredImageUrlForDisplay)
         whenever(post.hasFeaturedImage()).thenReturn(hasFeaturedImage)
         whenever(post.hasFeaturedVideo()).thenReturn(hasFeaturedVideo)
-        post.isWpForTeams = isp2Post
+        post.organization = if (isp2Post) P2 else NO_ORGANIZATION
         post.blogName = blogName
         post.authorFirstName = authorFirstName
         post.authorName = authorName

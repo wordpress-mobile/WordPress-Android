@@ -1322,10 +1322,32 @@ public class EditPostActivity extends LocaleAwareActivity implements
         } else if (mEditorPhotoPicker.isPhotoPickerShowing()) {
             mEditorPhotoPicker.hidePhotoPicker();
         } else {
-            savePostAndOptionallyFinish(true, false);
+            performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+                @Override public void doWhenNoStoriesBeingSaved() {
+                    savePostAndOptionallyFinish(true, false);
+                }
+            });
         }
 
         return true;
+    }
+
+    interface DoWhenNoStoriesBeingSavedCallback {
+        void doWhenNoStoriesBeingSaved();
+    }
+
+    private void performWhenNoStoriesBeingSaved(DoWhenNoStoriesBeingSavedCallback callback) {
+        if (mWPStoriesFeatureConfig.isEnabled()) {
+            if (mStoriesEventListener.getStoriesSavingInProgress().isEmpty()) {
+                callback.doWhenNoStoriesBeingSaved();
+            } else {
+                // Oops! A story is still being saved, let's wait
+                ToastUtils.showToast(EditPostActivity.this,
+                        getString(R.string.toast_edit_story_update_in_progress_title));
+            }
+        } else {
+            callback.doWhenNoStoriesBeingSaved();
+        }
     }
 
     private RemotePreviewLogicHelper.RemotePreviewHelperFunctions getEditPostActivityStrategyFunctions() {
@@ -1499,7 +1521,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
                 mPublishPostImmediatelyUseCase.updatePostToPublishImmediately(mEditPostRepository, mIsNewPost);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return true;
             case NONE:
                 throw new IllegalStateException("Switch in `secondaryAction` shouldn't go through the NONE case");
@@ -1611,12 +1633,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
         switch (getPrimaryAction()) {
             case PUBLISH_NOW:
                 mAnalyticsTrackerWrapper.track(Stat.EDITOR_POST_PUBLISH_TAPPED);
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case UPDATE:
             case SCHEDULE:
             case SUBMIT_FOR_REVIEW:
-                showPrepublishingNudgeBottomSheet();
+                checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet();
                 return;
             case SAVE:
                 uploadPost(false);
@@ -2014,6 +2036,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         };
     }
 
+    private void checkNoStorySaveOperationInProgressAndShowPrepublishingNudgeBottomSheet() {
+        performWhenNoStoriesBeingSaved(new DoWhenNoStoriesBeingSavedCallback() {
+            @Override public void doWhenNoStoriesBeingSaved() {
+                showPrepublishingNudgeBottomSheet();
+            }
+        });
+    }
+
     private void showPrepublishingNudgeBottomSheet() {
         mViewPager.setCurrentItem(PAGE_CONTENT);
         ActivityUtils.hideKeyboard(this);
@@ -2306,7 +2336,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
-                mWPStoriesFeatureConfig.isEnabled(),
+                mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
@@ -2942,6 +2972,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
+    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher
+                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -2993,6 +3028,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+    }
+
+    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
     }
 
     @Override

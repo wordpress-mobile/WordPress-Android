@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-23 17:11:40+0000
+Translation-Revision-Date: 2020-11-30 20:07:10+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_choose_a_file">ВЫБРАТЬ ФАЙЛ</string>
+    <string name="gutenberg_native_copy_file_url">Скопировать URL файла</string>
+    <string name="gutenberg_native_edit_file">Редактировать файл</string>
+    <string name="gutenberg_native_failed_to_save_files_please_tap_for_options">Невозможно сохранить файлы.\nНажмите для выбора вариантов.</string>
+    <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Невозможно загрузить файлы.\nНажмите для выбора вариантов.</string>
+    <string name="gutenberg_native_file_block_settings">Настройки блока файла</string>
+    <string name="gutenberg_native_file_name">Имя файла</string>
+    <string name="reader_follow_comments_unsubscribe_success">Вы отписались от комментариев</string>
+    <string name="reader_follow_comments_get_status_error">Ошибка получения статуса подписки для записи</string>
+    <string name="reader_follow_comments_could_not_subscribe_error">Невозможно подписаться на комментарии для этой записи</string>
+    <string name="reader_follow_comments_could_not_unsubscribe_error">Невозможно отписаться от комментариев для этой записи</string>
+    <string name="reader_btn_follow_comments">Подписаться на беседу</string>
+    <string name="reader_btn_following_comments">Вы подписаны на беседу</string>
+    <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="my_site_btn_jetpack_settings">Настройки Jetpack</string>
+    <string name="my_site_bottom_sheet_story_tag_new">Новая</string>
+    <string name="new_site_creation_domain_header_title">Выбрать домен</string>
+    <string name="activity_log_activity_type_filter_apply">Применить</string>
+    <string name="activity_log_activity_type_filter_clear">Очистить</string>
+    <string name="reader_follow_comments_null_response">Ответ не получен</string>
+    <string name="reader_follow_comments_bad_format_response">Получен неверный ответ</string>
+    <string name="reader_follow_comments_subscribe_success">Вы подписались на комментарии</string>
     <string name="dialog_edit_story_unsupported_format_message">К вашей истории не были добавлены один или несколько слайдов, на текущий момент истории не поддерживают GIF файлы. Выберите статическое изображение или видео для фона вместо GIF.</string>
     <string name="dialog_edit_story_limited_message">Эта история редактировалась на другом устройстве. Возможности редактирования некоторых объектов могут быть ограничены.</string>
     <string name="dialog_edit_story_unavailable_title">Нельзя отредактировать историю</string>
@@ -289,7 +311,6 @@ Language: ru
     <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
     <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Дата публикации</string>
-    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
     <string name="ccpa_privacy_notice_read">Прочитать уведомление о конфиденциальности CCPA</string>
     <string name="publish_date">Дата публикации</string>
     <string name="post_status_post_scheduled">Запланирована</string>
@@ -297,6 +318,7 @@ Language: ru
     <string name="post_status_post_published">Опубликована</string>
     <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
     <string name="reader_btn_done">Готово</string>
+    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
     <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
     <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
@@ -308,7 +330,6 @@ Language: ru
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Нажмите дважды для того, чтобы открыть панель действий со всеми доступными возможностями</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Нажмите дважды для того, чтобы открыть нижнюю панель действий с доступными возможностями</string>
-    <string name="gutenberg_native_insert_mention">Вставить упоминание</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Выбранная главная страница и страница записей не могут быть однаковыми.</string>
     <string name="site_settings_classic_blog">Классический блог</string>
     <string name="site_settings_static_homepage">Статическая главная страница</string>
@@ -467,7 +488,6 @@ Language: ru
     <string name="gutenberg_native_add_paragraph_block">Добавить блок параграфа</string>
     <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
     <string name="gutenberg_native_10_street_road">улица Лизюкова 2</string>
-    <string name="my_site_select_domains_page_title">Адрес сайта</string>
     <string name="dialog_title_sharing_facebook_account_must_have_pages">Нет подключения</string>
     <string name="sharing_facebook_account_must_have_pages">Подключение к Facebook не может обнаружить страниц, Publicize не может использовать профили Facebook, только страницы.</string>
     <string name="post_list_tab_published_posts">Опубликованные</string>
@@ -974,7 +994,6 @@ Language: ru
     <string name="site_creation_error_generic_title">Возникла проблема</string>
     <string name="site_creation_error_generic_subtitle">Ошибка подключения к серверу, пожалуйста попробуйте еще раз</string>
     <string name="new_site_creation_empty_domain_list_message">Нет доступных адресов по критериям поиска</string>
-    <string name="new_site_creation_domain_header_title">Выберите доменное имя для вашего сайта</string>
     <string name="site_creation_segments_subtitle">Это поможет нам делать вам рекомендации. Но вы не ограничены этим, все сайты развиваются.</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Возникла проблема</string>
     <string name="site_creation_segments_title">Расскажите какого типа сайт вы хотите создать</string>
@@ -1422,7 +1441,6 @@ Language: ru
     <string name="media_file_page_singular_mixed_not_uploaded_one_file">не загружены 1 страница и 1 файл </string>
     <string name="media_file_posts_plural_mixed_not_uploaded_one_file">не загружены %1$d записей и 1 файл </string>
     <string name="media_file_post_singular_mixed_not_uploaded_one_file">не загружены 1 запись и 1 файл </string>
-    <string name="latitude_longitude">%1$f, %2$f</string>
     <string name="site_creation_domain_finish_button">Создать сайт</string>
     <string name="signup_user_exists">Email уже зарегистрирован на WordPress.com\nПереходим ко входу.</string>
     <string name="signup_with_email_button">Зарегистрироваться с адресом Email</string>
@@ -1713,11 +1731,7 @@ Language: ru
     <string name="post_status_post_private">Личная</string>
     <string name="post_status_pending_review">Ожидает проверки</string>
     <string name="post_status_publish_post">Опубликовать</string>
-    <string name="change_location">Изменить местоположение</string>
-    <string name="remove_location">Удалить местоположение</string>
-    <string name="post_settings_error_placepicker_missing_play_services">Невозможно открыть средство выбора расположений: службы Google Play недоступны.</string>
     <string name="now">Сейчас</string>
-    <string name="post_settings_location">Местоположение</string>
     <string name="post_settings_password_dialog_hint">Без этого пароля невозможно просмотреть запись.</string>
     <string name="post_settings_excerpt_dialog_hint">Цитата — это краткое содержание записи, составляемое по желанию.</string>
     <string name="post_settings_slug_dialog_hint">Слаг — это усечённая версия названия записи для включения в URL-адрес.</string>
