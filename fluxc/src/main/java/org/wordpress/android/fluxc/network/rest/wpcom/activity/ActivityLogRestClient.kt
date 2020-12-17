@@ -194,7 +194,7 @@ class ActivityLogRestClient(
         val response = wpComGsonRequestBuilder.syncGetRequest(
                 this,
                 url,
-                mapOf(),
+                params,
                 ActivityTypesResponse::class.java
         )
         return when (response) {
