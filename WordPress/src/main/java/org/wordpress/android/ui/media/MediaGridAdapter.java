@@ -474,7 +474,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
-        mImageManager.loadThumbnailFromVideoUrl(imageView, ImageType.VIDEO, media.getThumbnailUrl(), ScaleType.CENTER_CROP,
+        mImageManager.loadThumbnailFromVideoUrl(imageView, ImageType.VIDEO, filePath, ScaleType.CENTER_CROP,
                 new ImageManager.RequestListener<Drawable>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
