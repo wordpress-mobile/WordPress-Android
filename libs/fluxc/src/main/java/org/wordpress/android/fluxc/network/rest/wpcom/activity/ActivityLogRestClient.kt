@@ -199,8 +199,7 @@ class ActivityLogRestClient(
         )
         return when (response) {
             is Success -> {
-                // TODO malinjir implement
-                FetchedActivityTypesResultPayload(remoteSiteId)
+                buildActivityTypesPayload(response.data, remoteSiteId)
             }
             is Error -> {
                 val errorType = NetworkErrorMapper.map(
@@ -352,6 +351,27 @@ class ActivityLogRestClient(
         )
         return FetchedBackupDownloadStatePayload(statusModel, site)
     }
+
+    private fun buildActivityTypesPayload(
+        response: ActivityTypesResponse,
+        remoteSiteId: Long
+    ): FetchedActivityTypesResultPayload {
+        val activityTypes = response.groups?.activityTypes
+                ?.filter { it.key != null && it.name != null }
+                ?.map { ActivityTypeModel(requireNotNull(it.key), requireNotNull(it.name), it.count ?: 0) }
+                ?: listOf()
+
+        if (BuildConfig.DEBUG && (response.groups?.activityTypes?.size ?: 0) != activityTypes.size) {
+            throw IllegalStateException("ActivityTypes parsing failed - one or more items were ignored.")
+        }
+
+        return FetchedActivityTypesResultPayload(
+                remoteSiteId,
+                activityTypes,
+                response.totalItems ?: 0
+        )
+    }
+
 
     class ActivitiesResponse(
         val totalItems: Int?,
