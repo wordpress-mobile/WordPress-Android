@@ -157,7 +157,7 @@ public class ReaderSiteHeaderView extends LinearLayout {
         }
 
         mImageManager.loadIntoCircle(blavatarImg,
-                SiteUtils.getSiteImageType(blogInfo.isWpForTeams, BlavatarShape.CIRCULAR),
+                SiteUtils.getSiteImageType(blogInfo.isP2orA8C(), BlavatarShape.CIRCULAR),
                 PhotonUtils.getPhotonImageUrl(blogInfo.getImageUrl(), mBlavatarSz, mBlavatarSz, Quality.HIGH));
 
         txtFollowCount.setText(String.format(

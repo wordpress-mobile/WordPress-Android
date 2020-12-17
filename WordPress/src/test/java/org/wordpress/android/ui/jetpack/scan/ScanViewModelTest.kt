@@ -1,22 +1,23 @@
 package org.wordpress.android.ui.jetpack.scan
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.mockito.junit.MockitoJUnitRunner
+import org.mockito.Mock
+import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.SiteModel
 
-@RunWith(MockitoJUnitRunner::class)
-class ScanViewModelTest {
-    @Rule
-    @JvmField val rule = InstantTaskExecutorRule()
+@InternalCoroutinesApi
+class ScanViewModelTest : BaseUnitTest() {
+    @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var scanStatusService: ScanStatusService
 
     private lateinit var viewModel: ScanViewModel
 
     @Before
     fun setUp() {
-        viewModel = ScanViewModel()
+        viewModel = ScanViewModel(scanStatusService)
+        viewModel.site = site
     }
 
     @Test

@@ -5,6 +5,7 @@ import android.text.TextUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId;
 import org.wordpress.android.ui.reader.utils.ReaderIframeScanner;
@@ -65,8 +66,9 @@ public class ReaderPost {
     public boolean isPrivateAtomic;
     public boolean isVideoPress;
     public boolean isJetpack;
-    public boolean isWpForTeams;
     public boolean useExcerpt;
+
+    public int organizationId;
 
     private String mAttachmentsJson;
     private String mDiscoverJson;
@@ -170,10 +172,7 @@ public class ReaderPost {
             // TODO: as of 29-Sept-2014, this is broken - endpoint returns false when it should be true
             post.isJetpack = JSONUtils.getBool(jsonSite, "jetpack");
 
-            JSONObject jsonSiteOptions = JSONUtils.getJSONChild(jsonSite, "options");
-            if (jsonSiteOptions != null) {
-                post.isWpForTeams = JSONUtils.getBool(jsonSiteOptions, "is_wpforteams_site");
-            }
+            post.organizationId = jsonSite.optInt("organization_id");
         }
 
         // "discover" posts
@@ -561,6 +560,14 @@ public class ReaderPost {
         return !TextUtils.isEmpty(mSecondaryTag);
     }
 
+    public Organization getOrganization() {
+        return Organization.fromOrgId(organizationId);
+    }
+
+    public void setOrganization(Organization organization) {
+        organizationId = organization.getOrgId();
+    }
+
     /*
      * attachments are stored as the actual JSON to avoid having a separate table for
      * them, may need to revisit this if/when attachments become more important
@@ -672,6 +679,13 @@ public class ReaderPost {
      */
     public boolean isXpost() {
         return xpostBlogId != 0 && xpostPostId != 0;
+    }
+
+    /*
+     * returns true if this is a P2 or A8C post
+     */
+    public boolean isP2orA8C() {
+        return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
     }
 
     /*

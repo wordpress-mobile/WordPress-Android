@@ -386,12 +386,6 @@
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
 
-    <!-- gutenberg informative dialog -->
-    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-
     <!-- reload drop down -->
     <string name="loading">Loading…</string>
 
@@ -1043,6 +1037,15 @@
 
     <!-- scan -->
     <string name="scan">Scan</string>
+
+    <string name="scan_state_icon">Scan state icon</string>
+    <string name="scan_scanning_title">Preparing to scan</string>
+    <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
+    <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.
+        \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
+    <string name="scan_idle_no_threats_found_description">The last Jetpack scan ran 7 hours ago and everything looked great. Run a manual scan now or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_threats_found_description">The scan found %d potential threats with %s. Please review them below and take action. We\'re here to help if you need us.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -3323,6 +3326,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
+    <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>

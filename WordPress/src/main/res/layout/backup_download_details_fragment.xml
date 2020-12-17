@@ -1,70 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/backup_details_scroll_view"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/backup_download_details_container"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
     android:padding="@dimen/margin_medium_large">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/backup_details_container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <ImageView
-            android:id="@+id/backup_details_action_icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:contentDescription="@string/backup_download_details_icon_content_description"
-            app:layout_constraintStart_toStartOf="@+id/backup_details_header"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/ic_cloud_white_24dp" />
-
-        <com.google.android.material.button.MaterialButton
-            android:id="@+id/backup_details_action_button"
-            style="@style/Backup.Details.PrimaryButton"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_description"
-            android:text="@string/backup_download_details_action_button"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/backup_details_header"
-            style="@style/Backup.Details.Header"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_action_icon"
-            tools:text="Create downloadable backup"
-            android:text="@string/backup_download_details_header"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/backup_details_description"
-            style="@style/Backup.Details.Description"
-            app:layout_constraintStart_toStartOf="@+id/backup_details_header"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_header"
-            tools:text="October 21, 2020 at 3:40 AM is the selected point to create a downloadable backup."
-            android:text="@string/backup_download_details_description"/>
-
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/backup_details_secondary_header"
-            style="@style/Backup.Details.SecondaryHeader"
-            android:layout_marginTop="13dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_action_button"
-            app:layout_constraintBottom_toTopOf="@+id/recycler_view"
-            tools:text="Items included in this download"
-            android:text="@string/backup_download_details_choose_items_header"/>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/backup_details_secondary_header"
-            app:layout_constraintBottom_toBottomOf="parent"/>
-    </androidx.constraintlayout.widget.ConstraintLayout>
-</ScrollView>
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
