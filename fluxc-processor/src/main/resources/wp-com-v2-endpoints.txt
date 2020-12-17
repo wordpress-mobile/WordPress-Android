@@ -3,6 +3,7 @@
 /read/sites/$site#String/notification-subscriptions/$action#String
 
 /sites/$site/activity
+/sites/$site/activity/count/group
 /sites/$site/rewind
 /sites/$site/rewind/downloads
 
