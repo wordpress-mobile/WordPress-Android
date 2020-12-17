@@ -101,7 +101,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         })
         viewModel.start(
                 remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
-                initialSelection = requireNotNull(arguments).getIntArray(ARG_INITIAL_SELECTION)?.toList() ?: listOf(),
+                initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList() ?: listOf(),
                 parentViewModel = parentViewModel
         )
     }
@@ -152,9 +152,9 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(remoteSiteId: RemoteId, initialSelection: List<Int>): ActivityLogTypeFilterFragment {
+        fun newInstance(remoteSiteId: RemoteId, initialSelection: List<String>): ActivityLogTypeFilterFragment {
             val args = Bundle()
-            args.putIntArray(ARG_INITIAL_SELECTION, initialSelection.toIntArray())
+            args.putStringArray(ARG_INITIAL_SELECTION, initialSelection.toTypedArray())
             args.putLong(WordPress.REMOTE_SITE_ID, remoteSiteId.value)
             return ActivityLogTypeFilterFragment().apply { arguments = args }
         }

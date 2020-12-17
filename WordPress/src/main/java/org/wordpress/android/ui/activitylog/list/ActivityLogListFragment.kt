@@ -199,7 +199,7 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
+    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<String>) {
         ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
                 .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }

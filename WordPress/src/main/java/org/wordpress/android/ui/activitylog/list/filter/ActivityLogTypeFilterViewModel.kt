@@ -32,7 +32,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private var isStarted = false
     private lateinit var remoteSiteId: RemoteId
     private lateinit var parentViewModel: ActivityLogViewModel
-    private lateinit var initialSelection: List<Int>
+    private lateinit var initialSelection: List<String>
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -43,7 +43,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     fun start(
         remoteSiteId: RemoteId,
         parentViewModel: ActivityLogViewModel,
-        initialSelection: List<Int>
+        initialSelection: List<String>
     ) {
         if (isStarted) return
         isStarted = true
@@ -100,7 +100,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         }
     }
 
-    private fun onItemClicked(itemId: Int) {
+    private fun onItemClicked(itemId: String) {
         (_uiState.value as? Content)?.let { content ->
             val updatedList = content.items.map { itemUiState ->
                 if (itemUiState is ListItemUiState.ActivityType && itemUiState.id == itemId) {
@@ -137,7 +137,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 }
             }
 
-    private fun getSelectedActivityTypeIds(): List<Int> =
+    private fun getSelectedActivityTypeIds(): List<String> =
             (_uiState.value as Content).items
                     .filterIsInstance(ActivityType::class.java)
                     .filter { it.checked }
@@ -177,7 +177,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
 
         data class ActivityType(
-            val id: Int,
+            val id: String,
             val title: UiString,
             val checked: Boolean = false,
             val onClick: (() -> Unit)

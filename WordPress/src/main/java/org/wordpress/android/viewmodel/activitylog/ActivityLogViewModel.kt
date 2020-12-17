@@ -119,7 +119,7 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindStatus: Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
-    private var currentActivityTypeFilter: List<Int> = listOf()
+    private var currentActivityTypeFilter: List<String> = listOf()
 
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
@@ -227,7 +227,7 @@ class ActivityLogViewModel @Inject constructor(
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(RemoteId(site.siteId), currentActivityTypeFilter)
     }
 
-    fun onActivityTypesSelected(activityTypeIds: List<Int>) {
+    fun onActivityTypesSelected(activityTypeIds: List<String>) {
         currentActivityTypeFilter = activityTypeIds
         // TODO malinjir: refetch/load data
     }
@@ -378,7 +378,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
-    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<Int>)
+    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<String>)
 
     sealed class FiltersUiState(val visibility: Boolean) {
         object FiltersHidden : FiltersUiState(visibility = false)
