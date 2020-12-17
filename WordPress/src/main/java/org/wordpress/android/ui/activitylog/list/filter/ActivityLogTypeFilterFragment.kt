@@ -101,7 +101,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         })
         viewModel.start(
                 remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
-                initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList() ?: listOf(),
+                initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList()
+                        ?: listOf(),
                 parentViewModel = parentViewModel
         )
     }
