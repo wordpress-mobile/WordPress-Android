@@ -7,12 +7,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
+import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
-import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -23,7 +25,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
-    private val dummyActivityTypesProvider: DummyActivityTypesProvider,
+    private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -55,11 +57,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun fetchAvailableActivityTypes() {
         launch {
             _uiState.value = FullscreenLoading
-            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(remoteSiteId.value)
+            val response = activityLogStore.fetchActivityTypes(
+                    FetchActivityTypesPayload(
+                            remoteSiteId.value,
+                            // TODO malinjir pass current date range filter
+                            null,
+                            null
+                    )
+            )
             if (response.isError) {
                 _uiState.value = buildErrorUiState()
             } else {
-                _uiState.value = buildContentUiState(response.activityTypes)
+                _uiState.value = buildContentUiState(response.activityTypeModels)
             }
         }
     }
@@ -67,20 +76,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun buildErrorUiState() =
             UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
-    private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
+    private suspend fun buildContentUiState(activityTypes: List<ActivityTypeModel>): Content {
         return withContext(bgDispatcher) {
-            // TODO malinjir replace the hardcoded header title
             val headerListItem = ListItemUiState.SectionHeader(
                     UiStringRes(R.string.activity_log_activity_type_filter_header)
             )
-            // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
                         ListItemUiState.ActivityType(
-                                id = it.id,
+                                id = it.key,
                                 title = UiStringText(it.toString()),
-                                onClick = { onItemClicked(it.id) },
-                                checked = initialSelection.contains(it.id)
+                                onClick = { onItemClicked(it.key) },
+                                checked = initialSelection.contains(it.key)
                         )
                     }
             Content(
