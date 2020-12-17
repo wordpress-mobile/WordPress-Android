@@ -124,7 +124,7 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="WordPress.ZenDesk"  />
+    <style name="WordPress.ZenDesk" />
 
     <!-- Overload of Zendesk FAB style -->
     <style name="zs_contact_us_fab">
