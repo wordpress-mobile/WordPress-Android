@@ -59,7 +59,9 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
     data class Site(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
-        val blog: ReaderBlog
+        val blog: ReaderBlog,
+        val showUnseenCount: Boolean = blog.numUnseenPosts > 0,
+        val unseenCount: Int = blog.numUnseenPosts
     ) : SubfilterListItem(SITE, true) {
         override val label: UiString = if (blog.name.isNotEmpty()) {
             UiStringText(blog.name)

@@ -29,6 +29,7 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.subfilter.adapters.SubfilterListAdapter
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.config.UnreadPostsCountFeatureConfig
 import org.wordpress.android.widgets.WPTextView
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -36,6 +37,7 @@ import javax.inject.Inject
 class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var unreadPostsCountFeatureConfig: UnreadPostsCountFeatureConfig
 
     private lateinit var subFilterViewModel: SubFilterViewModel
     private lateinit var viewModel: SubfilterPageViewModel
@@ -70,7 +72,7 @@ class SubfilterPageFragment : DaggerFragment() {
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = SubfilterListAdapter(uiHelpers)
+        recyclerView.adapter = SubfilterListAdapter(uiHelpers, unreadPostsCountFeatureConfig)
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
