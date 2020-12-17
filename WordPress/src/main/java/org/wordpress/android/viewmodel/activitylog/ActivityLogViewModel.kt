@@ -223,8 +223,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
-        // TODO malinjir pass initially selected activity types
-        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(RemoteId(site.siteId), currentActivityTypeFilter)
+        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
+                RemoteId(site.siteId),
+                currentActivityTypeFilter,
+                currentDateRangeFilter
+        )
     }
 
     fun onActivityTypesSelected(activityTypeIds: List<String>) {
@@ -378,7 +381,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
-    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<String>)
+    data class ShowActivityTypePicker(
+        val siteId: RemoteId,
+        val initialSelection: List<String>,
+        val dateRange: DateRange?
+    )
 
     sealed class FiltersUiState(val visibility: Boolean) {
         object FiltersHidden : FiltersUiState(visibility = false)

@@ -20,6 +20,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import org.wordpress.android.viewmodel.activitylog.DateRange
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -32,6 +34,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private lateinit var remoteSiteId: RemoteId
     private lateinit var parentViewModel: ActivityLogViewModel
     private lateinit var initialSelection: List<String>
+    private var dateRange: DateRange? = null
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -42,6 +45,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     fun start(
         remoteSiteId: RemoteId,
         parentViewModel: ActivityLogViewModel,
+        dateRange: DateRange?,
         initialSelection: List<String>
     ) {
         if (isStarted) return
@@ -49,7 +53,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         this.remoteSiteId = remoteSiteId
         this.parentViewModel = parentViewModel
         this.initialSelection = initialSelection
-
+        this.dateRange = dateRange
         fetchAvailableActivityTypes()
     }
 
@@ -59,9 +63,8 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val response = activityLogStore.fetchActivityTypes(
                     FetchActivityTypesPayload(
                             remoteSiteId.value,
-                            // TODO malinjir pass current date range filter
-                            null,
-                            null
+                            dateRange?.first?.let { Date(it) },
+                            dateRange?.second?.let { Date(it) }
                     )
             )
             if (response.isError) {

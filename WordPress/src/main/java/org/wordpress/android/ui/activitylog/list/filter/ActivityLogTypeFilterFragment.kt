@@ -7,6 +7,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.util.Pair
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -24,9 +25,12 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import org.wordpress.android.viewmodel.activitylog.DateRange
 import javax.inject.Inject
 
 private const val ARG_INITIAL_SELECTION = "arg_initial_selection"
+private const val ARG_DATE_RANGE_AFTER = "arg_date_range_after"
+private const val ARG_DATE_RANGE_BEFORE = "arg_date_range_before"
 private const val ACTIONS_MENU_GROUP = 1
 
 /**
@@ -99,10 +103,19 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         viewModel.dismissDialog.observe(viewLifecycleOwner, Observer {
             it.applyIfNotHandled { dismiss() }
         })
+
+        val dateRange: DateRange? = if (requireNotNull(arguments).containsKey(ARG_DATE_RANGE_AFTER)) {
+            val after = requireNotNull(arguments).getLong(ARG_DATE_RANGE_AFTER)
+            val before = requireNotNull(arguments).getLong(ARG_DATE_RANGE_BEFORE)
+            Pair(after, before)
+        }  else {
+            null
+        }
         viewModel.start(
                 remoteSiteId = RemoteId(requireNotNull(arguments).getLong(WordPress.REMOTE_SITE_ID)),
                 initialSelection = requireNotNull(arguments).getStringArray(ARG_INITIAL_SELECTION)?.toList()
                         ?: listOf(),
+                dateRange = dateRange,
                 parentViewModel = parentViewModel
         )
     }
@@ -153,9 +166,11 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(remoteSiteId: RemoteId, initialSelection: List<String>): ActivityLogTypeFilterFragment {
+        fun newInstance(remoteSiteId: RemoteId, initialSelection: List<String>, dateRange: DateRange?): ActivityLogTypeFilterFragment {
             val args = Bundle()
             args.putStringArray(ARG_INITIAL_SELECTION, initialSelection.toTypedArray())
+            dateRange?.first?.let { args.putLong(ARG_DATE_RANGE_AFTER, it) }
+            dateRange?.second?.let { args.putLong(ARG_DATE_RANGE_BEFORE, it) }
             args.putLong(WordPress.REMOTE_SITE_ID, remoteSiteId.value)
             return ActivityLogTypeFilterFragment().apply { arguments = args }
         }
