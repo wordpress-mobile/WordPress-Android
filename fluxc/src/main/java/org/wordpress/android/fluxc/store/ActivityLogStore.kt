@@ -283,14 +283,14 @@ class ActivityLogStore
     data class OnActivityTypesFetched(
         val causeOfChange: ActivityLogAction,
         val remoteSiteId: Long,
-        val activityTypeModels: List<ActivityTypeModel>? = null,
+        val activityTypeModels: List<ActivityTypeModel>,
         val totalItems: Int = 0
     ) : Store.OnChanged<ActivityTypesError>() {
         constructor(
             remoteSiteId: Long,
             error: ActivityTypesError,
             causeOfChange: ActivityLogAction
-        ) : this(remoteSiteId = remoteSiteId, causeOfChange = causeOfChange) {
+        ) : this(remoteSiteId = remoteSiteId, causeOfChange = causeOfChange, activityTypeModels = listOf()) {
             this.error = error
         }
     }
@@ -388,10 +388,10 @@ class ActivityLogStore
 
     class FetchedActivityTypesResultPayload(
         val remoteSiteId: Long,
-        val activityTypeModels: List<ActivityTypeModel>? = null,
+        val activityTypeModels: List<ActivityTypeModel>,
         val totalItems: Int = 0
     ) : Payload<ActivityTypesError>() {
-        constructor(error: ActivityTypesError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId) {
+        constructor(error: ActivityTypesError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId, activityTypeModels = listOf()) {
             this.error = error
         }
     }
