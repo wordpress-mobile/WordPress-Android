@@ -30,7 +30,27 @@ sealed class ThreatModel {
     data class VulnerableExtensionThreatModel(
         override val baseThreatModel: BaseThreatModel,
         val extension: Extension
-    ) : ThreatModel()
+    ) : ThreatModel() {
+        data class Extension(
+            val type: ExtensionType,
+            val slug: String?,
+            val name: String?,
+            val version: String?,
+            val isPremium: Boolean
+        ) {
+            enum class ExtensionType(val value: String?) {
+                PLUGIN("plugin"),
+                THEME("theme"),
+                UNKNOWN("unknown");
+
+                companion object {
+                    fun fromValue(value: String?): ExtensionType {
+                        return values().firstOrNull { it.value == value } ?: UNKNOWN
+                    }
+                }
+            }
+        }
+    }
 
     data class DatabaseThreatModel(
         override val baseThreatModel: BaseThreatModel,
@@ -88,26 +108,6 @@ sealed class ThreatModel {
 
             companion object {
                 fun fromValue(value: String?): FixType {
-                    return values().firstOrNull { it.value == value } ?: UNKNOWN
-                }
-            }
-        }
-    }
-
-    data class Extension(
-        val type: ExtensionType,
-        val slug: String?,
-        val name: String?,
-        val version: String?,
-        val isPremium: Boolean
-    ) {
-        enum class ExtensionType(val value: String?) {
-            PLUGIN("plugin"),
-            THEME("theme"),
-            UNKNOWN("unknown");
-
-            companion object {
-                fun fromValue(value: String?): ExtensionType {
                     return values().firstOrNull { it.value == value } ?: UNKNOWN
                 }
             }
