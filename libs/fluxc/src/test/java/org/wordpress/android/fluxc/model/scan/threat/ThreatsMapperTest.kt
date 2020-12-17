@@ -9,12 +9,12 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Extension.ExtensionType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
