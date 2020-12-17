@@ -208,15 +208,15 @@ class ActivityLogListFragment : Fragment() {
 
     private fun updateFilters(uiState: FiltersShown) {
         with(requireActivity().date_range_picker) {
-            this.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
-            this.isCloseIconVisible = uiState.clearDateRangeFilterClicked != null
-            this.setOnCloseIconClickListener { uiState.clearDateRangeFilterClicked?.invoke() }
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+            isCloseIconVisible = uiState.clearDateRangeFilterClicked != null
+            setOnCloseIconClickListener { uiState.clearDateRangeFilterClicked?.invoke() }
         }
 
         with(requireActivity().activity_type_filter) {
-            this.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
-            this.isCloseIconVisible = uiState.clearActivityTypeFilterClicked != null
-            this.setOnCloseIconClickListener { uiState.clearActivityTypeFilterClicked?.invoke() }
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            isCloseIconVisible = uiState.clearActivityTypeFilterClicked != null
+            setOnCloseIconClickListener { uiState.clearActivityTypeFilterClicked?.invoke() }
         }
     }
 
