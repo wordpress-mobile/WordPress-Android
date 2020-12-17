@@ -104,10 +104,11 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `scan item built if scan feature config enabled`() {
+    fun `scan item built if scan feature config enabled & scan feature is available`() {
+        val isScanAvailable = true
         whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
 
-        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION, isScanAvailable)
 
         assertThat(item).isEqualTo(SCAN_ITEM)
     }

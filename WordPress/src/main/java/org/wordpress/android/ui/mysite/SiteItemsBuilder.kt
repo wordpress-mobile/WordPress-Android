@@ -13,7 +13,11 @@ class SiteItemsBuilder
     private val siteCategoryItemBuilder: SiteCategoryItemBuilder,
     private val siteListItemBuilder: SiteListItemBuilder
 ) {
-    fun buildSiteItems(site: SiteModel, onClick: (ListItemAction) -> Unit): List<MySiteItem> {
+    fun buildSiteItems(
+        site: SiteModel,
+        onClick: (ListItemAction) -> Unit,
+        isScanAvailable: Boolean = false
+    ): List<MySiteItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site),
@@ -23,7 +27,7 @@ class SiteItemsBuilder
                         onClick = ListItemInteraction.create(ListItemAction.STATS, onClick)
                 ),
                 siteListItemBuilder.buildActivityLogItemIfAvailable(site, onClick),
-                siteListItemBuilder.buildScanItemIfAvailable(onClick),
+                siteListItemBuilder.buildScanItemIfAvailable(onClick, isScanAvailable),
                 siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_publish)),
                 ListItem(
