@@ -1038,6 +1038,15 @@
     <!-- scan -->
     <string name="scan">Scan</string>
 
+    <string name="scan_state_icon">Scan state icon</string>
+    <string name="scan_scanning_title">Preparing to scan</string>
+    <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
+    <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.
+        \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
+    <string name="scan_idle_no_threats_found_description">The last Jetpack scan ran 7 hours ago and everything looked great. Run a manual scan now or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_threats_found_description">The scan found %d potential threats with %s. Please review them below and take action. We\'re here to help if you need us.</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>

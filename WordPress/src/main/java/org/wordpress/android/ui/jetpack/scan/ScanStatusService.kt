@@ -31,6 +31,10 @@ class ScanStatusService
     private val _scanAvailable = MutableLiveData<Boolean>()
     val scanAvailable: LiveData<Boolean> = _scanAvailable
 
+    private val _scanState = MutableLiveData<ScanStateModel>()
+    val scanState: LiveData<ScanStateModel>
+        get() = _scanState
+
     private val _scanStateFetchError = MutableLiveData<ScanStateError>()
 
     fun start(site: SiteModel) {
@@ -72,9 +76,9 @@ class ScanStatusService
         return false
     }
 
-    private fun updateScanState(scanState: ScanStateModel?) {
-        _scanAvailable.value = scanState?.state != UNAVAILABLE &&
-            scanState?.state != UNKNOWN &&
+    private fun updateScanState(scanStateModel: ScanStateModel) {
+        _scanAvailable.value = scanStateModel.state != UNAVAILABLE &&
+            scanStateModel.state != UNKNOWN &&
             _scanStateFetchError.value == null
     }
 

@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/scan_state_icon"
+        android:layout_width="@dimen/scan_state_icon_size"
+        android:layout_height="@dimen/scan_state_icon_size"
+        android:layout_marginTop="@dimen/margin_extra_medium_large"
+        android:contentDescription="@string/scan_state_icon"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/scan_state_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scan_state_icon"
+        tools:text="@string/scan_idle_no_threats_found_title" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/scan_state_description"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/margin_extra_large"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/scan_state_title"
+        tools:text="@string/scan_idle_no_threats_found_title" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
