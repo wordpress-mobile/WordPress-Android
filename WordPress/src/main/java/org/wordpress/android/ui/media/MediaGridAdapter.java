@@ -4,6 +4,8 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -16,6 +18,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -478,29 +481,28 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
-        new Thread() {
-            @Override
-            public void run() {
-                final Bitmap thumb =
-                        ImageUtils.getVideoFrameFromVideo(filePath,
-                                mThumbWidth,
-                                mAuthenticationUtils.getAuthHeaders(filePath)
-                        );
-                if (thumb != null) {
-                    mHandler.post(new Runnable() {
-                        @Override
-                        public void run() {
-                            WordPress.getBitmapCache().put(filePath, thumb);
-                            if (imageView.getTag(R.id.media_grid_file_path_id) instanceof String
-                                && (imageView.getTag(R.id.media_grid_file_path_id)).equals(filePath)) {
-                                imageView.setTag(R.id.media_grid_file_path_id, null);
-                                notifyItemChanged(position);
-                            }
+        mImageManager.loadThumbnailFromVideoUrl(imageView, ImageType.VIDEO, media.getThumbnailUrl(), ScaleType.CENTER_CROP,
+                new ImageManager.RequestListener<Drawable>() {
+                    @Override
+                    public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {
+                        if (e != null) {
+                            AppLog.d(AppLog.T.MEDIA, "MediaGridAdapter > error loading video thumbnail = " + e);
                         }
-                    });
-                }
-            }
-        }.start();
+                    }
+
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
+                        // create a copy since the original bitmap may by automatically recycled
+                        bitmap = bitmap.copy(bitmap.getConfig(), true);
+                        WordPress.getBitmapCache().put(filePath, bitmap);
+                        if (imageView.getTag(R.id.media_grid_file_path_id) instanceof String
+                            && (imageView.getTag(R.id.media_grid_file_path_id)).equals(filePath)) {
+                            imageView.setTag(R.id.media_grid_file_path_id, null);
+                            notifyItemChanged(position);
+                        }
+                    }
+                });
     }
 
     public boolean isEmpty() {
