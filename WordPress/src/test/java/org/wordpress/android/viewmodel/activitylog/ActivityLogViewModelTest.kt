@@ -420,7 +420,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(dateRange)
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearDateRangeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
         Assertions.assertThat(action != null).isTrue
     }
 
@@ -429,7 +429,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onDateRangeSelected(null)
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearDateRangeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
         Assertions.assertThat(action == null).isTrue
     }
 
@@ -439,9 +439,9 @@ class ActivityLogViewModelTest {
         whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        (viewModel.filtersUiState.value as FiltersShown).clearDateRangeFilterClicked!!.invoke()
+        (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearDateRangeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
         Assertions.assertThat(action == null).isTrue
     }
 
@@ -471,7 +471,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf(1))
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearActivityTypeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
         Assertions.assertThat(action != null).isTrue
     }
 
@@ -480,7 +480,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf())
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearActivityTypeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
         Assertions.assertThat(action == null).isTrue
     }
 
@@ -489,9 +489,9 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf(1))
 
-        (viewModel.filtersUiState.value as FiltersShown).clearActivityTypeFilterClicked!!.invoke()
+        (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
-        val action = (viewModel.filtersUiState.value as FiltersShown).clearActivityTypeFilterClicked
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
         Assertions.assertThat(action == null).isTrue
     }
 

@@ -434,8 +434,8 @@ class ActivityLogViewModel @Inject constructor(
         data class FiltersShown(
             val dateRangeLabel: UiString,
             val activityTypeLabel: UiString,
-            val clearDateRangeFilterClicked: (() -> Unit)?,
-            val clearActivityTypeFilterClicked: (() -> Unit)?
+            val onClearDateRangeFilterClicked: (() -> Unit)?,
+            val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
     }
 }
