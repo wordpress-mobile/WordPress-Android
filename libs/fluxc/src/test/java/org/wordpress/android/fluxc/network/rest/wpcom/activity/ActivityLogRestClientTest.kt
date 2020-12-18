@@ -462,7 +462,7 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchActivityTypes(siteId, null, null)
 
         assertEquals(
-                payload.activityTypeModels!![0],
+                payload.activityTypeModels[0],
                 ActivityTypeModel(activityType.key!!, activityType.name!!, activityType.count)
         )
     }
