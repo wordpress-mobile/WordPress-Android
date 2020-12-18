@@ -5,6 +5,7 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
@@ -112,8 +114,11 @@ class MySiteViewModel
     private val contextProvider: ContextProvider,
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
-    private val domainRegistrationHandler: DomainRegistrationHandler
+    private val domainRegistrationHandler: DomainRegistrationHandler,
+    private val scanStatusService: ScanStatusService
 ) : ScopedViewModel(mainDispatcher) {
+    private var currentSiteId: Int = 0
+    private val _scanAvailable = MediatorLiveData<Boolean>()
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -131,8 +136,15 @@ class MySiteViewModel
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
             selectedSiteRepository.showSiteIconProgressBar.distinct(),
-            domainRegistrationHandler.isDomainCreditAvailable.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
+            domainRegistrationHandler.isDomainCreditAvailable.distinct(),
+            _scanAvailable
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable ->
+        site?.takeIf { site.id != currentSiteId }?.let {
+            _scanAvailable.value = false
+            requestScanAvailableStatus(site)
+            currentSiteId = site.id
+        }
+
         val items = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -158,12 +170,23 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable ?: false))
             siteItems
         } else {
             listOf()
         }
         UiModel(currentAvatarUrl.orEmpty(), items)
+    }
+
+    init {
+        _scanAvailable.addSource(scanStatusService.scanAvailable) {
+            _scanAvailable.value = it == true
+        }
+    }
+
+    private fun requestScanAvailableStatus(site: SiteModel) {
+        scanStatusService.stop()
+        scanStatusService.start(site)
     }
 
     private fun onItemClick(action: ListItemAction) {
@@ -403,6 +426,7 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
+        scanStatusService.stop()
         super.onCleared()
     }
 

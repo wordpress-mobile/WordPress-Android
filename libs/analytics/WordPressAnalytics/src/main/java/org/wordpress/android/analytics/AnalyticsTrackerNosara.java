@@ -480,6 +480,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
                 predefinedEventProperties.put("button", "find_out_more");
                 break;
+            case READER_ARTICLE_COMMENTED_ON:
+                predefinedEventProperties.put("replying_to", "post");
+                break;
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
+                predefinedEventProperties.put("replying_to", "comment");
+                break;
         }
 
         final String user;
@@ -638,6 +644,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ACCESSED:
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
                 return "reader_article_commented_on";
             case READER_ARTICLE_COMMENTS_OPENED:
                 return "reader_article_comments_opened";
@@ -691,6 +698,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_reader_tag_followed";
             case READER_TAG_LOADED:
                 return "reader_tag_loaded";
+            case READER_P2_SHOWN:
+                return "reader_p2_shown";
+            case READER_A8C_SHOWN:
+                return "reader_a8c_shown";
             case READER_TAG_PREVIEWED:
                 return "reader_tag_previewed";
             case READER_SEARCH_LOADED:
@@ -1933,6 +1944,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_deleted";
             case COMMENT_FOLLOW_CONVERSATION:
                 return "comment_follow_conversation";
+            case COMMENT_BATCH_APPROVED:
+                return "comment_batch_approved";
+            case COMMENT_BATCH_UNAPPROVED:
+                return "comment_batch_unapproved";
+            case COMMENT_BATCH_SPAMMED:
+                return "comment_batch_spammed";
+            case COMMENT_BATCH_TRASHED:
+                return "comment_batch_trashed";
+            case COMMENT_BATCH_DELETED:
+                return "comment_batch_deleted";
+            case COMMENT_EDITOR_OPENED:
+                return "comment_editor_opened";
         }
         return null;
     }

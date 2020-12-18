@@ -671,7 +671,7 @@
 
         <!-- Jetpack backup -->
         <activity
-            android:name=".ui.jetpack.backup.BackupDownloadActivity"
+            android:name=".ui.jetpack.backup.download.BackupDownloadActivity"
             android:label="@string/backup_download"
             android:theme="@style/WordPress.NoActionBar"/>
 

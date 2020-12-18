@@ -30,7 +30,7 @@ import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
-const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60
+const val UPDATE_TAGS_THRESHOLD = 1000 * 60 * 60 // 1 hr
 const val TRACK_TAB_CHANGED_THROTTLE = 100L
 
 class ReaderViewModel @Inject constructor(

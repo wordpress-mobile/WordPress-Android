@@ -352,7 +352,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
         mImageManager.loadIntoCircle(holder.mImgBlavatar,
-                SiteUtils.getSiteImageType(post.isWpForTeams, BlavatarShape.CIRCULAR),
+                SiteUtils.getSiteImageType(post.isP2orA8C(), BlavatarShape.CIRCULAR),
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));
