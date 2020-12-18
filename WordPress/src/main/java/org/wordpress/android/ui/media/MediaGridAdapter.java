@@ -19,6 +19,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import org.wordpress.android.R;
@@ -65,6 +66,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private final Handler mHandler;
     private final LayoutInflater mInflater;
+    private GridLayoutManager mLayoutManager;
 
     private final Context mContext;
     private final SiteModel mSite;
@@ -77,6 +79,8 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     private static final float SCALE_NORMAL = 1.0f;
     private static final float SCALE_SELECTED = .8f;
+
+    private static final String VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL = "view_tag_extract_from_remote_video_url";
 
     @Inject ImageManager mImageManager;
     @Inject AuthenticationUtils mAuthenticationUtils;
@@ -445,7 +449,42 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Override public void onViewRecycled(@NonNull GridViewHolder holder) {
         mImageManager.cancelRequestAndClearImageView(holder.mImageView);
+        holder.mImageView.setTag(R.id.media_grid_remote_thumb_extract_id, null);
         super.onViewRecycled(holder);
+    }
+
+    public void cancelPendingRequestsForVisibleItems(@NonNull RecyclerView recyclerView) {
+        int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+        for (int i=firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+            GridViewHolder holder = (GridViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+            if (holder != null
+                && (VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL.equals(
+                        holder.mImageView.getTag(R.id.media_grid_remote_thumb_extract_id)))) {
+                mImageManager.cancelRequestAndClearImageView(holder.mImageView);
+            }
+        }
+    }
+
+    public void refreshCurrentItems(@NonNull RecyclerView recyclerView) {
+        int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
+        int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
+        if (mMediaList.size() >= lastVisibleItemPosition && lastVisibleItemPosition > -1) {
+            for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+                // only refresh this one
+                GridViewHolder holder = (GridViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
+                if (holder != null
+                    && (VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL.equals(
+                            holder.mImageView.getTag(R.id.media_grid_remote_thumb_extract_id)))) {
+                    notifyItemChanged(i);
+                }
+            }
+        }
+    }
+
+    @Override public void onAttachedToRecyclerView(@NonNull RecyclerView recyclerView) {
+        super.onAttachedToRecyclerView(recyclerView);
+        mLayoutManager = (GridLayoutManager) recyclerView.getLayoutManager();
     }
 
     /*
@@ -479,6 +518,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
             return;
         }
 
+        imageView.setTag(R.id.media_grid_remote_thumb_extract_id, VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL);
         mImageManager.loadThumbnailFromVideoUrl(imageView, ImageType.VIDEO, filePath, ScaleType.CENTER_CROP,
                 new ImageManager.RequestListener<Drawable>() {
                     @Override
@@ -490,6 +530,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
                     @Override
                     public void onResourceReady(@NonNull Drawable resource, @Nullable Object model) {
+                        imageView.setTag(R.id.media_grid_remote_thumb_extract_id, null);
                         Bitmap bitmap = ((BitmapDrawable) resource).getBitmap();
                         // create a copy since the original bitmap may by automatically recycled
                         bitmap = bitmap.copy(bitmap.getConfig(), true);
