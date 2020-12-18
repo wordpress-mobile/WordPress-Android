@@ -21,7 +21,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/checkbox_label"
-        style="@style/Backup.Download.ListItem.Label"
+        style="@style/Jetpack.ListItem.Label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/vertical_guideline"
