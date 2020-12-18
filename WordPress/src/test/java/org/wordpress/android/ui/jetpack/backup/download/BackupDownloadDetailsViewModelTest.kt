@@ -4,8 +4,10 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
@@ -13,9 +15,12 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 
 @InternalCoroutinesApi
-class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
+class    : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadDetailsViewModel
     private lateinit var availableItemsProvider: BackupAvailableItemsProvider
+    @Mock private lateinit var parentViewModel: BackupDownloadViewModel
+    @Mock private lateinit var site: SiteModel
+    private val activityId = "1"
 
     @Before
     fun setUp() {
@@ -31,7 +36,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     fun `when available items are fetched, the content view is shown`() = test {
         val uiStates = initObservers().uiStates
 
-        viewModel.start()
+        viewModel.start(site, activityId, parentViewModel)
 
         assertThat(uiStates[0]).isInstanceOf(Content::class.java)
     }
@@ -40,7 +45,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     fun `given item is checked, when item is clicked, then item gets unchecked`() = test {
         val uiStates = initObservers().uiStates
 
-        viewModel.start()
+        viewModel.start(site, activityId, parentViewModel)
 
         ((uiStates.last() as Content).items[1]).onClick.invoke()
 
@@ -51,7 +56,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     fun `given item is unchecked, when item is clicked, then item gets checked`() = test {
         val uiStates = initObservers().uiStates
 
-        viewModel.start()
+        viewModel.start(site, activityId, parentViewModel)
 
         ((uiStates.last() as Content).items[1]).onClick.invoke()
         ((uiStates.last() as Content).items[1]).onClick.invoke()
