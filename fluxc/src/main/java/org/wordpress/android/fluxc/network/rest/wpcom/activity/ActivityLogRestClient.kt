@@ -236,8 +236,8 @@ class ActivityLogRestClient(
         after: Date? = null,
         before: Date? = null
     ) {
-        after?.let { params["after"] = DateTimeUtils.iso8601UTCFromDate(it) }
-        before?.let { params["before"] = DateTimeUtils.iso8601UTCFromDate(it) }
+        after?.let { params["after"] = DateTimeUtils.iso8601FromDate(it) }
+        before?.let { params["before"] = DateTimeUtils.iso8601FromDate(it) }
     }
 
     private fun buildActivityPayload(
