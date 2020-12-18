@@ -34,9 +34,9 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start(site: SiteModel, activityLogId: String, parentViewModel: BackupDownloadViewModel) {
+    fun start(site: SiteModel, activityId: String, parentViewModel: BackupDownloadViewModel) {
         this.site = site
-        this.activityId = activityLogId
+        this.activityId = activityId
         this.parentViewModel = parentViewModel
 
         parentViewModel.setToolbarState(DetailsToolbarState())
