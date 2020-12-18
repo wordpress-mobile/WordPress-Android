@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
@@ -32,7 +32,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadSta
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStatusService.BackupDownloadProgress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStatusService.BackupDownloadProgress
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)

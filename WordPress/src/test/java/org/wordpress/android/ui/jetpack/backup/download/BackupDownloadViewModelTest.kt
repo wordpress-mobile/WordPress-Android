@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import org.assertj.core.api.Assertions.assertThat
@@ -8,7 +8,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.ToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState
 import org.wordpress.android.util.wizard.WizardManager
 
 @RunWith(MockitoJUnitRunner::class)

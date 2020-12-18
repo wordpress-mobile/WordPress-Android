@@ -1,10 +1,10 @@
-package org.wordpress.android.ui.jetpack.backup.details
+package org.wordpress.android.ui.jetpack.backup.download.details
 
 import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.ListItemUiState
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.ListItemUiState
 import org.wordpress.android.ui.utils.UiHelpers
 
 class BackupDownloadDetailsAdapter(private val uiHelpers: UiHelpers) :

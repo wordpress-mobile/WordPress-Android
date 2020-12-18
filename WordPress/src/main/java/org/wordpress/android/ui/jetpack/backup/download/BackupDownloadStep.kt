@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup
+package org.wordpress.android.ui.jetpack.backup.download
 
 import org.wordpress.android.util.wizard.WizardStep
 import javax.inject.Inject
