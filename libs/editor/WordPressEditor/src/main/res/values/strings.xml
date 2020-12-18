@@ -148,4 +148,6 @@
 
     <string name="menu_toolbar_title">Edit %s block"</string>
 
+    <!-- Error Messages -->
+    <string name="error_file_type_not_supported">This file type is not supported by your site\'s plan. </string>
 </resources>

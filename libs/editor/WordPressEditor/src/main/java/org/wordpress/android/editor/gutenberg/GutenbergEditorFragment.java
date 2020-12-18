@@ -103,6 +103,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private static final String USER_EVENT_KEY_TEMPLATE = "template";
 
+    private static final String FILE_TYPE_NOT_PERMITTED_ERROR =
+            "Sorry, this file type is not permitted for security reasons.";
+
     private static final int UNSUPPORTED_BLOCK_REQUEST_CODE = 1001;
 
     private boolean mHtmlModeEnabled;
@@ -1167,8 +1170,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId) {
-        getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId));
+    public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+        if (errorMessage.equals(FILE_TYPE_NOT_PERMITTED_ERROR)) {
+            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId),
+                    getString(R.string.error_file_type_not_supported));
+        } else {
+            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId), null);
+        }
+
         mFailedMediaIds.add(localMediaId);
         mUploadingMediaProgressMax.remove(localMediaId);
     }
