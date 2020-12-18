@@ -5,16 +5,13 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.drawable
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -36,16 +33,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initRecyclerView() {
-        initItemDecorator()
         initAdapter()
-    }
-
-    private fun initItemDecorator() {
-        requireContext().getDrawable(drawable.default_list_divider)?.let {
-            val itemDecorator = DividerItemDecoration(context, DividerItemDecoration.VERTICAL)
-            itemDecorator.setDrawable(it)
-            recycler_view.addItemDecoration(itemDecorator)
-        } ?: AppLog.w(AppLog.T.UTILS, "List divider null") // TODO: ashiagr add T.SCAN to AppLog in utils library
     }
 
     private fun initAdapter() {

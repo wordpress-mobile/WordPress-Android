@@ -6,9 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
 
@@ -41,23 +39,14 @@ class ScanViewModel @Inject constructor(
         scanStatusService.start(site)
     }
 
-    private fun buildContentUiState(model: ScanStateModel): Content {
-        val items = mutableListOf<ScanListItemState>()
-
-        val scanStateItemState = scanStateListItemBuilder.mapToScanState(
+    private fun buildContentUiState(model: ScanStateModel) = Content(
+        scanStateListItemBuilder.buildScanStateListItems(
             model,
             site,
             this@ScanViewModel::onScanButtonClicked,
             this@ScanViewModel::onFixAllButtonClicked
         )
-        items.add(scanStateItemState)
-        model.threats?.takeIf { scanStateItemState is ScanIdleState.ThreatsFound }?.let { threats ->
-            items.add(ThreatsHeaderItemState())
-            items.addAll(threats.map { ThreatItemState(it) })
-        }
-
-        return Content(items)
-    }
+    )
 
     fun onScanButtonClicked() { // TODO ashiagr to be implemented
     }
@@ -72,6 +61,6 @@ class ScanViewModel @Inject constructor(
     }
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
-        data class Content(val items: List<ScanListItemState>) : UiState()
+        data class Content(val items: List<JetpackListItemState>) : UiState()
     }
 }
