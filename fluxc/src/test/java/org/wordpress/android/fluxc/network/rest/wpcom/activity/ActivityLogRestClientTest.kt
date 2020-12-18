@@ -463,7 +463,7 @@ class ActivityLogRestClientTest {
 
         assertEquals(
                 payload.activityTypeModels[0],
-                ActivityTypeModel(activityType.key!!, activityType.name!!, activityType.count)
+                ActivityTypeModel(activityType.key!!, activityType.name!!, activityType.count!!)
         )
     }
 
