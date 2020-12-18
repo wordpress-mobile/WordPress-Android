@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 129
+        return 130
     }
 
     override fun getDbName(): String {
@@ -1383,22 +1383,46 @@ open class WellSqlConfig : DefaultWellConfig {
                     )
                 }
                 128 -> migrate(version) {
-                    db.execSQL("CREATE TABLE XPostSites (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "BLOG_ID INTEGER," +
-                            "TITLE TEXT," +
-                            "SITE_URL TEXT," +
-                            "SUBDOMAIN TEXT," +
-                            "BLAVATAR TEXT," +
-                            "UNIQUE (BLOG_ID) ON CONFLICT REPLACE)"
+                    db.execSQL("DROP TABLE IF EXISTS ThreatModel")
+                    db.execSQL(
+                        "CREATE TABLE ThreatModel (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                "LOCAL_SITE_ID INTEGER, REMOTE_SITE_ID INTEGER," +
+                                "THREAT_ID INTEGER," +
+                                "SIGNATURE TEXT NOT NULL," +
+                                "DESCRIPTION TEXT NOT NULL," +
+                                "STATUS TEXT NOT NULL," +
+                                "FIRST_DETECTED INTEGER," +
+                                "FIXED_ON INTEGER," +
+                                "FIXABLE_FILE TEXT," +
+                                "FIXABLE_FIXER TEXT," +
+                                "FIXABLE_TARGET TEXT," +
+                                "FILE_NAME TEXT," +
+                                "DIFF TEXT," +
+                                "EXTENSION TEXT," +
+                                "ROWS TEXT," +
+                                "CONTEXT TEXT)"
                     )
-                    db.execSQL("CREATE TABLE XPosts (" +
-                            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                            "SOURCE_SITE_ID INTEGER," +
-                            "TARGET_SITE_ID INTEGER," +
-                            "FOREIGN KEY(SOURCE_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
-                            "FOREIGN KEY(TARGET_SITE_ID) REFERENCES XPostSites(BLOG_ID)," +
-                            "UNIQUE (SOURCE_SITE_ID, TARGET_SITE_ID) ON CONFLICT IGNORE)")
+                }
+                129 -> migrate(version) {
+                    db.execSQL(
+                            "CREATE TABLE XPostSites (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "BLOG_ID INTEGER," +
+                                    "TITLE TEXT," +
+                                    "SITE_URL TEXT," +
+                                    "SUBDOMAIN TEXT," +
+                                    "BLAVATAR TEXT," +
+                                    "UNIQUE (BLOG_ID) ON CONFLICT REPLACE)"
+                    )
+                    db.execSQL(
+                            "CREATE TABLE XPosts (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "SOURCE_SITE_ID INTEGER," +
+                                    "TARGET_SITE_ID INTEGER," +
+                                    "FOREIGN KEY(SOURCE_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
+                                    "FOREIGN KEY(TARGET_SITE_ID) REFERENCES XPostSites(BLOG_ID)," +
+                                    "UNIQUE (SOURCE_SITE_ID, TARGET_SITE_ID) ON CONFLICT IGNORE)"
+                    )
                 }
             }
         }
