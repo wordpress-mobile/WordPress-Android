@@ -5,10 +5,10 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
-import org.wordpress.android.ui.jetpack.common.viewholders.ActionButtonViewHolder
-import org.wordpress.android.ui.jetpack.common.viewholders.DescriptionViewHolder
-import org.wordpress.android.ui.jetpack.common.viewholders.HeaderViewHolder
-import org.wordpress.android.ui.jetpack.common.viewholders.IconViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
@@ -28,10 +28,10 @@ class ScanAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder {
         return when (viewType) {
-            ViewType.ICON.id -> IconViewHolder(imageManager, parent)
-            ViewType.HEADER.id -> HeaderViewHolder(uiHelpers, parent)
-            ViewType.DESCRIPTION.id -> DescriptionViewHolder(uiHelpers, parent)
-            ViewType.ACTION_BUTTON.id -> ActionButtonViewHolder(uiHelpers, parent)
+            ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
+            ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
+            ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
+            ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")

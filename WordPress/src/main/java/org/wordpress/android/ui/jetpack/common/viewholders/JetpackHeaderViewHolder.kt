@@ -7,7 +7,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.utils.UiHelpers
 
-class HeaderViewHolder(
+class JetpackHeaderViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder(R.layout.jetpack_list_header_item, parent) {

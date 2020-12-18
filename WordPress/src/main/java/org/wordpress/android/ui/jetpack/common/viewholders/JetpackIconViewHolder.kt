@@ -7,7 +7,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.util.image.ImageManager
 
-class IconViewHolder(
+class JetpackIconViewHolder(
     private val imageManager: ImageManager,
     parent: ViewGroup
 ) : JetpackViewHolder(R.layout.jetpack_list_icon_item, parent) {

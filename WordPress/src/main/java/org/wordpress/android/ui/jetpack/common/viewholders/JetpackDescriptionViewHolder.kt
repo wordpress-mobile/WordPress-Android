@@ -7,7 +7,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.utils.UiHelpers
 
-class DescriptionViewHolder(
+class JetpackDescriptionViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder(R.layout.jetpack_list_description_item, parent) {
