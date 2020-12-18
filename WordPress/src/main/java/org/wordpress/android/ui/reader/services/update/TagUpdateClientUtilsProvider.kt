@@ -6,11 +6,11 @@ import javax.inject.Inject
 
 class TagUpdateClientUtilsProvider @Inject constructor() {
     fun getRestClientForTagUpdate(): RestClientUtils {
-        return WordPress.getRestClientUtilsV1_2()
+        return WordPress.getRestClientUtilsV1_3()
     }
 
     fun getTagUpdateEndpointURL(): String {
-        return WordPress.getRestClientUtilsV1_2().restClient.endpointURL
+        return WordPress.getRestClientUtilsV1_3().restClient.endpointURL
     }
 
     fun getRestClientForInterestTags(): RestClientUtils {

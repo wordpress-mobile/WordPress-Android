@@ -9,6 +9,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
@@ -189,6 +191,13 @@ class ActivityLogListFragment : Fragment() {
     private fun showDateRangePicker(initialDateRange: DateRange?) {
         val picker = MaterialDatePicker.Builder
                 .dateRangePicker()
+                .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
+                .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                                .setValidator(DateValidatorPointBackward.now())
+                                .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
+                                .build()
+                )
                 .setSelection(initialDateRange)
                 .build()
         initDateRangePickerButtonClickListener(picker)

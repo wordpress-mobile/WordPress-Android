@@ -12,6 +12,7 @@ import kotlinx.android.synthetic.main.backup_download_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Error
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel.UiState.Loading
@@ -66,12 +67,23 @@ class BackupDownloadDetailsFragment : Fragment() {
             }
         })
 
-        parentViewModel.setTitle(R.string.backup_download_details_page_title)
+        parentViewModel.setToolbarState(DetailsToolbarState())
         viewModel.start()
     }
 
     private fun showContent(content: Content) {
         ((recycler_view.adapter) as BackupDownloadDetailsAdapter).update(content.items)
+    }
+
+    // todo: annmarie -(REMOVE) this dummy method references layout files that lint says aren't
+    // used, but they will be in the next PR because there were too many changes for 1 PR
+    private fun dummyAccess() {
+        val buttonLayoutId = R.layout.backup_download_list_button_item
+        val checkboxLayoutId = R.layout.backup_download_list_checkbox_item
+        val descriptionLayoutId = R.layout.backup_download_list_description_item
+        val headerLayoutId = R.layout.backup_download_list_header_item
+        val subheaderLayoutId = R.layout.backup_download_list_subheader_item
+        val imageLayoutId = R.layout.backup_download_list_image_item
     }
 
     companion object {

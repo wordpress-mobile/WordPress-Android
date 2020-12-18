@@ -88,7 +88,7 @@ public class ReaderPostTable {
             + "is_bookmarked," // 46
             + "is_private_atomic," // 47
             + "tags," // 48
-            + "is_wpforteams_site"; // 49
+            + "organization_id"; // 49
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -139,7 +139,7 @@ public class ReaderPostTable {
             + "is_bookmarked," // 45
             + "is_private_atomic," // 46
             + "tags," // 47
-            + "is_wpforteams_site"; // 48
+            + "organization_id"; // 48
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -191,7 +191,7 @@ public class ReaderPostTable {
                    + " is_bookmarked INTEGER DEFAULT 0,"
                    + " is_private_atomic INTEGER DEFAULT 0,"
                    + " tags TEXT,"
-                   + " is_wpforteams_site INTEGER DEFAULT 0,"
+                   + " organization_id INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -775,14 +775,16 @@ public class ReaderPostTable {
             }
 
 
-            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites"
+            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites" or "P2"
             if (!isFollowed) {
                 if (blogId != 0) {
-                    db.delete("tbl_posts", "blog_id=? AND tag_name=?",
-                              new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
+                    db.delete("tbl_posts", "blog_id=? AND (tag_name=? OR tag_name=?)",
+                            new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES,
+                                    ReaderTag.TAG_SLUG_P2});
                 } else {
-                    db.delete("tbl_posts", "feed_id=? AND tag_name=?",
-                              new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
+                    db.delete("tbl_posts", "feed_id=? AND (tag_name=? OR tag_name=?)",
+                            new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES,
+                                    ReaderTag.TAG_SLUG_P2});
                 }
             }
 
@@ -895,7 +897,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(46, SqlUtils.boolToSql(post.isBookmarked));
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
                 stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
-                stmtPosts.bindLong(49, SqlUtils.boolToSql(post.isWpForTeams));
+                stmtPosts.bindLong(49, post.organizationId);
                 stmtPosts.execute();
             }
 
@@ -1149,7 +1151,7 @@ public class ReaderPostTable {
             post.setTags(ReaderUtils.getTagsFromCommaSeparatedSlugs(commaSeparatedTags));
         }
 
-        post.isWpForTeams = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_wpforteams_site")));
+        post.organizationId = c.getInt(c.getColumnIndex("organization_id"));
 
         return post;
     }

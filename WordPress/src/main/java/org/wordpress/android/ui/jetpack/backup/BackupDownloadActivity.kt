@@ -68,10 +68,11 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             }
         })
 
-        viewModel.screenTitleObservable.observe(this, { title ->
-            supportActionBar?.title = getString(title)
+        viewModel.toolbarStateObservable.observe(this, { state ->
+            supportActionBar?.title = getString(state.title)
+            supportActionBar?.setHomeAsUpIndicator(state.icon)
             // Change the activity title for accessibility purposes
-            this.title = getString(title)
+            this.title = getString(state.title)
         })
 
         // Canceled, Running, Complete -> (Running = kick off status)

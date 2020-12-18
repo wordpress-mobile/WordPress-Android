@@ -298,8 +298,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
-    private static final String TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG = "tag_gb_rollout_v2_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -1647,27 +1645,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showGutenbergInformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                mEditPostRepository.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
-                        : getString(R.string.dialog_gutenberg_informative_description_post),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void showGutenbergRolloutV2InformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                getString(R.string.dialog_gutenberg_informative_description_v2),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 

@@ -3,6 +3,7 @@ package org.wordpress.android.models;
 import android.text.TextUtils;
 
 import org.json.JSONObject;
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.util.JSONUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
@@ -15,10 +16,10 @@ public class ReaderBlog {
 
     public boolean isPrivate;
     public boolean isJetpack;
-    public boolean isWpForTeams;
     public boolean isFollowing;
     public boolean isNotificationsEnabled;
     public int numSubscribers;
+    public int organizationId;
 
     private String mName;
     private String mDescription;
@@ -55,10 +56,7 @@ public class ReaderBlog {
             if (jsonIcon != null) {
                 blog.setImageUrl(JSONUtils.getString(jsonIcon, "img"));
             }
-            JSONObject jsonOptions = jsonSite.optJSONObject("options");
-            if (jsonOptions != null) {
-                blog.isWpForTeams = JSONUtils.getBool(jsonOptions, "is_wpforteams_site");
-            }
+            blog.organizationId = jsonSite.optInt("organization_id");
         } else if (jsonFeed != null) {
             blog.feedId = jsonFeed.optLong("feed_ID");
             blog.setFeedUrl(JSONUtils.getString(jsonFeed, "feed_URL"));
@@ -161,6 +159,17 @@ public class ReaderBlog {
 
     public boolean isExternal() {
         return (feedId != 0);
+    }
+
+    public Organization getOrganization() {
+        return Organization.fromOrgId(organizationId);
+    }
+
+    /*
+     * returns true if this is a P2 or A8C site
+     */
+    public boolean isP2orA8C() {
+        return getOrganization() == Organization.P2 || getOrganization() == Organization.A8C;
     }
 
     /*

@@ -417,6 +417,8 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     EditTextUtils.hideSoftInput(mEditAdd);
                     showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
+                    // update tags if the site we added belongs to a tag we don't yet have
+                    performUpdate(EnumSet.of(UpdateTask.TAGS));
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }
