@@ -108,7 +108,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
             val after = requireNotNull(arguments).getLong(ARG_DATE_RANGE_AFTER)
             val before = requireNotNull(arguments).getLong(ARG_DATE_RANGE_BEFORE)
             Pair(after, before)
-        }  else {
+        } else {
             null
         }
         viewModel.start(
@@ -166,7 +166,11 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
 
     companion object {
         @JvmStatic
-        fun newInstance(remoteSiteId: RemoteId, initialSelection: List<String>, dateRange: DateRange?): ActivityLogTypeFilterFragment {
+        fun newInstance(
+            remoteSiteId: RemoteId,
+            initialSelection: List<String>,
+            dateRange: DateRange?
+        ): ActivityLogTypeFilterFragment {
             val args = Bundle()
             args.putStringArray(ARG_INITIAL_SELECTION, initialSelection.toTypedArray())
             dateRange?.first?.let { args.putLong(ARG_DATE_RANGE_AFTER, it) }

@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
+import androidx.core.util.Pair
+import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -17,6 +20,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesError
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityTypesFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState
@@ -24,6 +28,7 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import org.wordpress.android.viewmodel.activitylog.DateRange
 
 @InternalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
@@ -185,6 +190,18 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         ).containsExactlyElementsOf(initialSelection)
     }
 
+    @Test
+    fun `date range passed to the api, when provided on view model start`() = test {
+        init().uiStates
+        val captor: KArgumentCaptor<FetchActivityTypesPayload> = argumentCaptor()
+
+        startVM(dateRange = Pair(1L, 2L))
+
+        verify(activityLogStore).fetchActivityTypes(captor.capture())
+        assertThat(captor.firstValue.after!!.time).isEqualTo(1L)
+        assertThat(captor.firstValue.before!!.time).isEqualTo(2L)
+    }
+
     private suspend fun init(successResponse: Boolean = true, activityTypeCount: Int = 5): Observers {
         val uiStates = mutableListOf<UiState>()
         val dismissDialogEvents = mutableListOf<Unit>()
@@ -211,8 +228,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         return Observers(uiStates, dismissDialogEvents)
     }
 
-    private fun startVM(initialSelection: List<String> = listOf()) {
-        viewModel.start(RemoteId(0L), parentViewModel, initialSelection)
+    private fun startVM(initialSelection: List<String> = listOf(), dateRange: DateRange? = null) {
+        viewModel.start(RemoteId(0L), parentViewModel, dateRange, initialSelection)
     }
 
     private fun generateActivityTypes(count: Int): List<ActivityTypeModel> {
