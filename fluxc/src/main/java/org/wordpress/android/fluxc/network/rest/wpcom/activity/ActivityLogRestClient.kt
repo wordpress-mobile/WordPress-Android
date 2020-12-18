@@ -13,6 +13,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Credentials
+import org.wordpress.android.fluxc.network.Response
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -198,9 +199,7 @@ class ActivityLogRestClient(
                 ActivityTypesResponse::class.java
         )
         return when (response) {
-            is Success -> {
-                buildActivityTypesPayload(response.data, remoteSiteId)
-            }
+            is Success -> buildActivityTypesPayload(response.data, remoteSiteId)
             is Error -> {
                 val errorType = NetworkErrorMapper.map(
                         response.error,
@@ -456,7 +455,7 @@ class ActivityLogRestClient(
     data class ActivityTypesResponse(
         @JsonAdapter(ActivityTypesDeserializer::class) val groups: Groups?,
         val totalItems: Int?
-    ) {
+    ) : Response {
         data class Groups(
             val activityTypes: List<ActivityType>
         )

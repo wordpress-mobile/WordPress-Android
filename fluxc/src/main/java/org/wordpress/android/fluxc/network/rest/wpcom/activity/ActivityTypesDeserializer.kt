@@ -62,8 +62,6 @@ class ActivityTypesDeserializer : JsonDeserializer<Groups?> {
                 )
             } catch (ex: ClassCastException) {
                 null
-            } catch (ex: NumberFormatException) {
-                null
             } catch (ex: IllegalStateException) {
                 null
             }
