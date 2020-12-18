@@ -6,9 +6,6 @@ import com.google.gson.JsonElement
 import com.google.gson.JsonObject
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivityTypesResponse.ActivityType
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivityTypesResponse.Groups
-import java.lang.ClassCastException
-import java.lang.IllegalStateException
-import java.lang.NumberFormatException
 import java.lang.reflect.Type
 
 class ActivityTypesDeserializer : JsonDeserializer<Groups?> {
