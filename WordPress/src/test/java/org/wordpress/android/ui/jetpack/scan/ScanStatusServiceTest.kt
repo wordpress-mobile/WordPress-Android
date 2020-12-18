@@ -23,7 +23,6 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.UNAVAILABLE
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.OnScanStateFetched
-import org.wordpress.android.fluxc.store.ThreatStore
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType.AUTHORIZATION_REQUIRED
 import org.wordpress.android.test
@@ -36,7 +35,6 @@ class ScanStatusServiceTest {
     private val scanStateCaptor = argumentCaptor<FetchScanStatePayload>()
 
     @Mock private lateinit var scanStore: ScanStore
-    @Mock private lateinit var threatStore: ThreatStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanFeatureConfig: ScanFeatureConfig
 
@@ -44,22 +42,21 @@ class ScanStatusServiceTest {
     private var scanAvailable: Boolean? = null
 
     private val scanStateModel = ScanStateModel(
-            state = IDLE,
-            reason = null,
-            threats = null,
-            credentials = null,
-            hasCloud = false,
-            mostRecentStatus = null,
-            currentStatus = null
+        state = IDLE,
+        reason = null,
+        threats = null,
+        credentials = null,
+        hasCloud = false,
+        mostRecentStatus = null,
+        currentStatus = null
     )
 
     @Before
     fun setUp() = runBlocking<Unit> {
         scanStatusService = ScanStatusService(
-                scanStore,
-                threatStore,
-                scanFeatureConfig,
-                TEST_SCOPE
+            scanStore,
+            scanFeatureConfig,
+            TEST_SCOPE
         )
         scanAvailable = null
         scanStatusService.scanAvailable.observeForever { scanAvailable = it }
@@ -96,7 +93,7 @@ class ScanStatusServiceTest {
     @Test
     fun emitsScanNotAvailableOnError() = test {
         whenever(scanStore.fetchScanState(any())).thenReturn(
-                OnScanStateFetched(ScanStateError(AUTHORIZATION_REQUIRED), FETCH_SCAN_STATE)
+            OnScanStateFetched(ScanStateError(AUTHORIZATION_REQUIRED), FETCH_SCAN_STATE)
         )
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
 
