@@ -19,7 +19,7 @@ class AudioBlockProcessor(localId: String?, mediaFile: MediaFile?) : BlockProces
     }
 
     override fun processBlockJsonAttributes(jsonAttributes: JsonObject?): Boolean {
-        val id = jsonAttributes?.get(FileBlockProcessor.ID_ATTRIBUTE)
+        val id = jsonAttributes?.get(ID_ATTRIBUTE)
 
         return if (id != null && !id.isJsonNull && id.asString == mLocalId) {
             jsonAttributes.apply {
