@@ -6,11 +6,14 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItem
 import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -23,16 +26,24 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
+    private lateinit var site: SiteModel
+    private lateinit var activityId: String
+    private lateinit var parentViewModel: BackupDownloadViewModel
     private var isStarted: Boolean = false
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    fun start() {
+    fun start(site: SiteModel, activityLogId: String, parentViewModel: BackupDownloadViewModel) {
+        this.site = site
+        this.activityId = activityLogId
+        this.parentViewModel = parentViewModel
+
+        parentViewModel.setToolbarState(DetailsToolbarState())
+
         if (isStarted) return
         isStarted = true
 
-        // todo: annmarie - this is a temp name until useCase has been added for record dets :)
         getData()
     }
 
