@@ -1391,7 +1391,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     }
 
     @Override
-    public void onMediaUploadFailed(final String localMediaId) {
+    public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
         if (!isAdded() || mContent == null) {
             return;
         }
