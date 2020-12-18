@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import androidx.lifecycle.MutableLiveData
-import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.junit.Before
 import org.junit.Test
@@ -35,7 +34,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         viewModel = ScanViewModel(scanStatusService, scanStateItemBuilder)
-        whenever(scanStatusService.scanState).thenReturn(scanState)
+//        whenever(scanStatusService.scanState).thenReturn(scanState)
     }
 
     @Test
