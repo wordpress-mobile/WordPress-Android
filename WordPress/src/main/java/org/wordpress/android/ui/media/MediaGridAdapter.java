@@ -443,6 +443,11 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
     }
 
+    @Override public void onViewRecycled(@NonNull GridViewHolder holder) {
+        mImageManager.cancelRequestAndClearImageView(holder.mImageView);
+        super.onViewRecycled(holder);
+    }
+
     /*
      * loads the thumbnail for the passed video media item - works with both local and network videos
      */
