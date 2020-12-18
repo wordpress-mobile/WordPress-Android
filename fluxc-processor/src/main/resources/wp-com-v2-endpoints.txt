@@ -20,6 +20,8 @@
 /sites/$site/block-layouts
 /common-block-layouts
 
+/sites/$site/xposts
+
 /users/username/suggestions/
 
 /segments
