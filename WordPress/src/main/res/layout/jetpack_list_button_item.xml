@@ -6,14 +6,13 @@
     android:layout_width="match_parent"
     android:layout_height="?attr/listPreferredItemHeight">
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/backup_download_description"
-        style="@style/Jetpack.Description"
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button"
+        style="@style/Jetpack.PrimaryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="October 21, 2020 at 3:40 AM is the selected point to create a downloadable backup."
-        android:text="@string/backup_download_details_description"/>
+        tools:text="@string/backup_download_details_action_button"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

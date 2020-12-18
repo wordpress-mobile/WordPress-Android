@@ -28,7 +28,7 @@ class ScanAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder {
         return when (viewType) {
-            ViewType.IMAGE.id -> IconViewHolder(imageManager, parent)
+            ViewType.ICON.id -> IconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> HeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> DescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> ActionButtonViewHolder(uiHelpers, parent)

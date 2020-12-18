@@ -3336,7 +3336,6 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
-    <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
@@ -3345,4 +3344,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
+
+    <string name="jetpack_icon_content_description">icon</string>
+
 </resources>
