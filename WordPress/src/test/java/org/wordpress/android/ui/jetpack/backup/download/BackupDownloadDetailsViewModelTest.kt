@@ -15,7 +15,7 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 
 @InternalCoroutinesApi
-class    : BaseUnitTest() {
+class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadDetailsViewModel
     private lateinit var availableItemsProvider: BackupAvailableItemsProvider
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
