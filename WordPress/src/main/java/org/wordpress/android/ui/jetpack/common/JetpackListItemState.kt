@@ -9,7 +9,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
     data class IconState(
         @DrawableRes val icon: Int,
         val contentDescription: UiString
-    ) : JetpackListItemState(ViewType.IMAGE)
+    ) : JetpackListItemState(ViewType.ICON)
 
     data class HeaderState(val text: UiString) : JetpackListItemState(ViewType.HEADER)
 

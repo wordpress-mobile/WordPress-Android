@@ -7,10 +7,10 @@
     android:layout_height="?attr/listPreferredItemHeight">
 
     <ImageView
-        android:id="@+id/backup_download_icon"
+        android:id="@+id/icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/backup_download_details_icon_content_description"
+        android:contentDescription="@string/jetpack_icon_content_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"

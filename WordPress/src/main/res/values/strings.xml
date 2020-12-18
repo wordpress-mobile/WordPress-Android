@@ -3345,4 +3345,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
+
+    <string name="jetpack_icon_content_description">icon</string>
+
 </resources>
