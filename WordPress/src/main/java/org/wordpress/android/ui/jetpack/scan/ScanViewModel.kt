@@ -7,12 +7,14 @@ import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
 
 class ScanViewModel @Inject constructor(
-    private val scanStatusService: ScanStatusService
+    private val scanStatusService: ScanStatusService,
+    private val scanStateListItemBuilder: ScanStateListItemBuilder
 ) : ViewModel() {
     private var isStarted = false
 
@@ -40,15 +42,27 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun buildContentUiState(model: ScanStateModel): Content {
-        val scanStateItem = when (model.state) {
-            ScanStateModel.State.IDLE ->
-                model.threats?.let { ScanIdleState.ThreatsFound() }
-                    ?: ScanIdleState.ThreatsNotFound()
-            ScanStateModel.State.SCANNING -> ScanScanningState()
-            ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
-                ScanScanningState() // TODO: ashiagr filter out
+        val items = mutableListOf<ScanListItemState>()
+
+        val scanStateItemState = scanStateListItemBuilder.mapToScanState(
+            model,
+            site,
+            this@ScanViewModel::onScanButtonClicked,
+            this@ScanViewModel::onFixAllButtonClicked
+        )
+        items.add(scanStateItemState)
+        model.threats?.takeIf { scanStateItemState is ScanIdleState.ThreatsFound }?.let { threats ->
+            items.add(ThreatsHeaderItemState())
+            items.addAll(threats.map { ThreatItemState(it) })
         }
-        return Content(listOf(scanStateItem))
+
+        return Content(items)
+    }
+
+    fun onScanButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
     }
 
     override fun onCleared() {

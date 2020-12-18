@@ -1039,13 +1039,24 @@
     <string name="scan">Scan</string>
 
     <string name="scan_state_icon">Scan state icon</string>
+    <string name="scan_now">Scan now</string>
+    <string name="scan_again">Scan again</string>
     <string name="scan_scanning_title">Preparing to scan</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
-    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.
+    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
         \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
-    <string name="scan_idle_no_threats_found_description">The last Jetpack scan ran 7 hours ago and everything looked great. Run a manual scan now or wait for Jetpack to scan your site later today.</string>
-    <string name="scan_idle_threats_found_description">The scan found %d potential threats with %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
+    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_this_site">this site</string>
+    <string name="scan_in_hours_ago">%s hours ago</string>
+    <string name="scan_in_minutes_ago">%s minutes ago</string>
+    <string name="scan_in_few_seconds">in a few seconds</string>
+
+    <!-- threats -->
+    <string name="threats_fix_all">Fix all</string>
+    <string name="threats_found">Threats found</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
