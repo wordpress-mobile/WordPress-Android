@@ -7,5 +7,6 @@ enum class ViewType(val id: Int) {
     ACTION_BUTTON(3),
     THREATS_HEADER(4),
     THREAT_ITEM(5),
-    CHECKBOX(6)
+    CHECKBOX(6),
+    BACKUP_SUB_HEADER(7)
 }
