@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
-import android.widget.ImageView.ScaleType.FIT_END
 import kotlinx.android.synthetic.main.jetpack_list_icon_item.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
