@@ -9,9 +9,9 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItem
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
@@ -22,7 +22,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadDetailsViewModel @Inject constructor(
-    private val backupAvailableItemsProvider: BackupAvailableItemsProvider,
+    private val backupAvailableItemsProvider: JetpackAvailableItemsProvider,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -54,7 +54,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
         }
     }
 
-    private suspend fun buildContentUiState(items: List<BackupAvailableItem>): Content {
+    private suspend fun buildContentUiState(items: List<JetpackAvailableItem>): Content {
         return withContext(bgDispatcher) {
             val availableItemsListItems: List<ListItemUiState> = items.map {
                 ListItemUiState(
@@ -72,12 +72,12 @@ class BackupDownloadDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onItemClicked(backupAvailableItemType: BackupAvailableItemType) {
+    private fun onItemClicked(jetpackAvailableItemType: JetpackAvailableItemType) {
         // todo: annmarie update the checkboxes - keep a running list of selected checkboxes, so
         // they can be persisted on rotation
         (_uiState.value as? Content)?.let { content ->
             val updatedList = content.items.map { itemUiState ->
-                if (itemUiState.availableItemType == backupAvailableItemType) {
+                if (itemUiState.availableItemType == jetpackAvailableItemType) {
                     itemUiState.copy(checked = !itemUiState.checked)
                 } else {
                     itemUiState
@@ -100,7 +100,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     }
 
     data class ListItemUiState(
-        val availableItemType: BackupAvailableItemType,
+        val availableItemType: JetpackAvailableItemType,
         val label: UiString,
         val checked: Boolean = false,
         val onClick: (() -> Unit)

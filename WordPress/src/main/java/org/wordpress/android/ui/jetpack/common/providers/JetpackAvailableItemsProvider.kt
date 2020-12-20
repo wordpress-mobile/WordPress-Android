@@ -1,56 +1,56 @@
-package org.wordpress.android.ui.jetpack
+package org.wordpress.android.ui.jetpack.common.providers
 
 import androidx.annotation.StringRes
-import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.CONTENTS
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.MEDIA_UPLOADS
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.ROOTS
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.SQLS
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.THEMES
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider.BackupAvailableItemType.PLUGINS
+import org.wordpress.android.R.string
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.ROOTS
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.PLUGINS
 import javax.inject.Inject
 import javax.inject.Singleton
 
 /**
- * This class provides the available item choices for Jetpack Backup Download
+ * This class provides the available item choices for Jetpack Backup Download & Restore
  */
 @Singleton
-class BackupAvailableItemsProvider @Inject constructor() {
-    fun getAvailableItems(): List<BackupAvailableItem> {
+class JetpackAvailableItemsProvider @Inject constructor() {
+    fun getAvailableItems(): List<JetpackAvailableItem> {
         return listOf(
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         THEMES,
-                        R.string.backup_item_themes
+                        string.backup_item_themes
                 ),
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         PLUGINS,
-                        R.string.backup_item_plugins
+                        string.backup_item_plugins
                 ),
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         MEDIA_UPLOADS,
-                        R.string.backup_item_media_uploads
+                        string.backup_item_media_uploads
                 ),
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         SQLS,
-                        R.string.backup_item_sqls
+                        string.backup_item_sqls
                 ),
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         ROOTS,
-                        R.string.backup_item_roots
+                        string.backup_item_roots
                 ),
-                BackupAvailableItem(
+                JetpackAvailableItem(
                         CONTENTS,
-                        R.string.backup_item_contents
+                        string.backup_item_contents
                 )
         )
     }
 
-    data class BackupAvailableItem(
-        val availableItemType: BackupAvailableItemType,
+    data class JetpackAvailableItem(
+        val availableItemType: JetpackAvailableItemType,
         @StringRes val labelResId: Int
     )
 
-    enum class BackupAvailableItemType {
+    enum class JetpackAvailableItemType {
         THEMES,
         PLUGINS,
         MEDIA_UPLOADS,

@@ -5,14 +5,15 @@ import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 
 @RunWith(MockitoJUnitRunner::class)
-class BackupAvailableItemsProviderTest {
-    private lateinit var provider: BackupAvailableItemsProvider
+class JetpackAvailableItemsProviderTest {
+    private lateinit var provider: JetpackAvailableItemsProvider
 
     @Before
     fun setUp() {
-        provider = BackupAvailableItemsProvider()
+        provider = JetpackAvailableItemsProvider()
     }
 
     @Test

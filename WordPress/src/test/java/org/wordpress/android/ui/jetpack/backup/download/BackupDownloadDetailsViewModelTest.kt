@@ -9,7 +9,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.BackupAvailableItemsProvider
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
@@ -17,14 +17,14 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 @InternalCoroutinesApi
 class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadDetailsViewModel
-    private lateinit var availableItemsProvider: BackupAvailableItemsProvider
+    private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
     private val activityId = "1"
 
     @Before
     fun setUp() {
-        availableItemsProvider = BackupAvailableItemsProvider()
+        availableItemsProvider = JetpackAvailableItemsProvider()
         viewModel = BackupDownloadDetailsViewModel(
                 availableItemsProvider,
                 TEST_DISPATCHER,
