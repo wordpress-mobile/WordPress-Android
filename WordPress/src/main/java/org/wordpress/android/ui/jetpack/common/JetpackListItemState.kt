@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.common
 
 import androidx.annotation.DrawableRes
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString
 
 abstract class JetpackListItemState(open val type: ViewType) {
@@ -21,4 +22,11 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val isSecondary: Boolean = false,
         val onClick: () -> Unit
     ) : JetpackListItemState(ViewType.ACTION_BUTTON)
+
+    data class CheckboxState(
+        val availableItemType: JetpackAvailableItemType,
+        val label: UiString,
+        val checked: Boolean = false,
+        val onClick: (() -> Unit)
+    ) : JetpackListItemState(ViewType.CHECKBOX)
 }
