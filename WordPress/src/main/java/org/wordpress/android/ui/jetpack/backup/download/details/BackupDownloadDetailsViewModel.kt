@@ -4,26 +4,26 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
-import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
-import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
+import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
+import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadDetailsViewModel @Inject constructor(
-    private val backupAvailableItemsProvider: JetpackAvailableItemsProvider,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val availableItemsProvider: JetpackAvailableItemsProvider,
+    private val activityLogStore: ActivityLogStore,
+    private val stateListItemBuilder: BackupDownloadDetailsStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
@@ -49,38 +49,40 @@ class BackupDownloadDetailsViewModel @Inject constructor(
 
     private fun getData() {
         launch {
-            val availableItems = backupAvailableItemsProvider.getAvailableItems()
-            _uiState.value = buildContentUiState(availableItems)
-        }
-    }
-
-    private suspend fun buildContentUiState(items: List<JetpackAvailableItem>): Content {
-        return withContext(bgDispatcher) {
-            val availableItemsListItems: List<ListItemUiState> = items.map {
-                ListItemUiState(
-                        availableItemType = it.availableItemType,
-                        label = UiStringRes(it.labelResId),
-                        checked = true,
-                        onClick = { onItemClicked(it.availableItemType) }
+            val availableItems = availableItemsProvider.getAvailableItems()
+            // todo: annmarie move this to a useCase
+            val activityLogModel = activityLogStore.getActivityLogItemByActivityId(activityId)
+            if (activityLogModel != null) {
+                _uiState.value = Content(
+                        items = stateListItemBuilder.buildDetailsListStateItems(
+                                availableItems = availableItems,
+                                activityLogModel = activityLogModel,
+                                onCreateDownloadClick = this@BackupDownloadDetailsViewModel::onCreateDownloadClick,
+                                onCheckboxItemClicked = this@BackupDownloadDetailsViewModel::onCheckboxItemClicked
+                        )
                 )
+            } else {
+                // todo: annmarie - snackbar message here and leave the wizard?
             }
-            // todo: annmarie - swap out the placeholder for date from record
-            Content(
-                    description = UiStringRes(R.string.backup_download_details_description),
-                    items = availableItemsListItems
-            )
         }
     }
 
-    private fun onItemClicked(jetpackAvailableItemType: JetpackAvailableItemType) {
-        // todo: annmarie update the checkboxes - keep a running list of selected checkboxes, so
-        // they can be persisted on rotation
+    private fun onCreateDownloadClick() {
+        // todo: annmarie implement onActionButtonClicked
+    }
+
+    private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
         (_uiState.value as? Content)?.let { content ->
-            val updatedList = content.items.map { itemUiState ->
-                if (itemUiState.availableItemType == jetpackAvailableItemType) {
-                    itemUiState.copy(checked = !itemUiState.checked)
+            val updatedList = content.items.map { contentState ->
+                if (contentState.type == CHECKBOX) {
+                    contentState as CheckboxState
+                    if (contentState.availableItemType == itemType) {
+                        contentState.copy(checked = !contentState.checked)
+                    } else {
+                        contentState
+                    }
                 } else {
-                    itemUiState
+                    contentState
                 }
             }
             _uiState.postValue(content.copy(items = updatedList))
@@ -94,15 +96,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
         data class Loading(val message: String) : UiState()
 
         data class Content(
-            val description: UiString,
-            val items: List<ListItemUiState>
+            val items: List<JetpackListItemState>
         ) : UiState()
     }
-
-    data class ListItemUiState(
-        val availableItemType: JetpackAvailableItemType,
-        val label: UiString,
-        val checked: Boolean = false,
-        val onClick: (() -> Unit)
-    )
 }
