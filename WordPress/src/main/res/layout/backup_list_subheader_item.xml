@@ -7,7 +7,7 @@
     android:layout_height="?attr/listPreferredItemHeight">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/backup_download_secondary_header"
+        android:id="@+id/text"
         style="@style/Jetpack.SecondaryHeader"
         android:layout_marginTop="13dp"
         app:layout_constraintStart_toStartOf="parent"
