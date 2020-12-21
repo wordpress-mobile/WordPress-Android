@@ -9,12 +9,14 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ActivityLogAction
 import org.wordpress.android.fluxc.action.ActivityLogAction.BACKUP_DOWNLOAD
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITY_TYPES
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest
@@ -63,6 +65,11 @@ class ActivityLogStore
             FETCH_BACKUP_DOWNLOAD_STATE -> {
                 coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_BACKUP_DOWNLOAD_STATE") {
                     emitChange(fetchBackupDownloadState(action.payload as FetchBackupDownloadStatePayload))
+                }
+            }
+            FETCH_ACTIVITY_TYPES -> {
+                coroutineEngine.launch(AppLog.T.API, this, "ActivityLog: On FETCH_ACTIVITY_TYPES") {
+                    emitChange(fetchActivityTypes(action.payload as FetchActivityTypesPayload))
                 }
             }
         }
@@ -132,6 +139,15 @@ class ActivityLogStore
         return storeBackupDownloadState(payload, FETCH_BACKUP_DOWNLOAD_STATE)
     }
 
+    suspend fun fetchActivityTypes(fetchActivityTypesPayload: FetchActivityTypesPayload): OnActivityTypesFetched {
+        val payload = activityLogRestClient.fetchActivityTypes(
+                fetchActivityTypesPayload.remoteSiteId,
+                fetchActivityTypesPayload.after,
+                fetchActivityTypesPayload.before
+        )
+        return emitActivityTypesResult(payload, FETCH_ACTIVITY_TYPES)
+    }
+
     private fun storeActivityLog(payload: FetchedActivityLogPayload, action: ActivityLogAction): OnActivityLogFetched {
         return if (payload.error != null) {
             OnActivityLogFetched(payload.error, action)
@@ -196,6 +212,22 @@ class ActivityLogStore
         }
     }
 
+    private fun emitActivityTypesResult(
+        payload: FetchedActivityTypesResultPayload,
+        action: ActivityLogAction
+    ): OnActivityTypesFetched {
+        return if (payload.error != null) {
+            OnActivityTypesFetched(payload.remoteSiteId, payload.error, action)
+        } else {
+            OnActivityTypesFetched(
+                    causeOfChange = action,
+                    remoteSiteId = payload.remoteSiteId,
+                    activityTypeModels = payload.activityTypeModels,
+                    totalItems = payload.totalItems
+            )
+        }
+    }
+
     // Actions
     data class OnActivityLogFetched(
         val rowsAffected: Int,
@@ -244,6 +276,21 @@ class ActivityLogStore
             Store.OnChanged<BackupDownloadStatusError>() {
         constructor(error: BackupDownloadStatusError, causeOfChange: ActivityLogAction) :
                 this(causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnActivityTypesFetched(
+        val causeOfChange: ActivityLogAction,
+        val remoteSiteId: Long,
+        val activityTypeModels: List<ActivityTypeModel>,
+        val totalItems: Int = 0
+    ) : Store.OnChanged<ActivityTypesError>() {
+        constructor(
+            remoteSiteId: Long,
+            error: ActivityTypesError,
+            causeOfChange: ActivityLogAction
+        ) : this(remoteSiteId = remoteSiteId, causeOfChange = causeOfChange, activityTypeModels = listOf()) {
             this.error = error
         }
     }
@@ -333,6 +380,25 @@ class ActivityLogStore
         }
     }
 
+    class FetchActivityTypesPayload(
+        val remoteSiteId: Long,
+        val after: Date?,
+        val before: Date?
+    ) : Payload<BaseRequest.BaseNetworkError>()
+
+    class FetchedActivityTypesResultPayload(
+        val remoteSiteId: Long,
+        val activityTypeModels: List<ActivityTypeModel>,
+        val totalItems: Int = 0
+    ) : Payload<ActivityTypesError>() {
+        constructor(error: ActivityTypesError, remoteSiteId: Long) : this(
+                remoteSiteId = remoteSiteId,
+                activityTypeModels = listOf()
+        ) {
+            this.error = error
+        }
+    }
+
     data class RewindRequestTypes(
         val themes: Boolean,
         val plugins: Boolean,
@@ -402,4 +468,12 @@ class ActivityLogStore
 
     class BackupDownloadStatusError(var type: BackupDownloadStatusErrorType, var message: String? = null) :
             OnChangedError
+
+    enum class ActivityTypesErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class ActivityTypesError(var type: ActivityTypesErrorType, var message: String? = null) : OnChangedError
 }
