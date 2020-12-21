@@ -134,7 +134,7 @@ class ActivityLogListFragment : Fragment() {
         })
 
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
-            showActivityTypeFilterDialog(event.siteId, event.initialSelection)
+            showActivityTypeFilterDialog(event.siteId, event.initialSelection, event.dateRange)
         })
 
         viewModel.showDateRangePicker.observe(viewLifecycleOwner, { event ->
@@ -210,8 +210,12 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
+    private fun showActivityTypeFilterDialog(
+        remoteSiteId: RemoteId,
+        initialSelection: List<String>,
+        dateRange: DateRange?
+    ) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection, dateRange)
                 .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
     }
 

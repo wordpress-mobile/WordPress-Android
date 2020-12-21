@@ -7,30 +7,34 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
+import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.ListItemUiState.ActivityType
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
-import org.wordpress.android.ui.activitylog.list.filter.DummyActivityTypesProvider.DummyActivityType
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
+import org.wordpress.android.viewmodel.activitylog.DateRange
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
 class ActivityLogTypeFilterViewModel @Inject constructor(
-    private val dummyActivityTypesProvider: DummyActivityTypesProvider,
+    private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var remoteSiteId: RemoteId
     private lateinit var parentViewModel: ActivityLogViewModel
-    private lateinit var initialSelection: List<Int>
+    private lateinit var initialSelection: List<String>
+    private var dateRange: DateRange? = null
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
@@ -41,25 +45,32 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     fun start(
         remoteSiteId: RemoteId,
         parentViewModel: ActivityLogViewModel,
-        initialSelection: List<Int>
+        dateRange: DateRange?,
+        initialSelection: List<String>
     ) {
         if (isStarted) return
         isStarted = true
         this.remoteSiteId = remoteSiteId
         this.parentViewModel = parentViewModel
         this.initialSelection = initialSelection
-
+        this.dateRange = dateRange
         fetchAvailableActivityTypes()
     }
 
     private fun fetchAvailableActivityTypes() {
         launch {
             _uiState.value = FullscreenLoading
-            val response = dummyActivityTypesProvider.fetchAvailableActivityTypes(remoteSiteId.value)
+            val response = activityLogStore.fetchActivityTypes(
+                    FetchActivityTypesPayload(
+                            remoteSiteId.value,
+                            dateRange?.first?.let { Date(it) },
+                            dateRange?.second?.let { Date(it) }
+                    )
+            )
             if (response.isError) {
                 _uiState.value = buildErrorUiState()
             } else {
-                _uiState.value = buildContentUiState(response.activityTypes)
+                _uiState.value = buildContentUiState(response.activityTypeModels)
             }
         }
     }
@@ -67,20 +78,18 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     private fun buildErrorUiState() =
             UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
-    private suspend fun buildContentUiState(activityTypes: List<DummyActivityType>): Content {
+    private suspend fun buildContentUiState(activityTypes: List<ActivityTypeModel>): Content {
         return withContext(bgDispatcher) {
-            // TODO malinjir replace the hardcoded header title
             val headerListItem = ListItemUiState.SectionHeader(
                     UiStringRes(R.string.activity_log_activity_type_filter_header)
             )
-            // TODO malinjir replace "it.toString()" with activity type name
             val activityTypeListItems: List<ListItemUiState.ActivityType> = activityTypes
                     .map {
                         ListItemUiState.ActivityType(
-                                id = it.id,
-                                title = UiStringText(it.toString()),
-                                onClick = { onItemClicked(it.id) },
-                                checked = initialSelection.contains(it.id)
+                                id = it.key,
+                                title = UiStringText("${it.name} (${it.count})"),
+                                onClick = { onItemClicked(it.key) },
+                                checked = initialSelection.contains(it.key)
                         )
                     }
             Content(
@@ -93,7 +102,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         }
     }
 
-    private fun onItemClicked(itemId: Int) {
+    private fun onItemClicked(itemId: String) {
         (_uiState.value as? Content)?.let { content ->
             val updatedList = content.items.map { itemUiState ->
                 if (itemUiState is ListItemUiState.ActivityType && itemUiState.id == itemId) {
@@ -130,9 +139,9 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 }
             }
 
-    private fun getSelectedActivityTypeIds(): List<Int> =
+    private fun getSelectedActivityTypeIds(): List<String> =
             (_uiState.value as Content).items
-                    .filterIsInstance(ActivityType::class.java)
+                    .filterIsInstance(ListItemUiState.ActivityType::class.java)
                     .filter { it.checked }
                     .map { it.id }
 
@@ -170,7 +179,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         ) : ListItemUiState()
 
         data class ActivityType(
-            val id: Int,
+            val id: String,
             val title: UiString,
             val checked: Boolean = false,
             val onClick: (() -> Unit)
