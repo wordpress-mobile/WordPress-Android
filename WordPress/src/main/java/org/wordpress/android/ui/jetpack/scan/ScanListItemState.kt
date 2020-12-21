@@ -7,8 +7,6 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class ScanListItemState(override val type: ViewType) : JetpackListItemState(type) {
-    override fun longId() = hashCode().toLong()
-
     data class ThreatsHeaderItemState(val text: UiString = UiStringRes(R.string.threats_found)) : ScanListItemState(
         ViewType.THREATS_HEADER
     )
