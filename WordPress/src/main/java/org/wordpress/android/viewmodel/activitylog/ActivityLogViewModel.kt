@@ -39,6 +39,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.Activity
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -219,7 +220,14 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onDateRangeSelected(dateRange: DateRange?) {
         currentDateRangeFilter = dateRange
-        // TODO malinjir: refetch/load data
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
+    }
+
+    fun onClearDateRangeFilterClicked() {
+        currentDateRangeFilter = null
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
     }
 
     fun onActivityTypeFilterClicked() {
@@ -232,7 +240,14 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onActivityTypesSelected(activityTypeIds: List<String>) {
         currentActivityTypeFilter = activityTypeIds
-        // TODO malinjir: refetch/load data
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
+    }
+
+    fun onClearActivityTypeFilterClicked() {
+        currentActivityTypeFilter = listOf()
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -313,7 +328,13 @@ class ActivityLogViewModel @Inject constructor(
         if (canRequestEventsUpdate(isLoadingMore)) {
             val newStatus = if (isLoadingMore) LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.value = newStatus
-            val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
+            val payload = ActivityLogStore.FetchActivityLogPayload(
+                    site,
+                    isLoadingMore,
+                    currentDateRangeFilter?.first?.let { Date(it) },
+                    currentDateRangeFilter?.second?.let { Date(it) },
+                    currentActivityTypeFilter
+            )
             launch {
                 val result = activityLogStore.fetchActivities(payload)
                 onActivityLogFetched(result, isLoadingMore)
