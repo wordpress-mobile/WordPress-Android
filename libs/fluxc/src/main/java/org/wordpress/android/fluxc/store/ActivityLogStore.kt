@@ -97,6 +97,10 @@ class ActivityLogStore
         return activityLogSqlUtils.getBackupDownloadStatusForSite(site)
     }
 
+    fun clearActivityLogCache(site: SiteModel) {
+        activityLogSqlUtils.deleteActivityLog(site)
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
