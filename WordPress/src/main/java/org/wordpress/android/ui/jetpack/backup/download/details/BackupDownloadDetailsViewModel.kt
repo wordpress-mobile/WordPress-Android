@@ -5,10 +5,10 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.GetActivityLogItemUseCase
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -21,7 +21,7 @@ import javax.inject.Named
 
 class BackupDownloadDetailsViewModel @Inject constructor(
     private val availableItemsProvider: JetpackAvailableItemsProvider,
-    private val activityLogStore: ActivityLogStore,
+    private val getActivityLogItemUseCase: GetActivityLogItemUseCase,
     private val stateListItemBuilder: BackupDownloadDetailsStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -49,8 +49,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private fun getData() {
         launch {
             val availableItems = availableItemsProvider.getAvailableItems()
-            // todo: annmarie move this to a useCase
-            val activityLogModel = activityLogStore.getActivityLogItemByActivityId(activityId)
+            val activityLogModel = getActivityLogItemUseCase.get(activityId)
             if (activityLogModel != null) {
                 _uiState.value = Content(
                         items = stateListItemBuilder.buildDetailsListStateItems(
