@@ -40,6 +40,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.CAN_LOAD_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
@@ -365,9 +366,10 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun requestEventsUpdate(loadMore: Boolean) {
-        val isLoadingMore = fetchActivitiesJob != null && _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
-        if (isLoadingMore && loadMore) {
-            // Ignore loadMore request when already loading more items
+        val isLoadingMore = fetchActivitiesJob != null && _eventListStatus.value == ActivityLogListStatus.LOADING_MORE
+        val canLoadMore = _eventListStatus.value == CAN_LOAD_MORE
+        if (loadMore && (isLoadingMore || !canLoadMore)) {
+            // Ignore loadMore request when already loading more items or there are no more items to load
             return
         }
         fetchActivitiesJob?.cancel()
