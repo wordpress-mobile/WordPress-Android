@@ -38,7 +38,6 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Mock private lateinit var parentViewModel: ActivityLogViewModel
     @Mock private lateinit var activityLogStore: ActivityLogStore
 
-
     @Before
     fun setUp() {
         viewModel = ActivityLogTypeFilterViewModel(activityLogStore, TEST_DISPATCHER, TEST_DISPATCHER)
