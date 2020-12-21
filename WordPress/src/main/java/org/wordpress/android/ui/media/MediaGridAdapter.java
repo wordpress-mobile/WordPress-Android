@@ -455,7 +455,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
     public void cancelPendingRequestsForVisibleItems(@NonNull RecyclerView recyclerView) {
         int firstVisibleItemPosition = mLayoutManager.findFirstVisibleItemPosition();
         int lastVisibleItemPosition = mLayoutManager.findLastVisibleItemPosition();
-        for (int i=firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
+        for (int i = firstVisibleItemPosition; i <= lastVisibleItemPosition; i++) {
             GridViewHolder holder = (GridViewHolder) recyclerView.findViewHolderForAdapterPosition(i);
             if (holder != null
                 && (VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL.equals(
