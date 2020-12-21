@@ -168,6 +168,13 @@ class ActivityLogViewModel @Inject constructor(
         rewindStatusService.rewindAvailable.removeObserver(rewindAvailableObserver)
         rewindStatusService.rewindProgress.removeObserver(rewindProgressObserver)
         rewindStatusService.stop()
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            /**
+             * Clear cache when filters are not empty. Filters are not retained across sessions, therefore the data is
+             * not relevant when the screen is accessed next time.
+             */
+            activityLogStore.clearActivityLogCache(site)
+        }
 
         super.onCleared()
     }
