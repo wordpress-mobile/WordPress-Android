@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.jetpack.common.providers
 
 import androidx.annotation.StringRes
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.ROOTS
@@ -20,27 +20,27 @@ class JetpackAvailableItemsProvider @Inject constructor() {
         return listOf(
                 JetpackAvailableItem(
                         THEMES,
-                        string.backup_item_themes
+                        R.string.backup_item_themes
                 ),
                 JetpackAvailableItem(
                         PLUGINS,
-                        string.backup_item_plugins
+                        R.string.backup_item_plugins
                 ),
                 JetpackAvailableItem(
                         MEDIA_UPLOADS,
-                        string.backup_item_media_uploads
+                        R.string.backup_item_media_uploads
                 ),
                 JetpackAvailableItem(
                         SQLS,
-                        string.backup_item_sqls
+                        R.string.backup_item_sqls
                 ),
                 JetpackAvailableItem(
                         ROOTS,
-                        string.backup_item_roots
+                        R.string.backup_item_roots
                 ),
                 JetpackAvailableItem(
                         CONTENTS,
-                        string.backup_item_contents
+                        R.string.backup_item_contents
                 )
         )
     }
