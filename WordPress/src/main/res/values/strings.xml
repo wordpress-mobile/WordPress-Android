@@ -1780,7 +1780,6 @@
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
     <string name="reader_choose_interests_content_description">Choose your interests</string>
 
