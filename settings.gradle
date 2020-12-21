@@ -21,13 +21,15 @@ include ':libs:WordPressAnnotations'
 include ':WordPressMocks'
 project(':WordPressMocks').projectDir = new File(rootProject.projectDir, properties.getOrDefault('wp.wordpress_mocks_path', 'libs/mocks') + '/WordPressMocks')
 
-include ':@wordpress_react-native-aztec'
-project(':@wordpress_react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
-
-include ':@wordpress_react-native-bridge'
-project(':@wordpress_react-native-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
-
+// Only include all of the React Native and Gutenberg stuff when building
+// Gutenberg from source. Otherwise, the AAR from Bintray will be used.
 if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()) {
+    include ':@wordpress_react-native-aztec'
+    project(':@wordpress_react-native-aztec').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-aztec/android')
+
+    include ':@wordpress_react-native-bridge'
+    project(':@wordpress_react-native-bridge').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android')
+
     include ':react-native-linear-gradient'
     project(':react-native-linear-gradient').projectDir = new File(rootProject.projectDir, 'libs/gutenberg-mobile/gutenberg/node_modules/react-native-linear-gradient/android')
     include ':react-native-svg'
@@ -56,6 +58,7 @@ if (properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
+gradle.ext.gutenbergMobileBinaryPath = "com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {

@@ -188,6 +188,14 @@ androidExtensions {
 }
 
 dependencies {
+    // Gutenberg Mobile
+    //
+    // Use a binary from Bintray by default, but can optionally be configured
+    // to use a local build via local-builds.gradle
+    implementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
+    testImplementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
+    debugImplementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
+
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
@@ -333,6 +341,22 @@ dependencies {
     implementation (project(path:':libs:editor:WordPressEditor')) {
         exclude group: 'org.wordpress', module: 'utils' 
     }
+
+    // Hermes is a React Native dependency that we somehow lost at runtime
+    // since moving to the Bintray binary for Gutenberg.
+    //
+    // These cannot be defined in the WordPressEditor project itself, or we'll
+    // get a "Direct local .aar file dependencies are not supported when
+    // building an AAR." error.
+    //
+    // FIXME: In the long run, we'll want to read this from the Gutenberg AAR.
+    //
+    // A starting point might be the fact that the
+    // @wordpress_react-native-bridge-release AAR contains only the
+    // -release.aar version of Hermes in its libs folder
+    debugRuntimeOnly files('./../libs/hermes/hermes-debug.aar')
+    releaseRuntimeOnly files('./../libs/hermes/hermes-release.aar')
+
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'

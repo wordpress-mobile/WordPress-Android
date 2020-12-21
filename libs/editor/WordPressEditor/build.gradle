@@ -17,6 +17,8 @@ buildscript {
 repositories {
     google()
     jcenter()
+    // FIXME: This is a debug repo. Remove it before merging.
+    maven { url "https://dl.bintray.com/mokagio/maven" }
     maven { url "https://www.jitpack.io" }
     maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 }
@@ -81,9 +83,13 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    implementation (project(':@wordpress_react-native-bridge')) {
-        exclude group: "com.android.volley"
-        exclude group: 'com.google.code.findbugs'
+    if (buildGutenbergFromSource) {
+        implementation (project(':@wordpress_react-native-bridge')) {
+            exclude group: "com.android.volley"
+            exclude group: 'com.google.code.findbugs'
+        }
+    } else {
+      implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
     }
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
