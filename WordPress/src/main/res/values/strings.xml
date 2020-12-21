@@ -3334,7 +3334,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_download">Backup Download</string>
     <string name="backup_download_details_page_title">Download Backup</string>
     <string name="backup_download_details_header">Create downloadable backup</string>
-    <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
+    <string name="backup_download_details_description">%1$s %2$s is the selected point to create a downloadable backup.</string>
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>

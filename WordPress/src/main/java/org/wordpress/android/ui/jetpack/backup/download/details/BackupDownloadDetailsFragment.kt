@@ -17,13 +17,16 @@ import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTI
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Error
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Loading
+import org.wordpress.android.ui.jetpack.backup.download.details.adapters.BackupDownloadDetailsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class BackupDownloadDetailsFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
     private lateinit var parentViewModel: BackupDownloadViewModel
     private lateinit var viewModel: BackupDownloadDetailsViewModel
     override fun onCreateView(
@@ -50,7 +53,7 @@ class BackupDownloadDetailsFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = BackupDownloadDetailsAdapter(uiHelpers)
+        recycler_view.adapter = BackupDownloadDetailsAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel() {
@@ -84,13 +87,6 @@ class BackupDownloadDetailsFragment : Fragment() {
 
     private fun showContent(content: Content) {
         ((recycler_view.adapter) as BackupDownloadDetailsAdapter).update(content.items)
-    }
-
-    // todo: annmarie -(REMOVE) this dummy method references layout files that lint says aren't
-    // used, but they will be in the next PR because there were too many changes for 1 PR
-    private fun dummyAccess() {
-        val checkboxLayoutId = R.layout.backup_download_list_checkbox_item
-        val subheaderLayoutId = R.layout.backup_download_list_subheader_item
     }
 
     companion object {
