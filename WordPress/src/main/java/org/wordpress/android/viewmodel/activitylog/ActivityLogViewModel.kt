@@ -324,20 +324,20 @@ class ActivityLogViewModel @Inject constructor(
                 resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates))
     }
 
-    private fun requestEventsUpdate(isLoadingMore: Boolean) {
-        if (canRequestEventsUpdate(isLoadingMore)) {
-            val newStatus = if (isLoadingMore) LOADING_MORE else ActivityLogListStatus.FETCHING
+    private fun requestEventsUpdate(loadMore: Boolean) {
+        if (canRequestEventsUpdate(loadMore)) {
+            val newStatus = if (loadMore) LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.value = newStatus
             val payload = ActivityLogStore.FetchActivityLogPayload(
                     site,
-                    isLoadingMore,
+                    loadMore,
                     currentDateRangeFilter?.first?.let { Date(it) },
                     currentDateRangeFilter?.second?.let { Date(it) },
                     currentActivityTypeFilter
             )
             launch {
                 val result = activityLogStore.fetchActivities(payload)
-                onActivityLogFetched(result, isLoadingMore)
+                onActivityLogFetched(result, loadMore)
             }
         }
     }
