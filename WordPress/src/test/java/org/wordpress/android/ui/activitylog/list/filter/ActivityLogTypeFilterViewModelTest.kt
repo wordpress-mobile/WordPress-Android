@@ -36,6 +36,8 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     @Mock private lateinit var parentViewModel: ActivityLogViewModel
     @Mock private lateinit var activityLogStore: ActivityLogStore
 
+    private val remoteSiteId = 0L
+
     @Before
     fun setUp() {
         viewModel = ActivityLogTypeFilterViewModel(activityLogStore, TEST_DISPATCHER, TEST_DISPATCHER)
@@ -192,14 +194,16 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `date range passed to the api, when provided on view model start`() = test {
+        val after = 1L
+        val before = 2L
         init().uiStates
         val captor: KArgumentCaptor<FetchActivityTypesPayload> = argumentCaptor()
 
-        startVM(dateRange = Pair(1L, 2L))
+        startVM(dateRange = Pair(after, before))
 
         verify(activityLogStore).fetchActivityTypes(captor.capture())
-        assertThat(captor.firstValue.after!!.time).isEqualTo(1L)
-        assertThat(captor.firstValue.before!!.time).isEqualTo(2L)
+        assertThat(captor.firstValue.after!!.time).isEqualTo(after)
+        assertThat(captor.firstValue.before!!.time).isEqualTo(before)
     }
 
     private suspend fun init(successResponse: Boolean = true, activityTypeCount: Int = 5): Observers {
@@ -217,19 +221,19 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
                         if (successResponse) {
                             OnActivityTypesFetched(
                                     FETCH_ACTIVITY_TYPES,
-                                    0L,
+                                    remoteSiteId,
                                     generateActivityTypes(activityTypeCount),
                                     activityTypeCount
                             )
                         } else {
-                            OnActivityTypesFetched(0L, ActivityTypesError(GENERIC_ERROR), FETCH_ACTIVITY_TYPES)
+                            OnActivityTypesFetched(remoteSiteId, ActivityTypesError(GENERIC_ERROR), FETCH_ACTIVITY_TYPES)
                         }
                 )
         return Observers(uiStates, dismissDialogEvents)
     }
 
     private fun startVM(initialSelection: List<String> = listOf(), dateRange: DateRange? = null) {
-        viewModel.start(RemoteId(0L), parentViewModel, dateRange, initialSelection)
+        viewModel.start(RemoteId(remoteSiteId), parentViewModel, dateRange, initialSelection)
     }
 
     private fun generateActivityTypes(count: Int): List<ActivityTypeModel> {
