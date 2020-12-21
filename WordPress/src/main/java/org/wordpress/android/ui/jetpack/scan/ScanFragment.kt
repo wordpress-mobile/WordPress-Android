@@ -24,7 +24,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
-        initAdapter()
+        initRecyclerView()
         initViewModel(getSite(savedInstanceState))
     }
 
@@ -32,8 +32,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
+    private fun initRecyclerView() {
+        initAdapter()
+    }
+
     private fun initAdapter() {
         recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
+        recycler_view.itemAnimator = null
     }
 
     private fun initViewModel(site: SiteModel) {

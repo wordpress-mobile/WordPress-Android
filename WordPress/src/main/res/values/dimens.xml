@@ -416,9 +416,6 @@
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
 
-    <!-- scan -->
-    <dimen name="scan_state_icon_size">40dp</dimen>
-
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
     <dimen name="actionable_empty_view_text_maximum_width">440dp</dimen>

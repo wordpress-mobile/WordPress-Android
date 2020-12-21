@@ -6,13 +6,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
 
 class ScanViewModel @Inject constructor(
-    private val scanStatusService: ScanStatusService
+    private val scanStatusService: ScanStatusService,
+    private val scanStateListItemBuilder: ScanStateListItemBuilder
 ) : ViewModel() {
     private var isStarted = false
 
@@ -39,16 +39,19 @@ class ScanViewModel @Inject constructor(
         scanStatusService.start(site)
     }
 
-    private fun buildContentUiState(model: ScanStateModel): Content {
-        val scanStateItem = when (model.state) {
-            ScanStateModel.State.IDLE ->
-                model.threats?.let { ScanIdleState.ThreatsFound() }
-                    ?: ScanIdleState.ThreatsNotFound()
-            ScanStateModel.State.SCANNING -> ScanScanningState()
-            ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
-                ScanScanningState() // TODO: ashiagr filter out
-        }
-        return Content(listOf(scanStateItem))
+    private fun buildContentUiState(model: ScanStateModel) = Content(
+        scanStateListItemBuilder.buildScanStateListItems(
+            model,
+            site,
+            this@ScanViewModel::onScanButtonClicked,
+            this@ScanViewModel::onFixAllButtonClicked
+        )
+    )
+
+    fun onScanButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
     }
 
     override fun onCleared() {
@@ -58,6 +61,6 @@ class ScanViewModel @Inject constructor(
     }
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
-        data class Content(val items: List<ScanListItemState>) : UiState()
+        data class Content(val items: List<JetpackListItemState>) : UiState()
     }
 }

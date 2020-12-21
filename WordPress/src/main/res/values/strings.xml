@@ -1029,8 +1029,9 @@
     <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
-    <string name="activity_log_date_range_filter_label">Date range</string>
-    <string name="activity_log_activity_type_filter_label">Activity type</string>
+    <string name="activity_log_date_range_filter_label">Date Range</string>
+    <string name="activity_log_activity_type_filter_label">Activity Type</string>
+    <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
@@ -1039,13 +1040,24 @@
     <string name="scan">Scan</string>
 
     <string name="scan_state_icon">Scan state icon</string>
+    <string name="scan_now">Scan now</string>
+    <string name="scan_again">Scan again</string>
     <string name="scan_scanning_title">Preparing to scan</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
-    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.
+    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
         \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
-    <string name="scan_idle_no_threats_found_description">The last Jetpack scan ran 7 hours ago and everything looked great. Run a manual scan now or wait for Jetpack to scan your site later today.</string>
-    <string name="scan_idle_threats_found_description">The scan found %d potential threats with %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
+    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_this_site">this site</string>
+    <string name="scan_in_hours_ago">%s hours ago</string>
+    <string name="scan_in_minutes_ago">%s minutes ago</string>
+    <string name="scan_in_few_seconds">in a few seconds</string>
+
+    <!-- threats -->
+    <string name="threats_fix_all">Fix all</string>
+    <string name="threats_found">Threats found</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -1768,7 +1780,6 @@
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
     <string name="reader_choose_interests_content_description">Choose your interests</string>
 
@@ -3322,7 +3333,7 @@ translators: sample content for "Services" page template -->
     <string name="backup_download">Backup Download</string>
     <string name="backup_download_details_page_title">Download Backup</string>
     <string name="backup_download_details_header">Create downloadable backup</string>
-    <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
+    <string name="backup_download_details_description">%1$s %2$s is the selected point to create a downloadable backup.</string>
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
@@ -3331,7 +3342,10 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
-    <string name="backup_item_roots">WordPress root (includes wp-config php and any non WordPress files)</string>
+    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
+
+    <string name="jetpack_icon_content_description">icon</string>
+
 </resources>

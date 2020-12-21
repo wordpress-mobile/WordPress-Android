@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Scan.TextView" parent="android:Widget.TextView">
+        <item name="android:textColor">?attr/colorOnSurface</item>
+    </style>
+
+    <!--Threats List Header-->
+    <style name="Scan.Threats.Header" parent="Scan.TextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:clickable">false</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+    </style>
+
+    <!--Threat Item-->
+    <style name="Scan.Threat.Icon" parent="">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:importantForAccessibility">no</item>
+        <item name="android:padding">@dimen/margin_medium</item>
+        <item name="android:background">@drawable/bg_oval_error_50</item>
+        <item name="android:src">@drawable/ic_notice_outline_white_24dp</item>
+    </style>
+
+    <style name="Scan.Threat.Header" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="Scan.Threat.SecondaryHeader" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">start</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+    </style>
+</resources>

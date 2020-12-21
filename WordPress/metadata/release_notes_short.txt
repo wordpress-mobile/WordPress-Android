@@ -1,0 +1,3 @@
+Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.
+
+Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.
