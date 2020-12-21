@@ -200,7 +200,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     @Test
     fun `builds threat header correctly for GenericThreatModel`() {
         // Arrange
-        val expectedHeader = UiStringRes(R.string.threats_found)
+        val expectedHeader = UiStringRes(R.string.threat_item_header_threat_found)
         // Act
         val threatItem = buildThreatItem(genericThreatModel)
         // Assert

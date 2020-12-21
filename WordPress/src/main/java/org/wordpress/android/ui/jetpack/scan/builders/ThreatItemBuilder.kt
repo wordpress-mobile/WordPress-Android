@@ -59,7 +59,7 @@ class ThreatItemBuilder @Inject constructor() {
             }
         }
 
-        is GenericThreatModel -> UiStringRes(R.string.threats_found)
+        is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
     private fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
