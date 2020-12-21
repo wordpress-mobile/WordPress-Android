@@ -11,8 +11,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.backup_download_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Error
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Loading
@@ -67,8 +68,18 @@ class BackupDownloadDetailsFragment : Fragment() {
             }
         })
 
-        parentViewModel.setToolbarState(DetailsToolbarState())
-        viewModel.start()
+        val (site, activityId) = when {
+            arguments != null -> {
+                val site = requireNotNull(arguments).getSerializable(WordPress.SITE) as SiteModel
+                val activityId = requireNotNull(arguments).getString(
+                        KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
+                ) as String
+                site to activityId
+            }
+            else -> throw Throwable("Couldn't initialize BackupDownloadDetails view model")
+        }
+
+        viewModel.start(site, activityId, parentViewModel)
     }
 
     private fun showContent(content: Content) {
@@ -78,18 +89,14 @@ class BackupDownloadDetailsFragment : Fragment() {
     // todo: annmarie -(REMOVE) this dummy method references layout files that lint says aren't
     // used, but they will be in the next PR because there were too many changes for 1 PR
     private fun dummyAccess() {
-        val buttonLayoutId = R.layout.jetpack_list_button_item
         val checkboxLayoutId = R.layout.backup_download_list_checkbox_item
-        val descriptionLayoutId = R.layout.jetpack_list_description_item
-        val headerLayoutId = R.layout.jetpack_list_header_item
         val subheaderLayoutId = R.layout.backup_download_list_subheader_item
-        val imageLayoutId = R.layout.jetpack_list_icon_item
     }
 
     companion object {
         const val TAG = "BACKUP_DOWNLOAD_DETAILS_FRAGMENT"
-        fun newInstance(): BackupDownloadDetailsFragment {
-            return BackupDownloadDetailsFragment()
+        fun newInstance(bundle: Bundle?): BackupDownloadDetailsFragment {
+            return BackupDownloadDetailsFragment().apply { arguments = bundle }
         }
     }
 }

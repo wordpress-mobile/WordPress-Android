@@ -104,7 +104,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
 
     private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
         val fragment = when (target.wizardStep) {
-            DETAILS -> BackupDownloadDetailsFragment.newInstance()
+            DETAILS -> BackupDownloadDetailsFragment.newInstance(intent?.extras)
             PROGRESS -> BackupDownloadProgressFragment.newInstance()
             COMPLETE -> BackupDownloadCompleteFragment.newInstance()
         }
