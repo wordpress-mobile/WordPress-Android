@@ -33,7 +33,8 @@ class ScanStateListItemBuilder @Inject constructor(
         model: ScanStateModel,
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
-        onFixAllButtonClicked: () -> Unit
+        onFixAllButtonClicked: () -> Unit,
+        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
     ): List<JetpackListItemState> {
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
@@ -42,7 +43,8 @@ class ScanStateListItemBuilder @Inject constructor(
                         threats,
                         site,
                         onScanButtonClicked,
-                        onFixAllButtonClicked
+                        onFixAllButtonClicked,
+                        onThreatItemClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -56,7 +58,8 @@ class ScanStateListItemBuilder @Inject constructor(
         threats: List<ThreatModel>,
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
-        onFixAllButtonClicked: () -> Unit
+        onFixAllButtonClicked: () -> Unit,
+        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
@@ -75,7 +78,7 @@ class ScanStateListItemBuilder @Inject constructor(
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
-            items.addAll(threats.map { threatItemBuilder.buildThreatItem(it) })
+            items.addAll(threats.map { threat -> threatItemBuilder.buildThreatItem(threat, onThreatItemClicked) })
         }
 
         return items

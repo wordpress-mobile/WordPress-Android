@@ -13,7 +13,12 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         ViewType.THREATS_HEADER
     )
 
-    data class ThreatItemState(val threatId: Long, val header: UiString, val subHeader: UiString) : ScanListItemState(
+    data class ThreatItemState(
+        val threatId: Long,
+        val header: UiString,
+        val subHeader: UiString,
+        val onClick: () -> Unit
+    ) : ScanListItemState(
         ViewType.THREAT_ITEM
     ) {
         override fun longId() = threatId.hashCode().toLong()

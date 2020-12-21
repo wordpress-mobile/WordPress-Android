@@ -18,5 +18,6 @@ class ThreatViewHolder(
             threat_header.text = getTextOfUiString(itemView.context, threatItemState.header)
             threat_sub_header.text = getTextOfUiString(itemView.context, threatItemState.subHeader)
         }
+        itemView.setOnClickListener { threatItemState.onClick.invoke() }
     }
 }

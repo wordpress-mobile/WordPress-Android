@@ -6,6 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import javax.inject.Inject
@@ -44,14 +45,18 @@ class ScanViewModel @Inject constructor(
             model,
             site,
             this@ScanViewModel::onScanButtonClicked,
-            this@ScanViewModel::onFixAllButtonClicked
+            this@ScanViewModel::onFixAllButtonClicked,
+            this@ScanViewModel::onThreatItemClicked
         )
     )
 
-    fun onScanButtonClicked() { // TODO ashiagr to be implemented
+    private fun onScanButtonClicked() { // TODO ashiagr to be implemented
     }
 
-    fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
+    private fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun onThreatItemClicked(threatModel: ThreatModel) { // TODO ashiagr to be implemented
     }
 
     override fun onCleared() {

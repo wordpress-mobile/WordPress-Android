@@ -17,11 +17,13 @@ import javax.inject.Inject
 
 @Reusable
 class ThreatItemBuilder @Inject constructor() {
-    fun buildThreatItem(threatModel: ThreatModel) = ThreatItemState(
-        threatId = threatModel.baseThreatModel.id,
-        header = buildThreatItemHeader(threatModel),
-        subHeader = buildThreatItemSubHeader(threatModel)
-    )
+    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatModel: ThreatModel) -> Unit) =
+        ThreatItemState(
+            threatId = threatModel.baseThreatModel.id,
+            header = buildThreatItemHeader(threatModel),
+            subHeader = buildThreatItemSubHeader(threatModel),
+            onClick = { onThreatItemClicked(threatModel) }
+        )
 
     private fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringResWithParams(
