@@ -153,7 +153,7 @@ class ActivityLogStore
             OnActivityLogFetched(payload.error, action)
         } else {
             if (payload.offset == 0) {
-                activityLogSqlUtils.deleteActivityLog()
+                activityLogSqlUtils.deleteActivityLog(payload.site)
             }
             val rowsAffected = if (payload.activityLogModels.isNotEmpty())
                 activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
