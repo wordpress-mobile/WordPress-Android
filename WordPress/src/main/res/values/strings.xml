@@ -1061,7 +1061,7 @@
     <!-- threat item header -->
     <string name="threat_item_header_threat_found">Threat found</string>
     <string name="threat_item_header_infected_core_file">%s: infected core file</string>
-    <string name="threat_item_header_database_threat">Database threat</string>
+    <string name="threat_item_header_database_threat">Database %s threats</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
     <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %s (version %s)</string>
     <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %s (version %s)</string>

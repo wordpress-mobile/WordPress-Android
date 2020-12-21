@@ -31,7 +31,10 @@ class ThreatItemBuilder @Inject constructor() {
             listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
         )
 
-        is DatabaseThreatModel -> UiStringRes(R.string.threat_item_header_database_threat)
+        is DatabaseThreatModel -> UiStringResWithParams(
+            R.string.threat_item_header_database_threat,
+            listOf(UiStringText("${threatModel.rows?.size ?: 0}"))
+        )
 
         is FileThreatModel -> UiStringResWithParams(
             R.string.threat_item_header_file_malicious_code_pattern,
@@ -60,10 +63,7 @@ class ThreatItemBuilder @Inject constructor() {
     }
 
     private fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
-        is CoreFileModificationThreatModel -> UiStringResWithParams(
-            R.string.threat_item_sub_header_core_file,
-            listOf(UiStringText(threatModel.fileName))
-        )
+        is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
         is DatabaseThreatModel -> UiStringText("")
 
