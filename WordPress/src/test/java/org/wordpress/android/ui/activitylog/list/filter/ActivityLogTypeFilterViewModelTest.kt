@@ -30,13 +30,14 @@ import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterVie
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.DateRange
 
+private const val REMOTE_SITE_ID = 0L
+
 @InternalCoroutinesApi
 class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ActivityLogTypeFilterViewModel
     @Mock private lateinit var parentViewModel: ActivityLogViewModel
     @Mock private lateinit var activityLogStore: ActivityLogStore
 
-    private val remoteSiteId = 0L
 
     @Before
     fun setUp() {
@@ -221,13 +222,13 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
                         if (successResponse) {
                             OnActivityTypesFetched(
                                     FETCH_ACTIVITY_TYPES,
-                                    remoteSiteId,
+                                    REMOTE_SITE_ID,
                                     generateActivityTypes(activityTypeCount),
                                     activityTypeCount
                             )
                         } else {
                             OnActivityTypesFetched(
-                                    remoteSiteId,
+                                    REMOTE_SITE_ID,
                                     ActivityTypesError(GENERIC_ERROR),
                                     FETCH_ACTIVITY_TYPES
                             )
@@ -237,7 +238,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     private fun startVM(initialSelection: List<String> = listOf(), dateRange: DateRange? = null) {
-        viewModel.start(RemoteId(remoteSiteId), parentViewModel, dateRange, initialSelection)
+        viewModel.start(RemoteId(REMOTE_SITE_ID), parentViewModel, dateRange, initialSelection)
     }
 
     private fun generateActivityTypes(count: Int): List<ActivityTypeModel> {
