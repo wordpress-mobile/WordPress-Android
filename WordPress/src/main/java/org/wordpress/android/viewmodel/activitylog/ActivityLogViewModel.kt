@@ -5,6 +5,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
@@ -104,15 +106,13 @@ class ActivityLogViewModel @Inject constructor(
     val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
         get() = _navigationEvents
 
-    private val isLoadingInProgress: Boolean
-        get() = eventListStatus.value == LOADING_MORE ||
-                eventListStatus.value == ActivityLogListStatus.FETCHING
-
     private val isRewindProgressItemShown: Boolean
         get() = _events.value?.containsProgressItem() == true
 
     private val isDone: Boolean
         get() = eventListStatus.value == DONE
+
+    private var fetchActivitiesJob: Job? = null
 
     private var areActionsEnabled: Boolean = true
 
@@ -325,28 +325,27 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun requestEventsUpdate(loadMore: Boolean) {
-        if (canRequestEventsUpdate(loadMore)) {
-            val newStatus = if (loadMore) LOADING_MORE else ActivityLogListStatus.FETCHING
-            _eventListStatus.value = newStatus
-            val payload = ActivityLogStore.FetchActivityLogPayload(
-                    site,
-                    loadMore,
-                    currentDateRangeFilter?.first?.let { Date(it) },
-                    currentDateRangeFilter?.second?.let { Date(it) },
-                    currentActivityTypeFilter
-            )
-            launch {
-                val result = activityLogStore.fetchActivities(payload)
-                onActivityLogFetched(result, loadMore)
-            }
+        val isLoadingMore = fetchActivitiesJob != null && _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+        if (isLoadingMore && loadMore) {
+            // Ignore loadMore request when already loading more items
+            return
         }
-    }
-
-    private fun canRequestEventsUpdate(isLoadingMore: Boolean): Boolean {
-        return when {
-            isLoadingInProgress -> false
-            isLoadingMore -> _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
-            else -> true
+        fetchActivitiesJob?.cancel()
+        val newStatus = if (loadMore) LOADING_MORE else ActivityLogListStatus.FETCHING
+        _eventListStatus.value = newStatus
+        val payload = ActivityLogStore.FetchActivityLogPayload(
+                site,
+                loadMore,
+                currentDateRangeFilter?.first?.let { Date(it) },
+                currentDateRangeFilter?.second?.let { Date(it) },
+                currentActivityTypeFilter
+        )
+        fetchActivitiesJob = launch {
+            val result = activityLogStore.fetchActivities(payload)
+            if (isActive) {
+                onActivityLogFetched(result, loadMore)
+                fetchActivitiesJob = null
+            }
         }
     }
 
