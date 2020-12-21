@@ -11,7 +11,6 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsStateListItemBuilder
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
@@ -25,23 +24,23 @@ import java.util.Date
 class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadDetailsViewModel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
-    @Mock private lateinit var activityLogStore: ActivityLogStore
+    @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     private lateinit var backupDownloadDetailsStateListItemBuilder: BackupDownloadDetailsStateListItemBuilder
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
     private val activityId = "1"
 
     @Before
-    fun setUp() {
+    fun setUp() = test {
         availableItemsProvider = JetpackAvailableItemsProvider()
         backupDownloadDetailsStateListItemBuilder = BackupDownloadDetailsStateListItemBuilder()
         viewModel = BackupDownloadDetailsViewModel(
                 availableItemsProvider,
-                activityLogStore,
+                getActivityLogItemUseCase,
                 backupDownloadDetailsStateListItemBuilder,
                 TEST_DISPATCHER
         )
-        whenever(activityLogStore.getActivityLogItemByActivityId(anyOrNull())).thenReturn(fakeActivityLogModel)
+        whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
     }
 
     @Test
