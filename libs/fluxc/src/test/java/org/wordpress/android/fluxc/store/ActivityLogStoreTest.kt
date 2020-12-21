@@ -146,7 +146,7 @@ class ActivityLogStoreTest {
                 false,
                 ActivityLogAction.FETCH_ACTIVITIES)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
-        verify(activityLogSqlUtils).deleteActivityLog()
+        verify(activityLogSqlUtils).deleteActivityLog(siteModel)
     }
 
     @Test
