@@ -10,7 +10,7 @@ import javax.inject.Named
 
 class GetActivityLogItemUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
-    private val activityLogStore: ActivityLogStore,
+    private val activityLogStore: ActivityLogStore
 ) {
     suspend fun get(
         activityId: String
