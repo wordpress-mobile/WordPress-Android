@@ -25,6 +25,8 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
+import org.wordpress.android.analytics.AnalyticsTracker;
+import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.action.CommentAction;
 import org.wordpress.android.fluxc.generated.CommentActionBuilder;
@@ -487,6 +489,29 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void moderateComments(CommentList comments, CommentStatus status) {
+        // track batch actions
+        switch (status) {
+            case APPROVED:
+                AnalyticsTracker.track(Stat.COMMENT_BATCH_APPROVED);
+                break;
+            case UNAPPROVED:
+                AnalyticsTracker.track(Stat.COMMENT_BATCH_UNAPPROVED);
+                break;
+            case SPAM:
+                AnalyticsTracker.track(Stat.COMMENT_BATCH_SPAMMED);
+                break;
+            case TRASH:
+                AnalyticsTracker.track(Stat.COMMENT_BATCH_TRASHED);
+                break;
+            case DELETED:
+                AnalyticsTracker.track(Stat.COMMENT_BATCH_DELETED);
+                break;
+            case ALL:
+            case UNSPAM:
+            case UNTRASH:
+                break; // noop
+        }
+
         for (CommentModel comment : comments) {
             // Preemptive update
             comment.setStatus(status.toString());

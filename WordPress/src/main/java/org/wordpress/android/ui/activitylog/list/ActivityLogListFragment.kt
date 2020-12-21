@@ -9,8 +9,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_log_list_activity.*
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
@@ -83,12 +86,15 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
-        date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
-
         setupObservers()
 
         viewModel.start(site)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        requireActivity().activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
+        requireActivity().date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -122,10 +128,17 @@ class ActivityLogListFragment : Fragment() {
         })
 
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
-            uiHelpers.updateVisibility(filters_bar, uiState.visibility)
+            uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
+            uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
             if (uiState is FiltersShown) {
-                date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
-                activity_type_filter.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+                requireActivity().date_range_picker.text = uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        uiState.dateRangeLabel
+                )
+                requireActivity().activity_type_filter.text = uiHelpers.getTextOfUiString(
+                        requireContext(),
+                        uiState.activityTypeLabel
+                )
             }
         })
 
@@ -189,6 +202,13 @@ class ActivityLogListFragment : Fragment() {
     private fun showDateRangePicker(initialDateRange: DateRange?) {
         val picker = MaterialDatePicker.Builder
                 .dateRangePicker()
+                .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
+                .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                                .setValidator(DateValidatorPointBackward.now())
+                                .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
+                                .build()
+                )
                 .setSelection(initialDateRange)
                 .build()
         initDateRangePickerButtonClickListener(picker)
