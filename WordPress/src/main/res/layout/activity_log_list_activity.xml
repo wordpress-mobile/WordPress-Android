@@ -29,6 +29,7 @@
             android:scrollIndicators="none"
             android:visibility="gone"
             app:layout_scrollFlags="noScroll"
+            android:scrollbars="none"
             tools:targetApi="m">
 
             <LinearLayout
@@ -70,7 +71,7 @@
             android:id="@+id/filters_bar_divider"
             android:layout_width="match_parent"
             android:layout_height="@dimen/divider_size"
-            android:background="@color/divider"
+            android:background="?attr/wpColorSurfaceSecondary"
             android:visibility="gone" />
 
     </com.google.android.material.appbar.AppBarLayout>

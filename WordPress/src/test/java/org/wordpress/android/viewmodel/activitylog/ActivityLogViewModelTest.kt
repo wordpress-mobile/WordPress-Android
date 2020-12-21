@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
@@ -24,6 +25,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
@@ -46,10 +48,15 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAUL
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import java.util.Calendar
 import java.util.Date
 
@@ -62,6 +69,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
+    @Mock private lateinit var dateUtils: DateUtils
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
@@ -121,6 +129,7 @@ class ActivityLogViewModelTest {
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupFeatureConfig,
+                dateUtils,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -401,6 +410,121 @@ class ActivityLogViewModelTest {
         viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
 
         Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
+    }
+
+    @Test
+    fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        val dateRange = Pair(10L, 20L)
+
+        viewModel.onDateRangeSelected(dateRange)
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action != null).isTrue
+    }
+
+    @Test
+    fun dateRangeFilterClearActionHiddenWhenFilterEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onDateRangeSelected(null)
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun onDateRangeFilterClearActionClickClearActionDisappears() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun basicDateRangeLabelShownWhenFilterEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.onDateRangeSelected(null)
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+                .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
+    }
+
+    @Test
+    fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+                .isEqualTo(UiStringText("TEST"))
+    }
+
+    @Test
+    fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf(1))
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action != null).isTrue
+    }
+
+    @Test
+    fun activityTypeFilterClearActionHiddenWhenFilterEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf())
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun onActivityTypeFilterClearActionClickClearActionDisappears() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf(1))
+
+        (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun basicActivityTypeLabelShownWhenFilterEmpty() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf())
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
+    }
+
+    @Test
+    fun activityTypeLabelWithNameShownWhenFilterHasOneItem() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf(1))
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(UiStringText("1"))
+    }
+
+    @Test
+    fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        viewModel.onActivityTypesSelected(listOf(1, 2))
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_active_label,
+                                listOf(UiStringText("2"))
+                        )
+                )
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

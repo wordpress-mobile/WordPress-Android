@@ -104,10 +104,14 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
             it.applyIfNotHandled { dismiss() }
         })
 
-        val dateRange: DateRange? = if (requireNotNull(arguments).containsKey(ARG_DATE_RANGE_AFTER)) {
+        val afterDateRangeAvailable = requireNotNull(arguments).containsKey(ARG_DATE_RANGE_AFTER)
+        val beforeDateRangeAvailable = requireNotNull(arguments).containsKey(ARG_DATE_RANGE_BEFORE)
+        val dateRange: DateRange? = if (afterDateRangeAvailable && beforeDateRangeAvailable) {
             val after = requireNotNull(arguments).getLong(ARG_DATE_RANGE_AFTER)
             val before = requireNotNull(arguments).getLong(ARG_DATE_RANGE_BEFORE)
             Pair(after, before)
+        } else if (afterDateRangeAvailable || beforeDateRangeAvailable) {
+            throw IllegalStateException("DateRange is missing after or before date")
         } else {
             null
         }

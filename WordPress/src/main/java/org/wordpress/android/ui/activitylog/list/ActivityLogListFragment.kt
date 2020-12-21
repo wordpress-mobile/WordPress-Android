@@ -130,16 +130,7 @@ class ActivityLogListFragment : Fragment() {
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
             uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
-            if (uiState is FiltersShown) {
-                requireActivity().date_range_picker.text = uiHelpers.getTextOfUiString(
-                        requireContext(),
-                        uiState.dateRangeLabel
-                )
-                requireActivity().activity_type_filter.text = uiHelpers.getTextOfUiString(
-                        requireContext(),
-                        uiState.activityTypeLabel
-                )
-            }
+            if (uiState is FiltersShown) { updateFilters(uiState) }
         })
 
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
@@ -226,6 +217,20 @@ class ActivityLogListFragment : Fragment() {
     ) {
         ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection, dateRange)
                 .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    }
+
+    private fun updateFilters(uiState: FiltersShown) {
+        with(requireActivity().date_range_picker) {
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+            isCloseIconVisible = uiState.onClearDateRangeFilterClicked != null
+            setOnCloseIconClickListener { uiState.onClearDateRangeFilterClicked?.invoke() }
+        }
+
+        with(requireActivity().activity_type_filter) {
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            isCloseIconVisible = uiState.onClearActivityTypeFilterClicked != null
+            setOnCloseIconClickListener { uiState.onClearActivityTypeFilterClicked?.invoke() }
+        }
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {
