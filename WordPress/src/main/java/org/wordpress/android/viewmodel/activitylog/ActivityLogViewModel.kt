@@ -416,17 +416,15 @@ class ActivityLogViewModel @Inject constructor(
             return
         }
 
-        if (event.rowsAffected > 0) {
-            reloadEvents(
-                    !rewindStatusService.isRewindAvailable,
-                    rewindStatusService.isRewindInProgress,
-                    !event.canLoadMore
-            )
-            if (!loadingMore) {
-                moveToTop.call()
-            }
-            rewindStatusService.requestStatusUpdate()
+        reloadEvents(
+                !rewindStatusService.isRewindAvailable,
+                rewindStatusService.isRewindInProgress,
+                !event.canLoadMore
+        )
+        if (!loadingMore) {
+            moveToTop.call()
         }
+        rewindStatusService.requestStatusUpdate()
 
         if (event.canLoadMore) {
             _eventListStatus.value = ActivityLogListStatus.CAN_LOAD_MORE
