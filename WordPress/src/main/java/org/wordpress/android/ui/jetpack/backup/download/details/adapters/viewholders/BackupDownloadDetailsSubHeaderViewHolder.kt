@@ -15,6 +15,6 @@ class BackupDownloadDetailsSubHeaderViewHolder(
 ) : JetpackViewHolder(R.layout.backup_list_subheader_item, parent) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val subHeaderItemState = itemUiState as DetailsSubHeaderState
-        text.text = uiHelpers.getTextOfUiString(itemView.context, subHeaderItemState.text)
+        subheader.text = uiHelpers.getTextOfUiString(itemView.context, subHeaderItemState.text)
     }
 }
