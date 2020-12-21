@@ -469,7 +469,7 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf(1))
+        viewModel.onActivityTypesSelected(listOf("1"))
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
         Assertions.assertThat(action != null).isTrue
@@ -487,7 +487,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onActivityTypeFilterClearActionClickClearActionDisappears() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf(1))
+        viewModel.onActivityTypesSelected(listOf("1"))
 
         (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
@@ -507,7 +507,7 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeLabelWithNameShownWhenFilterHasOneItem() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf(1))
+        viewModel.onActivityTypesSelected(listOf("1"))
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(UiStringText("1"))
@@ -516,7 +516,7 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf(1, 2))
+        viewModel.onActivityTypesSelected(listOf("1", "2"))
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(
