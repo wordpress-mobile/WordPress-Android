@@ -226,7 +226,11 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
                                     activityTypeCount
                             )
                         } else {
-                            OnActivityTypesFetched(remoteSiteId, ActivityTypesError(GENERIC_ERROR), FETCH_ACTIVITY_TYPES)
+                            OnActivityTypesFetched(
+                                    remoteSiteId,
+                                    ActivityTypesError(GENERIC_ERROR),
+                                    FETCH_ACTIVITY_TYPES
+                            )
                         }
                 )
         return Observers(uiStates, dismissDialogEvents)
