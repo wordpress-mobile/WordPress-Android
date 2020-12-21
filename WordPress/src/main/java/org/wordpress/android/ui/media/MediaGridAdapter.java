@@ -33,7 +33,6 @@ import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.DisplayUtils;
-import org.wordpress.android.util.ImageUtils;
 import org.wordpress.android.util.MediaUtils;
 import org.wordpress.android.util.PhotoPickerUtils;
 import org.wordpress.android.util.PhotonUtils;
