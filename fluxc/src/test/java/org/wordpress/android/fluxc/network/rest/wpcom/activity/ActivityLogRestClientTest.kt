@@ -53,8 +53,8 @@ import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import java.util.Date
 import java.util.TimeZone
 
-private const val DATE_TIMESTAMP_1 =  1578614400L // 2020-01-10T00:00:00+00:00
-private const val DATE_TIMESTAMP_2 =  1578787200L // 2020-01-12T00:00:00+00:00
+private const val DATE_TIMESTAMP_1 = 1578614400L // 2020-01-10T00:00:00+00:00
+private const val DATE_TIMESTAMP_2 = 1578787200L // 2020-01-12T00:00:00+00:00
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
@@ -144,14 +144,14 @@ class ActivityLogRestClientTest {
                 // 2020-01-10T00:00:00+00:00
                 Date(DATE_TIMESTAMP_1),
                 // 2020-01-12T00:00:00+00:00
-                Date(DATE_TIMESTAMP_2),
+                Date(DATE_TIMESTAMP_2)
         )
 
         activityRestClient.fetchActivity(payload, number, offset)
 
         with(paramsCaptor.firstValue) {
-            assertEquals("2020-01-09T21:00:00+00:00",this["after"])
-            assertEquals("2020-01-11T21:00:00+00:00",this["before"])
+            assertEquals("2020-01-09T21:00:00+00:00", this["after"])
+            assertEquals("2020-01-11T21:00:00+00:00", this["before"])
         }
     }
 
@@ -166,14 +166,14 @@ class ActivityLogRestClientTest {
                 // 2020-01-10T00:00:00+00:00
                 Date(DATE_TIMESTAMP_1),
                 // 2020-01-12T00:00:00+00:00
-                Date(DATE_TIMESTAMP_2),
+                Date(DATE_TIMESTAMP_2)
         )
 
         activityRestClient.fetchActivity(payload, number, offset)
 
         with(paramsCaptor.firstValue) {
-            assertEquals("2020-01-10T07:00:00+00:00",this["after"])
-            assertEquals("2020-01-12T07:00:00+00:00",this["before"])
+            assertEquals("2020-01-10T07:00:00+00:00", this["after"])
+            assertEquals("2020-01-12T07:00:00+00:00", this["before"])
         }
     }
 
