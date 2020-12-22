@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.backup.download
+package org.wordpress.android.ui.jetpack.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext

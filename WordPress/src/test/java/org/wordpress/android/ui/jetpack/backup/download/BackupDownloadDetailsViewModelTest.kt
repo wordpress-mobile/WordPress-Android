@@ -18,6 +18,7 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
+import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import java.util.Date
 
 @InternalCoroutinesApi

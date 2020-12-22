@@ -8,7 +8,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.GetActivityLogItemUseCase
+import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
