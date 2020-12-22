@@ -415,7 +415,7 @@ class ActivityLogViewModelTest {
     @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
 
         viewModel.onDateRangeSelected(dateRange)
@@ -436,7 +436,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDateRangeFilterClearActionClickClearActionDisappears() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
@@ -458,7 +458,7 @@ class ActivityLogViewModelTest {
     @Test
     fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
