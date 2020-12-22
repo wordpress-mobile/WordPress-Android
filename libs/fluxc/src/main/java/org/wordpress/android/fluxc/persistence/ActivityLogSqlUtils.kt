@@ -76,8 +76,13 @@ class ActivityLogSqlUtils
                 ?.build(formattableContentMapper)
     }
 
-    fun deleteActivityLog(): Int {
-        return WellSql.delete(ActivityLogBuilder::class.java).execute()
+    fun deleteActivityLog(site: SiteModel): Int {
+        return WellSql
+                .delete(ActivityLogBuilder::class.java)
+                .where()
+                .equals(ActivityLogTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
     }
 
     fun replaceRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
