@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.lifecycle.Lifecycle
