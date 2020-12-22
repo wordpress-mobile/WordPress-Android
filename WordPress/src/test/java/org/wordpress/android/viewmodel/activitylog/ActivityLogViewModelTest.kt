@@ -49,6 +49,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -401,12 +402,15 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
-        val selectedItems = listOf("1", "4")
+        val selectedItems = listOf(
+                Pair("backup", UiStringText("Backups and Restores") as UiString),
+                Pair("user", UiStringText("Users") as UiString)
+        )
         viewModel.onActivityTypesSelected(selectedItems)
 
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(selectedItems, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
+        assertEquals(selectedItems.map { it.first }, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
     }
 
     @Test
@@ -514,7 +518,9 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf("1"))
+        viewModel.onActivityTypesSelected(
+                listOf(Pair("backup", UiStringText("Backups and Restores") as UiString))
+        )
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
         Assertions.assertThat(action != null).isTrue
@@ -532,7 +538,9 @@ class ActivityLogViewModelTest {
     @Test
     fun onActivityTypeFilterClearActionClickClearActionDisappears() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf("1"))
+        viewModel.onActivityTypesSelected(
+                listOf(Pair("backup", UiStringText("Backups and Restores") as UiString))
+        )
 
         (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
@@ -552,16 +560,24 @@ class ActivityLogViewModelTest {
     @Test
     fun activityTypeLabelWithNameShownWhenFilterHasOneItem() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf("1"))
+        val activityTypeName = "Backups and Restores"
+        viewModel.onActivityTypesSelected(
+                listOf(Pair("backup", UiStringText(activityTypeName) as UiString))
+        )
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringText("1"))
+                .isEqualTo(UiStringText(activityTypeName))
     }
 
     @Test
     fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        viewModel.onActivityTypesSelected(listOf("1", "2"))
+        viewModel.onActivityTypesSelected(
+                listOf(
+                        Pair("backup", UiStringText("Backups and Restores") as UiString),
+                        Pair("user", UiStringText("Users") as UiString)
+                )
+        )
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(
