@@ -21,12 +21,14 @@ import org.wordpress.android.ui.reader.subfilter.viewholders.SiteViewHolder
 import org.wordpress.android.ui.reader.subfilter.viewholders.SubFilterDiffCallback
 import org.wordpress.android.ui.reader.subfilter.viewholders.SubfilterListItemViewHolder
 import org.wordpress.android.ui.reader.subfilter.viewholders.TagViewHolder
+import org.wordpress.android.ui.stats.refresh.utils.StatsUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.config.UnreadPostsCountFeatureConfig
 
 class SubfilterListAdapter(
     val uiHelpers: UiHelpers,
-    private val unreadPostsCountFeatureConfig: UnreadPostsCountFeatureConfig
+    val statsUtils: StatsUtils,
+    val unreadPostsCountFeatureConfig: UnreadPostsCountFeatureConfig
 ) : Adapter<SubfilterListItemViewHolder>() {
     private var items: List<SubfilterListItem> = listOf()
 
@@ -47,7 +49,7 @@ class SubfilterListAdapter(
         val item = items[position]
         when (holder) {
             is SectionTitleViewHolder -> holder.bind(item as SectionTitle, uiHelpers)
-            is SiteViewHolder -> holder.bind(item as Site, uiHelpers, unreadPostsCountFeatureConfig.isEnabled())
+            is SiteViewHolder -> holder.bind(item as Site, uiHelpers, statsUtils, unreadPostsCountFeatureConfig.isEnabled())
             is SiteAllViewHolder -> holder.bind(item as SiteAll, uiHelpers)
             is TagViewHolder -> holder.bind(item as Tag, uiHelpers)
             is DividerViewHolder -> {}
