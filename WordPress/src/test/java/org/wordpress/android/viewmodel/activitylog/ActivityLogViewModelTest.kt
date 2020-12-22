@@ -513,8 +513,6 @@ class ActivityLogViewModelTest {
         )
     }
 
-
-
     @Test
     fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
