@@ -49,6 +49,10 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
+private const val ONE_SECOND_IN_MILLIS = 1000
+private const val TIMEZONE_UTC = "UTC"
+
 typealias DateRange = Pair<Long, Long>
 
 class ActivityLogViewModel @Inject constructor(
@@ -195,7 +199,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun createDateRangeFilterLabel(): UiString {
         return currentDateRangeFilter?.let {
-            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second)))
+            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_UTC))
         } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
     }
 
