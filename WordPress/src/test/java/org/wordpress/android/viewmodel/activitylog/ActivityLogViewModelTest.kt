@@ -65,7 +65,7 @@ import java.util.Date
 private const val DATE_1_IN_MILLIS = 1578614400000L // 2020-01-10T00:00:00+00:00
 private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
 
-private const val TIMEZONE_UTC = "UTC"
+private const val TIMEZONE_GMT_0 = "GMT+0"
 private const val ONE_DAY_WITHOUT_SECOND_IN_MILLIS = 1000 * 60 * 60 * 24 - 1000
 
 @RunWith(MockitoJUnitRunner::class)
@@ -482,7 +482,7 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun dateRangeLabelFormattingUsesUTCTimezone() {
+    fun dateRangeLabelFormattingUsesGMT0Timezone() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(
                 dateUtils.formatDateRange(
@@ -495,7 +495,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         Assertions.assertThat(formatDateRangeTimezoneCaptor.firstValue)
-                .isEqualTo(TIMEZONE_UTC)
+                .isEqualTo(TIMEZONE_GMT_0)
     }
 
     @Test
