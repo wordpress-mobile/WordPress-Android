@@ -47,6 +47,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.utils.NetworkErrorMapper
+import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
 import java.util.TimeZone
@@ -55,11 +56,12 @@ import javax.inject.Singleton
 @Singleton
 class ActivityLogRestClient(
     private val wpComGsonRequestBuilder: WPComGsonRequestBuilder,
+    private val timeZoneProvider: TimeZoneProvider,
     dispatcher: Dispatcher,
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent
+    userAgent: UserAgent,
 ) :
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
@@ -238,11 +240,11 @@ class ActivityLogRestClient(
         before: Date? = null
     ) {
         after?.let {
-            val offset = TimeZone.getDefault().getOffset(it.time)
+            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time) / 1000
             params["after"] = DateTimeUtils.iso8601UTCFromTimestamp(it.time - offset)
         }
         before?.let {
-            val offset = TimeZone.getDefault().getOffset(it.time)
+            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time) / 1000
             params["before"] = DateTimeUtils.iso8601UTCFromTimestamp(it.time - offset)
         }
     }
