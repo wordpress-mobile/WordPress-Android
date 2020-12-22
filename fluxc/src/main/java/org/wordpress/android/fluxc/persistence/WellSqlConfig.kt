@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 130
+        return 131
     }
 
     override fun getDbName(): String {
@@ -1422,6 +1422,23 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "FOREIGN KEY(SOURCE_SITE_ID) REFERENCES SiteModel(_id) ON DELETE CASCADE," +
                                     "FOREIGN KEY(TARGET_SITE_ID) REFERENCES XPostSites(BLOG_ID)," +
                                     "UNIQUE (SOURCE_SITE_ID, TARGET_SITE_ID) ON CONFLICT IGNORE)"
+                    )
+                }
+                130 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS BackupDownloadStatus")
+                    db.execSQL(
+                            "CREATE TABLE BackupDownloadStatus (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "REMOTE_SITE_ID INTEGER," +
+                                    "DOWNLOAD_ID INTEGER," +
+                                    "REWIND_ID TEXT NOT NULL," +
+                                    "BACKUP_POINT INTEGER," +
+                                    "STARTED_AT INTEGER," +
+                                    "PROGRESS INTEGER," +
+                                    "DOWNLOAD_COUNT INTEGER," +
+                                    "VALID_UNTIL INTEGER," +
+                                    "URL TEXT)"
                     )
                 }
             }
