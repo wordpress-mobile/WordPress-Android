@@ -49,8 +49,12 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import java.util.Date
+import java.util.TimeZone
+
+private const val DATE_TIMESTAMP_1 =  1578614400L // 2020-01-10T00:00:00+00:00
+private const val DATE_TIMESTAMP_2 =  1578787200L // 2020-01-12T00:00:00+00:00
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
@@ -61,6 +65,7 @@ class ActivityLogRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var timeZoneProvider: TimeZoneProvider
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var activityRestClient: ActivityLogRestClient
@@ -74,24 +79,24 @@ class ActivityLogRestClientTest {
         paramsCaptor = argumentCaptor()
         activityRestClient = ActivityLogRestClient(
                 wpComGsonRequestBuilder,
+                timeZoneProvider,
                 dispatcher,
                 null,
                 requestQueue,
                 accessToken,
                 userAgent)
         whenever(requestPayload.site).thenReturn(site)
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
     }
 
     @Test
     fun fetchActivity_passesCorrectParamToBuildRequest() = test {
         initFetchActivity()
-        val afterMillis = 1603860428000
-        val beforeMillis = 1603961628000
         val payload = FetchActivityLogPayload(
                 site,
                 false,
-                Date(afterMillis),
-                Date(beforeMillis),
+                Date(DATE_TIMESTAMP_1),
+                Date(DATE_TIMESTAMP_2),
                 listOf("post", "attachment")
         )
 
@@ -125,6 +130,50 @@ class ActivityLogRestClientTest {
             assertEquals("1", this["page"])
             assertEquals("$number", this["number"])
             assertEquals(2, this.size)
+        }
+    }
+
+    @Test
+    fun fetchActivity_adjustsDateRangeBasedOnTimezoneGMT3() = test {
+        val timezoneOffset = 3
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT+$timezoneOffset"))
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                // 2020-01-10T00:00:00+00:00
+                Date(DATE_TIMESTAMP_1),
+                // 2020-01-12T00:00:00+00:00
+                Date(DATE_TIMESTAMP_2),
+        )
+
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        with(paramsCaptor.firstValue) {
+            assertEquals("2020-01-09T21:00:00+00:00",this["after"])
+            assertEquals("2020-01-11T21:00:00+00:00",this["before"])
+        }
+    }
+
+    @Test
+    fun fetchActivity_adjustsDateRangeBasedOnTimezoneGMTMinus7() = test {
+        val timezoneOffset = -7
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT$timezoneOffset"))
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                // 2020-01-10T00:00:00+00:00
+                Date(DATE_TIMESTAMP_1),
+                // 2020-01-12T00:00:00+00:00
+                Date(DATE_TIMESTAMP_2),
+        )
+
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        with(paramsCaptor.firstValue) {
+            assertEquals("2020-01-10T07:00:00+00:00",this["after"])
+            assertEquals("2020-01-12T07:00:00+00:00",this["before"])
         }
     }
 
