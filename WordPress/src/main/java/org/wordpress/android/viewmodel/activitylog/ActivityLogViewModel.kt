@@ -125,7 +125,7 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindStatus: Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
-    private var currentActivityTypeFilter: List<String> = listOf()
+    private var currentActivityTypeFilter: List<Pair<String, UiString>> = listOf()
 
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
@@ -202,8 +202,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun createActivityTypeFilterLabel(): UiString {
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
-                // TODO malinjir replace it[0] with translated name of the activity type
-                UiStringText("${it[0]}")
+                it[0].second
             } else {
                 UiStringResWithParams(
                         R.string.activity_log_activity_type_filter_active_label,
@@ -267,12 +266,12 @@ class ActivityLogViewModel @Inject constructor(
     fun onActivityTypeFilterClicked() {
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
-                currentActivityTypeFilter,
+                currentActivityTypeFilter.mapNotNull { it.first },
                 currentDateRangeFilter
         )
     }
 
-    fun onActivityTypesSelected(activityTypeIds: List<String>) {
+    fun onActivityTypesSelected(activityTypeIds: List<Pair<String, UiString>>) {
         currentActivityTypeFilter = activityTypeIds
         refreshFiltersUiState()
         requestEventsUpdate(false)
@@ -380,7 +379,7 @@ class ActivityLogViewModel @Inject constructor(
                 loadMore,
                 currentDateRangeFilter?.first?.let { Date(it) },
                 currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter
+                currentActivityTypeFilter.mapNotNull { it.first }
         )
         fetchActivitiesJob = launch {
             val result = activityLogStore.fetchActivities(payload)
