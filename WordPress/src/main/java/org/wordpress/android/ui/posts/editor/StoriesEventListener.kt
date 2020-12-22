@@ -275,7 +275,7 @@ class StoriesEventListener @Inject constructor(
                     (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
             )
             if (localMediaId != 0) {
-                val media: MediaModel = mediaStore.getMediaWithLocalId(localMediaId)
+                val media: MediaModel? = mediaStore.getMediaWithLocalId(localMediaId)
                 // if we find at least one item in the mediaFiles collection passed
                 // for which we don't have a local MediaModel, just tell the user and bail
                 if (media == null) {
