@@ -51,6 +51,11 @@ class SuggestionActivity : LocaleAwareActivity() {
         finish()
     }
 
+    override fun onBackPressed() {
+        viewModel.trackExit(false)
+        super.onBackPressed()
+    }
+
     private fun initializeActivity(siteModel: SiteModel, suggestionType: SuggestionType) {
         siteId = siteModel.siteId
         viewModel.init(suggestionType, siteModel).let { supportsSuggestions ->
@@ -62,10 +67,11 @@ class SuggestionActivity : LocaleAwareActivity() {
 
         initializeSuggestionAdapter()
 
+        // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
+        // the entire screen. If the user taps a part of the screen showing the still-visible previous
+        // Activity, then finish this Activity and return the user to the previous Activity.
         rootView.setOnClickListener {
-            // The previous activity is visible "behind" this Activity if the list of Suggestions does not fill
-            // the entire screen. If the user taps a part of the screen showing the still-visible previous
-            // Activity, then finish this Activity and return the user to the previous Activity.
+            viewModel.trackExit(false)
             finish()
         }
 
@@ -117,6 +123,7 @@ class SuggestionActivity : LocaleAwareActivity() {
                             return
                         } else if (s.isEmpty() && matchesPrefixBeforeChanged == true) {
                             // Tapping delete when only the prefix is shown exits the suggestions UI
+                            viewModel.trackExit(false)
                             finish()
                         } else if (!s.startsWith(prefix)) {
                             // Re-insert prefix if it was deleted
@@ -190,6 +197,7 @@ class SuggestionActivity : LocaleAwareActivity() {
     }
 
     private fun finishWithValue(value: String?) {
+        viewModel.trackExit(true)
         setResult(Activity.RESULT_OK, Intent().apply {
             putExtra(SELECTED_VALUE, value)
         })
