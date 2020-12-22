@@ -49,7 +49,12 @@ class SubfilterListAdapter(
         val item = items[position]
         when (holder) {
             is SectionTitleViewHolder -> holder.bind(item as SectionTitle, uiHelpers)
-            is SiteViewHolder -> holder.bind(item as Site, uiHelpers, statsUtils, unreadPostsCountFeatureConfig.isEnabled())
+            is SiteViewHolder -> holder.bind(
+                    item as Site,
+                    uiHelpers,
+                    statsUtils,
+                    unreadPostsCountFeatureConfig.isEnabled()
+            )
             is SiteAllViewHolder -> holder.bind(item as SiteAll, uiHelpers)
             is TagViewHolder -> holder.bind(item as Tag, uiHelpers)
             is DividerViewHolder -> {}

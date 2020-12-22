@@ -17,7 +17,7 @@ class SiteViewHolder(
     private val itemUrl = itemView.findViewById<TextView>(R.id.item_url)
     private val itemUnseenCount = itemView.findViewById<TextView>(R.id.unseen_count)
 
-    fun bind(site: Site, uiHelpers: UiHelpers, statsUtils: StatsUtils, showUnreadpostsCount: Boolean, ) {
+    fun bind(site: Site, uiHelpers: UiHelpers, statsUtils: StatsUtils, showUnreadpostsCount: Boolean) {
         super.bind(site, uiHelpers)
         this.itemTitle.text = uiHelpers.getTextOfUiString(parent.context, site.label)
         this.itemUrl.visibility = View.VISIBLE
