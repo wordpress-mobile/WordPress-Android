@@ -239,12 +239,12 @@ class ActivityLogRestClient(
         before: Date? = null
     ) {
         after?.let {
-            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time) / 1000
-            params["after"] = DateTimeUtils.iso8601UTCFromTimestamp(it.time - offset)
+            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time)
+            params["after"] = DateTimeUtils.iso8601UTCFromDate(Date(it.time - offset))
         }
         before?.let {
-            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time) / 1000
-            params["before"] = DateTimeUtils.iso8601UTCFromTimestamp(it.time - offset)
+            val offset = timeZoneProvider.getDefaultTimeZone().getOffset(it.time)
+            params["before"] = DateTimeUtils.iso8601UTCFromDate(Date(it.time - offset))
         }
     }
 
