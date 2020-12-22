@@ -97,6 +97,10 @@ class ActivityLogStore
         return activityLogSqlUtils.getBackupDownloadStatusForSite(site)
     }
 
+    fun clearActivityLogCache(site: SiteModel) {
+        activityLogSqlUtils.deleteActivityLog(site)
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
@@ -152,12 +156,13 @@ class ActivityLogStore
         return if (payload.error != null) {
             OnActivityLogFetched(payload.error, action)
         } else {
+            var rowsAffected = 0
             if (payload.offset == 0) {
-                activityLogSqlUtils.deleteActivityLog()
+                rowsAffected += activityLogSqlUtils.deleteActivityLog(payload.site)
             }
-            val rowsAffected = if (payload.activityLogModels.isNotEmpty())
-                activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
-            else 0
+            if (payload.activityLogModels.isNotEmpty()) {
+                rowsAffected += activityLogSqlUtils.insertOrUpdateActivities(payload.site, payload.activityLogModels)
+            }
             val canLoadMore = payload.activityLogModels.isNotEmpty() &&
                     (payload.offset + payload.number) < payload.totalItems
             OnActivityLogFetched(rowsAffected, canLoadMore, action)
