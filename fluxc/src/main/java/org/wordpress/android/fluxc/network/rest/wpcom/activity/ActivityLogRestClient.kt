@@ -50,7 +50,6 @@ import org.wordpress.android.fluxc.utils.NetworkErrorMapper
 import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import org.wordpress.android.util.DateTimeUtils
 import java.util.Date
-import java.util.TimeZone
 import javax.inject.Singleton
 
 @Singleton
@@ -61,7 +60,7 @@ class ActivityLogRestClient(
     appContext: Context?,
     requestQueue: RequestQueue,
     accessToken: AccessToken,
-    userAgent: UserAgent,
+    userAgent: UserAgent
 ) :
         BaseWPComRestClient(appContext, dispatcher, requestQueue, accessToken, userAgent) {
     suspend fun fetchActivity(payload: FetchActivityLogPayload, number: Int, offset: Int): FetchedActivityLogPayload {
