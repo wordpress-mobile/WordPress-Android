@@ -1,6 +1,6 @@
 16.5
 -----
-[***] Block Editor: Cross-post suggestions are now available if the + character is used in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
+[***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
  
 16.4
 -----
