@@ -257,7 +257,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onDateRangeSelected(dateRange: DateRange?) {
-        currentDateRangeFilter = dateRange
+        val adjustedDateRange = dateRange?.let {
+            // adjust time of the end of the date range to 23:59:59
+            Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
+        }
+        currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
