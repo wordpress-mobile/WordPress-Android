@@ -287,10 +287,7 @@ class StoriesEventListener @Inject constructor(
                             activity
                     )
                     builder.setTitle(activity.getString(string.cannot_retry_deleted_media_item_fatal))
-                    builder.setPositiveButton(string.yes) { dialog, id -> dialog.dismiss() }
-                    builder.setNegativeButton(activity.getString(string.no),
-                            DialogInterface.OnClickListener { dialog: DialogInterface, id: Int -> dialog.dismiss() }
-                    )
+                    builder.setPositiveButton(string.ok) { dialog, id -> dialog.dismiss() }
                     val dialog = builder.create()
                     dialog.show()
                     return
