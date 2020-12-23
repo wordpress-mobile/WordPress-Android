@@ -12,8 +12,8 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButton
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
+import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -26,13 +26,15 @@ import javax.inject.Inject
 class ScanStateListItemBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val threatItemBuilder: ThreatItemBuilder
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
-        onFixAllButtonClicked: () -> Unit
+        onFixAllButtonClicked: () -> Unit,
+        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
     ): List<JetpackListItemState> {
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
@@ -41,7 +43,8 @@ class ScanStateListItemBuilder @Inject constructor(
                         threats,
                         site,
                         onScanButtonClicked,
-                        onFixAllButtonClicked
+                        onFixAllButtonClicked,
+                        onThreatItemClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -55,7 +58,8 @@ class ScanStateListItemBuilder @Inject constructor(
         threats: List<ThreatModel>,
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
-        onFixAllButtonClicked: () -> Unit
+        onFixAllButtonClicked: () -> Unit,
+        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
@@ -74,7 +78,7 @@ class ScanStateListItemBuilder @Inject constructor(
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
-            items.addAll(threats.map { ThreatItemState(it) })
+            items.addAll(threats.map { threat -> threatItemBuilder.buildThreatItem(threat, onThreatItemClicked) })
         }
 
         return items

@@ -13,23 +13,27 @@
         style="@style/Scan.Threat.Icon"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/threat_header"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/threat_title"
+        android:id="@+id/threat_header"
         style="@style/Scan.Threat.Header"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/threat_icon"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Vulnerable plugin: calender (version 1.3.1)"/>
+        tools:text="@string/threat_item_header_vulnerable_plugin" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/threat_description"
+        android:id="@+id/threat_sub_header"
         style="@style/Scan.Threat.SecondaryHeader"
-        app:layout_constraintStart_toStartOf="@+id/threat_title"
-        app:layout_constraintTop_toBottomOf="@+id/threat_title"
-        tools:text="Vulnerability found in plugin"/>
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/threat_header"
+        app:layout_constraintTop_toBottomOf="@+id/threat_header"
+        tools:text="@string/threat_item_sub_header_vulnerable_plugin" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

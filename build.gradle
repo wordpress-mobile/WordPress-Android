@@ -137,7 +137,7 @@ ext {
 
     daggerVersion = '2.29.1'
     fluxCVersion = '1.8.0-beta-5'
-  
+
     appCompatVersion = '1.0.2'
     coreVersion = '1.2.0'
     constraintLayoutVersion = '1.1.3'

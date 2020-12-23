@@ -1059,6 +1059,21 @@
     <string name="threats_fix_all">Fix all</string>
     <string name="threats_found">Threats found</string>
 
+    <!-- threat item header -->
+    <string name="threat_item_header_threat_found">Threat found</string>
+    <string name="threat_item_header_infected_core_file">%s: infected core file</string>
+    <string name="threat_item_header_database_threat">Database %s threats</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
+    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %s (version %s)</string>
+
+    <!-- threat item sub header -->
+    <string name="threat_item_sub_header_misc_vulnerability">Miscellaneous vulnerability</string>
+    <string name="threat_item_sub_header_core_file">Vulnerability found in WordPress</string>
+    <string name="threat_item_sub_header_file_signature">Threat found %s</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>

@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
+import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -139,11 +140,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 }
             }
 
-    private fun getSelectedActivityTypeIds(): List<String> =
+    private fun getSelectedActivityTypeIds(): List<Pair<String, UiString>> =
             (_uiState.value as Content).items
                     .filterIsInstance(ListItemUiState.ActivityType::class.java)
                     .filter { it.checked }
-                    .map { it.id }
+                    .map { Pair(it.id, it.title) }
 
     sealed class UiState {
         open val contentVisibility = false
