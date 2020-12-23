@@ -6,6 +6,7 @@ import android.os.Parcelable
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
@@ -14,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -64,6 +66,9 @@ class BackupDownloadViewModel @Inject constructor(
     private val _onBackPressedObservable = MutableLiveData<Event<Unit>>()
     val onBackPressedObservable: LiveData<Event<Unit>> = _onBackPressedObservable
 
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
@@ -80,6 +85,11 @@ class BackupDownloadViewModel @Inject constructor(
         }
     }
 
+    fun addSnackbarMessageSource(snackbarEvents: LiveData<Event<SnackbarMessageHolder>>) {
+        _snackbarEvents.addSource(snackbarEvents) { event ->
+            _snackbarEvents.value = event
+        }
+    }
     fun writeToBundle(outState: Bundle) {
         outState.putBoolean(KEY_BACKUP_DOWNLOAD_COMPLETED, backupDownloadCompleted)
         outState.putInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP, wizardManager.currentStep)

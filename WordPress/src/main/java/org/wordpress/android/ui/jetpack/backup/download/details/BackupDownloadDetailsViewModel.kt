@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.backup.download.details
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -15,6 +16,9 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxStat
 import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,17 +37,25 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+
     fun start(site: SiteModel, activityId: String, parentViewModel: BackupDownloadViewModel) {
+        if (isStarted) return
+        isStarted = true
+
         this.site = site
         this.activityId = activityId
         this.parentViewModel = parentViewModel
 
         parentViewModel.setToolbarState(DetailsToolbarState())
 
-        if (isStarted) return
-        isStarted = true
-
+        initSources()
         getData()
+    }
+
+    private fun initSources() {
+        parentViewModel.addSnackbarMessageSource(snackbarEvents)
     }
 
     private fun getData() {
@@ -67,6 +79,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
 
     private fun onCreateDownloadClick() {
         // todo: annmarie implement onActionButtonClicked
+        _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Create downloadable file clicked"))))
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
