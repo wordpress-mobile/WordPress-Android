@@ -85,7 +85,10 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
     }
 
-    /** Uses regex to remove the whole path except of the file name */
+    /**
+     * Uses regex to remove the whole path except of the file name
+     * e.g. "/var/www/html/jp-scan-daily/wp-admin/index.php" returns "index.php".
+     * */
     private fun getDisplayFileName(fileName: String?) = fileName?.replace(".*/".toRegex(), "") ?: ""
 
     companion object {
