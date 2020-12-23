@@ -4,4 +4,4 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/header_text"
     style="@style/Scan.Threats.Header"
-    tools:text="@string/threats_found" />
+    tools:text="@string/threat_item_header_threat_found" />
