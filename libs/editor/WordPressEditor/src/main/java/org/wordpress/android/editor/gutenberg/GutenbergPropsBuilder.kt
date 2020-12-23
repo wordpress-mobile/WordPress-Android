@@ -28,6 +28,6 @@ data class GutenbergPropsBuilder(
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
             htmlModeEnabled = isHtmlModeEnabled,
-            isPreview = enablePreviewMode,
+            isPreview = enablePreviewMode
     )
 }
