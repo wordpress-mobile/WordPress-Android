@@ -165,7 +165,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds threat sub header correctly VulnerableExtensionThreatModel of Plugin type`() {
+    fun `builds threat sub header correctly for VulnerableExtensionThreatModel of Plugin type`() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
         // Act
@@ -188,7 +188,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds threat sub header correctly VulnerableExtensionThreatModel of Theme type`() {
+    fun `builds threat sub header correctly for VulnerableExtensionThreatModel of Theme type`() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
         // Act
@@ -208,7 +208,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds threat sub header correctly Plugin GenericThreatModel`() {
+    fun `builds threat sub header correctly for GenericThreatModel`() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
         // Act
