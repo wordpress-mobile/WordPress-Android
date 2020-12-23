@@ -58,8 +58,15 @@ import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ShowDateRangePicker
 import java.util.Calendar
 import java.util.Date
+
+private const val DATE_1_IN_MILLIS = 1578614400000L // 2020-01-10T00:00:00+00:00
+private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
+
+private const val TIMEZONE_GMT_0 = "GMT+0"
+private const val ONE_DAY_WITHOUT_SECOND_IN_MILLIS = 1000 * 60 * 60 * 24 - 1000
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -72,6 +79,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
+    private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
@@ -81,6 +89,7 @@ class ActivityLogViewModelTest {
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
     private var navigationEvents:
             MutableList<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents?>> = mutableListOf()
+    private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
     private var rewindProgress = MutableLiveData<RewindProgress>()
@@ -141,7 +150,9 @@ class ActivityLogViewModelTest {
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
+        viewModel.showDateRangePicker.observeForever { showDateRangePickerEvents.add(it) }
         fetchActivityLogCaptor = argumentCaptor()
+        formatDateRangeTimezoneCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
@@ -419,7 +430,7 @@ class ActivityLogViewModelTest {
     @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
 
         viewModel.onDateRangeSelected(dateRange)
@@ -440,7 +451,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onDateRangeFilterClearActionClickClearActionDisappears() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
@@ -462,12 +473,44 @@ class ActivityLogViewModelTest {
     @Test
     fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(dateUtils.formatDateRange(10L, 20L)).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
                 .isEqualTo(UiStringText("TEST"))
+    }
+
+    @Test
+    fun dateRangeLabelFormattingUsesGMT0Timezone() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(
+                dateUtils.formatDateRange(
+                        anyOrNull(),
+                        anyOrNull(),
+                        formatDateRangeTimezoneCaptor.capture()
+                )
+        ).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        Assertions.assertThat(formatDateRangeTimezoneCaptor.firstValue)
+                .isEqualTo(TIMEZONE_GMT_0)
+    }
+
+    @Test
+    fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(
+                dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())
+        ).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
+        viewModel.dateRangePickerClicked()
+
+        Assertions.assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
+                Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS)
+        )
     }
 
     @Test

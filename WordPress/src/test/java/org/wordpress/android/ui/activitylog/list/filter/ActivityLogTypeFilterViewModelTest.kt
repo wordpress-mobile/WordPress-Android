@@ -127,7 +127,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
 
-        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isTrue()
+        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isTrue
     }
 
     @Test
@@ -138,7 +138,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
         ((uiStates.last() as Content).items[1] as ActivityType).onClick.invoke()
 
-        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isFalse()
+        assertThat(((uiStates.last() as Content).items[1] as ActivityType).checked).isFalse
     }
 
     @Test

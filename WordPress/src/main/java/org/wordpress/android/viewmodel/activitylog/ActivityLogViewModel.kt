@@ -49,6 +49,10 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
+private const val ONE_SECOND_IN_MILLIS = 1000
+private const val TIMEZONE_GMT_0 = "GMT+0"
+
 typealias DateRange = Pair<Long, Long>
 
 class ActivityLogViewModel @Inject constructor(
@@ -195,7 +199,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun createDateRangeFilterLabel(): UiString {
         return currentDateRangeFilter?.let {
-            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second)))
+            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0))
         } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
     }
 
@@ -252,7 +256,11 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onDateRangeSelected(dateRange: DateRange?) {
-        currentDateRangeFilter = dateRange
+        val adjustedDateRange = dateRange?.let {
+            // adjust time of the end of the date range to 23:59:59
+            Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
+        }
+        currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
