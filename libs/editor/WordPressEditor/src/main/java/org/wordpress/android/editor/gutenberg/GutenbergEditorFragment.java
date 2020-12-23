@@ -64,7 +64,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendBu
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
@@ -361,17 +360,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
                 },
                 mEditorFragmentListener::getMention,
-                new OnStarterPageTemplatesTooltipShownEventListener() {
-                    @Override
-                    public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-                        mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
-                    }
-
-                    @Override
-                    public boolean onRequestStarterPageTemplatesTooltipShown() {
-                        return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
-                    }
-                },
                 new OnMediaFilesCollectionBasedBlockEditorListener() {
                     @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);

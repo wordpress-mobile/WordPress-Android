@@ -211,7 +211,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -400,7 +399,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
@@ -684,8 +682,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void presentNewPageNoticeIfNeeded() {
         if (mIsPreview
             || !mIsPage
-            || !mIsNewPost
-            || !mModalLayoutPickerFeatureConfig.isEnabled()) {
+            || !mIsNewPost) {
             return;
         }
         String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
@@ -2330,7 +2327,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 mIsPreview,
-                mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
                 themeBundle
@@ -3270,14 +3266,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override public void getMention(Consumer<String> onResult) {
         mOnGetMentionResult = onResult;
         ActivityLauncher.viewSuggestUsersForResult(this, mSite);
-    }
-
-    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
-    }
-
-    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
-        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
     }
 
     @Override
