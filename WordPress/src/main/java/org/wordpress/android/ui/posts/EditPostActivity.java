@@ -677,7 +677,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         setupPrepublishingBottomSheetRunnable();
 
-        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository);
+        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
         setupPreviewUI();
     }
 

@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
+import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
@@ -80,11 +81,17 @@ class StoriesEventListener @Inject constructor(
         eventBusWrapper.unregister(this)
     }
 
-    fun start(lifecycle: Lifecycle, site: SiteModel, editPostRepository: EditPostRepository) {
+    fun start(
+        lifecycle: Lifecycle,
+        site: SiteModel,
+        editPostRepository: EditPostRepository,
+        editorMediaListener: EditorMediaListener
+    ) {
         this.site = site
         this.editPostRepository = editPostRepository
         this.lifecycle = lifecycle
         this.lifecycle.addObserver(this)
+        this.editorMedia.start(site, editorMediaListener)
     }
 
     fun setSaveMediaListener(newListener: StorySaveMediaListener) {
