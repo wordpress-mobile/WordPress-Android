@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.posts.editor
 
 import android.app.Activity
-import android.content.DialogInterface
 import android.net.Uri
 import androidx.appcompat.app.AlertDialog.Builder
 import androidx.lifecycle.Lifecycle
@@ -282,7 +281,7 @@ class StoriesEventListener @Inject constructor(
                     (mediaFile as HashMap<String?, Any?>)["id"].toString(), 0
             )
             if (localMediaId != 0) {
-                val media: MediaModel = mediaStore.getMediaWithLocalId(localMediaId)
+                val media: MediaModel? = mediaStore.getMediaWithLocalId(localMediaId)
                 // if we find at least one item in the mediaFiles collection passed
                 // for which we don't have a local MediaModel, just tell the user and bail
                 if (media == null) {
@@ -294,10 +293,7 @@ class StoriesEventListener @Inject constructor(
                             activity
                     )
                     builder.setTitle(activity.getString(string.cannot_retry_deleted_media_item_fatal))
-                    builder.setPositiveButton(string.yes) { dialog, id -> dialog.dismiss() }
-                    builder.setNegativeButton(activity.getString(string.no),
-                            DialogInterface.OnClickListener { dialog: DialogInterface, id: Int -> dialog.dismiss() }
-                    )
+                    builder.setPositiveButton(string.ok) { dialog, id -> dialog.dismiss() }
                     val dialog = builder.create()
                     dialog.show()
                     return
