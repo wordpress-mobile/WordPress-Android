@@ -124,6 +124,58 @@ class JetpackTunnelGsonRequestBuilder
         restClient.add(request)
     }
 
+    /**
+     * Extends JetpackTunnelGsonRequestBuilder to make available a new JSON-formatted PUT requests,
+     * triggers it and awaits results synchronously.
+     * @param restClient rest client that handles the request
+     * @param url the request URL
+     * @param body the content body, which will be converted to JSON using [Gson][com.google.gson.Gson]
+     * @param clazz the class defining the expected response
+     */
+
+    suspend fun <T : Any> syncPutRequest(
+        restClient: BaseWPComRestClient,
+        site: SiteModel,
+        url: String,
+        body: Map<String, Any>,
+        clazz: Class<T>
+    ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
+        val request = JetpackTunnelGsonRequest.buildPutRequest<T>(url, site.siteId, body, clazz, {
+            cont.resume(JetpackSuccess(it))
+        }, {
+            cont.resume(JetpackError(it))
+        })
+        cont.invokeOnCancellation {
+            request?.cancel()
+        }
+        restClient.add(request)
+    }
+
+    /**
+     * Extends JetpackTunnelGsonRequestBuilder to make available a new JSON-formatted DELETE requests,
+     * triggers it and awaits results synchronously.
+     * @param restClient rest client that handles the request
+     * @param url the request URL
+     * @param clazz the class defining the expected response
+     */
+
+    suspend fun <T : Any> syncDeleteRequest(
+        restClient: BaseWPComRestClient,
+        site: SiteModel,
+        url: String,
+        clazz: Class<T>
+    ) = suspendCancellableCoroutine<JetpackResponse<T>> { cont ->
+        val request = JetpackTunnelGsonRequest.buildDeleteRequest<T>(url, site.siteId, mapOf(), clazz, {
+            cont.resume(JetpackSuccess(it))
+        }, {
+            cont.resume(JetpackError(it))
+        })
+        cont.invokeOnCancellation {
+            request?.cancel()
+        }
+        restClient.add(request)
+    }
+
     sealed class JetpackResponse<T> {
         data class JetpackSuccess<T>(val data: T?) : JetpackResponse<T>()
         data class JetpackError<T>(val error: WPComGsonNetworkError) : JetpackResponse<T>()
