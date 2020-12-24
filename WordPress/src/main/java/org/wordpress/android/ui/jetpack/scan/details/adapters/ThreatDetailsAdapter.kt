@@ -40,14 +40,14 @@ class ThreatDetailsAdapter(
     override fun getItemCount() = items.size
 
     fun update(newItems: List<JetpackListItemState>) {
-        val diffResult = DiffUtil.calculateDiff(ScanDiffCallback(this.items.toList(), items))
+        val diffResult = DiffUtil.calculateDiff(ThreatDetailsDiffCallback(items.toList(), newItems))
         items.clear()
         items.addAll(newItems)
 
         diffResult.dispatchUpdatesTo(this)
     }
 
-    class ScanDiffCallback(
+    class ThreatDetailsDiffCallback(
         private val oldList: List<JetpackListItemState>,
         private val newList: List<JetpackListItemState>
     ) : DiffUtil.Callback() {

@@ -10,7 +10,6 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionVie
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsHeaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -49,7 +48,7 @@ class ScanAdapter(
     override fun getItemCount() = items.size
 
     fun update(newItems: List<JetpackListItemState>) {
-        val diffResult = DiffUtil.calculateDiff(ScanDiffCallback(this.items.toList(), items))
+        val diffResult = DiffUtil.calculateDiff(ScanDiffCallback(items.toList(), newItems))
         items.clear()
         items.addAll(newItems)
 
@@ -63,10 +62,10 @@ class ScanAdapter(
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int): Boolean {
             val oldItem = oldList[oldItemPosition]
             val newItem = newList[newItemPosition]
-            return when {
-                oldItem is ThreatItemState && newItem is ThreatItemState -> oldItem.threatId == newItem.threatId
-                else -> false
+            if (oldItem::class != newItem::class) {
+                return false
             }
+            return oldItem.longId() == newItem.longId()
         }
 
         override fun getOldListSize() = oldList.size
