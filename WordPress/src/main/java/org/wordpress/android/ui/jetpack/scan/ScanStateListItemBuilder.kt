@@ -34,7 +34,7 @@ class ScanStateListItemBuilder @Inject constructor(
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
@@ -59,7 +59,7 @@ class ScanStateListItemBuilder @Inject constructor(
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
