@@ -50,6 +50,8 @@ class ScanStore @Inject constructor(
         return scanStateModel?.copy(threats = threats)
     }
 
+    fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }

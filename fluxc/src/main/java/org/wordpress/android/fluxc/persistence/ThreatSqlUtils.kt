@@ -40,6 +40,16 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
             .map { it.build(gson, threatMapper) }
     }
 
+    fun getThreatByThreatId(threatId: Long): ThreatModel? {
+        return WellSql.select(ThreatBuilder::class.java)
+            .where()
+            .equals(ThreatModelTable.THREAT_ID, threatId)
+            .endWhere()
+            .asModel
+            .firstOrNull()
+            ?.build(gson, threatMapper)
+    }
+
     private fun ThreatModel.toBuilder(site: SiteModel): ThreatBuilder {
         var fileName: String? = null
         var diff: String? = null
