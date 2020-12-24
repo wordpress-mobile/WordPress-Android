@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 131
+        return 132
     }
 
     override fun getDbName(): String {
@@ -1439,6 +1439,18 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "DOWNLOAD_COUNT INTEGER," +
                                     "VALID_UNTIL INTEGER," +
                                     "URL TEXT)"
+                    )
+                }
+                131 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCProductAttributeModel")
+                    db.execSQL(
+                            "CREATE TABLE WCProductAttributeModel (" +
+                                    "_id INTEGER PRIMARY KEY, " +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT, " +
+                                    "TYPE TEXT, " +
+                                    "ORDER_BY TEXT, " +
+                                    "HAS_ARCHIVES BOOLEAN NOT NULL)"
                     )
                 }
             }
