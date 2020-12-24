@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemBuilder
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 

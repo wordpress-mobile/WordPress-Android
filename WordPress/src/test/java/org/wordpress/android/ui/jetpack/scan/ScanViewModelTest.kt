@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemBuilder
 
 // private const val SCAN_STATE_MODEL_PARAM_POSITION = 0
 
