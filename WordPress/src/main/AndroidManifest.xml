@@ -641,10 +641,16 @@
             android:label="@string/activity_log_event"
             android:theme="@style/WordPress.NoActionBar"/>
 
-        <!--Scan-->
+        <!-- Jetpack - Scan-->
         <activity
             android:name=".ui.jetpack.scan.ScanActivity"
             android:label="@string/scan"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack - Threat Details-->
+        <activity
+            android:name=".ui.jetpack.scan.details.ThreatDetailsActivity"
+            android:label="@string/threat_details"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!--Domain Registration-->
