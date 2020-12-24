@@ -8,6 +8,7 @@ import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.scan.ScanConstants
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -36,7 +37,23 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ThreatDetailsViewModel::class.java)
+        setupObservers()
         val threatId = requireActivity().intent.getLongExtra(ScanConstants.ARG_THREAT_ID, 0)
         viewModel.start(threatId)
+    }
+
+    private fun setupObservers() {
+        viewModel.uiState.observe(
+            viewLifecycleOwner,
+            { uiState ->
+                if (uiState is Content) {
+                    refreshContentScreen(uiState)
+                }
+            }
+        )
+    }
+
+    private fun refreshContentScreen(content: Content) {
+        ((recycler_view.adapter) as ThreatDetailsAdapter).update(content.items)
     }
 }
