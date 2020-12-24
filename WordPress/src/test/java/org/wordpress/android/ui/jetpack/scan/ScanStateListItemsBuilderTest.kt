@@ -5,7 +5,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemBuilder
+import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -16,8 +16,8 @@ import org.wordpress.android.viewmodel.ResourceProvider
 // private const val ONE_HOUR = 60 * ONE_MINUTE
 
 @InternalCoroutinesApi
-class ScanStateListItemBuilderTest : BaseUnitTest() {
-    private lateinit var builder: ScanStateListItemBuilder
+class ScanStateListItemsBuilderTest : BaseUnitTest() {
+    private lateinit var builder: ScanStateListItemsBuilder
 
 //    @Mock private lateinit var site: SiteModel
     @Mock private lateinit var dateProvider: DateProvider
@@ -39,7 +39,7 @@ class ScanStateListItemBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = ScanStateListItemBuilder(dateProvider, htmlMessageUtils, resourceProvider, threatItemBuilder)
+        builder = ScanStateListItemsBuilder(dateProvider, htmlMessageUtils, resourceProvider, threatItemBuilder)
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
 //        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))

@@ -10,13 +10,13 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemBuilder
+import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ScanViewModel @Inject constructor(
     private val scanStatusService: ScanStatusService,
-    private val scanStateListItemBuilder: ScanStateListItemBuilder
+    private val scanStateListItemsBuilder: ScanStateListItemsBuilder
 ) : ViewModel() {
     private var isStarted = false
 
@@ -47,7 +47,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun buildContentUiState(model: ScanStateModel) = Content(
-        scanStateListItemBuilder.buildScanStateListItems(
+        scanStateListItemsBuilder.buildScanStateListItems(
             model,
             site,
             this@ScanViewModel::onScanButtonClicked,

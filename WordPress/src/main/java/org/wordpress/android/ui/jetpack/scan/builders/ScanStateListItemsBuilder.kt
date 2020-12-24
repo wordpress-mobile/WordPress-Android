@@ -22,7 +22,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 @Reusable
-class ScanStateListItemBuilder @Inject constructor(
+class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
