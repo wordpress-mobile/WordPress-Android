@@ -13,7 +13,7 @@ import javax.inject.Inject
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatDetailsUseCase: GetThreatDetailsUseCase,
-    private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
+    private val builder: ThreatDetailsListItemsBuilder
 ) : ViewModel() {
     private var isStarted = false
     private var threatId: Long = 0
@@ -33,12 +33,15 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun getData() {
         viewModelScope.launch {
             val threatModel = getThreatDetailsUseCase.get(threatId)
-            threatModel?.let { buildContentUiState(threatModel) }
+            threatModel?.let { updateUiState(it) }
         }
     }
 
-    private fun buildContentUiState(model: ThreatModel) =
-        Content(threatDetailsListItemsBuilder.buildThreatDetailsListItems(model))
+    private fun updateUiState(threatModel: ThreatModel) {
+        _uiState.value = buildContentUiState(threatModel)
+    }
+
+    private fun buildContentUiState(model: ThreatModel) = Content(builder.buildThreatDetailsListItems(model))
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<JetpackListItemState>) : UiState()
