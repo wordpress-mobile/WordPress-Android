@@ -51,6 +51,8 @@ public final class AnalyticsTracker {
         READER_INFINITE_SCROLL,
         READER_LIST_FOLLOWED,
         READER_LIST_LOADED,
+        READER_P2_SHOWN,
+        READER_A8C_SHOWN,
         READER_LIST_PREVIEWED,
         READER_LIST_UNFOLLOWED,
         READER_TAG_FOLLOWED,

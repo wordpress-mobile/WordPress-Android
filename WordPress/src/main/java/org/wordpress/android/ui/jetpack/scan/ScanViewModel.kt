@@ -1,23 +1,30 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanIdleState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ScanState.ScanScanningState
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetail
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
 class ScanViewModel @Inject constructor(
-    private val scanStatusService: ScanStatusService
+    private val scanStatusService: ScanStatusService,
+    private val scanStateListItemBuilder: ScanStateListItemBuilder
 ) : ViewModel() {
     private var isStarted = false
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _navigationEvents = MediatorLiveData<Event<ScanNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ScanNavigationEvents>> = _navigationEvents
 
     private val scanStateObserver = Observer<ScanStateModel> {
         _uiState.value = buildContentUiState(it)
@@ -39,16 +46,24 @@ class ScanViewModel @Inject constructor(
         scanStatusService.start(site)
     }
 
-    private fun buildContentUiState(model: ScanStateModel): Content {
-        val scanStateItem = when (model.state) {
-            ScanStateModel.State.IDLE ->
-                model.threats?.let { ScanIdleState.ThreatsFound() }
-                    ?: ScanIdleState.ThreatsNotFound()
-            ScanStateModel.State.SCANNING -> ScanScanningState()
-            ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
-                ScanScanningState() // TODO: ashiagr filter out
-        }
-        return Content(listOf(scanStateItem))
+    private fun buildContentUiState(model: ScanStateModel) = Content(
+        scanStateListItemBuilder.buildScanStateListItems(
+            model,
+            site,
+            this@ScanViewModel::onScanButtonClicked,
+            this@ScanViewModel::onFixAllButtonClicked,
+            this@ScanViewModel::onThreatItemClicked
+        )
+    )
+
+    private fun onScanButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun onThreatItemClicked(threatModel: ThreatModel) {
+        _navigationEvents.value = Event(ShowThreatDetail(threatModel))
     }
 
     override fun onCleared() {
@@ -58,6 +73,6 @@ class ScanViewModel @Inject constructor(
     }
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
-        data class Content(val items: List<ScanListItemState>) : UiState()
+        data class Content(val items: List<JetpackListItemState>) : UiState()
     }
 }

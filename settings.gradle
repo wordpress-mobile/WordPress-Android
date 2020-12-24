@@ -85,7 +85,7 @@ if (localBuilds.exists()) {
         includeBuild(ext.localWPUtilsPath) {
             dependencySubstitution {
                 println "Substituting wputils with the local build"
-                substitute module("$gradle.ext.wputilsBinaryPath:WordPressUtils") with project(':WordPressUtils')
+                substitute module("$gradle.ext.wputilsBinaryPath") with project(':WordPressUtils')
             }
         }
     }
