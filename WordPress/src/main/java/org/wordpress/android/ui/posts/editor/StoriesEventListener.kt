@@ -147,10 +147,15 @@ class StoriesEventListener @Inject constructor(
             )
             storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
         } else {
-            val mediaModel: MediaModel = mediaStore.getSiteMediaWithId(site, localMediaId.toLong())
+            val mediaModel: MediaModel? = mediaStore.getMediaWithLocalId(localMediaId.toInt())
             if (mediaModel != null) {
                 val mediaFile: MediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel)
                 storySaveMediaListener?.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL())
+            } else {
+                AppLog.e(
+                        MEDIA,
+                        "onStoryFrameSaveCompleted - localMediaId not found: " + localMediaId
+                )
             }
         }
     }
