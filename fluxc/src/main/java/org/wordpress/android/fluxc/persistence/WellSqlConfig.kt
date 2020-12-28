@@ -1446,6 +1446,7 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL(
                             "CREATE TABLE WCProductAttributeModel (" +
                                     "_id INTEGER PRIMARY KEY, " +
+                                    "LOCAL_SITE_ID INTEGER," +
                                     "NAME TEXT NOT NULL," +
                                     "SLUG TEXT, " +
                                     "TYPE TEXT, " +
