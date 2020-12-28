@@ -106,6 +106,7 @@ class StoriesEventListener @Inject constructor(
             return
         }
 
+        var localMediaId: String
         if (event.frameId == null) {
             // when we get a FrameSaveStart event for a frame that hasn't been assigned an id yet,
             // we must provide one and set it on the StoryFrame object so further updates for FrameSave events
@@ -119,8 +120,10 @@ class StoriesEventListener @Inject constructor(
             val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
             // update the id on the StoryFrameItem
             frames[event.frameIndex].id = assignedTempId
+            localMediaId = assignedTempId
+        } else {
+            localMediaId = event.frameId.toString()
         }
-        val localMediaId = event.frameId.toString()
         val progress = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
         storySaveMediaListener?.onMediaSaveReattached(localMediaId, progress)
     }
