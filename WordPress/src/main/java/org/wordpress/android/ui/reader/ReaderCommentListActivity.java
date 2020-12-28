@@ -10,7 +10,6 @@ import android.view.HapticFeedbackConstants;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
@@ -41,13 +40,13 @@ import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.datasets.ReaderCommentTable;
 import org.wordpress.android.datasets.ReaderPostTable;
-import org.wordpress.android.datasets.SuggestionTable;
+import org.wordpress.android.datasets.UserSuggestionTable;
 import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.ReaderComment;
 import org.wordpress.android.models.ReaderPost;
-import org.wordpress.android.models.Suggestion;
+import org.wordpress.android.models.UserSuggestion;
 import org.wordpress.android.ui.ActivityLauncher;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment;
 import org.wordpress.android.ui.CollapseFullScreenDialogFragment.Builder;
@@ -64,6 +63,7 @@ import org.wordpress.android.ui.reader.actions.ReaderPostActions;
 import org.wordpress.android.ui.reader.adapters.ReaderCommentAdapter;
 import org.wordpress.android.ui.reader.services.ReaderCommentService;
 import org.wordpress.android.ui.reader.views.ReaderRecyclerView;
+import org.wordpress.android.ui.suggestion.Suggestion;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.suggestion.service.SuggestionEvents;
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager;
@@ -81,7 +81,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.AnalyticsCommentActionSource;
 import org.wordpress.android.util.config.FollowUnfollowCommentsFeatureConfig;
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper;
-import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 import org.wordpress.android.widgets.RecyclerItemDecoration;
 import org.wordpress.android.widgets.SuggestionAutoCompleteText;
 import org.wordpress.android.widgets.WPSnackbar;
@@ -221,25 +220,23 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         }
 
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                (CustomSwipeRefreshLayout) findViewById(R.id.swipe_to_refresh),
-                new SwipeToRefreshHelper.RefreshListener() {
-                    @Override
-                    public void onRefreshStarted() {
-                        if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
-                            mViewModel.onSwipeToRefresh();
-                        }
-                        updatePostAndComments();
+                findViewById(R.id.swipe_to_refresh),
+                () -> {
+                    if (mFollowUnfollowCommentsFeatureConfig.isEnabled()) {
+                        mViewModel.onSwipeToRefresh();
                     }
+                    updatePostAndComments();
                 }
         );
 
-        mRecyclerView = (ReaderRecyclerView) findViewById(R.id.recycler_view);
+        mRecyclerView = findViewById(R.id.recycler_view);
         int spacingHorizontal = 0;
         int spacingVertical = DisplayUtils.dpToPx(this, 1);
         mRecyclerView.addItemDecoration(new RecyclerItemDecoration(spacingHorizontal, spacingVertical));
 
-        mCommentBox = (ViewGroup) findViewById(R.id.layout_comment_box);
-        mEditComment = (SuggestionAutoCompleteText) mCommentBox.findViewById(R.id.edit_comment);
+        mCommentBox = findViewById(R.id.layout_comment_box);
+        mEditComment = mCommentBox.findViewById(R.id.edit_comment);
+        mEditComment.initializeWithPrefix('@');
         mEditComment.getAutoSaveTextHelper().setUniqueId(String.format(Locale.US, "%d%d", mPostId, mBlogId));
 
         mEditComment.addTextChangedListener(new TextWatcher() {
@@ -286,7 +283,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         mUpdateOnResume = (savedInstanceState == null);
 
         mSuggestionServiceConnectionManager = new SuggestionServiceConnectionManager(this, mBlogId);
-        mSuggestionAdapter = SuggestionUtils.setupSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
+        mSuggestionAdapter = SuggestionUtils.setupUserSuggestions(mBlogId, this, mSuggestionServiceConnectionManager,
                                                               mPost.isWP());
         if (mSuggestionAdapter != null) {
             mEditComment.setAdapter(mSuggestionAdapter);
@@ -298,9 +295,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
         ImageView buttonExpand = findViewById(R.id.button_expand);
         buttonExpand.setOnClickListener(
-            new OnClickListener() {
-                @Override
-                public void onClick(View v) {
+                v -> {
                     Bundle bundle = CommentFullScreenDialogFragment.Companion
                             .newBundle(mEditComment.getText().toString(),
                                     mEditComment.getSelectionStart(),
@@ -336,18 +331,15 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
                         .build()
                         .show(getSupportFragmentManager(), CollapseFullScreenDialogFragment.TAG);
                 }
-            }
         );
 
-        buttonExpand.setOnLongClickListener(new OnLongClickListener() {
-            @Override public boolean onLongClick(View view) {
-                if (view.isHapticFeedbackEnabled()) {
-                    view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
-                }
-
-                Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
-                return true;
+        buttonExpand.setOnLongClickListener(view -> {
+            if (view.isHapticFeedbackEnabled()) {
+                view.performHapticFeedback(HapticFeedbackConstants.LONG_PRESS);
             }
+
+            Toast.makeText(view.getContext(), R.string.description_expand, Toast.LENGTH_SHORT).show();
+            return true;
         });
         ViewUtilsKt.redirectContextClickToLongPressListener(buttonExpand);
     }
@@ -366,16 +358,13 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
 
     // to do a complete refresh we need to get updated post and new comments
     private void updatePostAndComments() {
-        ReaderPostActions.updatePost(mPost, new ReaderActions.UpdateResultListener() {
-            @Override
-            public void onUpdateResult(ReaderActions.UpdateResult result) {
-                if (!isFinishing() && result.isNewOrChanged()) {
-                    // get the updated post and pass it to the adapter
-                    ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
-                    if (post != null) {
-                        getCommentAdapter().setPost(post);
-                        mPost = post;
-                    }
+        ReaderPostActions.updatePost(mPost, result -> {
+            if (!isFinishing() && result.isNewOrChanged()) {
+                // get the updated post and pass it to the adapter
+                ReaderPost post = ReaderPostTable.getBlogPost(mBlogId, mPostId, false);
+                if (post != null) {
+                    getCommentAdapter().setPost(post);
+                    mPost = post;
                 }
             }
         });
@@ -402,7 +391,8 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
     public void onEventMainThread(SuggestionEvents.SuggestionNameListUpdated event) {
         // check if the updated suggestions are for the current blog and update the suggestions
         if (event.mRemoteBlogId != 0 && event.mRemoteBlogId == mBlogId && mSuggestionAdapter != null) {
-            List<Suggestion> suggestions = SuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            List<UserSuggestion> userSuggestions = UserSuggestionTable.getSuggestionsForSite(event.mRemoteBlogId);
+            List<Suggestion> suggestions = Suggestion.Companion.fromUserSuggestions(userSuggestions);
             mSuggestionAdapter.setSuggestionList(suggestions);
         }
     }

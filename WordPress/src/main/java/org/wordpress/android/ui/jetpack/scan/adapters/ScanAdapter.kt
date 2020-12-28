@@ -33,7 +33,7 @@ class ScanAdapter(
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
-            ViewType.THREAT_ITEM.id -> ThreatViewHolder(parent)
+            ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

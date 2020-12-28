@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
-import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
@@ -67,7 +67,7 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
-                                  AddMentionUtil addMentionUtil,
+                                  ShowSuggestionsUtil showSuggestionsUtil,
                                   OnMediaFilesCollectionBasedBlockEditorListener
                                           onMediaFilesCollectionBasedBlockEditorListener,
                                   boolean isDarkMode) {
@@ -85,7 +85,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     onGutenbergDidSendButtonPressedActionListener,
-                    addMentionUtil,
+                    showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
                     isDarkMode);
     }

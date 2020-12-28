@@ -1059,6 +1059,21 @@
     <string name="threats_fix_all">Fix all</string>
     <string name="threats_found">Threats found</string>
 
+    <!-- threat item header -->
+    <string name="threat_item_header_threat_found">Threat found</string>
+    <string name="threat_item_header_infected_core_file">%s: infected core file</string>
+    <string name="threat_item_header_database_threat">Database %s threats</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
+    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %s (version %s)</string>
+
+    <!-- threat item sub header -->
+    <string name="threat_item_sub_header_misc_vulnerability">Miscellaneous vulnerability</string>
+    <string name="threat_item_sub_header_core_file">Vulnerability found in WordPress</string>
+    <string name="threat_item_sub_header_file_signature">Threat found %s</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
@@ -2352,9 +2367,14 @@
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
-    <string name="suggestion_invalid_user">"%s is not a valid user"</string>
-    <string name="suggestion_no_matching_users">"No matching users available."</string>
+    <string name="suggestion_invalid">"%s is not a valid %s"</string>
+    <string name="suggestion_selection_needed">"Please type to filter the list of suggestions."</string>
+    <string name="suggestion_none">"No %s suggestions available."</string>
+    <string name="suggestion_problem">"There was a problem loading suggestions."</string>
+    <string name="suggestion_no_matching">"No matching %s."</string>
     <string name="suggestion_no_connection">"No internet connection.\nSuggestions are unavailable."</string>
+    <string name="suggestion_user">user</string>
+    <string name="suggestion_xpost">crosspost</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
