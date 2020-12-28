@@ -54,7 +54,9 @@ class StoriesEventListener @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val editorMedia: EditorMedia,
     private val loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase,
-    private val storyRepositoryWrapper: StoryRepositoryWrapper
+    private val saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase,
+    private val storyRepositoryWrapper: StoryRepositoryWrapper,
+    private val storiesPrefs: StoriesPrefs
 ) : LifecycleObserver {
     private lateinit var lifecycle: Lifecycle
     private lateinit var site: SiteModel
@@ -102,6 +104,21 @@ class StoriesEventListener @Inject constructor(
     fun onStoryFrameSaveStart(event: FrameSaveStart) {
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
+        }
+
+        if (event.frameId == null) {
+            // when we get a FrameSaveStart event for a frame that hasn't been assigned an id yet,
+            // we must provide one and set it on the StoryFrame object so further updates for FrameSave events
+            // correctly match them to it.
+            val assignedTempId = saveStoryGutenbergBlockUseCase.getTempIdForStoryFrame(
+                    storiesPrefs.getNewIncrementalTempId(),
+                    event.storyIndex,
+                    event.frameIndex
+            )
+
+            val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
+            // update the id on the StoryFrameItem
+            frames[event.frameIndex].id = assignedTempId
         }
         val localMediaId = event.frameId.toString()
         val progress = storyRepositoryWrapper.getCurrentStorySaveProgress(event.storyIndex, 0.0f)
