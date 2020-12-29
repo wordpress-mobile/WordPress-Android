@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-06 08:37:26+0000
+Translation-Revision-Date: 2020-12-18 16:02:02+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="backup_item_sqls">Bazë të dhënash (SQL) sajti</string>
+    <string name="backup_item_contents">Drejtori WP-content (përjashton tema, shtojca, dhe ngarkime)</string>
+    <string name="backup_item_roots">Rrënjë WordPress-i (përfshin wp-config.php dhe çfarëdo kartelash jo WordPress)</string>
+    <string name="backup_item_media_uploads">Ngarkime Media</string>
+    <string name="backup_item_plugins">Shtojca WordPress</string>
+    <string name="backup_item_themes">Tema WordPress</string>
+    <string name="backup_download_details_icon_content_description">Krijoni ikonë kopjeruajtjesh të shkarkueshme</string>
+    <string name="backup_download_details_action_button">Krijoni kartelë të shkarkueshme</string>
+    <string name="backup_download_details_choose_items_header">Zgjidhni objektet që doni të përfshihen te shkarkimi:</string>
+    <string name="backup_download_details_description">%1$s është pika e përzgjedhur për krijim të një kopjeruajtjeje të shkarkueshme.</string>
+    <string name="backup_download_details_header">Krijoni kopjeruajtje të shkarkueshme</string>
+    <string name="backup_download_details_page_title">Shkarkoni Kopjeruatjen</string>
+    <string name="backup_download">Shkarkim Kopjeruajtjeje</string>
+    <string name="gutenberg_native_error">Gabim</string>
+    <string name="gutenberg_native_choose_file">Zgjidhni kartelë</string>
+    <string name="activity_log_item_menu_download_backup_label">Shkarko kopjeruajtje</string>
+    <string name="activity_log_item_menu_restore_label">Riktheje në këtë pikë</string>
+    <string name="activity_log_activity_type_filter_label">Lloj veprimtarie</string>
+    <string name="activity_log_date_range_filter_label">Interval datash</string>
+    <string name="activity_log_activity_type_filter_header">Filtroji sipas Llojesh Veprimtarie</string>
+    <string name="dialog_confirm_copy_local_copy_button">Zgjidhni versionin prej këtij aplikacioni</string>
+    <string name="dialog_confirm_copy_local_edit_button">Përpunoni postimin së pari</string>
+    <string name="dialog_confirm_copy_local_message">Postimi që po rrekeni të kopjoni, ka dy versione që kanë përplasje, ose keni bërë ndryshime tani afër, por nuk i ruajtët ato.\nSë pari përpunoni postimin, që të zgjidhet çfarëdo përplasje ose që të vazhdohet kopjimi i versionit prej këtij aplikacioni.</string>
+    <string name="dialog_confirm_copy_local_title">Përplasje pas njëkohësimi</string>
+    <string name="button_copy">Përsëdyte</string>
+    <string name="toast_edit_story_update_in_progress_title">Artikulli po ruhet, ju lutemi, pritni…</string>
     <string name="gutenberg_native_file_name">Emër kartele</string>
     <string name="gutenberg_native_file_block_settings">Rregullime blloku kartelash</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">S’u arrit të ngarkohen kartela.\nJu lutemi, prekeni për mundësi.</string>
@@ -14,7 +40,6 @@ Language: sq_AL
     <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
     <string name="gutenberg_native_choose_a_file">ZGJIDHNI NJË KARTELË</string>
     <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
-    <string name="my_site_bottom_sheet_story_tag_new">E re</string>
     <string name="my_site_btn_jetpack_settings">Rregullime Jetpack-u</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Biseda ndiqet</string>
@@ -559,7 +584,6 @@ Language: sq_AL
     <string name="my_site_bottom_sheet_add_post">Postim blogu</string>
     <string name="my_site_bottom_sheet_title">Shtoni të ri</string>
     <string name="post_settings_publish">Botoje</string>
-    <string name="dialog_gutenberg_informative_description_v2">Bëmë përmirësime të mëdha te përpunuesi me blloqe dhe mendojmë se ia vlen të provohet! E kemi aktivizuar për postime dhe faqe të reja, por nëse doni të ktheheni te përpunuesi klasik, shkoni te \'Sajti Im\' > \'Rregullime Sajti\'.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Njëkohësoje tani</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Ky postim do të njëkohësohet menjëherë.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Gati për Njëkohësim?</string>
@@ -661,8 +685,6 @@ Language: sq_AL
     <string name="notifications_tab_dialog_master_hint_on">Çaktivizoni shfaqje njoftimesh te skedë njoftimesh për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_off">Njoftime për këtë sajt</string>
     <string name="notifications_tab_dialog_master_status_on">Njoftime për këtë sajt</string>
-    <string name="dialog_gutenberg_informative_description_page">Për faqe të reja tanimë po përdorni përpunuesin me blloqe, bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
-    <string name="dialog_gutenberg_informative_description_post">Për postime të reja tanimë po përdorni përpunuesin me blloqe, bukur! Nëse do të donit ta ndryshonit me përpunuesin klasik, shkoni te ‘Sajti Im’ > ‘Rregullime Sajti’.</string>
     <string name="pick_media">Shtoni figurë ose video</string>
     <string name="error_post_not_submitted_retrying">S’e parashtruam dot për shqyrtim këtë postim, por do të riprovojmë më vonë. </string>
     <string name="error_post_not_scheduled_retrying">S’e vumë dot në plan këtë postim, por do të riprovojmë më vonë.</string>
@@ -935,7 +957,6 @@ Language: sq_AL
     <string name="stats_loading_error">S’u ngarkuan të dhëna</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Përpunoni postime dhe faqe të reja me përpunuesin me blloqe</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Përdorni Përpunuesin Me Blloqe</string>
-    <string name="dialog_gutenberg_informative_title">Përpunuesi Pamor i Aktivizuar</string>
     <string name="exit">dalje</string>
     <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
     <string name="quick_start_sites_type_grow">Shtoni Publikun Tuaj</string>
