@@ -33,9 +33,11 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
+import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
+import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
