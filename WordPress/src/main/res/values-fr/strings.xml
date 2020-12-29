@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-01 07:51:07+0000
+Translation-Revision-Date: 2020-12-14 13:15:52+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="toast_edit_story_update_in_progress_title">La story a été enregistrée, veuillez patienter…</string>
     <string name="gutenberg_native_file_name">Nom du fichier</string>
     <string name="gutenberg_native_file_block_settings">Réglages du bloc fichier</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Le téléversement des fichiers a échoué.\nVeuillez toucher pour accéder aux options.</string>
@@ -14,7 +15,6 @@ Language: fr
     <string name="gutenberg_native_copy_file_url">Copier l’URL du fichier</string>
     <string name="gutenberg_native_choose_a_file">Choisir un fichier</string>
     <string name="new_site_creation_domain_header_title">Choisir un domaine</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Nouveau</string>
     <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Discussion suivie</string>
@@ -102,6 +102,7 @@ Language: fr
     <string name="gutenberg_native_choose_images">Choisir des images</string>
     <string name="stories_intro_create_story_post_label">Créer une publication de story</string>
     <string name="stories_intro_description_second">Elles sont publiées en tant que nouvel article de blog sur votre site afin que votre public ne rate jamais rien.</string>
+    <string name="stories_intro_title_second">Les publications de story ne disparaissent pas.</string>
     <string name="stories_intro_description_first">Combinez des photos, des vidéos et du texte pour créer des publications de story engageantes et sur lesquelles on peut appuyer. Vos visiteurs apprécieront.</string>
     <string name="stories_intro_title_first">Maintenant, les stories sont pour tout le monde</string>
     <string name="stories_intro_image_caption_second">Exemple de titre de story</string>
@@ -559,7 +560,6 @@ Language: fr
     <string name="my_site_bottom_sheet_add_post">Article de blog</string>
     <string name="my_site_bottom_sheet_title">Ajouter</string>
     <string name="post_settings_publish">Publier</string>
-    <string name="dialog_gutenberg_informative_description_v2">Nous avons apporté de grandes améliorations à l\'éditeur de blocs. Essayez-le vite ! Nous l\'avons rendu disponible pour les nouveaux articles et les nouvelles pages, mais si vous souhaitez repasser à l\'éditeur classique, accédez à « Mon site » > « Paramètres du site ».</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Synchroniser maintenant</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Cet article sera synchronisé immédiatement.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Prêt à synchroniser ?</string>
@@ -661,8 +661,6 @@ Language: fr
     <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
-    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>
@@ -935,7 +933,6 @@ Language: fr
     <string name="stats_loading_error">Données non chargées</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifier les nouvelles publications et pages avec l’éditeur de blocs</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Utiliser l’éditeur de blocs</string>
-    <string name="dialog_gutenberg_informative_title">Éditeur de blocs activé</string>
     <string name="exit">sortir</string>
     <string name="quick_start_sites_type_subtitle">Fait : %1$d of %2$d</string>
     <string name="quick_start_sites_type_grow">Développez votre audience</string>
