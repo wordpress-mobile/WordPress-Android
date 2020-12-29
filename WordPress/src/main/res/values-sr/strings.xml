@@ -523,7 +523,6 @@ Language: sr_RS
     <string name="menu_switch_to_gutenberg_editor">Пребаци на блоковски уређивач</string>
     <string name="menu_switch_to_aztec_editor">Пребаци на класични уређивач</string>
     <string name="stats_loading_error">Подаци нису учитани</string>
-    <string name="dialog_gutenberg_informative_title">Блоковски уређивач омогућен</string>
     <string name="exit">излаз</string>
     <string name="quick_start_sites_type_grow">Увећајте свој аудиторијум</string>
     <string name="quick_start_sites_type_customize">Прилагодите свој сајт</string>
