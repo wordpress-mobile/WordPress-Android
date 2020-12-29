@@ -126,33 +126,24 @@ class StoriesEventListener @Inject constructor(
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
+        // in onStoryFrameSaveCompleted we should always get a frameId that has the TEMPORARY_ID_PREFIX prefix
         val localMediaId = requireNotNull(event.frameId)
 
-        // check whether this is a temporary file being just saved (so we don't have a proper local MediaModel yet)
-        // catch ( NumberFormatException e)
-        if (localMediaId.startsWith(TEMPORARY_ID_PREFIX)) {
-            val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
+        val (frames) = storyRepositoryWrapper.getStoryAtIndex(event.storyIndex)
 
-            // first, update the media's url
-            val frame = frames[event.frameIndex]
-            storySaveMediaListener?.onMediaSaveSucceeded(
-                    localMediaId,
-                    Uri.fromFile(frame.composedFrameFile).toString()
-            )
+        // first, update the media's url
+        val frame = frames[event.frameIndex]
+        storySaveMediaListener?.onMediaSaveSucceeded(
+                localMediaId,
+                Uri.fromFile(frame.composedFrameFile).toString()
+        )
 
-            // now update progress
-            val totalProgress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
-                    event.storyIndex,
-                    0.0f
-            )
-            storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
-        } else {
-            val mediaModel: MediaModel = mediaStore.getSiteMediaWithId(site, localMediaId.toLong())
-            if (mediaModel != null) {
-                val mediaFile: MediaFile = FluxCUtils.mediaFileFromMediaModel(mediaModel)
-                storySaveMediaListener?.onMediaSaveSucceeded(localMediaId, mediaFile.getFileURL())
-            }
-        }
+        // now update progress
+        val totalProgress: Float = storyRepositoryWrapper.getCurrentStorySaveProgress(
+                event.storyIndex,
+                0.0f
+        )
+        storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
