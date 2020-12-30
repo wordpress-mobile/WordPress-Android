@@ -587,23 +587,25 @@ workflows:
         - << pipeline.parameters.translation_review_build >>
         - << pipeline.parameters.generate_screenshots >>
     jobs:
-      - gutenberg-bundle-build
+      # - gutenberg-bundle-build
       - strings-check
-      - test:
-          requires:
-            - gutenberg-bundle-build
-      - lint:
-          requires:
-            - gutenberg-bundle-build
+      - test
+      # - test:
+      #     requires:
+      #       - gutenberg-bundle-build
+      - lint
+      # - lint:
+      #     requires:
+      #       - gutenberg-bundle-build
       - Installable Build:
-          requires:
-            - gutenberg-bundle-build
+          # requires:
+          #   - gutenberg-bundle-build
           filters:
             branches:
               ignore: /pull\/[0-9]+/
       - Connected Tests:
-          requires:
-            - gutenberg-bundle-build
+          # requires:
+          #   - gutenberg-bundle-build
           post-to-slack: true
           # Always run connected tests on develop and release branches
           filters:
