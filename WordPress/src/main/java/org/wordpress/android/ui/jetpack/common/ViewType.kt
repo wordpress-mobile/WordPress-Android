@@ -9,5 +9,6 @@ enum class ViewType(val id: Int) {
     THREAT_ITEM(5),
     CHECKBOX(6),
     BACKUP_SUB_HEADER(7),
-    THREAT_CONTEXT_LINES(8)
+    THREAT_CONTEXT_LINES(8),
+    FILE_NAME(9)
 }

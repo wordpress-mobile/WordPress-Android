@@ -4,6 +4,7 @@ import androidx.annotation.ColorRes
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext.ContextLine
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
+import org.wordpress.android.ui.utils.UiString
 
 sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackListItemState(type) {
     data class ThreatContextLinesItemState(val lines: List<ThreatContextLineItemState>) : ThreatDetailsListItemState(
@@ -18,4 +19,6 @@ sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackLi
             @ColorRes val normalTextColorRes: Int
         )
     }
+
+    data class FileNameState(val fileName: UiString) : ThreatDetailsListItemState(ViewType.FILE_NAME)
 }

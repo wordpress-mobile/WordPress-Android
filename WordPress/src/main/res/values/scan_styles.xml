@@ -75,4 +75,16 @@
         <item name="android:padding">@dimen/margin_small_medium</item>
     </style>
 
+    <!--Threat Details - FileName-->
+    <style name="Scan.ThreatDetails.FileName" parent="Scan.TextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textAlignment">viewStart</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:gravity">center_vertical|start</item>
+        <item name="android:paddingTop">@dimen/margin_small_medium</item>
+        <item name="android:paddingBottom">@dimen/margin_small_medium</item>
+    </style>
+
 </resources>
