@@ -119,12 +119,6 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory
-      - restore-gutenberg-bundle-cache
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Test WordPress
           environment:
@@ -148,12 +142,6 @@ jobs:
       - android/restore-gradle-cache
       - copy-gradle-properties
       - update-gradle-memory
-      - restore-gutenberg-bundle-cache
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Checkstyle
           environment:
@@ -198,12 +186,6 @@ jobs:
           command: bundle exec fastlane run configure_apply
       - update-gradle-memory
       - android/restore-gradle-cache
-      - restore-gutenberg-bundle-cache
-      - run:
-          name: Ensure assets folder exists
-          command: mkdir -p libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
-      - attach_workspace:
-          at: libs/gutenberg-mobile/gutenberg/packages/react-native-bridge/android/build/assets
       - run:
           name: Build APK
           environment:
