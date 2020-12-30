@@ -51,7 +51,7 @@ commands:
     steps:
       - run:
           name: Checkout submodules
-          command: git submodule update --init --recursive --depth 1
+          command: git submodule update --init --depth 1
   npm-bundle-android:
     steps:
       - run:
