@@ -283,6 +283,7 @@ class PageListViewModel @Inject constructor(
                             localId = it.pageId,
                             title = it.title,
                             subtitle = itemUiStateData.subtitle,
+                            icon = itemUiStateData.icon,
                             date = it.date,
                             labels = itemUiStateData.labels,
                             labelsColor = itemUiStateData.labelsColor,
@@ -446,7 +447,12 @@ class PageListViewModel @Inject constructor(
             pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
             else -> null
         }
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle)
+        val icon = when (pageModel.remoteId) {
+            pagesViewModel.site.pageOnFront -> R.drawable.ic_homepage_16dp
+            pagesViewModel.site.pageForPosts -> R.drawable.ic_posts_16dp
+            else -> null
+        }
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon)
     }
 
     private data class ItemUiStateData(
@@ -455,6 +461,7 @@ class PageListViewModel @Inject constructor(
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
         val actions: Set<Action>,
-        val subtitle: Int? = null
+        val subtitle: Int? = null,
+        val icon: Int? = null
     )
 }
