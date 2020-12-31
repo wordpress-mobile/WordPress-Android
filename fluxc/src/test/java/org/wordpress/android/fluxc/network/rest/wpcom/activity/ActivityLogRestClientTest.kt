@@ -436,18 +436,27 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityDownload_dispatchesGenericErrorOnFailure() = test {
-        initFetchBackupDownloadStatus(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+            initFetchBackupDownloadStatus(
+                    error = WPComGsonNetworkError(
+                            BaseNetworkError(
+                                    NETWORK_ERROR
+                            )
+                    )
+            )
 
-        val payload = activityRestClient.fetchBackupDownloadState(site)
+            val payload = activityRestClient.fetchBackupDownloadState(site)
 
-        assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
+            assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
+//        } catch (e: Exception) {
+//            print("***=> something weird happened with ${e.message}")
+//        }
     }
 
     @Test
     fun fetchActivityBackupDownload_dispatchesResponseOnSuccess() = test {
         val progress = 55
         val downloadResponse = BACKUP_DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
-        initFetchBackupDownloadStatus(downloadResponse)
+        initFetchBackupDownloadStatus(arrayOf(downloadResponse))
 
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
@@ -625,15 +634,21 @@ class ActivityLogRestClientTest {
     }
 
     private suspend fun initFetchBackupDownloadStatus(
-        data: BackupDownloadStatusResponse = mock(),
+        data: Array<BackupDownloadStatusResponse>? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<BackupDownloadStatusResponse> {
-        val response = if (error != null) Response.Error<BackupDownloadStatusResponse>(error) else Success(data)
+    ): Response<Array<BackupDownloadStatusResponse>> {
+        val defaultError = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))
+        val response = when {
+            error != null -> { Response.Error(error) }
+            data != null -> { Success(data) }
+            else -> { Response.Error(defaultError) }
+        }
+
         whenever(wpComGsonRequestBuilder.syncGetRequest(
                 eq(activityRestClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(BackupDownloadStatusResponse::class.java),
+                eq(Array<BackupDownloadStatusResponse>::class.java),
                 eq(false),
                 any(),
                 eq(false))).thenReturn(response)
