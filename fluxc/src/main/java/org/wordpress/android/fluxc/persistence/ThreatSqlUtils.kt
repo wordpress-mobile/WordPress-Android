@@ -124,7 +124,7 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
         @Column var rows: String? = null,
         @Column var context: String? = null
     ) : Identifiable {
-        constructor() : this(-1, 0, 0, 0, "", "", "", 0, 0, "", "", "")
+        constructor() : this(-1, 0, 0, 0, "", "", "", 0, 0)
 
         override fun setId(id: Int) {
             this.id = id
