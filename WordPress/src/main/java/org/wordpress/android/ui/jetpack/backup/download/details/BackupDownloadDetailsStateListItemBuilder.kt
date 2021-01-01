@@ -60,7 +60,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
 
     private fun buildDescriptionState(published: Date) = DescriptionState(
             UiStringResWithParams(
-                    R.string.backup_download_details_description,
+                    R.string.backup_download_details_description_with_two_parameters,
                     listOf(
                             UiStringText(published.toFormattedDateString()),
                             UiStringText(published.toFormattedTimeString())
