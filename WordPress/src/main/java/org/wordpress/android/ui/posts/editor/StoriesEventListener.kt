@@ -33,7 +33,6 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
-import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
@@ -43,7 +42,6 @@ import org.wordpress.android.util.AppLog.T.MEDIA
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtils
 import org.wordpress.android.util.StringUtils
-import org.wordpress.android.util.helpers.MediaFile
 import java.util.ArrayList
 import java.util.HashMap
 import javax.inject.Inject
