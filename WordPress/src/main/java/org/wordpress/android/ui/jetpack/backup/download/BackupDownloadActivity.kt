@@ -114,14 +114,14 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     private fun SnackbarMessageHolder.showSnackbar() {
         val snackbar = WPSnackbar.make(
                 coordinator_layout,
-                uiHelpers.getTextOfUiString(this@BackupDownloadActivity, this.message),
+                uiHelpers.getTextOfUiString(this@BackupDownloadActivity, message),
                 Snackbar.LENGTH_LONG
         )
-        if (this.buttonTitle != null) {
+        if (buttonTitle != null) {
             snackbar.setAction(
-                    uiHelpers.getTextOfUiString(this@BackupDownloadActivity, this.buttonTitle)
+                    uiHelpers.getTextOfUiString(this@BackupDownloadActivity, buttonTitle)
             ) {
-                this.buttonAction.invoke()
+                buttonAction.invoke()
             }
         }
         snackbar.show()

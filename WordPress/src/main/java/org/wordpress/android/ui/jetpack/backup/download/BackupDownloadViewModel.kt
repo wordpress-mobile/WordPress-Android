@@ -90,6 +90,7 @@ class BackupDownloadViewModel @Inject constructor(
             _snackbarEvents.value = event
         }
     }
+    
     fun writeToBundle(outState: Bundle) {
         outState.putBoolean(KEY_BACKUP_DOWNLOAD_COMPLETED, backupDownloadCompleted)
         outState.putInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP, wizardManager.currentStep)
