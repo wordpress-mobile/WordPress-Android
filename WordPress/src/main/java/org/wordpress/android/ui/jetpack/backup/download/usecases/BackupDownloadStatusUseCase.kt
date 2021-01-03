@@ -29,7 +29,10 @@ class BackupDownloadStatusUseCase @Inject constructor(
             val downloadStatusForSite = activityLogStore.getBackupDownloadStatusForSite(site)
             if (downloadStatusForSite != null && downloadStatusForSite.downloadId == downloadId) {
                 if (downloadStatusForSite.progress == null && downloadId == downloadStatusForSite.downloadId) {
-                    emit(Complete(downloadStatusForSite.rewindId, downloadStatusForSite.downloadId, downloadStatusForSite.url))
+                    emit(Complete(
+                            downloadStatusForSite.rewindId,
+                            downloadStatusForSite.downloadId,
+                            downloadStatusForSite.url))
                     return@flow
                 } else {
                     emit(Progress(downloadStatusForSite.rewindId, downloadStatusForSite.progress))

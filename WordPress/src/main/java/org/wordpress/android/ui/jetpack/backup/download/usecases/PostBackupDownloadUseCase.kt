@@ -23,7 +23,7 @@ class PostBackupDownloadUseCase @Inject constructor(
         types: BackupDownloadRequestTypes
     ) = flow {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(BackupDownloadHandlerStatus.Failure(rewindId,UiStringRes(R.string.error_network_connection)))
+            emit(BackupDownloadHandlerStatus.Failure(rewindId, UiStringRes(R.string.error_network_connection)))
             return@flow
         }
 
@@ -38,12 +38,16 @@ class PostBackupDownloadUseCase @Inject constructor(
         } else {
             if (result.rewindId == rewindId) {
                 if (result.downloadId == null) {
-                    emit(BackupDownloadHandlerStatus.Failure(rewindId, UiStringRes(R.string.backup_download_generic_failure)))
+                    emit(BackupDownloadHandlerStatus.Failure(
+                            rewindId,
+                            UiStringRes(R.string.backup_download_generic_failure)))
                 } else {
                     emit(BackupDownloadHandlerStatus.Success(result.rewindId, result.downloadId as Long))
                 }
             } else {
-                emit(BackupDownloadHandlerStatus.Failure(rewindId,UiStringRes(R.string.backup_download_another_download_running)))
+                emit(BackupDownloadHandlerStatus.Failure(
+                        rewindId,
+                        UiStringRes(R.string.backup_download_another_download_running)))
             }
         }
     }
