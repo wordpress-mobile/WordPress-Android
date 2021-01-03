@@ -3361,6 +3361,8 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
     <string name="backup_download_another_download_running">There is another download running.</string>
 
+    <string name="backup_download_progress_page_title">Download Backup</string>
+
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
