@@ -6,7 +6,10 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import javax.inject.Inject
+
+private const val ARG_DATA = "arg_backup_download_progress_data"
 
 class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progress_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -33,8 +36,15 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
 
     companion object {
         const val TAG = "BACKUP_DOWNLOAD_PROGRESS_FRAGMENT"
-        fun newInstance(): BackupDownloadProgressFragment {
-            return BackupDownloadProgressFragment()
+        fun newInstance(
+            bundle: Bundle? = null,
+            backupDownloadState: BackupDownloadState
+        ): BackupDownloadProgressFragment {
+            val newBundle = Bundle().apply {
+                putParcelable(ARG_DATA, backupDownloadState)
+            }
+            bundle?.let { newBundle.putAll(bundle) }
+            return BackupDownloadProgressFragment().apply { arguments = newBundle }
         }
     }
 }

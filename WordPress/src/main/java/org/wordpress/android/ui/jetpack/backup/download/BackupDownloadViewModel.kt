@@ -12,15 +12,13 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleEventObservable
+import java.util.Date
 import javax.inject.Inject
 
 const val KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY = "key_backup_download_activity_id_key"
@@ -32,7 +30,11 @@ const val KEY_BACKUP_DOWNLOAD_STATE = "key_backup_download_state"
 @SuppressLint("ParcelCreator")
 data class BackupDownloadState(
     val siteId: Long? = null,
-    val rewindId: Long? = null
+    val activityId: String? = null,
+    val rewindId: String? = null,
+    val downloadId: Long? = null,
+    val published: Date? = null,
+    val url: String? = null
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>
@@ -48,7 +50,7 @@ class BackupDownloadViewModel @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
-                    clearOldBackupDownloadState(it)
+                    clearOldBackupDownloadState()
                     WizardNavigationTarget(it, backupDownloadState)
                 }
         )
@@ -102,17 +104,21 @@ class BackupDownloadViewModel @Inject constructor(
         // todo: annmarie - what should happen on backPress - always exit, please revisit
     }
 
-    private fun clearOldBackupDownloadState(wizardStep: BackupDownloadStep) {
-        when (wizardStep) {
-            DETAILS -> backupDownloadState.rewindId?.let {
-                backupDownloadState = backupDownloadState.copy(rewindId = null)
-            }
-            PROGRESS -> backupDownloadState.rewindId?.let {
-                backupDownloadState = backupDownloadState.copy(rewindId = null)
-            }
-            COMPLETE -> {
-            } // intentionally left empty
-        }
+    private fun clearOldBackupDownloadState() {
+        backupDownloadState = backupDownloadState.copy(rewindId = null, downloadId = null, url = null)
+    }
+
+    fun onBackupDownloadDetailsFinished(rewindId: String?, downloadId: Long?, published: Date) {
+        backupDownloadState = backupDownloadState.copy(
+                rewindId = rewindId,
+                downloadId = downloadId,
+                published = published)
+        wizardManager.showNextStep()
+    }
+
+    fun onBackupDownloadProgressFinished(url: String?) {
+        backupDownloadState = backupDownloadState.copy(url = url)
+        wizardManager.showNextStep()
     }
 
     private fun exitFlow() {
@@ -141,6 +147,11 @@ class BackupDownloadViewModel @Inject constructor(
         data class DetailsToolbarState(
             @StringRes override val title: Int = R.string.backup_download_details_page_title,
             @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
+        ) : ToolbarState()
+
+        data class ProgressToolbarState(
+            @StringRes override val title: Int = R.string.backup_download_progress_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }
 }
