@@ -25,7 +25,7 @@ class ThreatItemBuilder @Inject constructor() {
             onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
         )
 
-    private fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
+    fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringResWithParams(
             R.string.threat_item_header_infected_core_file,
             listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
@@ -62,7 +62,7 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
-    private fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
+    fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
         is DatabaseThreatModel -> UiStringText("")

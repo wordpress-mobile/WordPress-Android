@@ -1076,6 +1076,26 @@
 
     <!-- threat details -->
     <string name="threat_details">Threat Details</string>
+    <string name="threat_details_icon">Threat details icon</string>
+    <string name="threat_problem_header">What was the problem?</string>
+    <string name="threat_technical_details_header">The technical details</string>
+    <string name="threat_file_description">Threat found in file:</string>
+    <!-- threat fix -->
+    <string name="threat_fix_default_header">How will we fix it?</string>
+    <string name="threat_fix_fixed_header">How did Jetpack fix it?</string>
+    <string name="threat_fix_current_fixable_header">@string/threat_fix_default_header</string>
+    <string name="threat_fix_current_not_fixable_header">Resolving the threat</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.
+        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n
+        If you need more help to resolve this threat, we recommend <b>Codeable</b>, a trusted freelancer marketplace of highly vetted WordPress experts.
+        They have identified a select group of security experts to help with these projects. Pricing ranges from $70&#8211;120/hour, and you can get a free estimate with no obligation to hire.
+    </string>
+    <!-- threat fixable -->
+    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan will delete the affected file or directory.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan will update to a newer version (%s).</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan will edit the affected file or directory.</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan will resolve the threat.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>

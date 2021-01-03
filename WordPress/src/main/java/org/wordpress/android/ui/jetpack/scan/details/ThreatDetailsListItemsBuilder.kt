@@ -3,36 +3,124 @@ package org.wordpress.android.ui.jetpack.scan.details
 import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext.ContextLine
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.FileNameState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState.ThreatContextLineItemState
+import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
 
 @Reusable
-class ThreatDetailsListItemsBuilder @Inject constructor() {
-    // TODO ashiagr to be implemented
-    fun buildThreatDetailsListItems(threatModel: ThreatModel): List<JetpackListItemState> {
-        val items = mutableListOf<JetpackListItemState>()
-        if (threatModel is FileThreatModel) {
-            val threatContextLines = buildThreatContextLines(threatModel.context)
-            items.add(threatContextLines)
-        }
-        return items
+class ThreatDetailsListItemsBuilder @Inject constructor(
+    private val htmlMessageUtils: HtmlMessageUtils,
+    private val threatItemBuilder: ThreatItemBuilder
+) {
+    fun buildThreatDetailsListItems(threatModel: ThreatModel) = mutableListOf<JetpackListItemState>().apply {
+        addAll(buildBasicThreatDetailsListItems(threatModel))
+        addAll(buildTechnicalDetailsListItems(threatModel))
+        addAll(buildFixDetailsListItems(threatModel))
     }
+
+    private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
+        mutableListOf<JetpackListItemState>().apply {
+            add(buildThreatDetailsIcon())
+            add(buildThreatHeaderItem(threatModel))
+            add(buildThreatSubHeaderItem(threatModel))
+            add(buildProblemHeaderItem())
+            add(buildProblemDescriptionItem(threatModel))
+        }
+
+    private fun buildTechnicalDetailsListItems(threatModel: ThreatModel): List<JetpackListItemState> {
+        var fileName: String? = null
+        var threatContext: ThreatContext? = null
+        var diff: String? = null
+
+        when (threatModel) {
+            is ThreatModel.FileThreatModel -> {
+                fileName = threatModel.fileName
+                threatContext = threatModel.context
+            }
+
+            is ThreatModel.CoreFileModificationThreatModel -> {
+                fileName = threatModel.fileName
+                diff = threatModel.diff
+            }
+
+            is ThreatModel.DatabaseThreatModel,
+            is ThreatModel.GenericThreatModel,
+            is ThreatModel.VulnerableExtensionThreatModel -> { // Do Nothing
+            }
+        }
+
+        return mutableListOf<JetpackListItemState>().apply {
+            fileName?.let {
+                add(buildFileNameDescription())
+                add(buildFileName(it))
+            }
+            threatContext?.let { add(buildThreatContextLines(threatContext)) }
+            diff?.let { add(buildDiff(diff)) }
+
+            if (isNotEmpty()) {
+                add(0, buildTechnicalDetailsHeaderItem())
+            }
+        }
+    }
+
+    private fun buildFixDetailsListItems(threatModel: ThreatModel) = mutableListOf<JetpackListItemState>().apply {
+        with(threatModel.baseThreatModel) {
+            if (status != ThreatStatus.FIXED) {
+                add(buildFixTitleHeader(status, fixable))
+                add(buildFixDescription(fixable))
+            }
+        }
+    }
+
+    private fun buildThreatDetailsIcon() = IconState(
+        icon = R.drawable.ic_scan_idle_threats_found,
+        contentDescription = UiStringRes(R.string.threat_details_icon)
+    )
+
+    private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
+        text = threatItemBuilder.buildThreatItemHeader(threatModel),
+        textColorRes = R.attr.colorError
+    )
+
+    private fun buildThreatSubHeaderItem(threatModel: ThreatModel) =
+        DescriptionState(threatItemBuilder.buildThreatItemSubHeader(threatModel))
+
+    private fun buildProblemHeaderItem() = HeaderState(UiStringRes(R.string.threat_problem_header))
+
+    private fun buildProblemDescriptionItem(threatModel: ThreatModel) =
+        DescriptionState(UiStringText(threatModel.baseThreatModel.description))
+
+    private fun buildTechnicalDetailsHeaderItem() = HeaderState(UiStringRes(R.string.threat_technical_details_header))
+
+    private fun buildFileNameDescription() = DescriptionState(UiStringRes(R.string.threat_file_description))
+
+    private fun buildFileName(fileName: String) = FileNameState(UiStringText(fileName))
 
     private fun buildThreatContextLines(context: ThreatContext) =
         ThreatContextLinesItemState(lines = context.lines.map { buildThreatContextLine(it) })
 
-    private fun buildThreatContextLine(line: ContextLine): ThreatContextLineItemState {
+    private fun buildThreatContextLine(
+        line: ThreatContext.ContextLine
+    ): ThreatContextLinesItemState.ThreatContextLineItemState {
         val isHighlighted = line.highlights?.isNotEmpty() == true
 
         val lineNumberBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_20
         val contentBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_5
 
-        return ThreatContextLineItemState(
+        return ThreatContextLinesItemState.ThreatContextLineItemState(
             line = line,
             lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
             contentBackgroundColorRes = contentBackgroundColorRes,
@@ -41,4 +129,45 @@ class ThreatDetailsListItemsBuilder @Inject constructor() {
             normalTextColorRes = R.color.black
         )
     }
+
+    private fun buildDiff(diff: String) = DescriptionState(UiStringText(diff)) // TODO: ashiagr custom diff view?
+
+    private fun buildFixTitleHeader(status: ThreatStatus, fixable: Fixable?) = HeaderState(
+        UiStringRes(
+            when (status) {
+                ThreatStatus.FIXED -> R.string.threat_fix_fixed_header
+
+                ThreatStatus.CURRENT ->
+                    fixable?.let { R.string.threat_fix_current_fixable_header }
+                        ?: R.string.threat_fix_current_not_fixable_header
+
+                ThreatStatus.IGNORED, ThreatStatus.UNKNOWN -> R.string.threat_fix_default_header
+            }
+        )
+    )
+
+    private fun buildFixDescription(fixable: Fixable?) = fixable?.let { buildFixableThreatDescription(it) }
+        ?: buildNotFixableThreatDescription()
+
+    private fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
+        when (fixable.fixer) {
+            FixType.REPLACE -> UiStringRes(R.string.threat_fix_fixable_replace)
+
+            FixType.DELETE -> UiStringRes(R.string.threat_fix_fixable_delete)
+
+            FixType.UPDATE -> fixable.target?.let {
+                UiStringResWithParams(R.string.threat_fix_fixable_update, listOf(UiStringText(it)))
+            } ?: UiStringRes(R.string.threat_fix_fixable_default)
+
+            FixType.EDIT -> UiStringRes(R.string.threat_fix_fixable_edit)
+
+            FixType.UNKNOWN -> UiStringRes(R.string.threat_fix_fixable_default)
+        }
+    )
+
+    private fun buildNotFixableThreatDescription() = DescriptionState(
+        UiStringText(
+            htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
+        )
+    )
 }
