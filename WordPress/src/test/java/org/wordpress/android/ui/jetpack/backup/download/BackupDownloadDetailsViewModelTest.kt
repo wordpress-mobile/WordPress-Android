@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.backup.download
 
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -17,8 +18,12 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadHandler
+import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadHandler.BackupDownloadHandlerStatus
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -29,6 +34,10 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     private lateinit var backupDownloadDetailsStateListItemBuilder: BackupDownloadDetailsStateListItemBuilder
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
+    @Mock private lateinit var backupDownloadHandler: BackupDownloadHandler
+
+    private var snackbarEvents = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private var handlerStatus = MutableLiveData<BackupDownloadHandlerStatus>()
     private val activityId = "1"
 
     @Before
@@ -39,9 +48,13 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
                 availableItemsProvider,
                 getActivityLogItemUseCase,
                 backupDownloadDetailsStateListItemBuilder,
+                backupDownloadHandler,
+                TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
+        whenever(backupDownloadHandler.snackbarEvents).thenReturn(snackbarEvents)
+        whenever(backupDownloadHandler.statusUpdate).thenReturn(handlerStatus)
     }
 
     @Test

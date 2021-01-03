@@ -7,8 +7,8 @@ import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
@@ -16,9 +16,11 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadStatusHandler
 import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadStatusHandler.BackupDownloadStatusHandlerState
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -26,7 +28,6 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadProgressViewModel @Inject constructor(
-    private val getActivityLogItemUseCase: GetActivityLogItemUseCase,
     private val backupDownloadStatusHandler: BackupDownloadStatusHandler,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
@@ -99,6 +100,11 @@ class BackupDownloadProgressViewModel @Inject constructor(
 
     private fun initView() {
         // todo: annmarie - init the view from backupDownloadState
+        _uiState.value = Content(listOf(
+                HeaderState(
+                UiStringRes(string.backup_download_progress_page_title)
+        )
+        ))
     }
 
     private fun queryStatus() {
@@ -112,7 +118,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
         data class Error(val message: String) : UiState()
 
         data class Content(
-            val activityLogModel: ActivityLogModel,
             val items: List<JetpackListItemState>
         ) : UiState()
     }
