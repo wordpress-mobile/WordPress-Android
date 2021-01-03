@@ -1,7 +1,9 @@
 package org.wordpress.android.ui.jetpack.common
 
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString
 
@@ -14,7 +16,8 @@ abstract class JetpackListItemState(open val type: ViewType) {
         @ColorRes val colorResId: Int? = null
     ) : JetpackListItemState(ViewType.ICON)
 
-    data class HeaderState(val text: UiString) : JetpackListItemState(ViewType.HEADER)
+    data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
+        JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(val text: UiString) : JetpackListItemState(ViewType.DESCRIPTION)
 
