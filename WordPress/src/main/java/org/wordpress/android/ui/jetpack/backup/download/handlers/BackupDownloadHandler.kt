@@ -33,7 +33,7 @@ class BackupDownloadHandler @Inject constructor(
         types: BackupDownloadRequestTypes
     ) {
         postBackupDownloadUseCase.postBackupDownloadRequest(rewindId, site, types)
-                .flowOn(bgDispatcher).collect { state ->   handleState(state) }
+                .flowOn(bgDispatcher).collect { state -> handleState(state) }
     }
 
     private fun handleState(state: BackupDownloadHandlerStatus) {
