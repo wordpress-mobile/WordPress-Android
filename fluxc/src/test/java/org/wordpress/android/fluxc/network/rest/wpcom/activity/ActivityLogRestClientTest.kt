@@ -447,9 +447,6 @@ class ActivityLogRestClientTest {
             val payload = activityRestClient.fetchBackupDownloadState(site)
 
             assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
-//        } catch (e: Exception) {
-//            print("***=> something weird happened with ${e.message}")
-//        }
     }
 
     @Test
