@@ -12,6 +12,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -50,7 +51,7 @@ class BackupDownloadViewModel @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
-                    clearOldBackupDownloadState()
+                    clearOldBackupDownloadState(it)
                     WizardNavigationTarget(it, backupDownloadState)
                 }
         )
@@ -104,8 +105,14 @@ class BackupDownloadViewModel @Inject constructor(
         // todo: annmarie - what should happen on backPress - always exit, please revisit
     }
 
-    private fun clearOldBackupDownloadState() {
-        backupDownloadState = backupDownloadState.copy(rewindId = null, downloadId = null, url = null)
+    private fun clearOldBackupDownloadState(wizardStep: BackupDownloadStep) {
+        if (wizardStep == DETAILS) {
+            backupDownloadState = backupDownloadState.copy(
+                    rewindId = null,
+                    downloadId = null,
+                    url = null
+            )
+        }
     }
 
     fun onBackupDownloadDetailsFinished(rewindId: String?, downloadId: Long?, published: Date) {
