@@ -7,6 +7,8 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatM
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext.ContextLine
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
@@ -58,10 +60,24 @@ object ThreatTestData {
     )
     val fileThreatModel = FileThreatModel(
         baseThreatModel = baseThreatModel,
+        fileName = TEST_FILE_PATH,
         context = ThreatContext(lines = listOf(contextLine))
     )
     val vulnerableExtensionThreatModel = VulnerableExtensionThreatModel(
         baseThreatModel = baseThreatModel,
         extension = extension
+    )
+    val fixableThreatInCurrentStatus = GenericThreatModel(
+        baseThreatModel.copy(
+            fixable = Fixable(file = null, fixer = FixType.EDIT, target = null),
+            status = ThreatStatus.CURRENT
+        )
+    )
+
+    val notFixableThreatInCurrentStatus = GenericThreatModel(
+        baseThreatModel.copy(
+            fixable = null,
+            status = ThreatStatus.CURRENT
+        )
     )
 }
