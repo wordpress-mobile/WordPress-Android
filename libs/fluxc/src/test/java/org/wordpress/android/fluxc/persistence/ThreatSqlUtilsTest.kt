@@ -161,8 +161,7 @@ class ThreatSqlUtilsTest {
 
         val threat = threatSqlUtils.getThreatByThreatId(threatId)
 
-        assertThat(threat).isNotNull
         assertThat(threat).isInstanceOf(GenericThreatModel::class.java)
-        assertEquals(threatId, requireNotNull(threat).baseThreatModel.id)
+        assertEquals(threatId, threat?.baseThreatModel?.id)
     }
 }
