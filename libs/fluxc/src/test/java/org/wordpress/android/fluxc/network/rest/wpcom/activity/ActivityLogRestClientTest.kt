@@ -436,17 +436,17 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityDownload_dispatchesGenericErrorOnFailure() = test {
-            initFetchBackupDownloadStatus(
-                    error = WPComGsonNetworkError(
-                            BaseNetworkError(
-                                    NETWORK_ERROR
-                            )
-                    )
-            )
+        initFetchBackupDownloadStatus(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR
+                        )
+                )
+        )
 
-            val payload = activityRestClient.fetchBackupDownloadState(site)
+        val payload = activityRestClient.fetchBackupDownloadState(site)
 
-            assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
+        assertEmittedDownloadStatusError(payload, BackupDownloadStatusErrorType.GENERIC_ERROR)
     }
 
     @Test
