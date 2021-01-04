@@ -1,10 +1,19 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
+import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.usecases.GetThreatModelUseCase
 
 @InternalCoroutinesApi
@@ -12,6 +21,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getThreatModelUseCase: GetThreatModelUseCase
     @Mock private lateinit var builder: ThreatDetailsListItemsBuilder
     private lateinit var viewModel: ThreatDetailsViewModel
+    private val threatId = 1L
 
     @Before
     fun setUp() {
@@ -19,6 +29,33 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun dummyTest() { // TODO: ashiagr added for CI to run fine, to be removed after first test is added
+    fun `given threat id, then on start, threat details are retrieved`() = test {
+        // Act
+        viewModel.start(threatId)
+        // Assert
+        verify(getThreatModelUseCase).get(threatId)
     }
+
+    @Test
+    fun `given threat id, then on start, ui is updated with content`() = test {
+        // Arrange
+        val uiStates = init().uiStates
+        // Act
+        viewModel.start(threatId)
+        // Assert
+        val uiState = uiStates.last()
+        assertThat(uiState).isInstanceOf(Content::class.java)
+    }
+
+    private suspend fun init(): Observers {
+        val uiStates = mutableListOf<UiState>()
+        viewModel.uiState.observeForever {
+            uiStates.add(it)
+        }
+        whenever(getThreatModelUseCase.get(anyLong())).thenReturn(mock())
+        whenever(builder.buildThreatDetailsListItems(any())).thenReturn(mock())
+        return Observers(uiStates)
+    }
+
+    private data class Observers(val uiStates: List<UiState>)
 }
