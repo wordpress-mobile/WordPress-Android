@@ -80,7 +80,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
                 UiStringRes(R.string.backup_download_progress_page_title)
         )
         ))
-        _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Progress = 0"))))
     }
 
     private fun queryStatus() {
