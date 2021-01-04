@@ -162,7 +162,6 @@ class ThreatsMapperTest {
 
         val model = mapper.map(threat.copy(fixable = Fixable(fixer = "rollback", file = null, target = null)))
 
-        assertNotNull(model.baseThreatModel.fixable)
         assertEquals(model.baseThreatModel.fixable?.fixer, FixType.UNKNOWN)
     }
 
