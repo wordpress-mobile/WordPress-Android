@@ -152,4 +152,16 @@ class ThreatSqlUtilsTest {
             assertEquals(dummyThreat.context.lines.first().contents, context.lines.first().contents)
         }
     }
+
+    @Test
+    fun `threat model gets retrieved for the given threat id`() {
+        val threatId = dummyBaseThreatModel.id
+        val dummyThreat = GenericThreatModel(baseThreatModel = dummyBaseThreatModel)
+        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+
+        val threat = threatSqlUtils.getThreatByThreatId(threatId)
+
+        assertThat(threat).isInstanceOf(GenericThreatModel::class.java)
+        assertEquals(threatId, threat?.baseThreatModel?.id)
+    }
 }
