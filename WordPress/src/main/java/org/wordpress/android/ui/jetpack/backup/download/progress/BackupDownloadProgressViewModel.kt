@@ -3,20 +3,25 @@ package org.wordpress.android.ui.jetpack.backup.download.progress
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadStatusHandler
-import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadStatusHandler.BackupDownloadStatusHandlerState
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -28,7 +33,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadProgressViewModel @Inject constructor(
-    private val backupDownloadStatusHandler: BackupDownloadStatusHandler,
+    private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -36,27 +41,12 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private lateinit var backupDownloadState: BackupDownloadState
     private lateinit var parentViewModel: BackupDownloadViewModel
     private var isStarted = false
-    private var backupDownloadStatusJob: Job? = null
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val backupDownloadStatusJobObserver = Observer<BackupDownloadStatusHandlerState> {
-        when (it) {
-            is BackupDownloadStatusHandlerState.Complete -> {
-                // todo: annmarie check that the ids are the same - handle on background return
-                parentViewModel.onBackupDownloadProgressFinished(it.url)
-            }
-            is BackupDownloadStatusHandlerState.Progress -> {
-                // todo: annmarie check that the ids are the same - handle on background return
-                _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Progress = ${it.progress}"))))
-            }
-            is BackupDownloadStatusHandlerState.Error -> {}
-        }
-    }
 
     // todo: annmarie think about adding state to instanceState
     fun start(
@@ -74,7 +64,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
         parentViewModel.setToolbarState(ProgressToolbarState())
 
         initSources()
-        initObservers()
 
         initView()
         queryStatus()
@@ -82,36 +71,49 @@ class BackupDownloadProgressViewModel @Inject constructor(
 
     private fun initSources() {
         parentViewModel.addSnackbarMessageSource(snackbarEvents)
-
-        _snackbarEvents.addSource(backupDownloadStatusHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-    }
-
-    private fun initObservers() {
-        backupDownloadStatusHandler.statusUpdate.observeForever(backupDownloadStatusJobObserver)
-    }
-
-    override fun onCleared() {
-        backupDownloadStatusHandler.statusUpdate.removeObserver(backupDownloadStatusJobObserver)
-        backupDownloadStatusJob?.cancel()
-        super.onCleared()
     }
 
     private fun initView() {
         // todo: annmarie - init the view from backupDownloadState
         _uiState.value = Content(listOf(
                 HeaderState(
-                UiStringRes(string.backup_download_progress_page_title)
+                UiStringRes(R.string.backup_download_progress_page_title)
         )
         ))
+        _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Progress = 0"))))
     }
 
     private fun queryStatus() {
-        backupDownloadStatusJob?.cancel()
-        backupDownloadStatusJob = launch(bgDispatcher) {
-            backupDownloadStatusHandler.handleBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
+    launch {
+            getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
+                    .flowOn(bgDispatcher).collect { state ->
+                handleState(state)
+            }
         }
+    }
+
+    private fun handleState(state: BackupDownloadRequestState) {
+        when (state) {
+            is NetworkUnavailable -> {
+                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+            }
+            is RemoteRequestFailure -> {
+                _snackbarEvents.postValue(Event(GenericFailureMsg))
+            }
+            is Progress -> {
+                _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Progress = ${state.progress}"))))
+            }
+            is Complete -> {
+                parentViewModel.onBackupDownloadProgressFinished(state.url)
+            }
+            is Success -> {
+            } // no op
+        }
+    }
+
+    companion object {
+        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.backup_download_generic_failure))
     }
 
     sealed class UiState {

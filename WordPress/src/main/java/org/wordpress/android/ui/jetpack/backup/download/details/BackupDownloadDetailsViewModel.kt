@@ -3,21 +3,24 @@ package org.wordpress.android.ui.jetpack.backup.download.details
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadHandler
-import org.wordpress.android.ui.jetpack.backup.download.handlers.BackupDownloadHandler.BackupDownloadHandlerStatus
+import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownloadUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
@@ -30,6 +33,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
@@ -40,30 +44,19 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private val availableItemsProvider: JetpackAvailableItemsProvider,
     private val getActivityLogItemUseCase: GetActivityLogItemUseCase,
     private val stateListItemBuilder: BackupDownloadDetailsStateListItemBuilder,
-    private val backupDownloadHandler: BackupDownloadHandler,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val postBackupDownloadUseCase: PostBackupDownloadUseCase,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
     private lateinit var activityId: String
     private lateinit var parentViewModel: BackupDownloadViewModel
     private var isStarted: Boolean = false
-    private var backupDownloadRequestJob: Job? = null
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val backupDownloadJobObserver = Observer<BackupDownloadHandlerStatus> {
-        when (it) {
-            is BackupDownloadHandlerStatus.Success -> {
-                parentViewModel.onBackupDownloadDetailsFinished(it.rewindId, it.downloadId, extractPublishedDate())
-            }
-            is BackupDownloadHandlerStatus.Failure -> {}
-        }
-    }
 
     private fun extractPublishedDate(): Date {
         // todo: annmarie do something about all these null checks
@@ -81,26 +74,11 @@ class BackupDownloadDetailsViewModel @Inject constructor(
         parentViewModel.setToolbarState(DetailsToolbarState())
 
         initSources()
-        initObservers()
         getData()
     }
 
     private fun initSources() {
         parentViewModel.addSnackbarMessageSource(snackbarEvents)
-
-        _snackbarEvents.addSource(backupDownloadHandler.snackbarEvents) { event ->
-            _snackbarEvents.value = event
-        }
-    }
-
-    private fun initObservers() {
-        backupDownloadHandler.statusUpdate.observeForever(backupDownloadJobObserver)
-    }
-
-    override fun onCleared() {
-        backupDownloadHandler.statusUpdate.removeObserver(backupDownloadJobObserver)
-        backupDownloadRequestJob?.cancel()
-        super.onCleared()
     }
 
     private fun getData() {
@@ -143,9 +121,9 @@ class BackupDownloadDetailsViewModel @Inject constructor(
 
     private fun onCreateDownloadClick() {
         val (rewindId, types) = getParams()
-        backupDownloadRequestJob?.cancel()
-        backupDownloadRequestJob = launch(bgDispatcher) {
-            backupDownloadHandler.handleBackupDownloadRequest(rewindId, site, types)
+        launch {
+            val result = postBackupDownloadUseCase.postBackupDownloadRequest(rewindId, site, types)
+            handleBackupDownloadRequestResult(result)
         }
     }
 
@@ -169,6 +147,42 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                 roots = checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true,
                 contents = checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true
         )
+    }
+
+    private fun handleBackupDownloadRequestResult(result: BackupDownloadRequestState) {
+        when (result) {
+            is NetworkUnavailable -> {
+                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+            }
+            is RemoteRequestFailure -> {
+                _snackbarEvents.postValue(Event(GenericFailureMsg))
+            }
+            is Success -> {
+                if (result.requestRewindId == result.rewindId) {
+                    if (result.downloadId == null) {
+                        _snackbarEvents.postValue(Event(GenericFailureMsg))
+                    } else {
+                        parentViewModel.onBackupDownloadDetailsFinished(
+                                result.rewindId,
+                                result.downloadId,
+                                extractPublishedDate())
+                    }
+                } else {
+                    _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+                }
+            }
+            is Progress -> {
+            } // no op
+            is Complete -> {
+            } // no op
+        }
+    }
+
+    companion object {
+        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.backup_download_generic_failure))
+        private val OtherRequestRunningMsg = SnackbarMessageHolder(
+                UiStringRes(R.string.backup_download_another_download_running))
     }
 
     sealed class UiState {
