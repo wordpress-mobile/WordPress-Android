@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
@@ -25,11 +26,24 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val threatItemBuilder: ThreatItemBuilder
 ) {
-    fun buildThreatDetailsListItems(threatModel: ThreatModel) = mutableListOf<JetpackListItemState>().apply {
+    fun buildThreatDetailsListItems(
+        threatModel: ThreatModel,
+        onFixThreatButtonClicked: () -> Unit,
+        onGetFreeEstimateButtonClicked: () -> Unit,
+        onIgnoreThreatButtonClicked: () -> Unit
+    ) = mutableListOf<JetpackListItemState>().apply {
         addAll(buildBasicThreatDetailsListItems(threatModel))
         addAll(buildTechnicalDetailsListItems(threatModel))
         addAll(buildFixDetailsListItems(threatModel))
-    }
+        addAll(
+            buildActionButtons(
+                threatModel,
+                onFixThreatButtonClicked,
+                onGetFreeEstimateButtonClicked,
+                onIgnoreThreatButtonClicked
+            )
+        )
+    }.toList()
 
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
@@ -81,6 +95,27 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
             if (status != ThreatStatus.FIXED) {
                 add(buildFixTitleHeader(status, fixable))
                 add(buildFixDescription(fixable))
+            }
+        }
+    }
+
+    private fun buildActionButtons(
+        threatModel: ThreatModel,
+        onFixThreatButtonClicked: () -> Unit,
+        onGetFreeEstimateButtonClicked: () -> Unit,
+        onIgnoreThreatButtonClicked: () -> Unit
+    ) = mutableListOf<JetpackListItemState>().apply {
+        with(threatModel.baseThreatModel) {
+            val isFixable = fixable != null
+            if (status != ThreatStatus.FIXED) {
+                if (isFixable) {
+                    add(buildFixThreatButtonAction(onFixThreatButtonClicked))
+                } else {
+                    add(buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked))
+                }
+            }
+            if (status == ThreatStatus.CURRENT) {
+                add(buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked))
             }
         }
     }
@@ -169,5 +204,24 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         UiStringText(
             htmlMessageUtils.getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
         )
+    )
+
+    private fun buildFixThreatButtonAction(onFixThreatButtonClicked: () -> Unit) = ActionButtonState(
+        text = UiStringRes(R.string.threat_fix),
+        onClick = onFixThreatButtonClicked,
+        contentDescription = UiStringRes(R.string.threat_fix)
+    )
+
+    private fun buildGetFreeEstimateButtonAction(onGetFreeEstimateButtonClicked: () -> Unit) = ActionButtonState(
+        text = UiStringRes(R.string.threat_get_free_estimate),
+        onClick = onGetFreeEstimateButtonClicked,
+        contentDescription = UiStringRes(R.string.threat_get_free_estimate)
+    )
+
+    private fun buildIgnoreThreatButtonAction(onIgnoreThreatButtonClicked: () -> Unit) = ActionButtonState(
+        text = UiStringRes(R.string.threat_ignore),
+        onClick = onIgnoreThreatButtonClicked,
+        contentDescription = UiStringRes(R.string.threat_ignore),
+        isSecondary = true
     )
 }
