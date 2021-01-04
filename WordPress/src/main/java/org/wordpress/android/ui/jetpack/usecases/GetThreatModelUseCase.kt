@@ -7,7 +7,7 @@ import org.wordpress.android.modules.IO_THREAD
 import javax.inject.Inject
 import javax.inject.Named
 
-class GetThreatDetailsUseCase @Inject constructor(
+class GetThreatModelUseCase @Inject constructor(
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
     private val scanStore: ScanStore
 ) {
