@@ -1074,6 +1074,9 @@
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
 
+    <!-- threat details -->
+    <string name="threat_details">Threat Details</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>

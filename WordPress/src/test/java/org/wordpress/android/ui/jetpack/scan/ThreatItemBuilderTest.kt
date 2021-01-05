@@ -220,15 +220,15 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     @Test
     fun `onThreatItemClicked listener is correctly assigned to ThreatItem's onClick`() = test {
         // Arrange
-        val onThreatItemClicked: (ThreatModel) -> Unit = mock()
+        val onThreatItemClicked: (Long) -> Unit = mock()
         val threatItem = buildThreatItem(genericThreatModel, onThreatItemClicked)
         // Act
         threatItem.onClick.invoke()
         // Assert
-        verify(onThreatItemClicked).invoke(genericThreatModel)
+        verify(onThreatItemClicked).invoke(genericThreatModel.baseThreatModel.id)
     }
 
-    private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((ThreatModel) -> Unit) = mock()) =
+    private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((Long) -> Unit) = mock()) =
         builder.buildThreatItem(
             threatModel = threatModel,
             onThreatItemClicked = onThreatItemClicked

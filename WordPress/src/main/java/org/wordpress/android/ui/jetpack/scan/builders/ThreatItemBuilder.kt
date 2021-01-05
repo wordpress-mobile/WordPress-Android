@@ -17,12 +17,12 @@ import javax.inject.Inject
 
 @Reusable
 class ThreatItemBuilder @Inject constructor() {
-    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatModel: ThreatModel) -> Unit) =
+    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatId: Long) -> Unit) =
         ThreatItemState(
             threatId = threatModel.baseThreatModel.id,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
-            onClick = { onThreatItemClicked(threatModel) }
+            onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
         )
 
     private fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
