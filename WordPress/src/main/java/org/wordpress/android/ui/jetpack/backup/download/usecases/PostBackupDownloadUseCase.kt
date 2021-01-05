@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestT
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -32,8 +33,16 @@ class PostBackupDownloadUseCase @Inject constructor(
         val result = activityLogStore.backupDownload(BackupDownloadPayload(site, rewindId, types))
         if (result.isError) {
             RemoteRequestFailure
+        } else {
+            if (result.rewindId == rewindId) {
+                if (result.downloadId == null) {
+                    RemoteRequestFailure
+                } else {
+                    Success(rewindId, result.rewindId, result.downloadId)
+                }
+            } else {
+                OtherRequestRunning
+            }
         }
-
-        Success(rewindId, result.rewindId, result.downloadId)
     }
 }
