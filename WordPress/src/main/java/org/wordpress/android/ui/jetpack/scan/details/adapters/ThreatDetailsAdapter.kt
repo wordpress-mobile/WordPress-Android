@@ -10,8 +10,8 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionVie
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
-import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.FileNameViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatContextLinesViewHolder
+import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatFileNameViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -30,7 +30,7 @@ class ThreatDetailsAdapter(
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
-            ViewType.FILE_NAME.id -> FileNameViewHolder(uiHelpers, parent)
+            ViewType.THREAT_FILE_NAME.id -> ThreatFileNameViewHolder(uiHelpers, parent)
             ViewType.THREAT_CONTEXT_LINES.id -> ThreatContextLinesViewHolder(parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")

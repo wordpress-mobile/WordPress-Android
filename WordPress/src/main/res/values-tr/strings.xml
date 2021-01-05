@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-07 21:43:39+0000
+Translation-Revision-Date: 2020-12-24 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="backup_item_sqls">Site veritabanı (SQL)</string>
+    <string name="backup_item_contents">WP-İçerik dizini (temalar, eklentiler ve yüklemeler hariç)</string>
+    <string name="backup_item_roots">WordPress Root (wp-config.php ve WordPress\'e ait olmayan tüm dosyaları içerir)</string>
+    <string name="backup_item_media_uploads">Medya Yüklemeleri</string>
+    <string name="backup_item_plugins">WordPress Eklentileri</string>
+    <string name="backup_item_themes">WordPress Temaları</string>
+    <string name="backup_download_details_icon_content_description">İndirilebilir yedekleme oluştur simgesi</string>
+    <string name="backup_download_details_action_button">İndirilebilir dosya oluştur</string>
+    <string name="backup_download_details_choose_items_header">İndirmeye eklemek istediğiniz öğeleri seçin:</string>
+    <string name="backup_download_details_description">%1$s indirme yedeklemesi oluşturmak için seçtiğiniz saattir.</string>
+    <string name="backup_download_details_header">İndirilebilir yedekleme oluştur</string>
+    <string name="backup_download_details_page_title">Yedeklemeyi İndir</string>
+    <string name="backup_download">İndirilebilir Yedekleme</string>
+    <string name="gutenberg_native_error">Hata</string>
+    <string name="gutenberg_native_choose_file">Dosya seçin</string>
+    <string name="activity_log_item_menu_download_backup_label">Yedeklemeyi indir</string>
+    <string name="activity_log_item_menu_restore_label">Bu noktaya kadar geri yükle</string>
+    <string name="activity_log_activity_type_filter_label">Etkinlik türü</string>
+    <string name="activity_log_date_range_filter_label">Tarih aralığı</string>
+    <string name="activity_log_activity_type_filter_header">Etkinlik Türüne göre filtrele</string>
+    <string name="dialog_confirm_copy_local_copy_button">Sürümü bu uygulamadan kopyala</string>
+    <string name="dialog_confirm_copy_local_edit_button">Önce gönderiyi düzenle</string>
+    <string name="dialog_confirm_copy_local_message">Kopyalamaya çalıştığınız gönderinin çakışan iki sürümü var veya yakın zamanda değişiklik yaptığınız ancak bunları kaydetmediniz.\nHerhangi bir çakışmayı çözmek için önce gönderiyi düzenleyin veya sürümü bu uygulamadan kopyalayarak devam edin.</string>
+    <string name="dialog_confirm_copy_local_title">Senkronizasyon çakışması sonrası</string>
+    <string name="button_copy">Çoğalt</string>
+    <string name="toast_edit_story_update_in_progress_title">Öykü kaydediliyor, lütfen bekleyin…</string>
     <string name="gutenberg_native_file_name">Dosya adı</string>
     <string name="gutenberg_native_file_block_settings">Dosya blok ayarları</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Dosyaların yüklenmesi başarısız.\nSeçenekler için dokunun.</string>
@@ -14,7 +40,6 @@ Language: tr
     <string name="gutenberg_native_copy_file_url">Dosya adresini kopyala</string>
     <string name="gutenberg_native_choose_a_file">DOSYA SEÇ</string>
     <string name="new_site_creation_domain_header_title">Bir alan adı seçin</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Yeni</string>
     <string name="my_site_btn_jetpack_settings">Jetpack ayarları</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Sohbet takip ediliyor</string>
@@ -559,7 +584,6 @@ Language: tr
     <string name="photo_picker_image_thumbnail_content_description">Görsel küçük resmi</string>
     <string name="photo_picker_image_thumbnail_selected">Görsel seçildi</string>
     <string name="photo_picker_image_selected">,Seçildi</string>
-    <string name="dialog_gutenberg_informative_description_v2">Blok düzenleyicide büyük iyileştirmeler yaptık ve denemeye değer olduğunu düşünüyoruz! Yeni yazılar ve sayfalar için etkinleştirdik, ancak klasik düzenleyiciye geçmek isterseniz, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
     <string name="post_settings_publish">Yayımla</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Bu yazı hemen yayınlanacak.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Senkronize etmeye hazır mısınız?</string>
@@ -662,8 +686,6 @@ Language: tr
     <string name="notifications_tab_dialog_master_off_title">Bu sitenin bildirimlerini, bildirimler sekmesindeki bildirimleri görmek için, açın.</string>
     <string name="notifications_tab_dialog_master_hint_off">Bu site için bildirimler sekmesinde bildirim gösterimini etkinleştir</string>
     <string name="notifications_tab_dialog_master_hint_on">Bu site için bildirimler sekmesinde bildirim gösterimini etkisizleştir</string>
-    <string name="dialog_gutenberg_informative_description_page">Şimdi yeni sayfalar için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
-    <string name="dialog_gutenberg_informative_description_post">Şimdi yeni göçnderiler için blok düzenleyiciyi kullanıyorsunuz, harika! Klasik düzenleyiciye geçmek istiyorsanız, \'Sitem\'> \'Site Ayarları\'na gidin.</string>
     <string name="pick_media">Görsel veya video ekle.</string>
     <string name="error_post_not_published_retrying_private">Bu özel yazıyı yayınlayamadık ama daha sonra tekrar deneyeceğiz.</string>
     <string name="error_post_not_scheduled_retrying">Bu yazıyı planlayamadık ama daha sonra tekrar deneyeceğiz.</string>
@@ -936,7 +958,6 @@ Language: tr
     <string name="site_settings_gutenberg_default_for_new_posts">Blok Düzenleyicisini Kullan</string>
     <string name="menu_switch_to_gutenberg_editor">Blok düzenleyicisine geç</string>
     <string name="menu_switch_to_aztec_editor">Klasik düzenleyiciye geç</string>
-    <string name="dialog_gutenberg_informative_title">Blok Düzenleyicisi Etkinleştirildi</string>
     <string name="exit">çıkış</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d tamamlandı</string>
     <string name="quick_start_sites_type_grow">Kitlenizi Genişletin</string>

@@ -193,6 +193,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetList
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
+import org.wordpress.android.ui.suggestion.SuggestionActivity;
+import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -229,6 +231,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         SupportModule.class,
         ThreadModule.class,
         TrackerModule.class,
+        SuggestionSourceModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
@@ -609,6 +612,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderDiscoverJobService object);
 
     void inject(ReaderDiscoverService object);
+
+    void inject(SuggestionActivity object);
 
     void inject(MediaPickerActivity object);
 

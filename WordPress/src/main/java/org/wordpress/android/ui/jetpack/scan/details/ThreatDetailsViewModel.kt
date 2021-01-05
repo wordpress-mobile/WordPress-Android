@@ -8,11 +8,11 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.usecases.GetThreatDetailsUseCase
+import org.wordpress.android.ui.jetpack.usecases.GetThreatModelUseCase
 import javax.inject.Inject
 
 class ThreatDetailsViewModel @Inject constructor(
-    private val getThreatDetailsUseCase: GetThreatDetailsUseCase,
+    private val getThreatModelUseCase: GetThreatModelUseCase,
     private val builder: ThreatDetailsListItemsBuilder
 ) : ViewModel() {
     private var isStarted = false
@@ -32,13 +32,13 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun getData() {
         viewModelScope.launch {
-            val threatModel = getThreatDetailsUseCase.get(threatId)
-            threatModel?.let { updateUiState(it) }
+            val model = getThreatModelUseCase.get(threatId)
+            model?.let { updateUiState(it) }
         }
     }
 
-    private fun updateUiState(threatModel: ThreatModel) {
-        _uiState.value = buildContentUiState(threatModel)
+    private fun updateUiState(model: ThreatModel) {
+        _uiState.value = buildContentUiState(model)
     }
 
     private fun buildContentUiState(model: ThreatModel) = Content(
