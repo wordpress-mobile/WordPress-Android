@@ -174,7 +174,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 override val buttonText: UiString = UiStringRes(R.string.retry)
             }
 
-            object NoActivitiesError: Error() {
+            object NoActivitiesError : Error() {
                 override val image = R.drawable.img_illustration_empty_results_216dp
                 override val title = UiStringRes(R.string.activity_log_activity_type_empty_title)
                 override val subtitle = UiStringRes(R.string.activity_log_activity_type_empty_subtitle)
