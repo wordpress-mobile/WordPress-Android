@@ -2,7 +2,7 @@ package org.wordpress.android.ui.jetpack.backup.download.details
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.DetailsSubHeaderState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -73,7 +73,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
             onClick = onClick
     )
 
-    private fun buildDetailsSubHeader() = DetailsSubHeaderState(
+    private fun buildDetailsSubHeader() = SubHeaderState(
             text = UiStringRes(R.string.backup_download_details_choose_items_header)
     )
 }
