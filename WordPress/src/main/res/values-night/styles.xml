@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:tools="http://schemas.android.com/tools" xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Base.Wordpress" parent="Theme.MaterialComponents.DayNight.Bridge">
         <item name="colorPrimary">@color/blue_30</item>
@@ -124,18 +124,20 @@
         <item name="android:background">?android:attr/listDivider</item>
     </style>
 
-    <style name="WordPress.ZenDesk" parent="ZendeskSdkTheme.Dark" />
-
-    <!-- Overload of Zendesk FAB style -->
-    <style name="zs_contact_us_fab">
-        <item name="android:gravity">bottom|end</item>
-        <item name="android:layout_margin">@dimen/zs_fab_margin</item>
-        <item name="android:contentDescription">
-            @string/zs_general_contact_us_button_label_accessibility
+    <style name="WordPress.ZenDesk" parent="WordPress.NoActionBar">
+        <item name="toolbarStyle">@style/WordPress.ZenDesk.Toolbar</item>
+        <item name="android:statusBarColor">@color/primary_dark</item>
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="toolbarNavigationButtonStyle">
+            @style/Widget.AppCompat.Toolbar.Button.Navigation
         </item>
-        <item name="android:visibility">gone</item>
-        <item name="android:src">@drawable/zs_create_ticket_fab</item>
-        <item name="android:backgroundTint">@color/pink_50</item>
+        <item name="android:windowLightStatusBar" tools:targetApi="m">false</item>
+        <item name="android:navigationBarColor">@android:color/black</item>
+    </style>
+
+    <style name="WordPress.ZenDesk.Toolbar" parent="Widget.MaterialComponents.Toolbar.Surface">
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
     </style>
 
 </resources>
