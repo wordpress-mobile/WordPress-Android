@@ -8,9 +8,11 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
@@ -22,17 +24,20 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
+import org.wordpress.android.ui.jetpack.common.ViewType.BACKUP_PROGRESS
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadProgressViewModel @Inject constructor(
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
+    private val stateListItemBuilder: BackupDownloadProgressStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -73,11 +78,11 @@ class BackupDownloadProgressViewModel @Inject constructor(
     }
 
     private fun initView() {
-        // todo: annmarie - init the view from backupDownloadState
-        _uiState.value = Content(listOf(
-                HeaderState(
-                UiStringRes(R.string.backup_download_progress_page_title)
-        )
+        _uiState.value = Content(
+                items = stateListItemBuilder.buildProgressListStateItems(
+                        progress = 0,
+                        published = backupDownloadState.published as Date,
+                        onNotifyMeClick = this@BackupDownloadProgressViewModel::onNotifyMeClick
         ))
     }
 
@@ -99,7 +104,21 @@ class BackupDownloadProgressViewModel @Inject constructor(
                 _snackbarEvents.postValue(Event(GenericFailureMsg))
             }
             is Progress -> {
-                _snackbarEvents.value = Event(SnackbarMessageHolder((UiStringText("Progress = ${state.progress}"))))
+                (_uiState.value as? Content)?.let { content ->
+                    val updatedList = content.items.map { contentState ->
+                        if (contentState.type == BACKUP_PROGRESS) {
+                            contentState as ProgressState
+                            contentState.copy(progress = state.progress ?: 0,
+                                    label = UiStringResWithParams(
+                                            string.backup_download_progress_label,
+                                            listOf(UiStringText(state.progress?.toString() ?: "0")))
+                            )
+                        } else {
+                            contentState
+                        }
+                    }
+                    _uiState.postValue(content.copy(items = updatedList))
+                }
             }
             is Complete -> {
                 parentViewModel.onBackupDownloadProgressFinished(state.url)
@@ -107,6 +126,11 @@ class BackupDownloadProgressViewModel @Inject constructor(
             else -> {
             } // no op
         }
+    }
+
+    private fun onNotifyMeClick() {
+        // todo: annmarie - implement the onNotifyClick
+        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Notified me clicked"))))
     }
 
     companion object {
