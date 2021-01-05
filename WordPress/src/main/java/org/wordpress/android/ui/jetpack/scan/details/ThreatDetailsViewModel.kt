@@ -32,13 +32,13 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun getData() {
         viewModelScope.launch {
-            val threatModel = getThreatModelUseCase.get(threatId)
-            threatModel?.let { updateUiState(it) }
+            val model = getThreatModelUseCase.get(threatId)
+            model?.let { updateUiState(it) }
         }
     }
 
-    private fun updateUiState(threatModel: ThreatModel) {
-        _uiState.value = buildContentUiState(threatModel)
+    private fun updateUiState(model: ThreatModel) {
+        _uiState.value = buildContentUiState(model)
     }
 
     private fun buildContentUiState(model: ThreatModel) = Content(builder.buildThreatDetailsListItems(model))
