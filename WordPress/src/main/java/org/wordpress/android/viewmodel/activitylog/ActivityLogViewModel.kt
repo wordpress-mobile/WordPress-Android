@@ -38,6 +38,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.Event
@@ -66,6 +67,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
@@ -266,6 +268,7 @@ class ActivityLogViewModel @Inject constructor(
             // adjust time of the end of the date range to 23:59:59
             Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
         }
+        trackDateRangeSelected(dateRange)
         currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
@@ -292,6 +295,21 @@ class ActivityLogViewModel @Inject constructor(
         currentActivityTypeFilter = selectedTypes
         refreshFiltersUiState()
         requestEventsUpdate(false)
+    }
+
+    private fun trackDateRangeSelected(dateRange: Pair<Long, Long>?) {
+        val start = dateRange?.first
+        val end = dateRange?.second
+        if (start == null || end == null) {
+            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+        } else {
+            val map = mutableMapOf<String, Any>()
+            // Number of selected days
+            map["duration"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date(end)) + 1
+            // Distance from the startDate to today (in days)
+            map["distance"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date())
+            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
+        }
     }
 
     private fun trackActivityTypesSelected(activityTypeIds: List<ActivityTypeModel>) {
