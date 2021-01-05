@@ -1037,6 +1037,7 @@
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
     <!-- scan -->
+    <string name="backup">Backup</string>
     <string name="scan">Scan</string>
 
     <string name="scan_state_icon">Scan state icon</string>
