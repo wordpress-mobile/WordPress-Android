@@ -13,8 +13,8 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.FileNameState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -142,7 +142,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
     private fun buildFileNameDescription() = DescriptionState(UiStringRes(R.string.threat_file_description))
 
-    private fun buildFileName(fileName: String) = FileNameState(UiStringText(fileName))
+    private fun buildFileName(fileName: String) = ThreatFileNameState(UiStringText(fileName))
 
     private fun buildThreatContextLines(context: ThreatContext) =
         ThreatContextLinesItemState(lines = context.lines.map { buildThreatContextLine(it) })

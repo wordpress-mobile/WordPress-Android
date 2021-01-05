@@ -23,8 +23,8 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_PATH
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.FileNameState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -115,7 +115,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         val expectedTechnicalDetailsHeaderItem = technicalDetailsHeaderItem
         val expectedFileNameDescriptionItem = fileNameDescriptionItem
-        val expectedFileNameItem = FileNameState(UiStringText(TEST_FILE_PATH))
+        val expectedFileNameItem = ThreatFileNameState(UiStringText(TEST_FILE_PATH))
         val expectedContextLinesItem = ThreatContextLinesItemState(
             listOf(
                 ThreatContextLinesItemState.ThreatContextLineItemState(
@@ -146,7 +146,9 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedTechnicalDetailsHeaderItem = technicalDetailsHeaderItem
         val expectedFileNameDescriptionItem = fileNameDescriptionItem
-        val expectedFileNameItem = FileNameState(UiStringText(ThreatTestData.coreFileModificationThreatModel.fileName))
+        val expectedFileNameItem = ThreatFileNameState(
+            UiStringText(ThreatTestData.coreFileModificationThreatModel.fileName)
+        )
         val expectedDiffItem = DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
 
         // Act
