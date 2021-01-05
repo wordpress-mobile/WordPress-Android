@@ -10,6 +10,7 @@ import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -291,6 +292,20 @@ class ActivityLogViewModel @Inject constructor(
         currentActivityTypeFilter = selectedTypes
         refreshFiltersUiState()
         requestEventsUpdate(false)
+    }
+
+    private fun trackActivityTypesSelected(activityTypeIds: List<ActivityTypeModel>) {
+        if (activityTypeIds.isEmpty()) {
+            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
+        } else {
+            val map = mutableMapOf<String, Any>()
+            map["num_groups_selected"] = activityTypeIds.size.toString()
+            map["num_total_activities_selected"] = activityTypeIds.map { it.count }.reduce { acc, count -> acc + count }
+            activityTypeIds.forEach {
+                map["group_${it.key}"] = true
+            }
+            analyticsTrackerWrapper.track(ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED, map)
+        }
     }
 
     fun onClearActivityTypeFilterClicked() {
