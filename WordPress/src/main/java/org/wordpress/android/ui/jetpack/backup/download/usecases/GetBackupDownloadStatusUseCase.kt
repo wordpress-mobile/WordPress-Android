@@ -11,6 +11,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+import kotlinx.coroutines.delay
 
 const val DELAY_MILLIS = 5000L
 
@@ -46,7 +47,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                 emit(RemoteRequestFailure)
                 return@flow
             }
-            kotlinx.coroutines.delay(DELAY_MILLIS)
+            delay(DELAY_MILLIS)
         }
     }
 }

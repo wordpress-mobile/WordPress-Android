@@ -11,10 +11,9 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
@@ -158,22 +157,15 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                 _snackbarEvents.postValue(Event(GenericFailureMsg))
             }
             is Success -> {
-                if (result.requestRewindId == result.rewindId) {
-                    if (result.downloadId == null) {
-                        _snackbarEvents.postValue(Event(GenericFailureMsg))
-                    } else {
-                        parentViewModel.onBackupDownloadDetailsFinished(
-                                result.rewindId,
-                                result.downloadId,
-                                extractPublishedDate())
-                    }
-                } else {
-                    _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
-                }
+                parentViewModel.onBackupDownloadDetailsFinished(
+                    result.rewindId,
+                    result.downloadId,
+                    extractPublishedDate())
             }
-            is Progress -> {
-            } // no op
-            is Complete -> {
+            is OtherRequestRunning -> {
+                _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            }
+            else -> {
             } // no op
         }
     }

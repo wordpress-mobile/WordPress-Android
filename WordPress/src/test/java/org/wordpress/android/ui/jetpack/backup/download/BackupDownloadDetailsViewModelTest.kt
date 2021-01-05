@@ -121,7 +121,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     @Test
     fun `snackbar message is shown when request another request is already running`() = test {
         whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadSuccessUnmatched)
+                .thenReturn(otherRequestRunningError)
 
         val uiStates = initObservers().uiStates
         val messages = initObservers().snackbarMsgs
@@ -133,21 +133,6 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         assertThat(messages[0].peekContent().message)
                 .isEqualTo(UiStringRes(R.string.backup_download_another_download_running))
-    }
-
-    @Test
-    fun `snackbar message is shown when downloadId returned is null`() = test {
-        whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
-                .thenReturn(postBackupDownloadSuccessNullDownloadId)
-
-        val uiStates = initObservers().uiStates
-        val messages = initObservers().snackbarMsgs
-
-        viewModel.start(site, activityId, parentViewModel)
-
-        (((uiStates.last() as Content).items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
-
-        assertThat(messages[0].peekContent().message).isEqualTo(UiStringRes(R.string.backup_download_generic_failure))
     }
 
     private fun initObservers(): Observers {
@@ -192,12 +177,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
             downloadId = 100L
     )
 
-    private val postBackupDownloadSuccessNullDownloadId = BackupDownloadRequestState.Success(
-            requestRewindId = "rewindId",
-            rewindId = "rewindId",
-            downloadId = null
-    )
-
     private val postBackupDownloadNetworkError = BackupDownloadRequestState.Failure.NetworkUnavailable
     private val postBackupDownloadRemoteRequestError = BackupDownloadRequestState.Failure.RemoteRequestFailure
+    private val otherRequestRunningError = BackupDownloadRequestState.Failure.OtherRequestRunning
 }

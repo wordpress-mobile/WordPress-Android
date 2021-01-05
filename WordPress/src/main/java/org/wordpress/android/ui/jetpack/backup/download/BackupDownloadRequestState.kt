@@ -12,5 +12,6 @@ sealed class BackupDownloadRequestState {
     sealed class Failure : BackupDownloadRequestState() {
         object NetworkUnavailable : Failure()
         object RemoteRequestFailure : Failure()
+        object OtherRequestRunning : Failure()
     }
 }

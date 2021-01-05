@@ -16,7 +16,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
@@ -105,7 +104,7 @@ class BackupDownloadProgressViewModel @Inject constructor(
             is Complete -> {
                 parentViewModel.onBackupDownloadProgressFinished(state.url)
             }
-            is Success -> {
+            else -> {
             } // no op
         }
     }
