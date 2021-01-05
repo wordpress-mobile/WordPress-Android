@@ -13,6 +13,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -132,7 +133,7 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindStatus: Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
-    private var currentActivityTypeFilter: List<Pair<String, UiString>> = listOf()
+    private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
 
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
@@ -209,7 +210,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun createActivityTypeFilterLabel(): UiString {
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
-                it[0].second
+                UiStringText("${it[0].name} (${it[0].count})")
             } else {
                 UiStringResWithParams(
                         R.string.activity_log_activity_type_filter_active_label,
@@ -249,7 +250,7 @@ class ActivityLogViewModel @Inject constructor(
                     ShowBackupDownload(item)
                 }
             }
-            _navigationEvents.value = org.wordpress.android.viewmodel.Event(navigationEvent)
+            _navigationEvents.value = Event(navigationEvent)
         }
         return true
     }
@@ -280,13 +281,14 @@ class ActivityLogViewModel @Inject constructor(
         analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED)
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
-                currentActivityTypeFilter.mapNotNull { it.first },
+                currentActivityTypeFilter.mapNotNull { it.key },
                 currentDateRangeFilter
         )
     }
 
-    fun onActivityTypesSelected(activityTypeIds: List<Pair<String, UiString>>) {
-        currentActivityTypeFilter = activityTypeIds
+    fun onActivityTypesSelected(selectedTypes: List<ActivityTypeModel>) {
+        trackActivityTypesSelected(selectedTypes)
+        currentActivityTypeFilter = selectedTypes
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
@@ -394,7 +396,7 @@ class ActivityLogViewModel @Inject constructor(
                 loadMore,
                 currentDateRangeFilter?.first?.let { Date(it) },
                 currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter.mapNotNull { it.first }
+                currentActivityTypeFilter.mapNotNull { it.key }
         )
         fetchActivitiesJob = launch {
             val result = activityLogStore.fetchActivities(payload)
