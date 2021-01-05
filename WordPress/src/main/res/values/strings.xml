@@ -1032,6 +1032,11 @@
     <string name="activity_log_date_range_filter_label">Date Range</string>
     <string name="activity_log_activity_type_filter_label">Activity Type</string>
     <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
+    <string name="activity_log_activity_type_error_title">No connection</string>
+    <string name="activity_log_activity_type_error_subtitle">Please Check your internet connection and retry.</string>
+    <string name="activity_log_activity_type_empty_title">No activities available</string>
+    <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
+
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>

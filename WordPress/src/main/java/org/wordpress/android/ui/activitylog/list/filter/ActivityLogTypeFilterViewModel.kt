@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityTypesPayl
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Content
+import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.Error
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel.UiState.FullscreenLoading
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -77,10 +78,12 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
     }
 
     private fun buildErrorUiState() =
-            UiState.Error(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
+            Error.ConnectionError(Action(UiStringRes(R.string.retry)).apply { action = ::onRetryClicked })
 
-    private suspend fun buildContentUiState(activityTypes: List<ActivityTypeModel>): Content {
+    private suspend fun buildContentUiState(activityTypes: List<ActivityTypeModel>): UiState {
         return withContext(bgDispatcher) {
+            if (activityTypes.isEmpty()) { return@withContext Error.NoActivitiesError }
+
             val headerListItem = ListItemUiState.SectionHeader(
                     UiStringRes(R.string.activity_log_activity_type_filter_header)
             )
@@ -156,13 +159,26 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             val loadingText: UiString = UiStringRes(R.string.loading)
         }
 
-        data class Error(val retryAction: Action) : UiState() {
+        sealed class Error : UiState() {
             override val errorVisibility = true
+            abstract val image: Int
+            abstract val title: UiString
+            abstract val subtitle: UiString
+            open val buttonText: UiString? = null
+            open val retryAction: Action? = null
 
-            // TODO malinjir replace strings according to design
-            val errorTitle: UiString = UiStringRes(R.string.error)
-            val errorSubtitle: UiString = UiStringRes(R.string.hpp_retry_error)
-            val errorButtonText: UiString = UiStringRes(R.string.retry)
+            data class ConnectionError(override val retryAction: Action) : Error() {
+                override val image = R.drawable.img_illustration_cloud_off_152dp
+                override val title: UiString = UiStringRes(R.string.activity_log_activity_type_error_title)
+                override val subtitle: UiString = UiStringRes(R.string.activity_log_activity_type_error_subtitle)
+                override val buttonText: UiString = UiStringRes(R.string.retry)
+            }
+
+            object NoActivitiesError: Error() {
+                override val image = R.drawable.img_illustration_empty_results_216dp
+                override val title = UiStringRes(R.string.activity_log_activity_type_empty_title)
+                override val subtitle = UiStringRes(R.string.activity_log_activity_type_empty_subtitle)
+            }
         }
 
         data class Content(
