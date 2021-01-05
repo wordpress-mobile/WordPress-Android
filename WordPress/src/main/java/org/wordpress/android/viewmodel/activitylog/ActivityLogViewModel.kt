@@ -270,6 +270,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onClearDateRangeFilterClicked() {
+        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
         currentDateRangeFilter = null
         refreshFiltersUiState()
         requestEventsUpdate(false)
@@ -291,6 +292,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onClearActivityTypeFilterClicked() {
+        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
         currentActivityTypeFilter = listOf()
         refreshFiltersUiState()
         requestEventsUpdate(false)
