@@ -20,5 +20,5 @@ sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackLi
         )
     }
 
-    data class FileNameState(val fileName: UiString) : ThreatDetailsListItemState(ViewType.FILE_NAME)
+    data class ThreatFileNameState(val fileName: UiString) : ThreatDetailsListItemState(ViewType.THREAT_FILE_NAME)
 }
