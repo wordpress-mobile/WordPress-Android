@@ -3,12 +3,12 @@ package org.wordpress.android.ui.jetpack.scan
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.utils.UiHelpers
@@ -24,7 +24,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
-        initAdapter()
+        initRecyclerView()
         initViewModel(getSite(savedInstanceState))
     }
 
@@ -32,8 +32,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         (requireActivity().application as WordPress).component()?.inject(this)
     }
 
+    private fun initRecyclerView() {
+        initAdapter()
+    }
+
     private fun initAdapter() {
         recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
+        recycler_view.itemAnimator = null
     }
 
     private fun initViewModel(site: SiteModel) {
@@ -45,9 +50,20 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun setupObservers() {
         viewModel.uiState.observe(
             viewLifecycleOwner,
-            Observer { uiState ->
+            { uiState ->
                 if (uiState is Content) {
                     refreshContentScreen(uiState)
+                }
+            }
+        )
+
+        viewModel.navigationEvents.observe(
+            viewLifecycleOwner,
+            {
+                it.applyIfNotHandled {
+                    if (this is ScanNavigationEvents.ShowThreatDetails) {
+                        ActivityLauncher.viewThreatDetails(requireActivity(), threatId)
+                    }
                 }
             }
         )
@@ -68,5 +84,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val ARG_THREAT_ID = "arg_threat_id"
     }
 }

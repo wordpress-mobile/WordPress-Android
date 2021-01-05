@@ -66,10 +66,10 @@ class ScanStatusService
     }
 
     private fun reloadScanState(): Boolean {
-        site?.let {
-            val state = scanStore.getScanStateForSite(it)
-            state?.let {
-                updateScanState(state)
+        site?.let { site ->
+            val state = scanStore.getScanStateForSite(site)
+            state?.let { scanState ->
+                updateScanState(scanState)
                 return true
             }
         }
@@ -80,6 +80,7 @@ class ScanStatusService
         _scanAvailable.value = scanStateModel.state != UNAVAILABLE &&
             scanStateModel.state != UNKNOWN &&
             _scanStateFetchError.value == null
+        _scanState.value = scanStateModel
     }
 
     private fun onScanStateFetched(scanStateError: ScanStateError?, isError: Boolean) {

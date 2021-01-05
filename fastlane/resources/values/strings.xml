@@ -208,7 +208,7 @@
     <!-- Delete Media -->
     <string name="cannot_delete_multi_media_items">Some media can\'t be deleted at this time. Try again later.</string>
     <string name="cannot_retry_deleted_media_item">Media has been removed. Delete it from this post?</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try editing your Story.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="media_empty_list">You don\'t have any media</string>
     <string name="media_empty_search_list">No media matching your search</string>
     <string name="media_empty_image_list">You don\'t have any images</string>
@@ -385,12 +385,6 @@
     <string name="dialog_confirm_trash_losing_local_changes_message">Trashing this post will also discard local changes, are you sure you want to continue?</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Unsaved changes</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Trashing this post will also discard unsaved changes, are you sure you want to continue?</string>
-
-    <!-- gutenberg informative dialog -->
-    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
-    <string name="dialog_gutenberg_informative_description_post">You\’re now using the block editor for new posts, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_page">You\’re now using the block editor for new pages, great! If you\’d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages but if you\'d like to change to the classic editor, go to \'My Site\' &gt; \'Site Settings\'.</string>
 
     <!-- reload drop down -->
     <string name="loading">Loading…</string>

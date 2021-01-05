@@ -199,11 +199,13 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
     public void onStart() {
         super.onStart();
         mDispatcher.register(this);
+        mGridAdapter.refreshCurrentItems(mRecycler);
     }
 
     @Override
     public void onStop() {
         mDispatcher.unregister(this);
+        mGridAdapter.cancelPendingRequestsForVisibleItems(mRecycler);
         super.onStop();
     }
 

@@ -21,6 +21,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
     PersistentEditTextHelper mPersistentEditTextHelper;
     private OnEditTextBackListener mBackListener;
     private SuggestionTokenizer mSuggestionTokenizer;
+    private char mPrefix;
 
     public interface OnEditTextBackListener {
         void onEditTextBack();
@@ -42,12 +43,16 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
     }
 
     private void init(Context context) {
-        mSuggestionTokenizer = new SuggestionTokenizer();
-        setTokenizer(mSuggestionTokenizer);
-        setThreshold(1);
         mPersistentEditTextHelper = new PersistentEditTextHelper(context);
         // When TYPE_TEXT_FLAG_AUTO_COMPLETE is set, autocorrection is disabled.
         setRawInputType(getInputType() & ~EditorInfo.TYPE_TEXT_FLAG_AUTO_COMPLETE);
+    }
+
+    public void initializeWithPrefix(char prefix) {
+        mPrefix = prefix;
+        mSuggestionTokenizer = new SuggestionTokenizer(mPrefix);
+        setTokenizer(mSuggestionTokenizer);
+        setThreshold(1);
     }
 
     @Override
@@ -63,7 +68,7 @@ public class SuggestionAutoCompleteText extends AppCompatMultiAutoCompleteTextVi
 
         return start > 0
                && (end - start >= 1
-                             || (start == end && text.charAt(start - 1) == '@'));
+                             || (start == end && text.charAt(start - 1) == mPrefix));
     }
 
     public void forceFiltering(CharSequence text) {

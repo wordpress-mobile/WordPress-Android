@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 13:54:10+0000
+Translation-Revision-Date: 2020-12-23 12:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="backup_item_sqls">網站資料庫 (SQL)</string>
+    <string name="backup_item_contents">WP 內容目錄 (不包括佈景主題、外掛程式和上傳內容)</string>
+    <string name="backup_item_roots">WordPress 根目錄 (包括 wp-config.php 和任何非 WordPress 檔案)</string>
+    <string name="backup_item_media_uploads">媒體上傳</string>
+    <string name="backup_item_plugins">WordPress 外掛程式</string>
+    <string name="backup_item_themes">WordPress 佈景主題</string>
+    <string name="backup_download_details_icon_content_description">建立可下載的備份圖示</string>
+    <string name="backup_download_details_action_button">建立可下載檔案</string>
+    <string name="backup_download_details_choose_items_header">選擇要加入下載的項目：</string>
+    <string name="backup_download_details_description">%1$s 是選定建立下載備份的時間點。</string>
+    <string name="backup_download_details_header">建立可下載的備份</string>
+    <string name="backup_download_details_page_title">下載備份</string>
+    <string name="backup_download">備份下載</string>
+    <string name="gutenberg_native_error">錯誤</string>
+    <string name="gutenberg_native_choose_file">選擇檔案</string>
+    <string name="activity_log_item_menu_download_backup_label">下載備份</string>
+    <string name="activity_log_item_menu_restore_label">還原至此時間點</string>
+    <string name="activity_log_activity_type_filter_label">活動類型</string>
+    <string name="activity_log_date_range_filter_label">日期範圍</string>
+    <string name="activity_log_activity_type_filter_header">依活動類型篩選</string>
+    <string name="dialog_confirm_copy_local_copy_button">複製此應用程式的版本</string>
+    <string name="dialog_confirm_copy_local_edit_button">首先編輯文章</string>
+    <string name="dialog_confirm_copy_local_message">你嘗試複製的文章有兩個互相不一致的版本，或者你最近進行變更但沒有儲存。\n首先編輯文章，解決任何不一致，或繼續複製此應用程式的版本。</string>
+    <string name="dialog_confirm_copy_local_title">文章同步不一致</string>
+    <string name="button_copy">複製</string>
+    <string name="toast_edit_story_update_in_progress_title">正在儲存故事，請稍候…</string>
     <string name="gutenberg_native_file_name">檔案名稱</string>
     <string name="gutenberg_native_file_block_settings">檔案區塊設定</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">上傳檔案失敗。\n請點選以顯示選項。</string>
@@ -14,7 +40,6 @@ Language: zh_TW
     <string name="gutenberg_native_copy_file_url">複製檔案 URL</string>
     <string name="gutenberg_native_choose_a_file">選擇檔案</string>
     <string name="new_site_creation_domain_header_title">選擇網域</string>
-    <string name="my_site_bottom_sheet_story_tag_new">新增</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">我追蹤的討論</string>
@@ -558,7 +583,6 @@ Language: zh_TW
     <string name="my_site_bottom_sheet_add_post">網誌文章</string>
     <string name="my_site_bottom_sheet_title">新增</string>
     <string name="post_settings_publish">發佈</string>
-    <string name="dialog_gutenberg_informative_description_v2">我們大幅改進了區塊編輯器，值得你一試！我們為新文章和頁面啟用了這項功能，但如果你希望變更為傳統編輯器，請前往「我的網站」>「網站設定」進行變更。</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
     <string name="dialog_confirm_scheduled_post_sync_message">此文章會立即同步。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
@@ -660,8 +684,6 @@ Language: zh_TW
     <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
     <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
     <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
-    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器編輯新頁面，太棒了！ 如想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
-    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器編輯新文章，太棒了！ 如想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -927,7 +949,6 @@ Language: zh_TW
     <string name="stats_loading_error">未載入資料</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用區塊編輯器編輯新文章和網頁</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
-    <string name="dialog_gutenberg_informative_title">已啟用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
     <string name="quick_start_sites_type_grow">拓展你的讀者群</string>
