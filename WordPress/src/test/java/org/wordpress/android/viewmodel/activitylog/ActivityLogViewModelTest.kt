@@ -54,6 +54,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
@@ -78,6 +79,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
+    @Mock private lateinit var activityLogTracker: ActivityLogTracker
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
@@ -140,6 +142,7 @@ class ActivityLogViewModelTest {
                 activityLogFiltersFeatureConfig,
                 backupFeatureConfig,
                 dateUtils,
+                activityLogTracker,
                 Dispatchers.Unconfined
         )
         viewModel.site = site

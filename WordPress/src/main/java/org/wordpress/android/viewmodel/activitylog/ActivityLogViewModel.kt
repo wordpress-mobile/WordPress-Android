@@ -9,8 +9,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -38,8 +36,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
-import org.wordpress.android.util.DateTimeUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -67,8 +64,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val activityLogTracker: ActivityLogTracker,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -259,7 +255,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun dateRangePickerClicked() {
-        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+        activityLogTracker.trackDateRangeFilterButtonClicked()
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
@@ -268,21 +264,21 @@ class ActivityLogViewModel @Inject constructor(
             // adjust time of the end of the date range to 23:59:59
             Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
         }
-        trackDateRangeSelected(dateRange)
+        activityLogTracker.trackDateRangeFilterSelected(dateRange)
         currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onClearDateRangeFilterClicked() {
-        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+        activityLogTracker.trackDateRangeFilterCleared()
         currentDateRangeFilter = null
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onActivityTypeFilterClicked() {
-        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED)
+        activityLogTracker.trackActivityTypeFilterButtonClicked()
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
                 currentActivityTypeFilter.mapNotNull { it.key },
@@ -291,43 +287,14 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypesSelected(selectedTypes: List<ActivityTypeModel>) {
-        trackActivityTypesSelected(selectedTypes)
+        activityLogTracker.trackActivityTypeFilterSelected(selectedTypes)
         currentActivityTypeFilter = selectedTypes
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
-    private fun trackDateRangeSelected(dateRange: Pair<Long, Long>?) {
-        val start = dateRange?.first
-        val end = dateRange?.second
-        if (start == null || end == null) {
-            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
-        } else {
-            val map = mutableMapOf<String, Any>()
-            // Number of selected days
-            map["duration"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date(end)) + 1
-            // Distance from the startDate to today (in days)
-            map["distance"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date())
-            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
-        }
-    }
-
-    private fun trackActivityTypesSelected(activityTypeIds: List<ActivityTypeModel>) {
-        if (activityTypeIds.isEmpty()) {
-            analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
-        } else {
-            val map = mutableMapOf<String, Any>()
-            map["num_groups_selected"] = activityTypeIds.size.toString()
-            map["num_total_activities_selected"] = activityTypeIds.map { it.count }.reduce { acc, count -> acc + count }
-            activityTypeIds.forEach {
-                map["group_${it.key}"] = true
-            }
-            analyticsTrackerWrapper.track(ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED, map)
-        }
-    }
-
     fun onClearActivityTypeFilterClicked() {
-        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
+        activityLogTracker.trackActivityTypeFilterCleared()
         currentActivityTypeFilter = listOf()
         refreshFiltersUiState()
         requestEventsUpdate(false)

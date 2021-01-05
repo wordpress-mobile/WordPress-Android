@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
-import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -96,7 +95,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             Content(
                     listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
-                            .apply { action = { onApplyClicked(activityTypes) }},
+                            .apply { action = { onApplyClicked(activityTypes) } },
                     secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
                             .apply { action = ::onClearClicked }
             )
