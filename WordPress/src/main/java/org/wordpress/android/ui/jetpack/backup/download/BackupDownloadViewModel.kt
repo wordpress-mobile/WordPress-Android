@@ -160,5 +160,10 @@ class BackupDownloadViewModel @Inject constructor(
             @StringRes override val title: Int = R.string.backup_download_progress_page_title,
             @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
+
+        data class CompleteToolbarState(
+            @StringRes override val title: Int = R.string.backup_download_complete_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
     }
 }
