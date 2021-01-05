@@ -29,7 +29,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat id, then on start, threat details are retrieved`() = test {
+    fun `given threat id, when on start, then threat details are retrieved`() = test {
         // Act
         viewModel.start(threatId)
         // Assert
@@ -37,7 +37,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat id, then on start, ui is updated with content`() = test {
+    fun `given threat id, when on start, then ui is updated with content`() = test {
         // Arrange
         val uiStates = init().uiStates
         // Act
