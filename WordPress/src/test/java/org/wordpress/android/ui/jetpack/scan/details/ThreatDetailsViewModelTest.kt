@@ -53,7 +53,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             uiStates.add(it)
         }
         whenever(getThreatModelUseCase.get(anyLong())).thenReturn(mock())
-        whenever(builder.buildThreatDetailsListItems(any())).thenReturn(mock())
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenReturn(mock())
         return Observers(uiStates)
     }
 
