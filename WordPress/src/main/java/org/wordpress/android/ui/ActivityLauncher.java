@@ -48,7 +48,6 @@ import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
-import org.wordpress.android.ui.jetpack.scan.ScanConstants;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
@@ -115,6 +114,7 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
+import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNFLATTENED_LOADED_SLIDES;
@@ -625,7 +625,7 @@ public class ActivityLauncher {
 
     public static void viewThreatDetails(Activity activity, @NonNull Long threatId) {
         Intent intent = new Intent(activity, ThreatDetailsActivity.class);
-        intent.putExtra(ScanConstants.ARG_THREAT_ID, threatId);
+        intent.putExtra(ARG_THREAT_ID, threatId);
         activity.startActivity(intent);
     }
 

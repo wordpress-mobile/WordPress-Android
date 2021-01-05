@@ -85,4 +85,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
     }
+
+    companion object {
+        const val ARG_THREAT_ID = "arg_threat_id"
+    }
 }

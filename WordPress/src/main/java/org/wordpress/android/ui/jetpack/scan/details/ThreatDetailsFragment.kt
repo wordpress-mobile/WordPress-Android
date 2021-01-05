@@ -7,7 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.jetpack.scan.ScanConstants
+import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
@@ -38,7 +38,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ThreatDetailsViewModel::class.java)
         setupObservers()
-        val threatId = requireActivity().intent.getLongExtra(ScanConstants.ARG_THREAT_ID, 0)
+        val threatId = requireActivity().intent.getLongExtra(ARG_THREAT_ID, 0)
         viewModel.start(threatId)
     }
 
