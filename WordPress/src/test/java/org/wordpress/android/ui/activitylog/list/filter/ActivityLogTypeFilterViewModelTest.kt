@@ -153,7 +153,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `selected items propagated to activity log, when the user clicks on apply action`() = test {
-        val observers = init()
+        val observers = init(activityTypeCount = 1)
         startVM()
         // select an item
         val activityType = ((observers.uiStates.last() as Content).items[1] as ActivityType)
@@ -161,7 +161,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         (observers.uiStates.last() as Content).primaryAction.action.invoke()
 
-        verify(parentViewModel).onActivityTypesSelected(listOf(Pair(activityType.id, activityType.title)))
+        verify(parentViewModel).onActivityTypesSelected(listOf(ActivityTypeModel("1","1", 1)))
     }
 
     @Test
