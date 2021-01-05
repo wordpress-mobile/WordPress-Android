@@ -48,9 +48,7 @@ class ActivityLogTracker @Inject constructor(
             val map = mutableMapOf<String, Any>()
             map["num_groups_selected"] = selectedTypes.size.toString()
             map["num_total_activities_selected"] = selectedTypes.map { it.count }.reduce { acc, count -> acc + count }
-            selectedTypes.forEach {
-                map["group_${it.key}"] = true
-            }
+            selectedTypes.forEach { map["group_${it.key}"] = true }
             tracker.track(ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED, map)
         }
     }
