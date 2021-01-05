@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.scan
+package org.wordpress.android.ui.jetpack.scan.builders
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -13,7 +13,6 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
-import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -23,7 +22,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 @Reusable
-class ScanStateListItemBuilder @Inject constructor(
+class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
@@ -34,7 +33,7 @@ class ScanStateListItemBuilder @Inject constructor(
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
@@ -59,7 +58,7 @@ class ScanStateListItemBuilder @Inject constructor(
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatModel: ThreatModel) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
