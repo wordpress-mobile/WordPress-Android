@@ -9,6 +9,7 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -35,6 +36,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -62,6 +64,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -252,6 +255,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun dateRangePickerClicked() {
+        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
@@ -272,6 +276,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
+        analyticsTrackerWrapper.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED)
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
                 currentActivityTypeFilter.mapNotNull { it.first },
