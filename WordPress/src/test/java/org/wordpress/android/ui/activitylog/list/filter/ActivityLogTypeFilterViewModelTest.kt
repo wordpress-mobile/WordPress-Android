@@ -161,7 +161,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         (observers.uiStates.last() as Content).primaryAction.action.invoke()
 
-        verify(parentViewModel).onActivityTypesSelected(listOf(ActivityTypeModel("1","1", 1)))
+        verify(parentViewModel).onActivityTypesSelected(listOf(ActivityTypeModel("1", "1", 1)))
     }
 
     @Test
