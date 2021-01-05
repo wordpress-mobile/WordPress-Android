@@ -55,13 +55,15 @@ class BackupDownloadCompleteStateListItemBuilder @Inject constructor() {
 
     private fun buildNotifyMeButtonActionState(onClick: () -> Unit) = ActionButtonState(
             text = UiStringRes(R.string.backup_download_complete_download_action_button),
-            contentDescription = UiStringRes(R.string.backup_download_complete_download_action_button_content_description),
+            contentDescription =
+                UiStringRes(R.string.backup_download_complete_download_action_button_content_description),
             onClick = onClick
     )
 
     private fun buildShareLinkButtonActionState(onClick: () -> Unit) = ActionButtonState(
             text = UiStringRes(R.string.backup_download_complete_download_share_action_button),
-            contentDescription = UiStringRes(R.string.backup_download_complete_download_share_action_button_content_description),
+            contentDescription =
+                UiStringRes(R.string.backup_download_complete_download_share_action_button_content_description),
             onClick = onClick
     )
 
