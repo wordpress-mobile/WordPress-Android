@@ -8,7 +8,6 @@ import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -83,15 +82,19 @@ class BackupDownloadProgressViewModel @Inject constructor(
                         progress = 0,
                         published = backupDownloadState.published as Date,
                         onNotifyMeClick = this@BackupDownloadProgressViewModel::onNotifyMeClick
-        ))
+                )
+        )
     }
 
     private fun queryStatus() {
-    launch {
-            getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
+        launch {
+            getBackupDownloadStatusUseCase.getBackupDownloadStatus(
+                    site,
+                    backupDownloadState.downloadId as Long
+            )
                     .flowOn(bgDispatcher).collect { state ->
-                handleState(state)
-            }
+                        handleState(state)
+                    }
         }
     }
 
@@ -108,10 +111,12 @@ class BackupDownloadProgressViewModel @Inject constructor(
                     val updatedList = content.items.map { contentState ->
                         if (contentState.type == BACKUP_PROGRESS) {
                             contentState as ProgressState
-                            contentState.copy(progress = state.progress ?: 0,
+                            contentState.copy(
+                                    progress = state.progress ?: 0,
                                     label = UiStringResWithParams(
-                                            string.backup_download_progress_label,
-                                            listOf(UiStringText(state.progress?.toString() ?: "0")))
+                                            R.string.backup_download_progress_label,
+                                            listOf(UiStringText(state.progress?.toString() ?: "0"))
+                                    )
                             )
                         } else {
                             contentState
