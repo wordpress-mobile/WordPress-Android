@@ -1012,19 +1012,19 @@
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
-    <string name="rewind">Rewind</string>
+    <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
-    <string name="activity_log_empty_title">No activity yet</string>
-    <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
-    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
+    <string name="activity_log_empty_title">No matching events found</string>
+    <string name="activity_log_empty_subtitle">Try adjusting your date range or activity type filters.</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
-    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
-    <string name="activity_log_rewind_site">Rewind Site</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
+    <string name="activity_log_rewind_site">Restore Site</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
     <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
@@ -1032,6 +1032,11 @@
     <string name="activity_log_date_range_filter_label">Date Range</string>
     <string name="activity_log_activity_type_filter_label">Activity Type</string>
     <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
+    <string name="activity_log_activity_type_error_title">No connection</string>
+    <string name="activity_log_activity_type_error_subtitle">Please check your internet connection and retry.</string>
+    <string name="activity_log_activity_type_empty_title">No activities available</string>
+    <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
+
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>

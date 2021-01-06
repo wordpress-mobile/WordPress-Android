@@ -129,10 +129,11 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
     }
 
     private fun refreshErrorScreen(uiState: Error) {
-        uiHelpers.setTextOrHide(actionable_empty_view.title, uiState.errorTitle)
-        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, uiState.errorSubtitle)
-        uiHelpers.setTextOrHide(actionable_empty_view.button, uiState.errorButtonText)
-        actionable_empty_view.button.setOnClickListener { uiState.retryAction.action.invoke() }
+        actionable_empty_view.image.setImageResource(uiState.image)
+        uiHelpers.setTextOrHide(actionable_empty_view.title, uiState.title)
+        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, uiState.subtitle)
+        uiHelpers.setTextOrHide(actionable_empty_view.button, uiState.buttonText)
+        actionable_empty_view.button.setOnClickListener { uiState.retryAction?.action?.invoke() }
     }
 
     private fun refreshContentScreen(uiState: Content) {
