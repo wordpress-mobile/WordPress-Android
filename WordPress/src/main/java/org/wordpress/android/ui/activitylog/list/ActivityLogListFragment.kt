@@ -222,6 +222,7 @@ class ActivityLogListFragment : Fragment() {
     private fun updateFilters(uiState: FiltersShown) {
         with(requireActivity().date_range_picker) {
             text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+            contentDescription = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabelContentDescription)
             isCloseIconVisible = uiState.onClearDateRangeFilterClicked != null
             setOnCloseIconClickListener { uiState.onClearDateRangeFilterClicked?.invoke() }
         }

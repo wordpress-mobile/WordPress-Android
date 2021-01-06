@@ -1030,6 +1030,7 @@
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
     <string name="activity_log_date_range_filter_label">Date Range</string>
+    <string name="activity_log_date_range_filter_label_content_description">Date Range filter</string>
     <string name="activity_log_activity_type_filter_label">Activity Type</string>
     <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
     <string name="activity_log_activity_type_error_title">No connection</string>

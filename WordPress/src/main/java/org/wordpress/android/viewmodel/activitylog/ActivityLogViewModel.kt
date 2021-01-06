@@ -190,8 +190,10 @@ class ActivityLogViewModel @Inject constructor(
     private fun refreshFiltersUiState() {
         _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
             val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
+            val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
             FiltersShown(
-                    createDateRangeFilterLabel(),
+                    dateRangeLabel,
+                    dateRangeLabelContentDescription,
                     activityTypeLabel,
                     activityTypeLabelContentDescription,
                     currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
@@ -202,10 +204,16 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun createDateRangeFilterLabel(): UiString {
+    private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentDateRangeFilter?.let {
-            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0))
-        } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
+            val label = UiStringText(
+                    dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
+            )
+            kotlin.Pair(label, label)
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_date_range_filter_label),
+                UiStringRes(R.string.activity_log_date_range_filter_label_content_description)
+        )
     }
 
     private fun createActivityTypeFilterLabel(): kotlin.Pair<UiString, UiString> {
@@ -489,6 +497,7 @@ class ActivityLogViewModel @Inject constructor(
 
         data class FiltersShown(
             val dateRangeLabel: UiString,
+            val dateRangeLabelContentDescription: UiString,
             val activityTypeLabel: UiString,
             val activityTypeLabelContentDescription: UiString,
             val onClearDateRangeFilterClicked: (() -> Unit)?,
