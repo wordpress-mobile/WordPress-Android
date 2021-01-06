@@ -3395,6 +3395,13 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_another_download_running">There is another download running.</string>
 
     <string name="backup_download_progress_page_title">Download Backup</string>
+    <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
+    <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
+    <string name="backup_download_progress_action_button">OK, notify me!</string>
+    <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
+    <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
+    <string name="backup_download_progress_additional_info">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
