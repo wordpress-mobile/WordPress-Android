@@ -41,7 +41,23 @@ class ThreatDetailsViewModel @Inject constructor(
         _uiState.value = buildContentUiState(model)
     }
 
-    private fun buildContentUiState(model: ThreatModel) = Content(builder.buildThreatDetailsListItems(model))
+    private fun buildContentUiState(model: ThreatModel) = Content(
+        builder.buildThreatDetailsListItems(
+            model,
+            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+            this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
+            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
+        )
+    )
+
+    private fun onFixThreatButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun onIgnoreThreatButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
+    }
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<JetpackListItemState>) : UiState()
