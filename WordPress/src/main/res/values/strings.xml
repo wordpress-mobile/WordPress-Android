@@ -1079,6 +1079,9 @@
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
 
+    <!-- threat details -->
+    <string name="threat_details">Threat Details</string>
+
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
     <string name="stats_timeframe_yesterday">Yesterday</string>
@@ -2827,8 +2830,9 @@
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_list_author">Page author</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
@@ -3363,6 +3367,10 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
+    <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
+    <string name="backup_download_another_download_running">There is another download running.</string>
+
+    <string name="backup_download_progress_page_title">Download Backup</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>

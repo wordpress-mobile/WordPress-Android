@@ -8,6 +8,7 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 
 // private const val SCAN_STATE_MODEL_PARAM_POSITION = 0
 
@@ -15,7 +16,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStatusService: ScanStatusService
-    @Mock private lateinit var scanStateItemBuilder: ScanStateListItemBuilder
+    @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     private val scanState = MutableLiveData<ScanStateModel>()
 
     private lateinit var viewModel: ScanViewModel
@@ -33,7 +34,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        viewModel = ScanViewModel(scanStatusService, scanStateItemBuilder)
+        viewModel = ScanViewModel(scanStatusService, scanStateItemsBuilder)
 //        whenever(scanStatusService.scanState).thenReturn(scanState)
     }
 

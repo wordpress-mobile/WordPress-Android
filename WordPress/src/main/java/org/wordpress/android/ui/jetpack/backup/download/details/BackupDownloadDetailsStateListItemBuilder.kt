@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.backup.download.details
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.DetailsSubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -23,7 +22,7 @@ import javax.inject.Inject
 @Reusable
 class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
     fun buildDetailsListStateItems(
-        activityLogModel: ActivityLogModel,
+        published: Date,
         availableItems: List<JetpackAvailableItem>,
         onCreateDownloadClick: () -> Unit,
         onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit
@@ -31,7 +30,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
         val items = mutableListOf(
                 buildDetailsIcon(),
                 buildDetailsHeader(),
-                buildDescriptionState(activityLogModel.published),
+                buildDescriptionState(published),
                 buildDetailsButtonAction(onCreateDownloadClick),
                 buildDetailsSubHeader()
         )

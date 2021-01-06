@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.activitylog.list.filter
 
 import androidx.annotation.DrawableRes
-import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -100,7 +99,7 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
             Content(
                     listOf(headerListItem) + activityTypeListItems,
                     primaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_apply))
-                            .apply { action = ::onApplyClicked },
+                            .apply { action = { onApplyClicked(activityTypes) } },
                     secondaryAction = Action(label = UiStringRes(R.string.activity_log_activity_type_filter_clear))
                             .apply { action = ::onClearClicked }
             )
@@ -120,8 +119,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
         }
     }
 
-    private fun onApplyClicked() {
-        parentViewModel.onActivityTypesSelected(getSelectedActivityTypeIds())
+    private fun onApplyClicked(activityTypes: List<ActivityTypeModel>) {
+        val selectedModels = getSelectedActivityTypeIds().mapNotNull { key ->
+            activityTypes.find { model -> model.key == key }
+        }
+        parentViewModel.onActivityTypesSelected(selectedModels)
         _dismissDialog.value = Event(Unit)
     }
 
@@ -144,11 +146,11 @@ class ActivityLogTypeFilterViewModel @Inject constructor(
                 }
             }
 
-    private fun getSelectedActivityTypeIds(): List<Pair<String, UiString>> =
+    private fun getSelectedActivityTypeIds(): List<String> =
             (_uiState.value as Content).items
                     .filterIsInstance(ListItemUiState.ActivityType::class.java)
                     .filter { it.checked }
-                    .map { Pair(it.id, it.title) }
+                    .map { it.id }
 
     sealed class UiState {
         open val contentVisibility = false
