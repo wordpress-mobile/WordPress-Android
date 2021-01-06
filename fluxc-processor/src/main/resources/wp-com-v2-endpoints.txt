@@ -10,6 +10,8 @@
 /sites/$site/scan
 /sites/$site/scan/enqueue
 /sites/$site/scan/threat/$threat_id
+/sites/$site/alerts/fix
+/sites/$site/alerts/$threat_id
 
 /sites/$site/gutenberg
 
