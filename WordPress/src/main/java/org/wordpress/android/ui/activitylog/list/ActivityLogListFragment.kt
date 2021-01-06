@@ -228,6 +228,8 @@ class ActivityLogListFragment : Fragment() {
 
         with(requireActivity().activity_type_filter) {
             text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            contentDescription = uiHelpers
+                    .getTextOfUiString(requireContext(), uiState.activityTypeLabelContentDescription)
             isCloseIconVisible = uiState.onClearActivityTypeFilterClicked != null
             setOnCloseIconClickListener { uiState.onClearActivityTypeFilterClicked?.invoke() }
         }

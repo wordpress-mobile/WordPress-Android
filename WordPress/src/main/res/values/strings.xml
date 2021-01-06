@@ -1036,6 +1036,9 @@
     <string name="activity_log_activity_type_error_subtitle">Please check your internet connection and retry.</string>
     <string name="activity_log_activity_type_empty_title">No activities available</string>
     <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
 
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>

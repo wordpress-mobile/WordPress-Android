@@ -189,9 +189,11 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun refreshFiltersUiState() {
         _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
+            val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
             FiltersShown(
                     createDateRangeFilterLabel(),
-                    createActivityTypeFilterLabel(),
+                    activityTypeLabel,
+                    activityTypeLabelContentDescription,
                     currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                     currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
             )
@@ -206,17 +208,32 @@ class ActivityLogViewModel @Inject constructor(
         } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
     }
 
-    private fun createActivityTypeFilterLabel(): UiString {
+    private fun createActivityTypeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
-                UiStringText("${it[0].name} (${it[0].count})")
+                kotlin.Pair(
+                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_single_item_selected_content_description,
+                                listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
+                        )
+                )
             } else {
-                UiStringResWithParams(
-                        R.string.activity_log_activity_type_filter_active_label,
-                        listOf(UiStringText("${it.size}"))
+                kotlin.Pair(
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_active_label,
+                                listOf(UiStringText("${it.size}"))
+                        ),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_multiple_items_selected_content_description,
+                                listOf(UiStringText("${it.size}"))
+                        )
                 )
             }
-        } ?: UiStringRes(R.string.activity_log_activity_type_filter_label)
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_activity_type_filter_label),
+                UiStringRes(R.string.activity_log_activity_type_filter_no_item_selected_content_description)
+        )
     }
 
     fun onPullToRefresh() {
@@ -473,6 +490,7 @@ class ActivityLogViewModel @Inject constructor(
         data class FiltersShown(
             val dateRangeLabel: UiString,
             val activityTypeLabel: UiString,
+            val activityTypeLabelContentDescription: UiString,
             val onClearDateRangeFilterClicked: (() -> Unit)?,
             val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
