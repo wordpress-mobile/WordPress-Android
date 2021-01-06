@@ -16,7 +16,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Error
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Loading
 import org.wordpress.android.ui.jetpack.backup.download.details.adapters.BackupDownloadDetailsAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ToastUtils
@@ -65,7 +64,6 @@ class BackupDownloadDetailsFragment : Fragment() {
 
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             when (uiState) {
-                is Loading -> ToastUtils.showToast(requireContext(), "Implement loading")
                 is Content -> showContent(uiState)
                 is Error -> ToastUtils.showToast(requireContext(), "Implement Error")
             }

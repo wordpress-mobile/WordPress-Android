@@ -3362,6 +3362,10 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
+    <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
+    <string name="backup_download_another_download_running">There is another download running.</string>
+
+    <string name="backup_download_progress_page_title">Download Backup</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
