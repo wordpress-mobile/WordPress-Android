@@ -35,9 +35,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusErrorType
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
@@ -360,6 +362,31 @@ class ScanRestClientTest {
         }
     }
 
+    @Test
+    fun `fetch fix threats status dispatches response on success`() = test {
+        initFetchFixThreatsStatus(FixThreatsStatusResponse(ok = true, fixThreatsStatus = listOf()))
+
+        val payload = scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))
+
+        with(payload) {
+            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertNull(error)
+        }
+    }
+
+    @Test
+    fun `fetch fix threats status dispatches api error on failure from api`() = test {
+        initFetchFixThreatsStatus(FixThreatsStatusResponse(ok = false, fixThreatsStatus = null))
+
+        val payload = scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))
+
+        with(payload) {
+            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertTrue(isError)
+            assertEquals(FixThreatsStatusErrorType.API_ERROR, error.type)
+        }
+    }
+
     private fun assertEmittedScanStateError(payload: FetchedScanStatePayload, errorType: ScanStateErrorType) {
         with(payload) {
             assertEquals(site, this@ScanRestClientTest.site)
@@ -443,7 +470,7 @@ class ScanRestClientTest {
     private suspend fun initIgnoreThreat(
         error: WPComGsonNetworkError? = null
     ): Response<Any> {
-        val response = if (error != null) Response.Error(error) else Success(data = Any())
+        val response = if (error != null) Response.Error(error) else Success(Any())
         whenever(
             wpComGsonRequestBuilder.syncPostRequest(
                 eq(scanRestClient),
@@ -451,6 +478,26 @@ class ScanRestClientTest {
                 anyOrNull(),
                 anyOrNull(),
                 eq(Any::class.java)
+            )
+        ).thenReturn(response)
+        return response
+    }
+
+    private suspend fun initFetchFixThreatsStatus(
+        data: FixThreatsStatusResponse? = null,
+        error: WPComGsonNetworkError? = null
+    ): Response<FixThreatsStatusResponse> {
+        val nonNullData = data ?: mock()
+        val response = if (error != null) Response.Error(error) else Success(nonNullData)
+        whenever(
+            wpComGsonRequestBuilder.syncGetRequest(
+                eq(scanRestClient),
+                urlCaptor.capture(),
+                anyOrNull(),
+                eq(FixThreatsStatusResponse::class.java),
+                eq(false),
+                any(),
+                eq(false)
             )
         ).thenReturn(response)
         return response
