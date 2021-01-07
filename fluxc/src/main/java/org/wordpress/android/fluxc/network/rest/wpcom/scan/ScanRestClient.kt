@@ -17,7 +17,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Error
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResponse
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
@@ -79,6 +83,38 @@ class ScanRestClient(
                 val error = ScanStartError(errorType, response.error.message)
                 ScanStartResultPayload(error, site)
             }
+        }
+    }
+
+    suspend fun fixThreats(remoteSiteId: Long, threatIds: List<Long>): FixThreatsResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).alerts.fix.url
+        val params = buildFixThreatsRequestParams(threatIds)
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, params, null, FixThreatsResponse::class.java)
+        return when (response) {
+            is Success -> {
+                if (response.data.ok == true) {
+                    FixThreatsResultPayload(remoteSiteId)
+                } else {
+                    val error = FixThreatsError(FixThreatsErrorType.API_ERROR)
+                    FixThreatsResultPayload(error, remoteSiteId)
+                }
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                    response.error,
+                    FixThreatsErrorType.GENERIC_ERROR,
+                    FixThreatsErrorType.INVALID_RESPONSE,
+                    FixThreatsErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = FixThreatsError(errorType, response.error.message)
+                FixThreatsResultPayload(error, remoteSiteId)
+            }
+        }
+    }
+
+    private fun buildFixThreatsRequestParams(threatIds: List<Long>) = mutableMapOf<String, String>().apply {
+        threatIds.forEachIndexed { index, value ->
+            put("threat_ids[$index]", value.toString())
         }
     }
 
