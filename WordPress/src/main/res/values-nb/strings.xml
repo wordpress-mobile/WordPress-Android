@@ -8,7 +8,6 @@ Language: nb_NO
 <resources>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Ny</string>
     <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF-filer ikke støttet</string>
@@ -498,8 +497,6 @@ Language: nb_NO
     <string name="notifications_tab_dialog_master_hint_on">Deaktiver visning av varslinger  på varslingsfanen for dette nettstedet.</string>
     <string name="notifications_tab_dialog_master_status_off">Varslinger for dette nettstedet</string>
     <string name="notifications_tab_dialog_master_status_on">Varslinger for dette nettstedet</string>
-    <string name="dialog_gutenberg_informative_description_page">Du bruker nå blokkredigering for nye sider, flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Du bruker nå blokkredigering for nye innlegg, flott! Om du ønsker å bytte til klassisk redigering, gå til \'Mitt nettsted\' > \'Innstillinger for nettstedet\'.</string>
     <string name="pick_media">Legg til bilde eller video</string>
     <string name="error_post_not_submitted_retrying">Vi kunne ikke sende dette innlegget til gjennomgang, men vi vil prøve igjen senere.</string>
     <string name="error_post_not_scheduled_retrying">Vi kunne ikke planlegge dette innlegget, men vi vil prøve igjen senere.</string>
@@ -770,7 +767,6 @@ Language: nb_NO
     <string name="stats_loading_error">Data ikke lastet inn</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Rediger nye innlegg og sider med blokkredigering</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Bruk blokkredigering</string>
-    <string name="dialog_gutenberg_informative_title">Blokkredigering aktivert</string>
     <string name="exit">gå ut</string>
     <string name="quick_start_sites_type_subtitle">%1$d av %2$d ferdig</string>
     <string name="quick_start_sites_type_grow">Gjør ditt publikum større</string>

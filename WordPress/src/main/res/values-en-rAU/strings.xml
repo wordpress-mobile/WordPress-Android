@@ -286,7 +286,6 @@ Language: en_AU
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
-    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>
