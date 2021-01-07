@@ -1,0 +1,22 @@
+{
+  "data": {
+    "id": 1,
+    "name": "Color",
+    "slug": "pa_color",
+    "type": "select",
+    "order_by": "menu_order",
+    "has_archives": true,
+    "_links": {
+      "self": [
+        {
+          "href": "https://example.com/wp-json/wc/v3/products/attributes/6"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://example.com/wp-json/wc/v3/products/attributes"
+        }
+      ]
+    }
+  }
+}

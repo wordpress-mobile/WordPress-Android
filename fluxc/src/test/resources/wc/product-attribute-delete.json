@@ -1,0 +1,22 @@
+{
+  "data": {
+    "id": 1,
+    "name": "Size",
+    "slug": "pa_size",
+    "type": "select",
+    "order_by": "name",
+    "has_archives": true,
+    "_links": {
+      "self": [
+        {
+          "href": "https://example.com/wp-json/wc/v3/products/attributes/6"
+        }
+      ],
+      "collection": [
+        {
+          "href": "https://example.com/wp-json/wc/v3/products/attributes"
+        }
+      ]
+    }
+  }
+}
