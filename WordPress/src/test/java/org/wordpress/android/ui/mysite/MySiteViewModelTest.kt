@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -78,6 +79,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 class MySiteViewModelTest : BaseUnitTest() {
@@ -94,6 +96,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
     @Mock lateinit var scanStatusService: ScanStatusService
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -140,6 +143,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteIconUploadHandler,
                 siteStoriesHandler,
                 domainRegistrationHandler,
+                backupsFeatureConfig,
                 scanStatusService
         )
         uiModels = mutableListOf()
@@ -736,6 +740,20 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `site items builder invoked with the selected site's backups availability`() {
+        whenever(backupsFeatureConfig.isEnabled()).thenReturn(true)
+
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder, times(2)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupsAvailable = eq(true),
+                isScanAvailable = any()
+        )
+    }
+
+    @Test
     fun `site items builder invoked with the selected site's scan availability`() {
         whenever(scanStatusService.start(site)).thenAnswer {
             onScanAvailable.postValue(true)
@@ -745,6 +763,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
+                isBackupsAvailable = any(),
                 isScanAvailable = eq(true)
         )
     }

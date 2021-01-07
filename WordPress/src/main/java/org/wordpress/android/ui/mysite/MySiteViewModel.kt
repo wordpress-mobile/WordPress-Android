@@ -89,6 +89,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
@@ -116,6 +117,7 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
+    private val backupsFeatureConfig: BackupsFeatureConfig,
     private val scanStatusService: ScanStatusService
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
@@ -174,6 +176,7 @@ class MySiteViewModel
             siteItems.addAll(siteItemsBuilder.buildSiteItems(
                     site,
                     this::onItemClick,
+                    backupsFeatureConfig.isEnabled(),
                     scanAvailable ?: false
             ))
             siteItems
