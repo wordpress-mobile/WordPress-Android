@@ -1,9 +1,7 @@
 package org.wordpress.android.ui.reader.subfilter.viewholders
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -17,10 +15,6 @@ open class SubfilterListItemViewHolder(
     @LayoutRes layout: Int
 ) : ViewHolder(LayoutInflater.from(parent.context).inflate(layout, parent, false)) {
     open fun bind(filter: SubfilterListItem, uiHelpers: UiHelpers) {
-        val selectedTick: ImageView? = this.itemView.findViewById(R.id.item_selected)
-        selectedTick?.let {
-            it.visibility = if (filter.isSelected) View.VISIBLE else View.GONE
-        }
         val itemText: TextView? = this.itemView.findViewById(R.id.item_title)
         itemText?.let {
             it.setTextColor(

@@ -25,6 +25,7 @@
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar_main"
             style="@style/WordPress.ToolBar"
+            android:theme="@style/Base.Wordpress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

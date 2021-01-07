@@ -5,11 +5,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -24,23 +30,34 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.CAN_LOAD_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
+private const val ONE_SECOND_IN_MILLIS = 1000
+private const val TIMEZONE_GMT_0 = "GMT+0"
 
 typealias DateRange = Pair<Long, Long>
 
@@ -50,6 +67,9 @@ class ActivityLogViewModel @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
+    private val dateUtils: DateUtils,
+    private val activityLogTracker: ActivityLogTracker,
+    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -70,7 +90,7 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersUiState = MutableLiveData<FiltersUiState>()
+    private val _filtersUiState = MutableLiveData<FiltersUiState>(FiltersHidden)
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
@@ -103,15 +123,13 @@ class ActivityLogViewModel @Inject constructor(
     val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
         get() = _navigationEvents
 
-    private val isLoadingInProgress: Boolean
-        get() = eventListStatus.value == LOADING_MORE ||
-                eventListStatus.value == ActivityLogListStatus.FETCHING
-
     private val isRewindProgressItemShown: Boolean
         get() = _events.value?.containsProgressItem() == true
 
     private val isDone: Boolean
         get() = eventListStatus.value == DONE
+
+    private var fetchActivitiesJob: Job? = null
 
     private var areActionsEnabled: Boolean = true
 
@@ -119,7 +137,7 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindStatus: Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
-    private var currentActivityTypeFilter: List<Int> = listOf()
+    private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
 
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
@@ -154,28 +172,92 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        refreshFiltersUiState()
+        showFiltersIfSupported()
 
         isStarted = true
+    }
+
+    private fun showFiltersIfSupported() {
+        when {
+            !activityLogFiltersFeatureConfig.isEnabled() -> return
+            !site.hasFreePlan -> refreshFiltersUiState()
+            else -> {
+                launch {
+                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
+                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
+                        refreshFiltersUiState()
+                    }
+                }
+            }
+        }
     }
 
     override fun onCleared() {
         rewindStatusService.rewindAvailable.removeObserver(rewindAvailableObserver)
         rewindStatusService.rewindProgress.removeObserver(rewindProgressObserver)
         rewindStatusService.stop()
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            /**
+             * Clear cache when filters are not empty. Filters are not retained across sessions, therefore the data is
+             * not relevant when the screen is accessed next time.
+             */
+            activityLogStore.clearActivityLogCache(site)
+        }
 
         super.onCleared()
     }
 
     private fun refreshFiltersUiState() {
-        _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
-            FiltersShown(
-                    UiStringRes(R.string.activity_log_date_range_filter_label),
-                    UiStringRes(R.string.activity_log_activity_type_filter_label)
+        val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
+        val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
+        _filtersUiState.value = FiltersShown(
+                dateRangeLabel,
+                dateRangeLabelContentDescription,
+                activityTypeLabel,
+                activityTypeLabelContentDescription,
+                currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
+                currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
+        )
+    }
+
+    private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
+        return currentDateRangeFilter?.let {
+            val label = UiStringText(
+                    dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
             )
-        } else {
-            FiltersHidden
-        }
+            kotlin.Pair(label, label)
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_date_range_filter_label),
+                UiStringRes(R.string.activity_log_date_range_filter_label_content_description)
+        )
+    }
+
+    private fun createActivityTypeFilterLabel(): kotlin.Pair<UiString, UiString> {
+        return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
+            if (it.size == 1) {
+                kotlin.Pair(
+                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_single_item_selected_content_description,
+                                listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
+                        )
+                )
+            } else {
+                kotlin.Pair(
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_active_label,
+                                listOf(UiStringText("${it.size}"))
+                        ),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_multiple_items_selected_content_description,
+                                listOf(UiStringText("${it.size}"))
+                        )
+                )
+            }
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_activity_type_filter_label),
+                UiStringRes(R.string.activity_log_activity_type_filter_no_item_selected_content_description)
+        )
     }
 
     fun onPullToRefresh() {
@@ -208,28 +290,55 @@ class ActivityLogViewModel @Inject constructor(
                     ShowBackupDownload(item)
                 }
             }
-            _navigationEvents.value = org.wordpress.android.viewmodel.Event(navigationEvent)
+            _navigationEvents.value = Event(navigationEvent)
         }
         return true
     }
 
     fun dateRangePickerClicked() {
+        activityLogTracker.trackDateRangeFilterButtonClicked()
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
     fun onDateRangeSelected(dateRange: DateRange?) {
-        currentDateRangeFilter = dateRange
-        // TODO malinjir: refetch/load data
+        val adjustedDateRange = dateRange?.let {
+            // adjust time of the end of the date range to 23:59:59
+            Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
+        }
+        activityLogTracker.trackDateRangeFilterSelected(dateRange)
+        currentDateRangeFilter = adjustedDateRange
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
+    }
+
+    fun onClearDateRangeFilterClicked() {
+        activityLogTracker.trackDateRangeFilterCleared()
+        currentDateRangeFilter = null
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
     }
 
     fun onActivityTypeFilterClicked() {
-        // TODO malinjir pass initially selected activity types
-        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(RemoteId(site.siteId), currentActivityTypeFilter)
+        activityLogTracker.trackActivityTypeFilterButtonClicked()
+        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
+                RemoteId(site.siteId),
+                currentActivityTypeFilter.mapNotNull { it.key },
+                currentDateRangeFilter
+        )
     }
 
-    fun onActivityTypesSelected(activityTypeIds: List<Int>) {
-        currentActivityTypeFilter = activityTypeIds
-        // TODO malinjir: refetch/load data
+    fun onActivityTypesSelected(selectedTypes: List<ActivityTypeModel>) {
+        activityLogTracker.trackActivityTypeFilterSelected(selectedTypes)
+        currentActivityTypeFilter = selectedTypes
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
+    }
+
+    fun onClearActivityTypeFilterClicked() {
+        activityLogTracker.trackActivityTypeFilterCleared()
+        currentActivityTypeFilter = listOf()
+        refreshFiltersUiState()
+        requestEventsUpdate(false)
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -298,37 +407,50 @@ class ActivityLogViewModel @Inject constructor(
         return activityLogModel?.let {
             val rewoundEvent = ActivityLogListItem.Event(
                     model = it,
-                    backupFeatureEnabled = backupFeatureConfig.isEnabled())
-            ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                    resourceProvider.getString(R.string.activity_log_currently_restoring_message,
-                            rewoundEvent.formattedDate, rewoundEvent.formattedTime))
-        } ?: ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates))
+                    backupFeatureEnabled = backupFeatureConfig.isEnabled()
+            )
+            ActivityLogListItem.Progress(
+                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                    resourceProvider.getString(
+                            R.string.activity_log_currently_restoring_message,
+                            rewoundEvent.formattedDate, rewoundEvent.formattedTime
+                    )
+            )
+        } ?: ActivityLogListItem.Progress(
+                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates)
+        )
     }
 
-    private fun requestEventsUpdate(isLoadingMore: Boolean) {
-        if (canRequestEventsUpdate(isLoadingMore)) {
-            val newStatus = if (isLoadingMore) LOADING_MORE else ActivityLogListStatus.FETCHING
-            _eventListStatus.value = newStatus
-            val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
-            launch {
-                val result = activityLogStore.fetchActivities(payload)
-                onActivityLogFetched(result, isLoadingMore)
-            }
+    private fun requestEventsUpdate(loadMore: Boolean) {
+        val isLoadingMore = fetchActivitiesJob != null && _eventListStatus.value == ActivityLogListStatus.LOADING_MORE
+        val canLoadMore = _eventListStatus.value == CAN_LOAD_MORE
+        if (loadMore && (isLoadingMore || !canLoadMore)) {
+            // Ignore loadMore request when already loading more items or there are no more items to load
+            return
         }
-    }
-
-    private fun canRequestEventsUpdate(isLoadingMore: Boolean): Boolean {
-        return when {
-            isLoadingInProgress -> false
-            isLoadingMore -> _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
-            else -> true
+        fetchActivitiesJob?.cancel()
+        val newStatus = if (loadMore) LOADING_MORE else ActivityLogListStatus.FETCHING
+        _eventListStatus.value = newStatus
+        val payload = ActivityLogStore.FetchActivityLogPayload(
+                site,
+                loadMore,
+                currentDateRangeFilter?.first?.let { Date(it) },
+                currentDateRangeFilter?.second?.let { Date(it) },
+                currentActivityTypeFilter.mapNotNull { it.key }
+        )
+        fetchActivitiesJob = launch {
+            val result = activityLogStore.fetchActivities(payload)
+            if (isActive) {
+                onActivityLogFetched(result, loadMore)
+                fetchActivitiesJob = null
+            }
         }
     }
 
     private fun showRewindStartedMessage() {
         rewindStatusService.rewindingActivity?.let {
-            val event = ActivityLogListItem. Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val event = ActivityLogListItem.Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
@@ -342,9 +464,11 @@ class ActivityLogViewModel @Inject constructor(
         if (item != null) {
             val event = ActivityLogListItem.Event(model = item, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value =
-                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message,
+                    resourceProvider.getString(
+                            R.string.activity_log_rewind_finished_snackbar_message,
                             event.formattedDate,
-                            event.formattedTime)
+                            event.formattedTime
+                    )
         } else {
             _showSnackbarMessage.value =
                     resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
@@ -378,14 +502,22 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
-    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<Int>)
+    data class ShowActivityTypePicker(
+        val siteId: RemoteId,
+        val initialSelection: List<String>,
+        val dateRange: DateRange?
+    )
 
     sealed class FiltersUiState(val visibility: Boolean) {
         object FiltersHidden : FiltersUiState(visibility = false)
 
         data class FiltersShown(
             val dateRangeLabel: UiString,
-            val activityTypeLabel: UiString
+            val dateRangeLabelContentDescription: UiString,
+            val activityTypeLabel: UiString,
+            val activityTypeLabelContentDescription: UiString,
+            val onClearDateRangeFilterClicked: (() -> Unit)?,
+            val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
     }
 }

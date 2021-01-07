@@ -61,7 +61,7 @@ class ActionListItemViewHolder(
                     dimen.quick_start_focus_point_size
             )
             actionRowContainer.post {
-                val verticalOffset = -focusPointSize / 2
+                val verticalOffset = (actionRowContainer.width - focusPointSize) / 2
                 QuickStartUtils.addQuickStartFocusPointAboveTheView(
                         actionRowContainer, actionTitle,
                         verticalOffset, 0

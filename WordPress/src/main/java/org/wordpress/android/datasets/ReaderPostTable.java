@@ -788,14 +788,16 @@ public class ReaderPostTable {
             }
 
 
-            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites"
+            // if blog/feed is no longer followed, remove its posts tagged with "Followed Sites" or "P2"
             if (!isFollowed) {
                 if (blogId != 0) {
-                    db.delete("tbl_posts", "blog_id=? AND tag_name=?",
-                              new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
+                    db.delete("tbl_posts", "blog_id=? AND (tag_name=? OR tag_name=?)",
+                            new String[]{Long.toString(blogId), ReaderTag.TAG_TITLE_FOLLOWED_SITES,
+                                    ReaderTag.TAG_SLUG_P2});
                 } else {
-                    db.delete("tbl_posts", "feed_id=? AND tag_name=?",
-                              new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES});
+                    db.delete("tbl_posts", "feed_id=? AND (tag_name=? OR tag_name=?)",
+                            new String[]{Long.toString(feedId), ReaderTag.TAG_TITLE_FOLLOWED_SITES,
+                                    ReaderTag.TAG_SLUG_P2});
                 }
             }
 

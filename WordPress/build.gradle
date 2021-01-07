@@ -54,9 +54,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-262"
+            versionName "alpha-265"
         }
-        versionCode 967
+        versionCode 974
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -82,6 +82,7 @@ android {
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
         buildConfigField "boolean", "BACKUP_AVAILABLE", "false"
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
+        buildConfigField "boolean", "UNREAD_POSTS_COUNT", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
@@ -98,9 +99,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.3"
+                versionName "16.4-rc-3"
             }
-            versionCode 968
+            versionCode 973
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -122,6 +123,7 @@ android {
             dimension "buildType"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
+            buildConfigField "boolean", "UNREAD_POSTS_COUNT", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
