@@ -72,6 +72,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ToastUtils.showToast
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -180,6 +181,12 @@ class ImprovedMySiteFragment : Fragment(),
                 )
                 inputDialog.setTargetFragment(this, 0)
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
+            }
+        })
+        viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { id ->
+                // TODO Show bottom sheet menu
+                showToast(context, id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {

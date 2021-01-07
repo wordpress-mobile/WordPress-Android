@@ -126,12 +126,14 @@ class MySiteViewModel
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
+    private val _onQuickStartMenuShown = MutableLiveData<Event<String>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
 
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
+    val onQuickStartMenuShown = _onQuickStartMenuShown as LiveData<Event<String>>
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -240,7 +242,7 @@ class MySiteViewModel
     }
 
     private fun onQuickStartCardMoreClick(id: String) {
-        TODO("Not yet implemented")
+        _onQuickStartMenuShown.postValue(Event(id))
     }
 
     private fun titleClick(selectedSite: SiteModel) {
