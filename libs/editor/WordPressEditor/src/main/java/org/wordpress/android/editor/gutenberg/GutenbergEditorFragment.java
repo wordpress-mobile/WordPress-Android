@@ -538,26 +538,14 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private ArrayList<MediaOption> initOtherMediaFileOptions() {
-        ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
-
-        FragmentActivity activity = getActivity();
-        if (activity == null) {
-            AppLog.e(T.EDITOR,
-                    "Failed to initialize other media options because the activity is null");
-            return otherMediaOptions;
-        }
-
-        String packageName = activity.getApplication().getPackageName();
-
-        int chooseFileResourceId =
-                getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
-
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(chooseFileResourceId)));
-
-        return otherMediaOptions;
+        return initOtherMediaFileOptions(MEDIA_SOURCE_FILE);
     }
 
     private ArrayList<MediaOption> initOtherMediaAudioFileOptions() {
+        return initOtherMediaFileOptions(MEDIA_SOURCE_AUDIO_FILE);
+    }
+
+    private ArrayList<MediaOption> initOtherMediaFileOptions(String mediaOptionId) {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
         FragmentActivity activity = getActivity();
@@ -572,7 +560,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         int chooseAudioFileResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_AUDIO_FILE, getString(chooseAudioFileResourceId)));
+        otherMediaOptions.add(new MediaOption(mediaOptionId, getString(chooseAudioFileResourceId)));
 
         return otherMediaOptions;
     }
