@@ -905,7 +905,6 @@ public class SiteStore extends Store {
         public boolean isEligible;
         public @NonNull List<String> eligibilityErrorCodes;
 
-
         public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
                                                      boolean isEligible,
                                                      @NonNull List<String> eligibilityErrorCodes,
