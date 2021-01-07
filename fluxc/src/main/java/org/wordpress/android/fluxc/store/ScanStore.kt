@@ -7,6 +7,7 @@ import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.action.ScanAction.FIX_THREATS
+import org.wordpress.android.fluxc.action.ScanAction.IGNORE_THREAT
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
@@ -45,6 +46,11 @@ class ScanStore @Inject constructor(
             FIX_THREATS -> {
                 coroutineEngine.launch(AppLog.T.API, this, "Scan: On FIX_THREATS") {
                     emitChange(fixThreats(action.payload as FixThreatsPayload))
+                }
+            }
+            IGNORE_THREAT -> {
+                coroutineEngine.launch(AppLog.T.API, this, "Scan: On IGNORE_THREAT") {
+                    emitChange(ignoreThreat(action.payload as IgnoreThreatPayload))
                 }
             }
         }
@@ -105,6 +111,19 @@ class ScanStore @Inject constructor(
         }
     }
 
+    suspend fun ignoreThreat(ignoreThreatPayload: IgnoreThreatPayload): OnIgnoreThreatStarted {
+        val payload = scanRestClient.ignoreThreat(ignoreThreatPayload.remoteSiteId, ignoreThreatPayload.threatId)
+        return emitIgnoreThreatResult(payload)
+    }
+
+    private fun emitIgnoreThreatResult(payload: IgnoreThreatResultPayload): OnIgnoreThreatStarted {
+        return if (payload.error != null) {
+            OnIgnoreThreatStarted(payload.error, IGNORE_THREAT)
+        } else {
+            OnIgnoreThreatStarted(IGNORE_THREAT)
+        }
+    }
+
     // Actions
     data class OnScanStateFetched(var causeOfChange: ScanAction) : Store.OnChanged<ScanStateError>() {
         constructor(error: ScanStateError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
@@ -120,6 +139,12 @@ class ScanStore @Inject constructor(
 
     data class OnFixThreatsStarted(var causeOfChange: ScanAction) : Store.OnChanged<FixThreatsError>() {
         constructor(error: FixThreatsError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnIgnoreThreatStarted(var causeOfChange: ScanAction) : Store.OnChanged<IgnoreThreatError>() {
+        constructor(error: IgnoreThreatError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -157,6 +182,16 @@ class ScanStore @Inject constructor(
         }
     }
 
+    class IgnoreThreatPayload(val remoteSiteId: Long, val threatId: Long) : Payload<BaseNetworkError>()
+
+    class IgnoreThreatResultPayload(
+        val remoteSiteId: Long
+    ) : Payload<IgnoreThreatError>() {
+        constructor(error: IgnoreThreatError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId) {
+            this.error = error
+        }
+    }
+
     // Errors
     enum class ScanStateErrorType {
         GENERIC_ERROR,
@@ -186,4 +221,12 @@ class ScanStore @Inject constructor(
     }
 
     class FixThreatsError(var type: FixThreatsErrorType, var message: String? = null) : OnChangedError
+
+    enum class IgnoreThreatErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class IgnoreThreatError(var type: IgnoreThreatErrorType, var message: String? = null) : OnChangedError
 }

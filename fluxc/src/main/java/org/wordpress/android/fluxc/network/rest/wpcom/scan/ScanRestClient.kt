@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
@@ -115,6 +118,25 @@ class ScanRestClient(
     private fun buildFixThreatsRequestParams(threatIds: List<Long>) = mutableMapOf<String, String>().apply {
         threatIds.forEachIndexed { index, value ->
             put("threat_ids[$index]", value.toString())
+        }
+    }
+
+    suspend fun ignoreThreat(remoteSiteId: Long, threatId: Long): IgnoreThreatResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).alerts.threat(threatId).url
+        val params = mapOf("ignore" to "true")
+        val response = wpComGsonRequestBuilder.syncPostRequest(this, url, params, null, Any::class.java)
+        return when (response) {
+            is Success -> IgnoreThreatResultPayload(remoteSiteId)
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                    response.error,
+                    IgnoreThreatErrorType.GENERIC_ERROR,
+                    IgnoreThreatErrorType.INVALID_RESPONSE,
+                    IgnoreThreatErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = IgnoreThreatError(errorType, response.error.message)
+                IgnoreThreatResultPayload(error, remoteSiteId)
+            }
         }
     }
 
