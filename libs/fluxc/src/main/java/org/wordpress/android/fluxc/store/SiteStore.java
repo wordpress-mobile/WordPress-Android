@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.Payload;
 import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
+import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -239,6 +240,42 @@ public class SiteStore extends Store {
 
         public FetchPrivateAtomicCookiePayload(long siteId) {
             this.siteId = siteId;
+        }
+    }
+
+    public static class FetchJetpackCapabilitiesPayload {
+        public long remoteSiteId;
+
+        public FetchJetpackCapabilitiesPayload(long remoteSiteId) {
+            this.remoteSiteId = remoteSiteId;
+        }
+    }
+
+    public static class FetchedJetpackCapabilitiesPayload extends Payload<JetpackCapabilitiesError> {
+        public long remoteSiteId;
+        @NonNull public List<JetpackCapability> capabilities;
+
+        public FetchedJetpackCapabilitiesPayload(long remoteSiteId, @NonNull List<JetpackCapability> capabilities) {
+            this.remoteSiteId = remoteSiteId;
+            this.capabilities = capabilities;
+        }
+
+        public FetchedJetpackCapabilitiesPayload(long remoteSiteId, @NonNull JetpackCapabilitiesError error) {
+            this.remoteSiteId = remoteSiteId;
+            this.capabilities = new ArrayList<>();
+            this.error = error;
+        }
+    }
+
+    public static class OnJetpackCapabilitiesFetched extends OnChanged<JetpackCapabilitiesError> {
+        public long remoteSiteId;
+        public @Nullable List<JetpackCapability> capabilities;
+
+        public OnJetpackCapabilitiesFetched(long remoteSiteId, @NonNull List<JetpackCapability> capabilities,
+                                            @Nullable JetpackCapabilitiesError error) {
+            this.remoteSiteId = remoteSiteId;
+            this.capabilities = capabilities;
+            this.error = error;
         }
     }
 
@@ -853,10 +890,21 @@ public class SiteStore extends Store {
         }
     }
 
+    public static class JetpackCapabilitiesError implements OnChangedError {
+        @NonNull public JetpackCapabilitiesErrorType type;
+        @Nullable public String message;
+
+        public JetpackCapabilitiesError(@NonNull JetpackCapabilitiesErrorType type, String message) {
+            this.type = type;
+            this.message = message;
+        }
+    }
+
     public static class OnAutomatedTransferEligibilityChecked extends OnChanged<AutomatedTransferError> {
         public @NonNull SiteModel site;
         public boolean isEligible;
         public @NonNull List<String> eligibilityErrorCodes;
+
 
         public OnAutomatedTransferEligibilityChecked(@NonNull SiteModel site,
                                                      boolean isEligible,
@@ -1013,6 +1061,10 @@ public class SiteStore extends Store {
     }
 
     public enum SiteEditorsErrorType {
+        GENERIC_ERROR
+    }
+
+    public enum JetpackCapabilitiesErrorType {
         GENERIC_ERROR
     }
 
@@ -1632,6 +1684,11 @@ public class SiteStore extends Store {
             case FETCHED_PRIVATE_ATOMIC_COOKIE:
                 handleFetchedPrivateAtomicCookie((FetchedPrivateAtomicCookiePayload) action.getPayload());
                 break;
+            case FETCH_JETPACK_CAPABILITIES:
+                fetchJetpackCapabilities((FetchJetpackCapabilitiesPayload) action.getPayload());
+                break;
+            case FETCHED_JETPACK_CAPABILITIES:
+                handleFetchedJetpackCapabilities((FetchedJetpackCapabilitiesPayload) action.getPayload());
         }
     }
 
@@ -2055,6 +2112,14 @@ public class SiteStore extends Store {
         AtomicCookie siteCookie = payload.cookie.getCookies().get(0);
         mPrivateAtomicCookie.set(siteCookie);
         emitChange(new OnPrivateAtomicCookieFetched(payload.site, true, payload.error));
+    }
+
+    private void fetchJetpackCapabilities(FetchJetpackCapabilitiesPayload payload) {
+        mSiteRestClient.fetchJetpackCapabilities(payload.remoteSiteId);
+    }
+
+    private void handleFetchedJetpackCapabilities(FetchedJetpackCapabilitiesPayload payload) {
+        emitChange(new OnJetpackCapabilitiesFetched(payload.remoteSiteId, payload.capabilities, payload.error));
     }
 
     private void fetchPlans(SiteModel siteModel) {
