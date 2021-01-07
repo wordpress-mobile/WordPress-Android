@@ -27,8 +27,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -47,6 +47,9 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.ProgressColor
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
@@ -170,6 +173,29 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
+
+            // TODO We should extract the code block below to a proper builder class once we implement the actual logic
+            val dummyTasks = (1..5).map { DummyTask("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
+            val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
+                    .sortedWith(compareBy(DummyTask::done).thenBy(DummyTask::id))
+            siteItems.add(
+                    QuickStartCard(
+                            "customize_your_site",
+                            "Customize your Site",
+                            dummyTasks,
+                            ProgressColor.GREEN,
+                            ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
+                    )
+            )
+            siteItems.add(
+                    QuickStartCard(
+                            "grow_your_audience",
+                            "Grow your Audience",
+                            dummyTasksCompleted,
+                            ProgressColor.ORANGE,
+                            ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
+                    )
+            )
             siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable ?: false))
             siteItems
         } else {
@@ -211,6 +237,10 @@ class MySiteViewModel
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
+    }
+
+    private fun onQuickStartCardMoreClick(id: String) {
+        TODO("Not yet implemented")
     }
 
     private fun titleClick(selectedSite: SiteModel) {
