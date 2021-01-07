@@ -20,12 +20,16 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
+import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusPayload
+import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsPayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusErrorType
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatPayload
@@ -189,6 +193,41 @@ class ScanStoreTest {
         scanStore.onAction(fetchAction)
 
         val expectedEventWithError = ScanStore.OnIgnoreThreatStarted(payload.error, ScanAction.IGNORE_THREAT)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `fetch fix threats status triggers rest client`() = test {
+        val payload = FetchFixThreatsStatusPayload(siteId, listOf(threatId))
+        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(
+            FetchFixThreatsStatusResultPayload(siteId, mock())
+        )
+
+        val action = ScanActionBuilder.newFetchFixThreatsStatusAction(payload)
+        scanStore.onAction(action)
+
+        verify(scanRestClient).fetchFixThreatsStatus(siteId, listOf(threatId))
+    }
+
+    @Test
+    fun `error on fetch fix threats status returns the error`() = test {
+        val error = FixThreatsStatusError(FixThreatsStatusErrorType.GENERIC_ERROR, "error")
+        val payload = FetchFixThreatsStatusResultPayload(siteId, mock(), error)
+        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newFetchFixThreatsStatusAction(
+            FetchFixThreatsStatusPayload(
+                siteId,
+                listOf(threatId)
+            )
+        )
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnFixThreatsStatusFetched(
+            siteId,
+            payload.error,
+            ScanAction.FETCH_FIX_THREATS_STATUS
+        )
         verify(dispatcher).emitChange(expectedEventWithError)
     }
 }
