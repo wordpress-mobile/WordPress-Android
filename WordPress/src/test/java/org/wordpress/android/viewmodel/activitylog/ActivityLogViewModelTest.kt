@@ -49,6 +49,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAUL
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -69,6 +70,8 @@ private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
 private const val TIMEZONE_GMT_0 = "GMT+0"
 private const val ONE_DAY_WITHOUT_SECOND_IN_MILLIS = 1000 * 60 * 60 * 24 - 1000
 
+private const val SITE_ID = 1L
+
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
@@ -80,6 +83,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
+    @Mock private lateinit var fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
@@ -143,6 +147,7 @@ class ActivityLogViewModelTest {
                 backupFeatureConfig,
                 dateUtils,
                 activityLogTracker,
+                fetchJetpackCapabilitiesUseCase,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -400,7 +405,7 @@ class ActivityLogViewModelTest {
     fun onActivityTypeFilterClickRemoteSiteIdIsPassed() {
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(RemoteId(site.siteId), viewModel.showActivityTypeFilterDialog.value!!.siteId)
+        assertEquals(RemoteId(SITE_ID), viewModel.showActivityTypeFilterDialog.value!!.siteId)
     }
 
     @Test
