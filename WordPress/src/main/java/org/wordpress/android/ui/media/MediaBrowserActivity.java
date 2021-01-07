@@ -474,6 +474,7 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
             case RequestCodes.FILE_LIBRARY:
+            case RequestCodes.AUDIO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
