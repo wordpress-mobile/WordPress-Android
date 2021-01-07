@@ -1,6 +1,5 @@
 package org.wordpress.android.util;
 
-import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ClipData;
 import android.content.ContentResolver;
@@ -15,7 +14,6 @@ import android.provider.MediaStore;
 import android.view.ViewConfiguration;
 import android.webkit.MimeTypeMap;
 
-import androidx.annotation.IdRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.StringRes;
