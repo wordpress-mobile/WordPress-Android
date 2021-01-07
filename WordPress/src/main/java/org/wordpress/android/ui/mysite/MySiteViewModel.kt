@@ -171,7 +171,11 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable ?: false))
+            siteItems.addAll(siteItemsBuilder.buildSiteItems(
+                    site,
+                    this::onItemClick,
+                    scanAvailable ?: false
+            ))
             siteItems
         } else {
             listOf()
