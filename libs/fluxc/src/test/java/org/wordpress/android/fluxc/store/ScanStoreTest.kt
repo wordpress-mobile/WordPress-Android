@@ -22,8 +22,16 @@ import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsPayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatPayload
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
-import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
@@ -40,6 +48,9 @@ class ScanStoreTest {
     @Mock private lateinit var siteModel: SiteModel
     @Mock private lateinit var threat: ThreatModel
     private lateinit var scanStore: ScanStore
+    private val siteId = 11L
+    private val threatId = 1L
+    private val threatIds = listOf(threatId)
 
     @Before
     fun setUp() {
@@ -118,7 +129,7 @@ class ScanStoreTest {
 
     @Test
     fun `error on start scan returns the error`() = test {
-        val error = ScanStartError(GENERIC_ERROR, "error")
+        val error = ScanStartError(ScanStartErrorType.GENERIC_ERROR, "error")
         val payload = ScanStartResultPayload(error, siteModel)
         whenever(scanRestClient.startScan(siteModel)).thenReturn(payload)
 
@@ -126,6 +137,58 @@ class ScanStoreTest {
         scanStore.onAction(fetchAction)
 
         val expectedEventWithError = ScanStore.OnScanStarted(payload.error, ScanAction.START_SCAN)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `fix threats triggers rest client`() = test {
+        val payload = FixThreatsPayload(siteId, threatIds)
+        whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(
+            FixThreatsResultPayload(siteId)
+        )
+
+        val action = ScanActionBuilder.newFixThreatsAction(payload)
+        scanStore.onAction(action)
+
+        verify(scanRestClient).fixThreats(siteId, threatIds)
+    }
+
+    @Test
+    fun `error on fix threats returns the error`() = test {
+        val error = FixThreatsError(FixThreatsErrorType.GENERIC_ERROR, "error")
+        val payload = FixThreatsResultPayload(error, siteId)
+        whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newFixThreatsAction(FixThreatsPayload(siteId, threatIds))
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnFixThreatsStarted(payload.error, ScanAction.FIX_THREATS)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `ignore threat triggers rest client`() = test {
+        val payload = IgnoreThreatPayload(siteId, threatId)
+        whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(
+            IgnoreThreatResultPayload(siteId)
+        )
+
+        val action = ScanActionBuilder.newIgnoreThreatAction(payload)
+        scanStore.onAction(action)
+
+        verify(scanRestClient).ignoreThreat(siteId, threatId)
+    }
+
+    @Test
+    fun `error on ignore threat returns the error`() = test {
+        val error = IgnoreThreatError(IgnoreThreatErrorType.GENERIC_ERROR, "error")
+        val payload = IgnoreThreatResultPayload(error, siteId)
+        whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newIgnoreThreatAction(IgnoreThreatPayload(siteId, threatId))
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnIgnoreThreatStarted(payload.error, ScanAction.IGNORE_THREAT)
         verify(dispatcher).emitChange(expectedEventWithError)
     }
 }
