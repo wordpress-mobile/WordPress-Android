@@ -9,6 +9,8 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.Credentials
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
+import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
+import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel.FixStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.network.UserAgent
@@ -18,10 +20,14 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsStatusResponse
+import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusErrorType
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
 import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatResultPayload
@@ -140,6 +146,32 @@ class ScanRestClient(
         }
     }
 
+    suspend fun fetchFixThreatsStatus(remoteSiteId: Long, threatIds: List<Long>): FetchFixThreatsStatusResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).alerts.fix.url
+        val params = buildFixThreatsRequestParams(threatIds)
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, params, FixThreatsStatusResponse::class.java)
+        return when (response) {
+            is Success -> {
+                if (response.data.ok == true) {
+                    buildFixThreatsStatusPayload(response.data, remoteSiteId)
+                } else {
+                    val error = FixThreatsStatusError(FixThreatsStatusErrorType.API_ERROR)
+                    FetchFixThreatsStatusResultPayload(remoteSiteId = remoteSiteId, error = error)
+                }
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                    response.error,
+                    FixThreatsStatusErrorType.GENERIC_ERROR,
+                    FixThreatsStatusErrorType.INVALID_RESPONSE,
+                    FixThreatsStatusErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = FixThreatsStatusError(errorType, response.error.message)
+                FetchFixThreatsStatusResultPayload(remoteSiteId = remoteSiteId, error = error)
+            }
+        }
+    }
+
     // Build Payloads
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
         val state = State.fromValue(response.state) ?: return buildScanStateErrorPayload(
@@ -202,6 +234,28 @@ class ScanRestClient(
             }
         )
         return FetchedScanStatePayload(scanStateModel, site)
+    }
+
+    private fun buildFixThreatsStatusPayload(
+        response: FixThreatsStatusResponse,
+        remoteSiteId: Long
+    ): FetchFixThreatsStatusResultPayload {
+        var error: FixThreatsStatusErrorType? = null
+        val fixThreatStatusModels = response.fixThreatsStatus?.mapNotNull {
+            if (it.id == null) {
+                error = FixThreatsStatusErrorType.MISSING_THREAT_ID
+                null
+            } else {
+                FixThreatStatusModel(id = it.id, status = FixStatus.fromValue(it.status))
+            }
+        } ?: emptyList()
+
+        return error?.let {
+            FetchFixThreatsStatusResultPayload(remoteSiteId = remoteSiteId, error = FixThreatsStatusError(it))
+        } ?: FetchFixThreatsStatusResultPayload(
+            remoteSiteId = remoteSiteId,
+            fixThreatStatusModels = fixThreatStatusModels
+        )
     }
 
     private fun buildScanStateErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
