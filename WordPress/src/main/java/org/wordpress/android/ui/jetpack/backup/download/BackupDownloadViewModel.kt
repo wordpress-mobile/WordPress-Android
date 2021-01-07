@@ -77,8 +77,7 @@ class BackupDownloadViewModel @Inject constructor(
             // Show the next step only if it's a fresh activity so we can handle the navigation
             wizardManager.showNextStep()
         } else {
-            backupDownloadState = requireNotNull(savedInstanceState.getParcelable(KEY_BACKUP_DOWNLOAD_STATE)
-            )
+            backupDownloadState = requireNotNull(savedInstanceState.getParcelable(KEY_BACKUP_DOWNLOAD_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }
