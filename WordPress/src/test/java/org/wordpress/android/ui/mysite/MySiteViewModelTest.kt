@@ -210,7 +210,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().items).hasSize(2)
-        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
+        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue
     }
 
     @Test
@@ -792,7 +792,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(site)
     }
 
@@ -806,7 +806,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(action)
     }
 
