@@ -74,7 +74,6 @@ class ActivityLogViewModel @Inject constructor(
         FETCHING,
         LOADING_MORE
     }
-
     private var isStarted = false
 
     private val _events = MutableLiveData<List<ActivityLogListItem>>()
