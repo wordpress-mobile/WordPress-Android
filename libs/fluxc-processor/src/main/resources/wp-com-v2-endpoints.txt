@@ -11,6 +11,8 @@
 /sites/$site/scan/enqueue
 /sites/$site/scan/threat/$threat_id
 
+/sites/$site/rewind/capabilities
+
 /sites/$site/gutenberg
 
 /sites/$site/atomic-auth-proxy/read-access-cookies
