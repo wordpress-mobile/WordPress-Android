@@ -296,6 +296,16 @@ public class WPMediaUtils {
         return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
 
+    private static Intent prepareAudioLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAudioTypesOnly());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiSelect);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_media));
+    }
+
     private static Intent prepareChooserIntent(
             Context context,
             OpenSystemPicker openSystemPicker,
