@@ -758,6 +758,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(scanStatusService.start(site)).thenAnswer {
             onScanAvailable.postValue(true)
         }
+
         onSiteChange.postValue(site)
 
         verify(siteItemsBuilder).buildSiteItems(
