@@ -206,7 +206,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(3)
-        assertThat(uiModels.last().items).hasSize(2)
+        assertThat(uiModels.last().items).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
         assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
     }
 
