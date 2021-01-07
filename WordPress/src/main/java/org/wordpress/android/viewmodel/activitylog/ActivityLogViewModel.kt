@@ -188,20 +188,16 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun refreshFiltersUiState() {
-        _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
-            val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
-            val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
-            FiltersShown(
-                    dateRangeLabel,
-                    dateRangeLabelContentDescription,
-                    activityTypeLabel,
-                    activityTypeLabelContentDescription,
-                    currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
-                    currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
-            )
-        } else {
-            FiltersHidden
-        }
+        val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
+        val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
+        _filtersUiState.value = FiltersShown(
+                dateRangeLabel,
+                dateRangeLabelContentDescription,
+                activityTypeLabel,
+                activityTypeLabelContentDescription,
+                currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
+                currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
+        )
     }
 
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
