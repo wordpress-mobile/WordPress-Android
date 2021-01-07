@@ -27,10 +27,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
@@ -193,6 +194,7 @@ class MySiteViewModel
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val navigationAction = when (action) {
                 ACTIVITY_LOG -> OpenActivityLog(site)
+                BACKUP -> TODO()
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)
