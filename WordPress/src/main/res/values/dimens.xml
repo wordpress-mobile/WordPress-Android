@@ -410,6 +410,8 @@
     <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
+    <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
+
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
