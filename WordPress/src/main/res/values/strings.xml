@@ -1036,8 +1036,10 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
-    <!-- scan -->
+    <!-- backup -->
     <string name="backup">Backup</string>
+
+    <!-- scan -->
     <string name="scan">Scan</string>
 
     <string name="scan_state_icon">Scan state icon</string>
