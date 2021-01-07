@@ -23,10 +23,14 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -36,6 +40,8 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
+import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
@@ -168,6 +174,10 @@ class ActivityLogViewModelTest {
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
+        whenever(site.hasFreePlan).thenReturn(false)
+        whenever(site.siteId).thenReturn(SITE_ID)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null))
     }
 
     @Test
@@ -388,6 +398,62 @@ class ActivityLogViewModelTest {
     @Test
     fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnPaidPlan() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(false)
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreNotVisibleWhenSiteOnFreePlan() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+
+        viewModel.start(site)
+
+        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(SITE_ID))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP), null))
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupDailyProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_DAILY), null))
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupRealtimeProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null))
 
         viewModel.start(site)
 
