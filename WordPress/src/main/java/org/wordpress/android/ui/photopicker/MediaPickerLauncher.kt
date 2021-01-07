@@ -2,6 +2,7 @@ package org.wordpress.android.ui.photopicker
 
 import android.app.Activity
 import android.content.Intent
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -184,8 +185,33 @@ class MediaPickerLauncher @Inject constructor(
     }
 
     fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
+        showMediaPicker(
+                activity,
+                canMultiselect,
+                mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
+                R.string.photo_picker_choose_file,
+                RequestCodes.FILE_LIBRARY
+        )
+    }
+
+    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
+        showMediaPicker(
+            activity,
+            canMultiselect,
+                mutableSetOf(AUDIO),
+                R.string.photo_picker_choose_file,
+                RequestCodes.AUDIO_LIBRARY
+        )
+    }
+
+    private fun showMediaPicker(
+        activity: Activity,
+        canMultiselect: Boolean = false,
+        allowedTypes: Set<MediaType>,
+        @StringRes title: Int,
+        requestCode: Int
+    ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
                     availableDataSources = setOf(),
@@ -197,7 +223,7 @@ class MediaPickerLauncher @Inject constructor(
                     editingEnabled = true,
                     queueResults = false,
                     defaultSearchView = false,
-                    title = R.string.photo_picker_choose_file
+                    title = title
             )
             val intent = MediaPickerActivity.buildIntent(
                     activity,
@@ -205,36 +231,14 @@ class MediaPickerLauncher @Inject constructor(
             )
             activity.startActivityForResult(
                     intent,
-                    RequestCodes.FILE_LIBRARY
+                    requestCode
             )
         } else {
-            WPMediaUtils.launchFileLibrary(activity, canMultiselect)
-        }
-    }
-
-    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
-        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val mediaPickerSetup = MediaPickerSetup(
-                    primaryDataSource = DEVICE,
-                    availableDataSources = setOf(),
-                    canMultiselect = canMultiselect,
-                    requiresStoragePermissions = true,
-                    allowedTypes = mutableSetOf(AUDIO),
-                    cameraSetup = HIDDEN,
-                    systemPickerEnabled = true,
-                    editingEnabled = true,
-                    queueResults = false,
-                    defaultSearchView = false,
-                    title = R.string.photo_picker_choose_file
-            )
-            val intent = MediaPickerActivity.buildIntent(
-                    activity,
-                    mediaPickerSetup
-            )
-            activity.startActivityForResult(
-                    intent,
-                    RequestCodes.FILE_LIBRARY
-            )
+            if (requestCode == RequestCodes.FILE_LIBRARY) {
+                WPMediaUtils.launchFileLibrary(activity, canMultiselect)
+            } else {
+                WPMediaUtils.launchAudioFileLibrary(activity, canMultiselect)
+            }
         }
     }
 
