@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
@@ -20,6 +21,8 @@ import org.wordpress.android.util.image.ImageManager
 
 class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder>() {
     private var items = listOf<MySiteItem>()
+    private val quickStartViewPool = RecycledViewPool()
+
     fun loadData(result: List<MySiteItem>) {
         val diffResult = DiffUtil.calculateDiff(
                 MySiteAdapterDiffCallback(items, result)
@@ -33,7 +36,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent)
+            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, quickStartViewPool)
             CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
