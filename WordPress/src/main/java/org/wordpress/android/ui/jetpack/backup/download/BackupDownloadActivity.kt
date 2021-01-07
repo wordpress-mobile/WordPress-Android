@@ -131,7 +131,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         val fragment = when (target.wizardStep) {
             DETAILS -> BackupDownloadDetailsFragment.newInstance(intent?.extras)
             PROGRESS -> BackupDownloadProgressFragment.newInstance(intent?.extras, target.wizardState)
-            COMPLETE -> BackupDownloadCompleteFragment.newInstance()
+            COMPLETE -> BackupDownloadCompleteFragment.newInstance(intent?.extras, target.wizardState)
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }

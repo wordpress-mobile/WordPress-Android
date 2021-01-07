@@ -3414,6 +3414,16 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
 
+    <string name="backup_download_complete_page_title">Your Backup</string>
+    <string name="backup_download_complete_header">Your backup is now available for download</string>
+    <string name="backup_download_complete_description_with_two_parameters">We successfully created a backup of your site from %1$s %2$s.</string>
+    <string name="backup_download_complete_download_action_button">Download</string>
+    <string name="backup_download_complete_download_share_action_button">Share link</string>
+    <string name="backup_download_complete_icon_content_description">Downloadable backup ready icon</string>
+    <string name="backup_download_complete_download_action_button_content_description">Download button</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Share link button</string>
+    <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
+
     <string name="jetpack_icon_content_description">icon</string>
 
 </resources>
