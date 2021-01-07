@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
+import org.wordpress.android.fluxc.action.ScanAction.FIX_THREATS
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,8 +38,13 @@ class ScanStore @Inject constructor(
                 }
             }
             START_SCAN -> {
-                coroutineEngine.launch(AppLog.T.API, this, "Scan: On START_STATE") {
+                coroutineEngine.launch(AppLog.T.API, this, "Scan: On START_SCAN") {
                     emitChange(startScan(action.payload as ScanStartPayload))
+                }
+            }
+            FIX_THREATS -> {
+                coroutineEngine.launch(AppLog.T.API, this, "Scan: On FIX_THREATS") {
+                    emitChange(fixThreats(action.payload as FixThreatsPayload))
                 }
             }
         }
@@ -86,6 +92,19 @@ class ScanStore @Inject constructor(
         }
     }
 
+    suspend fun fixThreats(fixThreatsPayload: FixThreatsPayload): OnFixThreatsStarted {
+        val payload = scanRestClient.fixThreats(fixThreatsPayload.remoteSiteId, fixThreatsPayload.threatIds)
+        return emitFixThreatsResult(payload)
+    }
+
+    private fun emitFixThreatsResult(payload: FixThreatsResultPayload): OnFixThreatsStarted {
+        return if (payload.error != null) {
+            OnFixThreatsStarted(payload.error, FIX_THREATS)
+        } else {
+            OnFixThreatsStarted(FIX_THREATS)
+        }
+    }
+
     // Actions
     data class OnScanStateFetched(var causeOfChange: ScanAction) : Store.OnChanged<ScanStateError>() {
         constructor(error: ScanStateError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
@@ -95,6 +114,12 @@ class ScanStore @Inject constructor(
 
     data class OnScanStarted(var causeOfChange: ScanAction) : Store.OnChanged<ScanStartError>() {
         constructor(error: ScanStartError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnFixThreatsStarted(var causeOfChange: ScanAction) : Store.OnChanged<FixThreatsError>() {
+        constructor(error: FixThreatsError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -124,6 +149,14 @@ class ScanStore @Inject constructor(
         }
     }
 
+    class FixThreatsPayload(val remoteSiteId: Long, val threatIds: List<Long>) : Payload<BaseNetworkError>()
+
+    class FixThreatsResultPayload(val remoteSiteId: Long) : Payload<FixThreatsError>() {
+        constructor(error: FixThreatsError, remoteSiteId: Long) : this(remoteSiteId = remoteSiteId) {
+            this.error = error
+        }
+    }
+
     // Errors
     enum class ScanStateErrorType {
         GENERIC_ERROR,
@@ -144,4 +177,13 @@ class ScanStore @Inject constructor(
     }
 
     class ScanStartError(var type: ScanStartErrorType, var message: String? = null) : OnChangedError
+
+    enum class FixThreatsErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE,
+        API_ERROR
+    }
+
+    class FixThreatsError(var type: FixThreatsErrorType, var message: String? = null) : OnChangedError
 }
