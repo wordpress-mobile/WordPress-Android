@@ -9,6 +9,9 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -27,6 +30,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -65,6 +69,7 @@ class ActivityLogViewModel @Inject constructor(
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
+    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -85,7 +90,7 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersUiState = MutableLiveData<FiltersUiState>()
+    private val _filtersUiState = MutableLiveData<FiltersUiState>(FiltersHidden)
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
@@ -167,9 +172,24 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        refreshFiltersUiState()
+        showFiltersIfSupported()
 
         isStarted = true
+    }
+
+    private fun showFiltersIfSupported() {
+        when {
+            !activityLogFiltersFeatureConfig.isEnabled() -> return
+            !site.hasFreePlan -> refreshFiltersUiState()
+            else -> {
+                launch {
+                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
+                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
+                        refreshFiltersUiState()
+                    }
+                }
+            }
+        }
     }
 
     override fun onCleared() {
