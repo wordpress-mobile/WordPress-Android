@@ -503,7 +503,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
 
@@ -515,7 +514,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeFilterClearActionHiddenWhenFilterEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onDateRangeSelected(null)
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
@@ -524,7 +522,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onDateRangeFilterClearActionClickClearActionDisappears() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
@@ -536,8 +533,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun basicDateRangeLabelShownWhenFilterEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
-
         viewModel.onDateRangeSelected(null)
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
@@ -546,7 +541,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
@@ -557,7 +551,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeLabelFormattingUsesGMT0Timezone() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(
                 dateUtils.formatDateRange(
                         anyOrNull(),
@@ -574,7 +567,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(
                 dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())
         ).thenReturn("TEST")
@@ -589,7 +581,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
@@ -598,7 +589,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun activityTypeFilterClearActionHiddenWhenFilterEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf())
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
@@ -607,7 +597,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActivityTypeFilterClearActionClickClearActionDisappears() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(
                 listOf(ActivityTypeModel("user", "User", 10))
         )
@@ -620,7 +609,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun basicActivityTypeLabelShownWhenFilterEmpty() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(listOf())
 
         Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
@@ -629,7 +617,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun activityTypeLabelWithNameShownWhenFilterHasOneItem() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         val activityTypeName = "Backups and Restores"
         val activityTypeCount = 5
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
@@ -640,7 +627,6 @@ class ActivityLogViewModelTest {
 
     @Test
     fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
-        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         viewModel.onActivityTypesSelected(
                 listOf(
                         ActivityTypeModel("user", "User", 10),
