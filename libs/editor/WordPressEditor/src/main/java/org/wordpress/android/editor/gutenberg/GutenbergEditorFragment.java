@@ -557,10 +557,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
         String packageName = activity.getApplication().getPackageName();
 
-        int chooseAudioFileResourceId =
+        int chooseFileResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(mediaOptionId, getString(chooseAudioFileResourceId)));
+        otherMediaOptions.add(new MediaOption(mediaOptionId, getString(chooseFileResourceId)));
 
         return otherMediaOptions;
     }
