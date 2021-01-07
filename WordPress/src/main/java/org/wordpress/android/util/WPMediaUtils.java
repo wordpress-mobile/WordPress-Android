@@ -256,12 +256,22 @@ public class WPMediaUtils {
                 requestCode);
     }
 
+    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, title);
+    }
+
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("video/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoTypesOnly());
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiSelect);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_video));
     }
@@ -271,7 +281,7 @@ public class WPMediaUtils {
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoAndImageTypesOnly());
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiSelect);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_media));
     }
@@ -281,7 +291,7 @@ public class WPMediaUtils {
         intent.setType("*/*");
         intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAllTypes());
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiSelect);
         }
         return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
@@ -315,15 +325,6 @@ public class WPMediaUtils {
                 RequestCodes.PICTURE_LIBRARY);
     }
 
-    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.setType("image/*");
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
-        if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        }
-        return Intent.createChooser(intent, title);
-    }
 
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
