@@ -407,6 +407,9 @@ class MySiteFragment : Fragment(),
                     selectedSite
             )
         }
+        row_backup.setOnClickListener {
+            // Do nothing. TODO: Launch 'Backups' screen.
+        }
         row_scan.setOnClickListener {
             ActivityLauncher.viewScan(
                     activity,
