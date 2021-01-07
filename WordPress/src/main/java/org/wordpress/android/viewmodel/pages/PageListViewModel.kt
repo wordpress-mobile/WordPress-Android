@@ -271,10 +271,10 @@ class PageListViewModel @Inject constructor(
 
         val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
         val sortedPages = (if (shouldSortTopologically) {
-            topologicalSort(filteredPages, listType = PUBLISHED)
+            topologicalSort(filteredPages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
         } else {
-            filteredPages.sortedByDescending { it.date }
-        }).sortedBy { !it.isHomepage }
+            filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
+        })
 
         return sortedPages
                 .map {
