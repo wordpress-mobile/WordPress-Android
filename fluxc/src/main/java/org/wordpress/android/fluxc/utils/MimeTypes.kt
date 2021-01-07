@@ -159,6 +159,12 @@ class MimeTypes {
                 .toTypedArray()
     }
 
+    fun getAudioTypesOnly(): Array<String> {
+        return (audioTypes.toStrings())
+                .toSet()
+                .toTypedArray()
+    }
+
     private fun List<MimeType>.toStrings(): List<String> {
         return this.map { mimeType -> mimeType.subtypes.map { print(mimeType.type, it) } }.flatten()
     }
