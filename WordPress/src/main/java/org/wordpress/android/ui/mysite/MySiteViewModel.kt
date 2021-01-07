@@ -53,6 +53,7 @@ import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -201,7 +202,7 @@ class MySiteViewModel
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val navigationAction = when (action) {
                 ACTIVITY_LOG -> OpenActivityLog(site)
-                BACKUP -> TODO()
+                BACKUP -> OpenBackup(site)
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)

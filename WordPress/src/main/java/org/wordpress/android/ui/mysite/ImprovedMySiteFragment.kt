@@ -35,6 +35,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMedia
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -191,6 +192,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
                     is OpenCropActivity -> startCropActivity(action.imageUri)
                     is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+                    is OpenBackup -> Unit // Do nothing. TODO: Launch 'Backups' screen.
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
