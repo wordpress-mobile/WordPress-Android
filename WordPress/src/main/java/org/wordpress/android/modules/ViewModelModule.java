@@ -15,6 +15,7 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
@@ -473,6 +474,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BackupDownloadCompleteViewModel.class)
     abstract ViewModel backupDownloadCompleteViewModel(BackupDownloadCompleteViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(QuickStartMenuViewModel.class)
+    abstract ViewModel quickStartMenuViewModel(QuickStartMenuViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);
