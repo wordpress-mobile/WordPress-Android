@@ -2,8 +2,7 @@ package org.wordpress.android.ui.jetpack.backup.download.details
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.DetailsSubHeaderState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -23,7 +22,7 @@ import javax.inject.Inject
 @Reusable
 class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
     fun buildDetailsListStateItems(
-        activityLogModel: ActivityLogModel,
+        published: Date,
         availableItems: List<JetpackAvailableItem>,
         onCreateDownloadClick: () -> Unit,
         onCheckboxItemClicked: (availableItemType: JetpackAvailableItemType) -> Unit
@@ -31,7 +30,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
         val items = mutableListOf(
                 buildDetailsIcon(),
                 buildDetailsHeader(),
-                buildDescriptionState(activityLogModel.published),
+                buildDescriptionState(published),
                 buildDetailsButtonAction(onCreateDownloadClick),
                 buildDetailsSubHeader()
         )
@@ -60,7 +59,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
 
     private fun buildDescriptionState(published: Date) = DescriptionState(
             UiStringResWithParams(
-                    R.string.backup_download_details_description,
+                    R.string.backup_download_details_description_with_two_parameters,
                     listOf(
                             UiStringText(published.toFormattedDateString()),
                             UiStringText(published.toFormattedTimeString())
@@ -74,7 +73,7 @@ class BackupDownloadDetailsStateListItemBuilder @Inject constructor() {
             onClick = onClick
     )
 
-    private fun buildDetailsSubHeader() = DetailsSubHeaderState(
+    private fun buildDetailsSubHeader() = SubHeaderState(
             text = UiStringRes(R.string.backup_download_details_choose_items_header)
     )
 }

@@ -8,71 +8,17 @@ import org.junit.Before
 import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel.Row
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType.THEME
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import java.util.Date
-
-private const val FILE_PATH = "/var/www/html/jp-scan-daily/wp-admin/index.php"
-private const val FILE_NAME = "index.php"
-private const val VULNERABLE_THREAT_SLUG = "test slug"
-private const val VULNERABLE_THREAT_VERSION = "test version"
-private const val TEST_SIGNATURE = "test signature"
 
 @InternalCoroutinesApi
 class ThreatItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: ThreatItemBuilder
-
-    private val baseThreatModel = BaseThreatModel(
-        id = 1L,
-        signature = TEST_SIGNATURE,
-        description = "",
-        status = CURRENT,
-        firstDetected = Date(0)
-    )
-    private val extension = Extension(
-        type = Extension.ExtensionType.PLUGIN,
-        slug = VULNERABLE_THREAT_SLUG,
-        name = "",
-        version = VULNERABLE_THREAT_VERSION,
-        isPremium = false
-    )
-    private val rows = listOf(Row(id = 1, rowNumber = 1))
-    private val coreFileModificationThreatModel = CoreFileModificationThreatModel(
-        baseThreatModel = baseThreatModel,
-        fileName = FILE_PATH,
-        diff = ""
-    )
-    private val databaseThreatModel = DatabaseThreatModel(
-        baseThreatModel = baseThreatModel,
-        rows = rows
-    )
-    private val fileThreatModel = FileThreatModel(
-        baseThreatModel = baseThreatModel,
-        fileName = FILE_NAME,
-        context = ThreatContext(emptyList())
-    )
-    private val vulnerableExtensionThreatModel = VulnerableExtensionThreatModel(
-        baseThreatModel = baseThreatModel,
-        extension = extension
-    )
-    private val genericThreatModel = GenericThreatModel(
-        baseThreatModel = baseThreatModel
-    )
 
     @Before
     fun setUp() {
@@ -84,10 +30,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_infected_core_file,
-            listOf(UiStringText(FILE_NAME))
+            listOf(UiStringText(TEST_FILE_NAME))
         )
         // Act
-        val threatItem = buildThreatItem(coreFileModificationThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.coreFileModificationThreatModel)
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -97,7 +43,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_core_file)
         // Act
-        val threatItem = buildThreatItem(coreFileModificationThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.coreFileModificationThreatModel)
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -107,10 +53,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_database_threat,
-            listOf(UiStringText("${rows.size}"))
+            listOf(UiStringText("${ThreatTestData.rows.size}"))
         )
         // Act
-        val threatItem = buildThreatItem(databaseThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.databaseThreatModel)
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -120,7 +66,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedSubHeader = UiStringText("")
         // Act
-        val threatItem = buildThreatItem(databaseThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.databaseThreatModel)
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -130,10 +76,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_file_malicious_code_pattern,
-            listOf(UiStringText(FILE_NAME))
+            listOf(UiStringText(TEST_FILE_NAME))
         )
         // Act
-        val threatItem = buildThreatItem(fileThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.fileThreatModel)
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -146,7 +92,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
             listOf(UiStringText(TEST_SIGNATURE))
         )
         // Act
-        val threatItem = buildThreatItem(fileThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.fileThreatModel)
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -156,10 +102,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_vulnerable_plugin,
-            listOf(UiStringText(VULNERABLE_THREAT_SLUG), UiStringText(VULNERABLE_THREAT_VERSION))
+            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(TEST_VULNERABLE_THREAT_VERSION))
         )
         // Act
-        val threatItem = buildThreatItem(vulnerableExtensionThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.vulnerableExtensionThreatModel)
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -169,7 +115,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
         // Act
-        val threatItem = buildThreatItem(vulnerableExtensionThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.vulnerableExtensionThreatModel)
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -179,10 +125,14 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_vulnerable_theme,
-            listOf(UiStringText(VULNERABLE_THREAT_SLUG), UiStringText(VULNERABLE_THREAT_VERSION))
+            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(TEST_VULNERABLE_THREAT_VERSION))
         )
         // Act
-        val threatItem = buildThreatItem(vulnerableExtensionThreatModel.copy(extension = extension.copy(type = THEME)))
+        val threatItem = buildThreatItem(
+            ThreatTestData.vulnerableExtensionThreatModel.copy(
+                extension = ThreatTestData.extension.copy(type = ExtensionType.THEME)
+            )
+        )
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -192,7 +142,11 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
         // Act
-        val threatItem = buildThreatItem(vulnerableExtensionThreatModel.copy(extension = extension.copy(type = THEME)))
+        val threatItem = buildThreatItem(
+            ThreatTestData.vulnerableExtensionThreatModel.copy(
+                extension = ThreatTestData.extension.copy(type = ExtensionType.THEME)
+            )
+        )
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -202,7 +156,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringRes(R.string.threat_item_header_threat_found)
         // Act
-        val threatItem = buildThreatItem(genericThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.genericThreatModel)
         // Assert
         assertThat(threatItem.header).isEqualTo(expectedHeader)
     }
@@ -212,7 +166,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
         // Act
-        val threatItem = buildThreatItem(genericThreatModel)
+        val threatItem = buildThreatItem(ThreatTestData.genericThreatModel)
         // Assert
         assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
@@ -220,15 +174,15 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     @Test
     fun `onThreatItemClicked listener is correctly assigned to ThreatItem's onClick`() = test {
         // Arrange
-        val onThreatItemClicked: (ThreatModel) -> Unit = mock()
-        val threatItem = buildThreatItem(genericThreatModel, onThreatItemClicked)
+        val onThreatItemClicked: (Long) -> Unit = mock()
+        val threatItem = buildThreatItem(ThreatTestData.genericThreatModel, onThreatItemClicked)
         // Act
         threatItem.onClick.invoke()
         // Assert
-        verify(onThreatItemClicked).invoke(genericThreatModel)
+        verify(onThreatItemClicked).invoke(ThreatTestData.genericThreatModel.baseThreatModel.id)
     }
 
-    private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((ThreatModel) -> Unit) = mock()) =
+    private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((Long) -> Unit) = mock()) =
         builder.buildThreatItem(
             threatModel = threatModel,
             onThreatItemClicked = onThreatItemClicked

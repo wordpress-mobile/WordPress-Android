@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.backup_download_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -19,8 +20,10 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsFragment
 import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteFragment
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.wizard.WizardNavigationTarget
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class BackupDownloadActivity : LocaleAwareActivity() {
@@ -75,6 +78,12 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             this.title = getString(state.title)
         })
 
+        viewModel.snackbarEvents.observe(this, {
+            it?.applyIfNotHandled {
+                showSnackbar()
+            }
+        })
+
         // Canceled, Running, Complete -> (Running = kick off status)
         viewModel.wizardFinishedObservable.observe(this, {
             it.applyIfNotHandled {
@@ -102,11 +111,27 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         viewModel.start(savedInstanceState)
     }
 
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(
+                coordinator_layout,
+                uiHelpers.getTextOfUiString(this@BackupDownloadActivity, message),
+                Snackbar.LENGTH_LONG
+        )
+        if (buttonTitle != null) {
+            snackbar.setAction(
+                    uiHelpers.getTextOfUiString(this@BackupDownloadActivity, buttonTitle)
+            ) {
+                buttonAction.invoke()
+            }
+        }
+        snackbar.show()
+    }
+
     private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
         val fragment = when (target.wizardStep) {
             DETAILS -> BackupDownloadDetailsFragment.newInstance(intent?.extras)
-            PROGRESS -> BackupDownloadProgressFragment.newInstance()
-            COMPLETE -> BackupDownloadCompleteFragment.newInstance()
+            PROGRESS -> BackupDownloadProgressFragment.newInstance(intent?.extras, target.wizardState)
+            COMPLETE -> BackupDownloadCompleteFragment.newInstance(intent?.extras, target.wizardState)
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }
