@@ -12,5 +12,7 @@ enum class ScanAction : IAction {
     @Action(payloadType = ScanStore.ScanStartPayload::class)
     START_SCAN,
     @Action(payloadType = ScanStore.FixThreatsPayload::class)
-    FIX_THREATS
+    FIX_THREATS,
+    @Action(payloadType = ScanStore.IgnoreThreatPayload::class)
+    IGNORE_THREAT
 }
