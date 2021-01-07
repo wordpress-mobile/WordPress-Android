@@ -248,7 +248,7 @@ public class WPMediaUtils {
     }
 
     public static void launchAudioFileLibrary(Activity activity, boolean multiSelect) {
-        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
+        activity.startActivityForResult(prepareAudioLibraryIntent(activity, multiSelect),
                 RequestCodes.AUDIO_LIBRARY);
     }
 
