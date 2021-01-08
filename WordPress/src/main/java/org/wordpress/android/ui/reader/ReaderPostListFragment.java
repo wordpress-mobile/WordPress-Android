@@ -432,7 +432,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         if (isFilterableScreen()) {
-            initSubFilterViewModel();
+            initSubFilterViewModel(savedInstanceState);
         }
 
         mViewModel.getNavigationEvents().observe(getViewLifecycleOwner(),
@@ -538,7 +538,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void initSubFilterViewModel() {
+    private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
         mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory)
@@ -638,7 +638,19 @@ public class ReaderPostListFragment extends ViewPagerFragment
         });
 
         mSubFilterSharedViewModel.start();
-        mSubFilterViewModel.start(mCurrentTag, mOrganization);
+
+        SubfilterListItem currentSubfilter = null;
+
+        if (savedInstanceState != null) {
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_READER_TAB_SUBFILTER)) {
+                String currentSubfilterJson = savedInstanceState.getString(ReaderConstants.ARG_READER_TAB_SUBFILTER);
+                if (currentSubfilterJson != null) {
+                    currentSubfilter = mSubFilterSharedViewModel.buildSubfilterFromJson(currentSubfilterJson);
+                }
+            }
+        }
+
+        mSubFilterViewModel.start(mCurrentTag, mOrganization, currentSubfilter);
     }
 
     private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
@@ -982,6 +994,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
             outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, tabPosition);
             int siteSearchPosition = tabPosition == TAB_SITES ? getCurrentPosition() : mSiteSearchAdapterPos;
             outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, siteSearchPosition);
+        }
+
+        if (isFilterableTag(mTagFragmentStartedWith) && mSubFilterViewModel != null) {
+            outState.putString(
+                    ReaderConstants.ARG_READER_TAB_SUBFILTER, mSubFilterViewModel.getCurrentSubfilterJson(mOrganization)
+            );
         }
 
         super.onSaveInstanceState(outState);

@@ -37,7 +37,8 @@ class SubFilterSharedViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val eventBusWrapper: EventBusWrapper,
-    private val accountStore: AccountStore
+    private val accountStore: AccountStore,
+    private val subfilterListItemMapper: SubfilterListItemMapper
 ) : ScopedViewModel(bgDispatcher) {
     private val _subFilters = MutableLiveData<List<SubfilterListItem>>()
     val subFilters: LiveData<List<SubfilterListItem>> = _subFilters
@@ -162,6 +163,10 @@ class SubFilterSharedViewModel @Inject constructor(
         }
 
         _filtersMatchCount.postValue(currentValue)
+    }
+
+    fun buildSubfilterFromJson(json: String): SubfilterListItem {
+        return subfilterListItemMapper.fromJson(json, ::subfilterClickedAction, true)
     }
 
     fun onUserComesToReader(organization: Organization) {

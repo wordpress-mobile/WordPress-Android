@@ -19,7 +19,8 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 class SubFilterViewModel @Inject constructor(
-    private val readerTracker: ReaderTracker
+    private val readerTracker: ReaderTracker,
+    private val subfilterListItemMapper: SubfilterListItemMapper
 ) : ViewModel() {
     private val _currentSubFilter = MutableLiveData<SubfilterListItem>()
     val currentSubFilter: LiveData<SubfilterListItem> = _currentSubFilter
@@ -33,7 +34,7 @@ class SubFilterViewModel @Inject constructor(
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(tag: ReaderTag?, organization: Organization) {
+    fun start(tag: ReaderTag?, organization: Organization, currentSubfilter: SubfilterListItem?) {
         if (isStarted) {
             return
         }
@@ -41,7 +42,7 @@ class SubFilterViewModel @Inject constructor(
         isStarted = true
 
         tag?.let {
-            updateSubfilter(getCurrentSubfilterValue(organization))
+            updateSubfilter(currentSubfilter ?: getCurrentSubfilterValue(organization))
             initSubfiltersTracking(tag.isFilterable, organization)
         }
 
@@ -67,6 +68,10 @@ class SubFilterViewModel @Inject constructor(
                 isSelected = true,
                 organization = organization
         )
+    }
+
+    fun getCurrentSubfilterJson(organization: Organization): String {
+        return subfilterListItemMapper.toJson(getCurrentSubfilterValue(organization))
     }
 
     fun getCurrentSubfilterPage(organization: Organization): Int {
