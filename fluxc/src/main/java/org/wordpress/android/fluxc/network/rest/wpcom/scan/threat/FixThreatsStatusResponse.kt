@@ -6,8 +6,8 @@ import org.wordpress.android.fluxc.network.Response
 
 data class FixThreatsStatusResponse(
     @SerializedName("ok") val ok: Boolean?,
-    @SerializedName("threats") @JsonAdapter(FixThreatsStatusDeserializer::class)
-    val fixThreatsStatus: List<FixThreatStatus>?
+    @JsonAdapter(FixThreatsStatusDeserializer::class)
+    @SerializedName("threats") val fixThreatsStatus: List<FixThreatStatus>?
 ) : Response {
     data class FixThreatStatus(
         @SerializedName("id") val id: Long?,
