@@ -84,6 +84,10 @@ public enum MediaBrowserType {
         return this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
+    public boolean isSingleAudioFilePicker() {
+        return this == GUTENBERG_SINGLE_AUDIO_FILE_PICKER;
+    }
+
     public boolean isSingleMediaPicker() {
         return this == GUTENBERG_SINGLE_MEDIA_PICKER;
     }
