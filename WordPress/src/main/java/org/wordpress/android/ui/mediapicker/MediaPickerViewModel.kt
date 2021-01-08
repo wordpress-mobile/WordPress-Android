@@ -287,10 +287,13 @@ class MediaPickerViewModel @Inject constructor(
             else -> {
                 val isImagePicker = mediaPickerSetup.allowedTypes.contains(IMAGE)
                 val isVideoPicker = mediaPickerSetup.allowedTypes.contains(VIDEO)
+                val isAudioPicker = mediaPickerSetup.allowedTypes.contains(AUDIO)
                 if (isImagePicker && isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_media)
                 } else if (isVideoPicker) {
                     UiStringRes(R.string.photo_picker_use_video)
+                } else if (isAudioPicker) {
+                    UiStringRes(R.string.photo_picker_use_audio)
                 } else {
                     UiStringRes(R.string.photo_picker_use_photo)
                 }

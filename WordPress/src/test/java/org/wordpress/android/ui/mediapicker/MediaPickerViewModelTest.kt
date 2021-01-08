@@ -346,6 +346,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `action mode title is Use Audio when audio browser type`() = test {
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(AUDIO)))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_audio),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
+    }
+
+    @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE)))
