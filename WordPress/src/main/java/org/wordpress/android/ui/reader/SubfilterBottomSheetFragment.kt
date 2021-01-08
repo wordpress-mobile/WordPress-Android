@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.FrameLayout
+import android.widget.TextView
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
@@ -29,13 +30,15 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     companion object {
         const val ORGANIZATION_KEY = "organization_key"
         const val CURRENT_PAGE_KEY = "current_page_key"
+        const val TITLE_KEY = "title_key"
 
         @JvmStatic
-        fun newInstance(organization: Organization, currentPage: Int): SubfilterBottomSheetFragment {
+        fun newInstance(organization: Organization, currentPage: Int, title: String): SubfilterBottomSheetFragment {
             val fragment = SubfilterBottomSheetFragment()
             val bundle = Bundle()
             bundle.putSerializable(ORGANIZATION_KEY, organization)
             bundle.putInt(CURRENT_PAGE_KEY, currentPage)
+            bundle.putString(TITLE_KEY, title)
             fragment.arguments = bundle
             return fragment
         }
@@ -54,6 +57,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         val organization = arguments?.getSerializable(ORGANIZATION_KEY) as Organization
         val currentPage = arguments?.getInt(CURRENT_PAGE_KEY) ?: 0
+        val bottomSheetTitle = arguments?.getString(TITLE_KEY)
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(
@@ -63,9 +67,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
+        val title = view.findViewById<TextView>(R.id.title)
         pager.adapter = SubfilterPagerAdapter(requireActivity(), childFragmentManager, organization)
         tabLayout.setupWithViewPager(pager)
         pager.currentItem = currentPage
+        title.text = bottomSheetTitle
 
         viewModel.filtersMatchCount.observe(this, Observer {
             for (category in it.keys) {

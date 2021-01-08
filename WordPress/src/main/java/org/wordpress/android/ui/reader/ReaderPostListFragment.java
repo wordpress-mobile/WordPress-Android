@@ -592,7 +592,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         Organization organization = ((SubfilterShow) subfilterVisibility).getOrganization();
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
                                 organization,
-                                mSubFilterViewModel.getCurrentSubfilterPage(organization)
+                                mSubFilterViewModel.getCurrentSubfilterPage(organization),
+                                mTagFragmentStartedWith.getLabel()
                                 );
                         bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!subfilterVisibility.getShow() && bottomSheet != null) {
