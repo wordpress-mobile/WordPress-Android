@@ -87,7 +87,7 @@ class SubfilterPageFragment : DaggerFragment() {
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
         subFilterSharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(SubFilterSharedViewModel::class.java)
+                .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId, SubFilterSharedViewModel::class.java)
 
         subFilterViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + organization.orgId, SubFilterViewModel::class.java)
@@ -95,7 +95,6 @@ class SubfilterPageFragment : DaggerFragment() {
         subFilterSharedViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
                 var items = it?.filter { it.type == category.type && it.organization == organization } ?: listOf()
-
                 val currentFilter = subFilterViewModel.getCurrentSubfilterValue(organization)
 
                 if (items.isNotEmpty() && (currentFilter is Site || currentFilter is Tag)) {

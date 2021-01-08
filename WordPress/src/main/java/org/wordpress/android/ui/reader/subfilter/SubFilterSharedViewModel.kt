@@ -164,9 +164,6 @@ class SubFilterSharedViewModel @Inject constructor(
         _filtersMatchCount.postValue(currentValue)
     }
 
-
-
-
     fun onUserComesToReader(organization: Organization) {
         // TODO I think this method could be simplified, I don't think we need to store the data in the sharedPref
         if (lastKnownUserId == null) {
@@ -221,5 +218,9 @@ class SubFilterSharedViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         eventBusWrapper.unregister(this)
+    }
+
+    companion object {
+        const val SUBFILTER_SHARED_VM_BASE_KEY = "SUBFILTER_SHARED_VIEW_MODEL_BASE_KEY"
     }
 }
