@@ -132,10 +132,7 @@ class ScanStore @Inject constructor(
     }
 
     suspend fun fetchFixThreatsStatus(payload: FetchFixThreatsStatusPayload): OnFixThreatsStatusFetched {
-        val resultPayload = scanRestClient.fetchFixThreatsStatus(
-            payload.remoteSiteId,
-            payload.threatIds
-        )
+        val resultPayload = scanRestClient.fetchFixThreatsStatus(payload.remoteSiteId, payload.threatIds)
         return emitFixThreatsStatus(resultPayload)
     }
 
