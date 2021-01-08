@@ -5,7 +5,6 @@
 * [***] Block Editor: Full-width and wide alignment support for Columns (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2919)
 * [**] Block Editor: Image block - Add link picker to the block settings and enhance link settings with auto-hide options (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2841)
 * [*] Block Editor: Fix button link setting, rel link will not be overwritten if modified by the user (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2894)
-* [***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
 * [**] Block Editor: Added move to top/bottom when long pressing on respective block movers (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2872)
 * [***] Activity Log: Adds support for Date Range and Activity Type filters. [https://github.com/wordpress-mobile/WordPress-Android/issues/13268]
 * [**] Page List: Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
