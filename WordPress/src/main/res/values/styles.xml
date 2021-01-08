@@ -1220,6 +1220,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SubfilterDividerItem">
