@@ -202,6 +202,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/a8c");
     }
 
+    public boolean isFilterable() {
+        return this.isFollowedSites() || this.isA8C() || this.isP2();
+    }
+
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/list/");
