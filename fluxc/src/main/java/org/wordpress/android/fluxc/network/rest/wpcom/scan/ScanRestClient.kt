@@ -172,7 +172,6 @@ class ScanRestClient(
         }
     }
 
-    // Build Payloads
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
         val state = State.fromValue(response.state) ?: return buildScanStateErrorPayload(
             site,
