@@ -6,6 +6,7 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -15,7 +16,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
@@ -78,6 +78,7 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 class MySiteViewModelTest : BaseUnitTest() {
@@ -94,6 +95,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
+    @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
     @Mock lateinit var scanStatusService: ScanStatusService
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -140,6 +142,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteIconUploadHandler,
                 siteStoriesHandler,
                 domainRegistrationHandler,
+                backupsFeatureConfig,
                 scanStatusService
         )
         uiModels = mutableListOf()
@@ -207,7 +210,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().items).hasSize(2)
-        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
+        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue
     }
 
     @Test
@@ -723,7 +726,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
 
-        val message = UiStringResWithParams(string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
+        val message = UiStringResWithParams(R.string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
 
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
@@ -736,15 +739,31 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `site items builder invoked with the selected site's backups availability`() {
+        whenever(backupsFeatureConfig.isEnabled()).thenReturn(true)
+
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder, times(2)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupsAvailable = eq(true),
+                isScanAvailable = any()
+        )
+    }
+
+    @Test
     fun `site items builder invoked with the selected site's scan availability`() {
         whenever(scanStatusService.start(site)).thenAnswer {
             onScanAvailable.postValue(true)
         }
+
         onSiteChange.postValue(site)
 
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
+                isBackupsAvailable = any(),
                 isScanAvailable = eq(true)
         )
     }
@@ -773,7 +792,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(site)
     }
 
@@ -783,11 +802,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any())
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(action)
     }
 

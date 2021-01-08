@@ -35,8 +35,6 @@ import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
-import org.wordpress.android.R.attr
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -154,6 +152,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
@@ -197,6 +196,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
+    @Inject lateinit var backupsFeatureConfig: BackupsFeatureConfig
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
@@ -237,6 +237,7 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
+            updateBackupMenuVisibility()
             updateScanMenuVisibility()
 
             val isNotAdmin = !site.hasCapabilityManageOptions
@@ -256,6 +257,10 @@ class MySiteFragment : Fragment(),
             showQuickStartDialogMigration()
         }
         showQuickStartNoticeIfNecessary()
+    }
+
+    private fun updateBackupMenuVisibility() {
+        row_backup.setVisible(backupsFeatureConfig.isEnabled())
     }
 
     private fun updateScanMenuVisibility() {
@@ -401,6 +406,9 @@ class MySiteFragment : Fragment(),
                     activity,
                     selectedSite
             )
+        }
+        row_backup.setOnClickListener {
+            // Do nothing. TODO: Launch 'Backups' screen.
         }
         row_scan.setOnClickListener {
             ActivityLauncher.viewScan(
@@ -954,7 +962,7 @@ class MySiteFragment : Fragment(),
         options.setShowCropGrid(false)
         options.setStatusBarColor(context.getColorFromAttribute(android.R.attr.statusBarColor))
         options.setToolbarColor(context.getColorFromAttribute(R.attr.wpColorAppBar))
-        options.setToolbarWidgetColor(context.getColorFromAttribute(attr.colorOnSurface))
+        options.setToolbarWidgetColor(context.getColorFromAttribute(R.attr.colorOnSurface))
         options.setAllowedGestures(UCropActivity.SCALE, UCropActivity.NONE, UCropActivity.NONE)
         options.setHideBottomControls(true)
         UCrop.of(uri, Uri.fromFile(File(context.cacheDir, "cropped_for_site_icon.jpg")))
@@ -1184,7 +1192,7 @@ class MySiteFragment : Fragment(),
         if (!event.isSuccess()) {
             // note: no tracking added here as we'll perform tracking in StoryMediaSaveUploadBridge
             val errorText = String.format(
-                    getString(string.story_saving_snackbar_finished_with_error),
+                    getString(R.string.story_saving_snackbar_finished_with_error),
                     getStoryAtIndex(event.storyIndex).title
             )
             val snackbarMessage = buildSnackbarErrorMessage(
@@ -1195,7 +1203,7 @@ class MySiteFragment : Fragment(),
             uploadUtilsWrapper.showSnackbarError(
                     requireActivity().findViewById<View>(R.id.coordinator),
                     snackbarMessage,
-                    string.story_saving_failed_quick_action_manage
+                    R.string.story_saving_failed_quick_action_manage
             ) {
                 // TODO WPSTORIES add TRACKS: the putExtra described here below for NOTIFICATION_TYPE
                 // is meant to be used for tracking purposes. Use it!
@@ -1217,7 +1225,7 @@ class MySiteFragment : Fragment(),
     fun onStorySaveStart(event: StorySaveProcessStart) {
         EventBus.getDefault().removeStickyEvent(event)
         val snackbarMessage = String.format(
-                getString(string.story_saving_snackbar_started),
+                getString(R.string.story_saving_snackbar_started),
                 getStoryAtIndex(event.storyIndex).title
         )
         uploadUtilsWrapper.showSnackbar(
