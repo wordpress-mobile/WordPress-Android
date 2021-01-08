@@ -3,7 +3,7 @@
 [***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
 [***] Activity Log: Adds support for Date Range and Activity Type filters. [https://github.com/wordpress-mobile/WordPress-Android/issues/13268]
 * [**] Page List: Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
-
+* [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet. [https://github.com/wordpress-mobile/WordPress-Android/pull/13732]
  
 16.4
 -----
