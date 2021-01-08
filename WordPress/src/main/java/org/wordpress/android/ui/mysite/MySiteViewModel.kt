@@ -50,6 +50,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -83,6 +84,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -119,7 +121,8 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
     private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val scanStatusService: ScanStatusService
+    private val scanStatusService: ScanStatusService,
+    private val displayUtilsWrapper: DisplayUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _scanAvailable = MediatorLiveData<Boolean>()
@@ -149,7 +152,7 @@ class MySiteViewModel
             currentSiteId = site.id
         }
 
-        val items = if (site != null) {
+        val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
                     siteInfoBlockBuilder.buildSiteInfoBlock(
@@ -182,11 +185,13 @@ class MySiteViewModel
                             scanAvailable ?: false
                     )
             )
-            siteItems
+            State.SiteSelected(siteItems)
         } else {
-            listOf()
+            // Hide actionable empty view image when screen height is under 600 pixels.
+            val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+            State.NoSites(shouldShowImage)
         }
-        UiModel(currentAvatarUrl.orEmpty(), items)
+        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
     init {
@@ -434,6 +439,10 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMeScreen)
     }
 
+    fun onAddSitePressed() {
+        _onNavigation.value = Event(AddNewSite(accountStore.hasAccessToken()))
+    }
+
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
@@ -450,8 +459,13 @@ class MySiteViewModel
 
     data class UiModel(
         val accountAvatarUrl: String,
-        val items: List<MySiteItem>
+        val state: State
     )
+
+    sealed class State {
+        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class NoSites(val shouldShowImage: Boolean) : State()
+    }
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,
