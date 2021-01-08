@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.module.ReleaseToolsModule
 import org.wordpress.android.login.di.LoginFragmentModule
 import org.wordpress.android.login.di.LoginServiceModule
 import org.wordpress.android.ui.stats.refresh.StatsModule
+import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule
 import javax.inject.Singleton
 
 @Singleton
@@ -32,7 +33,8 @@ import javax.inject.Singleton
     LoginFragmentModule::class,
     LoginServiceModule::class,
     SupportModule::class,
-    ThreadModule::class])
+    ThreadModule::class,
+    SuggestionSourceModule::class])
 interface AppComponentTest : AppComponent {
     @Component.Builder
     interface Builder : AppComponent.Builder {

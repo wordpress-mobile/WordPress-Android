@@ -16,7 +16,8 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/quick_action_stats_button"
             style="@style/MySiteQuickActionButton"
-            android:src="@drawable/ic_stats_alt_white_24dp" />
+            android:src="@drawable/ic_stats_alt_white_24dp"
+            android:contentDescription="@string/stats"/>
 
         <org.wordpress.android.widgets.WPTextView
             style="@style/MySiteQuickActionButtonLabel"
@@ -29,33 +30,13 @@
         android:layout_height="match_parent"
         android:layout_weight="1" />
 
-    <RelativeLayout
-        android:id="@+id/quick_action_pages_container"
-        style="@style/MySiteQuickActionButtonContainer">
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/quick_action_pages_button"
-            style="@style/MySiteQuickActionButton"
-            android:src="@drawable/ic_pages_white_24dp" />
-
-        <org.wordpress.android.widgets.WPTextView
-            style="@style/MySiteQuickActionButtonLabel"
-            android:layout_below="@+id/quick_action_pages_button"
-            android:text="@string/pages" />
-    </RelativeLayout>
-
-    <Space
-        android:id="@+id/middle_quick_action_spacing"
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_weight="1" />
-
     <RelativeLayout style="@style/MySiteQuickActionButtonContainer">
 
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/quick_action_posts_button"
             style="@style/MySiteQuickActionButton"
-            android:src="@drawable/ic_posts_white_24dp" />
+            android:src="@drawable/ic_posts_white_24dp"
+            android:contentDescription="@string/posts"/>
 
         <org.wordpress.android.widgets.WPTextView
             style="@style/MySiteQuickActionButtonLabel"
@@ -73,7 +54,8 @@
         <com.google.android.material.floatingactionbutton.FloatingActionButton
             android:id="@+id/quick_action_media_button"
             style="@style/MySiteQuickActionButton"
-            android:src="@drawable/ic_media_white_24dp" />
+            android:src="@drawable/ic_media_white_24dp"
+            android:contentDescription="@string/media"/>
 
         <org.wordpress.android.widgets.WPTextView
             style="@style/MySiteQuickActionButtonLabel"
@@ -81,4 +63,25 @@
             android:text="@string/media" />
     </RelativeLayout>
 
+    <Space
+        android:id="@+id/middle_quick_action_spacing"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_weight="1" />
+
+    <RelativeLayout
+        android:id="@+id/quick_action_pages_container"
+        style="@style/MySiteQuickActionButtonContainer">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/quick_action_pages_button"
+            style="@style/MySiteQuickActionButton"
+            android:src="@drawable/ic_pages_white_24dp"
+            android:contentDescription="@string/pages"/>
+
+        <org.wordpress.android.widgets.WPTextView
+            style="@style/MySiteQuickActionButtonLabel"
+            android:layout_below="@+id/quick_action_pages_button"
+            android:text="@string/pages" />
+    </RelativeLayout>
 </LinearLayout>

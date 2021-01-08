@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 12:54:11+0000
+Translation-Revision-Date: 2020-12-31 08:54:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="backup_item_media_uploads">Caricamento di contenuti multimediali</string>
+    <string name="backup_item_plugins">Plugin WordPress</string>
+    <string name="backup_item_themes">Temi WordPress</string>
+    <string name="dialog_confirm_copy_local_title">Conflitto di sincronizzazione dell\'articolo</string>
     <string name="gutenberg_native_file_name">Nome file</string>
     <string name="gutenberg_native_file_block_settings">Impostazioni del blocco file</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Impossibile caricare i file.\nTocca per le opzioni.</string>
@@ -14,7 +18,6 @@ Language: it
     <string name="gutenberg_native_copy_file_url">Copia URL file</string>
     <string name="gutenberg_native_choose_a_file">SCEGLI UN FILE</string>
     <string name="new_site_creation_domain_header_title">Scegli un dominio</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Nuovo</string>
     <string name="my_site_btn_jetpack_settings">Impostazioni di Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Segui la conversazione</string>
@@ -542,7 +545,6 @@ Language: it
     <string name="my_site_bottom_sheet_add_post">Articolo del blog</string>
     <string name="my_site_bottom_sheet_title">Aggiungi nuovo</string>
     <string name="post_settings_publish">Pubblica</string>
-    <string name="dialog_gutenberg_informative_description_v2">Abbiamo apportato notevoli migliorie all\'editor dei blocchi e pensiamo valga la pena provarlo! È abilitato per i nuovi articoli e pagine, ma se preferisci passare all\'editor classico, vai su \'Mio Sito\' > \'Impostazioni del Sito\'.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizza ora</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Questo articolo verrà sincronizzato immediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Pronto per la sincronizzazione?</string>
@@ -644,8 +646,6 @@ Language: it
     <string name="notifications_tab_dialog_master_hint_on">Disabilita la visualizzazione delle notifiche sulla scheda delle notifiche per questo sito</string>
     <string name="notifications_tab_dialog_master_status_off">Notifiche per questo sito</string>
     <string name="notifications_tab_dialog_master_status_on">Notifiche per questo sito</string>
-    <string name="dialog_gutenberg_informative_description_page">Ora stai usando l\'editor a blocchi per le nuove pagine, fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
-    <string name="dialog_gutenberg_informative_description_post">Ora stai usando l\'editor a blocchi per i nuovi articoli, fantastico. Se desideri passare all\'editor classico, vai a \"Il mio sito\" > \"Impostazioni del sito\".</string>
     <string name="pick_media">Aggiungi immagine o video</string>
     <string name="error_post_not_submitted_retrying">Impossibile inviare questo articolo per la revisione, riproveremo più tardi. </string>
     <string name="error_post_not_scheduled_retrying">Impossibile pianificare questo articolo, riproveremo più tardi.</string>
@@ -918,7 +918,6 @@ Language: it
     <string name="stats_loading_error">Dati non caricati</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifica i nuovi articoli e pagine con l’editor a blocchi</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usa editor a blocchi</string>
-    <string name="dialog_gutenberg_informative_title">Editor a blocchi abilitato</string>
     <string name="exit">esci</string>
     <string name="quick_start_sites_type_subtitle">%1$d di %2$d completato</string>
     <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>

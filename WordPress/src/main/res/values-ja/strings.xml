@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 14:54:10+0000
+Translation-Revision-Date: 2021-01-06 08:55:04+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="backup_item_sqls">サイトデータベース (SQL)</string>
+    <string name="backup_item_contents">WP-content ディレクトリ (テーマ、プラグイン、アップロードを除く)</string>
+    <string name="backup_item_roots">WordPress のルート (wp-config.php とすべての非 WordPress ファイルを含む)</string>
+    <string name="backup_item_media_uploads">メディアのアップロード</string>
+    <string name="backup_item_plugins">WordPress プラグイン</string>
+    <string name="backup_item_themes">WordPress テーマ</string>
+    <string name="backup_download_details_icon_content_description">ダウンロード可能なバックアップアイコンを作成</string>
+    <string name="backup_download_details_action_button">ダウンロード可能なファイルを作成</string>
+    <string name="backup_download_details_choose_items_header">ダウンロードに含める項目を以下から選択してください。</string>
+    <string name="backup_download_details_description">ダウンロード可能なバックアップを作成するタイミングとして、%1$s を選択しています。</string>
+    <string name="backup_download_details_header">ダウンロード可能なバックアップを作成</string>
+    <string name="backup_download_details_page_title">バックアップをダウンロードする</string>
+    <string name="backup_download">バックアップのダウンロード</string>
+    <string name="gutenberg_native_error">エラー</string>
+    <string name="gutenberg_native_choose_file">ファイルを選択</string>
+    <string name="activity_log_item_menu_download_backup_label">バックアップをダウンロード</string>
+    <string name="activity_log_item_menu_restore_label">このポイントに復元</string>
+    <string name="activity_log_activity_type_filter_label">アクティビティタイプ</string>
+    <string name="activity_log_date_range_filter_label">日付の範囲</string>
+    <string name="activity_log_activity_type_filter_header">アクティビティタイプで絞り込み</string>
+    <string name="dialog_confirm_copy_local_copy_button">このアプリからバージョンをコピー</string>
+    <string name="dialog_confirm_copy_local_edit_button">最初に投稿を編集する</string>
+    <string name="dialog_confirm_copy_local_message">コピーしようとしている投稿に競合する2つのバージョンが存在するか、最近行った変更が保存されていません。\n競合を解消するには投稿を編集するか、このアプリからバージョンをコピーしてください。</string>
+    <string name="dialog_confirm_copy_local_title">同期後の競合</string>
+    <string name="button_copy">複製</string>
+    <string name="toast_edit_story_update_in_progress_title">ストーリーを保存しています、しばらくお待ちください…</string>
     <string name="gutenberg_native_file_name">ファイル名</string>
     <string name="gutenberg_native_file_block_settings">ファイルブロック設定</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">ファイルのアップロードに失敗しました。\nタップすると、オプションが表示されます。</string>
@@ -14,7 +40,6 @@ Language: ja_JP
     <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
     <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
     <string name="new_site_creation_domain_header_title">ドメインを選択</string>
-    <string name="my_site_bottom_sheet_story_tag_new">新規</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">フォロー中の会話</string>
@@ -36,7 +61,7 @@ Language: ja_JP
     <string name="dialog_edit_story_unavailable_title">ストーリーを編集できません</string>
     <string name="dialog_edit_story_limited_message">このストーリーは別の端末で編集されており、特定のオブジェクトを編集する機能が制限される可能性があります。</string>
     <string name="dialog_edit_story_limited_title">制限されたストーリー編集</string>
-    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーの編集をお試しください。</string>
+    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーを再度作成してみてください。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">テキスト</string>
     <string name="dialog_discard_story_ok_button_edit">保存しない</string>
@@ -559,7 +584,6 @@ Language: ja_JP
     <string name="my_site_bottom_sheet_add_post">ブログ投稿</string>
     <string name="my_site_bottom_sheet_title">新規追加</string>
     <string name="post_settings_publish">公開</string>
-    <string name="dialog_gutenberg_informative_description_v2">ブロックエディターを大幅に改善しました。ぜひお試しください。新規投稿とページに対して有効化していますが、旧エディターに変更する場合は「自分のサイト」    「サイトの設定」に移動してください。</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">今すぐ同期</string>
     <string name="dialog_confirm_scheduled_post_sync_message">この投稿はすぐに同期されます。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">同期しても良いですか ?</string>
@@ -661,8 +685,6 @@ Language: ja_JP
     <string name="notifications_tab_dialog_master_hint_on">このサイトの通知タブで通知表示を無効にする</string>
     <string name="notifications_tab_dialog_master_status_off">このサイトの通知</string>
     <string name="notifications_tab_dialog_master_status_on">このサイトの通知</string>
-    <string name="dialog_gutenberg_informative_description_page">新しいページでブロックエディターを使用しています。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動してください。</string>
-    <string name="dialog_gutenberg_informative_description_post">新しい投稿でブロックエディターを使用しています。旧エディターに変更する場合は、「参加サイト」 > 「サイト設定」に移動してください。</string>
     <string name="pick_media">画像または動画を追加</string>
     <string name="error_post_not_submitted_retrying">このレビュー投稿を送信できませんでした。後ほど再度実行します。</string>
     <string name="error_post_not_scheduled_retrying">この投稿を予約投稿にできませんでした。後ほど再度実行します。</string>
@@ -935,7 +957,6 @@ Language: ja_JP
     <string name="stats_loading_error">データは読み込まれていません</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">ブロックエディターで新しい投稿やページを編集</string>
     <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
-    <string name="dialog_gutenberg_informative_title">ブロックエディター有効</string>
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
     <string name="quick_start_sites_type_grow">訪問者を増やす</string>

@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-30 18:12:54+0000
+Translation-Revision-Date: 2020-12-30 18:16:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="backup_item_sqls">Site database (SQL)</string>
+    <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
+    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non-WordPress files)</string>
+    <string name="backup_item_media_uploads">Media Uploads</string>
+    <string name="backup_item_plugins">WordPress Plugins</string>
+    <string name="backup_item_themes">WordPress Themes</string>
+    <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
+    <string name="backup_download_details_action_button">Create downloadable file</string>
+    <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
+    <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
+    <string name="backup_download_details_header">Create downloadable backup</string>
+    <string name="backup_download_details_page_title">Download Backup</string>
+    <string name="backup_download">Backup Download</string>
+    <string name="gutenberg_native_error">Error</string>
+    <string name="gutenberg_native_choose_file">Choose file</string>
+    <string name="activity_log_item_menu_download_backup_label">Download backup</string>
+    <string name="activity_log_item_menu_restore_label">Restore to this point</string>
+    <string name="activity_log_activity_type_filter_label">Activity type</string>
+    <string name="activity_log_date_range_filter_label">Date range</string>
+    <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
+    <string name="dialog_confirm_copy_local_copy_button">Copy the version from this app</string>
+    <string name="dialog_confirm_copy_local_edit_button">Edit the post first</string>
+    <string name="dialog_confirm_copy_local_message">The post you are trying to copy has two versions that are in conflict, or you recently made changes but didn\'t save them.\nEdit the post first to resolve any conflict or proceed with copying the version from this app.</string>
+    <string name="dialog_confirm_copy_local_title">Post sync conflict</string>
+    <string name="button_copy">Duplicate</string>
+    <string name="toast_edit_story_update_in_progress_title">Story being saved, please wait…</string>
     <string name="gutenberg_native_file_name">File name</string>
     <string name="gutenberg_native_file_block_settings">File block settings</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Failed to upload files.\nPlease tap for options.</string>
@@ -14,7 +40,6 @@ Language: en_GB
     <string name="gutenberg_native_copy_file_url">Copy file URL</string>
     <string name="gutenberg_native_choose_a_file">CHOOSE A FILE</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
-    <string name="my_site_bottom_sheet_story_tag_new">New</string>
     <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Following conversation</string>
@@ -36,7 +61,7 @@ Language: en_GB
     <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
     <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try editing your Story.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="color_picker_label_background">Background</string>
     <string name="color_picker_label_text">Text</string>
     <string name="dialog_discard_story_ok_button_edit">Discard</string>
@@ -560,7 +585,6 @@ Language: en_GB
     <string name="my_site_bottom_sheet_add_post">Blog post</string>
     <string name="my_site_bottom_sheet_title">Add new</string>
     <string name="post_settings_publish">Publish</string>
-    <string name="dialog_gutenberg_informative_description_v2">We made big improvements to the block editor and think it\'s worth a try! We enabled it for new posts and pages, but, if you\'d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Sync now</string>
     <string name="dialog_confirm_scheduled_post_sync_message">This post will be synced immediately.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Ready to Sync?</string>
@@ -662,8 +686,6 @@ Language: en_GB
     <string name="notifications_tab_dialog_master_hint_on">Disable notifications display on notifications tab for this site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications for this site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications for this site</string>
-    <string name="dialog_gutenberg_informative_description_page">You’re now using the block editor for new pages, great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">You’re now using the block editor for new posts, great! If you’d like to change to the classic editor, go to \'My Site\' > \'Site Settings\'.</string>
     <string name="pick_media">Add image or video</string>
     <string name="error_post_not_submitted_retrying">We couldn\'t submit this post for review, but we\'ll try again later. </string>
     <string name="error_post_not_scheduled_retrying">We couldn\'t schedule this post, but we\'ll try again later.</string>
@@ -936,7 +958,6 @@ Language: en_GB
     <string name="stats_loading_error">Data not loaded</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edit new posts and pages with the Block Editor</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
-    <string name="dialog_gutenberg_informative_title">Block Editor Enabled</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>

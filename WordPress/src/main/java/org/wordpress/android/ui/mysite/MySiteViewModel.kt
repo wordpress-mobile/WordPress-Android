@@ -5,6 +5,7 @@ import android.net.Uri
 import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -27,8 +28,10 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
+import org.wordpress.android.ui.jetpack.scan.ScanStatusService
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
@@ -51,6 +54,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -88,6 +92,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
@@ -115,8 +120,12 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
+    private val backupsFeatureConfig: BackupsFeatureConfig,
+    private val scanStatusService: ScanStatusService,
     private val displayUtilsWrapper: DisplayUtilsWrapper
 ) : ScopedViewModel(mainDispatcher) {
+    private var currentSiteId: Int = 0
+    private val _scanAvailable = MediatorLiveData<Boolean>()
     private val _currentAccountAvatarUrl = MutableLiveData<String>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -134,8 +143,15 @@ class MySiteViewModel
             _currentAccountAvatarUrl,
             selectedSiteRepository.selectedSiteChange,
             selectedSiteRepository.showSiteIconProgressBar.distinct(),
-            domainRegistrationHandler.isDomainCreditAvailable.distinct()
-    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable ->
+            domainRegistrationHandler.isDomainCreditAvailable.distinct(),
+            _scanAvailable
+    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable ->
+        site?.takeIf { site.id != currentSiteId }?.let {
+            _scanAvailable.value = false
+            requestScanAvailableStatus(site)
+            currentSiteId = site.id
+        }
+
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
@@ -161,7 +177,14 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick))
+            siteItems.addAll(
+                    siteItemsBuilder.buildSiteItems(
+                            site,
+                            this::onItemClick,
+                            backupsFeatureConfig.isEnabled(),
+                            scanAvailable ?: false
+                    )
+            )
             State.SiteSelected(siteItems)
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
@@ -171,10 +194,22 @@ class MySiteViewModel
         UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
+    init {
+        _scanAvailable.addSource(scanStatusService.scanAvailable) {
+            _scanAvailable.value = it == true
+        }
+    }
+
+    private fun requestScanAvailableStatus(site: SiteModel) {
+        scanStatusService.stop()
+        scanStatusService.start(site)
+    }
+
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val navigationAction = when (action) {
                 ACTIVITY_LOG -> OpenActivityLog(site)
+                BACKUP -> OpenBackup(site)
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)
@@ -412,6 +447,7 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
+        scanStatusService.stop()
         super.onCleared()
     }
 

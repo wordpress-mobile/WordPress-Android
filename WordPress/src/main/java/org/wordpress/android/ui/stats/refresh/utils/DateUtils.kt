@@ -8,6 +8,7 @@ import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.viewmodel.ContextProvider
 import java.text.SimpleDateFormat
 import java.util.Calendar
+import java.util.Formatter
 import javax.inject.Inject
 
 class DateUtils @Inject constructor(
@@ -47,6 +48,18 @@ class DateUtils @Inject constructor(
                 DateTimeUtils.timestampFromIso8601Millis(dateIso8601),
                 getDateTimeFlags()
         )
+    }
+
+    fun formatDateRange(from: Long, to: Long, timezone: String): String {
+        val formatter = Formatter(StringBuilder(50), localeManagerWrapper.getLocale())
+        return DateUtils.formatDateRange(
+                contextProvider.getContext(),
+                formatter,
+                from,
+                to,
+                DateUtils.FORMAT_ABBREV_MONTH,
+                timezone
+        ).toString()
     }
 
     private fun getDateTimeFlags(): Int {

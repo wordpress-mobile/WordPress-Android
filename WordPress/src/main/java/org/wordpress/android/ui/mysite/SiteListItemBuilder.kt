@@ -14,6 +14,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -23,6 +24,7 @@ class SiteListItemBuilder
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
+    private val backupsFeatureConfig: BackupsFeatureConfig,
     private val scanFeatureConfig: ScanFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
@@ -39,8 +41,18 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (scanFeatureConfig.isEnabled()) {
+    fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupsAvailable: Boolean = false): ListItem? {
+        return if (backupsFeatureConfig.isEnabled() && isBackupsAvailable) {
+            ListItem(
+                    R.drawable.ic_backup_alt_white_24dp,
+                    UiStringRes(R.string.backup),
+                    onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
+            )
+        } else null
+    }
+
+    fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
+        return if (scanFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
                     R.drawable.ic_scan_alt_white_24dp,
                     UiStringRes(R.string.scan),
