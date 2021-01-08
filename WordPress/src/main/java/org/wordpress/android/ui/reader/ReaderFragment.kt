@@ -17,6 +17,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderTagList
+import org.wordpress.android.ui.Organization.A8C
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
+import org.wordpress.android.ui.Organization.P2
+import org.wordpress.android.ui.Organization.UNKNOWN
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment
@@ -193,7 +197,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             return if (tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
-                ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true)
+                ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true, when {
+                    tags[position].isA8C -> A8C
+                    tags[position].isP2 -> P2
+                    tags[position].isFollowedSites || tags[position].isDefaultInMemoryTag -> NO_ORGANIZATION
+                    else -> UNKNOWN
+                })
             }
         }
     }
