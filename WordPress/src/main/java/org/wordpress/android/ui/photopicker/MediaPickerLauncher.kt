@@ -189,7 +189,8 @@ class MediaPickerLauncher @Inject constructor(
                 activity,
                 canMultiselect,
                 mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
-                RequestCodes.FILE_LIBRARY
+                RequestCodes.FILE_LIBRARY,
+                string.photo_picker_choose_file
         )
     }
 
@@ -198,7 +199,8 @@ class MediaPickerLauncher @Inject constructor(
                 activity,
                 canMultiselect,
                 mutableSetOf(AUDIO),
-                RequestCodes.AUDIO_LIBRARY
+                RequestCodes.AUDIO_LIBRARY,
+                string.photo_picker_choose_audio
         )
     }
 
@@ -207,7 +209,7 @@ class MediaPickerLauncher @Inject constructor(
         canMultiselect: Boolean = false,
         allowedTypes: Set<MediaType>,
         requestCode: Int,
-        @StringRes title: Int = string.photo_picker_choose_file
+        @StringRes title: Int
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
@@ -232,11 +234,7 @@ class MediaPickerLauncher @Inject constructor(
                     requestCode
             )
         } else {
-            if (requestCode == RequestCodes.FILE_LIBRARY) {
-                WPMediaUtils.launchFileLibrary(activity, canMultiselect)
-            } else {
-                WPMediaUtils.launchAudioFileLibrary(activity, canMultiselect)
-            }
+            WPMediaUtils.launchFileLibrary(activity, canMultiselect, requestCode)
         }
     }
 
