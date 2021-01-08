@@ -1,5 +1,0 @@
-16.3:
-Vi har glädjen att presentera en rad nya funktioner i WordPress mobilapp:
-- fullskärms bildspel med foton och video för webbplatser hos WP.com de med Jetpack,
-- möjlighet att välja startsidesdesign när du skapar en webbplats hos WP.com,
-- och en knapp för att följa och sluta följa kommentarsektionen på en webbplats (stöds inte för webbplats på egen server/webbhotell om den inte är ansluten till Jetpack).

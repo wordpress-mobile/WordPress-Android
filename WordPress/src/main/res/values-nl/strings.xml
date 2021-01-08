@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-19 08:30:20+0000
+Translation-Revision-Date: 2020-12-30 18:26:33+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
@@ -60,8 +60,8 @@ Language: nl
     <string name="dialog_edit_story_unrecoverable_title">Kan verhaal niet bewerken</string>
     <string name="dialog_edit_story_unrecoverable_message">We konden geen media vinden voor dit verhaal op de site.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF bestanden worden niet ondersteund</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal te bewerken.</string>
     <string name="dialog_edit_story_limited_title">Beperkte verhaal bewerking</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal opnieuw te maken.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
     <string name="hpp_retry_error">Controleer je internet verbinding en probeer het opnieuw.</string>
     <string name="hpp_choose_error">Er was een fout bij het selecteren van het ontwerp.</string>

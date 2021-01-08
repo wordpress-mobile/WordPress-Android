@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-28 18:19:35+0000
+Translation-Revision-Date: 2021-01-06 13:58:40+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -1546,7 +1546,7 @@ Language: cs_CZ
     <string name="reader_toast_err_block_blog">Nepodařilo se zablokovat tento web</string>
     <string name="reader_toast_blog_blocked">Příspěvky z tohoto webu se již nebudou zobrazovat</string>
     <string name="reader_menu_block_blog">Zablokovat tento web</string>
-    <string name="schedule_verb">Rozvrh</string>
+    <string name="schedule_verb">Naplánovat</string>
     <string name="update_verb">Aktualizovat</string>
     <string name="reader_empty_recommended_blogs">Nejsou k dispozici žádné doporučené weby</string>
     <string name="reader_toast_err_unfollow_blog">Zrušení sledování tohoto webu se nezdařilo</string>

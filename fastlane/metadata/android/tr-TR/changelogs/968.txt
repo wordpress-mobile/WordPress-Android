@@ -1,5 +1,0 @@
-16.3:
-Bir kaç yeni WordPress mobil uygulama özelliğini bildirmekten mutluluk duyuyoruz:
-- WP.com ve Jetpack siteleri için tam ekran fotoğraf ve video slayt gösterileri;
-- bir WP.com sitesi oluştururken ana sayfa tasarımı seçme seçeneği;
-- ve sitenin yorumlar bölümü için, kullanıcıların sohbeti takip edebildikleri ve e-posta ile bildirim alabildikleri bir takip et/takipten çık düğmesi (Jetpack bağlantısı olmayan özel barındırma sunucularında desteklenmiyor.)

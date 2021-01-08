@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-19 16:21:47+0000
+Translation-Revision-Date: 2021-01-06 21:36:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
@@ -60,8 +60,8 @@ Language: es_MX
     <string name="dialog_edit_story_unrecoverable_title">No se puede editar la historia</string>
     <string name="dialog_edit_story_unrecoverable_message">No hemos podido encontrar en el sitio los medios para esta historia.</string>
     <string name="dialog_edit_story_unsupported_format_title">Los archivos GIF no son compatibles</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta editar tu historia.</string>
     <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta volver a crear tu historia.</string>
     <string name="hpp_error_title">Los diseños no están disponibles sin conexión</string>
     <string name="hpp_error_subtitle">Toca en reintentar cuando vuelvas a estar conectado.</string>
     <string name="hpp_retry_error">Por favor, revisa tu conexión a Internet e inténtalo de nuevo.</string>
@@ -633,11 +633,10 @@ Language: es_MX
     <string name="gutenberg_native_post_title_s">Título de la entrada. %s</string>
     <string name="gutenberg_native_post_title_empty">Título de la entrada. Vacío</string>
     <string name="gutenberg_native_paste_url">Pegar URL</string>
-    <string name="gutenberg_native_page_break_block_s">Bloque de salto de página. %s</string>
     <string name="gutenberg_native_open_settings">Abrir los ajustes</string>
-    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ninguna aplicación puede manejar esta petición. Por favor, instala un navegador Web.</string>
     <string name="gutenberg_native_problem_opening_the_video">Problema al abrir el video</string>
-    <string name="gutenberg_native_my_pre_publish_panel">Mi panel de prepublicación</string>
+    <string name="gutenberg_native_page_break_block_s">Bloque de separación de página. %s</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows">Ninguna aplicación puede manejar esta petición. Por favor, instala un navegador web.</string>
     <string name="gutenberg_native_my_post_status_info">Información del estado de mi entrada</string>
     <string name="gutenberg_native_my_post_publish_panel">Mi panel de publicación de entradas</string>
     <string name="gutenberg_native_my_document_setting_panel">Mi panel de ajustes de documentos</string>
@@ -645,6 +644,7 @@ Language: es_MX
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s">Mover el bloque hacia abajo desde la fila %1$s a la fila %2$s</string>
     <string name="gutenberg_native_move_block_up">Mover el bloque hacia arriba</string>
     <string name="gutenberg_native_navigate_up">Navegar hacia arriba</string>
+    <string name="gutenberg_native_my_pre_publish_panel">Mi panel de pre-publicación</string>
     <string name="gutenberg_native_move_block_down">Mover el bloque hacia abajo</string>
     <string name="gutenberg_native_image_caption_s">Leyenda de la imagen. %s</string>
     <string name="gutenberg_native_hide_keyboard">Ocultar teclado</string>

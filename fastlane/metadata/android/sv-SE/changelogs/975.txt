@@ -1,0 +1,9 @@
+16.4:
+Nyheter:
+
+Blockredigeraren: Nu kan du infoga ett filblock som visar en nedladdningsknapp för t.ex. dokumentfiler. Vi har även löst problem med rubrik- och galleriblock.
+
+Inläggslistan: Nu går det att kopiera ett inlägg med knappen ”duplicera” i inläggslistan för din blogg.
+
+Min webbplats: När du redigerade webbplatsrubriken kunde appen krascha. Nu är det löst.
+
