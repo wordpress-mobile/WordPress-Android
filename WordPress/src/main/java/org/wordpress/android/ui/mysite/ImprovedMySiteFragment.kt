@@ -188,8 +188,9 @@ class ImprovedMySiteFragment : Fragment(),
         })
         viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { id ->
-                // TODO Show bottom sheet menu
-                showToast(context, id)
+                ((parentFragmentManager.findFragmentByTag(id) as? QuickStartMenuFragment)
+                        ?: QuickStartMenuFragment.newInstance(id))
+                        .show(parentFragmentManager, id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
