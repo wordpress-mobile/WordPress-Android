@@ -16,16 +16,29 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
-import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
+import org.wordpress.android.ui.Organization
+import org.wordpress.android.ui.reader.subfilter.SubFilterSharedViewModel
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
 import javax.inject.Inject
 
 class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: SubFilterViewModel
+    private lateinit var viewModel: SubFilterSharedViewModel
+
+    companion object {
+        const val ORGANIZATION_KEY = "organization_key"
+        const val CURRENT_PAGE_KEY = "current_page_key"
+
+        @JvmStatic
+        fun newInstance(organization: Organization, currentPage: Int): SubfilterBottomSheetFragment {
+            val fragment = SubfilterBottomSheetFragment()
+            val bundle = Bundle()
+            bundle.putSerializable(ORGANIZATION_KEY, organization)
+            bundle.putInt(CURRENT_PAGE_KEY, currentPage)
+            fragment.arguments = bundle
+            return fragment
+        }
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -38,17 +51,17 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val organization = arguments?.getSerializable(ORGANIZATION_KEY) as Organization
+        val currentPage = arguments?.getInt(CURRENT_PAGE_KEY) ?: 0
+
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(SubFilterViewModel::class.java)
+                .get(SubFilterSharedViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
-        pager.adapter = SubfilterPagerAdapter(requireActivity(), childFragmentManager)
+        pager.adapter = SubfilterPagerAdapter(requireActivity(), childFragmentManager, organization)
         tabLayout.setupWithViewPager(pager)
-        pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
-            is Tag -> TAGS.ordinal
-            else -> SITES.ordinal
-        }
+        pager.currentItem = currentPage
 
         viewModel.filtersMatchCount.observe(this, Observer {
             for (category in it.keys) {

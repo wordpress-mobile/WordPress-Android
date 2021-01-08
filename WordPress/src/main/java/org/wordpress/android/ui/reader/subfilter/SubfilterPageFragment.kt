@@ -17,6 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
 import org.wordpress.android.R
+import org.wordpress.android.ui.Organization
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
@@ -41,6 +43,7 @@ class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var unreadPostsCountFeatureConfig: UnreadPostsCountFeatureConfig
     @Inject lateinit var statsUtils: StatsUtils
 
+    private lateinit var subFilterSharedViewModel: SubFilterSharedViewModel
     private lateinit var subFilterViewModel: SubFilterViewModel
     private lateinit var viewModel: SubfilterPageViewModel
     private lateinit var recyclerView: RecyclerView
@@ -50,11 +53,13 @@ class SubfilterPageFragment : DaggerFragment() {
 
     companion object {
         const val CATEGORY_KEY = "category_key"
+        const val ORGANIZATION_KEY = "organization_key"
 
-        fun newInstance(category: SubfilterCategory): SubfilterPageFragment {
+        fun newInstance(category: SubfilterCategory, organization: Organization): SubfilterPageFragment {
             val fragment = SubfilterPageFragment()
             val bundle = Bundle()
             bundle.putSerializable(CATEGORY_KEY, category)
+            bundle.putSerializable(ORGANIZATION_KEY, organization)
             fragment.arguments = bundle
             return fragment
         }
@@ -68,6 +73,7 @@ class SubfilterPageFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val category = arguments?.getSerializable(CATEGORY_KEY) as SubfilterCategory
+        val organization = arguments?.getSerializable(ORGANIZATION_KEY) as Organization
 
         viewModel = ViewModelProvider(this, viewModelFactory).get(SubfilterPageViewModel::class.java)
         viewModel.start(category)
@@ -80,14 +86,17 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
+        subFilterSharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(SubFilterSharedViewModel::class.java)
+
         subFilterViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(SubFilterViewModel::class.java)
+                .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + organization.orgId, SubFilterViewModel::class.java)
 
-        subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
+        subFilterSharedViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
-                var items = it?.filter { it.type == category.type } ?: listOf()
+                var items = it?.filter { it.type == category.type && it.organization == organization } ?: listOf()
 
-                val currentFilter = subFilterViewModel.getCurrentSubfilterValue()
+                val currentFilter = subFilterViewModel.getCurrentSubfilterValue(organization)
 
                 if (items.isNotEmpty() && (currentFilter is Site || currentFilter is Tag)) {
                     items = items.map {
@@ -98,7 +107,7 @@ class SubfilterPageFragment : DaggerFragment() {
 
                 viewModel.onSubFiltersChanged(items.isEmpty())
                 adapter.update(items)
-                subFilterViewModel.onSubfilterPageUpdated(category, items.size)
+                subFilterSharedViewModel.onSubfilterPageUpdated(category, items.size)
             }
         })
 
@@ -111,7 +120,7 @@ class SubfilterPageFragment : DaggerFragment() {
                         title.setText(uiState.title.stringRes)
                         actionButton.setText(uiState.buttonText.stringRes)
                         actionButton.setOnClickListener {
-                            subFilterViewModel.onBottomSheetActionClicked(uiState.action)
+                            subFilterSharedViewModel.onBottomSheetActionClicked(uiState.action)
                         }
                     }
                 }
@@ -126,14 +135,14 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 }
 
-class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager) : FragmentPagerAdapter(fm) {
-    private val filterCategory = listOf(SITES, TAGS)
+class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager, val organization: Organization) : FragmentPagerAdapter(fm) {
+    private val filterCategory = if (organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
     private val fragments = mutableMapOf<SubfilterCategory, WeakReference<SubfilterPageFragment>>()
 
     override fun getCount(): Int = filterCategory.size
 
     override fun getItem(position: Int): Fragment {
-        val fragment = SubfilterPageFragment.newInstance(filterCategory[position])
+        val fragment = SubfilterPageFragment.newInstance(filterCategory[position], organization)
         fragments[filterCategory[position]] = WeakReference(fragment)
         return fragment
     }
