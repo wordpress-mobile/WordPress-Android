@@ -213,6 +213,8 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             filter = MediaFilter.FILTER_IMAGES;
         } else if (mBrowserType == MediaBrowserType.GUTENBERG_VIDEO_PICKER) {
             filter = MediaFilter.FILTER_VIDEOS;
+        } else if (mBrowserType == MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER) {
+            filter = MediaFilter.FILTER_AUDIO;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
         } else {
