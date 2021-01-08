@@ -1,0 +1,9 @@
+16.4:
+Novedades:
+
+Editor de bloques: Ahora puedes insertar un bloque de archivo, que pone un botón de descarga para archivos como documentos. También hemos resuelto problemas con los bloques de encabezado y galería.
+
+Lista de entradas: Ahora puedes copiar una entrada con el botón de «Duplicar» en la lista de tus entradas de blog.
+
+Mi sitio: También hemos corregido una caída que ocurría mientras editabas el título de tu sitio.
+
