@@ -541,10 +541,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void initSubFilterViewModel() {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
-        mSubFilterViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+        mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mOrganization.getOrgId(), SubFilterViewModel.class);
 
-        mSubFilterSharedViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
+        mSubFilterSharedViewModel = new ViewModelProvider(this, mViewModelFactory)
                 .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + mOrganization.getOrgId(), SubFilterSharedViewModel.class);
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
@@ -580,7 +580,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mSubFilterSharedViewModel.getChangeBottomSheetVisibility().observe(getViewLifecycleOwner(), event -> {
             event.applyIfNotHandled(subfilterVisibility -> {
-                FragmentManager fm = getFragmentManager();
+                FragmentManager fm = getChildFragmentManager();
                 if (fm != null) {
                     SubfilterBottomSheetFragment bottomSheet =
                             (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
@@ -591,7 +591,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                 organization,
                                 mSubFilterViewModel.getCurrentSubfilterPage(organization)
                                 );
-                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                        bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
                     } else if (!subfilterVisibility.getShow() && bottomSheet != null) {
                         bottomSheet.dismiss();
                     }

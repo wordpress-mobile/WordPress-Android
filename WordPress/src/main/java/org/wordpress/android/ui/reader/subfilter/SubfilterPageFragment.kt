@@ -13,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
@@ -86,10 +87,10 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        subFilterSharedViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+        subFilterSharedViewModel = ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId, SubFilterSharedViewModel::class.java)
 
-        subFilterViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+        subFilterViewModel = ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + organization.orgId, SubFilterViewModel::class.java)
 
         subFilterSharedViewModel.subFilters.observe(viewLifecycleOwner, Observer {

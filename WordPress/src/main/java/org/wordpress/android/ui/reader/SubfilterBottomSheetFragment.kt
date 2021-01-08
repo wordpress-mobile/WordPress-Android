@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import androidx.viewpager.widget.ViewPager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -54,7 +55,7 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val organization = arguments?.getSerializable(ORGANIZATION_KEY) as Organization
         val currentPage = arguments?.getInt(CURRENT_PAGE_KEY) ?: 0
 
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId, SubFilterSharedViewModel::class.java)
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
