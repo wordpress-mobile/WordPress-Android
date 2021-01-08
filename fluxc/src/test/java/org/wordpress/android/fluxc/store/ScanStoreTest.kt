@@ -68,14 +68,15 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `fetch scan state triggers rest client`() = test {
+    fun `success on fetch scan state returns the success`() = test {
         val payload = FetchScanStatePayload(siteModel)
         whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(FetchedScanStatePayload(null, siteModel))
 
         val action = ScanActionBuilder.newFetchScanStateAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).fetchScanState(siteModel)
+        val expected = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -121,14 +122,15 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `start scan triggers rest client`() = test {
+    fun `success on start scan returns the success`() = test {
         val payload = ScanStartPayload(siteModel)
         whenever(scanRestClient.startScan(siteModel)).thenReturn(ScanStartResultPayload(siteModel))
 
         val action = ScanActionBuilder.newStartScanAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).startScan(siteModel)
+        val expected = ScanStore.OnScanStarted(ScanAction.START_SCAN)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -145,7 +147,7 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `fix threats triggers rest client`() = test {
+    fun `success on fix threats return the success`() = test {
         val payload = FixThreatsPayload(siteId, threatIds)
         whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(
             FixThreatsResultPayload(siteId)
@@ -154,7 +156,8 @@ class ScanStoreTest {
         val action = ScanActionBuilder.newFixThreatsAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).fixThreats(siteId, threatIds)
+        val expected = ScanStore.OnFixThreatsStarted(ScanAction.FIX_THREATS)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -171,7 +174,7 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `ignore threat triggers rest client`() = test {
+    fun `success on ignore threat returns the success`() = test {
         val payload = IgnoreThreatPayload(siteId, threatId)
         whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(
             IgnoreThreatResultPayload(siteId)
@@ -180,7 +183,8 @@ class ScanStoreTest {
         val action = ScanActionBuilder.newIgnoreThreatAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).ignoreThreat(siteId, threatId)
+        val expected = ScanStore.OnIgnoreThreatStarted(ScanAction.IGNORE_THREAT)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -197,16 +201,20 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `fetch fix threats status triggers rest client`() = test {
+    fun `success on fetch fix threats status returns the success`() = test {
         val payload = FetchFixThreatsStatusPayload(siteId, listOf(threatId))
-        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(
-            FetchFixThreatsStatusResultPayload(siteId, mock())
-        )
+        val resultPayload = FetchFixThreatsStatusResultPayload(siteId, mock())
+        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(resultPayload)
 
         val action = ScanActionBuilder.newFetchFixThreatsStatusAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).fetchFixThreatsStatus(siteId, listOf(threatId))
+        val expected = ScanStore.OnFixThreatsStatusFetched(
+            siteId,
+            resultPayload.fixThreatStatusModels,
+            ScanAction.FETCH_FIX_THREATS_STATUS
+        )
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -216,10 +224,7 @@ class ScanStoreTest {
         whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(payload)
 
         val fetchAction = ScanActionBuilder.newFetchFixThreatsStatusAction(
-            FetchFixThreatsStatusPayload(
-                siteId,
-                listOf(threatId)
-            )
+            FetchFixThreatsStatusPayload(siteId, listOf(threatId))
         )
         scanStore.onAction(fetchAction)
 
