@@ -207,8 +207,8 @@ class MediaPickerLauncher @Inject constructor(
         canMultiselect: Boolean = false,
         allowedTypes: Set<MediaType>,
         requestCode: Int,
-        @StringRes title: Int = R.string.photo_picker_choose_file,
-            ) {
+        @StringRes title: Int = string.photo_picker_choose_file
+    ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
