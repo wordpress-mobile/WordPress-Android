@@ -87,10 +87,15 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        subFilterSharedViewModel = ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
-                .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId, SubFilterSharedViewModel::class.java)
+        subFilterSharedViewModel =
+                ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
+                .get(
+                        SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId,
+                        SubFilterSharedViewModel::class.java
+                )
 
-        subFilterViewModel = ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
+        subFilterViewModel =
+                ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + organization.orgId, SubFilterViewModel::class.java)
 
         subFilterSharedViewModel.subFilters.observe(viewLifecycleOwner, Observer {
@@ -135,7 +140,11 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 }
 
-class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager, val organization: Organization) : FragmentPagerAdapter(fm) {
+class SubfilterPagerAdapter(
+    val context: Context,
+    val fm: FragmentManager,
+    val organization: Organization
+) : FragmentPagerAdapter(fm) {
     private val filterCategory = if (organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
     private val fragments = mutableMapOf<SubfilterCategory, WeakReference<SubfilterPageFragment>>()
 

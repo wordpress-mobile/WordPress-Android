@@ -56,7 +56,10 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val currentPage = arguments?.getInt(CURRENT_PAGE_KEY) ?: 0
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
-                .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId, SubFilterSharedViewModel::class.java)
+                .get(
+                        SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + organization.orgId,
+                        SubFilterSharedViewModel::class.java
+                )
 
         val pager = view.findViewById<ViewPager>(R.id.view_pager)
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)

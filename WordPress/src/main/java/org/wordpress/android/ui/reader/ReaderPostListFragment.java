@@ -545,7 +545,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mOrganization.getOrgId(), SubFilterViewModel.class);
 
         mSubFilterSharedViewModel = new ViewModelProvider(this, mViewModelFactory)
-                .get(SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + mOrganization.getOrgId(), SubFilterSharedViewModel.class);
+                .get(
+                        SubFilterSharedViewModel.SUBFILTER_SHARED_VM_BASE_KEY + mOrganization.getOrgId(),
+                        SubFilterSharedViewModel.class
+                );
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
