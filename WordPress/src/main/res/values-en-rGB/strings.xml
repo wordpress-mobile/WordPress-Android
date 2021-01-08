@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-17 14:07:52+0000
+Translation-Revision-Date: 2020-12-30 18:16:37+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
@@ -61,7 +61,7 @@ Language: en_GB
     <string name="dialog_edit_story_unavailable_title">Can\'t edit Story</string>
     <string name="dialog_edit_story_limited_message">This story was edited on a different device and the ability to edit certain objects may be limited.</string>
     <string name="dialog_edit_story_limited_title">Limited Story Editing</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try editing your Story.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media has been removed. Try re-creating your Story.</string>
     <string name="color_picker_label_background">Background</string>
     <string name="color_picker_label_text">Text</string>
     <string name="dialog_discard_story_ok_button_edit">Discard</string>
