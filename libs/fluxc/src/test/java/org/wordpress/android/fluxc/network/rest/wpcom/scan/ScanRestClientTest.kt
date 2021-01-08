@@ -318,7 +318,7 @@ class ScanRestClientTest {
         val payload = scanRestClient.fixThreats(siteId, listOf(threatId))
 
         with(payload) {
-            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertEquals(remoteSiteId, siteId)
             assertNull(error)
         }
     }
@@ -344,7 +344,7 @@ class ScanRestClientTest {
         val payload = scanRestClient.ignoreThreat(siteId, threatId)
 
         with(payload) {
-            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertEquals(remoteSiteId, siteId)
             assertNull(error)
         }
     }
@@ -356,7 +356,7 @@ class ScanRestClientTest {
         val payload = scanRestClient.ignoreThreat(siteId, threatId)
 
         with(payload) {
-            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertEquals(remoteSiteId, siteId)
             assertTrue(isError)
             assertEquals(IgnoreThreatErrorType.GENERIC_ERROR, error.type)
         }
@@ -369,7 +369,7 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))
 
         with(payload) {
-            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertEquals(remoteSiteId, siteId)
             assertNull(error)
         }
     }
@@ -381,7 +381,7 @@ class ScanRestClientTest {
         val payload = scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))
 
         with(payload) {
-            assertEquals(remoteSiteId, this@ScanRestClientTest.siteId)
+            assertEquals(remoteSiteId, siteId)
             assertTrue(isError)
             assertEquals(FixThreatsStatusErrorType.API_ERROR, error.type)
         }
