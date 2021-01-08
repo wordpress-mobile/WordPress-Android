@@ -1,7 +1,10 @@
 package org.wordpress.android.ui.sitecreation.previews
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.notNull
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
@@ -61,6 +64,7 @@ class SitePreviewViewModelTest {
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteStore: SiteStore
+    @Mock private lateinit var bundle: Bundle
     @Mock private lateinit var quickStartStore: QuickStartStore
     @Mock private lateinit var fetchWpComUseCase: FetchWpComSiteUseCase
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
@@ -71,7 +75,6 @@ class SitePreviewViewModelTest {
     @Mock private lateinit var onHelpedClickedObserver: Observer<Unit>
     @Mock private lateinit var onCancelWizardClickedObserver: Observer<CreateSiteState>
     @Mock private lateinit var onOkClickedObserver: Observer<CreateSiteState>
-    @Mock private lateinit var hideGetStartedObserver: Observer<Unit>
     @Mock private lateinit var preloadPreviewObserver: Observer<String>
 
     private lateinit var viewModel: SitePreviewViewModel
@@ -95,7 +98,6 @@ class SitePreviewViewModelTest {
         viewModel.onHelpClicked.observeForever(onHelpedClickedObserver)
         viewModel.onCancelWizardClicked.observeForever(onCancelWizardClickedObserver)
         viewModel.onOkButtonClicked.observeForever(onOkClickedObserver)
-        viewModel.hideGetStartedBar.observeForever(hideGetStartedObserver)
         viewModel.preloadPreview.observeForever(preloadPreviewObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         whenever(urlUtils.extractSubDomain(URL)).thenReturn(SUB_DOMAIN)
@@ -206,13 +208,6 @@ class SitePreviewViewModelTest {
     }
 
     @Test
-    fun `hide GetStartedBar on UrlLoaded`() {
-        initViewModel()
-        viewModel.onUrlLoaded()
-        verify(hideGetStartedObserver).onChanged(null)
-    }
-
-    @Test
     fun `show content on UrlLoaded`() {
         initViewModel()
         viewModel.onUrlLoaded()
@@ -270,8 +265,68 @@ class SitePreviewViewModelTest {
         assertThat(getCreateSiteState()).isEqualTo(SiteNotInLocalDb(REMOTE_SITE_ID))
     }
 
-    private fun initViewModel() {
-        viewModel.start(SITE_CREATION_STATE)
+    @Test
+    fun `CreateSiteState is saved into bundle`() {
+        initViewModel(null)
+
+        viewModel.writeToBundle(bundle)
+
+        verify(bundle).putParcelable(eq(KEY_CREATE_SITE_STATE), notNull())
+    }
+
+    @Test
+    fun `show fullscreen progress when restoring from SiteNotCreated state`() = testWithSuccessResponse {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        initViewModel(bundle)
+
+        assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
+    }
+
+    @Test
+    fun `service started when restoring from SiteNotCreated state`() {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        initViewModel(bundle)
+
+        assertThat(viewModel.startCreateSiteService.value).isNotNull
+    }
+
+    @Test
+    fun `show fullscreen progress when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE)).thenReturn(SiteNotCreated)
+        initViewModel(bundle)
+
+        assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
+    }
+
+    @Test
+    fun `start pre-loading WebView when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+        initViewModel(bundle)
+
+        assertThat(viewModel.uiState.value).isInstanceOf(SitePreviewFullscreenProgressUiState::class.java)
+    }
+
+    @Test
+    fun `fetch newly created SiteModel when restoring from SiteNotInLocalDb state`() = testWithSuccessResponse {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+                .thenReturn(SiteNotInLocalDb(REMOTE_SITE_ID))
+        initViewModel(bundle)
+
+        verify(fetchWpComUseCase).fetchSiteWithRetry(REMOTE_SITE_ID)
+    }
+
+    @Test
+    fun `start pre-loading WebView when restoring from SiteCreationCompleted state`() {
+        whenever(bundle.getParcelable<CreateSiteState>(KEY_CREATE_SITE_STATE))
+                .thenReturn(SiteCreationCompleted(LOCAL_SITE_ID))
+        initViewModel(bundle)
+
+        assertThat(viewModel.preloadPreview.value).isEqualTo(URL)
+    }
+
+    private fun initViewModel(savedState: Bundle? = null) {
+        viewModel.start(SITE_CREATION_STATE, savedState)
     }
 
     private fun createServiceFailureState(): SiteCreationServiceState {

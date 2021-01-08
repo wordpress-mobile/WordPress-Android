@@ -17,7 +17,6 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
@@ -86,9 +85,9 @@ class DomainRegistrationDetailsFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        mainViewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        mainViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainRegistrationDetailsViewModel::class.java)
         setupObservers()
 
@@ -452,7 +451,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 throw IllegalStateException("StatePickerDialogFragment is missing a targetFragment ")
             }
 
-            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_state_picker_dialog_title)
@@ -502,7 +501,7 @@ class DomainRegistrationDetailsFragment : Fragment() {
                 throw IllegalStateException("CountryPickerDialogFragment is missing a targetFragment ")
             }
 
-            viewModel = ViewModelProviders.of(targetFragment!!, viewModelFactory)
+            viewModel = ViewModelProvider(targetFragment!!, viewModelFactory)
                     .get(DomainRegistrationDetailsViewModel::class.java)
             val builder = MaterialAlertDialogBuilder(requireContext())
             builder.setTitle(R.string.domain_registration_country_picker_dialog_title)

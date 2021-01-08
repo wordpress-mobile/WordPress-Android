@@ -7,7 +7,6 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.domain_suggestions_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -47,7 +46,7 @@ class DomainRegistrationActivity : LocaleAwareActivity(), ScrollableViewInitiali
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(DomainRegistrationMainViewModel::class.java)
         viewModel.start()
 

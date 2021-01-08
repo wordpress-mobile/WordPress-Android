@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -43,7 +42,7 @@ class StatsActivity : LocaleAwareActivity() {
         intent?.let {
             val siteId = intent.getIntExtra(WordPress.LOCAL_SITE_ID, -1)
             if (siteId > -1) {
-                viewModel = ViewModelProviders.of(this, viewModelFactory).get(StatsViewModel::class.java)
+                viewModel = ViewModelProvider(this, viewModelFactory).get(StatsViewModel::class.java)
                 viewModel.start(intent, restart = true)
             }
         }

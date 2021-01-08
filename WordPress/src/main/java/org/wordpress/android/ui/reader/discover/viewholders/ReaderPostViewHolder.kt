@@ -133,7 +133,7 @@ class ReaderPostViewHolder(
         } else {
             imageManager.loadIntoCircle(
                     image_avatar_or_blavatar,
-                    BLAVATAR_CIRCULAR, state.blogSection.avatarOrBlavatarUrl
+                    state.blogSection.blavatarType, state.blogSection.avatarOrBlavatarUrl
             )
         }
 

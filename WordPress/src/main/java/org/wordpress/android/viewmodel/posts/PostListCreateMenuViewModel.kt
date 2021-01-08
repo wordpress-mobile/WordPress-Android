@@ -75,7 +75,6 @@ class PostListCreateMenuViewModel @Inject constructor(
                         actionType = CREATE_NEW_STORY,
                         iconRes = drawable.ic_story_icon_24dp,
                         labelRes = string.my_site_bottom_sheet_add_story,
-                        tagRes = string.my_site_bottom_sheet_story_tag_new,
                         onClickAction = ::onCreateActionClicked
 
                 )

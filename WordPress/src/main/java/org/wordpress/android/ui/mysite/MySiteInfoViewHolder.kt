@@ -7,6 +7,7 @@ import android.widget.ImageView
 import android.widget.ProgressBar
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
+import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
@@ -20,12 +21,12 @@ class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageMan
     private val siteInfoContainer = itemView.findViewById<MySiteTitleAndSubtitleLabelView>(R.id.site_info_container)
     private val switchSite = itemView.findViewById<ImageButton>(R.id.switch_site)
     fun bind(item: SiteInfoBlock) {
-        if (item.iconUrl != null) {
+        if (item.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
-            imageManager.load(mySiteBlavatar, BLAVATAR, item.iconUrl)
+            imageManager.load(mySiteBlavatar, BLAVATAR, item.iconState.url ?: "")
             mySiteIconProgress.visibility = View.GONE
             mySiteBlavatar.setOnClickListener { item.onIconClick.click() }
-        } else {
+        } else if (item.iconState is IconState.Progress) {
             mySiteBlavatar.setOnClickListener(null)
             mySiteIconProgress.visibility = View.VISIBLE
             mySiteBlavatar.visibility = View.GONE

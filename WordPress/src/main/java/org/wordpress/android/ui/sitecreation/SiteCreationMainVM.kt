@@ -28,6 +28,7 @@ import javax.inject.Inject
 
 const val TAG_WARNING_DIALOG = "back_pressed_warning_dialog"
 const val KEY_CURRENT_STEP = "key_current_step"
+const val KEY_SITE_CREATION_COMPLETED = "key_site_creation_completed"
 const val KEY_SITE_CREATION_STATE = "key_site_creation_state"
 
 @Parcelize
@@ -76,6 +77,7 @@ class SiteCreationMainVM @Inject constructor(
             tracker.trackSiteCreationAccessed()
             siteCreationState = SiteCreationState()
         } else {
+            siteCreationCompleted = savedInstanceState.getBoolean(KEY_SITE_CREATION_COMPLETED, false)
             siteCreationState = requireNotNull(savedInstanceState.getParcelable(KEY_SITE_CREATION_STATE))
             val currentStepIndex = savedInstanceState.getInt(KEY_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
@@ -88,6 +90,7 @@ class SiteCreationMainVM @Inject constructor(
     }
 
     fun writeToBundle(outState: Bundle) {
+        outState.putBoolean(KEY_SITE_CREATION_COMPLETED, siteCreationCompleted)
         outState.putInt(KEY_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_SITE_CREATION_STATE, siteCreationState)
     }

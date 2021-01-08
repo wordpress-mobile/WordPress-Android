@@ -9,7 +9,6 @@ import androidx.appcompat.widget.AppCompatButton
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.site_creation_domains_screen.*
@@ -94,7 +93,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationDomainsViewModel::class.java)
 
         viewModel.uiState.observe(this, Observer { uiState ->
@@ -129,7 +128,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateTitleVisibility(visible: Boolean) {
         val actionBar = (requireActivity() as? AppCompatActivity)?.supportActionBar
-        actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscape() || visible) // Always visible in landscape
+        actionBar?.setDisplayShowTitleEnabled(displayUtils.isLandscapeBySize() || visible)
     }
 
     private fun getSegmentIdFromArguments(): Long? = arguments?.getLong(EXTRA_SEGMENT_ID)

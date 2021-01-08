@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.posts.PrepublishingScreenClosedListener
@@ -26,7 +26,7 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(PrepublishingPublishSettingsViewModel::class.java)
     }
 

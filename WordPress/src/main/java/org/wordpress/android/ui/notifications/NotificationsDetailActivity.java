@@ -149,7 +149,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
             getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN);
         }
         // track initial comment note view
-        if (savedInstanceState == null) {
+        if (savedInstanceState == null && note != null) {
             trackCommentNote(note);
         }
     }
@@ -245,7 +245,7 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         mViewPager.addOnPageChangeListener(mOnPageChangeListener);
     }
 
-    private void trackCommentNote(Note note) {
+    private void trackCommentNote(@NotNull Note note) {
         if (note.isCommentType()) {
             SiteModel site = mSiteStore.getSiteBySiteId(note.getSiteId());
             AnalyticsUtils.trackCommentActionWithSiteDetails(

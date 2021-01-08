@@ -1,0 +1,9 @@
+16.4:
+Neuerungen:
+
+Block-Editor: Du kannst jetzt einen Dateiblock einfügen, der einen Download-Button für Dateien wie Dokumente bereitstellt. Außerdem haben wir Probleme beim Überschrifts- und Galerieblock behoben.
+
+Beitragsliste: Du kannst einen Beitrag jetzt mit dem Button „Duplizieren“ in deiner Blogbeitragsliste kopieren.
+
+Meine Website: Wir haben auch einen Absturz behoben, der beim Bearbeiten des Websitetitels auftrat.
+

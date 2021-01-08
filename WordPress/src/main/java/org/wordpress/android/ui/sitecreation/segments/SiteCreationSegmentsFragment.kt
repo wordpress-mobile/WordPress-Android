@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.annotation.LayoutRes
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
@@ -62,7 +61,7 @@ class SiteCreationSegmentsFragment : SiteCreationBaseFormFragment() {
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(SiteCreationSegmentsViewModel::class.java)
 
         viewModel.segmentsUiState.observe(this, Observer { state ->

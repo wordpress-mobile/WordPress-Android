@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-07 03:20:33+0000
+Translation-Revision-Date: 2020-12-31 00:46:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="backup_item_sqls">사이트 데이터베이스 (SQL)</string>
+    <string name="backup_item_contents">WP-content 디렉토리 (테마, 플러그인, 그리고 업로드 제외)</string>
+    <string name="backup_item_roots">워드프레스 루트(wp-config.php와 워드프레스 파일이 아닌 모든 것 포함)</string>
+    <string name="backup_item_media_uploads">미디어 업로드</string>
+    <string name="backup_item_plugins">워드프레스 플러그인</string>
+    <string name="backup_item_themes">워드프레스 테마</string>
+    <string name="backup_download_details_icon_content_description">다운로드할 수 있는 백업 만들기</string>
+    <string name="backup_download_details_action_button">다운로드할 수 있는 파일 만들기</string>
+    <string name="backup_download_details_choose_items_header">다운로드에 포함할 항목을 선택하세요:</string>
+    <string name="backup_download_details_description">%1$s은(는) 다운로드할 수 있는 백업을 만들기 위해 선택한 지점입니다.</string>
+    <string name="backup_download_details_header">다운로드 할 수 있는 백업 만들기</string>
+    <string name="backup_download_details_page_title">백업 다운로드하기</string>
+    <string name="backup_download">백업 다운로드</string>
+    <string name="gutenberg_native_error">오류</string>
+    <string name="gutenberg_native_choose_file">파일 선택하기</string>
+    <string name="activity_log_item_menu_download_backup_label">백업 다운로드하기</string>
+    <string name="activity_log_item_menu_restore_label">이 지점으로 복원하기</string>
+    <string name="activity_log_activity_type_filter_label">활동 유형</string>
+    <string name="activity_log_date_range_filter_label">날짜 범위</string>
+    <string name="activity_log_activity_type_filter_header">활동 유형에 따라 필터</string>
+    <string name="dialog_confirm_copy_local_copy_button">이 앱으로부터 버전 복사하기</string>
+    <string name="dialog_confirm_copy_local_edit_button">먼저 글 편집하기</string>
+    <string name="dialog_confirm_copy_local_message">복사하려고 한 글은 충돌하거나 최근 만들고 저장하지 않은 두 버전이 있습니다.\n충돌을 해결하거나 이 앱으로부터 버전 복사를 진행하려면 먼저 글을 편집하세요.</string>
+    <string name="dialog_confirm_copy_local_title">글 동기화 충돌</string>
+    <string name="button_copy">복제하기</string>
+    <string name="toast_edit_story_update_in_progress_title">이야기를 저장하는 중입니다. 기다려 주시기 바랍니다…</string>
     <string name="gutenberg_native_file_name">파일 이름</string>
     <string name="gutenberg_native_file_block_settings">파일 블록 설정</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">파일 업로드를 실패했습니다.\n옵션을 열려면 누르시기 바랍니다.</string>
@@ -14,7 +40,6 @@ Language: ko_KR
     <string name="gutenberg_native_copy_file_url">파일 URL 복사하기</string>
     <string name="gutenberg_native_choose_a_file">파일 선택하기</string>
     <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
-    <string name="my_site_bottom_sheet_story_tag_new">신규</string>
     <string name="my_site_btn_jetpack_settings">젯팩 설정</string>
     <string name="my_site_header_jetpack">젯팩</string>
     <string name="reader_btn_following_comments">대화 팔로우 중</string>
@@ -36,7 +61,7 @@ Language: ko_KR
     <string name="dialog_edit_story_unavailable_title">이야기를 편집할 수 없습니다</string>
     <string name="dialog_edit_story_limited_message">이 이야기는 다른 장치에서 편집하였고 특정 객체를 편집하는 기능을 제한할 수도 있습니다.</string>
     <string name="dialog_edit_story_limited_title">제한적인 이야기 편집 중</string>
-    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 편집을 시도하세요.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 다시 만들기를 시도하세요.</string>
     <string name="color_picker_label_background">배경</string>
     <string name="color_picker_label_text">본문</string>
     <string name="dialog_discard_story_ok_button_edit">폐기하기</string>
@@ -560,7 +585,6 @@ Language: ko_KR
     <string name="my_site_bottom_sheet_add_post">블로그 글</string>
     <string name="my_site_bottom_sheet_title">새로 추가</string>
     <string name="post_settings_publish">발행</string>
-    <string name="dialog_gutenberg_informative_description_v2">블록 편집기를 크게 개선했습니다. 한 번 시도해 볼 가치가 있다고 생각합니다! 새 글 및 페이지에서 사용하도록 설정했지만 클래식 편집기로 변경하려면 ‘내 사이트’ > ‘사이트 설정’으로 이동하세요.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">지금 동기화</string>
     <string name="dialog_confirm_scheduled_post_sync_message">이 글은 즉시 동기화됩니다.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">동기화할 준비가 되셨습니까?</string>
@@ -662,8 +686,6 @@ Language: ko_KR
     <string name="notifications_tab_dialog_master_hint_on">이 사이트의 알림 탭에서 알림 표시 사용 안 함</string>
     <string name="notifications_tab_dialog_master_status_off">이 사이트의 알림</string>
     <string name="notifications_tab_dialog_master_status_on">이 사이트의 알림</string>
-    <string name="dialog_gutenberg_informative_description_page">이제 새 페이지에 블록 편집기를 사용하게 됩니다. \u2014 잘하셨습니다! 고전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
-    <string name="dialog_gutenberg_informative_description_post">이제 새 글에 블록 편집기를 사용합니다. \u2014 잘하셨습니다! 고전 편집기로 변경하려면 \'내 사이트\'> \'사이트 설정\'으로 이동하세요.</string>
     <string name="pick_media">이미지 또는 비디오 추가</string>
     <string name="error_post_not_submitted_retrying">리뷰를 위해 이 글을 제출하지 못했지만 나중에 다시 시도하겠습니다. </string>
     <string name="error_post_not_scheduled_retrying">이 글을 예약하지 못했지만 나중에 다시 시도하겠습니다.</string>
@@ -936,7 +958,6 @@ Language: ko_KR
     <string name="stats_loading_error">데이터가 로드되지 않음</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">블록 편집기로 새 글과 페이지 편집</string>
     <string name="site_settings_gutenberg_default_for_new_posts">블록 편집기 사용</string>
-    <string name="dialog_gutenberg_informative_title">블록 편집기가 활성화됨</string>
     <string name="exit">종료</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d 완료</string>
     <string name="quick_start_sites_type_grow">방문자 수를 늘리세요</string>

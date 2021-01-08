@@ -1114,13 +1114,13 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String errorMessage;
 
-        UploadErrorEvent(PostModel post, String errorMessage) {
+        public UploadErrorEvent(PostModel post, String errorMessage) {
             this.post = post;
             this.mediaModelList = null;
             this.errorMessage = errorMessage;
         }
 
-        UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
+        public UploadErrorEvent(List<MediaModel> mediaModelList, String errorMessage) {
             this.post = null;
             this.mediaModelList = mediaModelList;
             this.errorMessage = errorMessage;
@@ -1131,7 +1131,7 @@ public class UploadService extends Service {
         public final List<MediaModel> mediaModelList;
         public final String successMessage;
 
-        UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
+        public UploadMediaSuccessEvent(List<MediaModel> mediaModelList, String successMessage) {
             this.mediaModelList = mediaModelList;
             this.successMessage = successMessage;
         }

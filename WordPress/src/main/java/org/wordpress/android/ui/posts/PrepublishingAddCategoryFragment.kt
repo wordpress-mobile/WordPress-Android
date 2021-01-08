@@ -9,7 +9,6 @@ import android.widget.AdapterView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.add_category.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*
 import org.wordpress.android.R
@@ -132,9 +131,9 @@ class PrepublishingAddCategoryFragment : Fragment(R.layout.prepublishing_add_cat
     }
 
     private fun initViewModel() {
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingAddCategoryViewModel::class.java)
-        parentViewModel = ViewModelProviders.of(requireParentFragment(), viewModelFactory)
+        parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(PrepublishingViewModel::class.java)
 
         startObserving()

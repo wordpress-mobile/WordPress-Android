@@ -4,6 +4,7 @@ import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.HISTORY
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.MORE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EVENT
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
@@ -30,15 +31,16 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val rewindId: String?,
         val date: Date,
         override val isButtonVisible: Boolean,
-        val buttonIcon: Icon = HISTORY,
-        val isProgressBarVisible: Boolean = false
+        val buttonIcon: Icon,
+        val isProgressBarVisible: Boolean = false,
+        val showMoreMenu: Boolean = false
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val formattedTime: String = date.toFormattedTimeString()
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
 
-        constructor(model: ActivityLogModel, rewindDisabled: Boolean = false) : this(
+        constructor(model: ActivityLogModel, rewindDisabled: Boolean = false, backupFeatureEnabled: Boolean) : this(
                 model.activityID,
                 model.summary,
                 model.content?.text ?: "",
@@ -47,7 +49,10 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.rewindable ?: false,
                 model.rewindID,
                 model.published,
-                isButtonVisible = !rewindDisabled && model.rewindable ?: false)
+                isButtonVisible = !rewindDisabled && model.rewindable ?: false,
+                buttonIcon = if (backupFeatureEnabled) MORE else HISTORY,
+                showMoreMenu = backupFeatureEnabled
+        )
 
         override fun longId(): Long = activityId.hashCode().toLong()
     }
@@ -110,11 +115,17 @@ sealed class ActivityLogListItem(val type: ViewType) {
         THEMES("themes", R.drawable.ic_themes_white_24dp),
         TRASH("trash", R.drawable.ic_trash_white_24dp),
         USER("user", R.drawable.ic_user_white_24dp),
+        MORE("more", R.drawable.ic_ellipsis_vertical_white_24dp),
         DEFAULT("", R.drawable.ic_notice_white_24dp);
 
         companion object {
             private val map = values().associateBy(Icon::value)
             fun fromValue(value: String?) = map[value] ?: DEFAULT
         }
+    }
+
+    enum class SecondaryAction(val itemId: Long) {
+        RESTORE(0),
+        DOWNLOAD_BACKUP(1);
     }
 }

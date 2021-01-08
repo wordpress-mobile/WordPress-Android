@@ -27,7 +27,6 @@ import androidx.appcompat.widget.SearchView;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
@@ -404,10 +403,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     @Override public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory)
+        mViewModel = new ViewModelProvider(this, mViewModelFactory)
                                        .get(ReaderPostListViewModel.class);
         if (mIsTopLevel) {
-            mReaderViewModel = ViewModelProviders.of(getParentFragment(), mViewModelFactory)
+            mReaderViewModel = new ViewModelProvider(getParentFragment(), mViewModelFactory)
                                                  .get(ReaderViewModel.class);
         }
 
@@ -519,9 +518,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void initSubFilterViewModel() {
-        WPMainActivityViewModel wpMainActivityViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+        WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
-        mSubFilterViewModel = ViewModelProviders.of(requireActivity(), mViewModelFactory)
+        mSubFilterViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(SubFilterViewModel.class);
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {

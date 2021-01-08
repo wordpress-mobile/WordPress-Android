@@ -13,6 +13,7 @@ public enum MediaBrowserType {
     GUTENBERG_SINGLE_VIDEO_PICKER, // select video from Gutenberg editor
     GUTENBERG_SINGLE_MEDIA_PICKER, // select a single image or video to insert into a post
     GUTENBERG_MEDIA_PICKER, // select multiple images or videos to insert into a post
+    GUTENBERG_SINGLE_FILE_PICKER, // select a file to insert into a post
     WP_STORIES_MEDIA_PICKER; // select multiple images or videos to insert as Story frames in a Story
 
     public boolean isPicker() {
@@ -40,7 +41,8 @@ public enum MediaBrowserType {
                || this == GUTENBERG_SINGLE_IMAGE_PICKER
                || this == GUTENBERG_SINGLE_MEDIA_PICKER
                || this == GUTENBERG_MEDIA_PICKER
-               || this == WP_STORIES_MEDIA_PICKER;
+               || this == WP_STORIES_MEDIA_PICKER
+               || this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isVideoPicker() {
@@ -50,7 +52,16 @@ public enum MediaBrowserType {
                || this == GUTENBERG_SINGLE_VIDEO_PICKER
                || this == GUTENBERG_SINGLE_MEDIA_PICKER
                || this == GUTENBERG_MEDIA_PICKER
-               || this == WP_STORIES_MEDIA_PICKER;
+               || this == WP_STORIES_MEDIA_PICKER
+               || this == GUTENBERG_SINGLE_FILE_PICKER;
+    }
+
+    public boolean isAudioPicker() {
+        return this == GUTENBERG_SINGLE_FILE_PICKER;
+    }
+
+    public boolean isDocumentPicker() {
+        return this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isGutenbergPicker() {
@@ -59,11 +70,16 @@ public enum MediaBrowserType {
                || this == GUTENBERG_VIDEO_PICKER
                || this == GUTENBERG_SINGLE_VIDEO_PICKER
                || this == GUTENBERG_SINGLE_MEDIA_PICKER
-               || this == GUTENBERG_MEDIA_PICKER;
+               || this == GUTENBERG_MEDIA_PICKER
+               || this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isWPStoriesPicker() {
         return this == WP_STORIES_MEDIA_PICKER;
+    }
+
+    public boolean isSingleFilePicker() {
+        return this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isSingleMediaPicker() {
@@ -72,10 +88,10 @@ public enum MediaBrowserType {
 
     public boolean canMultiselect() {
         return this == EDITOR_PICKER
-                || this == AZTEC_EDITOR_PICKER
-                || this == GUTENBERG_IMAGE_PICKER
-                || this == GUTENBERG_VIDEO_PICKER
-                || this == WP_STORIES_MEDIA_PICKER;
+               || this == AZTEC_EDITOR_PICKER
+               || this == GUTENBERG_IMAGE_PICKER
+               || this == GUTENBERG_VIDEO_PICKER
+               || this == WP_STORIES_MEDIA_PICKER;
     }
 
     public boolean canFilter() {

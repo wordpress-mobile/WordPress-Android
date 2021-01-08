@@ -10,7 +10,6 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout.OnOffsetChangedListener
@@ -162,7 +161,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     }
 
     private fun setupViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(ModalLayoutPickerViewModel::class.java)
 
         loadSavedState(savedInstanceState)

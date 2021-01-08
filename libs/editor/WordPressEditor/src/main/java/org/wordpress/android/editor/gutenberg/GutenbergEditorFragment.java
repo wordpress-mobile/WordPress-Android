@@ -218,6 +218,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onAddLibraryMediaClicked(allowMultipleSelection);
                     }
 
+                    @Override public void onMediaLibraryFileButtonClicked(boolean allowMultipleSelection) {
+                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
+                        mEditorFragmentListener.onAddLibraryFileClicked(allowMultipleSelection);
+                    }
+
                     @Override
                     public void onUploadPhotoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onAddPhotoClicked(allowMultipleSelection);

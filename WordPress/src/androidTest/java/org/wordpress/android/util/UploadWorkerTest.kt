@@ -47,8 +47,8 @@ class UploadWorkerTest {
 
     @Test
     fun testOneTimeUploadWorker() {
-        val testDriver = WorkManagerTestInitHelper.getTestDriver()
-        val workManager = WorkManager.getInstance()
+        val testDriver = WorkManagerTestInitHelper.getTestDriver(mock())
+        val workManager = WorkManager.getInstance(mock())
 
         // Define inputs
         val site = SiteModel()
@@ -58,7 +58,7 @@ class UploadWorkerTest {
         val (request, operation) = enqueueUploadWorkRequestForSite(site)
 
         // Meet constraints
-        testDriver.setAllConstraintsMet(request.id)
+        testDriver!!.setAllConstraintsMet(request.id)
 
         // Wait for result
         operation.result.get()
@@ -77,7 +77,7 @@ class UploadWorkerTest {
         val site = SiteModel()
         whenever(siteStore.getSiteByLocalId(any())).doReturn(site)
 
-        val workManager = WorkManager.getInstance()
+        val workManager = WorkManager.getInstance(mock())
 
         // Enqueue
         val (request, operation) = enqueueUploadWorkRequestForSite(site)
@@ -96,14 +96,14 @@ class UploadWorkerTest {
     @Test
     fun testPeriodicUploadWorkerWithMetConstraints() {
         // Define input data
-        val testDriver = WorkManagerTestInitHelper.getTestDriver()
-        val workManager = WorkManager.getInstance()
+        val testDriver = WorkManagerTestInitHelper.getTestDriver(mock())
+        val workManager = WorkManager.getInstance(mock())
 
         // Enqueue
         val (request, operation) = enqueuePeriodicUploadWorkRequestForAllSites()
 
         // Meet constraints and delay
-        testDriver.setAllConstraintsMet(request.id)
+        testDriver!!.setAllConstraintsMet(request.id)
         testDriver.setPeriodDelayMet(request.id)
 
         // Wait for result
@@ -120,15 +120,15 @@ class UploadWorkerTest {
     @Test
     fun testPeriodicUploadWorkerWithMetConstraintsCalledTwice() {
         // Define input data
-        val testDriver = WorkManagerTestInitHelper.getTestDriver()
-        val workManager = WorkManager.getInstance()
+        val testDriver = WorkManagerTestInitHelper.getTestDriver(mock())
+        val workManager = WorkManager.getInstance(mock())
 
         // Enqueue
         val (request, operation) = enqueuePeriodicUploadWorkRequestForAllSites()
 
         // ############### First round
         // Meet delay, constraints, and wait for result
-        testDriver.setAllConstraintsMet(request.id)
+        testDriver!!.setAllConstraintsMet(request.id)
         testDriver.setPeriodDelayMet(request.id)
         operation.result.get()
 

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -79,29 +80,49 @@ class MediaPickerLauncher @Inject constructor(
         site: SiteModel?
     ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val mediaPickerSetup = MediaPickerSetup(
-                    primaryDataSource = DEVICE,
-                    availableDataSources = setOf(WP_LIBRARY),
-                    canMultiselect = false,
-                    requiresStoragePermissions = true,
-                    allowedTypes = setOf(IMAGE),
-                    cameraSetup = ENABLED,
-                    systemPickerEnabled = true,
-                    editingEnabled = true,
-                    queueResults = false,
-                    defaultSearchView = false,
-                    title = R.string.photo_picker_title
-            )
-            val intent = MediaPickerActivity.buildIntent(
-                    activity,
-                    mediaPickerSetup,
-                    site,
-                    null
-            )
+            val intent = buildSitePickerIntent(activity, site)
             activity.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
         } else {
             ActivityLauncher.showPhotoPickerForResult(activity, SITE_ICON_PICKER, site, null)
         }
+    }
+
+    fun showSiteIconPicker(
+        fragment: Fragment,
+        site: SiteModel?
+    ) {
+        if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
+            val intent = buildSitePickerIntent(fragment.requireActivity(), site)
+            fragment.startActivityForResult(intent, RequestCodes.SITE_ICON_PICKER)
+        } else {
+            ActivityLauncher.showPhotoPickerForResult(fragment.requireActivity(), SITE_ICON_PICKER, site, null)
+        }
+    }
+
+    private fun buildSitePickerIntent(
+        activity: Activity,
+        site: SiteModel?
+    ): Intent {
+        val mediaPickerSetup = MediaPickerSetup(
+                primaryDataSource = DEVICE,
+                availableDataSources = setOf(WP_LIBRARY),
+                canMultiselect = false,
+                requiresStoragePermissions = true,
+                allowedTypes = setOf(IMAGE),
+                cameraSetup = ENABLED,
+                systemPickerEnabled = true,
+                editingEnabled = true,
+                queueResults = false,
+                defaultSearchView = false,
+                title = string.photo_picker_title
+        )
+        val intent = MediaPickerActivity.buildIntent(
+                activity,
+                mediaPickerSetup,
+                site,
+                null
+        )
+        return intent
     }
 
     fun showPhotoPickerForResult(
@@ -162,13 +183,13 @@ class MediaPickerLauncher @Inject constructor(
         fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
-    fun showFilePicker(activity: Activity) {
+    fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
                     availableDataSources = setOf(),
-                    canMultiselect = true,
+                    canMultiselect = canMultiselect,
                     requiresStoragePermissions = true,
                     allowedTypes = allowedTypes,
                     cameraSetup = HIDDEN,
@@ -187,7 +208,7 @@ class MediaPickerLauncher @Inject constructor(
                     RequestCodes.FILE_LIBRARY
             )
         } else {
-            WPMediaUtils.launchFileLibrary(activity, true)
+            WPMediaUtils.launchFileLibrary(activity, canMultiselect)
         }
     }
 
@@ -313,6 +334,15 @@ class MediaPickerLauncher @Inject constructor(
         if (browserType.isVideoPicker) {
             allowedTypes.add(VIDEO)
         }
+
+        if (browserType.isAudioPicker) {
+            allowedTypes.add(AUDIO)
+        }
+
+        if (browserType.isDocumentPicker) {
+            allowedTypes.add(DOCUMENT)
+        }
+
         return MediaPickerSetup(
                 primaryDataSource = WP_LIBRARY,
                 availableDataSources = setOf(),

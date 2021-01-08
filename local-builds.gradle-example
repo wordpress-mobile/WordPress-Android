@@ -15,4 +15,5 @@ binary build if you're not working on a specific library.
 */
 ext {
     localFluxCPath = "../WordPress-FluxC-Android"
+    localWPUtilsPath = "../WordPress-Utils-Android"
 }

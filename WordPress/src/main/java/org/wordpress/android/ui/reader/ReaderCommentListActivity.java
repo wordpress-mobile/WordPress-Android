@@ -24,7 +24,6 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.LinearSmoothScroller;
 import androidx.recyclerview.widget.RecyclerView;
@@ -152,7 +151,7 @@ public class ReaderCommentListActivity extends LocaleAwareActivity {
         super.onCreate(savedInstanceState);
         ((WordPress) getApplication()).component().inject(this);
         setContentView(R.layout.reader_activity_comment_list);
-        mViewModel = ViewModelProviders.of(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(ReaderCommentListViewModel.class);
 
         AppBarLayout appBarLayout = findViewById(R.id.appbar_main);
 

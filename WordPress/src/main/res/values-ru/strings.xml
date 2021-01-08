@@ -1,11 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-11-30 20:07:10+0000
+Translation-Revision-Date: 2020-12-30 18:31:47+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="backup_item_themes">Темы WordPress</string>
+    <string name="backup_item_plugins">Плагины WordPress</string>
+    <string name="backup_item_media_uploads">Загруженные медиафайлы</string>
+    <string name="backup_item_contents">Папка wp-content (за исключением тем, плагинов и загруженных файлов)</string>
+    <string name="backup_item_roots">Корневая папка WordPress (включая wp-config.php и любые файлы, не относящиеся к WordPress)</string>
+    <string name="backup_item_sqls">База данных сайта (SQL)</string>
+    <string name="backup_download_details_icon_content_description">Создание значка скачиваемой резервной копии</string>
+    <string name="activity_log_date_range_filter_label">Период</string>
+    <string name="activity_log_activity_type_filter_label">Тип активности</string>
+    <string name="activity_log_item_menu_restore_label">Восстановить до этой точки</string>
+    <string name="activity_log_item_menu_download_backup_label">Скачать резервную копию</string>
+    <string name="gutenberg_native_choose_file">Выбрать файл</string>
+    <string name="gutenberg_native_error">Ошибка</string>
+    <string name="backup_download">Скачивание резервной копии</string>
+    <string name="backup_download_details_page_title">Скачать резервную копию</string>
+    <string name="backup_download_details_header">Создать резервную копию для скачивания</string>
+    <string name="backup_download_details_description">%1$s - выбранная точка создания резервной копии для скачивания.</string>
+    <string name="backup_download_details_choose_items_header">Выберите элементы, которые нужно включить для скачивания:</string>
+    <string name="backup_download_details_action_button">Создать скачиваемый файл</string>
+    <string name="button_copy">Дублировать</string>
+    <string name="dialog_confirm_copy_local_title">Конфликт синхронизации записей</string>
+    <string name="dialog_confirm_copy_local_message">Запись, которую вы пытаетесь скопировать имеет две конфликтующие версии или вы недавно внесли, но не сохранили изменения.\nОтредактируйте запись и решите конфликты или скопируйте версию из этого приложения.</string>
+    <string name="dialog_confirm_copy_local_edit_button">Сначала отредактируйте запись</string>
+    <string name="dialog_confirm_copy_local_copy_button">Взять версию из этого приложения</string>
+    <string name="activity_log_activity_type_filter_header">Отфильтровать по типу активности</string>
+    <string name="toast_edit_story_update_in_progress_title">История сохраняется, подождите…</string>
     <string name="gutenberg_native_choose_a_file">ВЫБРАТЬ ФАЙЛ</string>
     <string name="gutenberg_native_copy_file_url">Скопировать URL файла</string>
     <string name="gutenberg_native_edit_file">Редактировать файл</string>
@@ -21,7 +47,6 @@ Language: ru
     <string name="reader_btn_following_comments">Вы подписаны на беседу</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_btn_jetpack_settings">Настройки Jetpack</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Новая</string>
     <string name="new_site_creation_domain_header_title">Выбрать домен</string>
     <string name="activity_log_activity_type_filter_apply">Применить</string>
     <string name="activity_log_activity_type_filter_clear">Очистить</string>
@@ -35,8 +60,8 @@ Language: ru
     <string name="dialog_edit_story_unrecoverable_title">Нельзя отредактировать историю</string>
     <string name="dialog_edit_story_unrecoverable_message">Невозможно найти медиафайлы этой истории на сайте.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF файлы не поддерживаются</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Медиафайл удалён. Попробуйте отредактировать историю.</string>
     <string name="dialog_edit_story_limited_title">Ограниченное редактирование истории</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Медиафайл удалён. Попробуйте создать историю заново.</string>
     <string name="hpp_error_title">Макеты недоступны при отсутствии подключения к сети</string>
     <string name="hpp_error_subtitle">Нажмите повторить при появлении подключения к сети.</string>
     <string name="hpp_retry_error">Проверьте подключение к Интернету и повторите попытку.</string>
@@ -311,6 +336,7 @@ Language: ru
     <string name="prepublishing_nudges_toolbar_title_tags">Добавить метки</string>
     <string name="prepublishing_tags_description">Метки информируют о том, про что написано в записи.</string>
     <string name="prepublishing_nudges_toolbar_title_publish">Дата публикации</string>
+    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
     <string name="ccpa_privacy_notice_read">Прочитать уведомление о конфиденциальности CCPA</string>
     <string name="publish_date">Дата публикации</string>
     <string name="post_status_post_scheduled">Запланирована</string>
@@ -318,7 +344,6 @@ Language: ru
     <string name="post_status_post_published">Опубликована</string>
     <string name="reader_btn_select_few_interests">Выберите несколько для продолжения</string>
     <string name="reader_btn_done">Готово</string>
-    <string name="ccpa_privacy_notice_caption">Калифорнийский закон о защите прав потребителей («CCPA») обязывает нас предоставлять жителям Калифорнии некоторую дополнительную информацию о категориях личной информации, которую мы собираем и передаем, где мы получаем эту личную информацию, а также как и почему мы ее используем.</string>
     <string name="reader_choose_interests_content_description">Выберите ваши интересы</string>
     <string name="reader_label_choose_your_interests">Выберите ваши интересы</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">Переместить записи в черновики</string>
@@ -448,9 +473,9 @@ Language: ru
     <string name="gutenberg_native_what_people_say">Люди говорят</string>
     <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Мы небольшая команда талантливых профессионалов с широким спектром навыков и опытом. Мы страстно любим свое дело. Мы стремимся начать работать с вами.</string>
     <string name="gutenberg_native_walt_disney">Уолт Дисней</string>
+    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Посетителям интересно узнать кто за той стороной экрана. Используйте это место для того, чтобы написать о себе, о сайте, о своем бизнесе или чём угодно еще. Используйте отзывы ниже для цитат, на одну тему, своими словами.</string>
     <string name="gutenberg_native_want_to_work_with_us">Хотите работать с нами?</string>
     <string name="gutenberg_native_warning_message">Предупреждающее сообщение</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Посетителям интересно узнать кто за той стороной экрана. Используйте это место для того, чтобы написать о себе, о сайте, о своем бизнесе или чём угодно еще. Используйте отзывы ниже для цитат, на одну тему, своими словами.</string>
     <string name="gutenberg_native_position_or_job_title">Должность</string>
     <string name="gutenberg_native_project_name">Имя проекта</string>
     <string name="gutenberg_native_sally_smith">Елена Васина</string>
@@ -560,7 +585,6 @@ Language: ru
     <string name="my_site_bottom_sheet_add_post">Запись блога</string>
     <string name="my_site_bottom_sheet_title">Добавить</string>
     <string name="post_settings_publish">Опубликовать</string>
-    <string name="dialog_gutenberg_informative_description_v2">Мы значительно улучшили редактор блоков. Вы должны его попробовать! Мы включили редактор блоков для новых записей и страниц. Если вы захотите вернуться на классический редактор, то перейдите в \'Мой сайт\' > \'Настройки сайта\'.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Синхронизировать сейчас</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Эта запись будет синхронизирована прямо сейчас.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Готовы начать синхронизацию?</string>
@@ -657,13 +681,11 @@ Language: ru
     <string name="master_switch_default_title_off">Выкл.</string>
     <string name="notifications_tab_dialog_master_off_message">Отключение уведомлений для этого сайта выключит их отображение на вкладке уведомлений. Вы можете настроить какие из уведомлений вы хотите видеть, после того как включите уведомления.</string>
     <string name="notifications_tab_dialog_switch_desc">Уведомления</string>
-    <string name="dialog_gutenberg_informative_description_page">Сейчас вы используете редактор блоков для новых страниц. Отлично! Если захотите изменить редактор на классический, то сделайте это в \'Мой сайт\'>\'Настройки сайта\',</string>
     <string name="notifications_tab_dialog_master_status_on">Уведомления для этого сайта</string>
     <string name="notifications_tab_dialog_master_status_off">Уведомления для этого сайта</string>
     <string name="notifications_tab_dialog_master_hint_on">Выключить отображение уведомлений для этого сайта на вкладке уведомлений</string>
     <string name="notifications_tab_dialog_master_hint_off">Включить отображение уведомлений для этого сайта на вкладке уведомлений</string>
     <string name="notifications_tab_dialog_master_off_title">Для просмотра уведомлений от этого сайта на вкладке уведомлений включите уведомления для сайта.</string>
-    <string name="dialog_gutenberg_informative_description_post">Сейчас вы используете редактор блоков для новых записей. Отлично! Если захотите изменить редактор на классический, то сделайте это в \'Мой сайт\'>\'Настройки сайта\',</string>
     <string name="pick_media">Добавить изображение или видео</string>
     <string name="error_post_not_published_retrying_private">Невозможно опубликовать эту личную запись, но мы попробуем ещё раз позже.</string>
     <string name="error_post_not_scheduled_retrying">Невозможно запланировать публикацию записи, но мы попробуем ещё раз позже.</string>
@@ -937,7 +959,6 @@ Language: ru
     <string name="plans_loading_error_network_title">Нет подключения</string>
     <string name="plans_loading_error_no_plans_title">Невозможно загрузить тарифы</string>
     <string name="exit">выход</string>
-    <string name="dialog_gutenberg_informative_title">Редактор блоков включен</string>
     <string name="quick_start_dialog_create_new_page_message_short_pages">Нажмите %1$s Добавить страницу %2$s для создания новой страницы.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Нажмите %1$s Тариф %2$s для просмотра вашего и других доступных тарифов</string>
     <string name="quick_start_dialog_upload_icon_message">Ваши посетители увидят ваш значок в своем браузере. Добавьте пользовательский значок для стильного, профессионального вида.</string>

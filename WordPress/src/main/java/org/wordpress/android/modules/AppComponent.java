@@ -45,6 +45,8 @@ import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
+import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
+import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -164,6 +166,8 @@ import org.wordpress.android.ui.reader.views.ReaderPostDetailHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderSiteHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderTagHeaderView;
 import org.wordpress.android.ui.reader.views.ReaderWebView;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsFragment;
 import org.wordpress.android.ui.sitecreation.previews.SiteCreationPreviewFragment;
@@ -460,6 +464,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ActivityLogDetailFragment object);
 
+    void inject(ScanActivity object);
+
+    void inject(ScanFragment object);
+
     void inject(PluginListFragment object);
 
     void inject(PluginDetailActivity object);
@@ -613,6 +621,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ActivityLogTypeFilterFragment object);
 
     void inject(ImprovedMySiteFragment object);
+
+    void inject(BackupDownloadActivity object);
+
+    void inject(BackupDownloadDetailsFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

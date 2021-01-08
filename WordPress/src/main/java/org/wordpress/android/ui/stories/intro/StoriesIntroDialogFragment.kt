@@ -12,7 +12,6 @@ import android.view.Window
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import kotlinx.android.synthetic.main.stories_intro_dialog_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
@@ -48,7 +47,7 @@ class StoriesIntroDialogFragment : DialogFragment() {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val dialog = super.onCreateDialog(savedInstanceState)
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoriesIntroViewModel::class.java)
 
         if (VERSION.SDK_INT >= VERSION_CODES.M) {

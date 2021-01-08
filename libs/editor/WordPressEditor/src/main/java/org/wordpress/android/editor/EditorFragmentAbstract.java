@@ -182,6 +182,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
         void onAddLibraryMediaClicked(boolean allowMultipleSelection);
+        void onAddLibraryFileClicked(boolean allowMultipleSelection);
         void onAddPhotoClicked(boolean allowMultipleSelection);
         void onCapturePhotoClicked();
         void onAddVideoClicked(boolean allowMultipleSelection);

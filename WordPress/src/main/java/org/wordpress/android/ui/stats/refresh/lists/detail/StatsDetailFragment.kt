@@ -7,7 +7,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import dagger.android.support.DaggerFragment
 import kotlinx.android.synthetic.main.stats_detail_fragment.*
 import org.wordpress.android.R
@@ -58,7 +57,7 @@ class StatsDetailFragment : DaggerFragment() {
         val postTitle = activity.intent?.getSerializableExtra(POST_TITLE) as String?
         val postUrl = activity.intent?.getSerializableExtra(POST_URL) as String?
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StatsSection.DETAIL.name, StatsDetailViewModel::class.java)
         viewModel.init(
                 checkNotNull(postId),

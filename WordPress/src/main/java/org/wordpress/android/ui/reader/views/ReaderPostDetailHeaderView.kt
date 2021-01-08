@@ -14,7 +14,6 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.getDrawableResIdFromAttribute
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
@@ -83,7 +82,7 @@ class ReaderPostDetailHeaderView @JvmOverloads constructor(
         } else {
             imageManager.loadIntoCircle(
                     image_avatar_or_blavatar,
-                    BLAVATAR_CIRCULAR, state.avatarOrBlavatarUrl
+                    state.blavatarType, state.avatarOrBlavatarUrl
             )
         }
         // we don't show the p2 style of header in post details yet

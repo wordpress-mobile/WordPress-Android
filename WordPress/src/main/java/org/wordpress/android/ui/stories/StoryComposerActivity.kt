@@ -9,7 +9,6 @@ import android.os.Bundle
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.material.snackbar.Snackbar
 import com.wordpress.stories.compose.AuthenticationHeadersProvider
 import com.wordpress.stories.compose.ComposeLoopFrameActivity
@@ -177,7 +176,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
         val postEditorAnalyticsSession =
                 savedInstanceState?.getSerializable(STATE_KEY_EDITOR_SESSION_DATA) as PostEditorAnalyticsSession?
 
-        viewModel = ViewModelProviders.of(this, viewModelFactory)
+        viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(StoryComposerViewModel::class.java)
 
         site?.let {

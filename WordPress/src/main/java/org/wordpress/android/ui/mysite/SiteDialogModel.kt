@@ -1,7 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.annotation.StringRes
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 
 sealed class SiteDialogModel(
     val tag: String,
@@ -12,19 +12,20 @@ sealed class SiteDialogModel(
     @StringRes val cancelButtonLabel: Int? = null
 ) {
     object AddSiteIconDialogModel : SiteDialogModel(
-            MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG, string.my_site_icon_dialog_title,
-            string.my_site_icon_dialog_add_message,
-            string.yes,
-            string.no,
+            MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG,
+            R.string.my_site_icon_dialog_title,
+            R.string.my_site_icon_dialog_add_message,
+            R.string.yes,
+            R.string.no,
             null
     )
 
     object ChangeSiteIconDialogModel : SiteDialogModel(
             MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG,
-            string.my_site_icon_dialog_title,
-            string.my_site_icon_dialog_change_message,
-            string.my_site_icon_dialog_change_button,
-            string.my_site_icon_dialog_remove_button,
-            string.my_site_icon_dialog_cancel_button
+            R.string.my_site_icon_dialog_title,
+            R.string.my_site_icon_dialog_change_message,
+            R.string.my_site_icon_dialog_change_button,
+            R.string.my_site_icon_dialog_remove_button,
+            R.string.my_site_icon_dialog_cancel_button
     )
 }

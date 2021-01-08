@@ -15,20 +15,30 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.modules.UI_THREAD
-import org.wordpress.android.ui.activitylog.RewindStatusService
-import org.wordpress.android.ui.activitylog.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.DONE
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -39,6 +49,7 @@ class ActivityLogViewModel @Inject constructor(
     private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
+    private val backupFeatureConfig: BackupFeatureConfig,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -59,16 +70,16 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersVisibility = MutableLiveData<Boolean>()
-    val filtersVisibility: LiveData<Boolean>
-        get() = _filtersVisibility
+    private val _filtersUiState = MutableLiveData<FiltersUiState>()
+    val filtersUiState: LiveData<FiltersUiState>
+        get() = _filtersUiState
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
 
-    private val _showActivityTypeFilterDialog = SingleLiveEvent<RemoteId>()
-    val showActivityTypeFilterDialog: LiveData<RemoteId>
+    private val _showActivityTypeFilterDialog = SingleLiveEvent<ShowActivityTypePicker>()
+    val showActivityTypeFilterDialog: LiveData<ShowActivityTypePicker>
         get() = _showActivityTypeFilterDialog
 
     private val _showDateRangePicker = SingleLiveEvent<ShowDateRangePicker>()
@@ -87,6 +98,11 @@ class ActivityLogViewModel @Inject constructor(
     val showSnackbarMessage: LiveData<String>
         get() = _showSnackbarMessage
 
+    private val _navigationEvents =
+            MutableLiveData<Event<ActivityLogNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
+        get() = _navigationEvents
+
     private val isLoadingInProgress: Boolean
         get() = eventListStatus.value == LOADING_MORE ||
                 eventListStatus.value == ActivityLogListStatus.FETCHING
@@ -101,7 +117,10 @@ class ActivityLogViewModel @Inject constructor(
 
     private var lastRewindActivityId: String? = null
     private var lastRewindStatus: Status? = null
+
     private var currentDateRangeFilter: DateRange? = null
+    private var currentActivityTypeFilter: List<Int> = listOf()
+
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
             lastRewindActivityId = it?.activityLogItem?.activityID
@@ -135,7 +154,7 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        _filtersVisibility.value = activityLogFiltersFeatureConfig.isEnabled()
+        refreshFiltersUiState()
 
         isStarted = true
     }
@@ -148,20 +167,50 @@ class ActivityLogViewModel @Inject constructor(
         super.onCleared()
     }
 
+    private fun refreshFiltersUiState() {
+        _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
+            FiltersShown(
+                    UiStringRes(R.string.activity_log_date_range_filter_label),
+                    UiStringRes(R.string.activity_log_activity_type_filter_label)
+            )
+        } else {
+            FiltersHidden
+        }
+    }
+
     fun onPullToRefresh() {
         requestEventsUpdate(false)
     }
 
     fun onItemClicked(item: ActivityLogListItem) {
-        if (item is Event) {
+        if (item is ActivityLogListItem.Event) {
             _showItemDetail.value = item
         }
     }
 
+    // todo: annmarie - Remove once the feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
-        if (item is Event) {
+        if (item is ActivityLogListItem.Event) {
             _showRewindDialog.value = item
         }
+    }
+
+    fun onSecondaryActionClicked(
+        secondaryAction: ActivityLogListItem.SecondaryAction,
+        item: ActivityLogListItem
+    ): Boolean {
+        if (item is ActivityLogListItem.Event) {
+            val navigationEvent = when (secondaryAction) {
+                RESTORE -> {
+                    ShowRestore(item)
+                }
+                DOWNLOAD_BACKUP -> {
+                    ShowBackupDownload(item)
+                }
+            }
+            _navigationEvents.value = org.wordpress.android.viewmodel.Event(navigationEvent)
+        }
+        return true
     }
 
     fun dateRangePickerClicked() {
@@ -174,7 +223,13 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onActivityTypeFilterClicked() {
-        _showActivityTypeFilterDialog.value = RemoteId(site.siteId)
+        // TODO malinjir pass initially selected activity types
+        _showActivityTypeFilterDialog.value = ShowActivityTypePicker(RemoteId(site.siteId), currentActivityTypeFilter)
+    }
+
+    fun onActivityTypesSelected(activityTypeIds: List<Int>) {
+        currentActivityTypeFilter = activityTypeIds
+        // TODO malinjir: refetch/load data
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -211,8 +266,8 @@ class ActivityLogViewModel @Inject constructor(
             moveToTop = eventListStatus.value != LOADING_MORE
         }
         eventList.forEach { model ->
-            val currentItem = Event(model, disableActions)
-            val lastItem = items.lastOrNull() as? Event
+            val currentItem = ActivityLogListItem.Event(model, disableActions, backupFeatureConfig.isEnabled())
+            val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(Header(currentItem.formattedDate))
             }
@@ -241,7 +296,9 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
         return activityLogModel?.let {
-            val rewoundEvent = ActivityLogListItem.Event(it)
+            val rewoundEvent = ActivityLogListItem.Event(
+                    model = it,
+                    backupFeatureEnabled = backupFeatureConfig.isEnabled())
             ActivityLogListItem.Progress(resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(R.string.activity_log_currently_restoring_message,
                             rewoundEvent.formattedDate, rewoundEvent.formattedTime))
@@ -251,7 +308,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun requestEventsUpdate(isLoadingMore: Boolean) {
         if (canRequestEventsUpdate(isLoadingMore)) {
-            val newStatus = if (isLoadingMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
+            val newStatus = if (isLoadingMore) LOADING_MORE else ActivityLogListStatus.FETCHING
             _eventListStatus.value = newStatus
             val payload = ActivityLogStore.FetchActivityLogPayload(site, isLoadingMore)
             launch {
@@ -271,7 +328,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun showRewindStartedMessage() {
         rewindStatusService.rewindingActivity?.let {
-            val event = Event(it)
+            val event = ActivityLogListItem. Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
@@ -283,7 +340,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun showRewindFinishedMessage() {
         val item = rewindStatusService.rewindingActivity
         if (item != null) {
-            val event = Event(item)
+            val event = ActivityLogListItem.Event(model = item, backupFeatureEnabled = backupFeatureConfig.isEnabled())
             _showSnackbarMessage.value =
                     resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message,
                             event.formattedDate,
@@ -321,4 +378,14 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
+    data class ShowActivityTypePicker(val siteId: RemoteId, val initialSelection: List<Int>)
+
+    sealed class FiltersUiState(val visibility: Boolean) {
+        object FiltersHidden : FiltersUiState(visibility = false)
+
+        data class FiltersShown(
+            val dateRangeLabel: UiString,
+            val activityTypeLabel: UiString
+        ) : FiltersUiState(visibility = true)
+    }
 }

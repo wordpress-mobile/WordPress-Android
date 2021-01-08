@@ -5,15 +5,21 @@ import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
+import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
+import javax.inject.Inject
 
-class ActivityLogListActivity : LocaleAwareActivity(), BasicFragmentDialog.BasicDialogPositiveClickInterface,
+class ActivityLogListActivity : LocaleAwareActivity(),
+        BasicFragmentDialog.BasicDialogPositiveClickInterface,
         BasicFragmentDialog.BasicDialogNegativeClickInterface {
+    @Inject lateinit var backupFeatureConfig: BackupFeatureConfig
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        (application as WordPress).component().inject(this)
 
         setContentView(R.layout.activity_log_list_activity)
 
@@ -46,6 +52,7 @@ class ActivityLogListActivity : LocaleAwareActivity(), BasicFragmentDialog.Basic
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+        // Unused
     }
 
     private fun passRewindConfirmation(rewindId: String) {

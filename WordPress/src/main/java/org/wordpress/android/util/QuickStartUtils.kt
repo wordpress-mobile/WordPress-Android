@@ -47,10 +47,11 @@ import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.ui.themes.ThemeBrowserActivity
+import org.wordpress.android.ui.themes.ThemeBrowserUtils
 
 class QuickStartUtils {
     companion object {
+        private val themeBrowserUtils = ThemeBrowserUtils()
         private const val QUICK_START_REMINDER_INTERVAL = (24 * 60 * 60 * 1000 * 2).toLong() // two days
         const val ICON_NOT_SET = -1
 
@@ -196,7 +197,7 @@ class QuickStartUtils {
         @JvmStatic
         fun isQuickStartAvailableForTheSite(siteModel: SiteModel): Boolean {
             return (siteModel.hasCapabilityManageOptions &&
-                    ThemeBrowserActivity.isAccessible(siteModel) &&
+                    themeBrowserUtils.isAccessible(siteModel) &&
                     SiteUtils.isAccessedViaWPComRest(siteModel))
         }
 

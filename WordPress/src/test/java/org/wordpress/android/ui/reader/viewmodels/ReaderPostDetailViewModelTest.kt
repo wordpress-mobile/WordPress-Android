@@ -46,6 +46,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 
 private const val POST_PARAM_POSITION = 0
@@ -329,6 +330,7 @@ class ReaderPostDetailViewModelTest {
                             avatarOrBlavatarUrl = "",
                             authorAvatarUrl = "",
                             isAuthorAvatarVisible = false,
+                            blavatarType = BLAVATAR_CIRCULAR,
                             blogSectionClickData = ReaderBlogSectionClickData(onBlogSectionClicked, 0)
                         ),
                         FollowButtonUiState(

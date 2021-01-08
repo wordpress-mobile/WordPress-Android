@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -39,7 +38,7 @@ class MainBottomSheetFragment : BottomSheetDialogFragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
         recyclerView.adapter = AddContentAdapter(requireActivity())
 
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(WPMainActivityViewModel::class.java)
 
         viewModel.mainActions.observe(this, Observer {
             (dialog?.content_recycler_view?.adapter as? AddContentAdapter)?.update(it ?: listOf())

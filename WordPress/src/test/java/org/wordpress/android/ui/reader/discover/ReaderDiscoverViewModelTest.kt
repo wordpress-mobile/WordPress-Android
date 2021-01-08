@@ -71,6 +71,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
 
@@ -664,6 +665,7 @@ class ReaderDiscoverViewModelTest {
                         "",
                         "",
                         false,
+                        blavatarType = BLAVATAR_CIRCULAR,
                         ReaderBlogSectionClickData(postHeaderClicked, 0)
                 ),
                 tagItems = listOf(TagUiState("", "", false, onTagClicked)),

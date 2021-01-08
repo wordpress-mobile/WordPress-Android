@@ -31,7 +31,7 @@
         android:background="?attr/selectableItemBackgroundBorderless"
         android:contentDescription="@string/activity_log_button"
         android:padding="@dimen/activity_log_icon_margin"
-        android:src="@drawable/ic_history_white_24dp"
+        tools:src="@drawable/ic_ellipsis_vertical_white_24dp"
         app:tint="?attr/colorPrimary" />
 
     <LinearLayout

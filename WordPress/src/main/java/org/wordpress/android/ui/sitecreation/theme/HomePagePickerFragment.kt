@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
@@ -75,7 +74,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupViewModel() {
-        viewModel = ViewModelProviders.of(requireActivity(), viewModelFactory)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
@@ -115,7 +114,7 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun setupUi() {
-        title?.setVisible(isPhoneLandscape())
+        title?.visibility = if (isPhoneLandscape()) View.VISIBLE else View.INVISIBLE
         header?.setText(R.string.hpp_title)
         description?.setText(R.string.hpp_subtitle)
     }
@@ -149,5 +148,5 @@ class HomePagePickerFragment : Fragment() {
         }
     }
 
-    private fun isPhoneLandscape() = displayUtils.isLandscape() && !displayUtils.isTablet()
+    private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
 }
