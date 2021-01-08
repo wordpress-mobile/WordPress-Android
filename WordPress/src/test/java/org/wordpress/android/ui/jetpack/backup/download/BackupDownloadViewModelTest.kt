@@ -58,14 +58,14 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when view model is started, process moves to next step`() {
+    fun `given view model, when started, then process moves to next step`() {
         viewModel.start(null)
 
         verify(wizardManager).showNextStep()
     }
 
     @Test
-    fun `when details is finished, process moves to next step`() {
+    fun `given in details step, when finished, then process moves to next step`() {
         viewModel.start(null)
         // need to clear invocations because nextStep is called on start
         clearInvocations(wizardManager)
@@ -75,7 +75,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when progress is finished, process moves to next step`() {
+    fun `given in progress step, when finished, then process moves to next step`() {
         viewModel.start(null)
         clearInvocations(wizardManager)
 
@@ -84,7 +84,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when details is finished, state is updated properly`() {
+    fun `given in details step, when finished, state is updated properly`() {
         val navigationTargets = initObservers().navigationTargets
 
         viewModel.start(null)
@@ -96,13 +96,12 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
         viewModel.onBackupDownloadDetailsFinished(rewindId, downloadId, published)
 
-        assertThat(navigationTargets.last().wizardState.rewindId).isEqualTo(rewindId)
-        assertThat(navigationTargets.last().wizardState.downloadId).isEqualTo(downloadId)
-        assertThat(navigationTargets.last().wizardState.published).isEqualTo(published)
+        assertThat(navigationTargets.last().wizardState)
+                .isEqualTo(BackupDownloadState(rewindId = rewindId, downloadId = downloadId, published = published))
     }
 
     @Test
-    fun `when progress is finished, state is updated properly`() {
+    fun `given in progress step, when finished, state is updated properly`() {
         val navigationTargets = initObservers().navigationTargets
 
         viewModel.start(null)
@@ -114,87 +113,109 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
 
         viewModel.onBackupDownloadProgressFinished(url)
 
-        assertThat(navigationTargets.last().wizardState.url).isEqualTo(url)
+        assertThat(navigationTargets.last().wizardState).isEqualTo(BackupDownloadState(url = url))
     }
 
     @Test
-    fun `when onBackPressed while in details step, invokes wizard finished with cancel`() {
+    fun `given in details step, when onBackPressed, then invokes wizard finished with cancel`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
 
         viewModel.start(null)
         clearInvocations(wizardManager)
 
-        whenever(wizardManager.currentStep).thenReturn(0)
+        whenever(wizardManager.currentStep).thenReturn(BackupDownloadStep.DETAILS.id)
         viewModel.onBackPressed()
 
         assertThat(wizardFinishedObserver.last()).isInstanceOf(BackupDownloadCanceled::class.java)
     }
 
     @Test
-    fun `when onBackPressed while in progress step, invokes wizard finished with BackupDownloadInProgress`() {
+    fun `given in progress step, when onBackPressed, then invokes wizard finished with BackupDownloadInProgress`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
         clearInvocations(wizardManager)
         viewModel.onBackupDownloadDetailsFinished(rewindId, downloadId, published)
 
-        whenever(wizardManager.currentStep).thenReturn(1)
+        whenever(wizardManager.currentStep).thenReturn(BackupDownloadStep.PROGRESS.id)
         viewModel.onBackPressed()
 
         assertThat(wizardFinishedObserver.last()).isInstanceOf(BackupDownloadInProgress::class.java)
     }
 
     @Test
-    fun `when onBackPressed while in complete step, invokes wizard finished with BackupDownloadCompleted`() {
+    fun `given in complete step, when onBackPressed, then invokes wizard finished with BackupDownloadCompleted`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
         clearInvocations(wizardManager)
 
-        whenever(wizardManager.currentStep).thenReturn(2)
+        whenever(wizardManager.currentStep).thenReturn(BackupDownloadStep.COMPLETE.id)
         viewModel.onBackPressed()
 
         assertThat(wizardFinishedObserver.last()).isInstanceOf(BackupDownloadCompleted::class.java)
     }
 
     @Test
-    fun `when viewModel starts, toolbarState contains no entries`() {
+    fun `given viewModel, when starts, toolbarState contains no entries`() {
         val toolbarStates = initObservers().toolbarState
 
-        viewModel.start(savedInstanceState = null)
+        viewModel.start(null)
 
         assertThat(toolbarStates.size).isEqualTo(0)
     }
 
     @Test
-    fun `backupDownloadState is writtenToBundle`() {
-        viewModel.start(savedInstanceState = null)
+    fun `given backupDownloadState, when writeToBundle is invoked, state is writtenToBundle`() {
+        viewModel.start(null)
 
         viewModel.writeToBundle(savedInstanceState)
+
         verify(savedInstanceState)
                 .putParcelable(any(), argThat { this is BackupDownloadState })
     }
 
     @Test
-    fun `when setToolbarState is invoked, toolbar state is updated`() {
+    fun `given in detail step, when setToolbarState is invoked, then toolbar state is updated`() {
         val toolbarStates = initObservers().toolbarState
 
         viewModel.start(null)
+
         viewModel.setToolbarState(DetailsToolbarState())
+
         assertThat(toolbarStates.last()).isInstanceOf(DetailsToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in progress step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+
+        viewModel.start(null)
 
         viewModel.setToolbarState(ProgressToolbarState())
+
         assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+
+        viewModel.start(null)
 
         viewModel.setToolbarState(CompleteToolbarState())
+
         assertThat(toolbarStates.last()).isInstanceOf(CompleteToolbarState::class.java)
     }
 
     @Test
-    fun `step index is restored`() {
+    fun `given step index, when returned from background, then step index is restored`() {
         val index = 2
+
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP)).thenReturn(index)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
                 .thenReturn(backupDownloadState)
+
         viewModel.start(savedInstanceState = savedInstanceState)
+
         verify(wizardManager).setCurrentStepIndex(index)
     }
 
