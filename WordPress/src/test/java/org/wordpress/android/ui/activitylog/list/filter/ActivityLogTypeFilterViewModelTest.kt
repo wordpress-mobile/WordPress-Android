@@ -81,12 +81,21 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `fullscreen error shown, when fetch available activity types completes with error`() = test {
+    fun `connection error shown, when fetch available activity types completes with error`() = test {
         init(successResponse = false)
 
         startVM()
 
-        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Error::class.java)
+        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Error.ConnectionError::class.java)
+    }
+
+    @Test
+    fun `no activities error shown, when fetch available activity types returns empty list`() = test {
+        init(successResponse = true, activityTypeCount = 0)
+
+        startVM()
+
+        assertThat(viewModel.uiState.value).isInstanceOf(UiState.Error.NoActivitiesError::class.java)
     }
 
     @Test
@@ -94,7 +103,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         init(successResponse = false)
         startVM()
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction!!.action.invoke()
 
         verify(activityLogStore, times(2)).fetchActivityTypes(anyOrNull())
     }
@@ -105,7 +114,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
         startVM()
         init(successResponse = true)
 
-        (viewModel.uiState.value as UiState.Error).retryAction.action.invoke()
+        (viewModel.uiState.value as UiState.Error).retryAction!!.action.invoke()
 
         assertThat(viewModel.uiState.value).isInstanceOf(Content::class.java)
     }
@@ -153,7 +162,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
     @Test
     fun `selected items propagated to activity log, when the user clicks on apply action`() = test {
-        val observers = init()
+        val observers = init(activityTypeCount = 1)
         startVM()
         // select an item
         val activityType = ((observers.uiStates.last() as Content).items[1] as ActivityType)
@@ -161,7 +170,7 @@ class ActivityLogTypeFilterViewModelTest : BaseUnitTest() {
 
         (observers.uiStates.last() as Content).primaryAction.action.invoke()
 
-        verify(parentViewModel).onActivityTypesSelected(listOf(Pair(activityType.id, activityType.title)))
+        verify(parentViewModel).onActivityTypesSelected(listOf(ActivityTypeModel("1", "1", 1)))
     }
 
     @Test

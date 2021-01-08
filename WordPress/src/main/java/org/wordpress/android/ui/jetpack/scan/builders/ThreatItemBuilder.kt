@@ -17,15 +17,15 @@ import javax.inject.Inject
 
 @Reusable
 class ThreatItemBuilder @Inject constructor() {
-    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatModel: ThreatModel) -> Unit) =
+    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatId: Long) -> Unit) =
         ThreatItemState(
             threatId = threatModel.baseThreatModel.id,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
-            onClick = { onThreatItemClicked(threatModel) }
+            onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
         )
 
-    private fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
+    fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringResWithParams(
             R.string.threat_item_header_infected_core_file,
             listOf(UiStringText(getDisplayFileName(threatModel.fileName)))
@@ -62,7 +62,7 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
-    private fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
+    fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
         is DatabaseThreatModel -> UiStringText("")

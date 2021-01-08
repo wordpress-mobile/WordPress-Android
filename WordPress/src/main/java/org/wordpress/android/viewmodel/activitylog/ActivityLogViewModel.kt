@@ -9,9 +9,13 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -26,6 +30,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -35,6 +40,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -62,6 +68,8 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
+    private val activityLogTracker: ActivityLogTracker,
+    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -71,7 +79,6 @@ class ActivityLogViewModel @Inject constructor(
         FETCHING,
         LOADING_MORE
     }
-
     private var isStarted = false
 
     private val _events = MutableLiveData<List<ActivityLogListItem>>()
@@ -82,7 +89,7 @@ class ActivityLogViewModel @Inject constructor(
     val eventListStatus: LiveData<ActivityLogListStatus>
         get() = _eventListStatus
 
-    private val _filtersUiState = MutableLiveData<FiltersUiState>()
+    private val _filtersUiState = MutableLiveData<FiltersUiState>(FiltersHidden)
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
@@ -129,7 +136,7 @@ class ActivityLogViewModel @Inject constructor(
     private var lastRewindStatus: Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
-    private var currentActivityTypeFilter: List<Pair<String, UiString>> = listOf()
+    private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
 
     private val rewindProgressObserver = Observer<RewindProgress> {
         if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
@@ -164,9 +171,24 @@ class ActivityLogViewModel @Inject constructor(
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
-        refreshFiltersUiState()
+        showFiltersIfSupported()
 
         isStarted = true
+    }
+
+    private fun showFiltersIfSupported() {
+        when {
+            !activityLogFiltersFeatureConfig.isEnabled() -> return
+            !site.hasFreePlan -> refreshFiltersUiState()
+            else -> {
+                launch {
+                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
+                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
+                        refreshFiltersUiState()
+                    }
+                }
+            }
+        }
     }
 
     override fun onCleared() {
@@ -185,35 +207,56 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun refreshFiltersUiState() {
-        _filtersUiState.value = if (activityLogFiltersFeatureConfig.isEnabled()) {
-            FiltersShown(
-                    createDateRangeFilterLabel(),
-                    createActivityTypeFilterLabel(),
-                    currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
-                    currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
-            )
-        } else {
-            FiltersHidden
-        }
+        val (activityTypeLabel, activityTypeLabelContentDescription) = createActivityTypeFilterLabel()
+        val (dateRangeLabel, dateRangeLabelContentDescription) = createDateRangeFilterLabel()
+        _filtersUiState.value = FiltersShown(
+                dateRangeLabel,
+                dateRangeLabelContentDescription,
+                activityTypeLabel,
+                activityTypeLabelContentDescription,
+                currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
+                currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
+        )
     }
 
-    private fun createDateRangeFilterLabel(): UiString {
+    private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentDateRangeFilter?.let {
-            UiStringText(dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0))
-        } ?: UiStringRes(R.string.activity_log_date_range_filter_label)
+            val label = UiStringText(
+                    dateUtils.formatDateRange(requireNotNull(it.first), requireNotNull(it.second), TIMEZONE_GMT_0)
+            )
+            kotlin.Pair(label, label)
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_date_range_filter_label),
+                UiStringRes(R.string.activity_log_date_range_filter_label_content_description)
+        )
     }
 
-    private fun createActivityTypeFilterLabel(): UiString {
+    private fun createActivityTypeFilterLabel(): kotlin.Pair<UiString, UiString> {
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
-                it[0].second
+                kotlin.Pair(
+                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_single_item_selected_content_description,
+                                listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
+                        )
+                )
             } else {
-                UiStringResWithParams(
-                        R.string.activity_log_activity_type_filter_active_label,
-                        listOf(UiStringText("${it.size}"))
+                kotlin.Pair(
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_active_label,
+                                listOf(UiStringText("${it.size}"))
+                        ),
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_multiple_items_selected_content_description,
+                                listOf(UiStringText("${it.size}"))
+                        )
                 )
             }
-        } ?: UiStringRes(R.string.activity_log_activity_type_filter_label)
+        } ?: kotlin.Pair(
+                UiStringRes(R.string.activity_log_activity_type_filter_label),
+                UiStringRes(R.string.activity_log_activity_type_filter_no_item_selected_content_description)
+        )
     }
 
     fun onPullToRefresh() {
@@ -246,12 +289,13 @@ class ActivityLogViewModel @Inject constructor(
                     ShowBackupDownload(item)
                 }
             }
-            _navigationEvents.value = org.wordpress.android.viewmodel.Event(navigationEvent)
+            _navigationEvents.value = Event(navigationEvent)
         }
         return true
     }
 
     fun dateRangePickerClicked() {
+        activityLogTracker.trackDateRangeFilterButtonClicked()
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
@@ -260,32 +304,37 @@ class ActivityLogViewModel @Inject constructor(
             // adjust time of the end of the date range to 23:59:59
             Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
         }
+        activityLogTracker.trackDateRangeFilterSelected(dateRange)
         currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onClearDateRangeFilterClicked() {
+        activityLogTracker.trackDateRangeFilterCleared()
         currentDateRangeFilter = null
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onActivityTypeFilterClicked() {
+        activityLogTracker.trackActivityTypeFilterButtonClicked()
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
-                currentActivityTypeFilter.mapNotNull { it.first },
+                currentActivityTypeFilter.mapNotNull { it.key },
                 currentDateRangeFilter
         )
     }
 
-    fun onActivityTypesSelected(activityTypeIds: List<Pair<String, UiString>>) {
-        currentActivityTypeFilter = activityTypeIds
+    fun onActivityTypesSelected(selectedTypes: List<ActivityTypeModel>) {
+        activityLogTracker.trackActivityTypeFilterSelected(selectedTypes)
+        currentActivityTypeFilter = selectedTypes
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onClearActivityTypeFilterClicked() {
+        activityLogTracker.trackActivityTypeFilterCleared()
         currentActivityTypeFilter = listOf()
         refreshFiltersUiState()
         requestEventsUpdate(false)
@@ -387,7 +436,7 @@ class ActivityLogViewModel @Inject constructor(
                 loadMore,
                 currentDateRangeFilter?.first?.let { Date(it) },
                 currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter.mapNotNull { it.first }
+                currentActivityTypeFilter.mapNotNull { it.key }
         )
         fetchActivitiesJob = launch {
             val result = activityLogStore.fetchActivities(payload)
@@ -463,7 +512,9 @@ class ActivityLogViewModel @Inject constructor(
 
         data class FiltersShown(
             val dateRangeLabel: UiString,
+            val dateRangeLabelContentDescription: UiString,
             val activityTypeLabel: UiString,
+            val activityTypeLabelContentDescription: UiString,
             val onClearDateRangeFilterClicked: (() -> Unit)?,
             val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)

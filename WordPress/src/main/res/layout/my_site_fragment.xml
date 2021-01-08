@@ -445,6 +445,24 @@
 
                     </LinearLayout>
 
+                    <!--Backup-->
+                    <LinearLayout
+                        android:id="@+id/row_backup"
+                        style="@style/MySiteListRowLayout">
+
+                        <ImageView
+                            android:id="@+id/my_site_backup_icon"
+                            style="@style/MySiteListRowIcon"
+                            android:importantForAccessibility="no"
+                            android:src="@drawable/ic_backup_alt_white_24dp" />
+
+                        <org.wordpress.android.widgets.WPTextView
+                            android:id="@+id/my_site_backup_text_view"
+                            style="@style/MySiteListRowTextView"
+                            android:text="@string/backup" />
+
+                    </LinearLayout>
+
                     <!--Scan-->
                     <LinearLayout
                         android:id="@+id/row_scan"
