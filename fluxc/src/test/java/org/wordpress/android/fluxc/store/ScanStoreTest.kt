@@ -68,17 +68,6 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `fetch scan state triggers rest client`() = test {
-        val payload = FetchScanStatePayload(siteModel)
-        whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(FetchedScanStatePayload(null, siteModel))
-
-        val action = ScanActionBuilder.newFetchScanStateAction(payload)
-        scanStore.onAction(action)
-
-        verify(scanRestClient).fetchScanState(siteModel)
-    }
-
-    @Test
     fun `error on fetch scan state returns the error`() = test {
         val error = ScanStateError(ScanStateErrorType.INVALID_RESPONSE, "error")
         val payload = FetchedScanStatePayload(error, siteModel)
@@ -121,17 +110,6 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `start scan triggers rest client`() = test {
-        val payload = ScanStartPayload(siteModel)
-        whenever(scanRestClient.startScan(siteModel)).thenReturn(ScanStartResultPayload(siteModel))
-
-        val action = ScanActionBuilder.newStartScanAction(payload)
-        scanStore.onAction(action)
-
-        verify(scanRestClient).startScan(siteModel)
-    }
-
-    @Test
     fun `error on start scan returns the error`() = test {
         val error = ScanStartError(ScanStartErrorType.GENERIC_ERROR, "error")
         val payload = ScanStartResultPayload(error, siteModel)
@@ -142,19 +120,6 @@ class ScanStoreTest {
 
         val expectedEventWithError = ScanStore.OnScanStarted(payload.error, ScanAction.START_SCAN)
         verify(dispatcher).emitChange(expectedEventWithError)
-    }
-
-    @Test
-    fun `fix threats triggers rest client`() = test {
-        val payload = FixThreatsPayload(siteId, threatIds)
-        whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(
-            FixThreatsResultPayload(siteId)
-        )
-
-        val action = ScanActionBuilder.newFixThreatsAction(payload)
-        scanStore.onAction(action)
-
-        verify(scanRestClient).fixThreats(siteId, threatIds)
     }
 
     @Test
@@ -171,19 +136,6 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `ignore threat triggers rest client`() = test {
-        val payload = IgnoreThreatPayload(siteId, threatId)
-        whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(
-            IgnoreThreatResultPayload(siteId)
-        )
-
-        val action = ScanActionBuilder.newIgnoreThreatAction(payload)
-        scanStore.onAction(action)
-
-        verify(scanRestClient).ignoreThreat(siteId, threatId)
-    }
-
-    @Test
     fun `error on ignore threat returns the error`() = test {
         val error = IgnoreThreatError(IgnoreThreatErrorType.GENERIC_ERROR, "error")
         val payload = IgnoreThreatResultPayload(error, siteId)
@@ -194,19 +146,6 @@ class ScanStoreTest {
 
         val expectedEventWithError = ScanStore.OnIgnoreThreatStarted(payload.error, ScanAction.IGNORE_THREAT)
         verify(dispatcher).emitChange(expectedEventWithError)
-    }
-
-    @Test
-    fun `fetch fix threats status triggers rest client`() = test {
-        val payload = FetchFixThreatsStatusPayload(siteId, listOf(threatId))
-        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(
-            FetchFixThreatsStatusResultPayload(siteId, mock())
-        )
-
-        val action = ScanActionBuilder.newFetchFixThreatsStatusAction(payload)
-        scanStore.onAction(action)
-
-        verify(scanRestClient).fetchFixThreatsStatus(siteId, listOf(threatId))
     }
 
     @Test
