@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.subfilter
 import org.wordpress.android.R
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
+import org.wordpress.android.ui.Organization
+import org.wordpress.android.ui.Organization.UNKNOWN
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.DIVIDER
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SECTION_TITLE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
@@ -16,6 +18,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
     open var isSelected: Boolean = false
     open val onClickAction: ((filter: SubfilterListItem) -> Unit)? = null
     open val label: UiString? = null
+    open val organization: Organization = UNKNOWN
 
     fun isSameItem(otherItem: SubfilterListItem?): Boolean {
         if (otherItem == null) return false
@@ -51,7 +54,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
 
     data class SiteAll(
         override var isSelected: Boolean = false,
-        override val onClickAction: (filter: SubfilterListItem) -> Unit
+        override val organization: Organization
     ) : SubfilterListItem(SITE_ALL) {
         override val label: UiString = UiStringRes(R.string.reader_filter_cta)
     }
@@ -59,6 +62,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
     data class Site(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
+        override val organization: Organization,
         val blog: ReaderBlog
     ) : SubfilterListItem(SITE, true) {
         override val label: UiString = if (blog.name.isNotEmpty()) {
@@ -73,6 +77,7 @@ sealed class SubfilterListItem(val type: ItemType, val isTrackedItem: Boolean = 
     data class Tag(
         override var isSelected: Boolean = false,
         override val onClickAction: (filter: SubfilterListItem) -> Unit,
+        override val organization: Organization,
         val tag: ReaderTag
     ) : SubfilterListItem(TAG, true) {
         override val label: UiString = UiStringText(tag.tagTitle)
