@@ -124,7 +124,6 @@ android {
             dimension "buildType"
             // Enable this for testing consolidated media picker
             // buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "true"
-            buildConfigField "boolean", "UNREAD_POSTS_COUNT", "true"
         }
 
         jalapeno { // Pre-Alpha version, used for PR builds, can be installed along release, alpha, beta, dev versions
