@@ -242,14 +242,8 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
-    public static void launchFileLibrary(Activity activity, boolean multiSelect) {
-        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
-                RequestCodes.FILE_LIBRARY);
-    }
-
-    public static void launchAudioFileLibrary(Activity activity, boolean multiSelect) {
-        activity.startActivityForResult(prepareAudioLibraryIntent(activity, multiSelect),
-                RequestCodes.AUDIO_LIBRARY);
+    public static void launchFileLibrary(Activity activity, boolean multiSelect, int requestCode) {
+        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect), requestCode);
     }
 
     public static void launchChooserWithContext(
