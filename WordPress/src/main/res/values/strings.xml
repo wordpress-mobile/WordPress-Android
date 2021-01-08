@@ -937,7 +937,7 @@
 
     <!-- Number suffixes -->
     <string name="negative_prefix">-%s</string>
-    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
