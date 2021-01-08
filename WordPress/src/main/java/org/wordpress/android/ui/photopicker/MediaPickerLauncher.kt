@@ -185,32 +185,30 @@ class MediaPickerLauncher @Inject constructor(
     }
 
     fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
-        showMediaPicker(
+        showFilePicker(
                 activity,
                 canMultiselect,
                 mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
-                R.string.photo_picker_choose_file,
                 RequestCodes.FILE_LIBRARY
         )
     }
 
     fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
-        showMediaPicker(
-            activity,
-            canMultiselect,
+        showFilePicker(
+                activity,
+                canMultiselect,
                 mutableSetOf(AUDIO),
-                R.string.photo_picker_choose_file,
                 RequestCodes.AUDIO_LIBRARY
         )
     }
 
-    private fun showMediaPicker(
+    private fun showFilePicker(
         activity: Activity,
         canMultiselect: Boolean = false,
         allowedTypes: Set<MediaType>,
-        @StringRes title: Int,
-        requestCode: Int
-    ) {
+        requestCode: Int,
+        @StringRes title: Int = R.string.photo_picker_choose_file,
+            ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
