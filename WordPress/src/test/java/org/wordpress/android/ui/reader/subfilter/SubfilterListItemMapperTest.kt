@@ -223,15 +223,20 @@ class SubfilterListItemMapperTest {
     }
 
     private companion object Fixtures {
-        private const val SITE_ALL_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":1}"
-        private const val SITE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
+        private const val SITE_ALL_JSON =
+                "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":1,\"organization\":0}"
+        private const val SITE_JSON =
+                "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2,\"organization\":0}"
         private const val SITE_JSON_WITH_BLOGID =
-                "{\"blogId\":1234,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
+                "{\"blogId\":1234,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":0,\"type\":2,\"organization\":0}"
         private const val SITE_JSON_WITH_FEEDID =
-                "{\"blogId\":0,\"feedId\":1234,\"tagSlug\":\"\",\"tagType\":0,\"type\":2}"
-        private const val TAG_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
-        private const val TAG_JSON_EMPTY_SLUG = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4}"
-        private const val WRONG_TYPE_JSON = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10}"
+                "{\"blogId\":0,\"feedId\":1234,\"tagSlug\":\"\",\"tagType\":0,\"type\":2,\"organization\":0}"
+        private const val TAG_JSON =
+                "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4,\"organization\":0}"
+        private const val TAG_JSON_EMPTY_SLUG =
+                "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"\",\"tagType\":1,\"type\":4,\"organization\":0}"
+        private const val WRONG_TYPE_JSON =
+                "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":10,\"organization\":0}"
 
         private fun onClickActionDummy(filter: SubfilterListItem) {}
     }

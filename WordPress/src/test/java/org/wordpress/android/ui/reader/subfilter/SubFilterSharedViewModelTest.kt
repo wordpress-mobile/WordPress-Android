@@ -62,7 +62,7 @@ class SubFilterSharedViewModelTest {
                 organization = organization
         )
         val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4,\"organization\":0}"
-        
+
         viewModel = SubFilterSharedViewModel(
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
