@@ -17,6 +17,7 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -170,7 +171,7 @@ class SubfilterListItemMapperTest {
     @Test
     fun `toJson returns correct SiteAll JSON`() {
         // Given
-        val item = SiteAll(onClickAction = ::onClickActionDummy)
+        val item = SiteAll(organization = NO_ORGANIZATION)
 
         // When
         val json = listItemMapper.toJson(item)
@@ -188,7 +189,8 @@ class SubfilterListItemMapperTest {
         val blog = ReaderBlog.fromJson(JSONObject(SITE_JSON))
         val item = Site(
                 onClickAction = ::onClickActionDummy,
-                blog = blog
+                blog = blog,
+                organization = NO_ORGANIZATION
         )
 
         // When
@@ -206,7 +208,8 @@ class SubfilterListItemMapperTest {
         // Given
         val item = Tag(
                 onClickAction = ::onClickActionDummy,
-                tag = tag
+                tag = tag,
+                organization = NO_ORGANIZATION
         )
 
         // When
