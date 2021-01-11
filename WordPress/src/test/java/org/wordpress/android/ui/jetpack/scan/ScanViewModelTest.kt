@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -13,11 +14,17 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
+import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.Event
+
+private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 4
 
 @InternalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
@@ -27,6 +34,8 @@ class ScanViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ScanViewModel
 
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
+    private val fakeUiStringText = UiStringText("")
+    private val fakeThreatId = 1L
 
     @Before
     fun setUp() = test {
@@ -37,6 +46,11 @@ class ScanViewModelTest : BaseUnitTest() {
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
+        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any())).thenAnswer {
+            createDummyScanStateListItems(
+                it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
+            )
+        }
     }
 
     @Test
@@ -53,15 +67,37 @@ class ScanViewModelTest : BaseUnitTest() {
         assertThat(uiStates.last()).isInstanceOf(Content::class.java)
     }
 
+    @Test
+    fun `when threat item is clicked, then app navigates to threat details`() = test {
+        val observers = init()
+
+        (observers.uiStates.last() as Content).items.filterIsInstance<ThreatItemState>().first().onClick.invoke()
+
+        assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
+    }
+
+    private fun createDummyScanStateListItems(onThreatItemClicked: (Long) -> Unit) = listOf(
+        ThreatItemState(
+            threatId = fakeThreatId,
+            header = fakeUiStringText,
+            subHeader = fakeUiStringText
+        ) { onThreatItemClicked(fakeThreatId) }
+    )
+
     private fun init(): Observers {
         val uiStates = mutableListOf<UiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
         }
+        val navigation = mutableListOf<Event<ScanNavigationEvents>>()
+        viewModel.navigationEvents.observeForever {
+            navigation.add(it)
+        }
+
         viewModel.start(site)
 
-        return Observers(uiStates)
+        return Observers(uiStates, navigation)
     }
 
-    private data class Observers(val uiStates: List<UiState>)
+    private data class Observers(val uiStates: List<UiState>, val navigation: List<Event<ScanNavigationEvents>>)
 }
