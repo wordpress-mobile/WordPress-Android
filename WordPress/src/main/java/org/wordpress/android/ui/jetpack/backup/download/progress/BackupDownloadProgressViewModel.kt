@@ -23,7 +23,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType.BACKUP_PROGRESS
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -45,9 +44,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
-
-    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
-    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _errorEvents = MediatorLiveData<Event<Boolean>>()
     val errorEvents: LiveData<Event<Boolean>> = _errorEvents
@@ -73,7 +69,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
     }
 
     private fun initSources() {
-        parentViewModel.addSnackbarMessageSource(snackbarEvents)
         parentViewModel.addErrorMessageSource(errorEvents)
     }
 
