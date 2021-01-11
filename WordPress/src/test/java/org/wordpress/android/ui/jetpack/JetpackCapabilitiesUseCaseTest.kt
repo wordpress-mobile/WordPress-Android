@@ -10,13 +10,17 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
+import org.wordpress.android.fluxc.utils.CurrentTimeProvider
 import org.wordpress.android.test
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import java.util.Date
 
 private const val SITE_ID = 1L
 @InternalCoroutinesApi
@@ -27,39 +31,49 @@ class JetpackCapabilitiesUseCaseTest {
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: SiteStore
+    @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var currentTimeProvider: CurrentTimeProvider
     private lateinit var useCase: JetpackCapabilitiesUseCase
     private lateinit var event: OnJetpackCapabilitiesFetched
 
     @Before
     fun setUp() {
-        this@FetchJetpackCapabilitiesUseCaseTest.useCase = JetpackCapabilitiesUseCase(store, dispatcher, TEST_DISPATCHER)
+        useCase = JetpackCapabilitiesUseCase(
+                store,
+                dispatcher,
+                appPrefsWrapper,
+                currentTimeProvider,
+                TEST_DISPATCHER
+        )
         event = OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null)
+        whenever(appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(anyLong())).thenReturn(0)
+        whenever(currentTimeProvider.currentDate).thenReturn(Date(99999999))
     }
 
     @Test
     fun `coroutine resumed, when result event dispatched`() = test {
-        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        val resultEvent = this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
+        val resultEvent = useCase.getOrFetchJetpackCapabilities(SITE_ID)
 
-        assertThat(resultEvent).isEqualTo(event)
+        assertThat(resultEvent).isEqualTo(event.capabilities)
     }
 
     @Test
     fun `useCase subscribes to event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
+        useCase.getOrFetchJetpackCapabilities(SITE_ID)
 
-        verify(dispatcher).register(this@FetchJetpackCapabilitiesUseCaseTest.useCase)
+        verify(dispatcher).register(useCase)
     }
 
     @Test
     fun `useCase unsubscribes from event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
+        useCase.getOrFetchJetpackCapabilities(SITE_ID)
 
-        verify(dispatcher).unregister(this@FetchJetpackCapabilitiesUseCaseTest.useCase)
+        verify(dispatcher).unregister(useCase)
     }
 }
