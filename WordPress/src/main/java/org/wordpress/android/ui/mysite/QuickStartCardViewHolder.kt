@@ -110,7 +110,7 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
     private var items = listOf<QuickStartTaskCard>()
 
     fun loadData(newItems: List<QuickStartTaskCard>) {
-        val diffResult = DiffUtil.calculateDiff(DummyTaskAdapterDiffCallback(items, newItems))
+        val diffResult = DiffUtil.calculateDiff(QuickStartTaskCardAdapterDiffCallback(items, newItems))
         items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
@@ -137,7 +137,7 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
         }
     }
 
-    inner class DummyTaskAdapterDiffCallback(
+    inner class QuickStartTaskCardAdapterDiffCallback(
         private val oldItems: List<QuickStartTaskCard>,
         private val newItems: List<QuickStartTaskCard>
     ) : DiffUtil.Callback() {
