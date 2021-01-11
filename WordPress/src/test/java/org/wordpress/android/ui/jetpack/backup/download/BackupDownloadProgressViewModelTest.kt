@@ -17,8 +17,6 @@ import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadP
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -75,16 +73,12 @@ class BackupDownloadProgressViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             uiStates.add(it)
         }
-        val snackbarMessages = mutableListOf<Event<SnackbarMessageHolder>>()
-        viewModel.snackbarEvents.observeForever {
-            snackbarMessages.add(it)
-        }
-        return Observers(uiStates, snackbarMessages)
+
+        return Observers(uiStates)
     }
 
     private data class Observers(
-        val uiStates: List<UiState>,
-        val snackbarMessages: List<Event<SnackbarMessageHolder>>
+        val uiStates: List<UiState>
     )
 
     private val getStatusProgress = BackupDownloadRequestState.Progress(rewindId = "rewindId", progress = 0)
