@@ -654,6 +654,8 @@ class ActivityLogViewModelTest {
 
     @Test
     fun verifyEmptyScreenTextsWhenDateRangeFilterSet() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
         Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
