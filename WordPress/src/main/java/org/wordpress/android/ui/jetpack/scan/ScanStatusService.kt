@@ -18,6 +18,10 @@ import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@Deprecated(
+    "This class is replaced in favour of FetchScanStateUseCase." +
+        "It will be removed after scan menu logic built upon it is replaced with scan capabilities logic."
+)
 @Singleton
 class ScanStatusService
 @Inject constructor(
