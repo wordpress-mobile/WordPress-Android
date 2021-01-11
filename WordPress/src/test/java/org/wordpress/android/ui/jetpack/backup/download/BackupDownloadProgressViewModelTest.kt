@@ -17,7 +17,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemSt
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -60,7 +59,7 @@ class BackupDownloadProgressViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, backupDownloadState, parentViewModel)
 
-        assertThat(uiStates[0]).isInstanceOf(Content::class.java)
+        assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
     }
 
     @Test
@@ -69,7 +68,7 @@ class BackupDownloadProgressViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, backupDownloadState, parentViewModel)
 
-        assertThat((((uiStates[0] as Content).items).first { it is ProgressState } as ProgressState).progress)
+        assertThat(((uiStates[0].items).first { it is ProgressState } as ProgressState).progress)
                 .isEqualTo(0)
     }
 
