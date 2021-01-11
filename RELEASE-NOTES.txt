@@ -1,3 +1,6 @@
+16.6
+-----
+ 
 16.5
 -----
 * [**] Page List - Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
