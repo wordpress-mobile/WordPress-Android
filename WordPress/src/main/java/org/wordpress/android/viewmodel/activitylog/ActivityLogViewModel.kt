@@ -30,7 +30,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -69,7 +69,7 @@ class ActivityLogViewModel @Inject constructor(
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
-    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -182,7 +182,7 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 launch {
-                    fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
                             .find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }
                             ?.let {
                                 refreshFiltersUiState()

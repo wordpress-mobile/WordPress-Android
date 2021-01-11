@@ -21,7 +21,7 @@ import kotlin.coroutines.suspendCoroutine
 
 private const val MAX_CACHE_VALIDITY = 1000 * 60 * 15 // 15 minutes
 
-class FetchJetpackCapabilitiesUseCase @Inject constructor(
+class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
     private val dispatcher: Dispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
@@ -55,7 +55,7 @@ class FetchJetpackCapabilitiesUseCase @Inject constructor(
                 throw IllegalStateException("Request already in progress.")
             }
 
-            dispatcher.register(this@FetchJetpackCapabilitiesUseCase)
+            dispatcher.register(this@JetpackCapabilitiesUseCase)
             val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
                 val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
                 continuation = cont
@@ -83,7 +83,7 @@ class FetchJetpackCapabilitiesUseCase @Inject constructor(
     @Subscribe(threadMode = ThreadMode.BACKGROUND)
     @SuppressWarnings("unused")
     fun onJetpackCapabilitiesFetched(event: OnJetpackCapabilitiesFetched) {
-        dispatcher.unregister(this@FetchJetpackCapabilitiesUseCase)
+        dispatcher.unregister(this@JetpackCapabilitiesUseCase)
         continuation?.resume(event)
         continuation = null
     }

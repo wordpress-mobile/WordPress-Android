@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
@@ -121,7 +121,7 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
     private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val scanFeatureConfig: ScanFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
@@ -195,7 +195,7 @@ class MySiteViewModel
     private fun updateScanItemState(site: SiteModel) {
         if (scanFeatureConfig.isEnabled()) {
             launch {
-                val capabilities = fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
                 _scanAvailable.value = capabilities.find { it == JetpackCapability.SCAN } != null
             }
         }

@@ -55,7 +55,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAUL
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -89,7 +89,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
-    @Mock private lateinit var fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
+    @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
@@ -153,7 +153,7 @@ class ActivityLogViewModelTest {
                 backupFeatureConfig,
                 dateUtils,
                 activityLogTracker,
-                fetchJetpackCapabilitiesUseCase,
+                jetpackCapabilitiesUseCase,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -176,7 +176,7 @@ class ActivityLogViewModelTest {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
-        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
                 .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null))
     }
 
@@ -428,7 +428,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(SITE_ID))
+        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(SITE_ID))
                 .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP), null))
 
         viewModel.start(site)
@@ -440,7 +440,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupDailyProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
                 .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_DAILY), null))
 
         viewModel.start(site)
@@ -452,7 +452,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupRealtimeProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
                 .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null))
 
         viewModel.start(site)

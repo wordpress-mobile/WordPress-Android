@@ -105,7 +105,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -212,7 +212,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
-    @Inject lateinit var fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
+    @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -284,7 +284,7 @@ class MySiteFragment : Fragment(),
         uiScope.launch {
             val show = withContext(bgDispatcher) {
                 scanFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
-                    fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
+                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
                             .find { it == SCAN } != null
                 } ?: false
             }

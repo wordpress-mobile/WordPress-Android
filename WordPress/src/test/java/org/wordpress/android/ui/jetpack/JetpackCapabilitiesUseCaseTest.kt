@@ -21,45 +21,45 @@ import org.wordpress.android.test
 private const val SITE_ID = 1L
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class FetchJetpackCapabilitiesUseCaseTest {
+class JetpackCapabilitiesUseCaseTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var store: SiteStore
-    private lateinit var useCase: FetchJetpackCapabilitiesUseCase
+    private lateinit var useCase: JetpackCapabilitiesUseCase
     private lateinit var event: OnJetpackCapabilitiesFetched
 
     @Before
     fun setUp() {
-        useCase = FetchJetpackCapabilitiesUseCase(store, dispatcher, TEST_DISPATCHER)
+        this@FetchJetpackCapabilitiesUseCaseTest.useCase = JetpackCapabilitiesUseCase(store, dispatcher, TEST_DISPATCHER)
         event = OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null)
     }
 
     @Test
     fun `coroutine resumed, when result event dispatched`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
 
-        val resultEvent = useCase.fetchJetpackCapabilities(SITE_ID)
+        val resultEvent = this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
 
         assertThat(resultEvent).isEqualTo(event)
     }
 
     @Test
     fun `useCase subscribes to event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
 
-        useCase.fetchJetpackCapabilities(SITE_ID)
+        this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
 
-        verify(dispatcher).register(useCase)
+        verify(dispatcher).register(this@FetchJetpackCapabilitiesUseCaseTest.useCase)
     }
 
     @Test
     fun `useCase unsubscribes from event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
+        whenever(dispatcher.dispatch(any())).then { this@FetchJetpackCapabilitiesUseCaseTest.useCase.onJetpackCapabilitiesFetched(event) }
 
-        useCase.fetchJetpackCapabilities(SITE_ID)
+        this@FetchJetpackCapabilitiesUseCaseTest.useCase.fetchJetpackCapabilities(SITE_ID)
 
-        verify(dispatcher).unregister(useCase)
+        verify(dispatcher).unregister(this@FetchJetpackCapabilitiesUseCaseTest.useCase)
     }
 }
