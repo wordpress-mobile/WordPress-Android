@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * Configuration of the Activity Log Filters feature.
  */
-@Feature(remoteField = ACTIVITY_LOG_FILTERS)
+@Feature(remoteField = ACTIVITY_LOG_FILTERS, defaultValue = true)
 class ActivityLogFiltersFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
