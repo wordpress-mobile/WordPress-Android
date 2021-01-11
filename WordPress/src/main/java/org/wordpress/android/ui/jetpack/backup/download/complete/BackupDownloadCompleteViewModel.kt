@@ -9,7 +9,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.CompleteToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -46,10 +46,7 @@ class BackupDownloadCompleteViewModel @Inject constructor(
         this.backupDownloadState = backupDownloadState
         this.parentViewModel = parentViewModel
 
-        parentViewModel.setToolbarState(CompleteToolbarState())
-
         initSources()
-
         initView()
     }
 
@@ -58,12 +55,21 @@ class BackupDownloadCompleteViewModel @Inject constructor(
     }
 
     private fun initView() {
-        _uiState.value = Content(
-                items = stateListItemBuilder.buildCompleteListStateItems(
-                        published = backupDownloadState.published as Date,
-                        onDownloadFileClick = this@BackupDownloadCompleteViewModel::onDownloadFileClick,
-                        onShareLinkClick = this@BackupDownloadCompleteViewModel::onShareLinkClick
+        if (backupDownloadState.isError) {
+            parentViewModel.setToolbarState(ErrorToolbarState())
+            _uiState.value = UiState(
+                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                        onDoneClick = this@BackupDownloadCompleteViewModel::onDoneClick
                 ))
+        } else {
+            parentViewModel.setToolbarState(CompleteToolbarState())
+            _uiState.value = UiState(
+                items = stateListItemBuilder.buildCompleteListStateItems(
+                published = backupDownloadState.published as Date,
+                onDownloadFileClick = this@BackupDownloadCompleteViewModel::onDownloadFileClick,
+                onShareLinkClick = this@BackupDownloadCompleteViewModel::onShareLinkClick
+            ))
+        }
     }
 
     private fun onDownloadFileClick() {
@@ -76,9 +82,11 @@ class BackupDownloadCompleteViewModel @Inject constructor(
         _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Share clicked"))))
     }
 
-    sealed class UiState {
-        data class Content(
-            val items: List<JetpackListItemState>
-        ) : UiState()
+    private fun onDoneClick() {
+        parentViewModel.onBackupDownloadDetailsCanceled()
     }
+
+    data class UiState(
+        val items: List<JetpackListItemState>
+    )
 }

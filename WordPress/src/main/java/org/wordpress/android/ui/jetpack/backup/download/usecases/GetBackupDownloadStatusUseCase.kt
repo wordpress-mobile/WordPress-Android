@@ -20,13 +20,13 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore
 ) {
     suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(NetworkUnavailable)
-            return@flow
-        }
-
         var result: OnBackupDownloadStatusFetched?
         while (true) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(NetworkUnavailable)
+                return@flow
+            }
+
             val downloadStatusForSite = activityLogStore.getBackupDownloadStatusForSite(site)
             if (downloadStatusForSite != null && downloadStatusForSite.downloadId == downloadId) {
                 if (downloadStatusForSite.progress == null && downloadId == downloadStatusForSite.downloadId) {
