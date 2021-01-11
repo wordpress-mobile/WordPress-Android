@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-18 07:44:41+0000
+Translation-Revision-Date: 2020-12-31 00:46:23+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
@@ -61,7 +61,7 @@ Language: ko_KR
     <string name="dialog_edit_story_unavailable_title">이야기를 편집할 수 없습니다</string>
     <string name="dialog_edit_story_limited_message">이 이야기는 다른 장치에서 편집하였고 특정 객체를 편집하는 기능을 제한할 수도 있습니다.</string>
     <string name="dialog_edit_story_limited_title">제한적인 이야기 편집 중</string>
-    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 편집을 시도하세요.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">미디어를 제거했습니다. 이야기 다시 만들기를 시도하세요.</string>
     <string name="color_picker_label_background">배경</string>
     <string name="color_picker_label_text">본문</string>
     <string name="dialog_discard_story_ok_button_edit">폐기하기</string>

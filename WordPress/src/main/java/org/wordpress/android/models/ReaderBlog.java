@@ -82,9 +82,7 @@ public class ReaderBlog {
             blog.numSubscribers = json.optInt("subscribers_count");
         }
 
-        if (json.has("unseen_count")) {
-            blog.numUnseenPosts = json.optInt("unseen_count");
-        }
+        blog.numUnseenPosts = json.optInt("unseen_count");
 
         // blogId will be empty for feeds, so set it to the feedId (consistent with /read/ endpoints)
         if (blog.blogId == 0 && blog.feedId != 0) {

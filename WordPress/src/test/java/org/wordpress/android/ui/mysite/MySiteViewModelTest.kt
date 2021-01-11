@@ -47,6 +47,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -55,6 +56,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.T
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -78,6 +80,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -105,6 +108,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -152,6 +156,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 backupsFeatureConfig,
                 jetpackCapabilitiesUseCase,
                 scanFeatureConfig
+                displayUtilsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -206,7 +211,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(null)
 
         assertThat(uiModels).hasSize(2)
-        assertThat(uiModels.last().items).isEmpty()
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
     }
 
     @Test
@@ -214,8 +219,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(3)
-        assertThat(uiModels.last().items).hasSize(2)
-        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue
+        assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
+
+        assertThat(getLastItems()).hasSize(2)
+        assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
     @Test
@@ -435,13 +442,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onAvatarPressed()
 
         assertThat(navigationActions).containsOnly(OpenMeScreen)
-    }
-
-    @Test
-    fun `quick actions are not shown when no site is selected`() {
-        onSiteChange.postValue(null)
-
-        assertThat(uiModels.last().items).doesNotHaveAnyElementsOfTypes(QuickActionsBlock::class.java)
     }
 
     @Test
@@ -785,14 +785,45 @@ class MySiteViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
+    }
+
+    @Test
+    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
+    }
+
+    @Test
+    fun `add new site press is handled correctly`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        viewModel.onAddSitePressed()
+
+        assertThat(navigationActions).containsOnly(AddNewSite(true))
+    }
+
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
 
-    private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
+    private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =
-            uiModels.last().items.find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+            getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+
+    private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {

@@ -51,7 +51,6 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    // todo: annmarie think about adding state to instanceState
     fun start(
         site: SiteModel,
         backupDownloadState: BackupDownloadState,

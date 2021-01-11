@@ -64,6 +64,7 @@ import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ShowDateRangePicker
 import java.util.Calendar
@@ -640,6 +641,30 @@ class ActivityLogViewModelTest {
                                 listOf(UiStringText("2"))
                         )
                 )
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenFiltersAreEmpty() {
+        viewModel.onClearDateRangeFilterClicked()
+        viewModel.onClearActivityTypeFilterClicked()
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.EmptyFilters)
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenDateRangeFilterSet() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(1L, 2L))
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenActivityTypeFilterSet() {
+        viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

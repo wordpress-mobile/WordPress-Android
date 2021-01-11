@@ -95,7 +95,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                         )
                 )
             } else {
-                // todo: annmarie - Set the correct activity result & exit wizard
+                parentViewModel.onBackupDownloadDetailsCanceled()
             }
         }
     }

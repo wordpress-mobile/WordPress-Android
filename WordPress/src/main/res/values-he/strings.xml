@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-24 08:54:08+0000
+Translation-Revision-Date: 2021-01-05 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
@@ -61,7 +61,7 @@ Language: he_IL
     <string name="dialog_edit_story_unavailable_title">אין אפשרות לערוך את הסטורי</string>
     <string name="dialog_edit_story_limited_message">הסטורי הזה נערך במכשיר שונה והאפשרות לערוך אובייקטים מסוימים עלולה להיות מוגבלת.</string>
     <string name="dialog_edit_story_limited_title">עריכה מוגבלת של הסטורי</string>
-    <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. מומלץ לנסות לערוך את הסטורי שלך.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. כדאי לנסות ליצור את הסיפור שלך מחדש.</string>
     <string name="color_picker_label_background">רקע</string>
     <string name="color_picker_label_text">טקסט</string>
     <string name="dialog_discard_story_ok_button_edit">ביטול</string>
