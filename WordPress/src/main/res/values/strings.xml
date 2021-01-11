@@ -3432,5 +3432,6 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
 
     <string name="jetpack_icon_content_description">icon</string>
+    <string name="label_control_upload">Upload</string>
 
 </resources>
