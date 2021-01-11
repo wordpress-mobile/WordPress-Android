@@ -154,9 +154,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteStoriesHandler,
                 domainRegistrationHandler,
                 backupsFeatureConfig,
+                displayUtilsWrapper,
                 jetpackCapabilitiesUseCase,
                 scanFeatureConfig
-                displayUtilsWrapper
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
