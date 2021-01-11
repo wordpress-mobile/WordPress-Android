@@ -188,14 +188,6 @@ androidExtensions {
 }
 
 dependencies {
-    // Gutenberg Mobile
-    //
-    // Use a binary from Bintray by default, but can optionally be configured
-    // to use a local build via local-builds.gradle
-    implementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
-    testImplementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
-    debugImplementation "$gradle.ext.gutenbergMobileBinaryPath:$gutenbergMobileVersion"
-
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
