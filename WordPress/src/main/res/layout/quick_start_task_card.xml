@@ -6,7 +6,7 @@
     android:orientation="vertical">
 
     <ImageView
-        android:id="@+id/dummy_task_background"
+        android:id="@+id/task_card_illustration"
         android:layout_width="match_parent"
         android:layout_height="@dimen/quick_start_task_card_illustration_height"
         android:layout_gravity="center"
@@ -14,7 +14,7 @@
         tools:ignore="ContentDescription" />
 
     <TextView
-        android:id="@+id/dummy_task_title"
+        android:id="@+id/task_card_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_large"
@@ -25,7 +25,7 @@
         tools:text="Lorem ipsum" />
 
     <TextView
-        android:id="@+id/dummy_task_description"
+        android:id="@+id/task_card_description"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/margin_small"

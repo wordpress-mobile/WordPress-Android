@@ -127,13 +127,13 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
 
     inner class QuickStartTaskCardViewHolder(itemView: View) : ViewHolder(itemView) {
         fun bind(taskCard: QuickStartTaskCard) = itemView.apply {
-            dummy_task_title.text = taskCard.title
-            dummy_task_description.text = taskCard.description
+            task_card_title.text = taskCard.title
+            task_card_description.text = taskCard.description
 
             val alpha = if (taskCard.done) 0.2f else 1.0f
-            dummy_task_title.alpha = alpha
-            dummy_task_description.alpha = alpha
-            dummy_task_background.alpha = alpha
+            task_card_title.alpha = alpha
+            task_card_description.alpha = alpha
+            task_card_illustration.alpha = alpha
         }
     }
 
