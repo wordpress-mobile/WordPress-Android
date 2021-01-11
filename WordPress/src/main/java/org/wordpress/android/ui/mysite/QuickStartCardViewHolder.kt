@@ -27,7 +27,7 @@ import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.DummyTaskAdapter.DummyTaskViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -80,7 +80,7 @@ class QuickStartCardViewHolder(
         }
 
         quick_start_card_title.text = item.title
-        (quick_start_card_recycler_view.adapter as? DummyTaskAdapter)?.loadData(item.tasks)
+        (quick_start_card_recycler_view.adapter as? DummyTaskAdapter)?.loadData(item.taskCards)
         restoreScrollState(quick_start_card_recycler_view, item.id)
         quick_start_card_more_button.setOnClickListener { item.onMoreClick?.click() }
     }
@@ -107,9 +107,9 @@ class QuickStartCardViewHolder(
 }
 
 class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
-    private var items = listOf<DummyTask>()
+    private var items = listOf<QuickStartTaskCard>()
 
-    fun loadData(newItems: List<DummyTask>) {
+    fun loadData(newItems: List<QuickStartTaskCard>) {
         val diffResult = DiffUtil.calculateDiff(DummyTaskAdapterDiffCallback(items, newItems))
         items = newItems
         diffResult.dispatchUpdatesTo(this)
@@ -126,11 +126,11 @@ class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
     override fun getItemCount() = items.size
 
     inner class DummyTaskViewHolder(itemView: View) : ViewHolder(itemView) {
-        fun bind(task: DummyTask) = itemView.apply {
-            dummy_task_title.text = task.title
-            dummy_task_description.text = task.description
+        fun bind(taskCard: QuickStartTaskCard) = itemView.apply {
+            dummy_task_title.text = taskCard.title
+            dummy_task_description.text = taskCard.description
 
-            val alpha = if (task.done) 0.2f else 1.0f
+            val alpha = if (taskCard.done) 0.2f else 1.0f
             dummy_task_title.alpha = alpha
             dummy_task_description.alpha = alpha
             dummy_task_background.alpha = alpha
@@ -138,8 +138,8 @@ class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
     }
 
     inner class DummyTaskAdapterDiffCallback(
-        private val oldItems: List<DummyTask>,
-        private val newItems: List<DummyTask>
+        private val oldItems: List<QuickStartTaskCard>,
+        private val newItems: List<QuickStartTaskCard>
     ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldItems.size
 

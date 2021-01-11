@@ -50,7 +50,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -186,9 +186,9 @@ class MySiteViewModel
             }
 
             // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val dummyTasks = (1..5).map { DummyTask("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
+            val dummyTasks = (1..5).map { QuickStartTaskCard("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
             val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
-                    .sortedWith(compareBy(DummyTask::done).thenBy(DummyTask::id))
+                    .sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id))
             siteItems.add(
                     QuickStartCard(
                             "customize_your_site",
