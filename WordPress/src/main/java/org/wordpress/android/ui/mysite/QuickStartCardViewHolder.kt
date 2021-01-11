@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.DummyTaskViewHolder
+import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.QuickStartTaskCardViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.util.ColorUtils
@@ -106,7 +106,7 @@ class QuickStartCardViewHolder(
     }
 }
 
-class QuickStartTaskCardAdapter : Adapter<DummyTaskViewHolder>() {
+class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
     private var items = listOf<QuickStartTaskCard>()
 
     fun loadData(newItems: List<QuickStartTaskCard>) {
@@ -115,17 +115,17 @@ class QuickStartTaskCardAdapter : Adapter<DummyTaskViewHolder>() {
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DummyTaskViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuickStartTaskCardViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.quick_start_task_card, parent, false)
     )
 
-    override fun onBindViewHolder(holder: DummyTaskViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: QuickStartTaskCardViewHolder, position: Int) {
         holder.bind(items[position])
     }
 
     override fun getItemCount() = items.size
 
-    inner class DummyTaskViewHolder(itemView: View) : ViewHolder(itemView) {
+    inner class QuickStartTaskCardViewHolder(itemView: View) : ViewHolder(itemView) {
         fun bind(taskCard: QuickStartTaskCard) = itemView.apply {
             dummy_task_title.text = taskCard.title
             dummy_task_description.text = taskCard.description
