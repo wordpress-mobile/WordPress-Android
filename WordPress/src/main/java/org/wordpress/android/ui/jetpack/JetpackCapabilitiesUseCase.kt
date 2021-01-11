@@ -19,7 +19,7 @@ import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
-private const val MAX_CACHE_VALIDITY = 1000 * 60 * 15 // 15 minutes
+const val MAX_CACHE_VALIDITY = 1000 * 60 * 15L // 15 minutes
 
 class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
