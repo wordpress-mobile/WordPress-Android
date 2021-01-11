@@ -133,6 +133,17 @@ class ActivityLogListFragment : Fragment() {
             if (uiState is FiltersShown) { updateFilters(uiState) }
         })
 
+        viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
+            actionable_empty_view.title.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    emptyState.emptyScreenTitle
+            )
+            actionable_empty_view.subtitle.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    emptyState.emptyScreenSubtitle
+            )
+        })
+
         viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
             showActivityTypeFilterDialog(event.siteId, event.initialSelection, event.dateRange)
         })

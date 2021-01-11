@@ -1015,8 +1015,10 @@
     <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
-    <string name="activity_log_empty_title">No matching events found</string>
-    <string name="activity_log_empty_subtitle">Try adjusting your date range or activity type filters.</string>
+    <string name="activity_log_empty_title">No activity yet</string>
+    <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
+    <string name="activity_log_active_filter_empty_title">No matching events found</string>
+    <string name="activity_log_active_filter_empty_subtitle">Try adjusting your date range or activity type filters</string>
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>

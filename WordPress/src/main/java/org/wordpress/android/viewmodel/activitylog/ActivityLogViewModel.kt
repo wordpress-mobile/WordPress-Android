@@ -93,6 +93,9 @@ class ActivityLogViewModel @Inject constructor(
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
+    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.EmptyFilters)
+    val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
+
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
     val showRewindDialog: LiveData<ActivityLogListItem>
         get() = _showRewindDialog
@@ -217,6 +220,11 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                 currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            _emptyUiState.value = EmptyUiState.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.EmptyFilters
+        }
     }
 
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
@@ -518,5 +526,20 @@ class ActivityLogViewModel @Inject constructor(
             val onClearDateRangeFilterClicked: (() -> Unit)?,
             val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
+    }
+
+    sealed class EmptyUiState {
+        abstract val emptyScreenTitle: UiString
+        abstract val emptyScreenSubtitle: UiString
+
+        object EmptyFilters : EmptyUiState() {
+            override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
+            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+        }
+
+        object ActiveFilters : EmptyUiState() {
+            override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
+            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+        }
     }
 }
