@@ -31,7 +31,7 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     private var continuation: Continuation<OnJetpackCapabilitiesFetched>? = null
 
     suspend fun getOrFetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return if(hasValidCache(remoteSiteId)) {
+        return if (hasValidCache(remoteSiteId)) {
             getCachedJetpackCapabilities(remoteSiteId)
         } else {
             fetchJetpackCapabilities(remoteSiteId)
