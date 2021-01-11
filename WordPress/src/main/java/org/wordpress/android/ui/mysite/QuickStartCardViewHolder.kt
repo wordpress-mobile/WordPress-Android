@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.DummyTaskAdapter.DummyTaskViewHolder
+import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.DummyTaskViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.util.ColorUtils
@@ -44,7 +44,7 @@ class QuickStartCardViewHolder(
         itemView.apply {
             quick_start_card_more_button.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
             quick_start_card_recycler_view.apply {
-                adapter = DummyTaskAdapter()
+                adapter = QuickStartTaskCardAdapter()
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
                 addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 10), 0))
@@ -80,7 +80,7 @@ class QuickStartCardViewHolder(
         }
 
         quick_start_card_title.text = item.title
-        (quick_start_card_recycler_view.adapter as? DummyTaskAdapter)?.loadData(item.taskCards)
+        (quick_start_card_recycler_view.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
         restoreScrollState(quick_start_card_recycler_view, item.id)
         quick_start_card_more_button.setOnClickListener { item.onMoreClick?.click() }
     }
@@ -106,7 +106,7 @@ class QuickStartCardViewHolder(
     }
 }
 
-class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
+class QuickStartTaskCardAdapter : Adapter<DummyTaskViewHolder>() {
     private var items = listOf<QuickStartTaskCard>()
 
     fun loadData(newItems: List<QuickStartTaskCard>) {
