@@ -40,7 +40,6 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
@@ -176,8 +175,8 @@ class ActivityLogViewModelTest {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
-        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
-                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null))
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
+                .thenReturn(listOf())
     }
 
     @Test
@@ -428,8 +427,8 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(SITE_ID))
-                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP), null))
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(SITE_ID))
+                .thenReturn(listOf(BACKUP))
 
         viewModel.start(site)
 
@@ -440,8 +439,8 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupDailyProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
-                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_DAILY), null))
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
+                .thenReturn(listOf(BACKUP_DAILY))
 
         viewModel.start(site)
 
@@ -452,8 +451,8 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupRealtimeProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
-                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null))
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
+                .thenReturn(listOf(BACKUP_REALTIME))
 
         viewModel.start(site)
 
