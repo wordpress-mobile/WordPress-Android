@@ -1102,7 +1102,7 @@
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.
         We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n
         If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.
-        They have identified a select group of security experts to help with these projects. Pricing ranges from $70&#8211;120/hour, and you can get a free estimate with no obligation to hire.
+        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.
     </string>
     <!-- threat fixable -->
     <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
