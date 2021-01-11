@@ -17,6 +17,8 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
+import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -25,6 +27,7 @@ import javax.inject.Named
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
     private val fetchScanStateUseCase: FetchScanStateUseCase,
+    private val startScanUseCase: StartScanUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -60,6 +63,24 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    private fun startScan() {
+        launch {
+            startScanUseCase.startScan(site)
+                .flowOn(bgDispatcher)
+                .collect { startScanState ->
+                    when (startScanState) {
+                        is StartScanState.ScanningStateUpdatedInDb -> updateUiState(
+                            buildContentUiState(startScanState.model)
+                        )
+
+                        is StartScanState.Success -> fetchScanState()
+
+                        is StartScanState.Failure -> TODO() // TODO ashiagr to be implemented
+                    }
+                }
+        }
+    }
+
     private fun buildContentUiState(model: ScanStateModel) = Content(
         scanStateListItemsBuilder.buildScanStateListItems(
             model,
@@ -70,7 +91,8 @@ class ScanViewModel @Inject constructor(
         )
     )
 
-    private fun onScanButtonClicked() { // TODO ashiagr to be implemented
+    private fun onScanButtonClicked() {
+        startScan()
     }
 
     private fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
