@@ -13,7 +13,10 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
@@ -21,9 +24,11 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMP
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
+import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -76,11 +81,13 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
+@RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
@@ -96,7 +103,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
-    @Mock lateinit var scanStatusService: ScanStatusService
+    @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -114,18 +122,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData<Boolean>()
-    private val onScanAvailable = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
     @Before
-    fun setUp() {
+    suspend fun setUp() {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         isDomainCreditAvailable.value = null
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
-        whenever(scanStatusService.scanAvailable).thenReturn(onScanAvailable)
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -143,7 +150,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteStoriesHandler,
                 domainRegistrationHandler,
                 backupsFeatureConfig,
-                scanStatusService
+                jetpackCapabilitiesUseCase,
+                scanFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -191,9 +199,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteInfoBlock
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(scanStatusService.start(site)).thenAnswer {
-            onScanAvailable.postValue(false)
-        }
     }
 
     @Test
@@ -732,10 +737,21 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `scan status service invoked to get scan availability status when site is changed`() {
+    fun `jetpack capabilities requested, when selected site changes`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+
         onSiteChange.postValue(site)
 
-        verify(scanStatusService).start(site)
+        verify(jetpackCapabilitiesUseCase).getOrFetchJetpackCapabilities(site.siteId)
+    }
+
+    @Test
+    fun `jetpack capabilities not requested, when scanFeatureConfig flag is off`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
+
+        onSiteChange.postValue(site)
+
+        verify(jetpackCapabilitiesUseCase, never()).getOrFetchJetpackCapabilities(site.siteId)
     }
 
     @Test
@@ -753,10 +769,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site items builder invoked with the selected site's scan availability`() {
-        whenever(scanStatusService.start(site)).thenAnswer {
-            onScanAvailable.postValue(true)
-        }
+    fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
+                listOf(JetpackCapability.SCAN)
+        )
 
         onSiteChange.postValue(site)
 
