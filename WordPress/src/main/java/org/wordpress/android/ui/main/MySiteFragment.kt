@@ -31,6 +31,11 @@ import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -64,6 +69,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DI
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -86,6 +92,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.login.LoginMode.JETPACK_STATS
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -97,6 +105,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -167,6 +176,7 @@ import java.io.File
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
+import javax.inject.Named
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
@@ -184,6 +194,7 @@ class MySiteFragment : Fragment(),
     private var blavatarSz = 0
     private var isDomainCreditAvailable = false
     private var isDomainCreditChecked = false
+    private val job = Job()
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var dispatcher: Dispatcher
@@ -201,6 +212,10 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
+    @Inject lateinit var fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
+    @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
+    @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
+    lateinit var uiScope: CoroutineScope
 
     private val selectedSite: SiteModel?
         get() {
@@ -211,6 +226,7 @@ class MySiteFragment : Fragment(),
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         (requireActivity().application as WordPress).component().inject(this)
+        uiScope = CoroutineScope(uiDispatcher + job)
         if (savedInstanceState != null) {
             activeTutorialPrompt = savedInstanceState
                     .getSerializable(QuickStartMySitePrompts.KEY) as? QuickStartMySitePrompts
@@ -227,6 +243,7 @@ class MySiteFragment : Fragment(),
 
     override fun onDestroy() {
         selectedSiteRepository.clear()
+        job.cancel()
         super.onDestroy()
     }
 
@@ -264,7 +281,15 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateScanMenuVisibility() {
-        row_scan.setVisible(scanFeatureConfig.isEnabled())
+        uiScope.launch {
+            val show = withContext(bgDispatcher) {
+                scanFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
+                    fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
+                            .find { it == SCAN } != null
+                } ?: false
+            }
+            row_scan.setVisible(show)
+        }
     }
 
     private fun showQuickStartNoticeIfNecessary() {
