@@ -182,10 +182,11 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 launch {
-                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
-                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
-                        refreshFiltersUiState()
-                    }
+                    fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                            .find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }
+                            ?.let {
+                                refreshFiltersUiState()
+                            }
                 }
             }
         }
