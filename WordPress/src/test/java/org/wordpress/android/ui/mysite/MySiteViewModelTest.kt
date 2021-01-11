@@ -125,7 +125,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @InternalCoroutinesApi
     @Before
-    suspend fun setUp() {
+    fun setUp() = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         isDomainCreditAvailable.value = null
