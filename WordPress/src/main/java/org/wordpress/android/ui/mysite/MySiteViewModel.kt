@@ -87,6 +87,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
@@ -120,7 +121,8 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
     private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
+    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
+    private val scanFeatureConfig: ScanFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _scanAvailable = MediatorLiveData<Boolean>()
@@ -191,9 +193,11 @@ class MySiteViewModel
     }
 
     private fun updateScanItemState(site: SiteModel) {
-        launch {
-            val capabilities = fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
-            _scanAvailable.value = capabilities.find { it == JetpackCapability.SCAN } != null
+        if (scanFeatureConfig.isEnabled()) {
+            launch {
+                val capabilities = fetchJetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                _scanAvailable.value = capabilities.find { it == JetpackCapability.SCAN } != null
+            }
         }
     }
 
