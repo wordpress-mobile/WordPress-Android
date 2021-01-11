@@ -123,7 +123,7 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
     private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val displayUtilsWrapper: DisplayUtilsWrapper
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val scanFeatureConfig: ScanFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
