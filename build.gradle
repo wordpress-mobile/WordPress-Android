@@ -9,7 +9,7 @@ buildscript {
     ext.wordPressUtilsVersion = '1.30.1'
     // FIXME: This is a debug version on mokagio's fork. Switch to the official
     // one before merging!
-    ext.gutenbergMobileVersion = '20201216-141701'
+    ext.gutenbergMobileVersion = '20210108-153322'
 
     repositories {
         google()
