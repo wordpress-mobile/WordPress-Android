@@ -80,7 +80,7 @@ class ScanStore @Inject constructor(
         return storeScanState(payload)
     }
 
-    private fun storeScanState(payload: FetchedScanStatePayload): OnScanStateFetched {
+    fun storeScanState(payload: FetchedScanStatePayload): OnScanStateFetched {
         return if (payload.error != null) {
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
