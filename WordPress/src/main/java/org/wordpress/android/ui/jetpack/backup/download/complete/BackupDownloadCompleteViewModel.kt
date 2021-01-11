@@ -6,13 +6,15 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
@@ -34,6 +36,9 @@ class BackupDownloadCompleteViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _navigationEvents = MediatorLiveData<Event<BackupDownloadNavigationEvents>>()
+    val navigationEvents: LiveData<Event<BackupDownloadNavigationEvents>> = _navigationEvents
+
     fun start(
         site: SiteModel,
         backupDownloadState: BackupDownloadState,
@@ -52,6 +57,7 @@ class BackupDownloadCompleteViewModel @Inject constructor(
 
     private fun initSources() {
         parentViewModel.addSnackbarMessageSource(snackbarEvents)
+        parentViewModel.addNavigationEventSource(navigationEvents)
     }
 
     private fun initView() {
@@ -73,13 +79,11 @@ class BackupDownloadCompleteViewModel @Inject constructor(
     }
 
     private fun onDownloadFileClick() {
-        // todo: annmarie - implement the onDownloadFileClick
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Download clicked"))))
+        backupDownloadState.url?.let { _navigationEvents.postValue(Event(DownloadFile(it))) }
     }
 
     private fun onShareLinkClick() {
-        // todo: annmarie - implement the onShareLinkClick
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Share clicked"))))
+        backupDownloadState.url?.let { _navigationEvents.postValue(Event(ShareLink(it))) }
     }
 
     private fun onDoneClick() {

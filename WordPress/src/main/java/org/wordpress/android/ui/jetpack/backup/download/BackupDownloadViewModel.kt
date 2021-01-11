@@ -73,6 +73,9 @@ class BackupDownloadViewModel @Inject constructor(
     private val _errorEvents = MediatorLiveData<Event<Boolean>>()
     val errorEvents: LiveData<Event<Boolean>> = _errorEvents
 
+    private val _navigationEvents = MediatorLiveData<Event<BackupDownloadNavigationEvents>>()
+    val navigationEvents: LiveData<Event<BackupDownloadNavigationEvents>> = _navigationEvents
+
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
@@ -96,6 +99,12 @@ class BackupDownloadViewModel @Inject constructor(
     fun addErrorMessageSource(errorEvents: LiveData<Event<Boolean>>) {
         _errorEvents.addSource(errorEvents) { event ->
             _errorEvents.value = event
+        }
+    }
+
+    fun addNavigationEventSource(navigationEvent: LiveData<Event<BackupDownloadNavigationEvents>>) {
+        _navigationEvents.addSource(navigationEvent) { event ->
+            _navigationEvents.value = event
         }
     }
 
