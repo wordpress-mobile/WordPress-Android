@@ -20,7 +20,6 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore
 ) {
     suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
-        var result: OnBackupDownloadStatusFetched?
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
@@ -42,7 +41,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     emit(Progress(downloadStatusForSite.rewindId, downloadStatusForSite.progress))
                 }
             }
-            result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
+            val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 emit(RemoteRequestFailure)
                 return@flow
