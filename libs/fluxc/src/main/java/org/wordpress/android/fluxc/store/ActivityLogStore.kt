@@ -28,7 +28,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val ACTIVITY_LOG_PAGE_SIZE = 10
+private const val ACTIVITY_LOG_PAGE_SIZE = 20
 
 @Singleton
 class ActivityLogStore
