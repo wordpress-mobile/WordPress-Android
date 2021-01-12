@@ -34,4 +34,6 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val checked: Boolean = false,
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)
+
+    data class ProgressState(val progress: Int, val label: UiString) : JetpackListItemState(ViewType.PROGRESS)
 }

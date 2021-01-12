@@ -1056,7 +1056,8 @@
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
     <string name="scan_again">Scan again</string>
-    <string name="scan_scanning_title">Preparing to scan</string>
+    <string name="scan_preparing_to_scan_title">Preparing to scan</string>
+    <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
     <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
