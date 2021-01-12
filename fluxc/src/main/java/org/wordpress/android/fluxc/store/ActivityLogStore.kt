@@ -82,7 +82,11 @@ class ActivityLogStore
         ascending: Boolean = true
     ): List<ActivityLogModel> {
         val order = if (ascending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
-        return activityLogSqlUtils.getActivitiesForSite(site, order)
+        return if (rewindableOnly) {
+            activityLogSqlUtils.getRewindableActivitiesForSite(site, order)
+        } else {
+            activityLogSqlUtils.getActivitiesForSite(site, order)
+        }
     }
 
     fun getActivityLogItemByRewindId(rewindId: String): ActivityLogModel? {
