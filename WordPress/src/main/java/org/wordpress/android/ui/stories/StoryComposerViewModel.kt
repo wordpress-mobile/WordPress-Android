@@ -75,6 +75,10 @@ class StoryComposerViewModel @Inject constructor(
         this.editPostRepository = editPostRepository
         this.site = site
 
+        notificationType?.let {
+            systemNotificationsTracker.trackTappedNotification(it)
+        }
+
         if (postId.value == 0) {
             // Create a new post
             saveInitialPostUseCase.saveInitialPost(editPostRepository, site)
@@ -91,10 +95,6 @@ class StoryComposerViewModel @Inject constructor(
         }
 
         setupPostEditorAnalyticsSession(postEditorAnalyticsSession)
-
-        notificationType?.let {
-            systemNotificationsTracker.trackTappedNotification(it)
-        }
 
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
         updateStoryPostWithChanges()
