@@ -11,6 +11,7 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
@@ -32,7 +33,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        useCase = StartScanUseCase(networkUtilsWrapper, scanStore)
+        useCase = StartScanUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
     }

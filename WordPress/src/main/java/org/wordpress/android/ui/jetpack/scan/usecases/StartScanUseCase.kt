@@ -1,22 +1,27 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.SCANNING
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.ScanningStateUpdatedInDb
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.Success
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+import javax.inject.Named
 
 class StartScanUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val scanStore: ScanStore
+    private val scanStore: ScanStore,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun startScan(site: SiteModel) = flow {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -35,7 +40,7 @@ class StartScanUseCase @Inject constructor(
                 return@flow
             }
         }
-    }
+    }.flowOn(bgDispatcher)
 
     private suspend fun FlowCollector<StartScanState>.updateScanScanningStateInDb(site: SiteModel) {
         val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(state = SCANNING)
