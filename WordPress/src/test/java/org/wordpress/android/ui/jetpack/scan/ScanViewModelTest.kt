@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -14,6 +15,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
@@ -21,9 +23,13 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
+import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
+import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.ScanningStateUpdatedInDb
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 
+private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 2
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 4
 
 @InternalCoroutinesApi
@@ -31,6 +37,8 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
+    @Mock private lateinit var startScanUseCase: StartScanUseCase
+
     private lateinit var viewModel: ScanViewModel
 
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
@@ -42,11 +50,13 @@ class ScanViewModelTest : BaseUnitTest() {
         viewModel = ScanViewModel(
             scanStateItemsBuilder,
             fetchScanStateUseCase,
+            startScanUseCase,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any())).thenAnswer {
             createDummyScanStateListItems(
+                it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),
                 it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
             )
         }
@@ -75,7 +85,47 @@ class ScanViewModelTest : BaseUnitTest() {
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
 
-    private fun createDummyScanStateListItems(onThreatItemClicked: (Long) -> Unit) = listOf(
+    @Test
+    fun `when scan button is clicked, then start scan is triggered`() = test {
+        val uiStates = init().uiStates
+
+        (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+        verify(startScanUseCase).startScan(site)
+    }
+
+    @Test
+    fun `when scan button is clicked, then content updated on scan optimistic start (scanning state updated in db)`() =
+        test {
+            whenever(startScanUseCase.startScan(any()))
+                .thenReturn(flowOf(ScanningStateUpdatedInDb(fakeScanStateModel)))
+            val uiStates = init().uiStates
+
+            (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+            assertThat(uiStates.filterIsInstance<Content>()).size().isEqualTo(2)
+        }
+
+    @Test
+    fun `when scan button is clicked, then fetch scan state is triggered on scan start success`() = test {
+        whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
+        val uiStates = init().uiStates
+
+        (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+    }
+
+    private fun createDummyScanStateListItems(
+        onStartScanButtonClicked: (() -> Unit),
+        onThreatItemClicked: (Long) -> Unit
+    ) = listOf(
+        ActionButtonState(
+            text = fakeUiStringText,
+            contentDescription = fakeUiStringText,
+            isSecondary = false,
+            onClick = onStartScanButtonClicked
+        ),
         ThreatItemState(
             threatId = fakeThreatId,
             header = fakeUiStringText,
