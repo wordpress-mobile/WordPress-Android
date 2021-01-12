@@ -165,6 +165,7 @@ class ActivityLogViewModel @Inject constructor(
         if (isStarted) {
             return
         }
+        isStarted = true
 
         this.site = site
         this.rewindableOnly = rewindableOnly
@@ -179,8 +180,6 @@ class ActivityLogViewModel @Inject constructor(
         requestEventsUpdate(false)
 
         showFiltersIfSupported()
-
-        isStarted = true
     }
 
     private fun showFiltersIfSupported() {
