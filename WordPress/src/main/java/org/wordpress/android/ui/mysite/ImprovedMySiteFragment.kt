@@ -367,7 +367,7 @@ class ImprovedMySiteFragment : Fragment(),
                     AppLog.e(
                             MAIN,
                             "Image cropping failed!",
-                            UCrop.getError(data!!)
+                            UCrop.getError(data)
                     )
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
