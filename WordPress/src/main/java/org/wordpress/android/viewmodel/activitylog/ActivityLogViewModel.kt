@@ -159,13 +159,15 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     lateinit var site: SiteModel
+    var rewindableOnly: Boolean = false
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
             return
         }
 
         this.site = site
+        this.rewindableOnly = rewindableOnly
 
         rewindStatusService.start(site)
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)

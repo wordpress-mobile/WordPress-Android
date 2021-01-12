@@ -44,8 +44,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
@@ -55,6 +53,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -185,7 +185,7 @@ class ActivityLogViewModelTest {
         assertNull(viewModel.events.value)
         assertTrue(eventListStatuses.isEmpty())
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(
                 viewModel.events.value,
@@ -210,7 +210,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(
                 viewModel.events.value,
@@ -225,7 +225,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         reset(store)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
@@ -240,7 +240,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(
                 viewModel.events.value,
@@ -256,7 +256,7 @@ class ActivityLogViewModelTest {
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(
                 viewModel.events.value,
@@ -291,7 +291,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         reset(store)
 
@@ -306,7 +306,7 @@ class ActivityLogViewModelTest {
 
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertTrue(moveToTopEvents.isNotEmpty())
     }
@@ -317,7 +317,7 @@ class ActivityLogViewModelTest {
 
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         verify(store).getActivityLogForSite(site, false)
     }
@@ -327,7 +327,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertTrue(events.last()?.get(0) is Header)
         assertTrue(events.last()?.get(3) is Header)
@@ -353,7 +353,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onRewindConfirmedTriggersRewindOperation() {
-        viewModel.start(site)
+        viewModel.start(site, false)
         val rewindId = "rewindId"
 
         viewModel.onRewindConfirmed(rewindId)
@@ -377,7 +377,7 @@ class ActivityLogViewModelTest {
     fun loadsNextPageOnScrollToBottom() = runBlocking {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
         reset(store)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
@@ -390,7 +390,7 @@ class ActivityLogViewModelTest {
     fun filtersAreNotVisibleWhenFiltersFeatureFlagIsDisabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
@@ -399,7 +399,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -409,7 +409,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(false)
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -419,7 +419,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
@@ -431,7 +431,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(SITE_ID))
                 .thenReturn(listOf(BACKUP))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -443,7 +443,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
                 .thenReturn(listOf(BACKUP_DAILY))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -455,7 +455,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
                 .thenReturn(listOf(BACKUP_REALTIME))
 
-        viewModel.start(site)
+        viewModel.start(site, false)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }

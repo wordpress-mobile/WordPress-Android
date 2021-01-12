@@ -29,6 +29,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
@@ -76,6 +77,12 @@ class ActivityLogListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
+        val rewindableOnly = if (savedInstanceState == null) {
+            val nonNullIntent = checkNotNull(nonNullActivity.intent)
+            nonNullIntent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
+        } else {
+            savedInstanceState.getBoolean(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
+        }
 
         log_list_view.setEmptyView(actionable_empty_view)
         log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -88,7 +95,7 @@ class ActivityLogListFragment : Fragment() {
 
         setupObservers()
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -111,6 +118,7 @@ class ActivityLogListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
+        outState.putBoolean(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, viewModel.rewindableOnly)
         super.onSaveInstanceState(outState)
     }
 
