@@ -54,7 +54,7 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() = test {
-        val number = 10
+        val number = 20
         val offset = 0
 
         val payload = FetchActivityLogPayload(siteModel)
@@ -76,7 +76,7 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() = test {
-        val number = 10
+        val number = 20
 
         val payload = FetchActivityLogPayload(siteModel, loadMore = true)
         whenever(activityLogRestClient.fetchActivity(eq(payload), any(), any())).thenReturn(
@@ -415,8 +415,8 @@ class ActivityLogStoreTest {
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
         offset: Int = 0,
-        number: Int = 10,
-        totalItems: Int = 10
+        number: Int = 20,
+        totalItems: Int = 20
     ): Action<*> {
         val requestPayload = FetchActivityLogPayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(requestPayload)
