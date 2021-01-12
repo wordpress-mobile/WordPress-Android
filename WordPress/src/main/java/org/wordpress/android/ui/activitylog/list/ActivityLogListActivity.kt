@@ -10,6 +10,7 @@ import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import javax.inject.Inject
 
@@ -22,6 +23,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         (application as WordPress).component().inject(this)
 
         setContentView(R.layout.activity_log_list_activity)
+
+        if (intent.getSerializableExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY) as? Boolean == true) {
+            setTitle(R.string.backup)
+        }
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.let {
