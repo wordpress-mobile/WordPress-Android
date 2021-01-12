@@ -1715,6 +1715,7 @@
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
+    <string name="error_media_not_enough_storage">Not enough available site storage</string>
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
