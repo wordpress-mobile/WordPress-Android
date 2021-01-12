@@ -346,7 +346,7 @@ dependencies {
     // A starting point might be the fact that the
     // @wordpress_react-native-bridge-release AAR contains only the
     // -release.aar version of Hermes in its libs folder
-    def hermesPath = './../libs/hermes/'
+    def hermesPath = './../libs/editor/WordPressEditor/libs/hermes/'
     debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
     releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
 
