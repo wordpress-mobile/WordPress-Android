@@ -71,6 +71,11 @@ class ScanStore @Inject constructor(
 
     fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
 
+    fun addOrUpdateScanStateModelForSite(site: SiteModel, scanStateModel: ScanStateModel) {
+        scanSqlUtils.replaceScanState(site, scanStateModel)
+        threatSqlUtils.replaceThreatsForSite(site, scanStateModel.threats ?: emptyList())
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
@@ -84,9 +89,8 @@ class ScanStore @Inject constructor(
         return if (payload.error != null) {
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
-            if (payload.scanStateModel != null) {
-                scanSqlUtils.replaceScanState(payload.site, payload.scanStateModel)
-                threatSqlUtils.replaceThreatsForSite(payload.site, payload.scanStateModel.threats ?: emptyList())
+            payload.scanStateModel?.let {
+                addOrUpdateScanStateModelForSite(payload.site, payload.scanStateModel)
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
