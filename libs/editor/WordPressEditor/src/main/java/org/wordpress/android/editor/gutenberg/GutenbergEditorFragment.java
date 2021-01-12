@@ -66,6 +66,7 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendBu
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
+import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnFocalPointPickerTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
@@ -392,6 +393,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
                         showCancelMediaCollectionSaveDialog(mediaFiles);
+                    }
+                },
+                new OnFocalPointPickerTooltipShownEventListener() {
+                    @Override
+                    public void onSetFocalPointPickerTooltipShown(boolean tooltipShown) {
+                        mEditorFragmentListener.onGutenbergEditorSetFocalPointPickerTooltipShown(tooltipShown);
+                    }
+
+                    @Override
+                    public boolean onRequestFocalPointPickerTooltipShown() {
+                        return mEditorFragmentListener.onGutenbergEditorRequestFocalPointPickerTooltipShown();
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
