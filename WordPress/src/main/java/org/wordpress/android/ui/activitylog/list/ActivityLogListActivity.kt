@@ -3,7 +3,8 @@ package org.wordpress.android.ui.activitylog.list
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
-import kotlinx.android.synthetic.main.toolbar_main.*
+import android.view.View
+import kotlinx.android.synthetic.main.activity_log_list_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
@@ -26,6 +27,7 @@ class ActivityLogListActivity : LocaleAwareActivity(),
 
         if (intent.getSerializableExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY) as? Boolean == true) {
             setTitle(R.string.backup)
+            activity_type_filter.visibility = View.GONE
         }
 
         setSupportActionBar(toolbar_main)
