@@ -249,4 +249,32 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         // assert
         assertThat(viewModel.mediaFilesUris).isNotNull
     }
+
+    @Test
+    fun `if editPostRepository does not have a post then vm start() returns false`() {
+        // arrange
+        whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(null)
+
+        // act
+        val result = viewModel.start(site, editPostRepository, LocalId(2), mock(), mock())
+
+        // assert
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `if editPostRepository does have a post then vm start() returns true`() {
+        // arrange
+        whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(mock())
+
+        // act
+        val result = viewModel.start(site, editPostRepository, LocalId(2), mock(), mock())
+
+        // assert
+        assertThat(result).isTrue()
+    }
 }
