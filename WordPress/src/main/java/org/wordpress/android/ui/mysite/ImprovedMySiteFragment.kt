@@ -201,7 +201,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
                     is OpenCropActivity -> startCropActivity(action.imageUri)
                     is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-                    is OpenBackup -> Unit // Do nothing. TODO: Launch 'Backups' screen.
+                    is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)

@@ -55,6 +55,8 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+const val ACTIVITY_LOG_REWINDABLE_ONLY_KEY = "activity_log_rewindable_only"
+
 private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
 private const val ONE_SECOND_IN_MILLIS = 1000
 private const val TIMEZONE_GMT_0 = "GMT+0"

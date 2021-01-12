@@ -48,6 +48,7 @@ import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.main.MeActivity;
@@ -76,7 +77,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -124,6 +124,7 @@ import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNF
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
 public class ActivityLauncher {
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
@@ -602,6 +603,18 @@ public class ActivityLauncher {
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
+    public static void viewBackupList(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
+        Intent intent = new Intent(activity, ActivityLogListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, true);
         activity.startActivity(intent);
     }
 
