@@ -1052,6 +1052,8 @@
 
     <!-- scan -->
     <string name="scan">Scan</string>
+    <string name="scan_history">Scan History</string>
+    <string name="scan_history_menu_title">History</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
