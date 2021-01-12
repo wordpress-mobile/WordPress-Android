@@ -346,8 +346,9 @@ dependencies {
     // A starting point might be the fact that the
     // @wordpress_react-native-bridge-release AAR contains only the
     // -release.aar version of Hermes in its libs folder
-    debugRuntimeOnly files('./../libs/hermes/hermes-debug.aar')
-    releaseRuntimeOnly files('./../libs/hermes/hermes-release.aar')
+    def hermesPath = './../libs/hermes/'
+    debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
+    releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
 
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
