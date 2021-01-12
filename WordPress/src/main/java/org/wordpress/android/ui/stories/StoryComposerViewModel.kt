@@ -26,6 +26,8 @@ import org.wordpress.android.ui.posts.PostEditorAnalyticsSession.Outcome.SAVE
 import org.wordpress.android.ui.posts.PostEditorAnalyticsSessionWrapper
 import org.wordpress.android.ui.posts.SavePostToDbUseCase
 import org.wordpress.android.ui.stories.usecase.SetUntitledStoryTitleIfTitleEmptyUseCase
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
@@ -84,6 +86,7 @@ class StoryComposerViewModel @Inject constructor(
 
         // Ensure we have a valid post
         if (!editPostRepository.hasPost()) {
+            AppLog.e(T.EDITOR, "StoryComposerViewModel's EditPostRepository has no Post loaded: " + postId.value)
             return false
         }
 
