@@ -181,7 +181,11 @@ class ActivityLogStoreTest {
         whenever(activityLogSqlUtils.getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING))
                 .thenReturn(activityModels)
 
-        val activityModelsFromDb = activityLogStore.getActivityLogForSite(siteModel, ascending = false)
+        val activityModelsFromDb = activityLogStore.getActivityLogForSite(
+                site = siteModel,
+                rewindableOnly = false,
+                ascending = false
+        )
 
         verify(activityLogSqlUtils).getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
         assertEquals(activityModels, activityModelsFromDb)
