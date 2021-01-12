@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
@@ -20,12 +21,9 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType.BACKUP_PROGRESS
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -48,8 +46,8 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
-    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
 
     fun start(
         site: SiteModel,
@@ -72,11 +70,11 @@ class BackupDownloadProgressViewModel @Inject constructor(
     }
 
     private fun initSources() {
-        parentViewModel.addSnackbarMessageSource(snackbarEvents)
+        parentViewModel.addErrorMessageSource(errorEvents)
     }
 
     private fun initView() {
-        _uiState.value = Content(
+        _uiState.value = UiState(
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = 0,
                         published = backupDownloadState.published as Date,
@@ -100,13 +98,13 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private fun handleState(state: BackupDownloadRequestState) {
         when (state) {
             is NetworkUnavailable -> {
-                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+                _errorEvents.postValue(Event(BackupDownloadErrorTypes.NetworkUnavailable))
             }
             is RemoteRequestFailure -> {
-                _snackbarEvents.postValue(Event(GenericFailureMsg))
+                _errorEvents.postValue(Event(BackupDownloadErrorTypes.RemoteRequestFailure))
             }
             is Progress -> {
-                (_uiState.value as? Content)?.let { content ->
+                _uiState.value?.let { content ->
                     val updatedList = content.items.map { contentState ->
                         if (contentState.type == BACKUP_PROGRESS) {
                             contentState as ProgressState
@@ -133,20 +131,10 @@ class BackupDownloadProgressViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        // todo: annmarie - implement the onNotifyClick
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Notified me clicked"))))
+        parentViewModel.onBackupDownloadDetailsCanceled()
     }
 
-    companion object {
-        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
-        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.backup_download_generic_failure))
-    }
-
-    sealed class UiState {
-        data class Error(val message: String) : UiState()
-
-        data class Content(
-            val items: List<JetpackListItemState>
-        ) : UiState()
-    }
+    data class UiState(
+        val items: List<JetpackListItemState>
+    )
 }

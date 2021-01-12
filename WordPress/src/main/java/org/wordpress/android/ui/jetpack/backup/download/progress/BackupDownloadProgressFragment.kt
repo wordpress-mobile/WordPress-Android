@@ -12,11 +12,9 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Error
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.progress.adapters.BackupDownloadProgressAdapter
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
@@ -60,12 +58,7 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadProgressViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-            when (uiState) {
-                is Content -> showContent(uiState)
-                is Error -> ToastUtils.showToast(requireContext(), "Implement Error")
-            }
-        })
+        viewModel.uiState.observe(viewLifecycleOwner, { showView(it) })
 
         val (site, state) = when {
             arguments != null -> {
@@ -80,8 +73,8 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
         viewModel.start(site, state, parentViewModel)
     }
 
-    private fun showContent(content: Content) {
-        ((recycler_view.adapter) as BackupDownloadProgressAdapter).update(content.items)
+    private fun showView(uiState: UiState) {
+        ((recycler_view.adapter) as BackupDownloadProgressAdapter).update(uiState.items)
     }
 
     companion object {

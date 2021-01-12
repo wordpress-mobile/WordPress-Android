@@ -466,6 +466,7 @@
                     <!--Scan-->
                     <LinearLayout
                         android:id="@+id/row_scan"
+                        android:visibility="gone"
                         style="@style/MySiteListRowLayout">
 
                         <ImageView

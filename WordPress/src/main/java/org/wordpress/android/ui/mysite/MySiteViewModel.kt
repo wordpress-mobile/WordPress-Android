@@ -22,13 +22,14 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
@@ -88,6 +89,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
@@ -121,8 +123,9 @@ class MySiteViewModel
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
     private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val scanStatusService: ScanStatusService,
-    private val displayUtilsWrapper: DisplayUtilsWrapper
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val scanFeatureConfig: ScanFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _scanAvailable = MediatorLiveData<Boolean>()
@@ -148,7 +151,7 @@ class MySiteViewModel
     ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable ->
         site?.takeIf { site.id != currentSiteId }?.let {
             _scanAvailable.value = false
-            requestScanAvailableStatus(site)
+            updateScanItemState(site)
             currentSiteId = site.id
         }
 
@@ -194,15 +197,13 @@ class MySiteViewModel
         UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
-    init {
-        _scanAvailable.addSource(scanStatusService.scanAvailable) {
-            _scanAvailable.value = it == true
+    private fun updateScanItemState(site: SiteModel) {
+        if (scanFeatureConfig.isEnabled()) {
+            launch {
+                val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                _scanAvailable.value = capabilities.find { it == JetpackCapability.SCAN } != null
+            }
         }
-    }
-
-    private fun requestScanAvailableStatus(site: SiteModel) {
-        scanStatusService.stop()
-        scanStatusService.start(site)
     }
 
     private fun onItemClick(action: ListItemAction) {
@@ -447,7 +448,6 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
-        scanStatusService.stop()
         super.onCleared()
     }
 

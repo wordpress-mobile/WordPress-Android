@@ -83,6 +83,12 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             }
         })
 
+        viewModel.errorEvents.observe(this, {
+            it?.applyIfNotHandled {
+                viewModel.transitionToError(this)
+            }
+        })
+
         viewModel.wizardFinishedObservable.observe(this, {
             it.applyIfNotHandled {
                 val intent = Intent()
