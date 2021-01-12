@@ -42,7 +42,6 @@ class ScanViewModelTest : BaseUnitTest() {
         viewModel = ScanViewModel(
             scanStateItemsBuilder,
             fetchScanStateUseCase,
-            TEST_DISPATCHER,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))

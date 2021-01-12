@@ -5,11 +5,9 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
@@ -25,8 +23,7 @@ import javax.inject.Named
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
     private val fetchScanStateUseCase: FetchScanStateUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -50,7 +47,6 @@ class ScanViewModel @Inject constructor(
     private fun fetchScanState() {
         launch {
             fetchScanStateUseCase.fetchScanState(site = site)
-                .flowOn(bgDispatcher)
                 .collect { state ->
                     when (state) {
                         is FetchScanState.Success -> updateUiState(buildContentUiState(state.scanStateModel))
