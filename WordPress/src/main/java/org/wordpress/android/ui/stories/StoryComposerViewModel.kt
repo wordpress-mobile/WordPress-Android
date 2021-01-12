@@ -69,7 +69,7 @@ class StoryComposerViewModel @Inject constructor(
         postId: LocalId,
         postEditorAnalyticsSession: PostEditorAnalyticsSession?,
         notificationType: NotificationType?
-    ) {
+    ): Boolean {
         this.editPostRepository = editPostRepository
         this.site = site
 
@@ -82,6 +82,11 @@ class StoryComposerViewModel @Inject constructor(
             editPostRepository.loadPostByLocalPostId(postId.value)
         }
 
+        // Ensure we have a valid post
+        if (!editPostRepository.hasPost()) {
+            return false
+        }
+
         setupPostEditorAnalyticsSession(postEditorAnalyticsSession)
 
         notificationType?.let {
@@ -90,6 +95,8 @@ class StoryComposerViewModel @Inject constructor(
 
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.STARTED
         updateStoryPostWithChanges()
+
+        return true
     }
 
     private fun setupPostEditorAnalyticsSession(postEditorAnalyticsSession: PostEditorAnalyticsSession?) {
