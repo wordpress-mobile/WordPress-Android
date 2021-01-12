@@ -192,6 +192,22 @@ class ActivityLogStoreTest {
     }
 
     @Test
+    fun returnRewindableOnlyActivitiesFromDb() {
+        val rewindableActivityModels = listOf<ActivityLogModel>(mock())
+        whenever(activityLogSqlUtils.getRewindableActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING))
+                .thenReturn(rewindableActivityModels)
+
+        val activityModelsFromDb = activityLogStore.getActivityLogForSite(
+                site = siteModel,
+                rewindableOnly = true,
+                ascending = false
+        )
+
+        verify(activityLogSqlUtils).getRewindableActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
+        assertEquals(rewindableActivityModels, activityModelsFromDb)
+    }
+
+    @Test
     fun storeFetchedRewindStatusToDb() = test {
         val rewindStatusModel = mock<RewindStatusModel>()
         val payload = FetchedRewindStatePayload(rewindStatusModel, siteModel)
