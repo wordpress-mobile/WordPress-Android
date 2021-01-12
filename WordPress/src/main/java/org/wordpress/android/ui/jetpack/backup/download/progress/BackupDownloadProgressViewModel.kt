@@ -11,6 +11,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
@@ -45,8 +46,8 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
-    private val _errorEvents = MediatorLiveData<Event<Boolean>>()
-    val errorEvents: LiveData<Event<Boolean>> = _errorEvents
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
 
     fun start(
         site: SiteModel,
@@ -97,10 +98,10 @@ class BackupDownloadProgressViewModel @Inject constructor(
     private fun handleState(state: BackupDownloadRequestState) {
         when (state) {
             is NetworkUnavailable -> {
-                _errorEvents.postValue(Event(true))
+                _errorEvents.postValue(Event(BackupDownloadErrorTypes.NetworkUnavailable))
             }
             is RemoteRequestFailure -> {
-                _errorEvents.postValue(Event(true))
+                _errorEvents.postValue(Event(BackupDownloadErrorTypes.RemoteRequestFailure))
             }
             is Progress -> {
                 _uiState.value?.let { content ->

@@ -55,7 +55,7 @@ class BackupDownloadCompleteViewModel @Inject constructor(
     }
 
     private fun initView() {
-        if (backupDownloadState.isError) {
+        if (backupDownloadState.errorType != null) {
             parentViewModel.setToolbarState(ErrorToolbarState())
             _uiState.value = UiState(
                 items = stateListItemBuilder.buildCompleteListStateErrorItems(
