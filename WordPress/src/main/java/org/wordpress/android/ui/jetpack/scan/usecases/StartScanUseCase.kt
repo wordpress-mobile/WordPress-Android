@@ -8,7 +8,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.SCANNING
 import org.wordpress.android.fluxc.store.ScanStore
-import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.Failure
@@ -44,7 +43,7 @@ class StartScanUseCase @Inject constructor(
 
     private suspend fun FlowCollector<StartScanState>.updateScanScanningStateInDb(site: SiteModel) {
         val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(state = SCANNING)
-        scanStore.storeScanState(FetchedScanStatePayload(model, site))
+        scanStore.addOrUpdateScanStateModelForSite(site, model)
         emit(ScanningStateUpdatedInDb(model))
     }
 

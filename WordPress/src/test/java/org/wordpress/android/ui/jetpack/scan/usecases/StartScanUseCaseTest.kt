@@ -55,17 +55,16 @@ class StartScanUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site, when scan is started, then scanning scan state is updated in db and returned`() =
+    fun `when scan start is triggered, then scan starts optimistically by updating scanning scan state in db`() =
         testWithSuccessResponse {
-            val scanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE)
+            val scanStateModelInIdleState = ScanStateModel(state = ScanStateModel.State.IDLE)
+            val expectedScanStateModel = scanStateModelInIdleState.copy(state = ScanStateModel.State.SCANNING)
             whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateModel)
 
             val result = useCase.startScan(site).toList(mutableListOf())
 
-            verify(scanStore).storeScanState(any())
-            assertThat(result).contains(
-                StartScanState.ScanningStateUpdatedInDb(scanStateModel.copy(state = ScanStateModel.State.SCANNING))
-            )
+            verify(scanStore).addOrUpdateScanStateModelForSite(site, expectedScanStateModel)
+            assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
         }
 
     @Test
