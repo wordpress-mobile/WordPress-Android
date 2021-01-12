@@ -495,7 +495,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        WPSnackbar snackbar = WPSnackbar.make(
+        Snackbar snackbar = WPSnackbar.make(
                 getSnackbarParent(),
                 mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG

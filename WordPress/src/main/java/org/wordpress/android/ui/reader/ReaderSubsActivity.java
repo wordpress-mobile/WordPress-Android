@@ -456,7 +456,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     private void showInfoSnackbar(String text) {
         View bottomView = findViewById(R.id.layout_bottom);
 
-        WPSnackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
         snackbar.setAnchorView(bottomView);
         snackbar.show();
     }
