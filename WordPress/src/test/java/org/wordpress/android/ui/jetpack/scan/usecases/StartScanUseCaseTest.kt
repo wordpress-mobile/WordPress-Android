@@ -69,7 +69,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given site, when scan is started, then RemoteRequestFailure is returned on failure`() =
+    fun `given server is unavailable, when scan is started, then RemoteRequestFailure is returned`() =
         testWithErrorResponse {
             val result = useCase.startScan(site).toList(mutableListOf())
 
