@@ -4,7 +4,6 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
-import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
