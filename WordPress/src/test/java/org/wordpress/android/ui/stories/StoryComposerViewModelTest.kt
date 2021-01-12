@@ -17,6 +17,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
+import org.wordpress.android.fluxc.model.PostImmutableModel
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
@@ -109,16 +110,20 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         // arrange
         val postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
         whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(mock())
+
+        whenever(
                 postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
                         any(),
-                        anyOrNull(),
+                        any(),
                         anyOrNull(),
                         any()
                 )
         ).thenReturn(mock())
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), postEditorAnalyticsSession, mock())
+        viewModel.start(site, editPostRepository, LocalId(1), postEditorAnalyticsSession, mock())
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(1)).getNewPostEditorAnalyticsSession(
