@@ -2,14 +2,15 @@ package org.wordpress.android.ui.jetpack.scan.history
 
 import android.os.Bundle
 import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ViewPagerFragment
 import javax.inject.Inject
 
-class ScanHistoryListFragment : Fragment(R.layout.scan_history_list_fragment) {
+class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanHistoryListViewModel
 
@@ -47,6 +48,8 @@ class ScanHistoryListFragment : Fragment(R.layout.scan_history_list_fragment) {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
     }
+
+    override fun getScrollableViewForUniqueIdProvision(): View? = nested_scroll_view
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)

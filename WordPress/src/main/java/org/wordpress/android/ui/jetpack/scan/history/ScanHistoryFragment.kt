@@ -13,9 +13,10 @@ import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import javax.inject.Inject
 
-class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment) {
+class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanHistoryViewModel
 
@@ -90,5 +91,9 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment) {
         override fun getItemCount(): Int = 3
 
         override fun createFragment(position: Int): Fragment = ScanHistoryListFragment()
+    }
+
+    override fun onScrollableViewInitialized(viewId: Int) {
+        appbar_main.liftOnScrollTargetViewId = viewId
     }
 }
