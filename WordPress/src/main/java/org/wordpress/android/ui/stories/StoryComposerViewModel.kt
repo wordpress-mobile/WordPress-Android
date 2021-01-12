@@ -45,7 +45,7 @@ class StoryComposerViewModel @Inject constructor(
 
     private lateinit var editPostRepository: EditPostRepository
     private lateinit var site: SiteModel
-    private lateinit var postEditorAnalyticsSession: PostEditorAnalyticsSession
+    private var postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
 
     private val _mediaFilesUris = MutableLiveData<List<Uri>>()
     val mediaFilesUris: LiveData<List<Uri>> = _mediaFilesUris
@@ -104,7 +104,7 @@ class StoryComposerViewModel @Inject constructor(
                 editPostRepository.getPost(),
                 site
         )
-        this.postEditorAnalyticsSession.start(null)
+        this.postEditorAnalyticsSession?.start(null)
     }
 
     private fun createPostEditorAnalyticsSessionTracker(
@@ -124,7 +124,7 @@ class StoryComposerViewModel @Inject constructor(
     }
 
     fun onStorySaved() {
-        postEditorAnalyticsSession.setOutcome(SAVE)
+        postEditorAnalyticsSession?.setOutcome(SAVE)
     }
 
     fun onStoryDiscarded(deleteDiscardedPost: Boolean) {
@@ -132,7 +132,7 @@ class StoryComposerViewModel @Inject constructor(
             // delete empty post from database
             dispatcher.dispatch(PostActionBuilder.newRemovePostAction(editPostRepository.getEditablePost()))
         }
-        postEditorAnalyticsSession.setOutcome(CANCEL)
+        postEditorAnalyticsSession?.setOutcome(CANCEL)
     }
 
     private fun updateStoryPostWithChanges() {
@@ -161,13 +161,13 @@ class StoryComposerViewModel @Inject constructor(
 
     fun onSubmitButtonClicked() {
         setUntitledStoryTitleIfTitleEmptyUseCase.setUntitledStoryTitleIfTitleEmpty(editPostRepository)
-        postEditorAnalyticsSession.setOutcome(PUBLISH)
+        postEditorAnalyticsSession?.setOutcome(PUBLISH)
         _submitButtonClicked.postValue(Event(Unit))
     }
 
     override fun onCleared() {
         super.onCleared()
         lifecycleOwner.lifecycleRegistry.currentState = Lifecycle.State.DESTROYED
-        postEditorAnalyticsSession.end()
+        postEditorAnalyticsSession?.end()
     }
 }
