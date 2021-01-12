@@ -52,6 +52,7 @@ import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadP
 import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -473,6 +474,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ScanFragment object);
 
     void inject(ScanHistoryFragment object);
+
+    void inject(ScanHistoryListFragment object);
 
     void inject(ThreatDetailsFragment object);
 
