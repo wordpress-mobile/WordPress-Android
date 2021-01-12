@@ -6,6 +6,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.scan_history_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -21,10 +23,21 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initViewModel(getSite(savedInstanceState))
+        // TODO malinjir use vm
+        updateTabs()
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
+    }
+
+    private fun updateTabs() {
+        val adapter = ScanHistoryTabAdapter(this)
+        view_pager.adapter = adapter
+
+        TabLayoutMediator(tab_layout, view_pager) { tab, position ->
+            tab.text = "Tab $position"
+        }.attach()
     }
 
     private fun initViewModel(site: SiteModel) {
@@ -70,5 +83,12 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment) {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    // todo malinjir create real tabs
+    private class ScanHistoryTabAdapter(parent: Fragment) : FragmentStateAdapter(parent) {
+        override fun getItemCount(): Int = 3
+
+        override fun createFragment(position: Int): Fragment = ScanHistoryListFragment()
     }
 }
