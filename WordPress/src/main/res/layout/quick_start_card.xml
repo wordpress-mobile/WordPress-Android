@@ -34,10 +34,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:maxLines="1"
             android:singleLine="true"
-            android:textAppearance="@style/WordPress.ToolBar.Title"
-            android:textSize="@dimen/text_sz_larger"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             tools:text="Quick Start card" />
 
         <ImageButton
