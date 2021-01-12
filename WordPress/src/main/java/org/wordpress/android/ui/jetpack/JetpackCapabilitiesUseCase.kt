@@ -41,7 +41,7 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     private suspend fun hasValidCache(remoteSiteId: Long): Boolean {
         return withContext(bgDispatcher) {
             val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-            lastUpdated > currentDateProvider.currentDate.time - MAX_CACHE_VALIDITY
+            lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
         }
     }
 

@@ -50,7 +50,7 @@ class JetpackCapabilitiesUseCaseTest {
         )
         event = OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null)
         whenever(appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(anyLong())).thenReturn(0)
-        whenever(currentTimeProvider.currentDate).thenReturn(Date(99999999))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(99999999))
     }
 
     @Test
@@ -83,7 +83,7 @@ class JetpackCapabilitiesUseCaseTest {
     @Test
     fun `cached value used, when not older than MAX_CACHE_VALIDITY`() = test {
         val expected = listOf(BACKUP, SCAN)
-        whenever(currentTimeProvider.currentDate).thenReturn(Date(MAX_CACHE_VALIDITY - 1))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(MAX_CACHE_VALIDITY - 1))
         whenever(appPrefsWrapper.getSiteJetpackCapabilities(SITE_ID)).thenReturn(expected)
 
         val result = useCase.getOrFetchJetpackCapabilities(SITE_ID)
@@ -93,7 +93,7 @@ class JetpackCapabilitiesUseCaseTest {
 
     @Test
     fun `fetch invoked, when older than MAX_CACHE_VALIDITY`() = test {
-        whenever(currentTimeProvider.currentDate).thenReturn(Date(MAX_CACHE_VALIDITY))
+        whenever(currentTimeProvider.currentDate()).thenReturn(Date(MAX_CACHE_VALIDITY))
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
         val result = useCase.getOrFetchJetpackCapabilities(SITE_ID)
