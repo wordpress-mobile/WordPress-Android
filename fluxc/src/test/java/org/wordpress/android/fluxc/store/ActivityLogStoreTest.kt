@@ -54,8 +54,6 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() = test {
-        val offset = 0
-
         val payload = FetchActivityLogPayload(siteModel)
         whenever(activityLogRestClient.fetchActivity(eq(payload), any(), any())).thenReturn(
                 FetchedActivityLogPayload(
@@ -70,7 +68,7 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, offset)
+        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, OFFSET)
     }
 
     @Test
@@ -411,7 +409,7 @@ class ActivityLogStoreTest {
     private suspend fun initRestClient(
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
-        offset: Int = 0,
+        offset: Int = OFFSET,
         number: Int = PAGE_SIZE,
         totalItems: Int = PAGE_SIZE
     ): Action<*> {
@@ -425,6 +423,7 @@ class ActivityLogStoreTest {
     }
 
     companion object {
+        private const val OFFSET = 0
         private const val PAGE_SIZE = 20
     }
 }
