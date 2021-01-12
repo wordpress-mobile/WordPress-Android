@@ -5,5 +5,5 @@ import javax.inject.Inject
 
 class CurrentTimeProvider
 @Inject constructor() {
-    val currentDate = Date()
+    fun currentDate() = Date()
 }

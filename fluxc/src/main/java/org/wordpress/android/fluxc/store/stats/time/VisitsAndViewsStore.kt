@@ -37,12 +37,12 @@ class VisitsAndViewsStore
         forced: Boolean = false
     ) = coroutineEngine.withDefaultContext(STATS, this, "fetchVisits") {
         val dateWithTimeZone = statsUtils.getFormattedDate(
-                currentTimeProvider.currentDate,
+                currentTimeProvider.currentDate(),
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         logProgress(granularity, "Site timezone: ${site.timezone}")
         try {
-            logProgress(granularity, "Current date: ${currentTimeProvider.currentDate}")
+            logProgress(granularity, "Current date: ${currentTimeProvider.currentDate()}")
         } catch (e: AssertionError) {
             // Workaround for a bug in Android that can cause crashes on Android 8.0 and 8.1
             logProgress(granularity, "Cannot print current date because of AssertionError: $e")
@@ -88,7 +88,7 @@ class VisitsAndViewsStore
         limitMode: LimitMode
     ): VisitsAndViewsModel? {
         val dateWithTimeZone = statsUtils.getFormattedDate(
-                currentTimeProvider.currentDate,
+                currentTimeProvider.currentDate(),
                 SiteUtils.getNormalizedTimezone(site.timezone)
         )
         return getVisits(site, granularity, limitMode, dateWithTimeZone)
