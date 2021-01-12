@@ -56,6 +56,10 @@ class ActivityLogSqlUtils
                 .map { it.build(formattableContentMapper) }
     }
 
+    fun getRewindableActivitiesForSite(site: SiteModel, @SelectQuery.Order order: Int): List<ActivityLogModel> {
+        return listOf()
+    }
+
     fun getActivityByRewindId(rewindId: String): ActivityLogModel? {
         return WellSql.select(ActivityLogBuilder::class.java)
                 .where()
