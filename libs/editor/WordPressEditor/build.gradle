@@ -99,6 +99,18 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
+
+    // Hermes is a React Native dependency that we somehow lost at runtime
+    // since moving to the Bintray binary for Gutenberg.
+    //
+    // FIXME: In the long run, we'll want to read this from the Gutenberg AAR.
+    //
+    // A starting point might be the fact that the
+    // @wordpress_react-native-bridge-release AAR contains only an empty file
+    // named hermes-release.aar in its libs folder.
+    def hermesPath = './libs/hermes/'
+    debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
+    releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
 }
 
 signing {

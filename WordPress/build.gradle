@@ -334,22 +334,6 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils' 
     }
 
-    // Hermes is a React Native dependency that we somehow lost at runtime
-    // since moving to the Bintray binary for Gutenberg.
-    //
-    // These cannot be defined in the WordPressEditor project itself, or we'll
-    // get a "Direct local .aar file dependencies are not supported when
-    // building an AAR." error.
-    //
-    // FIXME: In the long run, we'll want to read this from the Gutenberg AAR.
-    //
-    // A starting point might be the fact that the
-    // @wordpress_react-native-bridge-release AAR contains only the
-    // -release.aar version of Hermes in its libs folder
-    def hermesPath = './../libs/editor/WordPressEditor/libs/hermes/'
-    debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
-    releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
-
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
