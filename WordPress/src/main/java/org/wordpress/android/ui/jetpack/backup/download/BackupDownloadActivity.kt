@@ -88,7 +88,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
 
         viewModel.errorEvents.observe(this, {
             it?.applyIfNotHandled {
-                viewModel.transitionToError()
+                viewModel.transitionToError(this)
             }
         })
 

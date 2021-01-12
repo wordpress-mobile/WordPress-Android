@@ -40,7 +40,7 @@ data class BackupDownloadState(
     val downloadId: Long? = null,
     val published: Date? = null,
     val url: String? = null,
-    val isError: Boolean = false
+    val errorType: Int? = null
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>
@@ -70,8 +70,8 @@ class BackupDownloadViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    private val _errorEvents = MediatorLiveData<Event<Boolean>>()
-    val errorEvents: LiveData<Event<Boolean>> = _errorEvents
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
 
     private val _navigationEvents = MediatorLiveData<Event<BackupDownloadNavigationEvents>>()
     val navigationEvents: LiveData<Event<BackupDownloadNavigationEvents>> = _navigationEvents
@@ -96,7 +96,7 @@ class BackupDownloadViewModel @Inject constructor(
         }
     }
 
-    fun addErrorMessageSource(errorEvents: LiveData<Event<Boolean>>) {
+    fun addErrorMessageSource(errorEvents: LiveData<Event<BackupDownloadErrorTypes>>) {
         _errorEvents.addSource(errorEvents) { event ->
             _errorEvents.value = event
         }
@@ -137,7 +137,7 @@ class BackupDownloadViewModel @Inject constructor(
                     rewindId = null,
                     downloadId = null,
                     url = null,
-                    isError = false
+                    errorType = null
             )
         }
     }
@@ -163,8 +163,8 @@ class BackupDownloadViewModel @Inject constructor(
         _toolbarStateObservable.value = toolbarState
     }
 
-    fun transitionToError() {
-        backupDownloadState = backupDownloadState.copy(isError = true)
+    fun transitionToError(errorType: BackupDownloadErrorTypes) {
+        backupDownloadState = backupDownloadState.copy(errorType = errorType.id)
         wizardManager.setCurrentStepIndex(BackupDownloadStep.indexForErrorTransition())
         wizardManager.showNextStep()
     }

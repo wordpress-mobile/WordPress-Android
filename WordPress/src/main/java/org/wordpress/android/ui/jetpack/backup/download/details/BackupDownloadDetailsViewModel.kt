@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
@@ -56,8 +57,8 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
-    private val _errorEvents = MediatorLiveData<Event<Boolean>>()
-    val errorEvents: LiveData<Event<Boolean>> = _errorEvents
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
 
     private fun extractPublishedDate(): Date {
         return _uiState.value?.activityLogModel?.published as Date
@@ -97,7 +98,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                         )
                 )
             } else {
-                _errorEvents.value = Event(true)
+                _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
             }
         }
     }
@@ -123,7 +124,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private fun onCreateDownloadClick() {
         val (rewindId, types) = getParams()
         if (rewindId == null) {
-            _errorEvents.value = Event(true)
+            _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
         } else {
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(

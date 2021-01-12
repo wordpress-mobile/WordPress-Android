@@ -23,7 +23,7 @@ class BackupDownloadCompleteStateListItemBuilder @Inject constructor() {
         onDownloadFileClick: () -> Unit,
         onShareLinkClick: () -> Unit
     ): List<JetpackListItemState> {
-        return mutableListOf(
+        return listOf(
                 buildIconState(),
                 buildHeaderState(),
                 buildDescriptionState(published),
@@ -71,7 +71,7 @@ class BackupDownloadCompleteStateListItemBuilder @Inject constructor() {
             UiStringRes(R.string.backup_download_complete_info)
     )
 
-    fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = mutableListOf(
+    fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
                 buildErrorIconState(),
                 buildErrorDescriptionState(),
             buildErrorDoneActionState(onDoneClick)
