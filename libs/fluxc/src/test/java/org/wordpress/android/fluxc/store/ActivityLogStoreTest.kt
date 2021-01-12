@@ -54,7 +54,6 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() = test {
-        val number = 20
         val offset = 0
 
         val payload = FetchActivityLogPayload(siteModel)
@@ -71,13 +70,11 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivity(payload, number, offset)
+        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, offset)
     }
 
     @Test
     fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() = test {
-        val number = 20
-
         val payload = FetchActivityLogPayload(siteModel, loadMore = true)
         whenever(activityLogRestClient.fetchActivity(eq(payload), any(), any())).thenReturn(
                 FetchedActivityLogPayload(
@@ -96,7 +93,7 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivity(payload, number, existingActivities.size)
+        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, existingActivities.size)
     }
 
     @Test
@@ -415,8 +412,8 @@ class ActivityLogStoreTest {
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
         offset: Int = 0,
-        number: Int = 20,
-        totalItems: Int = 20
+        number: Int = PAGE_SIZE,
+        totalItems: Int = PAGE_SIZE
     ): Action<*> {
         val requestPayload = FetchActivityLogPayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(requestPayload)
@@ -425,5 +422,9 @@ class ActivityLogStoreTest {
         whenever(activityLogRestClient.fetchActivity(requestPayload, number, offset)).thenReturn(payload)
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
         return action
+    }
+
+    companion object {
+        private const val PAGE_SIZE = 20
     }
 }
