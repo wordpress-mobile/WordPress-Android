@@ -78,6 +78,7 @@ class ActivityLogStore
     @SuppressLint("WrongConstant")
     fun getActivityLogForSite(
         site: SiteModel,
+        rewindableOnly: Boolean = false,
         ascending: Boolean = true
     ): List<ActivityLogModel> {
         val order = if (ascending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
