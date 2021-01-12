@@ -130,6 +130,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+        GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -887,6 +888,14 @@ public class AppPrefs {
 
     public static void removeSupportName() {
         remove(DeletablePrefKey.SUPPORT_NAME);
+    }
+
+    public static void setGutenbergFocalPointPickerTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, tooltipShown);
+    }
+
+    public static boolean getGutenbergFocalPointPickerTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
     }
 
     /*
