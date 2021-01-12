@@ -4,8 +4,8 @@ import org.wordpress.android.util.wizard.WizardStep
 import javax.inject.Inject
 import javax.inject.Singleton
 
-enum class BackupDownloadStep : WizardStep {
-    DETAILS, PROGRESS, COMPLETE;
+enum class BackupDownloadStep(val id: Int) : WizardStep {
+    DETAILS(0), PROGRESS(1), COMPLETE(2);
 
     companion object {
         fun fromString(input: String): BackupDownloadStep = when (input) {
@@ -14,6 +14,8 @@ enum class BackupDownloadStep : WizardStep {
             "backup_download_complete" -> COMPLETE
             else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
         }
+
+        fun indexForErrorTransition(): Int = PROGRESS.id
     }
 }
 

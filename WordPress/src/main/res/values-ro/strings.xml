@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-17 14:20:10+0000
+Translation-Revision-Date: 2020-12-30 20:40:13+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
@@ -61,7 +61,7 @@ Language: ro
     <string name="dialog_edit_story_unavailable_title">Nu pot edita narațiunea</string>
     <string name="dialog_edit_story_limited_message">Această narațiune a fost editată pe un alt dispozitiv, iar posibilitatea de a edita anumite obiecte poate fi limitată.</string>
     <string name="dialog_edit_story_limited_title">Editare limitată pentru narațiuni</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Conținutul media a fost înlăturat. Încearcă să-ți editezi narațiunea.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Elementul media a fost înlăturat. Încearcă să-ți recreezi narațiunea.</string>
     <string name="color_picker_label_background">Fundal</string>
     <string name="color_picker_label_text">Text</string>
     <string name="dialog_discard_story_ok_button_edit">Renunță</string>

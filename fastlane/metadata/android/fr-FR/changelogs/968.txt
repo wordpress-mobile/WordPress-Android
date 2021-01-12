@@ -1,5 +1,0 @@
-16.3 :
-Nous sommes heureux d’annoncer l’ajout de plusieurs nouvelles fonctionnalités à l’application mobile WordPress :
-- diaporama photos ou vidéo en plein écran pour les sites WP.com et Jetpack ;
-- possibilité de choisir le design d’une page d’accueil lors de la création d’un site WP.com ;
-- bouton S’abonner/Se désabonner de la section Commentaires d’un site (non pris en charge pour les sites auto-hébergés non connectés à Jetpack).

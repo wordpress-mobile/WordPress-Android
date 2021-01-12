@@ -12,6 +12,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButton
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -35,6 +36,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
+        val progress = model.currentStatus?.progress ?: 0
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
@@ -47,9 +49,9 @@ class ScanStateListItemsBuilder @Inject constructor(
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
-            ScanStateModel.State.SCANNING -> buildScanningStateItems()
+            ScanStateModel.State.SCANNING -> buildScanningStateItems(progress)
             ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
-                buildScanningStateItems() // TODO: ashiagr filter out invalid states
+                buildScanningStateItems(progress) // TODO: ashiagr filter out invalid states
         }
     }
 
@@ -104,16 +106,19 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
-    private fun buildScanningStateItems(): List<JetpackListItemState> {
+    private fun buildScanningStateItems(progress: Int): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_scan_scanning)
-        val scanHeader = HeaderState(UiStringRes(R.string.scan_scanning_title))
+        val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
+        val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
+        val scanProgress = buildProgressState(progress)
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
+        items.add(scanProgress)
 
         return items
     }
@@ -121,6 +126,14 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildScanIcon(@DrawableRes icon: Int) = IconState(
         icon = icon,
         contentDescription = UiStringRes(R.string.scan_state_icon)
+    )
+
+    private fun buildProgressState(progress: Int) = ProgressState(
+        progress = progress,
+        label = UiStringResWithParams(
+            R.string.backup_download_progress_label, // TODO ashiagr replace label
+            listOf(UiStringText(progress.toString()))
+        )
     )
 
     private fun buildScanButtonAction(@StringRes titleRes: Int, onClick: () -> Unit) = ActionButtonState(

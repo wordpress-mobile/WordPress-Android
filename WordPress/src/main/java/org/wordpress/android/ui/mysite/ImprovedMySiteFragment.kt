@@ -27,14 +27,18 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -77,6 +81,7 @@ import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
+import org.wordpress.android.util.setVisible
 import java.io.File
 import javax.inject.Inject
 
@@ -142,6 +147,8 @@ class ImprovedMySiteFragment : Fragment(),
             }
         }
 
+        actionable_empty_view.button.setOnClickListener { viewModel.onAddSitePressed() }
+
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -153,7 +160,10 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
-                loadData(uiModel.items)
+                when (val state = uiModel.state) {
+                    is State.SiteSelected -> loadData(state.items)
+                    is State.NoSites -> loadEmptyView(state.shouldShowImage)
+                }
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
@@ -198,6 +208,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
                     is OpenCropActivity -> startCropActivity(action.imageUri)
                     is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
+                    is OpenBackup -> Unit // Do nothing. TODO: Launch 'Backups' screen.
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
@@ -240,6 +251,7 @@ class ImprovedMySiteFragment : Fragment(),
                             action.site,
                             CTA_DOMAIN_CREDIT_REDEMPTION
                     )
+                    is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
                 }
             }
         })
@@ -374,11 +386,19 @@ class ImprovedMySiteFragment : Fragment(),
     }
 
     private fun loadData(items: List<MySiteItem>) {
+        recycler_view.setVisible(true)
+        actionable_empty_view.setVisible(false)
         if (recycler_view.adapter == null) {
             recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
         }
         val adapter = recycler_view.adapter as MySiteAdapter
         adapter.loadData(items)
+    }
+
+    private fun loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+        recycler_view.setVisible(false)
+        actionable_empty_view.setVisible(true)
+        actionable_empty_view.image.setVisible(shouldShowEmptyViewImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

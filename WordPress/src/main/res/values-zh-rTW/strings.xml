@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-23 12:54:09+0000
+Translation-Revision-Date: 2021-01-06 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
@@ -61,7 +61,7 @@ Language: zh_TW
     <string name="dialog_edit_story_unavailable_title">無法編輯限時動態</string>
     <string name="dialog_edit_story_limited_message">這個限時動態已在不同裝置上編輯過，因此特定物件的編輯功能可能受到限制。</string>
     <string name="dialog_edit_story_limited_title">限時動態編輯功能受限</string>
-    <string name="cannot_retry_deleted_media_item_fatal">媒體已移除。 請嘗試編輯你的限時動態。</string>
+    <string name="cannot_retry_deleted_media_item_fatal">已移除媒體。 請嘗試重新建立你的限時動態。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">文字</string>
     <string name="dialog_discard_story_ok_button_edit">捨棄</string>
