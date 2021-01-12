@@ -53,7 +53,6 @@ class ScanViewModel @Inject constructor(
     private fun fetchScanState() {
         launch {
             fetchScanStateUseCase.fetchScanState(site = site)
-                .flowOn(bgDispatcher)
                 .collect { state ->
                     when (state) {
                         is FetchScanState.Success -> updateUiState(buildContentUiState(state.scanStateModel))
