@@ -183,8 +183,8 @@ class ActivityLogStoreTest {
 
         val activityModelsFromDb = activityLogStore.getActivityLogForSite(
                 site = siteModel,
-                rewindableOnly = false,
-                ascending = false
+                ascending = false,
+                rewindableOnly = false
         )
 
         verify(activityLogSqlUtils).getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
@@ -199,8 +199,8 @@ class ActivityLogStoreTest {
 
         val activityModelsFromDb = activityLogStore.getActivityLogForSite(
                 site = siteModel,
-                rewindableOnly = true,
-                ascending = false
+                ascending = false,
+                rewindableOnly = true
         )
 
         verify(activityLogSqlUtils).getRewindableActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
