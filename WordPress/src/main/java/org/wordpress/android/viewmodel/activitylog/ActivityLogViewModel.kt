@@ -229,17 +229,25 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun refreshEmptyUiState() {
         if (rewindableOnly) {
-            if (currentDateRangeFilter != null) {
-                _emptyUiState.value = EmptyUiState.Backup.ActiveFilters
-            } else {
-                _emptyUiState.value = EmptyUiState.Backup.EmptyFilters
-            }
+            refreshBackupEmptyUiState()
         } else {
-            if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
-                _emptyUiState.value = EmptyUiState.ActiveFilters
-            } else {
-                _emptyUiState.value = EmptyUiState.EmptyFilters
-            }
+            refreshActivityLogEmptyUiState()
+        }
+    }
+
+    private fun refreshBackupEmptyUiState() {
+        if (currentDateRangeFilter != null) {
+            _emptyUiState.value = EmptyUiState.Backup.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.Backup.EmptyFilters
+        }
+    }
+
+    private fun refreshActivityLogEmptyUiState() {
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            _emptyUiState.value = EmptyUiState.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.EmptyFilters
         }
     }
 
