@@ -177,19 +177,19 @@ class ScanRestClient(
             site,
             ScanStateErrorType.INVALID_RESPONSE
         )
-        var error: ScanStateErrorType? = null
+        var isError = false
         val threatModels = response.threats?.mapNotNull { threat ->
             val threatModel = when {
                 threat.id == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_ID
+                    isError = true
                     null
                 }
                 threat.signature == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_SIGNATURE
+                    isError = true
                     null
                 }
                 threat.firstDetected == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED
+                    isError = true
                     null
                 }
                 else -> {
@@ -197,15 +197,15 @@ class ScanRestClient(
                     if (threatStatus != ThreatStatus.UNKNOWN) {
                         threatMapper.map(threat)
                     } else {
-                        error = ScanStateErrorType.INVALID_RESPONSE
+                        isError = true
                         null
                     }
                 }
             }
             threatModel
         }
-        error?.let {
-            return buildScanStateErrorPayload(site, it)
+        if (isError) {
+            return buildScanStateErrorPayload(site, ScanStateErrorType.INVALID_RESPONSE)
         }
         val scanStateModel = ScanStateModel(
             state = state,
