@@ -175,21 +175,25 @@ class ScanRestClient(
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
         val state = State.fromValue(response.state) ?: return buildScanStateErrorPayload(
             site,
-            ScanStateErrorType.INVALID_RESPONSE
+            ScanStateError(ScanStateErrorType.INVALID_RESPONSE, "Unknown scan state")
         )
         var isError = false
+        var errorMsg: String? = null
         val threatModels = response.threats?.mapNotNull { threat ->
             val threatModel = when {
                 threat.id == null -> {
                     isError = true
+                    errorMsg = "Missing threat id"
                     null
                 }
                 threat.signature == null -> {
                     isError = true
+                    errorMsg = "Missing threat signature"
                     null
                 }
                 threat.firstDetected == null -> {
                     isError = true
+                    errorMsg = "Missing threat firstDetected"
                     null
                 }
                 else -> {
@@ -205,7 +209,7 @@ class ScanRestClient(
             threatModel
         }
         if (isError) {
-            return buildScanStateErrorPayload(site, ScanStateErrorType.INVALID_RESPONSE)
+            return buildScanStateErrorPayload(site, ScanStateError(ScanStateErrorType.INVALID_RESPONSE, errorMsg))
         }
         val scanStateModel = ScanStateModel(
             state = state,
@@ -257,6 +261,6 @@ class ScanRestClient(
         )
     }
 
-    private fun buildScanStateErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
-        FetchedScanStatePayload(ScanStateError(errorType), site)
+    private fun buildScanStateErrorPayload(site: SiteModel, errorType: ScanStateError) =
+        FetchedScanStatePayload(errorType, site)
 }
