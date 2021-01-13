@@ -15,17 +15,19 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 @InternalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getThreatModelUseCase: GetThreatModelUseCase
+    @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var builder: ThreatDetailsListItemsBuilder
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
 
     @Before
     fun setUp() {
-        viewModel = ThreatDetailsViewModel(getThreatModelUseCase, builder)
+        viewModel = ThreatDetailsViewModel(getThreatModelUseCase, selectedSiteRepository, builder)
     }
 
     @Test

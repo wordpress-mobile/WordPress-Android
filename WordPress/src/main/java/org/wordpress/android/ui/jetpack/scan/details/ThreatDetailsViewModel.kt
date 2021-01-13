@@ -5,16 +5,20 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import javax.inject.Inject
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
+    private val selectedSiteRepository: SelectedSiteRepository,
     private val builder: ThreatDetailsListItemsBuilder
 ) : ViewModel() {
+    private lateinit var site: SiteModel
     private var isStarted = false
     private var threatId: Long = 0
 
@@ -27,6 +31,7 @@ class ThreatDetailsViewModel @Inject constructor(
         }
         isStarted = true
         this.threatId = threatId
+        site = requireNotNull(selectedSiteRepository.getSelectedSite())
         getData()
     }
 
