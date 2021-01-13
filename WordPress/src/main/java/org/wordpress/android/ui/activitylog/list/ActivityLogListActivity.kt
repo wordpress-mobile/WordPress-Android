@@ -24,16 +24,29 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         (application as WordPress).component().inject(this)
 
         setContentView(R.layout.activity_log_list_activity)
-
-        if (intent.getSerializableExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY) as? Boolean == true) {
-            setTitle(R.string.backup)
-            activity_type_filter.visibility = View.GONE
-        }
+        checkAndUpdateUiToBackupScreen()
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.let {
             it.setHomeButtonEnabled(true)
             it.setDisplayHomeAsUpEnabled(true)
+        }
+    }
+
+    /**
+     * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
+     * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
+     * hand, not much more complexity would be introduced if the 'Activity Log' screen is reused (mainly some 'if/else'
+     * code branches here and there).
+     *
+     * However, should more 'Backup' related additions are added to the 'Activity Log' screen, then it should become a
+     * necessity to split those features in separate screens in order not to increase further the complexity of this
+     * screen's architecture.
+     */
+    private fun checkAndUpdateUiToBackupScreen() {
+        if (intent.getSerializableExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY) as? Boolean == true) {
+            setTitle(R.string.backup)
+            activity_type_filter.visibility = View.GONE
         }
     }
 
