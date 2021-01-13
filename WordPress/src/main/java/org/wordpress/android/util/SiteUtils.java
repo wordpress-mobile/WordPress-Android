@@ -33,6 +33,7 @@ public class SiteUtils {
     public static final String AZTEC_EDITOR_NAME = "aztec";
     public static final String WP_STORIES_CREATOR_NAME = "wp_stories_creator";
     public static final String WP_STORIES_JETPACK_VERSION = "9.1";
+    public static final String WP_CONTACT_INFO_JETPACK_VERSION = "9.1";
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_1 = 100;
     private static final int GB_ROLLOUT_PERCENTAGE_PHASE_2 = 100;
 
@@ -339,6 +340,10 @@ public class SiteUtils {
 
     public static boolean supportsStoriesFeature(SiteModel site) {
         return site != null && (site.isWPCom() || checkMinimalJetpackVersion(site, WP_STORIES_JETPACK_VERSION));
+    }
+
+    public static boolean supportsContactInfoFeature(SiteModel site) {
+        return site != null & (site.isWPCom() || checkMinimalJetpackVersion(site, WP_CONTACT_INFO_JETPACK_VERSION));
     }
 
     public static boolean isNonAtomicBusinessPlanSite(@Nullable SiteModel site) {
