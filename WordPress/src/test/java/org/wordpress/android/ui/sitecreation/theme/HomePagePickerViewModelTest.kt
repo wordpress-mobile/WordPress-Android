@@ -44,6 +44,7 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var uiStateObserver: Observer<UiState>
     @Mock lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
     @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
+    @Mock lateinit var thumbnailModeObserver: Observer<PreviewMode>
     @Mock lateinit var analyticsTracker: SiteCreationTracker
 
     private lateinit var viewModel: HomePagePickerViewModel
@@ -61,6 +62,7 @@ class HomePagePickerViewModelTest {
         viewModel.uiState.observeForever(uiStateObserver)
         viewModel.onDesignActionPressed.observeForever(onDesignActionObserver)
         viewModel.onPreviewActionPressed.observeForever(onPreviewActionObserver)
+        viewModel.thumbnailMode.observeForever(thumbnailModeObserver)
     }
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
@@ -194,5 +196,30 @@ class HomePagePickerViewModelTest {
         verify(onPreviewActionObserver).onChanged(captor.capture())
         assertThat(requireNotNull(captor.value as Show).template).isEqualTo(mockedDesignSlug)
         assertThat(requireNotNull(captor.value as Show).demoUrl).isEqualTo(mockedDesignDemoUrl)
+    }
+
+    @Test
+    fun `when the picker starts on a phone the mobile thumbnails load by default`() = mockResponse {
+        viewModel.start(isTablet = false)
+        val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
+        verify(thumbnailModeObserver).onChanged(captor.capture())
+        assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.MOBILE)
+    }
+
+    @Test
+    fun `when the picker starts on a tablet the tablet thumbnails load by default`() = mockResponse {
+        viewModel.start(isTablet = true)
+        val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
+        verify(thumbnailModeObserver).onChanged(captor.capture())
+        assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.TABLET)
+    }
+
+    @Test
+    fun `when the changes the preview mode the thumbnails change`() = mockResponse {
+        viewModel.start()
+        viewModel.onThumbnailModeChanged(PreviewMode.DESKTOP)
+        val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
+        verify(thumbnailModeObserver, times(2)).onChanged(captor.capture())
+        assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.DESKTOP)
     }
 }
