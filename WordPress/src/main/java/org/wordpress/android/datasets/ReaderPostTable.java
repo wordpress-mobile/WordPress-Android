@@ -541,13 +541,26 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostSeen(ReaderPost post) {
-        if (post == null) {
-            return false;
-        }
-        String[] args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
+        String[] args = new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT is_seen FROM tbl_posts WHERE blog_id=? AND post_id=?",
+                "SELECT is_seen FROM tbl_posts WHERE feed_id=? AND feed_item_id=?",
                 args);
+    }
+
+    public static void setPostSeenStatus(ReaderPost post, boolean isSeen) {
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            String sql = "UPDATE tbl_posts SET is_seen=" + SqlUtils.boolToSql(isSeen)
+                         + " WHERE feed_id=? AND feed_item_id=?";
+            db.execSQL(sql, new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)});
+
+
+            db.setTransactionSuccessful();
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        } finally {
+            db.endTransaction();
+        }
     }
 
     public static int deletePostsWithTag(final ReaderTag tag) {
