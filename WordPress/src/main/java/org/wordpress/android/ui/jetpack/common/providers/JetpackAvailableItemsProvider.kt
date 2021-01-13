@@ -50,12 +50,12 @@ class JetpackAvailableItemsProvider @Inject constructor() {
         @StringRes val labelResId: Int
     )
 
-    enum class JetpackAvailableItemType {
-        THEMES,
-        PLUGINS,
-        MEDIA_UPLOADS,
-        SQLS,
-        ROOTS,
-        CONTENTS
+    enum class JetpackAvailableItemType(val id: Int) {
+        THEMES(0),
+        PLUGINS(1),
+        MEDIA_UPLOADS(2),
+        SQLS(3),
+        ROOTS(4),
+        CONTENTS(5)
     }
 }

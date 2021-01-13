@@ -134,11 +134,11 @@ class RestoreActivity : LocaleAwareActivity() {
 
     private fun showStep(target: WizardNavigationTarget<RestoreStep, RestoreState>) {
         val fragment = when (target.wizardStep) {
-            DETAILS -> RestoreDetailsFragment.newInstance(intent?.extras)
+            DETAILS -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
             // todo: annmarie add fragments as they become available
-            WARNING -> RestoreDetailsFragment.newInstance(intent?.extras)
-            PROGRESS -> RestoreDetailsFragment.newInstance(intent?.extras)
-            COMPLETE -> RestoreDetailsFragment.newInstance(intent?.extras)
+            WARNING -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
+            PROGRESS -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
+            COMPLETE -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
         }
 
         slideInFragment(fragment, target.wizardStep.toString())
