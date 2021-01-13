@@ -56,6 +56,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun initToolbar() {
+        setHasOptionsMenu(true)
         val activity = (requireActivity() as AppCompatActivity)
         toolbar_main.title = getString(string.scan_history)
         activity.setSupportActionBar(toolbar_main)
