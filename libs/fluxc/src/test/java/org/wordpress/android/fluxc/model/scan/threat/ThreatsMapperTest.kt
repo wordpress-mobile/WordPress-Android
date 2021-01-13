@@ -9,13 +9,14 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.UnitTestUtils
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Extension.ExtensionType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat.Fixable
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -152,6 +153,16 @@ class ThreatsMapperTest {
 
         assertNotNull(model.baseThreatModel.fixable)
         assertEquals(model.baseThreatModel.fixable?.fixer, FixType.fromValue(threat.fixable?.fixer))
+    }
+
+    @Test
+    fun `maps fixable threat correctly for unknown fix type`() {
+        val threatJsonString = UnitTestUtils.getStringFromResourceFile(javaClass, THREAT_FIXABLE_JSON)
+        val threat = getThreatFromJsonString(threatJsonString)
+
+        val model = mapper.map(threat.copy(fixable = Fixable(fixer = "rollback", file = null, target = null)))
+
+        assertEquals(model.baseThreatModel.fixable?.fixer, FixType.UNKNOWN)
     }
 
     @Test

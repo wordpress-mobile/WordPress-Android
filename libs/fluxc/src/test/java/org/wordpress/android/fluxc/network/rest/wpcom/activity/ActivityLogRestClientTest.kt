@@ -18,6 +18,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.BaseRequest.GenericErrorType.NETWORK_ERROR
@@ -28,12 +29,16 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Response.Success
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivitiesResponse.Page
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivityTypesResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivityTypesResponse.ActivityType
+import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.ActivityTypesResponse.Groups
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.BackupDownloadResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.BackupDownloadStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.activity.ActivityLogRestClient.RewindStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityLogErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.ActivityTypesErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
@@ -44,8 +49,12 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.FormattableContent
-import org.wordpress.android.util.DateTimeUtils
+import org.wordpress.android.fluxc.utils.TimeZoneProvider
 import java.util.Date
+import java.util.TimeZone
+
+private const val DATE_1_IN_MILLIS = 1578614400000L // 2020-01-10T00:00:00+00:00
+private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogRestClientTest {
@@ -56,6 +65,7 @@ class ActivityLogRestClientTest {
     @Mock private lateinit var requestQueue: RequestQueue
     @Mock private lateinit var accessToken: AccessToken
     @Mock private lateinit var userAgent: UserAgent
+    @Mock private lateinit var timeZoneProvider: TimeZoneProvider
     private lateinit var urlCaptor: KArgumentCaptor<String>
     private lateinit var paramsCaptor: KArgumentCaptor<Map<String, String>>
     private lateinit var activityRestClient: ActivityLogRestClient
@@ -69,24 +79,24 @@ class ActivityLogRestClientTest {
         paramsCaptor = argumentCaptor()
         activityRestClient = ActivityLogRestClient(
                 wpComGsonRequestBuilder,
+                timeZoneProvider,
                 dispatcher,
                 null,
                 requestQueue,
                 accessToken,
                 userAgent)
         whenever(requestPayload.site).thenReturn(site)
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT"))
     }
 
     @Test
     fun fetchActivity_passesCorrectParamToBuildRequest() = test {
         initFetchActivity()
-        val afterMillis = 1603860428000
-        val beforeMillis = 1603961628000
         val payload = FetchActivityLogPayload(
                 site,
                 false,
-                Date(afterMillis),
-                Date(beforeMillis),
+                Date(DATE_1_IN_MILLIS),
+                Date(DATE_2_IN_MILLIS),
                 listOf("post", "attachment")
         )
 
@@ -96,8 +106,8 @@ class ActivityLogRestClientTest {
         with(paramsCaptor.firstValue) {
             assertEquals("1", this["page"])
             assertEquals("$number", this["number"])
-            assertEquals(DateTimeUtils.iso8601FromDate(Date(afterMillis)), this["after"])
-            assertEquals(DateTimeUtils.iso8601FromDate(Date(beforeMillis)), this["before"])
+            assertNotNull(this["after"])
+            assertNotNull(this["before"])
             assertEquals("post", this["group[0]"])
             assertEquals("attachment", this["group[1]"])
         }
@@ -120,6 +130,50 @@ class ActivityLogRestClientTest {
             assertEquals("1", this["page"])
             assertEquals("$number", this["number"])
             assertEquals(2, this.size)
+        }
+    }
+
+    @Test
+    fun fetchActivity_adjustsDateRangeBasedOnTimezoneGMT3() = test {
+        val timezoneOffset = 3
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT+$timezoneOffset"))
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                // 2020-01-10T00:00:00+00:00
+                Date(DATE_1_IN_MILLIS),
+                // 2020-01-12T00:00:00+00:00
+                Date(DATE_2_IN_MILLIS)
+        )
+
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        with(paramsCaptor.firstValue) {
+            assertEquals("2020-01-09T21:00:00+00:00", this["after"])
+            assertEquals("2020-01-11T21:00:00+00:00", this["before"])
+        }
+    }
+
+    @Test
+    fun fetchActivity_adjustsDateRangeBasedOnTimezoneGMTMinus7() = test {
+        val timezoneOffset = -7
+        whenever(timeZoneProvider.getDefaultTimeZone()).thenReturn(TimeZone.getTimeZone("GMT$timezoneOffset"))
+        initFetchActivity()
+        val payload = FetchActivityLogPayload(
+                site,
+                false,
+                // 2020-01-10T00:00:00+00:00
+                Date(DATE_1_IN_MILLIS),
+                // 2020-01-12T00:00:00+00:00
+                Date(DATE_2_IN_MILLIS)
+        )
+
+        activityRestClient.fetchActivity(payload, number, offset)
+
+        with(paramsCaptor.firstValue) {
+            assertEquals("2020-01-10T07:00:00+00:00", this["after"])
+            assertEquals("2020-01-12T07:00:00+00:00", this["before"])
         }
     }
 
@@ -382,7 +436,13 @@ class ActivityLogRestClientTest {
 
     @Test
     fun fetchActivityDownload_dispatchesGenericErrorOnFailure() = test {
-        initFetchBackupDownloadStatus(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+        initFetchBackupDownloadStatus(
+                error = WPComGsonNetworkError(
+                        BaseNetworkError(
+                                NETWORK_ERROR
+                        )
+                )
+        )
 
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
@@ -393,7 +453,7 @@ class ActivityLogRestClientTest {
     fun fetchActivityBackupDownload_dispatchesResponseOnSuccess() = test {
         val progress = 55
         val downloadResponse = BACKUP_DOWNLOAD_STATUS_RESPONSE.copy(progress = progress)
-        initFetchBackupDownloadStatus(downloadResponse)
+        initFetchBackupDownloadStatus(arrayOf(downloadResponse))
 
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
@@ -411,6 +471,71 @@ class ActivityLogRestClientTest {
                 assertEquals(this.url, BACKUP_DOWNLOAD_STATUS_RESPONSE.url)
                 assertEquals(this.progress, progress)
             }
+        }
+    }
+
+    @Test
+    fun fetchActivityTypes_dispatchesSuccessResponseOnSuccess() = test {
+        initFetchActivityTypes()
+        val siteId = 90L
+
+        val payload = activityRestClient.fetchActivityTypes(siteId, null, null)
+
+        with(payload) {
+            assertEquals(siteId, remoteSiteId)
+            assertEquals(false, isError)
+        }
+    }
+
+    @Test
+    fun fetchActivityTypes_dispatchesGenericErrorOnFailure() = test {
+        initFetchActivityTypes(error = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR)))
+        val siteId = 90L
+
+        val payload = activityRestClient.fetchActivityTypes(siteId, null, null)
+
+        with(payload) {
+            assertEquals(siteId, remoteSiteId)
+            assertEquals(true, isError)
+            assertEquals(error.type, ActivityTypesErrorType.GENERIC_ERROR)
+        }
+    }
+
+    @Test
+    fun fetchActivityTypes_mapsResponseModelsToDomainModels() = test {
+        val activityType = ActivityType("key1", "name1", 10)
+        initFetchActivityTypes(
+                data = ActivityTypesResponse(
+                        groups = Groups(
+                                activityTypes = listOf(activityType)
+                        ),
+                        15
+                )
+        )
+        val siteId = site.siteId
+
+        val payload = activityRestClient.fetchActivityTypes(siteId, null, null)
+
+        assertEquals(
+                payload.activityTypeModels[0],
+                ActivityTypeModel(activityType.key!!, activityType.name!!, activityType.count!!)
+        )
+    }
+
+    @Test
+    fun fetchActivityTypes_passesCorrectParams() = test {
+        initFetchActivityTypes()
+        val siteId = site.siteId
+        val afterMillis = 234124242145
+        val beforeMillis = 234124242999
+        val after = Date(afterMillis)
+        val before = Date(beforeMillis)
+
+        activityRestClient.fetchActivityTypes(siteId, after, before)
+
+        with(paramsCaptor.firstValue) {
+            assertNotNull(this["after"])
+            assertNotNull(this["before"])
         }
     }
 
@@ -506,19 +631,42 @@ class ActivityLogRestClientTest {
     }
 
     private suspend fun initFetchBackupDownloadStatus(
-        data: BackupDownloadStatusResponse = mock(),
+        data: Array<BackupDownloadStatusResponse>? = null,
         error: WPComGsonNetworkError? = null
-    ): Response<BackupDownloadStatusResponse> {
-        val response = if (error != null) Response.Error<BackupDownloadStatusResponse>(error) else Success(data)
+    ): Response<Array<BackupDownloadStatusResponse>> {
+        val defaultError = WPComGsonNetworkError(BaseNetworkError(NETWORK_ERROR))
+        val response = when {
+            error != null -> { Response.Error(error) }
+            data != null -> { Success(data) }
+            else -> { Response.Error(defaultError) }
+        }
+
         whenever(wpComGsonRequestBuilder.syncGetRequest(
                 eq(activityRestClient),
                 urlCaptor.capture(),
                 paramsCaptor.capture(),
-                eq(BackupDownloadStatusResponse::class.java),
+                eq(Array<BackupDownloadStatusResponse>::class.java),
                 eq(false),
                 any(),
                 eq(false))).thenReturn(response)
         whenever(site.siteId).thenReturn(siteId)
+        return response
+    }
+
+    private suspend fun initFetchActivityTypes(
+        data: ActivityTypesResponse = mock(),
+        error: WPComGsonNetworkError? = null
+    ): Response<ActivityTypesResponse> {
+        val response = if (error != null) Response.Error<ActivityTypesResponse>(error) else Success(data)
+        whenever(wpComGsonRequestBuilder.syncGetRequest(
+                eq(activityRestClient),
+                urlCaptor.capture(),
+                paramsCaptor.capture(),
+                eq(ActivityTypesResponse::class.java),
+                eq(false),
+                any(),
+                eq(false))
+        ).thenReturn(response)
         return response
     }
 

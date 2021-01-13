@@ -15,12 +15,27 @@ import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.generated.ScanActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
+import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
+import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusPayload
+import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsPayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusError
+import org.wordpress.android.fluxc.store.ScanStore.FixThreatsStatusErrorType
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatError
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatErrorType
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatPayload
+import org.wordpress.android.fluxc.store.ScanStore.IgnoreThreatResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartError
-import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ScanStore.ScanStartErrorType
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStartResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
@@ -32,29 +47,36 @@ import org.wordpress.android.fluxc.tools.initCoroutineEngine
 class ScanStoreTest {
     @Mock private lateinit var scanRestClient: ScanRestClient
     @Mock private lateinit var scanSqlUtils: ScanSqlUtils
+    @Mock private lateinit var threatSqlUtils: ThreatSqlUtils
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
+    @Mock private lateinit var threat: ThreatModel
     private lateinit var scanStore: ScanStore
+    private val siteId = 11L
+    private val threatId = 1L
+    private val threatIds = listOf(threatId)
 
     @Before
     fun setUp() {
         scanStore = ScanStore(
             scanRestClient,
             scanSqlUtils,
+            threatSqlUtils,
             initCoroutineEngine(),
             dispatcher
         )
     }
 
     @Test
-    fun `fetch scan state triggers rest client`() = test {
+    fun `success on fetch scan state returns the success`() = test {
         val payload = FetchScanStatePayload(siteModel)
         whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(FetchedScanStatePayload(null, siteModel))
 
         val action = ScanActionBuilder.newFetchScanStateAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).fetchScanState(siteModel)
+        val expected = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
@@ -71,44 +93,49 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `fetch scan state stores state in the db on success`() = test {
+    fun `fetch scan state replaces state and threats for site in the db on success`() = test {
         val scanStateModel = mock<ScanStateModel>()
         val payload = FetchedScanStatePayload(scanStateModel, siteModel)
         whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(payload)
+        whenever(scanStateModel.threats).thenReturn(listOf(threat))
 
         val fetchAction = ScanActionBuilder.newFetchScanStateAction(FetchScanStatePayload(siteModel))
         scanStore.onAction(fetchAction)
 
         verify(scanSqlUtils).replaceScanState(siteModel, scanStateModel)
+        verify(threatSqlUtils).replaceThreatsForSite(siteModel, listOf(threat))
         val expectedChangeEvent = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     @Test
-    fun `get scan state returns state from the db`() {
-        val scanStateModel = mock<ScanStateModel>()
+    fun `get scan state returns state and threats from the db`() {
+        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threat))
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
+        whenever(threatSqlUtils.getThreatsForSite(siteModel)).thenReturn(listOf(threat))
 
         val scanStateFromDb = scanStore.getScanStateForSite(siteModel)
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
+        verify(threatSqlUtils).getThreatsForSite(siteModel)
         Assert.assertEquals(scanStateModel, scanStateFromDb)
     }
 
     @Test
-    fun `start scan triggers rest client`() = test {
+    fun `success on start scan returns the success`() = test {
         val payload = ScanStartPayload(siteModel)
         whenever(scanRestClient.startScan(siteModel)).thenReturn(ScanStartResultPayload(siteModel))
 
         val action = ScanActionBuilder.newStartScanAction(payload)
         scanStore.onAction(action)
 
-        verify(scanRestClient).startScan(siteModel)
+        val expected = ScanStore.OnScanStarted(ScanAction.START_SCAN)
+        verify(dispatcher).emitChange(expected)
     }
 
     @Test
     fun `error on start scan returns the error`() = test {
-        val error = ScanStartError(GENERIC_ERROR, "error")
+        val error = ScanStartError(ScanStartErrorType.GENERIC_ERROR, "error")
         val payload = ScanStartResultPayload(error, siteModel)
         whenever(scanRestClient.startScan(siteModel)).thenReturn(payload)
 
@@ -116,6 +143,96 @@ class ScanStoreTest {
         scanStore.onAction(fetchAction)
 
         val expectedEventWithError = ScanStore.OnScanStarted(payload.error, ScanAction.START_SCAN)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `success on fix threats return the success`() = test {
+        val payload = FixThreatsPayload(siteId, threatIds)
+        whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(
+            FixThreatsResultPayload(siteId)
+        )
+
+        val action = ScanActionBuilder.newFixThreatsAction(payload)
+        scanStore.onAction(action)
+
+        val expected = ScanStore.OnFixThreatsStarted(ScanAction.FIX_THREATS)
+        verify(dispatcher).emitChange(expected)
+    }
+
+    @Test
+    fun `error on fix threats returns the error`() = test {
+        val error = FixThreatsError(FixThreatsErrorType.GENERIC_ERROR, "error")
+        val payload = FixThreatsResultPayload(error, siteId)
+        whenever(scanRestClient.fixThreats(siteId, threatIds)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newFixThreatsAction(FixThreatsPayload(siteId, threatIds))
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnFixThreatsStarted(payload.error, ScanAction.FIX_THREATS)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `success on ignore threat returns the success`() = test {
+        val payload = IgnoreThreatPayload(siteId, threatId)
+        whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(
+            IgnoreThreatResultPayload(siteId)
+        )
+
+        val action = ScanActionBuilder.newIgnoreThreatAction(payload)
+        scanStore.onAction(action)
+
+        val expected = ScanStore.OnIgnoreThreatStarted(ScanAction.IGNORE_THREAT)
+        verify(dispatcher).emitChange(expected)
+    }
+
+    @Test
+    fun `error on ignore threat returns the error`() = test {
+        val error = IgnoreThreatError(IgnoreThreatErrorType.GENERIC_ERROR, "error")
+        val payload = IgnoreThreatResultPayload(error, siteId)
+        whenever(scanRestClient.ignoreThreat(siteId, threatId)).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newIgnoreThreatAction(IgnoreThreatPayload(siteId, threatId))
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnIgnoreThreatStarted(payload.error, ScanAction.IGNORE_THREAT)
+        verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `success on fetch fix threats status returns the success`() = test {
+        val payload = FetchFixThreatsStatusPayload(siteId, listOf(threatId))
+        val resultPayload = FetchFixThreatsStatusResultPayload(siteId, mock())
+        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(resultPayload)
+
+        val action = ScanActionBuilder.newFetchFixThreatsStatusAction(payload)
+        scanStore.onAction(action)
+
+        val expected = ScanStore.OnFixThreatsStatusFetched(
+            siteId,
+            resultPayload.fixThreatStatusModels,
+            ScanAction.FETCH_FIX_THREATS_STATUS
+        )
+        verify(dispatcher).emitChange(expected)
+    }
+
+    @Test
+    fun `error on fetch fix threats status returns the error`() = test {
+        val error = FixThreatsStatusError(FixThreatsStatusErrorType.GENERIC_ERROR, "error")
+        val payload = FetchFixThreatsStatusResultPayload(siteId, mock(), error)
+        whenever(scanRestClient.fetchFixThreatsStatus(siteId, listOf(threatId))).thenReturn(payload)
+
+        val fetchAction = ScanActionBuilder.newFetchFixThreatsStatusAction(
+            FetchFixThreatsStatusPayload(siteId, listOf(threatId))
+        )
+        scanStore.onAction(fetchAction)
+
+        val expectedEventWithError = ScanStore.OnFixThreatsStatusFetched(
+            siteId,
+            payload.error,
+            ScanAction.FETCH_FIX_THREATS_STATUS
+        )
         verify(dispatcher).emitChange(expectedEventWithError)
     }
 }
