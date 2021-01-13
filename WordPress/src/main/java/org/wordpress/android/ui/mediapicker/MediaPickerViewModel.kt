@@ -518,6 +518,9 @@ class MediaPickerViewModel @Inject constructor(
                     listOf(IMAGE, VIDEO).containsAll(allowedTypes) -> {
                         Pair(ChooserContext.PHOTO_OR_VIDEO, MimeTypes().getVideoAndImageTypesOnly())
                     }
+                    listOf(AUDIO).containsAll(allowedTypes) -> {
+                        Pair(ChooserContext.AUDIO, MimeTypes().getAudioTypesOnly())
+                    }
                     else -> {
                         Pair(ChooserContext.MEDIA_FILE, MimeTypes().getAllTypes())
                     }
