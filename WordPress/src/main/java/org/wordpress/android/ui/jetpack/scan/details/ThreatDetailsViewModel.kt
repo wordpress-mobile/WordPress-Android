@@ -58,23 +58,6 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun ignoreThreat() { // TODO ashiagr to be implemented
     }
 
-    private fun updateNavigationEvent(navigationEvent: ThreatDetailsNavigationEvents) {
-        _navigationEvents.value = Event(navigationEvent)
-    }
-
-    private fun updateUiState(model: ThreatModel) {
-        _uiState.value = buildContentUiState(model)
-    }
-
-    private fun buildContentUiState(model: ThreatModel) = Content(
-        builder.buildThreatDetailsListItems(
-            model,
-            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
-            this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
-            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
-        )
-    )
-
     private fun onFixThreatButtonClicked() { // TODO ashiagr to be implemented
     }
 
@@ -96,6 +79,23 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
     }
+
+    private fun updateNavigationEvent(navigationEvent: ThreatDetailsNavigationEvents) {
+        _navigationEvents.value = Event(navigationEvent)
+    }
+
+    private fun updateUiState(model: ThreatModel) {
+        _uiState.value = buildContentUiState(model)
+    }
+
+    private fun buildContentUiState(model: ThreatModel) = Content(
+        builder.buildThreatDetailsListItems(
+            model,
+            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+            this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
+            this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
+        )
+    )
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<JetpackListItemState>) : UiState()
