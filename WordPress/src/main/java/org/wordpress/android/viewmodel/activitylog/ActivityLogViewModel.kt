@@ -549,5 +549,17 @@ class ActivityLogViewModel @Inject constructor(
             override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
             override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
         }
+
+        object Backup {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_empty_subtitle)
+            }
+
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_active_filter_empty_subtitle)
+            }
+        }
     }
 }
