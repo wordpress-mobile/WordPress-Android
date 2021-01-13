@@ -95,7 +95,7 @@ class ActivityLogViewModel @Inject constructor(
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
-    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.EmptyFilters)
+    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.ActivityLog.EmptyFilters)
     val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
@@ -245,9 +245,9 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun refreshActivityLogEmptyUiState() {
         if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
-            _emptyUiState.value = EmptyUiState.ActiveFilters
+            _emptyUiState.value = EmptyUiState.ActivityLog.ActiveFilters
         } else {
-            _emptyUiState.value = EmptyUiState.EmptyFilters
+            _emptyUiState.value = EmptyUiState.ActivityLog.EmptyFilters
         }
     }
 
@@ -560,14 +560,16 @@ class ActivityLogViewModel @Inject constructor(
         abstract val emptyScreenTitle: UiString
         abstract val emptyScreenSubtitle: UiString
 
-        object EmptyFilters : EmptyUiState() {
-            override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
-            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
-        }
+        object ActivityLog {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+            }
 
-        object ActiveFilters : EmptyUiState() {
-            override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
-            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+            }
         }
 
         object Backup {

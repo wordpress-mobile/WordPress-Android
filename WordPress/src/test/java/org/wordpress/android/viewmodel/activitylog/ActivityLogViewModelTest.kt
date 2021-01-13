@@ -647,27 +647,27 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenFiltersAreEmpty() {
+    fun verifyActivityLogEmptyScreenTextsWhenFiltersAreEmpty() {
         viewModel.onClearDateRangeFilterClicked()
         viewModel.onClearActivityTypeFilterClicked()
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.EmptyFilters)
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.EmptyFilters)
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenDateRangeFilterSet() {
+    fun verifyActivityLogEmptyScreenTextsWhenDateRangeFilterSet() {
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenActivityTypeFilterSet() {
+    fun verifyActivityLogEmptyScreenTextsWhenActivityTypeFilterSet() {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
     }
 
     @Test
