@@ -3,12 +3,17 @@
 /read/sites/$site#String/notification-subscriptions/$action#String
 
 /sites/$site/activity
+/sites/$site/activity/count/group
 /sites/$site/rewind
 /sites/$site/rewind/downloads
 
 /sites/$site/scan
 /sites/$site/scan/enqueue
 /sites/$site/scan/threat/$threat_id
+/sites/$site/alerts/fix
+/sites/$site/alerts/$threat_id
+
+/sites/$site/rewind/capabilities
 
 /sites/$site/gutenberg
 
@@ -19,6 +24,8 @@
 
 /sites/$site/block-layouts
 /common-block-layouts
+
+/sites/$site/xposts
 
 /users/username/suggestions/
 

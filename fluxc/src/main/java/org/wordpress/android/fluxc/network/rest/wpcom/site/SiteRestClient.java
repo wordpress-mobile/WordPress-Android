@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.action.SiteAction;
 import org.wordpress.android.fluxc.generated.SiteActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
+import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PlanModel;
 import org.wordpress.android.fluxc.model.PostFormatModel;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -39,6 +40,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.site.AutomatedTransferElig
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteWPComRestResponse.SitesResponse;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.UserRoleWPComRestResponse.UserRolesResponse;
 import org.wordpress.android.fluxc.store.SiteStore.FetchedBlockLayoutsResponsePayload;
+import org.wordpress.android.fluxc.store.SiteStore.FetchedJetpackCapabilitiesPayload;
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError;
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.PrivateAtomicCookieError;
 import org.wordpress.android.fluxc.store.SiteStore.AccessCookieErrorType;
 import org.wordpress.android.fluxc.store.SiteStore.AutomatedTransferEligibilityResponsePayload;
@@ -1044,6 +1048,43 @@ public class SiteRestClient extends BaseWPComRestClient {
         add(request);
     }
 
+    public void fetchJetpackCapabilities(final long remoteSiteId) {
+        Map<String, String> params = new HashMap<>();
+        String url = WPCOMV2.sites.site(remoteSiteId).rewind.capabilities.getUrl();
+        final WPComGsonRequest<JetpackCapabilitiesResponse> request = WPComGsonRequest.buildGetRequest(url, params,
+                JetpackCapabilitiesResponse.class,
+                new Listener<JetpackCapabilitiesResponse>() {
+                    @Override
+                    public void onResponse(JetpackCapabilitiesResponse response) {
+                        if (response != null && response.getCapabilities() != null) {
+                            FetchedJetpackCapabilitiesPayload payload =
+                                    responseToJetpackCapabilitiesPayload(remoteSiteId, response);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
+                        } else {
+                            AppLog.e(T.API, "Failed to fetch jetpack capabilities for site with id: " + remoteSiteId);
+                            JetpackCapabilitiesError error =
+                                    new JetpackCapabilitiesError(JetpackCapabilitiesErrorType.GENERIC_ERROR,
+                                            "Empty response");
+                            FetchedJetpackCapabilitiesPayload payload =
+                                    new FetchedJetpackCapabilitiesPayload(remoteSiteId, error);
+                            mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
+                        }
+                    }
+                },
+                new WPComErrorListener() {
+                    @Override
+                    public void onErrorResponse(@NonNull WPComGsonNetworkError error) {
+                        JetpackCapabilitiesError jetpackError =
+                                new JetpackCapabilitiesError(JetpackCapabilitiesErrorType.GENERIC_ERROR, error.message);
+                        FetchedJetpackCapabilitiesPayload payload =
+                                new FetchedJetpackCapabilitiesPayload(remoteSiteId, jetpackError);
+                        mDispatcher.dispatch(SiteActionBuilder.newFetchedJetpackCapabilitiesAction(payload));
+                    }
+                }
+        );
+        add(request);
+    }
+
     // Utils
 
     private SiteModel siteResponseToSiteModel(SiteWPComRestResponse from) {
@@ -1184,5 +1225,14 @@ public class SiteRestClient extends BaseWPComRestClient {
         DomainMappabilityStatus mappable = DomainMappabilityStatus.fromString(response.getMappable());
         boolean supportsPrivacy = response.getSupports_privacy();
         return new DomainAvailabilityResponsePayload(status, mappable, supportsPrivacy);
+    }
+
+    private FetchedJetpackCapabilitiesPayload responseToJetpackCapabilitiesPayload(
+            long remoteSiteId, JetpackCapabilitiesResponse response) {
+        List<JetpackCapability> capabilities = new ArrayList<>(response.getCapabilities().size());
+        for (String item : response.getCapabilities()) {
+            capabilities.add(JetpackCapability.Companion.fromString(item));
+        }
+        return new FetchedJetpackCapabilitiesPayload(remoteSiteId, capabilities);
     }
 }
