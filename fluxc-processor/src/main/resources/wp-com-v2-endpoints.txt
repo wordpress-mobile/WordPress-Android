@@ -12,6 +12,7 @@
 /sites/$site/scan/threat/$threat_id
 /sites/$site/alerts/fix
 /sites/$site/alerts/$threat_id
+/sites/$site/scan/history
 
 /sites/$site/rewind/capabilities
 
