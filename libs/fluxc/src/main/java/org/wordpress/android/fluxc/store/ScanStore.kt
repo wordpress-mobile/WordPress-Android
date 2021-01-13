@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_FIX_THREATS_STATUS
+import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_HISTORY
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.action.ScanAction.FIX_THREATS
 import org.wordpress.android.fluxc.action.ScanAction.IGNORE_THREAT
@@ -14,6 +15,7 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
@@ -60,6 +62,12 @@ class ScanStore @Inject constructor(
                     emitChange(fetchFixThreatsStatus(action.payload as FetchFixThreatsStatusPayload))
                 }
             }
+            FETCH_SCAN_HISTORY -> {
+                coroutineEngine.launch(AppLog.T.API, this, "Scan: On FETCH_SCAN_HISTORY") {
+                    emitChange(fetchScanHistory(action.payload as FetchScanHistoryPayload))
+                }
+            }
+
         }
     }
 
@@ -146,6 +154,14 @@ class ScanStore @Inject constructor(
         )
     }
 
+    suspend fun fetchScanHistory(payload: FetchScanHistoryPayload): OnScanHistoryFetched {
+        val resultPayload = scanRestClient.fetchScanHistory(payload.remoteSiteId)
+        return emitFetchScanHistoryResult(resultPayload)
+    }
+
+    private fun emitFetchScanHistoryResult(payload: FetchScanHistoryResultPayload) =
+            OnScanHistoryFetched(payload.remoteSiteId, payload.error, FETCH_SCAN_HISTORY)
+
     // Actions
     data class OnScanStateFetched(var causeOfChange: ScanAction) : Store.OnChanged<ScanStateError>() {
         constructor(error: ScanStateError, causeOfChange: ScanAction) : this(causeOfChange = causeOfChange) {
@@ -181,6 +197,19 @@ class ScanStore @Inject constructor(
             error: FixThreatsStatusError,
             causeOfChange: ScanAction
         ) : this(remoteSiteId = remoteSiteId, fixThreatStatusModels = emptyList(), causeOfChange = causeOfChange) {
+            this.error = error
+        }
+    }
+
+    data class OnScanHistoryFetched(
+        val remoteSiteId: Long,
+        val causeOfChange: ScanAction
+    ) : Store.OnChanged<FetchScanHistoryError>() {
+        constructor(
+            remoteSiteId: Long,
+            error: FetchScanHistoryError?,
+            causeOfChange: ScanAction
+        ) : this(remoteSiteId = remoteSiteId, causeOfChange = causeOfChange) {
             this.error = error
         }
     }
@@ -243,6 +272,20 @@ class ScanStore @Inject constructor(
         }
     }
 
+    class FetchScanHistoryPayload(val remoteSiteId: Long) : Payload<BaseNetworkError>()
+
+    class FetchScanHistoryResultPayload(
+        val remoteSiteId: Long,
+        val threats: List<ThreatModel>?
+    ) : Payload<FetchScanHistoryError>() {
+        constructor(
+            remoteSiteId: Long,
+            error: FetchScanHistoryError
+        ) : this(remoteSiteId = remoteSiteId, threats = listOf()) {
+            this.error = error
+        }
+    }
+
     // Errors
     enum class ScanStateErrorType {
         GENERIC_ERROR,
@@ -287,4 +330,12 @@ class ScanStore @Inject constructor(
     }
 
     class FixThreatsStatusError(var type: FixThreatsStatusErrorType, var message: String? = null) : OnChangedError
+
+    enum class FetchScanHistoryErrorType {
+        GENERIC_ERROR,
+        AUTHORIZATION_REQUIRED,
+        INVALID_RESPONSE
+    }
+
+    class FetchScanHistoryError(var type: FetchScanHistoryErrorType, var message: String? = null) : OnChangedError
 }
