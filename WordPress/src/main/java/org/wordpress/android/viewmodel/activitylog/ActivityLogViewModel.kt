@@ -224,10 +224,18 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                 currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
-        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
-            _emptyUiState.value = EmptyUiState.ActiveFilters
+        if (rewindableOnly) {
+            if (currentDateRangeFilter != null) {
+                _emptyUiState.value = EmptyUiState.Backup.ActiveFilters
+            } else {
+                _emptyUiState.value = EmptyUiState.Backup.EmptyFilters
+            }
         } else {
-            _emptyUiState.value = EmptyUiState.EmptyFilters
+            if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+                _emptyUiState.value = EmptyUiState.ActiveFilters
+            } else {
+                _emptyUiState.value = EmptyUiState.EmptyFilters
+            }
         }
     }
 
