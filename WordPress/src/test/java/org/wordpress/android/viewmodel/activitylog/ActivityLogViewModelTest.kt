@@ -670,6 +670,25 @@ class ActivityLogViewModelTest {
         Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
     }
 
+    @Test
+    fun verifyBackupEmptyScreenTextsWhenFilterIsEmpty() {
+        viewModel.rewindableOnly = true
+
+        viewModel.onClearDateRangeFilterClicked()
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.EmptyFilters)
+    }
+
+    @Test
+    fun verifyBackupEmptyScreenTextsWhenDateRangeFilterSet() {
+        viewModel.rewindableOnly = true
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(1L, 2L))
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
+    }
+
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
         verify(store).fetchActivities(fetchActivityLogCaptor.capture())
 
