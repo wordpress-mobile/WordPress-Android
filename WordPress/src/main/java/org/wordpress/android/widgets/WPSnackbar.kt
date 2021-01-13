@@ -12,9 +12,8 @@ class WPSnackbar {
             return make(view, text, duration)
         }
 
-
-        @JvmStatic fun make(view: View, text: CharSequence, duration: Int) = Snackbar.make( // CHECKSTYLE IGNORE
-                view, text, AccessibilityUtils.getSnackbarDuration(view.context, duration)
+        @JvmStatic fun make(view: View, text: CharSequence, duration: Int) = Snackbar.make(view, // CHECKSTYLE IGNORE
+                text, AccessibilityUtils.getSnackbarDuration(view.context, duration)
         )
     }
 }

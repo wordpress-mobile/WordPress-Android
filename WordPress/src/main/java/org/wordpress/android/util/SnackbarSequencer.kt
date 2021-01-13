@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.util.LinkedList
 import java.util.Queue
