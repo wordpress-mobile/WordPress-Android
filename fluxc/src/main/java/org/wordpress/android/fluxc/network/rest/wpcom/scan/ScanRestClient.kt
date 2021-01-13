@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsStatusResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
@@ -179,7 +180,7 @@ class ScanRestClient(
             site,
             ScanStateError(ScanStateErrorType.INVALID_RESPONSE, "Unknown scan state")
         )
-        val (threatModels, isError, errorMsg) = mapThreatsToThreatModels(response)
+        val (threatModels, isError, errorMsg) = mapThreatsToThreatModels(response.threats)
         if (isError) {
             return buildScanStateErrorPayload(site, ScanStateError(ScanStateErrorType.INVALID_RESPONSE, errorMsg))
         }
@@ -211,10 +212,10 @@ class ScanRestClient(
         return FetchedScanStatePayload(scanStateModel, site)
     }
 
-    private fun mapThreatsToThreatModels(response: ScanStateResponse): Triple<Boolean, String?, List<ThreatModel>?> {
+    private fun mapThreatsToThreatModels(threats: List<Threat>?): Triple<List<ThreatModel>?, Boolean, String?> {
         var isError = false
         var errorMsg: String? = null
-        val threatModels = response.threats?.mapNotNull { threat ->
+        val threatModels = threats?.mapNotNull { threat ->
             val threatModel = when {
                 threat.id == null -> {
                     isError = true
@@ -243,7 +244,7 @@ class ScanRestClient(
             }
             threatModel
         }
-        return Triple(isError, errorMsg, threatModels)
+        return Triple(threatModels, isError, errorMsg)
     }
 
     private fun buildFixThreatsStatusPayload(
