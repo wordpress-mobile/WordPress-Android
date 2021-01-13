@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.TooltipCompat
 import androidx.core.content.ContextCompat
+import androidx.core.content.res.ResourcesCompat
 import androidx.core.graphics.BlendModeColorFilterCompat.createBlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat.SRC_IN
 import androidx.recyclerview.widget.DiffUtil
@@ -23,6 +24,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.DummyTaskAdapter.DummyTaskViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 
@@ -30,6 +32,8 @@ class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val viewPool: RecycledViewPool
 ) : MySiteItemViewHolder(parent, R.layout.quick_start_card) {
+    private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
+
     init {
         itemView.apply {
             quick_start_card_more_button.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
@@ -45,8 +49,8 @@ class QuickStartCardViewHolder(
     fun bind(item: QuickStartCard) = itemView.apply {
         ObjectAnimator.ofInt(quick_start_card_progress, "progress", item.progress).setDuration(600).start()
 
-        val progressTrackColor = ContextCompat.getColor(context, item.progressColor.trackColor)
         val progressIndicatorColor = ContextCompat.getColor(context, item.progressColor.indicatorColor)
+        val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             quick_start_card_progress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)
             quick_start_card_progress.progressTintList = ColorStateList.valueOf(progressIndicatorColor)
