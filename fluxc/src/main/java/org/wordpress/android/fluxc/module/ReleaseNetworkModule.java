@@ -41,7 +41,6 @@ import org.wordpress.android.fluxc.network.rest.wpcom.plugin.PluginRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.post.PostRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.reader.ReaderRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient;
-import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.ThreatRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.site.SiteRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.AllTimeInsightsRestClient;
 import org.wordpress.android.fluxc.network.rest.wpcom.stats.insights.CommentsRestClient;
@@ -64,6 +63,7 @@ import org.wordpress.android.fluxc.network.xmlrpc.media.MediaXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.post.PostXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.site.SiteXMLRPCClient;
 import org.wordpress.android.fluxc.network.xmlrpc.taxonomy.TaxonomyXMLRPCClient;
+import org.wordpress.android.fluxc.utils.TimeZoneProvider;
 
 import java.io.File;
 
@@ -212,9 +212,10 @@ public class ReleaseNetworkModule {
     public ActivityLogRestClient provideActivityLogRestClient(Context appContext, Dispatcher dispatcher,
                                                               @Named("regular") RequestQueue requestQueue,
                                                               AccessToken token, UserAgent userAgent,
-                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder) {
-        return new ActivityLogRestClient(wpComGsonRequestBuilder, dispatcher, appContext, requestQueue,
-                token, userAgent);
+                                                              WPComGsonRequestBuilder wpComGsonRequestBuilder,
+                                                              TimeZoneProvider timeZoneProvider) {
+        return new ActivityLogRestClient(wpComGsonRequestBuilder, timeZoneProvider, dispatcher, appContext,
+                requestQueue, token, userAgent);
     }
 
     @Singleton
@@ -227,18 +228,6 @@ public class ReleaseNetworkModule {
         return new ScanRestClient(wpComGsonRequestBuilder, threatMapper, dispatcher, appContext, requestQueue,
                 token, userAgent);
     }
-
-    @Singleton
-    @Provides
-    public ThreatRestClient provideThreatRestClient(Context appContext, Dispatcher dispatcher,
-                                                @Named("regular") RequestQueue requestQueue,
-                                                AccessToken token, UserAgent userAgent,
-                                                WPComGsonRequestBuilder wpComGsonRequestBuilder,
-                                                ThreatMapper threatMapper) {
-        return new ThreatRestClient(wpComGsonRequestBuilder, threatMapper, dispatcher, appContext, requestQueue,
-                token, userAgent);
-    }
-
 
     @Singleton
     @Provides
