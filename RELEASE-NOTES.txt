@@ -1,3 +1,7 @@
+16.6
+-----
+* [**] Block Editor: Added Contact Info block to sites on WPcom or with Jetpack version > 9.1.
+
 16.5
 -----
 [***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
