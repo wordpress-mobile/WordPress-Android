@@ -242,7 +242,7 @@ class ScanRestClientTest {
 
         val payload = scanRestClient.fetchScanState(site)
 
-        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_ID)
+        assertEmittedScanStateError(payload, ScanStateErrorType.INVALID_RESPONSE)
     }
 
     @Test
@@ -255,7 +255,7 @@ class ScanRestClientTest {
 
         val payload = scanRestClient.fetchScanState(site)
 
-        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_SIGNATURE)
+        assertEmittedScanStateError(payload, ScanStateErrorType.INVALID_RESPONSE)
     }
 
     @Test
@@ -268,7 +268,7 @@ class ScanRestClientTest {
 
         val payload = scanRestClient.fetchScanState(site)
 
-        assertEmittedScanStateError(payload, ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED)
+        assertEmittedScanStateError(payload, ScanStateErrorType.INVALID_RESPONSE)
     }
 
     @Test
