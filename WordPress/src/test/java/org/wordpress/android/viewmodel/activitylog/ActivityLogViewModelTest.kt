@@ -14,7 +14,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -494,14 +494,14 @@ class ActivityLogViewModelTest {
     fun onSecondaryActionClickRestoreNavigationEventIsShowRestore() {
         viewModel.onSecondaryActionClicked(RESTORE, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
     }
 
     @Test
     fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
         viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
     }
 
     @Test
@@ -512,7 +512,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(dateRange)
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action != null).isTrue
+        assertThat(action != null).isTrue
     }
 
     @Test
@@ -520,7 +520,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(null)
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
@@ -531,14 +531,14 @@ class ActivityLogViewModelTest {
         (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
     fun basicDateRangeLabelShownWhenFilterEmpty() {
         viewModel.onDateRangeSelected(null)
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
                 .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
     }
 
@@ -548,7 +548,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
                 .isEqualTo(UiStringText("TEST"))
     }
 
@@ -564,7 +564,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        Assertions.assertThat(formatDateRangeTimezoneCaptor.firstValue)
+        assertThat(formatDateRangeTimezoneCaptor.firstValue)
                 .isEqualTo(TIMEZONE_GMT_0)
     }
 
@@ -577,7 +577,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
         viewModel.dateRangePickerClicked()
 
-        Assertions.assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
+        assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
                 Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS)
         )
     }
@@ -587,7 +587,7 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action != null).isTrue
+        assertThat(action != null).isTrue
     }
 
     @Test
@@ -595,7 +595,7 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypesSelected(listOf())
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
@@ -607,14 +607,14 @@ class ActivityLogViewModelTest {
         (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
     fun basicActivityTypeLabelShownWhenFilterEmpty() {
         viewModel.onActivityTypesSelected(listOf())
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
     }
 
@@ -624,7 +624,7 @@ class ActivityLogViewModelTest {
         val activityTypeCount = 5
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(UiStringText("$activityTypeName ($activityTypeCount)"))
     }
 
@@ -637,7 +637,7 @@ class ActivityLogViewModelTest {
                 )
         )
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_active_label,
@@ -651,7 +651,7 @@ class ActivityLogViewModelTest {
         viewModel.onClearDateRangeFilterClicked()
         viewModel.onClearActivityTypeFilterClicked()
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.EmptyFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.EmptyFilters)
     }
 
     @Test
@@ -660,14 +660,14 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
     }
 
     @Test
     fun verifyActivityLogEmptyScreenTextsWhenActivityTypeFilterSet() {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
     }
 
     @Test
@@ -676,7 +676,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onClearDateRangeFilterClicked()
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.EmptyFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.EmptyFilters)
     }
 
     @Test
@@ -686,7 +686,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
