@@ -49,7 +49,7 @@ class QuickStartCardViewHolder(
     fun bind(item: QuickStartCard) = itemView.apply {
         ObjectAnimator.ofInt(quick_start_card_progress, "progress", item.progress).setDuration(600).start()
 
-        val progressIndicatorColor = ContextCompat.getColor(context, item.progressColor.indicatorColor)
+        val progressIndicatorColor = ContextCompat.getColor(context, item.accentColor)
         val progressTrackColor = ColorUtils.applyEmphasisToColor(progressIndicatorColor, lowEmphasisAlpha)
         if (Build.VERSION.SDK_INT > Build.VERSION_CODES.LOLLIPOP) {
             quick_start_card_progress.progressBackgroundTintList = ColorStateList.valueOf(progressTrackColor)

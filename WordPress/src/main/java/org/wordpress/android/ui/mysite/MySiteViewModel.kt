@@ -51,7 +51,6 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.ProgressColor
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -195,7 +194,7 @@ class MySiteViewModel
                             "customize_your_site",
                             "Customize your Site",
                             dummyTasks,
-                            ProgressColor.GREEN,
+                            R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
                     )
             )
@@ -204,7 +203,7 @@ class MySiteViewModel
                             "grow_your_audience",
                             "Grow your Audience",
                             dummyTasksCompleted,
-                            ProgressColor.ORANGE,
+                            R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
                     )
             )
