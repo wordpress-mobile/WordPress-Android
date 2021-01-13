@@ -375,7 +375,11 @@ class ActivityLogViewModel @Inject constructor(
         displayProgressItem: Boolean = isRewindProgressItemShown,
         done: Boolean = isDone
     ) {
-        val eventList = activityLogStore.getActivityLogForSite(site, false)
+        val eventList = activityLogStore.getActivityLogForSite(
+                site = site,
+                ascending = false,
+                rewindableOnly = rewindableOnly
+        )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
         val rewindFinished = isRewindProgressItemShown && !displayProgressItem
