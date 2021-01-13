@@ -1431,6 +1431,8 @@
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
+    <string name="reader_marked_post_as_seen">Marked post as seen</string>
+    <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
