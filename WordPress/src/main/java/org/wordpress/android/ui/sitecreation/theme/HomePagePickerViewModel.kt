@@ -18,6 +18,8 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -60,6 +62,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private val _thumbnailMode = SingleLiveEvent<PreviewMode>()
+    val thumbnailMode: LiveData<PreviewMode> = _thumbnailMode
+
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
@@ -80,7 +85,8 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start() {
+    fun start(isTablet: Boolean = false) {
+        _thumbnailMode.value = if (isTablet) TABLET else MOBILE
         if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
@@ -110,7 +116,11 @@ class HomePagePickerViewModel @Inject constructor(
                 LayoutGridItemUiState(
                         slug = it.slug!!,
                         title = it.title ?: "",
-                        preview = it.screenshot!!,
+                        preview = when (_thumbnailMode.value) {
+                            MOBILE -> it.mobileScreenshot!!
+                            TABLET -> it.tabletScreenshot!!
+                            else -> it.screenshot!!
+                        },
                         selected = it.slug == state.selectedLayoutSlug,
                         onItemTapped = { onLayoutTapped(layoutSlug = it.slug!!) },
                         onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug!!) }
@@ -243,6 +253,13 @@ class HomePagePickerViewModel @Inject constructor(
             } else {
                 updateUiState(state.copy(selectedLayoutSlug = layoutSlug, isToolbarVisible = true))
             }
+            loadLayouts()
+        }
+    }
+
+    fun onThumbnailModeChanged(mode: PreviewMode) {
+        if (_thumbnailMode.value !== mode) {
+            _thumbnailMode.value = mode
             loadLayouts()
         }
     }
