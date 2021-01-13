@@ -267,7 +267,7 @@ class ActivityLogViewModel @Inject constructor(
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
                 kotlin.Pair(
-                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringText(it[0].name),
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_single_item_selected_content_description,
                                 listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))

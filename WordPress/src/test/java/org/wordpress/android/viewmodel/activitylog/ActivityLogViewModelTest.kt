@@ -625,7 +625,7 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
 
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringText("$activityTypeName ($activityTypeCount)"))
+                .isEqualTo(UiStringText(activityTypeName))
     }
 
     @Test
