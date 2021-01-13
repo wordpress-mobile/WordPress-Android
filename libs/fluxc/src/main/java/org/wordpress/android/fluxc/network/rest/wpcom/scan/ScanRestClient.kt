@@ -12,7 +12,9 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel.FixStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -177,37 +179,7 @@ class ScanRestClient(
             site,
             ScanStateError(ScanStateErrorType.INVALID_RESPONSE, "Unknown scan state")
         )
-        var isError = false
-        var errorMsg: String? = null
-        val threatModels = response.threats?.mapNotNull { threat ->
-            val threatModel = when {
-                threat.id == null -> {
-                    isError = true
-                    errorMsg = "Missing threat id"
-                    null
-                }
-                threat.signature == null -> {
-                    isError = true
-                    errorMsg = "Missing threat signature"
-                    null
-                }
-                threat.firstDetected == null -> {
-                    isError = true
-                    errorMsg = "Missing threat firstDetected"
-                    null
-                }
-                else -> {
-                    val threatStatus = ThreatStatus.fromValue(threat.status)
-                    if (threatStatus != ThreatStatus.UNKNOWN) {
-                        threatMapper.map(threat)
-                    } else {
-                        isError = true
-                        null
-                    }
-                }
-            }
-            threatModel
-        }
+        val (threatModels, isError, errorMsg) = mapThreatsToThreatModels(response)
         if (isError) {
             return buildScanStateErrorPayload(site, ScanStateError(ScanStateErrorType.INVALID_RESPONSE, errorMsg))
         }
@@ -237,6 +209,41 @@ class ScanRestClient(
             }
         )
         return FetchedScanStatePayload(scanStateModel, site)
+    }
+
+    private fun mapThreatsToThreatModels(response: ScanStateResponse): Triple<Boolean, String?, List<ThreatModel>?> {
+        var isError = false
+        var errorMsg: String? = null
+        val threatModels = response.threats?.mapNotNull { threat ->
+            val threatModel = when {
+                threat.id == null -> {
+                    isError = true
+                    errorMsg = "Missing threat id"
+                    null
+                }
+                threat.signature == null -> {
+                    isError = true
+                    errorMsg = "Missing threat signature"
+                    null
+                }
+                threat.firstDetected == null -> {
+                    isError = true
+                    errorMsg = "Missing threat firstDetected"
+                    null
+                }
+                else -> {
+                    val threatStatus = ThreatStatus.fromValue(threat.status)
+                    if (threatStatus != UNKNOWN) {
+                        threatMapper.map(threat)
+                    } else {
+                        isError = true
+                        null
+                    }
+                }
+            }
+            threatModel
+        }
+        return Triple(isError, errorMsg, threatModels)
     }
 
     private fun buildFixThreatsStatusPayload(
