@@ -2530,6 +2530,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
                 break;
+            case TOGGLE_SEEN_STATUS:
+                mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                break;
         }
     }
 
