@@ -40,6 +40,7 @@ import javax.inject.Inject
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
+private const val RESTORE_REQUEST_CODE = 1720
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -160,7 +161,16 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.showRewindDialog.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
-                displayRewindDialog(it)
+                if (it.launchRestoreWizard) {
+                    ActivityLauncher.showRestoreForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            it.activityId,
+                            RESTORE_REQUEST_CODE
+                    )
+                } else {
+                    displayRewindDialog(it)
+                }
             }
         })
 
@@ -183,10 +193,21 @@ class ActivityLogListFragment : Fragment() {
                             viewModel.site,
                             event.activityId,
                             BACKUP_DOWNLOAD_REQUEST_CODE)
-                    // todo: annmarie replace with the ActivityLauncher for showing restore details
-                    is ShowRestore -> displayRewindDialog(event) }
+                    is ShowRestore -> {
+                        if (event.launchRestoreWizard) {
+                            ActivityLauncher.showRestoreForResult(
+                                    requireActivity(),
+                                    viewModel.site,
+                                    event.activityId,
+                                    RESTORE_REQUEST_CODE
+                            )
+                        } else {
+                            displayRewindDialog(event)
+                        }
+                    }
                 }
-            })
+            }
+        })
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {

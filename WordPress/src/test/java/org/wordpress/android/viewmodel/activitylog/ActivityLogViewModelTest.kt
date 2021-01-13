@@ -60,6 +60,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -90,6 +91,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
@@ -154,6 +156,7 @@ class ActivityLogViewModelTest {
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
+                restoreFeatureConfig,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -269,9 +272,9 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true, false)
-        val second = Event(activityLogList[1], true, false)
-        val third = Event(activityLogList[2], true, false)
+        val first = Event(activityLogList[0], true, false, false)
+        val second = Event(activityLogList[1], true, false, false)
+        val third = Event(activityLogList[2], true, false, false)
         activityLogListItems.add(Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
