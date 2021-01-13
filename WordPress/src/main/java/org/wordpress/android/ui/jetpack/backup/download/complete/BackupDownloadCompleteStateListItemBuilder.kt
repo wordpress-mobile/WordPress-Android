@@ -23,7 +23,7 @@ class BackupDownloadCompleteStateListItemBuilder @Inject constructor() {
         onDownloadFileClick: () -> Unit,
         onShareLinkClick: () -> Unit
     ): List<JetpackListItemState> {
-        return mutableListOf(
+        return listOf(
                 buildIconState(),
                 buildHeaderState(),
                 buildDescriptionState(published),
@@ -69,5 +69,28 @@ class BackupDownloadCompleteStateListItemBuilder @Inject constructor() {
 
     private fun buildAdditionalInformationState() = AdditionalInformationState(
             UiStringRes(R.string.backup_download_complete_info)
+    )
+
+    fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
+                buildErrorIconState(),
+                buildErrorDescriptionState(),
+            buildErrorDoneActionState(onDoneClick)
+    )
+
+    private fun buildErrorIconState() = IconState(
+            icon = R.drawable.ic_get_app_24dp, // todo: annmarie replace with cloud icon
+            contentDescription = UiStringRes(R.string.backup_download_complete_failed_icon_content_description),
+            colorResId = R.color.error_50 // todo: annmarie make correct when doing design cleanup
+    )
+
+    private fun buildErrorDescriptionState() = DescriptionState(
+            UiStringRes(R.string.backup_download_complete_failed_description)
+    )
+
+    private fun buildErrorDoneActionState(onClick: () -> Unit) = ActionButtonState(
+            text = UiStringRes(R.string.backup_download_complete_failed_action_button),
+            contentDescription =
+            UiStringRes(R.string.backup_download_complete_failed_action_button_content_description),
+            onClick = onClick
     )
 }

@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 146;
+    private static final int DB_VERSION = 147;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -105,6 +105,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 144 - added tbl_posts.is_wpforteams_site
      * 145 - added tbl_blog_info.is_wp_for_teams
      * 146 - replaced tbl_blog_info.is_wp_for_teams and tbl_posts.is_wpforteams_site with organization_id
+     * 147 - added tbl_blog_info.unseen_count
      */
 
     /*
@@ -222,6 +223,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
             case 145:
                 db.execSQL("ALTER TABLE tbl_blog_info ADD organization_id INTEGER;");
                 db.execSQL("ALTER TABLE tbl_posts ADD organization_id INTEGER;");
+                currentVersion++;
+            case 146:
+                db.execSQL("ALTER TABLE tbl_blog_info ADD unseen_count INTEGER;");
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

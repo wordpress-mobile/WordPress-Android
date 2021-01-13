@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-24 11:54:10+0000
+Translation-Revision-Date: 2021-01-08 10:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
@@ -61,7 +61,7 @@ Language: tr
     <string name="dialog_edit_story_unavailable_title">Öykü düzenlenemiyor</string>
     <string name="dialog_edit_story_limited_message">Bu öykü farklı bir cihazda düzenlendi ve belirli nesneleri düzenleme yeteneği sınırlı olabilir.</string>
     <string name="dialog_edit_story_limited_title">Sınırlı Öykü Düzenleme</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Ortam kaldırıldı. Öykünüzü düzenlemeyi deneyin.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Ortam kaldırıldı. Öykünüzü yeniden oluşturmayı deneyin.</string>
     <string name="color_picker_label_background">Arka plan</string>
     <string name="color_picker_label_text">Metin</string>
     <string name="dialog_discard_story_ok_button_edit">Vazgeç</string>

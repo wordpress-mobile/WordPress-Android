@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.prefs
 
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
@@ -173,6 +174,15 @@ class AppPrefsWrapper @Inject constructor() {
     fun getManualFeatureConfig(featureKey: String): Boolean {
         return AppPrefs.getManualFeatureConfig(featureKey)
     }
+
+    fun setSiteJetpackCapabilities(remoteSiteId: Long, capabilities: List<JetpackCapability>) =
+            AppPrefs.setSiteJetpackCapabilities(remoteSiteId, capabilities)
+
+    fun getSiteJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> =
+            AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
+
+    fun getSiteJetpackCapabilitiesLastUpdated(remoteSiteId: Long): Long =
+            AppPrefs.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
 
     companion object {
         private const val LIGHT_MODE_ID = 0

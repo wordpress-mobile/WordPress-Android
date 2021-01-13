@@ -35,7 +35,6 @@ Language: pt_BR
     <string name="dialog_edit_story_unavailable_title">Não é possível editar o story</string>
     <string name="dialog_edit_story_limited_message">Este story foi editado em outro dispositivo e a possibilidade de edição de certos objetos pode estar limitada.</string>
     <string name="dialog_edit_story_limited_title">Edição limitada de story</string>
-    <string name="cannot_retry_deleted_media_item_fatal">A mídia foi removida. Tente editar o Story novamente.</string>
     <string name="color_picker_label_background">Fundo</string>
     <string name="color_picker_label_text">Texto</string>
     <string name="dialog_discard_story_ok_button_edit">Descartar</string>

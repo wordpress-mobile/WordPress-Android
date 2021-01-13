@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-26 22:01:55+0000
+Translation-Revision-Date: 2021-01-01 03:32:53+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -61,7 +61,7 @@ Language: ar
     <string name="dialog_edit_story_unavailable_title">لا يمكن تحرير القصة</string>
     <string name="dialog_edit_story_limited_message">تم تحرير هذه القصة على جهاز مختلف وقد تكون القدرة محدودة على تحرير كائنات معينة.</string>
     <string name="dialog_edit_story_limited_title">تحرير قصة محدودة</string>
-    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول تحرير قصتك.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول إعادة إنشاء قصتك.</string>
     <string name="color_picker_label_background">الخلفية</string>
     <string name="color_picker_label_text">النص</string>
     <string name="dialog_discard_story_ok_button_edit">تجاهل</string>
