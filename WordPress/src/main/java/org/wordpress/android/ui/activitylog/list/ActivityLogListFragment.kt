@@ -42,6 +42,16 @@ private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
 
+/**
+ * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
+ * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
+ * hand, not much more complexity would be introduced if the 'Activity Log' screen is reused (mainly some 'if/else'
+ * code branches here and there).
+ *
+ * However, should more 'Backup' related additions are added to the 'Activity Log' screen, then it should become a
+ * necessity to split those features in separate screens in order not to increase further the complexity of this
+ * screen's architecture.
+ */
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
@@ -193,8 +203,8 @@ class ActivityLogListFragment : Fragment() {
                             BACKUP_DOWNLOAD_REQUEST_CODE)
                     // todo: annmarie replace with the ActivityLauncher for showing restore details
                     is ShowRestore -> displayRewindDialog(event) }
-                }
-            })
+            }
+        })
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
