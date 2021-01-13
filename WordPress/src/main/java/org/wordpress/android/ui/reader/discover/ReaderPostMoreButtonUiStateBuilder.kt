@@ -103,9 +103,10 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = TOGGLE_SEEN_STATUS,
                             label = UiStringRes(R.string.reader_menu_mark_as_unseen),
-                            labelColor = R.attr.wpColorOnSurfaceMedium,
+                            labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_not_visible_white_24dp,
-                            isSelected = true,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            isSelected = false,
                             onClicked = onButtonClicked
                     )
             )
@@ -114,9 +115,10 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     SecondaryAction(
                             type = TOGGLE_SEEN_STATUS,
                             label = UiStringRes(R.string.reader_menu_mark_as_seen),
-                            labelColor = R.attr.wpColorOnSurfaceMedium,
+                            labelColor = R.attr.colorOnSurface,
                             iconRes = R.drawable.ic_visible_white_24dp,
-                            isSelected = true,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            isSelected = false,
                             onClicked = onButtonClicked
                     )
             )
