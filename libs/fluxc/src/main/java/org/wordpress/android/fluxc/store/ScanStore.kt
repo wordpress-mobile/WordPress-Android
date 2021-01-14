@@ -33,6 +33,9 @@ import java.lang.RuntimeException
 import javax.inject.Inject
 import javax.inject.Singleton
 
+private val SCAN_THREAT_STATUSES = listOf(CURRENT)
+private val SCAN_HISTORY_THREAT_STATUSES = listOf(IGNORED, FIXED)
+
 @Singleton
 class ScanStore @Inject constructor(
     private val scanRestClient: ScanRestClient,
@@ -83,15 +86,19 @@ class ScanStore @Inject constructor(
 
     fun getScanStateForSite(site: SiteModel): ScanStateModel? {
         val scanStateModel = scanSqlUtils.getScanStateForSite(site)
-        val threats = scanStateModel?.let { threatSqlUtils.getThreats(site, listOf(CURRENT)) }
+        val threats = scanStateModel?.let { threatSqlUtils.getThreats(site, SCAN_THREAT_STATUSES) }
         return scanStateModel?.copy(threats = threats)
+    }
+
+    fun getScanHistoryForSite(site: SiteModel): List<ThreatModel> {
+        return threatSqlUtils.getThreats(site, SCAN_HISTORY_THREAT_STATUSES)
     }
 
     fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
 
     fun addOrUpdateScanStateModelForSite(action: ScanAction, site: SiteModel, scanStateModel: ScanStateModel) {
         scanSqlUtils.replaceScanState(site, scanStateModel)
-        storeThreatsWithStatuses(action, site, scanStateModel.threats, listOf(CURRENT))
+        storeThreatsWithStatuses(action, site, scanStateModel.threats, SCAN_THREAT_STATUSES)
     }
 
     override fun onRegister() {
@@ -175,7 +182,7 @@ class ScanStore @Inject constructor(
                     FETCH_SCAN_HISTORY,
                     payload.site,
                     resultPayload.threats,
-                    listOf(IGNORED, FIXED)
+                    SCAN_HISTORY_THREAT_STATUSES
             )
         }
         return emitFetchScanHistoryResult(resultPayload)
