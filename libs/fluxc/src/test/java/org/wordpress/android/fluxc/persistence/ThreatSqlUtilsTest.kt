@@ -189,5 +189,6 @@ class ThreatSqlUtilsTest {
         val threats = threatSqlUtils.getThreats(site, listOf(CURRENT))
 
         assertEquals(threats[0].baseThreatModel.status, CURRENT)
+        assertEquals(threats.size, 1)
     }
 }
