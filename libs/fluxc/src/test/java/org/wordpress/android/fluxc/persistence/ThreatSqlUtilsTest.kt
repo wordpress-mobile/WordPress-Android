@@ -58,7 +58,7 @@ class ThreatSqlUtilsTest {
         val threat = GenericThreatModel(baseThreatModel = dummyBaseThreatModel)
 
         threatSqlUtils.insertThreats(site, listOf(threat))
-        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
+        val threats = threatSqlUtils.getThreats(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         with(threats.first().baseThreatModel) {
@@ -78,7 +78,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
+        val threats = threatSqlUtils.getThreats(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(DatabaseThreatModel::class.java)
@@ -97,7 +97,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
+        val threats = threatSqlUtils.getThreats(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(CoreFileModificationThreatModel::class.java)
@@ -121,7 +121,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
+        val threats = threatSqlUtils.getThreats(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(VulnerableExtensionThreatModel::class.java)
@@ -145,7 +145,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
+        val threats = threatSqlUtils.getThreats(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(FileThreatModel::class.java)
@@ -175,7 +175,7 @@ class ThreatSqlUtilsTest {
         threatSqlUtils.insertThreats(site, listOf(threat1, threat2))
 
         threatSqlUtils.removeThreatsWithStatus(site, listOf(CURRENT))
-        val threats = threatSqlUtils.getThreatsForSite(site, ThreatStatus.values().toList())
+        val threats = threatSqlUtils.getThreats(site, ThreatStatus.values().toList())
 
         assertEquals(1, threats.size)
     }
