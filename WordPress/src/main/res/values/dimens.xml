@@ -416,6 +416,7 @@
     <dimen name="quick_start_task_card_width">168dp</dimen>
     <dimen name="quick_start_task_card_illustration_height">94dp</dimen>
     <dimen name="quick_start_task_card_elevation">0dp</dimen>
+    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
     <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <!-- activity log -->
