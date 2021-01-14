@@ -1049,6 +1049,10 @@
 
     <!-- backup -->
     <string name="backup">Backup</string>
+    <string name="backup_empty_title">Your first backup will be ready soon</string>
+    <string name="backup_empty_subtitle">Your first backup will appear here within 24 hours and you will receive a notification once the backup has been completed</string>
+    <string name="backup_active_filter_empty_title">No matching backups found</string>
+    <string name="backup_active_filter_empty_subtitle">Try adjusting your date range</string>
 
     <!-- scan -->
     <string name="scan">Scan</string>
