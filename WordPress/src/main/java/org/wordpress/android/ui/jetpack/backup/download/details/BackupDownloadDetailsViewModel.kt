@@ -10,6 +10,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
@@ -18,7 +19,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownloadUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -57,9 +57,11 @@ class BackupDownloadDetailsViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
+
     private fun extractPublishedDate(): Date {
-        // todo: annmarie do something about all these null checks
-        return (_uiState.value as? Content)?.activityLogModel?.published as Date
+        return _uiState.value?.activityLogModel?.published as Date
     }
 
     fun start(site: SiteModel, activityId: String, parentViewModel: BackupDownloadViewModel) {
@@ -78,6 +80,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
 
     private fun initSources() {
         parentViewModel.addSnackbarMessageSource(snackbarEvents)
+        parentViewModel.addErrorMessageSource(errorEvents)
     }
 
     private fun getData() {
@@ -85,7 +88,7 @@ class BackupDownloadDetailsViewModel @Inject constructor(
             val availableItems = availableItemsProvider.getAvailableItems()
             val activityLogModel = getActivityLogItemUseCase.get(activityId)
             if (activityLogModel != null) {
-                _uiState.value = Content(
+                _uiState.value = UiState(
                         activityLogModel = activityLogModel,
                         items = stateListItemBuilder.buildDetailsListStateItems(
                                 availableItems = availableItems,
@@ -95,14 +98,14 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                         )
                 )
             } else {
-                parentViewModel.onBackupDownloadDetailsCanceled()
+                _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
             }
         }
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
-        (_uiState.value as? Content)?.let { content ->
-            val updatedList = content.items.map { contentState ->
+        _uiState.value?.let { uiState ->
+            val updatedList = uiState.items.map { contentState ->
                 if (contentState.type == CHECKBOX) {
                     contentState as CheckboxState
                     if (contentState.availableItemType == itemType) {
@@ -114,23 +117,29 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                     contentState
                 }
             }
-            _uiState.postValue(content.copy(items = updatedList))
+            _uiState.postValue(uiState.copy(items = updatedList))
         }
     }
 
     private fun onCreateDownloadClick() {
         val (rewindId, types) = getParams()
-        launch {
-            val result = postBackupDownloadUseCase.postBackupDownloadRequest(rewindId, site, types)
-            handleBackupDownloadRequestResult(result)
+        if (rewindId == null) {
+            _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
+        } else {
+            launch {
+                val result = postBackupDownloadUseCase.postBackupDownloadRequest(
+                        rewindId,
+                        site,
+                        types
+                )
+                handleBackupDownloadRequestResult(result)
+            }
         }
     }
 
-    private fun getParams(): Pair<String, BackupDownloadRequestTypes> {
-        val rewindId = (_uiState.value as Content).activityLogModel.rewindID
-        val items = (_uiState.value as Content).items
-        if (rewindId == null)
-            throw Throwable("State is all off - can not continue - what should I do here?")
+    private fun getParams(): Pair<String?, BackupDownloadRequestTypes> {
+        val rewindId = _uiState.value?.activityLogModel?.rewindID
+        val items = _uiState.value?.items ?: mutableListOf()
         val types = buildBackupDownloadRequestTypes(items)
         return rewindId to types
     }
@@ -177,13 +186,8 @@ class BackupDownloadDetailsViewModel @Inject constructor(
                 UiStringRes(R.string.backup_download_another_download_running))
     }
 
-    sealed class UiState {
-        // todo: annmarie - add error states or maybe not if we dump out or show snackbar
-        data class Error(val message: String) : UiState()
-
-        data class Content(
-            val activityLogModel: ActivityLogModel,
-            val items: List<JetpackListItemState>
-        ) : UiState()
-    }
+    data class UiState(
+        val activityLogModel: ActivityLogModel,
+        val items: List<JetpackListItemState>
+    )
 }

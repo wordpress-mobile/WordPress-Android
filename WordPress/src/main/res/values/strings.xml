@@ -1052,11 +1052,14 @@
 
     <!-- scan -->
     <string name="scan">Scan</string>
+    <string name="scan_history">Scan History</string>
+    <string name="scan_history_menu_title">History</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
     <string name="scan_again">Scan again</string>
-    <string name="scan_scanning_title">Preparing to scan</string>
+    <string name="scan_preparing_to_scan_title">Preparing to scan</string>
+    <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
     <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
@@ -3430,6 +3433,11 @@ translators: sample content for "Services" page template -->
     <string name="backup_download_complete_download_action_button_content_description">Download button</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Share link button</string>
     <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
+    <string name="backup_download_complete_failed_title">Download failed</string>
+    <string name="backup_download_complete_failed_description">We couldn\'t create your backup. Please try again later.</string>
+    <string name="backup_download_complete_failed_action_button">Done</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Done button</string>
+    <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
 
     <string name="jetpack_icon_content_description">icon</string>
     <string name="label_control_upload">Upload</string>

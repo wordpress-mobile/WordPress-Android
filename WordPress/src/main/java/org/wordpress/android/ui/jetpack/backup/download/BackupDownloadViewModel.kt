@@ -39,7 +39,8 @@ data class BackupDownloadState(
     val rewindId: String? = null,
     val downloadId: Long? = null,
     val published: Date? = null,
-    val url: String? = null
+    val url: String? = null,
+    val errorType: Int? = null
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>
@@ -69,6 +70,12 @@ class BackupDownloadViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
+    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
+
+    private val _navigationEvents = MediatorLiveData<Event<BackupDownloadNavigationEvents>>()
+    val navigationEvents: LiveData<Event<BackupDownloadNavigationEvents>> = _navigationEvents
+
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
@@ -86,6 +93,18 @@ class BackupDownloadViewModel @Inject constructor(
     fun addSnackbarMessageSource(snackbarEvents: LiveData<Event<SnackbarMessageHolder>>) {
         _snackbarEvents.addSource(snackbarEvents) { event ->
             _snackbarEvents.value = event
+        }
+    }
+
+    fun addErrorMessageSource(errorEvents: LiveData<Event<BackupDownloadErrorTypes>>) {
+        _errorEvents.addSource(errorEvents) { event ->
+            _errorEvents.value = event
+        }
+    }
+
+    fun addNavigationEventSource(navigationEvent: LiveData<Event<BackupDownloadNavigationEvents>>) {
+        _navigationEvents.addSource(navigationEvent) { event ->
+            _navigationEvents.value = event
         }
     }
 
@@ -117,7 +136,8 @@ class BackupDownloadViewModel @Inject constructor(
             backupDownloadState = backupDownloadState.copy(
                     rewindId = null,
                     downloadId = null,
-                    url = null
+                    url = null,
+                    errorType = null
             )
         }
     }
@@ -141,6 +161,12 @@ class BackupDownloadViewModel @Inject constructor(
 
     fun setToolbarState(toolbarState: ToolbarState) {
         _toolbarStateObservable.value = toolbarState
+    }
+
+    fun transitionToError(errorType: BackupDownloadErrorTypes) {
+        backupDownloadState = backupDownloadState.copy(errorType = errorType.id)
+        wizardManager.setCurrentStepIndex(BackupDownloadStep.indexForErrorTransition())
+        wizardManager.showNextStep()
     }
 
     sealed class BackupDownloadWizardState : Parcelable {
@@ -170,6 +196,11 @@ class BackupDownloadViewModel @Inject constructor(
 
         data class CompleteToolbarState(
             @StringRes override val title: Int = R.string.backup_download_complete_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
+
+        data class ErrorToolbarState(
+            @StringRes override val title: Int = R.string.backup_download_complete_failed_title,
             @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }

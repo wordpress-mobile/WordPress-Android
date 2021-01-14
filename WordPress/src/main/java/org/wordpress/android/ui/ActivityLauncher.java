@@ -49,6 +49,7 @@ import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -621,6 +622,16 @@ public class ActivityLauncher {
             return;
         }
         Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
+    public static void viewScanHistory(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanHistoryActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
     }
@@ -1351,5 +1362,18 @@ public class ActivityLauncher {
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
         activity.startActivityForResult(intent, resultCode);
+    }
+
+    public static void shareBackupDownloadFileLink(Context context, String url) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+    }
+
+    public static void downloadBackupDownloadFile(Context context, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(intent);
     }
 }

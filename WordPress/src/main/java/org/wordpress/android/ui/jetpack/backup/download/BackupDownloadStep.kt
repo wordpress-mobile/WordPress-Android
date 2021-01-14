@@ -14,6 +14,8 @@ enum class BackupDownloadStep(val id: Int) : WizardStep {
             "backup_download_complete" -> COMPLETE
             else -> throw IllegalArgumentException("SiteCreationStep not recognized: \$input")
         }
+
+        fun indexForErrorTransition(): Int = PROGRESS.id
     }
 }
 
