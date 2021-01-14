@@ -5,8 +5,11 @@ import org.wordpress.android.annotation.FeatureInDevelopment
 import javax.inject.Inject
 
 /**
- * Configuration of the Modal Layout Picker (MLP) feature
+ * Configuration of the 'Jetpack Backups' feature.
  */
 @FeatureInDevelopment
-class ModalLayoutPickerFeatureConfig
-@Inject constructor(appConfig: AppConfig) : FeatureConfig(appConfig, BuildConfig.MODAL_LAYOUT_PICKER)
+class BackupsFeatureConfig
+@Inject constructor(appConfig: AppConfig) : FeatureConfig(
+        appConfig,
+        BuildConfig.BACKUPS_AVAILABLE
+)

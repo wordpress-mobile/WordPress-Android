@@ -30,7 +30,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -69,7 +69,7 @@ class ActivityLogViewModel @Inject constructor(
     private val backupFeatureConfig: BackupFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
-    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -79,7 +79,6 @@ class ActivityLogViewModel @Inject constructor(
         FETCHING,
         LOADING_MORE
     }
-
     private var isStarted = false
 
     private val _events = MutableLiveData<List<ActivityLogListItem>>()
@@ -93,6 +92,9 @@ class ActivityLogViewModel @Inject constructor(
     private val _filtersUiState = MutableLiveData<FiltersUiState>(FiltersHidden)
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
+
+    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.EmptyFilters)
+    val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
 
     private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
     val showRewindDialog: LiveData<ActivityLogListItem>
@@ -183,10 +185,11 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 launch {
-                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
-                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
-                        refreshFiltersUiState()
-                    }
+                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                            .find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }
+                            ?.let {
+                                refreshFiltersUiState()
+                            }
                 }
             }
         }
@@ -218,6 +221,11 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                 currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            _emptyUiState.value = EmptyUiState.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.EmptyFilters
+        }
     }
 
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
@@ -519,5 +527,20 @@ class ActivityLogViewModel @Inject constructor(
             val onClearDateRangeFilterClicked: (() -> Unit)?,
             val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
+    }
+
+    sealed class EmptyUiState {
+        abstract val emptyScreenTitle: UiString
+        abstract val emptyScreenSubtitle: UiString
+
+        object EmptyFilters : EmptyUiState() {
+            override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
+            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+        }
+
+        object ActiveFilters : EmptyUiState() {
+            override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
+            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+        }
     }
 }

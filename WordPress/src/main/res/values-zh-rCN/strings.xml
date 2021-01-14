@@ -35,7 +35,6 @@ Language: zh_CN
     <string name="dialog_edit_story_unavailable_title">无法编辑故事</string>
     <string name="dialog_edit_story_limited_message">这个故事是在其他设备上编辑的，因此编辑某些对象时可能会受到限制。</string>
     <string name="dialog_edit_story_limited_title">受限故事编辑</string>
-    <string name="cannot_retry_deleted_media_item_fatal">媒体已被删除。 尝试编辑您的故事。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">文本</string>
     <string name="dialog_discard_story_ok_button_edit">丢弃</string>

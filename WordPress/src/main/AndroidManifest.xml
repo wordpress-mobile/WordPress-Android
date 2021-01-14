@@ -647,6 +647,11 @@
             android:label="@string/scan"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.jetpack.scan.history.ScanHistoryActivity"
+            android:label="@string/scan_history"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Jetpack - Threat Details-->
         <activity
             android:name=".ui.jetpack.scan.details.ThreatDetailsActivity"
