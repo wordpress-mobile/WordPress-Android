@@ -57,12 +57,24 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+const val ACTIVITY_LOG_REWINDABLE_ONLY_KEY = "activity_log_rewindable_only"
+
 private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
 private const val ONE_SECOND_IN_MILLIS = 1000
 private const val TIMEZONE_GMT_0 = "GMT+0"
 
 typealias DateRange = Pair<Long, Long>
 
+/**
+ * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
+ * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
+ * hand, not much more complexity would be introduced if the 'Activity Log' screen is reused (mainly some 'if/else'
+ * code branches here and there).
+ *
+ * However, should more 'Backup' related additions are added to the 'Activity Log' screen, then it should become a
+ * necessity to split those features in separate screens in order not to increase further the complexity of this
+ * screen's architecture.
+ */
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
@@ -82,6 +94,7 @@ class ActivityLogViewModel @Inject constructor(
         FETCHING,
         LOADING_MORE
     }
+
     private var isStarted = false
 
     private val _events = MutableLiveData<List<ActivityLogListItem>>()
@@ -96,7 +109,7 @@ class ActivityLogViewModel @Inject constructor(
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
-    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.EmptyFilters)
+    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.ActivityLog.EmptyFilters)
     val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
 
     private val _showActivityTypeFilterDialog = SingleLiveEvent<ShowActivityTypePicker>()
@@ -156,13 +169,16 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     lateinit var site: SiteModel
+    var rewindableOnly: Boolean = false
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
             return
         }
+        isStarted = true
 
         this.site = site
+        this.rewindableOnly = rewindableOnly
 
         rewindStatusService.start(site)
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
@@ -174,8 +190,6 @@ class ActivityLogViewModel @Inject constructor(
         requestEventsUpdate(false)
 
         showFiltersIfSupported()
-
-        isStarted = true
     }
 
     private fun showFiltersIfSupported() {
@@ -220,10 +234,30 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                 currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
-        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
-            _emptyUiState.value = EmptyUiState.ActiveFilters
+        refreshEmptyUiState()
+    }
+
+    private fun refreshEmptyUiState() {
+        if (rewindableOnly) {
+            refreshBackupEmptyUiState()
         } else {
-            _emptyUiState.value = EmptyUiState.EmptyFilters
+            refreshActivityLogEmptyUiState()
+        }
+    }
+
+    private fun refreshBackupEmptyUiState() {
+        if (currentDateRangeFilter != null) {
+            _emptyUiState.value = EmptyUiState.Backup.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.Backup.EmptyFilters
+        }
+    }
+
+    private fun refreshActivityLogEmptyUiState() {
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            _emptyUiState.value = EmptyUiState.ActivityLog.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.ActivityLog.EmptyFilters
         }
     }
 
@@ -243,7 +277,7 @@ class ActivityLogViewModel @Inject constructor(
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
                 kotlin.Pair(
-                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringText(it[0].name),
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_single_item_selected_content_description,
                                 listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
@@ -380,7 +414,11 @@ class ActivityLogViewModel @Inject constructor(
         displayProgressItem: Boolean = isRewindProgressItemShown,
         done: Boolean = isDone
     ) {
-        val eventList = activityLogStore.getActivityLogForSite(site, false)
+        val eventList = activityLogStore.getActivityLogForSite(
+                site = site,
+                ascending = false,
+                rewindableOnly = rewindableOnly
+        )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
         val rewindFinished = isRewindProgressItemShown && !displayProgressItem
@@ -552,14 +590,28 @@ class ActivityLogViewModel @Inject constructor(
         abstract val emptyScreenTitle: UiString
         abstract val emptyScreenSubtitle: UiString
 
-        object EmptyFilters : EmptyUiState() {
-            override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
-            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+        object ActivityLog {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+            }
+
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+            }
         }
 
-        object ActiveFilters : EmptyUiState() {
-            override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
-            override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+        object Backup {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_empty_subtitle)
+            }
+
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_active_filter_empty_subtitle)
+            }
         }
     }
 }
