@@ -43,7 +43,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -60,6 +60,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -90,12 +91,12 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
-    private var rewindDialogs: MutableList<ActivityLogListItem?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private var snackbarMessages: MutableList<String?> = mutableListOf()
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
@@ -154,13 +155,13 @@ class ActivityLogViewModelTest {
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
+                restoreFeatureConfig,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
         viewModel.showItemDetail.observeForever { itemDetails.add(it) }
-        viewModel.showRewindDialog.observeForever { rewindDialogs.add(it) }
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
@@ -269,9 +270,9 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true, false)
-        val second = Event(activityLogList[1], true, false)
-        val third = Event(activityLogList[2], true, false)
+        val first = Event(activityLogList[0], true, false, false)
+        val second = Event(activityLogList[1], true, false, false)
+        val third = Event(activityLogList[2], true, false, false)
         activityLogListItems.add(Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
@@ -344,11 +345,9 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActionButtonClickShowsRewindDialog() {
-        assertTrue(rewindDialogs.isEmpty())
-
         viewModel.onActionButtonClicked(event)
 
-        assertEquals(rewindDialogs.firstOrNull(), event)
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
@@ -488,10 +487,10 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onSecondaryActionClickRestoreNavigationEventIsShowRestore() {
+    fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
         viewModel.onSecondaryActionClicked(RESTORE, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test

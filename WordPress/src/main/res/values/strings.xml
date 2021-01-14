@@ -3442,4 +3442,8 @@ translators: sample content for "Services" page template -->
     <string name="jetpack_icon_content_description">icon</string>
     <string name="label_control_upload">Upload</string>
 
+    <!-- Jetpack restore -->
+    <string name="restore">Restore</string>
+    <string name="restore_details_page_title">@string/restore</string>
+
 </resources>
