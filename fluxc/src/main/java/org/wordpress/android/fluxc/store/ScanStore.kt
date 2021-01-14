@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.fluxc.utils.BuildConfigWrapper
 import org.wordpress.android.util.AppLog
 import java.lang.RuntimeException
 import javax.inject.Inject
@@ -39,6 +40,7 @@ class ScanStore @Inject constructor(
     private val threatSqlUtils: ThreatSqlUtils,
     private val coroutineEngine: CoroutineEngine,
     private val appLogWrapper: AppLogWrapper,
+    private val buildConfigWrapper: BuildConfigWrapper,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -191,7 +193,7 @@ class ScanStore @Inject constructor(
                     if (it.size != threats.size) {
                         val msg = "$action action returned a Threat with ThreatState not in ${statuses.joinToString()}"
                         appLogWrapper.e(AppLog.T.API, msg)
-                        if (BuildConfig.DEBUG) {
+                        if (buildConfigWrapper.isDebug()) {
                             throw RuntimeException(msg)
                         }
                     }
