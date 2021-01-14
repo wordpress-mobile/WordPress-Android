@@ -1,9 +1,12 @@
 package org.wordpress.android.fluxc.store
 
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -19,7 +22,9 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
@@ -272,5 +277,15 @@ class ScanStoreTest {
             ScanAction.FETCH_FIX_THREATS_STATUS
         )
         verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `getScanHistoryForSite returns only FIXED and IGNORED threats`() = test {
+        val captor = argumentCaptor<List<ThreatStatus>>()
+        whenever(threatSqlUtils.getThreats(anyOrNull(), captor.capture())).thenReturn(mock())
+
+        scanStore.getScanHistoryForSite(siteModel)
+
+        assertThat(captor.firstValue).isEqualTo(listOf(IGNORED, FIXED))
     }
 }
