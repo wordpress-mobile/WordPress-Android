@@ -3451,4 +3451,14 @@ translators: sample content for "Services" page template -->
     <string name="restore_details_action_button">Restore site</string>
     <string name="restore_details_icon_content_description">Restore icon</string>
     <string name="restore_details_action_button_content_description">Restore site button</string>
+
+    <string name="restore_warning_page_title">@string/restore</string>
+    <string name="restore_warning_header">Warning</string>
+    <string name="restore_warning_description_with_two_parameters">Are you sure you want to rewind your site back to %1$s at %2$s?
+        This will remove all content and options created or changed since then.</string>
+    <string name="restore_warning_action_button">Confirm restore site</string>
+    <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
+    <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
+    <string name="restore_generic_failure">There was a problem handling the request. Please try again later.</string>
+    <string name="restore_another_restore_running">There is another restore running.</string>
 </resources>
