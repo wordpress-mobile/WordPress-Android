@@ -11,6 +11,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.PLUGINS
@@ -19,8 +20,10 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
@@ -153,6 +156,18 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given in complete step, when onBackPressed, then invokes wizard finished with BackupDownloadCompleted`() {
+        val wizardFinishedObserver = initObservers().wizardFinishedObserver
+        viewModel.start(null)
+        Mockito.clearInvocations(wizardManager)
+
+        whenever(wizardManager.currentStep).thenReturn(RestoreStep.COMPLETE.id)
+        viewModel.onBackPressed()
+
+        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCompleted::class.java)
+    }
+
+    @Test
     fun `given viewModel, when starts, toolbarState contains no entries`() {
         val toolbarStates = initObservers().toolbarState
 
@@ -202,6 +217,27 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.setToolbarState(ProgressToolbarState())
 
         Assertions.assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+
+        viewModel.start(null)
+
+        viewModel.setToolbarState(CompleteToolbarState())
+
+        Assertions.assertThat(toolbarStates.last()).isInstanceOf(CompleteToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete error step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+        viewModel.start(null)
+
+        viewModel.setToolbarState(ToolbarState.ErrorToolbarState())
+
+        Assertions.assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test
