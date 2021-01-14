@@ -5,13 +5,18 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
@@ -24,6 +29,9 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+import javax.inject.Named
+
+private const val DELAY_MILLIS = 2000L
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
@@ -31,7 +39,8 @@ class ThreatDetailsViewModel @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private lateinit var site: SiteModel
     private var isStarted = false
@@ -70,6 +79,9 @@ class ThreatDetailsViewModel @Inject constructor(
                 is IgnoreThreatState.Success -> {
                     val message = UiStringRes(R.string.threat_ignore_success_message)
                     updateSnackbarMessageEvent(SnackbarMessageHolder(message))
+
+                    withContext(bgDispatcher) { delay(DELAY_MILLIS) }
+                    updateNavigationEvent(ShowUpdatedScanState)
                 }
 
                 is IgnoreThreatState.Failure -> {

@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
+import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -12,6 +14,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -65,8 +68,14 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
             viewLifecycleOwner,
             {
                 it.applyIfNotHandled {
-                    if (this is OpenThreatActionDialog) {
-                        showThreatActionDialog(this)
+                    when (this) {
+                        is OpenThreatActionDialog -> showThreatActionDialog(this)
+
+                        is ShowUpdatedScanState -> {
+                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, true)
+                            activity?.setResult(Activity.RESULT_OK, intent)
+                            activity?.finish()
+                        }
                     }
                 }
             }
@@ -100,5 +109,9 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     override fun onPause() {
         super.onPause()
         threatActionDialog?.dismiss()
+    }
+
+    companion object {
+        const val REQUEST_SCAN_STATE = "request_scan_state"
     }
 }

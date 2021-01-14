@@ -47,7 +47,7 @@ class ScanViewModel @Inject constructor(
         fetchScanState()
     }
 
-    private fun fetchScanState() {
+    fun fetchScanState() {
         launch {
             fetchScanStateUseCase.fetchScanState(site = site)
                 .collect { state ->
