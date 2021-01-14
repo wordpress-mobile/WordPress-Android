@@ -2,6 +2,7 @@ package org.wordpress.android.fluxc.store
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.fluxc.BuildConfig
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
@@ -16,12 +17,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
+import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.util.AppLog
+import java.lang.RuntimeException
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -31,6 +35,7 @@ class ScanStore @Inject constructor(
     private val scanSqlUtils: ScanSqlUtils,
     private val threatSqlUtils: ThreatSqlUtils,
     private val coroutineEngine: CoroutineEngine,
+    private val appLogWrapper: AppLogWrapper,
     dispatcher: Dispatcher
 ) : Store(dispatcher) {
     @Subscribe(threadMode = ThreadMode.ASYNC)
@@ -94,7 +99,16 @@ class ScanStore @Inject constructor(
         } else {
             if (payload.scanStateModel != null) {
                 scanSqlUtils.replaceScanState(payload.site, payload.scanStateModel)
-                threatSqlUtils.replaceThreatsForSite(payload.site, payload.scanStateModel.threats ?: emptyList())
+                threatSqlUtils.removeThreatsWithStatus(payload.site, listOf(CURRENT))
+                val threats = payload.scanStateModel.threats
+                        ?.filter { it.baseThreatModel.status == CURRENT }
+                        ?.also {
+                            if (it.size != payload.scanStateModel.threats.size) {
+                                appLogWrapper.e(AppLog.T.API, "Scan State endpoint returned Threat.State != CURRENT")
+                                if(BuildConfig.DEBUG) throw RuntimeException("fetchScanState API returned a Threat with status != CURRENT")
+                            }
+                        } ?: emptyList()
+                threatSqlUtils.insertThreats(payload.site, threats)
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
@@ -155,8 +169,15 @@ class ScanStore @Inject constructor(
     }
 
     suspend fun fetchScanHistory(payload: FetchScanHistoryPayload): OnScanHistoryFetched {
-        val resultPayload = scanRestClient.fetchScanHistory(payload.remoteSiteId)
+        val resultPayload = scanRestClient.fetchScanHistory(payload.site.siteId)
+        if(!resultPayload.isError && resultPayload.threats != null) {
+            storeThreats(payload.site, resultPayload.threats)
+        }
         return emitFetchScanHistoryResult(resultPayload)
+    }
+
+    private fun storeThreats(site: SiteModel, threats: List<ThreatModel>) {
+//        threatSqlUtils.replaceThreatsForSite(site, threats)
     }
 
     private fun emitFetchScanHistoryResult(payload: FetchScanHistoryResultPayload) =
@@ -272,7 +293,7 @@ class ScanStore @Inject constructor(
         }
     }
 
-    class FetchScanHistoryPayload(val remoteSiteId: Long) : Payload<BaseNetworkError>()
+    class FetchScanHistoryPayload(val site: SiteModel) : Payload<BaseNetworkError>()
 
     class FetchScanHistoryResultPayload(
         val remoteSiteId: Long,
