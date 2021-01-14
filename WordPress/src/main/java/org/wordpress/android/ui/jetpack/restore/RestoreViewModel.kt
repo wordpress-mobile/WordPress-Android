@@ -133,11 +133,16 @@ class RestoreViewModel @Inject constructor(
         }
     }
 
-    fun onRestoreDetailsFinished(rewindId: String?, optionsSelected: List<Pair<Int, Boolean>>?, published: Date?) {
+    fun onRestoreDetailsFinished(
+        rewindId: String?,
+        optionsSelected: List<Pair<Int, Boolean>>?,
+        published: Date?
+    ) {
         restoreState = restoreState.copy(
                 rewindId = rewindId,
                 optionsSelected = optionsSelected,
-                published = published)
+                published = published
+        )
         wizardManager.showNextStep()
     }
 
@@ -158,7 +163,7 @@ class RestoreViewModel @Inject constructor(
     fun onRestoreProgressFinished() {
         // todo: annmarie remove first line & uncomment nextStep
         _wizardFinishedObservable.value = Event(RestoreCompleted)
-       // wizardManager.showNextStep()
+        // wizardManager.showNextStep()
     }
 
     fun setToolbarState(toolbarState: ToolbarState) {
