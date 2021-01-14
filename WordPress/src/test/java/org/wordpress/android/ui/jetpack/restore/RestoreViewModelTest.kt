@@ -11,7 +11,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.PLUGINS
@@ -25,6 +24,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardSt
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
 import org.wordpress.android.util.wizard.WizardManager
@@ -235,7 +235,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         val toolbarStates = initObservers().toolbarState
         viewModel.start(null)
 
-        viewModel.setToolbarState(ToolbarState.ErrorToolbarState())
+        viewModel.setToolbarState(ErrorToolbarState())
 
         Assertions.assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
     }
