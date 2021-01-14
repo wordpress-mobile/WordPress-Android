@@ -55,7 +55,7 @@ sealed class MySiteItem(val type: Type) {
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
         val doneTasks = tasks.filter { it.done }
-        val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
+        val progress = if (tasks.isNotEmpty()) (doneTasks.size * 100f / tasks.size).roundToInt() else 0
 
         data class DummyTask(
             val id: String,
