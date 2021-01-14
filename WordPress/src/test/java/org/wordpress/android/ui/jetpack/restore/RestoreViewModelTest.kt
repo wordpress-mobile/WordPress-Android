@@ -156,7 +156,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given in complete step, when onBackPressed, then invokes wizard finished with BackupDownloadCompleted`() {
+    fun `given in complete step, when onBackPressed, then invokes wizard finished with RestoreCompleted`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
         Mockito.clearInvocations(wizardManager)

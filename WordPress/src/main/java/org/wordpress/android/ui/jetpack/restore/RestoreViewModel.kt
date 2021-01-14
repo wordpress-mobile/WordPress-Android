@@ -12,9 +12,11 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
@@ -122,6 +124,9 @@ class RestoreViewModel @Inject constructor(
             WARNING.id -> {
                 wizardManager.onBackPressed()
                 _onBackPressedObservable.value = Unit
+            }
+            COMPLETE.id -> {
+                _wizardFinishedObservable.value = Event(RestoreCompleted)
             }
         }
     }
