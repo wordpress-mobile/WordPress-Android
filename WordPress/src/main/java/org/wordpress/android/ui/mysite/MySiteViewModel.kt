@@ -186,14 +186,25 @@ class MySiteViewModel
             }
 
             // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val dummyTasks = (1..5).map { QuickStartTaskCard("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
-            val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
-                    .sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id))
+            val dummyTaskCards1 = (1..5).map {
+                QuickStartTaskCard(
+                        id = "dummy_task_$it",
+                        title = "Dummy Task $it",
+                        accentColor = R.color.green_20,
+                        done = it > 4
+                )
+            }.toList()
+            val dummyTaskCards2 = dummyTaskCards1.mapIndexed { i, task ->
+                task.copy(
+                        accentColor = R.color.orange_40,
+                        done = i % 2 == 0
+                )
+            }.sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id))
             siteItems.add(
                     QuickStartCard(
                             "customize_your_site",
                             "Customize your Site",
-                            dummyTasks,
+                            dummyTaskCards1,
                             R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
                     )
@@ -202,7 +213,7 @@ class MySiteViewModel
                     QuickStartCard(
                             "grow_your_audience",
                             "Grow your Audience",
-                            dummyTasksCompleted,
+                            dummyTaskCards2,
                             R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
                     )

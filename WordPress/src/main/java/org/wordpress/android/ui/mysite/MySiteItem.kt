@@ -61,6 +61,7 @@ sealed class MySiteItem(val type: Type) {
             val id: String,
             val title: String,
             val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
+            @ColorRes val accentColor: Int,
             val done: Boolean = false
         )
     }
