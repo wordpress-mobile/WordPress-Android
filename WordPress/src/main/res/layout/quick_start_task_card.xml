@@ -8,6 +8,7 @@
     android:checkable="true"
     android:clickable="true"
     android:focusable="true"
+    app:cardCornerRadius="@dimen/quick_start_task_card_corner_radius"
     app:cardElevation="@dimen/quick_start_task_card_elevation"
     app:cardForegroundColor="@color/quick_start_task_card_foreground_selector"
     app:rippleColor="@color/quick_start_task_card_ripple_selector">
