@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
+import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -7,16 +8,22 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
+import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderBlogTable
 import org.wordpress.android.datasets.ReaderTagTable
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.Organization.NO_ORGANIZATION
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderEvents
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
+import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
+import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
+import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
@@ -24,6 +31,8 @@ import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderModeInfo
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
@@ -49,14 +58,11 @@ class SubFilterViewModel @Inject constructor(
     private val _currentSubFilter = MutableLiveData<SubfilterListItem>()
     val currentSubFilter: LiveData<SubfilterListItem> = _currentSubFilter
 
-    private val _shouldShowSubFilters = MutableLiveData<Boolean>()
-    val shouldShowSubFilters: LiveData<Boolean> = _shouldShowSubFilters
-
     private val _readerModeInfo = SingleLiveEvent<ReaderModeInfo>()
     val readerModeInfo: LiveData<ReaderModeInfo> = _readerModeInfo
 
-    private val _changeBottomSheetVisibility = MutableLiveData<Event<Boolean>>()
-    val changeBottomSheetVisibility: LiveData<Event<Boolean>> = _changeBottomSheetVisibility
+    private val _bottomSheetUiState = MutableLiveData<Event<BottomSheetUiState>>()
+    val bottomSheetUiState: LiveData<Event<BottomSheetUiState>> = _bottomSheetUiState
 
     private val _filtersMatchCount = MutableLiveData<HashMap<SubfilterCategory, Int>>()
     val filtersMatchCount: LiveData<HashMap<SubfilterCategory, Int>> = _filtersMatchCount
@@ -72,25 +78,37 @@ class SubFilterViewModel @Inject constructor(
 
     private var isStarted = false
     private var isFirstLoad = true
+    private var shouldRequestNewerPosts = true
+    private var mainStreamTag: ReaderTag? = null
 
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(tag: ReaderTag?) {
+    fun start(mainStreamTag: ReaderTag?, tag: ReaderTag?, subfilterJson: String?) {
         if (isStarted) {
             return
         }
 
+        isStarted = true
+
+        shouldRequestNewerPosts = subfilterJson == null
+
+        this.mainStreamTag = mainStreamTag
         eventBusWrapper.register(this)
 
         tag?.let {
-            updateSubfilter(getCurrentSubfilterValue())
-            changeSubfiltersVisibility(tag.isFollowedSites)
+            val currentSubfilter = subfilterJson?.let {
+                subfilterListItemMapper.fromJson(
+                        json = subfilterJson,
+                        onClickAction = ::onSubfilterClicked,
+                        isSelected = true
+                )
+            }
+            updateSubfilter(currentSubfilter ?: getCurrentSubfilterValue())
+            initSubfiltersTracking(tag.isFilterable)
         }
 
         _filtersMatchCount.value = hashMapOf()
-
-        isStarted = true
     }
 
     fun loadSubFilters() {
@@ -98,20 +116,26 @@ class SubFilterViewModel @Inject constructor(
             val filterList = ArrayList<SubfilterListItem>()
 
             if (accountStore.hasAccessToken()) {
-                // Filtering Discover out
+                val organization = mainStreamTag?.organization
+
                 val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
+                    // Filtering out Discover and all blogs not belonging to this VM organization if valid
                     blogList.filter { blog ->
-                        !(blog.url.startsWith("https://discover.wordpress.com"))
+                        !(blog.url.startsWith("https://discover.wordpress.com")) && ( organization?.let {
+                            blog.organizationId == organization.orgId
+                        } ?: false )
                     }
                 }
 
-                for (blog in followedBlogs) {
-                    filterList.add(Site(
+                filterList.addAll(
+                    followedBlogs.map { blog ->
+                        Site(
                             onClickAction = ::onSubfilterClicked,
                             blog = blog,
                             isSelected = false
-                    ))
-                }
+                        )
+                    }
+                )
             }
 
             val tags = ReaderTagTable.getFollowedTags()
@@ -131,11 +155,12 @@ class SubFilterViewModel @Inject constructor(
     }
 
     private fun onSubfilterClicked(filter: SubfilterListItem) {
-        _changeBottomSheetVisibility.postValue(Event(false))
+        _bottomSheetUiState.postValue(Event(BottomSheetHidden))
         updateSubfilter(filter)
     }
 
-    fun changeSubfiltersVisibility(show: Boolean) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun initSubfiltersTracking(show: Boolean) {
         val isCurrentSubfilterTracked = getCurrentSubfilterValue().isTrackedItem
 
         if (show) {
@@ -147,18 +172,17 @@ class SubFilterViewModel @Inject constructor(
         } else {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
-
-        _shouldShowSubFilters.postValue(show)
     }
 
     fun getCurrentSubfilterValue(): SubfilterListItem {
-        return _currentSubFilter.value ?: appPrefsWrapper.getReaderSubfilter().let {
-            subfilterListItemMapper.fromJson(
-                    json = it,
-                    onClickAction = ::onSubfilterClicked,
-                    isSelected = true
-            )
-        }
+        return _currentSubFilter.value ?: SiteAll(
+                onClickAction = ::onSubfilterClicked,
+                isSelected = true
+        )
+    }
+
+    fun getCurrentSubfilterJson(): String {
+        return subfilterListItemMapper.toJson(getCurrentSubfilterValue())
     }
 
     fun setSubfilterFromTag(tag: ReaderTag) {
@@ -183,16 +207,20 @@ class SubFilterViewModel @Inject constructor(
                 UpdateTask.TAGS,
                 UpdateTask.FOLLOWED_BLOGS
         ))
-        _changeBottomSheetVisibility.value = Event(true)
+        _bottomSheetUiState.value = Event(BottomSheetVisible(
+                mainStreamTag?.let { UiStringText(it.label) } ?: UiStringRes(R.string.reader_filter_main_title),
+                if (mainStreamTag?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
+        ))
     }
 
     fun onBottomSheetCancelled() {
-        _changeBottomSheetVisibility.value = Event(false)
+        _bottomSheetUiState.value = Event(BottomSheetHidden)
     }
 
     private fun changeSubfilter(
         subfilterListItem: SubfilterListItem,
-        requestNewerPosts: Boolean
+        requestNewerPosts: Boolean,
+        streamTag: ReaderTag?
     ) {
         when (subfilterListItem.type) {
             SubfilterListItem.ItemType.SECTION_TITLE,
@@ -200,7 +228,7 @@ class SubFilterViewModel @Inject constructor(
                 // nop
             }
             SubfilterListItem.ItemType.SITE_ALL -> _readerModeInfo.value = (ReaderModeInfo(
-                    ReaderUtils.getDefaultTag(),
+                    streamTag ?: ReaderUtils.getDefaultTag(),
                     ReaderPostListType.TAG_FOLLOWED,
                     0,
                     0,
@@ -242,11 +270,14 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        changeSubfilter(subfilterListItem, true)
+        changeSubfilter(subfilterListItem, shouldRequestNewerPosts, mainStreamTag)
+        if (!shouldRequestNewerPosts) {
+            shouldRequestNewerPosts = true
+        }
     }
 
     fun onSubfilterReselected() {
-        changeSubfilter(getCurrentSubfilterValue(), false)
+        changeSubfilter(getCurrentSubfilterValue(), false, mainStreamTag)
     }
 
     fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
@@ -260,7 +291,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onBottomSheetActionClicked(action: ActionType) {
-        _changeBottomSheetVisibility.postValue(Event(false))
+        _bottomSheetUiState.postValue(Event(BottomSheetHidden))
         _bottomSheetEmptyViewAction.postValue(Event(action))
     }
 
@@ -271,8 +302,6 @@ class SubFilterViewModel @Inject constructor(
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
         _currentSubFilter.value = filter
-        val json = subfilterListItemMapper.toJson(filter)
-        appPrefsWrapper.setReaderSubfilter(json)
     }
 
     fun onUserComesToReader() {
@@ -322,7 +351,11 @@ class SubFilterViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
-        eventBusWrapper.unregister(this)
+    super.onCleared()
+    eventBusWrapper.unregister(this)
+}
+
+    companion object {
+        const val SUBFILTER_VM_BASE_KEY = "SUBFILTER_VIEW_MODEL_BASE_KEY"
     }
 }
