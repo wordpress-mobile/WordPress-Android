@@ -20,13 +20,9 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import dagger.android.support.DaggerFragment
-import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
-import org.wordpress.android.ui.Organization
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.HiddenEmptyUiState
 import org.wordpress.android.ui.reader.subfilter.SubfilterBottomSheetEmptyUiState.VisibleEmptyUiState
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
-import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.SITE
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.ItemType.TAG
@@ -89,8 +85,10 @@ class SubfilterPageFragment : DaggerFragment() {
         title = emptyStateContainer.findViewById(R.id.title)
         actionButton = emptyStateContainer.findViewById(R.id.action_button)
 
-        subFilterViewModel = ViewModelProvider(requireParentFragment().parentFragment as ViewModelStoreOwner, viewModelFactory)
-                .get(subfilterVmKey, SubFilterViewModel::class.java)
+        subFilterViewModel = ViewModelProvider(
+                requireParentFragment().parentFragment as ViewModelStoreOwner,
+                viewModelFactory
+        ).get(subfilterVmKey, SubFilterViewModel::class.java)
 
         subFilterViewModel.subFilters.observe(viewLifecycleOwner, Observer {
             (recyclerView.adapter as? SubfilterListAdapter)?.let { adapter ->
@@ -135,7 +133,12 @@ class SubfilterPageFragment : DaggerFragment() {
     }
 }
 
-class SubfilterPagerAdapter(val context: Context, val fm: FragmentManager, val subfilterViewModelKey: String, categories: List<SubfilterCategory>) : FragmentPagerAdapter(fm) {
+class SubfilterPagerAdapter(
+    val context: Context,
+    val fm: FragmentManager,
+    val subfilterViewModelKey: String,
+    categories: List<SubfilterCategory>
+) : FragmentPagerAdapter(fm) {
     private val filterCategory = categories
     private val fragments = mutableMapOf<SubfilterCategory, WeakReference<SubfilterPageFragment>>()
 

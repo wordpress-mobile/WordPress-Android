@@ -23,7 +23,6 @@ import org.wordpress.android.ui.reader.subfilter.SubfilterCategory
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
-import org.wordpress.android.ui.reader.subfilter.SubfilterPageFragment
 import org.wordpress.android.ui.reader.subfilter.SubfilterPagerAdapter
 import javax.inject.Inject
 
@@ -37,7 +36,11 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         const val SUBFILTER_CATEGORIES_KEY = "subfilter_categories_key"
 
         @JvmStatic
-        fun newInstance(subfilterViewModelKey: String, categories: List<SubfilterCategory>, title: CharSequence): SubfilterBottomSheetFragment {
+        fun newInstance(
+            subfilterViewModelKey: String,
+            categories: List<SubfilterCategory>,
+            title: CharSequence
+        ): SubfilterBottomSheetFragment {
             val fragment = SubfilterBottomSheetFragment()
             val bundle = Bundle()
             bundle.putString(SUBFILTER_VIEW_MODEL_KEY, subfilterViewModelKey)
@@ -62,7 +65,8 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
 
         val subfilterVmKey = requireArguments().getString(SUBFILTER_VIEW_MODEL_KEY)!!
         val bottomSheetTitle = requireArguments().getCharSequence(SUBFILTER_TITLE_KEY)!!
-        val categories: ArrayList<SubfilterCategory> = requireArguments().getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
+        val categories: ArrayList<SubfilterCategory> = requireArguments()
+                .getParcelableArrayList(SUBFILTER_CATEGORIES_KEY)!!
 
         viewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory)
                 .get(subfilterVmKey, SubFilterViewModel::class.java)
@@ -71,7 +75,12 @@ class SubfilterBottomSheetFragment : BottomSheetDialogFragment() {
         val tabLayout = view.findViewById<TabLayout>(R.id.tab_layout)
         val title = view.findViewById<TextView>(R.id.title)
         title.text = bottomSheetTitle
-        pager.adapter = SubfilterPagerAdapter(requireActivity(), childFragmentManager, subfilterVmKey, categories.toList())
+        pager.adapter = SubfilterPagerAdapter(
+                requireActivity(),
+                childFragmentManager,
+                subfilterVmKey,
+                categories.toList()
+        )
         tabLayout.setupWithViewPager(pager)
         pager.currentItem = when (viewModel.getCurrentSubfilterValue()) {
             is Tag -> TAGS.ordinal

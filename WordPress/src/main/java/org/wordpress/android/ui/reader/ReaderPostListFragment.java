@@ -260,7 +260,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return newInstanceForTag(tag, listType, false, -1);
     }
 
-    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType, boolean isTopLevel, int position) {
+    static ReaderPostListFragment newInstanceForTag(
+            ReaderTag tag,
+            ReaderPostListType listType,
+            boolean isTopLevel,
+            int position
+    ) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
@@ -532,8 +537,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
-        mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory)
-                                                     .get(SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mPosition, SubFilterViewModel.class);
+        mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
+                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mPosition,
+                SubFilterViewModel.class
+        );
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
@@ -613,7 +620,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
             });
         });
 
-        String currentSubfilterJson = savedInstanceState != null ? savedInstanceState.getString(ReaderConstants.ARG_READER_TAB_SUBFILTER) : null;
+        String currentSubfilterJson = savedInstanceState != null
+                ? savedInstanceState.getString(ReaderConstants.ARG_READER_TAB_SUBFILTER)
+                : null;
 
         mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, currentSubfilterJson);
     }

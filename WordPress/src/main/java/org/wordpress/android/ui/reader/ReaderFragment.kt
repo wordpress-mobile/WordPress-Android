@@ -193,7 +193,12 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
             return if (tags[position].isDiscover) {
                 ReaderDiscoverFragment()
             } else {
-                ReaderPostListFragment.newInstanceForTag(tags[position], ReaderPostListType.TAG_FOLLOWED, true, position)
+                ReaderPostListFragment.newInstanceForTag(
+                        tags[position],
+                        ReaderPostListType.TAG_FOLLOWED,
+                        true,
+                        position
+                )
             }
         }
     }
