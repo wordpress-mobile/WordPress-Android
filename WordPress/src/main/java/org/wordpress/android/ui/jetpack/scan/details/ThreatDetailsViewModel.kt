@@ -10,6 +10,7 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
@@ -58,12 +59,13 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun getData() {
         viewModelScope.launch {
             val model = getThreatModelUseCase.get(threatId)
-            model?.let { updateUiState(it) }
+            model?.let { updateUiState(buildContentUiState(it)) }
         }
     }
 
     private fun ignoreThreat() {
         viewModelScope.launch {
+            disableThreatActionButtons(true)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
                 is IgnoreThreatState.Success -> {
                     val message = UiStringRes(R.string.threat_ignore_success_message)
@@ -71,6 +73,7 @@ class ThreatDetailsViewModel @Inject constructor(
                 }
 
                 is IgnoreThreatState.Failure -> {
+                    disableThreatActionButtons(false)
                     val message = UiStringRes(R.string.threat_ignore_error_message)
                     updateSnackbarMessageEvent(SnackbarMessageHolder(message))
                 }
@@ -100,6 +103,19 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
     }
 
+    private fun disableThreatActionButtons(disable: Boolean) {
+        (_uiState.value as? Content)?.let { content ->
+            val updatesContentItems = content.items.map { contentItem ->
+                if (contentItem is ActionButtonState) {
+                    contentItem.copy(isEnabled = !disable)
+                } else {
+                    contentItem
+                }
+            }
+            updateUiState(content.copy(items = updatesContentItems))
+        }
+    }
+
     private fun updateSnackbarMessageEvent(messageHolder: SnackbarMessageHolder) {
         _snackbarEvents.value = Event(messageHolder)
     }
@@ -108,8 +124,8 @@ class ThreatDetailsViewModel @Inject constructor(
         _navigationEvents.value = Event(navigationEvent)
     }
 
-    private fun updateUiState(model: ThreatModel) {
-        _uiState.value = buildContentUiState(model)
+    private fun updateUiState(state: UiState) {
+        _uiState.value = state
     }
 
     private fun buildContentUiState(model: ThreatModel) = Content(
