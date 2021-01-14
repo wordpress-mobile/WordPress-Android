@@ -2,7 +2,6 @@ package org.wordpress.android.fluxc.store
 
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
-import org.wordpress.android.fluxc.BuildConfig
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.Payload
 import org.wordpress.android.fluxc.action.ScanAction
@@ -176,7 +175,7 @@ class ScanStore @Inject constructor(
 
     suspend fun fetchScanHistory(payload: FetchScanHistoryPayload): OnScanHistoryFetched {
         val resultPayload = scanRestClient.fetchScanHistory(payload.site.siteId)
-        if(!resultPayload.isError && resultPayload.threats != null) {
+        if (!resultPayload.isError && resultPayload.threats != null) {
             storeThreatsWithStatuses(
                     FETCH_SCAN_HISTORY,
                     payload.site,
