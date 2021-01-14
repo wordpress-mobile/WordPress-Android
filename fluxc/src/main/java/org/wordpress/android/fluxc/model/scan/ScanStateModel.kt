@@ -8,7 +8,7 @@ data class ScanStateModel(
     val reason: String? = null,
     val threats: List<ThreatModel>? = null,
     val credentials: List<Credentials>? = null,
-    val hasCloud: Boolean,
+    val hasCloud: Boolean = false,
     val mostRecentStatus: ScanProgressStatus? = null,
     val currentStatus: ScanProgressStatus? = null
 ) {

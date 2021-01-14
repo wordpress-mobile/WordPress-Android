@@ -84,6 +84,20 @@ class ScanStore @Inject constructor(
 
     fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
 
+    fun addOrUpdateScanStateModelForSite(site: SiteModel, scanStateModel: ScanStateModel) {
+        scanSqlUtils.replaceScanState(site, scanStateModel)
+        threatSqlUtils.removeThreatsWithStatus(site, listOf(CURRENT))
+        val threats = scanStateModel.threats
+                ?.filter { it.baseThreatModel.status == CURRENT }
+                ?.also {
+                    if (it.size != scanStateModel.threats.size) {
+                        appLogWrapper.e(AppLog.T.API, "Scan State endpoint returned Threat.State != CURRENT")
+                        if(BuildConfig.DEBUG) throw RuntimeException("fetchScanState API returned a Threat with status != CURRENT")
+                    }
+                } ?: emptyList()
+        threatSqlUtils.insertThreats(site, threats)
+    }
+
     override fun onRegister() {
         AppLog.d(AppLog.T.API, this.javaClass.name + ": onRegister")
     }
@@ -97,18 +111,8 @@ class ScanStore @Inject constructor(
         return if (payload.error != null) {
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
-            if (payload.scanStateModel != null) {
-                scanSqlUtils.replaceScanState(payload.site, payload.scanStateModel)
-                threatSqlUtils.removeThreatsWithStatus(payload.site, listOf(CURRENT))
-                val threats = payload.scanStateModel.threats
-                        ?.filter { it.baseThreatModel.status == CURRENT }
-                        ?.also {
-                            if (it.size != payload.scanStateModel.threats.size) {
-                                appLogWrapper.e(AppLog.T.API, "Scan State endpoint returned Threat.State != CURRENT")
-                                if(BuildConfig.DEBUG) throw RuntimeException("fetchScanState API returned a Threat with status != CURRENT")
-                            }
-                        } ?: emptyList()
-                threatSqlUtils.insertThreats(payload.site, threats)
+            payload.scanStateModel?.let {
+                addOrUpdateScanStateModelForSite(payload.site, payload.scanStateModel)
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
