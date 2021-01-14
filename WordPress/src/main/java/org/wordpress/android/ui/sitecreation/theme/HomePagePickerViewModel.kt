@@ -62,8 +62,8 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _thumbnailMode = SingleLiveEvent<PreviewMode>()
-    val thumbnailMode: LiveData<PreviewMode> = _thumbnailMode
+    private val _previewMode = SingleLiveEvent<PreviewMode>()
+    val previewMode: LiveData<PreviewMode> = _previewMode
 
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
@@ -79,7 +79,7 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 
-    override fun getPreviewMode() = thumbnailMode.value ?: MOBILE
+    override fun getPreviewMode() = previewMode.value ?: MOBILE
 
     override fun setPreviewMode(mode: PreviewMode) = onThumbnailModeChanged(mode)
 
@@ -90,7 +90,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start(isTablet: Boolean = false) {
-        _thumbnailMode.value = if (isTablet) TABLET else MOBILE
+        _previewMode.value = if (isTablet) TABLET else MOBILE
         if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
@@ -120,7 +120,7 @@ class HomePagePickerViewModel @Inject constructor(
                 LayoutGridItemUiState(
                         slug = it.slug!!,
                         title = it.title ?: "",
-                        preview = when (_thumbnailMode.value) {
+                        preview = when (_previewMode.value) {
                             MOBILE -> it.mobileScreenshot!!
                             TABLET -> it.tabletScreenshot!!
                             else -> it.screenshot!!
@@ -262,8 +262,8 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onThumbnailModeChanged(mode: PreviewMode) {
-        if (_thumbnailMode.value !== mode) {
-            _thumbnailMode.value = mode
+        if (_previewMode.value !== mode) {
+            _previewMode.value = mode
             loadLayouts()
         }
     }
