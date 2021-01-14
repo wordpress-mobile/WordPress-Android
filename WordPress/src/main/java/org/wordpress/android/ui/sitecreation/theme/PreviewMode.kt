@@ -8,3 +8,11 @@ enum class PreviewMode {
     TABLET,
     DESKTOP
 }
+
+/**
+ * Defines an interface for handling the [PreviewMode]
+ */
+interface PreviewModeHandler {
+    fun getPreviewMode(): PreviewMode
+    fun setPreviewMode(mode: PreviewMode)
+}

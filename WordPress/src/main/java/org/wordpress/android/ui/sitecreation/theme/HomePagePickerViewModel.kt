@@ -40,7 +40,7 @@ class HomePagePickerViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), CoroutineScope, PreviewModeHandler {
     private val fetchHomePageLayoutsJob = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
@@ -78,6 +78,10 @@ class HomePagePickerViewModel @Inject constructor(
     init {
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
+
+    override fun getPreviewMode() = thumbnailMode.value ?: MOBILE
+
+    override fun setPreviewMode(mode: PreviewMode) = onThumbnailModeChanged(mode)
 
     override fun onCleared() {
         super.onCleared()
