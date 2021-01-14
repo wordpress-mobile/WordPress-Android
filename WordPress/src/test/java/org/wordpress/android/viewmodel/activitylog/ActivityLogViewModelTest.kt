@@ -44,6 +44,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
@@ -97,7 +98,6 @@ class ActivityLogViewModelTest {
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
-    private var rewindDialogs: MutableList<ActivityLogListItem?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private var snackbarMessages: MutableList<String?> = mutableListOf()
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
@@ -346,11 +346,9 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActionButtonClickShowsRewindDialog() {
-        assertTrue(rewindDialogs.isEmpty())
-
         viewModel.onActionButtonClicked(event)
 
-        assertEquals(rewindDialogs.firstOrNull(), event)
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
