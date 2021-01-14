@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
@@ -35,13 +36,11 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
             task_card_title.text = taskCard.title
             task_card_description.text = taskCard.description
 
-            val alpha = if (taskCard.done) 0.2f else 1.0f
-            task_card_title.alpha = alpha
-            task_card_description.alpha = alpha
-            task_card_illustration.alpha = alpha
-
-            setOnClickListener { taskCard.onClick.click() }
-            isClickable = !taskCard.done
+            task_card_view.apply {
+                checkedIconTint = ContextCompat.getColorStateList(context, taskCard.accentColor)
+                isChecked = taskCard.done
+                setOnClickListener(if (taskCard.done) null else ({ taskCard.onClick.click() }))
+            }
         }
     }
 
