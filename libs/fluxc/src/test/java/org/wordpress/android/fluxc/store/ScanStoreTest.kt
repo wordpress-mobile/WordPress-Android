@@ -46,6 +46,7 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import org.wordpress.android.fluxc.utils.BuildConfigWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ScanStoreTest {
@@ -54,6 +55,7 @@ class ScanStoreTest {
     @Mock private lateinit var threatSqlUtils: ThreatSqlUtils
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
+    @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
     private val threat: ThreatModel = GenericThreatModel(
             BaseThreatModel(
                     1L,
@@ -78,6 +80,7 @@ class ScanStoreTest {
             threatSqlUtils,
             initCoroutineEngine(),
             mock(),
+            buildConfigWrapper,
             dispatcher
         )
     }
@@ -126,6 +129,7 @@ class ScanStoreTest {
 
     @Test
     fun `fetch scan state filters out threats which do not have CURRENT status`() = test {
+        whenever(buildConfigWrapper.isDebug()).thenReturn(false)
         val threatsInResponse = listOf(
                 threat,
                 GenericThreatModel(threat.baseThreatModel.copy(status = IGNORED))
