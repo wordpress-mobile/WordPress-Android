@@ -23,6 +23,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
@@ -41,6 +42,7 @@ import javax.inject.Inject
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
+private const val RESTORE_REQUEST_CODE = 1720
 
 /**
  * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
@@ -170,12 +172,6 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        viewModel.showRewindDialog.observe(viewLifecycleOwner, {
-            if (it is ActivityLogListItem.Event) {
-                displayRewindDialog(it)
-            }
-        })
-
         viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
@@ -195,8 +191,13 @@ class ActivityLogListFragment : Fragment() {
                             viewModel.site,
                             event.activityId,
                             BACKUP_DOWNLOAD_REQUEST_CODE)
-                    // todo: annmarie replace with the ActivityLauncher for showing restore details
-                    is ShowRestore -> displayRewindDialog(event) }
+                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            event.activityId,
+                            RESTORE_REQUEST_CODE)
+                    is ShowRewindDialog -> displayRewindDialog(event)
+                }
             }
         })
     }
