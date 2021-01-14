@@ -20,7 +20,7 @@ import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import java.util.Date
 
 @InternalCoroutinesApi
-class RestoreProgressViewModelTest: BaseUnitTest() {
+class RestoreProgressViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreProgressViewModel
     @Mock private lateinit var parentViewModel: RestoreViewModel
     @Mock private lateinit var site: SiteModel

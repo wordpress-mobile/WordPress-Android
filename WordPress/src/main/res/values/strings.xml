@@ -3463,8 +3463,6 @@ translators: sample content for "Services" page template -->
     <string name="restore_warning_action_button">Confirm restore site</string>
     <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
     <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
-    <string name="restore_generic_failure">There was a problem handling the request. Please try again later.</string>
-    <string name="restore_another_restore_running">There is another restore running.</string>
 
     <string name="restore_progress_page_title">@string/restore</string>
     <string name="restore_progress_header">Currently restoring site</string>
