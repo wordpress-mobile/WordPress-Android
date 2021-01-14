@@ -86,15 +86,6 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given in progress step, when finished, then process moves to next step`() {
-        viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
-
-        viewModel.onRestoreProgressFinished()
-        Mockito.verify(wizardManager).showNextStep()
-    }
-
-    @Test
     fun `given in details step, when finished, state is updated properly`() {
         val navigationTargets = initObservers().navigationTargets
 
