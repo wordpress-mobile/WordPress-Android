@@ -456,7 +456,7 @@ fun <T, U> scan(
     scanFunction: (U, T) -> U
 ): MediatorLiveData<U> {
     val mediator = MediatorLiveData<U>().also { it.value = initialState }
-    for (source in sources) {
+    for (source in partialStates) {
         mediator.addSource(source) {
             val currentState = mediator.value ?: initialState
             if (it != null && currentState != it || !distinct) {
