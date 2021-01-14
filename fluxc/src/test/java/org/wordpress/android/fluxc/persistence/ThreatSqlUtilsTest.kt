@@ -19,6 +19,8 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension
 import java.util.Date
@@ -54,7 +56,7 @@ class ThreatSqlUtilsTest {
     fun `insert and retrieve for base threat properties work correctly`() {
         val threat = GenericThreatModel(baseThreatModel = dummyBaseThreatModel)
 
-        threatSqlUtils.replaceThreatsForSite(site, listOf(threat))
+        threatSqlUtils.insertThreats(site, listOf(threat))
         val threats = threatSqlUtils.getThreatsForSite(site)
 
         assertEquals(1, threats.size)
@@ -74,7 +76,7 @@ class ThreatSqlUtilsTest {
             rows = listOf(DatabaseThreatModel.Row(id = 1, rowNumber = 1))
         )
 
-        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+        threatSqlUtils.insertThreats(site, listOf(dummyThreat))
         val threats = threatSqlUtils.getThreatsForSite(site)
 
         assertEquals(1, threats.size)
@@ -93,7 +95,7 @@ class ThreatSqlUtilsTest {
             diff = "test diff"
         )
 
-        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+        threatSqlUtils.insertThreats(site, listOf(dummyThreat))
         val threats = threatSqlUtils.getThreatsForSite(site)
 
         assertEquals(1, threats.size)
@@ -117,7 +119,7 @@ class ThreatSqlUtilsTest {
             )
         )
 
-        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+        threatSqlUtils.insertThreats(site, listOf(dummyThreat))
         val threats = threatSqlUtils.getThreatsForSite(site)
 
         assertEquals(1, threats.size)
@@ -141,7 +143,7 @@ class ThreatSqlUtilsTest {
             )
         )
 
-        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+        threatSqlUtils.insertThreats(site, listOf(dummyThreat))
         val threats = threatSqlUtils.getThreatsForSite(site)
 
         assertEquals(1, threats.size)
@@ -157,11 +159,23 @@ class ThreatSqlUtilsTest {
     fun `threat model gets retrieved for the given threat id`() {
         val threatId = dummyBaseThreatModel.id
         val dummyThreat = GenericThreatModel(baseThreatModel = dummyBaseThreatModel)
-        threatSqlUtils.replaceThreatsForSite(site, listOf(dummyThreat))
+        threatSqlUtils.insertThreats(site, listOf(dummyThreat))
 
         val threat = threatSqlUtils.getThreatByThreatId(threatId)
 
         assertThat(threat).isInstanceOf(GenericThreatModel::class.java)
         assertEquals(threatId, threat?.baseThreatModel?.id)
+    }
+
+    @Test
+    fun `removeThreatsWithStatus() removes only corresponding threats`() {
+        val threat1 = GenericThreatModel(baseThreatModel = dummyBaseThreatModel.copy(status = CURRENT))
+        val threat2 = GenericThreatModel(baseThreatModel = dummyBaseThreatModel.copy(status = FIXED))
+        threatSqlUtils.insertThreats(site, listOf(threat1, threat2))
+
+        threatSqlUtils.removeThreatsWithStatus(site, listOf(CURRENT))
+        val threats = threatSqlUtils.getThreatsForSite(site)
+
+        assertEquals(1, threats.size)
     }
 }
