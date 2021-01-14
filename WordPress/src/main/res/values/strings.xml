@@ -2927,6 +2927,7 @@
     <string name="web_preview_mobile">Mobile</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_desktop">Desktop</string>
+    <string name="web_preview_width_script" translatable="false">let parent = document.querySelector(\'meta[name=viewport]\'); parent.setAttribute(\'content\',\'width=%1$d, initial-scale=1\');</string>
 
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>

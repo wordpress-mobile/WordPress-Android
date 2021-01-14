@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.sitecreation.theme
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -12,13 +13,18 @@ import android.webkit.WebViewClient
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
-import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.errorView
+import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.backButton
+import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.previewTypeSelectorButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Error
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loaded
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loading
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.DESKTOP
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
+import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
@@ -29,6 +35,7 @@ import javax.inject.Inject
 class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
+    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     private lateinit var template: String
     private lateinit var url: String
@@ -57,14 +64,20 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
             inflater.inflate(R.layout.home_page_picker_preview_fragment, container)
 
+    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        webView.settings.javaScriptEnabled = true
+        webView.settings.useWideViewPort = true
+        webView.setInitialScale(100)
 
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
 
         viewModel.previewState.observe(viewLifecycleOwner, Observer { state ->
             when (state) {
                 is Loading -> {
+                    desktopPreviewHint.setVisible(false)
                     progressBar.setVisible(true)
                     webView.setVisible(false)
                     errorView.setVisible(false)
@@ -74,6 +87,14 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     progressBar.setVisible(false)
                     webView.setVisible(true)
                     errorView.setVisible(false)
+                    desktopPreviewHint.setText(
+                            when (viewModel.getPreviewMode()) {
+                                MOBILE -> R.string.web_preview_mobile
+                                TABLET -> R.string.web_preview_tablet
+                                DESKTOP -> R.string.web_preview_desktop
+                            }
+                    )
+                    AniUtils.animateBottomBar(desktopPreviewHint, true)
                 }
                 is Error -> {
                     progressBar.setVisible(false)
@@ -84,15 +105,22 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
+        viewModel.previewMode.observe(viewLifecycleOwner, Observer { load() })
+
+        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
+
         backButton.setOnClickListener { closeModal() }
 
         chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
+
+        previewTypeSelectorButton.setOnClickListener { previewModeSelectorPopup.show(viewModel) }
 
         webView.settings.userAgentString = WordPress.getUserAgent()
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                viewModel.onPreviewLoaded(template)
+                val widthScript = getString(R.string.web_preview_width_script, viewModel.getPreviewMode().previewWidth)
+                view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
