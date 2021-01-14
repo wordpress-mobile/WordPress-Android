@@ -24,11 +24,13 @@ import org.wordpress.android.ui.reader.ReaderSubsActivity
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenLoginPage
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage
+import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetHidden
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.SITES
 import org.wordpress.android.ui.reader.subfilter.SubfilterCategory.TAGS
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Tag
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
+import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.util.EventBusWrapper
 import java.util.EnumSet
 
@@ -62,9 +64,6 @@ class SubFilterViewModelTest {
         )
         val json = "{\"blogId\":0,\"feedId\":0,\"tagSlug\":\"news\",\"tagType\":1,\"type\":4}"
 
-        whenever(appPrefsWrapper.getReaderSubfilter()).thenReturn(json)
-        whenever(subfilterListItemMapper.fromJson(any(), any(), any())).thenReturn(tag)
-
         viewModel = SubFilterViewModel(
                 TEST_DISPATCHER,
                 TEST_DISPATCHER,
@@ -74,20 +73,24 @@ class SubFilterViewModelTest {
                 accountStore,
                 readerTracker
         )
+
+        viewModel.start(initialTag, any(), json)
     }
 
     @Test
-    fun `view model change subfilter visibility as requested`() {
-        viewModel.changeSubfiltersVisibility(true)
-        assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(true)
+    fun `view model tracks subfiltered list if filter is a tracked item`() {
+        viewModel.setSubfilterFromTag(savedTag)
+        viewModel.initSubfiltersTracking(true)
 
-        viewModel.changeSubfiltersVisibility(false)
-        assertThat(viewModel.shouldShowSubFilters.value).isEqualTo(false)
+        viewModel.initSubfiltersTracking(false)
+
+        verify(readerTracker, times(2)).start(ReaderTrackerType.SUBFILTERED_LIST)
+        verify(readerTracker, times(1)).stop(ReaderTrackerType.SUBFILTERED_LIST)
     }
 
     @Test
     fun `view model returns default filter on start`() {
-        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(Tag::class.java)
+        assertThat(viewModel.getCurrentSubfilterValue()).isInstanceOf(SiteAll::class.java)
     }
 
     @Test
@@ -114,7 +117,6 @@ class SubFilterViewModelTest {
     @Test
     fun `view model updates count of matched sites and tags`() {
         val data = hashMapOf(SITES to 3, TAGS to 25)
-        viewModel.start(initialTag)
 
         for (testStep in data.keys) {
             viewModel.onSubfilterPageUpdated(testStep, data.getOrDefault(testStep, 0))
@@ -124,31 +126,31 @@ class SubFilterViewModelTest {
     }
 
     @Test
-    fun `when WPCOM user selects empty bottom sheet SITES cta the subs is opened on followed blogs page`() {
+    fun `when WPCOM user taps empty bottom sheet SITES cta the subs activity is opened on followed blogs page`() {
         val action = OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_BLOGS)
         viewModel.onBottomSheetActionClicked(action)
 
-        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
 
     @Test
-    fun `when WPCOM user selects empty bottom sheet TAGS cta the subs is opened on followed tags page`() {
+    fun `when WPCOM user taps empty bottom sheet TAGS cta the subs activity is opened on followed tags page`() {
         val action = OpenSubsAtPage(ReaderSubsActivity.TAB_IDX_FOLLOWED_TAGS)
         viewModel.onBottomSheetActionClicked(action)
 
-        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
 
     @Test
-    fun `when self-hosted user selects empty bottom sheet cta the me page is opened`() {
+    fun `when self-hosted user taps empty bottom sheet cta the me page is opened`() {
         val action = OpenLoginPage
         viewModel.onBottomSheetActionClicked(action)
 
-        assertThat(viewModel.changeBottomSheetVisibility.value!!.peekContent()).isEqualTo(false)
+        assertThat(viewModel.bottomSheetUiState.value!!.peekContent()).isEqualTo(BottomSheetHidden)
         assertThat(viewModel.bottomSheetEmptyViewAction.value!!.peekContent())
                 .isEqualTo(action)
     }
