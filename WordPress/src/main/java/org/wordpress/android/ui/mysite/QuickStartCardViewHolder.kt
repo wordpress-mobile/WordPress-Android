@@ -47,7 +47,7 @@ class QuickStartCardViewHolder(
                 adapter = DummyTaskAdapter()
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
-                addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 8), 0))
+                addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 10), 0))
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
