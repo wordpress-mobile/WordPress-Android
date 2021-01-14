@@ -134,6 +134,15 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given in progress step, when finished, then process moves to next step`() {
+        viewModel.start(null)
+        Mockito.clearInvocations(wizardManager)
+
+        viewModel.onRestoreProgressFinished()
+        Mockito.verify(wizardManager).showNextStep()
+    }
+
+    @Test
     fun `given in progress step, when onBackPressed, then invokes wizard finished with RestoreInProgress`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
