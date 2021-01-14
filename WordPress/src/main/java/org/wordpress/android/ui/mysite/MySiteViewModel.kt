@@ -87,6 +87,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -191,7 +192,8 @@ class MySiteViewModel
                         id = "dummy_task_$it",
                         title = "Dummy Task $it",
                         accentColor = R.color.green_20,
-                        done = it > 4
+                        done = it > 4,
+                        onClick = ListItemInteraction.create("dummy_task_$it", this::onQuickStartTaskCardClick)
                 )
             }.toList()
             val dummyTaskCards2 = dummyTaskCards1.mapIndexed { i, task ->
@@ -272,6 +274,10 @@ class MySiteViewModel
 
     private fun onQuickStartCardMoreClick(id: String) {
         _onQuickStartMenuShown.postValue(Event(id))
+    }
+
+    private fun onQuickStartTaskCardClick(id: String) {
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(id)))
     }
 
     private fun titleClick(selectedSite: SiteModel) {

@@ -62,7 +62,8 @@ sealed class MySiteItem(val type: Type) {
             val title: String,
             val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
             @ColorRes val accentColor: Int,
-            val done: Boolean = false
+            val done: Boolean = false,
+            val onClick: ListItemInteraction
         )
     }
 

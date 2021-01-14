@@ -39,6 +39,9 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
             task_card_title.alpha = alpha
             task_card_description.alpha = alpha
             task_card_illustration.alpha = alpha
+
+            setOnClickListener { taskCard.onClick.click() }
+            isClickable = !taskCard.done
         }
     }
 
