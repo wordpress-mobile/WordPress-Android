@@ -80,7 +80,6 @@ class ScanStore @Inject constructor(
                     emitChange(fetchScanHistory(action.payload as FetchScanHistoryPayload))
                 }
             }
-
         }
     }
 
