@@ -24,6 +24,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
@@ -97,10 +98,6 @@ class ActivityLogViewModel @Inject constructor(
 
     private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.EmptyFilters)
     val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
-
-    private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
-    val showRewindDialog: LiveData<ActivityLogListItem>
-        get() = _showRewindDialog
 
     private val _showActivityTypeFilterDialog = SingleLiveEvent<ShowActivityTypePicker>()
     val showActivityTypeFilterDialog: LiveData<ShowActivityTypePicker>
@@ -283,7 +280,12 @@ class ActivityLogViewModel @Inject constructor(
     // todo: annmarie - Remove once the feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
-            _showRewindDialog.value = item
+            val navigationEvent = if (item.launchRestoreWizard) {
+                ShowRestore(item)
+            } else {
+                ShowRewindDialog(item)
+            }
+            _navigationEvents.value = Event(navigationEvent)
         }
     }
 
@@ -294,7 +296,11 @@ class ActivityLogViewModel @Inject constructor(
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = when (secondaryAction) {
                 RESTORE -> {
-                    ShowRestore(item)
+                    if (item.launchRestoreWizard) {
+                        ShowRestore(item)
+                    } else {
+                        ShowRewindDialog(item)
+                    }
                 }
                 DOWNLOAD_BACKUP -> {
                     ShowBackupDownload(item)
