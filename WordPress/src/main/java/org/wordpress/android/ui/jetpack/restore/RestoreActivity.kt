@@ -19,6 +19,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardSt
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsFragment
+import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressFragment
 import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -141,8 +142,8 @@ class RestoreActivity : LocaleAwareActivity() {
         val fragment = when (target.wizardStep) {
             DETAILS -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
             WARNING -> RestoreWarningFragment.newInstance(intent?.extras, target.wizardState)
+            PROGRESS -> RestoreProgressFragment.newInstance(intent?.extras, target.wizardState)
             // todo: annmarie add fragments as they become available
-            PROGRESS -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
             COMPLETE -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
         }
 

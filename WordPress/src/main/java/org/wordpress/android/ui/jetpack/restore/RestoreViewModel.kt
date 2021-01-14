@@ -15,8 +15,8 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -38,7 +38,6 @@ data class RestoreState(
     val optionsSelected: List<Pair<Int, Boolean>>? = null,
     val restoreId: Long? = null,
     val published: Date? = null,
-    val url: String? = null,
     val errorType: Int? = null
 ) : WizardState, Parcelable
 
@@ -126,7 +125,6 @@ class RestoreViewModel @Inject constructor(
             restoreState = restoreState.copy(
                     rewindId = null,
                     restoreId = null,
-                    url = null,
                     errorType = null,
                     optionsSelected = null,
                     published = null
@@ -144,17 +142,19 @@ class RestoreViewModel @Inject constructor(
 
     fun onRestoreWarningFinished(rewindId: String?, restoreId: Long?) {
         restoreState = restoreState.copy(rewindId = rewindId, restoreId = restoreId)
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Warning finished"))))
-        // todo: annmarie uncomment the showNextSteps
-        // wizardManager.showNextStep()
+        wizardManager.showNextStep()
     }
 
     fun onRestoreCanceled() {
         _wizardFinishedObservable.value = Event(RestoreCanceled)
     }
 
-    fun onRestoreProgressFinished(url: String?) {
-        restoreState = restoreState.copy(url = url)
+    fun onProgressExit(restoreId: Long) {
+        restoreState = restoreState.copy(restoreId = restoreId)
+        _wizardFinishedObservable.value = Event(RestoreInProgress(restoreId))
+    }
+
+    fun onRestoreProgressFinished() {
         wizardManager.showNextStep()
     }
 
@@ -190,6 +190,11 @@ class RestoreViewModel @Inject constructor(
 
         data class WarningToolbarState(
             @StringRes override val title: Int = R.string.restore_warning_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
+
+        data class ProgressToolbarState(
+            @StringRes override val title: Int = R.string.restore_progress_page_title,
             @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }
