@@ -440,3 +440,29 @@ fun <T> LiveData<T>.skip(times: Int): LiveData<T> {
 
     return mediator
 }
+
+/**
+ * A helper function that scans sources into a single state
+ * @param initialState the initial state passed into the scan function
+ * @param partialStates producing partial states to be merged into a single state
+ * @param distinct true if all the emitted items should be distinct
+ * @param scanFunction merges the partial state into the single state
+ * @return merged partial states into the single state
+ */
+fun <T, U> scan(
+    initialState: U,
+    vararg partialStates: LiveData<T>,
+    distinct: Boolean = true,
+    scanFunction: (U, T) -> U
+): MediatorLiveData<U> {
+    val mediator = MediatorLiveData<U>().also { it.value = initialState }
+    for (source in sources) {
+        mediator.addSource(source) {
+            val currentState = mediator.value ?: initialState
+            if (it != null && currentState != it || !distinct) {
+                mediator.value = scanFunction(currentState, it)
+            }
+        }
+    }
+    return mediator
+}
