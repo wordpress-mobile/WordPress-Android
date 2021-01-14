@@ -88,7 +88,7 @@ class ScanStore @Inject constructor(
         return scanStateModel?.copy(threats = threats)
     }
 
-    suspend fun getScanHistoryForSite(site: SiteModel): List<ThreatModel> {
+    fun getScanHistoryForSite(site: SiteModel): List<ThreatModel> {
         return threatSqlUtils.getThreats(site, SCAN_HISTORY_THREAT_STATUSES)
     }
 
