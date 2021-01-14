@@ -3,7 +3,6 @@ package org.wordpress.android.ui.jetpack.restore
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
-import android.util.Log
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
@@ -85,7 +84,6 @@ class RestoreViewModel @Inject constructor(
             wizardManager.showNextStep()
         } else {
             restoreState = requireNotNull(savedInstanceState.getParcelable(KEY_RESTORE_STATE))
-            Log.i(javaClass.simpleName, "***=> instance not null ${restoreState.optionsSelected?.get(0)}")
             val currentStepIndex = savedInstanceState.getInt(KEY_RESTORE_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }
