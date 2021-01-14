@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
@@ -155,7 +156,9 @@ class RestoreViewModel @Inject constructor(
     }
 
     fun onRestoreProgressFinished() {
-        wizardManager.showNextStep()
+        // todo: annmarie remove first line & uncomment nextStep
+        _wizardFinishedObservable.value = Event(RestoreCompleted)
+       // wizardManager.showNextStep()
     }
 
     fun setToolbarState(toolbarState: ToolbarState) {
