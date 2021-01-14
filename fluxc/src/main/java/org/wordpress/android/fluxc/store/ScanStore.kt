@@ -251,10 +251,7 @@ class ScanStore @Inject constructor(
     enum class ScanStateErrorType {
         GENERIC_ERROR,
         AUTHORIZATION_REQUIRED,
-        INVALID_RESPONSE,
-        MISSING_THREAT_ID,
-        MISSING_THREAT_SIGNATURE,
-        MISSING_THREAT_FIRST_DETECTED
+        INVALID_RESPONSE
     }
 
     class ScanStateError(var type: ScanStateErrorType, var message: String? = null) : OnChangedError
