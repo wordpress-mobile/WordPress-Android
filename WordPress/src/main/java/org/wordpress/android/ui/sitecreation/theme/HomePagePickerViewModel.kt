@@ -91,7 +91,7 @@ class HomePagePickerViewModel @Inject constructor(
         if (_thumbnailMode.value == null) {
             _thumbnailMode.value = if (isTablet) TABLET else MOBILE
         }
-         if (uiState.value !is UiState.Content) {
+        if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
         }
