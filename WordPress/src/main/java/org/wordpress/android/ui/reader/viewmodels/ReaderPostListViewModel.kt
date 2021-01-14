@@ -3,6 +3,8 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
@@ -20,12 +22,14 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem
 import org.wordpress.android.ui.reader.tracker.ReaderTracker
 import org.wordpress.android.ui.reader.tracker.ReaderTrackerType
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
@@ -39,6 +43,7 @@ class ReaderPostListViewModel @Inject constructor(
     private val readerPostCardActionsHandler: ReaderPostCardActionsHandler,
     private val reblogUseCase: ReblogUseCase,
     private val readerTracker: ReaderTracker,
+    private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -149,6 +154,20 @@ class ReaderPostListViewModel @Inject constructor(
     fun onReportPostButtonClicked(post: ReaderPost, bookmarksList: Boolean) {
         launch(bgDispatcher) {
             readerPostCardActionsHandler.onAction(post, REPORT_POST, bookmarksList)
+        }
+    }
+
+    fun onToggleSeenStatusClicked(post: ReaderPost, bookmarksList: Boolean) {
+        launch(bgDispatcher) {
+            readerPostCardActionsHandler.onAction(post, TOGGLE_SEEN_STATUS, bookmarksList)
+        }
+    }
+
+    fun onExternalPostOpened(post: ReaderPost) {
+        launch(bgDispatcher) {
+            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post).flowOn(bgDispatcher).collect {
+                // do things silently
+            }
         }
     }
 
