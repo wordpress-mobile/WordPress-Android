@@ -15,13 +15,16 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
-const val DELAY_MILLIS = 5000L
+const val DELAY_MILLIS = 10000L
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore
 ) {
     suspend fun getRestoreStatus(site: SiteModel, restoreId: Long) = flow {
+        // start off with a delay until "queued" status is implemented in RewindStatusModel
+        delay(DELAY_MILLIS)
+
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
