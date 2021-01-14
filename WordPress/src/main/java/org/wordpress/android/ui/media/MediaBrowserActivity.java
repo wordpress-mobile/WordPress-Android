@@ -710,12 +710,12 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
         if (mBrowserType.isBrowser() && !isLongClick
-                || mBrowserType.isPicker() && isLongClick) {
+            || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media);
         } else if ((mBrowserType.isSingleImagePicker() || mBrowserType.isSingleMediaPicker() || mBrowserType
-                .isSingleFilePicker()) || mBrowserType
-                .isSingleAudioFilePicker() && !isLongClick) {
-            // if we're picking a single image, we're done
+                .isSingleFilePicker() || mBrowserType
+                            .isSingleAudioFilePicker()) && !isLongClick) {
+            // if we're picking a single media item, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());
