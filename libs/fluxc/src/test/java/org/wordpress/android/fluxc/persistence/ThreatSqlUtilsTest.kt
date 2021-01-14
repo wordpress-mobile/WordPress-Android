@@ -179,4 +179,15 @@ class ThreatSqlUtilsTest {
 
         assertEquals(1, threats.size)
     }
+
+    @Test
+    fun `getThreats returns only threats with corresponding status`() {
+        val threat1 = GenericThreatModel(baseThreatModel = dummyBaseThreatModel.copy(status = CURRENT))
+        val threat2 = GenericThreatModel(baseThreatModel = dummyBaseThreatModel.copy(status = FIXED))
+        threatSqlUtils.insertThreats(site, listOf(threat1, threat2))
+
+        val threats = threatSqlUtils.getThreats(site, listOf(CURRENT))
+
+        assertEquals(threats[0].baseThreatModel.status, CURRENT)
+    }
 }
