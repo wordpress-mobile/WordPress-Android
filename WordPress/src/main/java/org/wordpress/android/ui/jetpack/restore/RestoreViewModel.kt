@@ -116,7 +116,7 @@ class RestoreViewModel @Inject constructor(
             }
             WARNING.id -> {
                 wizardManager.onBackPressed()
-                _onBackPressedObservable.value = null
+                _onBackPressedObservable.value = Unit
             }
         }
     }

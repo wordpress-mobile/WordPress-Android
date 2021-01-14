@@ -5,7 +5,6 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -26,8 +25,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
-import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
@@ -46,9 +43,6 @@ class RestoreWarningViewModel @Inject constructor(
 
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
-
-    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
-    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _errorEvents = MediatorLiveData<Event<RestoreErrorTypes>>()
     val errorEvents: LiveData<Event<RestoreErrorTypes>> = _errorEvents
@@ -72,7 +66,6 @@ class RestoreWarningViewModel @Inject constructor(
     }
 
     private fun initSources() {
-        parentViewModel.addSnackbarMessageSource(snackbarEvents)
         parentViewModel.addErrorMessageSource(errorEvents)
     }
 
@@ -128,17 +121,11 @@ class RestoreWarningViewModel @Inject constructor(
                 )
             }
             is OtherRequestRunning -> {
-                // todo: annmarie where should this go? I would think back to details, so implement
-                _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+                _errorEvents.postValue(Event(RestoreErrorTypes.OtherRequestRunning))
             }
             else -> {
             } // no op
         }
-    }
-
-    companion object {
-        private val OtherRequestRunningMsg = SnackbarMessageHolder(
-                UiStringRes(R.string.restore_another_restore_running))
     }
 
     data class UiState(val items: List<JetpackListItemState>)
