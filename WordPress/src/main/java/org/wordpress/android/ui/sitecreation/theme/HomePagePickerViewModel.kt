@@ -20,6 +20,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
 import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.valueOf
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -32,6 +33,7 @@ const val defaultTemplateSlug = "default"
 private const val ERROR_CONTEXT = "design"
 private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
 private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
+private const val PREVIEW_MODE = "PREVIEW_MODE"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -90,7 +92,9 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start(isTablet: Boolean = false) {
-        _previewMode.value = if (isTablet) TABLET else MOBILE
+        if (_previewMode.value == null) {
+            _previewMode.value = if (isTablet) TABLET else MOBILE
+        }
         if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
@@ -224,6 +228,7 @@ class HomePagePickerViewModel @Inject constructor(
         if (savedInstanceState == null) return
         val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
+        val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -231,6 +236,7 @@ class HomePagePickerViewModel @Inject constructor(
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
+        _previewMode.value = valueOf(previewMode)
         loadLayouts()
     }
 
@@ -238,6 +244,7 @@ class HomePagePickerViewModel @Inject constructor(
         (uiState.value as? UiState.Content)?.let {
             outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+            outState.putString(PREVIEW_MODE, _previewMode.value?.name ?: MOBILE.name)
         }
     }
 
