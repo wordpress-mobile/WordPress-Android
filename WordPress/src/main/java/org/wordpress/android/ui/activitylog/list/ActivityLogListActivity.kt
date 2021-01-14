@@ -44,7 +44,7 @@ class ActivityLogListActivity : LocaleAwareActivity(),
      * screen's architecture.
      */
     private fun checkAndUpdateUiToBackupScreen() {
-        if (intent.getSerializableExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY) as? Boolean == true) {
+        if (intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)) {
             setTitle(R.string.backup)
             activity_type_filter.visibility = View.GONE
         }
