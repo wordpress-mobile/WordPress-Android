@@ -87,12 +87,7 @@ class ActivityLogListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
-        val rewindableOnly = if (savedInstanceState == null) {
-            val nonNullIntent = checkNotNull(nonNullActivity.intent)
-            nonNullIntent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
-        } else {
-            savedInstanceState.getBoolean(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
-        }
+        val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
 
         log_list_view.setEmptyView(actionable_empty_view)
         log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -128,7 +123,6 @@ class ActivityLogListFragment : Fragment() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
-        outState.putBoolean(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, viewModel.rewindableOnly)
         super.onSaveInstanceState(outState)
     }
 
