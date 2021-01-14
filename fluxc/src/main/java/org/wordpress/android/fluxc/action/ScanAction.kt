@@ -10,5 +10,11 @@ enum class ScanAction : IAction {
     @Action(payloadType = ScanStore.FetchScanStatePayload::class)
     FETCH_SCAN_STATE,
     @Action(payloadType = ScanStore.ScanStartPayload::class)
-    START_SCAN
+    START_SCAN,
+    @Action(payloadType = ScanStore.FixThreatsPayload::class)
+    FIX_THREATS,
+    @Action(payloadType = ScanStore.IgnoreThreatPayload::class)
+    IGNORE_THREAT,
+    @Action(payloadType = ScanStore.FetchFixThreatsStatusPayload::class)
+    FETCH_FIX_THREATS_STATUS,
 }
