@@ -4,8 +4,6 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.backup.download.viewholders.BackupDownloadAdditionalInformationViewHolder
-import org.wordpress.android.ui.jetpack.backup.download.viewholders.BackupDownloadProgressViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
@@ -13,6 +11,8 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionVie
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
+import org.wordpress.android.ui.jetpack.restore.viewholders.RestoreAdditionalInformationViewHolder
+import org.wordpress.android.ui.jetpack.restore.viewholders.RestoreProgressViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -34,10 +34,10 @@ class RestoreProgressAdapter(
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_PROGRESS.id -> BackupDownloadProgressViewHolder(uiHelpers, parent)
+            ViewType.RESTORE_PROGRESS.id -> RestoreProgressViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_ADDITIONAL_INFORMATION.id ->
-                BackupDownloadAdditionalInformationViewHolder(uiHelpers, parent)
+            ViewType.RESTORE_ADDITIONAL_INFORMATION.id ->
+                RestoreAdditionalInformationViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
@@ -57,7 +57,7 @@ class RestoreProgressAdapter(
     @MainThread
     fun update(newItems: List<JetpackListItemState>) {
         val diffResult = DiffUtil.calculateDiff(
-                BackupDownloadDetailsListDiffUtils(
+                RestoreProgressListDiffUtils(
                         items.toList(),
                         newItems
                 )
@@ -67,7 +67,7 @@ class RestoreProgressAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private class BackupDownloadDetailsListDiffUtils(
+    private class RestoreProgressListDiffUtils(
         val oldItems: List<JetpackListItemState>,
         val newItems: List<JetpackListItemState>
     ) : DiffUtil.Callback() {
