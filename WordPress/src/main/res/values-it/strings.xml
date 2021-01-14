@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 12:54:11+0000
+Translation-Revision-Date: 2020-12-31 08:54:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="backup_item_media_uploads">Caricamento di contenuti multimediali</string>
+    <string name="backup_item_plugins">Plugin WordPress</string>
+    <string name="backup_item_themes">Temi WordPress</string>
+    <string name="dialog_confirm_copy_local_title">Conflitto di sincronizzazione dell\'articolo</string>
     <string name="gutenberg_native_file_name">Nome file</string>
     <string name="gutenberg_native_file_block_settings">Impostazioni del blocco file</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Impossibile caricare i file.\nTocca per le opzioni.</string>

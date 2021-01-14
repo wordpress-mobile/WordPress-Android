@@ -9,6 +9,7 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHold
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackProgressViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsHeaderViewHolder
@@ -30,6 +31,7 @@ class ScanAdapter(
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
+            ViewType.PROGRESS.id -> JetpackProgressViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)

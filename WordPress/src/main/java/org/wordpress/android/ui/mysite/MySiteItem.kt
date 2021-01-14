@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
-import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -52,16 +51,11 @@ sealed class MySiteItem(val type: Type) {
         val id: String,
         val title: String,
         val tasks: List<DummyTask>,
-        val progressColor: ProgressColor,
+        @ColorRes val accentColor: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
         val doneTasks = tasks.filter { it.done }
         val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
-
-        enum class ProgressColor(@ColorRes val indicatorColor: Int, @ColorRes val trackColor: Int) {
-            GREEN(R.color.green_20, R.color.green_0),
-            ORANGE(R.color.orange_40, R.color.orange_0)
-        }
 
         data class DummyTask(
             val id: String,

@@ -150,7 +150,7 @@
 
     <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
         <item name="android:visibility">visible</item>
-        <item name="android:background">@color/divider</item>
+        <item name="android:background">?attr/wpColorSurfaceSecondary</item>
     </style>
 
     <style name="WordPress.TextAppearance.MaterialCalendarDaysOfWeek" parent="TextAppearance.MaterialComponents.Body2">

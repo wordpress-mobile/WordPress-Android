@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-29 09:07:10+0000
+Translation-Revision-Date: 2021-01-07 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
@@ -36,7 +36,7 @@ Language: fr
     <string name="dialog_edit_story_unavailable_title">Impossible de modifier la Story</string>
     <string name="dialog_edit_story_limited_message">Cette Story a été modifiée sur un appareil différent et la possibilité de modifier certains objets peut être limitée.</string>
     <string name="dialog_edit_story_limited_title">Modification de la Story limitée</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de modifier votre Story.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de créer à nouveau votre story.</string>
     <string name="color_picker_label_background">Arrière-plan</string>
     <string name="color_picker_label_text">Texte</string>
     <string name="dialog_discard_story_ok_button_edit">Rejeter</string>

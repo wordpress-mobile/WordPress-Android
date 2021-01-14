@@ -60,7 +60,6 @@ Language: es_CO
     <string name="dialog_edit_story_unavailable_title">No se puede editar la historia</string>
     <string name="dialog_edit_story_limited_message">Esta historia se ha editado en un dispositivo diferente y la posibilidad de editar ciertos objetos puede estar limitada.</string>
     <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta editar tu historia.</string>
     <string name="color_picker_label_background">Fondo</string>
     <string name="color_picker_label_text">Texto</string>
     <string name="dialog_discard_story_ok_button_edit">Descartar</string>
