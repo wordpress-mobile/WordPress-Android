@@ -1,36 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/task_card_view"
     android:layout_width="@dimen/quick_start_task_card_width"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_medium">
+    app:cardElevation="@dimen/quick_start_task_card_elevation">
 
-    <ImageView
-        android:id="@+id/task_card_illustration"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="@dimen/quick_start_task_card_illustration_height"
-        android:layout_gravity="center"
-        android:src="@drawable/bg_rectangle_placeholder_radius_4dp"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/task_card_title"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_large"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
-        android:textSize="@dimen/text_sz_large"
-        tools:text="Lorem ipsum" />
+        android:orientation="vertical"
+        android:paddingBottom="@dimen/margin_medium">
 
-    <TextView
-        android:id="@+id/task_card_description"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/margin_small"
-        android:ellipsize="end"
-        android:maxLines="3"
-        tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
-</LinearLayout>
+        <ImageView
+            android:id="@+id/task_card_illustration"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/quick_start_task_card_illustration_height"
+            android:layout_gravity="center"
+            android:src="@drawable/bg_rectangle_placeholder_radius_4dp"
+            tools:ignore="ContentDescription" />
+
+        <TextView
+            android:id="@+id/task_card_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_large"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
+            android:textSize="@dimen/text_sz_large"
+            tools:text="Lorem ipsum" />
+
+        <TextView
+            android:id="@+id/task_card_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_small"
+            android:ellipsize="end"
+            android:maxLines="3"
+            tools:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat." />
+    </LinearLayout>
+</com.google.android.material.card.MaterialCardView>

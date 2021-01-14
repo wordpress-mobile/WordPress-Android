@@ -415,6 +415,7 @@
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
     <dimen name="quick_start_task_card_width">168dp</dimen>
     <dimen name="quick_start_task_card_illustration_height">94dp</dimen>
+    <dimen name="quick_start_task_card_elevation">0dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
