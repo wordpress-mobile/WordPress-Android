@@ -194,7 +194,7 @@ class RestoreViewModel @Inject constructor(
 
         data class WarningToolbarState(
             @StringRes override val title: Int = R.string.restore_warning_page_title,
-            @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }
 }
