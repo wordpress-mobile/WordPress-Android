@@ -61,7 +61,6 @@ Language: sq_AL
     <string name="dialog_edit_story_unavailable_title">S’përpunohet dot Artikulli</string>
     <string name="dialog_edit_story_limited_message">Ky artikull u përpunua në një pajisje tjetër dhe aftësia për të përpunuar disa elemente të dhënë mund të jetë e kufizuar.</string>
     <string name="dialog_edit_story_limited_title">Përpunim Artikulli i Kufizuar</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media është hequr. Provoni të përpunoni Artikullin tuaj.</string>
     <string name="color_picker_label_background">Sfond</string>
     <string name="color_picker_label_text">Tekst</string>
     <string name="dialog_discard_story_ok_button_edit">Hidhe tej</string>

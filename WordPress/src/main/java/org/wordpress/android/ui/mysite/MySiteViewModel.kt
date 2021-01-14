@@ -22,15 +22,17 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
+import org.wordpress.android.ui.mysite.ListItemAction.BACKUP
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
 import org.wordpress.android.ui.mysite.ListItemAction.JETPACK_SETTINGS
 import org.wordpress.android.ui.mysite.ListItemAction.MEDIA
@@ -49,7 +51,6 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.ProgressColor
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
@@ -58,9 +59,11 @@ import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.Sele
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
+import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenBackup
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenComments
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenCropActivity
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenDomainRegistration
@@ -90,13 +93,16 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -127,7 +133,10 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    private val scanStatusService: ScanStatusService
+    private val backupsFeatureConfig: BackupsFeatureConfig,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val scanFeatureConfig: ScanFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _partialState = MediatorLiveData<PartialState>()
@@ -148,7 +157,6 @@ class MySiteViewModel
     val uiModel: LiveData<UiModel> = scan<PartialState, UiState>(
             UiState(),
             _partialState,
-            scanStatusService.scanAvailable.mapNullable { ScanAvailable(it == true) },
             selectedSiteRepository.selectedSiteChange.mapNullable { SelectedSite(it) },
             selectedSiteRepository.showSiteIconProgressBar.distinct()
                     .mapNullable { ShowSiteIconProgressBar(it == true) },
@@ -159,11 +167,11 @@ class MySiteViewModel
     }.map { (currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable) ->
         site?.takeIf { site.id != currentSiteId }?.let {
             _partialState.value = ScanAvailable(false)
-            requestScanAvailableStatus(site)
+            updateScanItemState(site)
             currentSiteId = site.id
         }
 
-        val items = if (site != null) {
+        val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
             siteItems.add(
                     siteInfoBlockBuilder.buildSiteInfoBlock(
@@ -198,7 +206,7 @@ class MySiteViewModel
                             "customize_your_site",
                             "Customize your Site",
                             dummyTasks,
-                            ProgressColor.GREEN,
+                            R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
                     )
             )
@@ -207,33 +215,42 @@ class MySiteViewModel
                             "grow_your_audience",
                             "Grow your Audience",
                             dummyTasksCompleted,
-                            ProgressColor.ORANGE,
+                            R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
                     )
             )
-            siteItems.addAll(siteItemsBuilder.buildSiteItems(site, this::onItemClick, scanAvailable))
-            siteItems
+
+            siteItems.addAll(
+                    siteItemsBuilder.buildSiteItems(
+                            site,
+                            this::onItemClick,
+                            backupsFeatureConfig.isEnabled(),
+                            scanAvailable
+                    )
+            )
+            State.SiteSelected(siteItems)
         } else {
-            listOf()
+            // Hide actionable empty view image when screen height is under 600 pixels.
+            val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
+            State.NoSites(shouldShowImage)
         }
-        UiModel(currentAvatarUrl.orEmpty(), items)
+        UiModel(currentAvatarUrl.orEmpty(), state)
     }
 
-    init {
-        _partialState.addSource(scanStatusService.scanAvailable) {
-            _partialState.value = ScanAvailable(it == true)
+    private fun updateScanItemState(site: SiteModel) {
+        if (scanFeatureConfig.isEnabled()) {
+            launch {
+                val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                _partialState.value = ScanAvailable(capabilities.find { it == JetpackCapability.SCAN } != null)
+            }
         }
-    }
-
-    private fun requestScanAvailableStatus(site: SiteModel) {
-        scanStatusService.stop()
-        scanStatusService.start(site)
     }
 
     private fun onItemClick(action: ListItemAction) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             val navigationAction = when (action) {
                 ACTIVITY_LOG -> OpenActivityLog(site)
+                BACKUP -> OpenBackup(site)
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)
@@ -467,11 +484,14 @@ class MySiteViewModel
         _onNavigation.value = Event(OpenMeScreen)
     }
 
+    fun onAddSitePressed() {
+        _onNavigation.value = Event(AddNewSite(accountStore.hasAccessToken()))
+    }
+
     override fun onCleared() {
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
-        scanStatusService.stop()
         super.onCleared()
     }
 
@@ -509,8 +529,13 @@ class MySiteViewModel
 
     data class UiModel(
         val accountAvatarUrl: String,
-        val items: List<MySiteItem>
+        val state: State
     )
+
+    sealed class State {
+        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class NoSites(val shouldShowImage: Boolean) : State()
+    }
 
     data class TextInputDialogModel(
         val callbackId: Int = SITE_NAME_CHANGE_CALLBACK_ID,

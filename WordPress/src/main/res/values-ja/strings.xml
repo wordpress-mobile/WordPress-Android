@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-24 10:54:09+0000
+Translation-Revision-Date: 2021-01-06 08:55:04+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
@@ -61,7 +61,7 @@ Language: ja_JP
     <string name="dialog_edit_story_unavailable_title">ストーリーを編集できません</string>
     <string name="dialog_edit_story_limited_message">このストーリーは別の端末で編集されており、特定のオブジェクトを編集する機能が制限される可能性があります。</string>
     <string name="dialog_edit_story_limited_title">制限されたストーリー編集</string>
-    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーの編集をお試しください。</string>
+    <string name="cannot_retry_deleted_media_item_fatal">メディアが削除されました。 ストーリーを再度作成してみてください。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">テキスト</string>
     <string name="dialog_discard_story_ok_button_edit">保存しない</string>

@@ -1,127 +1,186 @@
 <ar>
-16.3:
-يسعدنا الإعلان عن العديد من الميزات الجديدة لتطبيق ووردبريس على الهاتف المحمول ألا وهي:
-- عروض شرائح بوضع ملء الشاشة للصور أو مقاطع الفيديو لمواقع WP.com و Jetpack؛
-- والخيار لاختيار تصميم الصفحة الرئيسية عند إنشاء موقع WP.com؛
-- وظائف محسَّنة لتعيين أبعاد الغلاف والأعمدة؛
-- وزر المتابعة / إلغاء المتابعة لقسم تعليقات الموقع، ما يسمح للمستخدمين بتعقٌّب محادثة ما وإخطارهم بالتحديثات عبر البريد الإلكتروني (غير مدعوم للمواقع المستضافة ذاتيًا غير المتصلة بـ Jetpack).
+16.4:
+ما الجديد:
+
+محرِّر المكوِّنات: يمكنك الآن إدراج مكوِّن الملف الذي يقوم بوضع زر تنزيل للملفات مثل المستندات. عالجنا أيضًا مشكلات في مكوِّنات العناوين والمعرض.
+
+قائمة المقالات: يمكنك الآن نسخ مقالة باستخدام الزر "تكرار" الموجود في قائمة مقالات مدونتك.
+
+موقعي: أصلحنا أيضًا العطل الذي يحدث أثناء تحرير عنوان موقعك.
+
 </ar>
 <de-DE>
-16.3:
-Wir freuen uns sehr, mehrere neue Funktionen für die WordPress-Mobil-App vorzustellen:
-- Vollbild-Diashows von Fotos oder Videos für WP.com- und Jetpack-Websites;
-- Die Option, bei Erstellung einer WP.com-Website ein Design für die Startseite auszuwählen;
-- Und einen Button zum Folgen/Nicht mehr folgen für die Kommentarfunktion einer Website (nicht unterstützt für selbst gehostete Websites, die nicht mit Jetpack verbunden sind).
+16.4:
+Neuerungen:
+
+Block-Editor: Du kannst jetzt einen Dateiblock einfügen, der einen Download-Button für Dateien wie Dokumente bereitstellt. Außerdem haben wir Probleme beim Überschrifts- und Galerieblock behoben.
+
+Beitragsliste: Du kannst einen Beitrag jetzt mit dem Button „Duplizieren“ in deiner Blogbeitragsliste kopieren.
+
+Meine Website: Wir haben auch einen Absturz behoben, der beim Bearbeiten des Websitetitels auftrat.
+
 </de-DE>
 <en-US>
-16.3:
-We’re pleased to announce several new WordPress mobile app features:
-- full-screen slideshows of photos or videos for WP.com and Jetpack sites;
-- the option to pick a homepage design when creating a WP.com site;
-- improved functionality for setting the dimensions of Cover and Columns;
-- and a Follow/Unfollow button for a site’s comments section, allowing users to track a conversation and be notified by email of updates (not supported for self-hosted sites that aren’t connected to Jetpack).
+16.4:
+What’s New:
+
+Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.
+
+Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.
+
+My Site: We also fixed a crash that occurred while editing your site title.
+
 </en-US>
 <es-ES>
-16.3:
-Estamos encantados de anunciar varias nuevas características de la aplicación móvil para WordPress:
-- Presentaciones de diapositivas a pantalla completa de fotos o vídeos para los sitios de WP.com y Jetpack;
-- La opción para elegir un diseño de página de inicio al crear un sitio en WP.com;
-- Y un botón par seguir/dejar de seguir para la sección de comentarios de un sitio (no compatible con los sitios autoalojados que no estén conectados a Jetpack).
+16.4:
+Novedades:
+
+Editor de bloques: Ahora puedes insertar un bloque de archivo, que pone un botón de descarga para archivos como documentos. También hemos resuelto problemas con los bloques de encabezado y galería.
+
+Lista de entradas: Ahora puedes copiar una entrada con el botón de «Duplicar» en la lista de tus entradas de blog.
+
+Mi sitio: También hemos corregido una caída que ocurría mientras editabas el título de tu sitio.
+
 </es-ES>
 <fr-CA>
-16.3 :
-Nous sommes heureux d’annoncer l’ajout de plusieurs nouvelles fonctionnalités à l’application mobile WordPress :
-- diaporama photos ou vidéo en plein écran pour les sites WP.com et Jetpack ;
-- possibilité de choisir le design d’une page d’accueil lors de la création d’un site WP.com ;
-- bouton S’abonner/Se désabonner de la section Commentaires d’un site (non pris en charge pour les sites auto-hébergés non connectés à Jetpack).
+16.4 :
+Nouveautés :
+
+Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
+
+Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
+
+Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
+
 </fr-CA>
 <fr-FR>
-16.3 :
-Nous sommes heureux d’annoncer l’ajout de plusieurs nouvelles fonctionnalités à l’application mobile WordPress :
-- diaporama photos ou vidéo en plein écran pour les sites WP.com et Jetpack ;
-- possibilité de choisir le design d’une page d’accueil lors de la création d’un site WP.com ;
-- bouton S’abonner/Se désabonner de la section Commentaires d’un site (non pris en charge pour les sites auto-hébergés non connectés à Jetpack).
+16.4 :
+Nouveautés :
+
+Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
+
+Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
+
+Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
+
 </fr-FR>
 <iw-IL>
-16.3:
-אנחנו שמחים להכריז על כמה אפשרויות חדשות באפליקציה לנייד של WordPress:
-- מצגות במסך מלא של תמונות או סרטונים באתרים של WP.com ושל Jetpack;
-- האפשרות לבחור עיצוב לעמוד הבית כאשר יוצרים אתר WP.com;
-- פונקציונליות משופרת בהגדרת הממדים של הכיסוי והטורים;
-- וכפתור 'לעקוב/לבטל מעקב' במקטע התגובות של האתר כדי לאפשר למשתמשים לעקוב אחר השיחה ולקבל עדכונים באימייל (לא נתמך באתרים באחסון עצמי שלא מחוברים אל Jetpack).
+16.4:
+מה חדש:
+
+עורך הבלוקים: כעת אפשר להוסיף בלוק קובץ שממקם כפתור 'הורדה' למסמכים ששמורים כקבצים. בנוסף, טיפלנו בכמה בעיות בבלוקים 'כותרת' ו'גלריה'.
+
+רשימת פוסטים: כעת אפשר להעתיק פוסט עם הכפתור 'שכפול' ברשימת הפוסטים בבלוג שלך.
+
+האתר שלי: תיקנו גם קריסה שאירעה במהלך העריכה של שם האתר.
+
 </iw-IL>
-<in>
-16.3:
-Dengan gembira kami umumkan beberapa fitur baru aplikasi seluler WordPress:
-- slideshow foto atau video layar penuh untuk WP.com dan situs Jetpack;
-- opsi desain halaman saat membuat situs WP.com;
-- dan tombol Ikuti/Batal Mengikuti untuk bagian komentar situs (tidak didukung untuk situs hosting sendiri yang tidak terhubung ke Jetpack).
-</in>
+<id>
+16,4:
+Yang Baru:
+
+Editor Blok: Kini Anda dapat memasukkan Blok File, yang menyediakan tombol unduh untuk berbagai file seperti dokumen. Kami juga telah memperbaiki kesalahan yang ada pada blok Judul dan Galeri.
+
+Daftar Pos: Dengan tombol “Duplikat”, Anda sekarang dapat menyalin sebuah pos di daftar Pos Blog.
+
+Situs Saya: Kami juga telah memperbaiki crash yang terjadi ketika menyunting judul situs Anda.
+
+</id>
+<it-IT>
+16.4:
+Novità:
+
+Editor a blocchi: ora puoi inserire un blocco file che colloca un pulsante di scaricamento per file come documenti.  Abbiamo anche risolto i problemi relativi ai blocchi Titolo e Galleria.
+
+Elenco di articoli: ora puoi copiare un articolo nel tuo elenco di articoli del blog con il pulsante "Duplica".
+
+Il mio sito: abbiamo anche risolto un arresto anomalo che si verificava durante la modifica del titolo del sito.
+
+</it-IT>
 <ja-JP>
-16.3:
-WordPress モバイルアプリの新しい機能をお知らせします。
-- WP.com および Jetpack サイトの写真または動画のフルスクリーンスライドショー
-- WP.com サイトの作成時にホームページのデザインを選択するオプション
-- カバーと列のサイズを設定する機能の改善
-- サイトのコメントセクションのフォロー/フォロー解除ボタンで、ユーザーは会話の追跡や更新情報のメール通知が可能に (Jetpack に接続されていないインストール型のサイトはサポートされていません)。
+16.4:
+最新情報 :
+
+ブロックエディター : ドキュメントなどのファイルのダウンロードボタンを配置するファイルブロックを挿入できるようになりました。 また、Heading ブロックと Gallery ブロックの問題に対応しました。
+
+投稿リスト : ブログ投稿リストの 「複製」 ボタンを使用して投稿をコピーできるようになりました。
+
+参加サイト : サイトタイトルの編集中に発生するクラッシュを修正しました。
+
 </ja-JP>
 <ko-KR>
-16.3:
-새 워드프레스 모바일 앱 기능을 알리게되어 기쁩니다:
-- WP.com과 젯팩 사이트에 대한 사진이나 비디오의 전체화면 슬라이드쇼;
-- WP.com 사이트를 만들 때 홈페이지 디자인을 선택할 수 있는 옵션;
-- 표지나 컬럼의 크기를 설정하기 위한 기능을 개선;
-- 그리고 이용자가 대화를 추적하고 업데이트 이메일로 알림을 받을 수 있는, 사이트 댓글 구역에 대한 팔로우/언팔로우 버튼 (젯팩을 연결하지 않은 자체 호스팅에는 지원하지 않습니다).
+16.4:
+새소식:
+
+블록 편집기: 이 문서와 같은 파일을 배치할 수 있는 파일 블록을 삽입할 수 있습니다. 헤딩과 갤러리 블록의 문제도 해결했습니다.
+
+글 목록: 이제 블로그 글 목록의 “복제” 버튼으로 글을 복사할 수 있습니다.
+
+내 사이트: 사이트 제목을 편집하는 동안 일어나는 충돌도 고쳤습니다.
+
 </ko-KR>
 <nl-NL>
-16.3:
-We zijn verheugd verschillende nieuwe functies van de mobiele WordPress app aan te kondigen:
-- slide-voorstellingen op volledig scherm van foto's of video's voor WP.com en Jetpack sites;
-- de optie om een homepage-ontwerp te kiezen bij het maken van een WP.com site;
-- en een knop Volgen/Ontvolgen voor de reacties sectie van een site (niet ondersteund voor door jezelf gehoste sites die niet zijn verbonden met Jetpack).
+16.4:
+Wat is er nieuw:
+
+Blok-editor: je kan nu een bestandsblok invoegen, welke een downloadknop plaatst voor bestanden zoals documenten. We hebben ook problemen met de blokken heading en galerij aangepakt.
+
+Berichtenlijst: je kan nu een bericht kopiëren met de knop "Dupliceren" in je lijst met blogberichten.
+
+Mijn site: we hebben ook een crash verholpen die optrad tijdens het bewerken van je sitetitel.
+
 </nl-NL>
-<pt-BR>
-16.3:
-Estamos felizes em anunciar diversos novos recursos no aplicativo WordPress:
-- slideshow em tela cheia de fotos ou vídeos de sites do WP.com e Jetpack;
-- possibilidade de selecionar um modelo para a página inicial ao criar um site no WP.com;
-- e um botão para seguir ou parar de seguir comentários em sites (não é suportado em sites auto-hospedados não conectados ao Jetpack).
-</pt-BR>
 <ru-RU>
-16.3:
-Мы рады объявить о нескольких новых функциях мобильного приложения WordPress:
-- полноэкранные слайд-шоу из фото или видео для сайтов WP.com и Jetpack;
-- возможность выбрать дизайн домашней страницы при создании сайта WP.com;
-- улучшен функционал настройки размеров обложки и столбцов;
-- кнопка "Подписаться / отменить подписку" для комментариев сайта, позволяющая пользователям отслеживать беседу и получать уведомления  по электронной почте (для автономных сайтов требуется Jetpack).
+16.4:
+Что нового:
+
+Редактор блоков: теперь вы можете вставить блок файлов, который помещает кнопку загрузки для файлов, таких как документы. Мы также решили проблемы с блоками "Заголовок" и "Галерея".
+
+Список записей: теперь вы можете скопировать запись с помощью кнопки «Дублировать» в списке записей блога.
+
+Мой сайт: мы также исправили сбой, который мог произойти при редактировании заголовка вашего сайта.
 </ru-RU>
 <sv-SE>
-16.3:
-Vi har glädjen att presentera en rad nya funktioner i WordPress mobilapp:
-- fullskärms bildspel med foton och video för webbplatser hos WP.com de med Jetpack,
-- möjlighet att välja startsidesdesign när du skapar en webbplats hos WP.com,
-- och en knapp för att följa och sluta följa kommentarsektionen på en webbplats (stöds inte för webbplats på egen server/webbhotell om den inte är ansluten till Jetpack).
+16.4:
+Nyheter:
+
+Blockredigeraren: Nu kan du infoga ett filblock som visar en nedladdningsknapp för t.ex. dokumentfiler. Vi har även löst problem med rubrik- och galleriblock.
+
+Inläggslistan: Nu går det att kopiera ett inlägg med knappen ”duplicera” i inläggslistan för din blogg.
+
+Min webbplats: När du redigerade webbplatsrubriken kunde appen krascha. Nu är det löst.
+
 </sv-SE>
 <tr-TR>
-16.3:
-Bir kaç yeni WordPress mobil uygulama özelliğini bildirmekten mutluluk duyuyoruz:
-- WP.com ve Jetpack siteleri için tam ekran fotoğraf ve video slayt gösterileri;
-- bir WP.com sitesi oluştururken ana sayfa tasarımı seçme seçeneği;
-- ve sitenin yorumlar bölümü için, kullanıcıların sohbeti takip edebildikleri ve e-posta ile bildirim alabildikleri bir takip et/takipten çık düğmesi (Jetpack bağlantısı olmayan özel barındırma sunucularında desteklenmiyor.)
+16.4:
+Yenilikler:
+
+Blok Düzenleyici: Artık, belgeler gibi dosyalar için indirme düğmesi yerleştiren bir Dosya bloğu ekleyebilirsiniz. Başlık ve Galeri bloklarıyla ilgili sorunları da giderdik.
+
+Gönderi Listesi: Artık Blog Gönderileri listenizdeki "Çoğalt" düğmesiyle bir gönderiyi kopyalayabilirsiniz
+
+Sitem: Site başlığınızı düzenlerken meydana gelen bir kilitlenme durumunu da düzelttik.
+
 </tr-TR>
 <zh-CN>
-16.3：
-我们非常高兴宣布 WordPress 移动应用程序推出了几项新功能：
-- WP.com 和 Jetpack 网站可以全屏播放照片或视频幻灯片；
-- 创建 WP.com 站点时可以选择主页设计；
-- 改进了封面和栏目尺寸的设置功能；-
- 以及网站评论部分的“关注/取消关注”按钮，让用户可以跟踪对话并通过电子邮件接收更新通知（未关联至 Jetpack 的自托管网站不支持）。
+16.4：
+新增功能：
+
+区块编辑器：您现在可以插入文件区块，在此区块中为文档等文件添加下载按钮。 我们还解决了标题区块和画廊区块的问题。
+
+文章列表：您现在可以使用博文列表中的“复制”按钮来复制文章。
+
+我的站点：我们还修复了在编辑站点标题时发生崩溃的问题。
+
 </zh-CN>
 <zh-TW>
-16.3：
-很高興在此宣佈幾項 WordPress 行動應用程式全新功能：
-- WP.com 和 Jetpack 網站的全螢幕相片或影片投影片功能；
-- 建立 WP.com 網站時可選擇是否挑選首頁設計；
-改善封面和欄位尺寸的設定功能；
-- 另外，網站留言區段新增「追蹤/停止追蹤」按鈕，讓使用者能夠追蹤討論情況，並接收更新電子郵件通知 (不支援未連結 Jetpack 的自助託管網站)。
+16.4：
+新功能：
+
+區塊編輯器：你現在可以插入檔案區塊，內含文件等檔案的下載按鈕。 我們也解決了標題和圖庫區塊的問題。
+
+文章清單：你現在可以使用「網誌文章」清單的「複製」按鈕複製文章。
+
+我的網站：我們也修正了編輯網站標題時發生的當機問題。
+
 </zh-TW>

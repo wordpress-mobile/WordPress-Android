@@ -214,6 +214,8 @@
 
     <dimen name="reader_subfilter_component_height">48dp</dimen>
 
+    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
+
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
 

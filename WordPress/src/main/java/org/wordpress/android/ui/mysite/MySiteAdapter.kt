@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.os.Bundle
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
@@ -22,6 +23,7 @@ import org.wordpress.android.util.image.ImageManager
 class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : Adapter<MySiteItemViewHolder>() {
     private var items = listOf<MySiteItem>()
     private val quickStartViewPool = RecycledViewPool()
+    private var nestedScrollStates = Bundle()
 
     fun loadData(result: List<MySiteItem>) {
         val diffResult = DiffUtil.calculateDiff(
@@ -36,7 +38,7 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, quickStartViewPool)
+            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, quickStartViewPool, nestedScrollStates)
             CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")
@@ -54,7 +56,22 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
         }
     }
 
+    override fun onViewRecycled(holder: MySiteItemViewHolder) {
+        super.onViewRecycled(holder)
+        if (holder is QuickStartCardViewHolder) {
+            holder.onRecycled()
+        }
+    }
+
     override fun getItemViewType(position: Int) = items[position].type.ordinal
 
     override fun getItemCount(): Int = items.size
+
+    fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        nestedScrollStates = savedInstanceState
+    }
+
+    fun onSaveInstanceState(): Bundle {
+        return nestedScrollStates
+    }
 }

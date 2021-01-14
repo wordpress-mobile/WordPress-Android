@@ -6,24 +6,29 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
+import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.AccountModel
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.ui.jetpack.scan.ScanStatusService
+import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -42,6 +47,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -50,6 +56,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.T
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.ConnectJetpackForStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenActivityLog
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenAdmin
@@ -73,13 +80,17 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
+@RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder
     @Mock lateinit var siteItemsBuilder: SiteItemsBuilder
@@ -94,7 +105,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
-    @Mock lateinit var scanStatusService: ScanStatusService
+    @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
+    @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -112,18 +126,17 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData<Boolean>()
-    private val onScanAvailable = MutableLiveData<Boolean>()
 
     @InternalCoroutinesApi
     @Before
-    fun setUp() {
+    fun setUp() = test {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         isDomainCreditAvailable.value = null
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
-        whenever(scanStatusService.scanAvailable).thenReturn(onScanAvailable)
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -140,7 +153,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteIconUploadHandler,
                 siteStoriesHandler,
                 domainRegistrationHandler,
-                scanStatusService
+                backupsFeatureConfig,
+                displayUtilsWrapper,
+                jetpackCapabilitiesUseCase,
+                scanFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -188,9 +204,6 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteInfoBlock
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(scanStatusService.start(site)).thenAnswer {
-            onScanAvailable.postValue(false)
-        }
     }
 
     @Test
@@ -198,7 +211,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(null)
 
         assertThat(uiModels).hasSize(2)
-        assertThat(uiModels.last().items).isEmpty()
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
     }
 
     @Test
@@ -206,8 +219,10 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(3)
-        assertThat(uiModels.last().items).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
-        assertThat(uiModels.last().items.first() is SiteInfoBlock).isTrue()
+        assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
+
+        assertThat(getLastItems()).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
+        assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
     @Test
@@ -427,13 +442,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onAvatarPressed()
 
         assertThat(navigationActions).containsOnly(OpenMeScreen)
-    }
-
-    @Test
-    fun `quick actions are not shown when no site is selected`() {
-        onSiteChange.postValue(null)
-
-        assertThat(uiModels.last().items).doesNotHaveAnyElementsOfTypes(QuickActionsBlock::class.java)
     }
 
     @Test
@@ -723,40 +731,99 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         verify(analyticsTrackerWrapper).track(DOMAIN_CREDIT_REDEMPTION_SUCCESS)
 
-        val message = UiStringResWithParams(string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
+        val message = UiStringResWithParams(R.string.my_site_verify_your_email, listOf(UiStringText(emailAddress)))
 
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(message))
     }
 
     @Test
-    fun `scan status service invoked to get scan availability status when site is changed`() {
+    fun `jetpack capabilities requested, when selected site changes`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+
         onSiteChange.postValue(site)
 
-        verify(scanStatusService).start(site)
+        verify(jetpackCapabilitiesUseCase).getOrFetchJetpackCapabilities(site.siteId)
     }
 
     @Test
-    fun `site items builder invoked with the selected site's scan availability`() {
-        whenever(scanStatusService.start(site)).thenAnswer {
-            onScanAvailable.postValue(true)
-        }
+    fun `jetpack capabilities not requested, when scanFeatureConfig flag is off`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
+
+        onSiteChange.postValue(site)
+
+        verify(jetpackCapabilitiesUseCase, never()).getOrFetchJetpackCapabilities(site.siteId)
+    }
+
+    @Test
+    fun `site items builder invoked with the selected site's backups availability`() {
+        whenever(backupsFeatureConfig.isEnabled()).thenReturn(true)
+
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder, times(2)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupsAvailable = eq(true),
+                isScanAvailable = any()
+        )
+    }
+
+    @Test
+    fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
+        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
+                listOf(JetpackCapability.SCAN)
+        )
+
         onSiteChange.postValue(site)
 
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
+                isBackupsAvailable = any(),
                 isScanAvailable = eq(true)
         )
+    }
+
+    @Test
+    fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
+    }
+
+    @Test
+    fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
+
+        onSiteChange.postValue(null)
+
+        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
+    }
+
+    @Test
+    fun `add new site press is handled correctly`() {
+        whenever(accountStore.hasAccessToken()).thenReturn(true)
+
+        viewModel.onAddSitePressed()
+
+        assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
     private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
 
     private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
 
-    private fun findQuickActionsBlock() = uiModels.last().items.find { it is QuickActionsBlock } as QuickActionsBlock?
+    private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =
-            uiModels.last().items.find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+            getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
+
+    private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {
@@ -773,7 +840,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(site)
     }
 
@@ -783,11 +850,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any())
 
         onSiteChange.postValue(site)
 
-        assertThat(clickAction).isNotNull()
+        assertThat(clickAction).isNotNull
         clickAction!!.invoke(action)
     }
 

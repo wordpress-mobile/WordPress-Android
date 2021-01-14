@@ -22,7 +22,8 @@
             style="?android:progressBarStyleHorizontal"
             android:layout_width="@dimen/quick_start_card_progress_indicator_size"
             android:layout_height="@dimen/quick_start_card_progress_indicator_size"
-            android:layout_margin="@dimen/margin_extra_large"
+            android:layout_marginEnd="@dimen/my_site_list_row_icon_margin_right"
+            android:layout_marginStart="@dimen/content_margin_site_row_start"
             android:indeterminate="false"
             android:progressDrawable="@drawable/quick_start_card_progress_drawable"
             tools:progress="75"
@@ -34,10 +35,10 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:fontFamily="serif"
             android:maxLines="1"
             android:singleLine="true"
-            android:textAppearance="@style/WordPress.ToolBar.Title"
-            android:textSize="@dimen/text_sz_larger"
+            android:textAppearance="@style/TextAppearance.MaterialComponents.Headline6"
             tools:text="Quick Start card" />
 
         <ImageButton
@@ -56,6 +57,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:clipToPadding="false"
-        android:paddingEnd="@dimen/margin_medium"
-        android:paddingStart="@dimen/margin_medium" />
+        android:paddingEnd="@dimen/margin_medium_large"
+        android:paddingStart="@dimen/margin_medium_large" />
 </LinearLayout>
