@@ -17,7 +17,10 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
@@ -84,18 +87,9 @@ class ScanStore @Inject constructor(
 
     fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
 
-    fun addOrUpdateScanStateModelForSite(site: SiteModel, scanStateModel: ScanStateModel) {
+    fun addOrUpdateScanStateModelForSite(action: ScanAction, site: SiteModel, scanStateModel: ScanStateModel) {
         scanSqlUtils.replaceScanState(site, scanStateModel)
-        threatSqlUtils.removeThreatsWithStatus(site, listOf(CURRENT))
-        val threats = scanStateModel.threats
-                ?.filter { it.baseThreatModel.status == CURRENT }
-                ?.also {
-                    if (it.size != scanStateModel.threats.size) {
-                        appLogWrapper.e(AppLog.T.API, "Scan State endpoint returned Threat.State != CURRENT")
-                        if(BuildConfig.DEBUG) throw RuntimeException("fetchScanState API returned a Threat with status != CURRENT")
-                    }
-                } ?: emptyList()
-        threatSqlUtils.insertThreats(site, threats)
+        storeThreatsWithStatuses(action, site, scanStateModel.threats, listOf(CURRENT))
     }
 
     override fun onRegister() {
@@ -112,7 +106,7 @@ class ScanStore @Inject constructor(
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
             payload.scanStateModel?.let {
-                addOrUpdateScanStateModelForSite(payload.site, payload.scanStateModel)
+                addOrUpdateScanStateModelForSite(FETCH_SCAN_STATE, payload.site, payload.scanStateModel)
             }
             OnScanStateFetched(FETCH_SCAN_STATE)
         }
@@ -175,13 +169,34 @@ class ScanStore @Inject constructor(
     suspend fun fetchScanHistory(payload: FetchScanHistoryPayload): OnScanHistoryFetched {
         val resultPayload = scanRestClient.fetchScanHistory(payload.site.siteId)
         if(!resultPayload.isError && resultPayload.threats != null) {
-            storeThreats(payload.site, resultPayload.threats)
+            storeThreatsWithStatuses(
+                    FETCH_SCAN_HISTORY,
+                    payload.site,
+                    resultPayload.threats,
+                    listOf(IGNORED, FIXED)
+            )
         }
         return emitFetchScanHistoryResult(resultPayload)
     }
 
-    private fun storeThreats(site: SiteModel, threats: List<ThreatModel>) {
-//        threatSqlUtils.replaceThreatsForSite(site, threats)
+    private fun storeThreatsWithStatuses(
+        action: ScanAction,
+        site: SiteModel,
+        threats: List<ThreatModel>?,
+        statuses: List<ThreatStatus>
+    ) {
+        threatSqlUtils.removeThreatsWithStatus(site, statuses)
+        threats?.filter { statuses.contains(it.baseThreatModel.status) }
+                ?.also {
+                    if (it.size != threats.size) {
+                        val msg = "$action action returned a Threat with ThreatState not in ${statuses.joinToString()}"
+                        appLogWrapper.e(AppLog.T.API, msg)
+                        if (BuildConfig.DEBUG) {
+                            throw RuntimeException(msg)
+                        }
+                    }
+                }
+                ?.run { threatSqlUtils.insertThreats(site, this) }
     }
 
     private fun emitFetchScanHistoryResult(payload: FetchScanHistoryResultPayload) =
