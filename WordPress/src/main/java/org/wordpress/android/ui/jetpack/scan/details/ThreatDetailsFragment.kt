@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -13,8 +14,10 @@ import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_I
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
@@ -55,6 +58,9 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                 }
             }
         )
+
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+
         viewModel.navigationEvents.observe(
             viewLifecycleOwner,
             {
@@ -69,6 +75,15 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     private fun refreshContentScreen(content: Content) {
         ((recycler_view.adapter) as ThreatDetailsAdapter).update(content.items)
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(
+            threat_details_layout,
+            uiHelpers.getTextOfUiString(requireContext(), this.message),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.show()
     }
 
     private fun showThreatActionDialog(holder: OpenThreatActionDialog) {

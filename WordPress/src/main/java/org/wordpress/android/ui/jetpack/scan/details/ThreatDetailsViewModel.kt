@@ -13,7 +13,10 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -23,6 +26,7 @@ import javax.inject.Inject
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
+    private val ignoreThreatUseCase: IgnoreThreatUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
@@ -34,6 +38,9 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _navigationEvents = MediatorLiveData<Event<ThreatDetailsNavigationEvents>>()
     val navigationEvents: LiveData<Event<ThreatDetailsNavigationEvents>> = _navigationEvents
@@ -55,7 +62,20 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun ignoreThreat() { // TODO ashiagr to be implemented
+    private fun ignoreThreat() {
+        viewModelScope.launch {
+            when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
+                is IgnoreThreatState.Success -> {
+                    val message = UiStringRes(R.string.threat_ignore_success_message)
+                    updateSnackbarMessageEvent(SnackbarMessageHolder(message))
+                }
+
+                is IgnoreThreatState.Failure -> {
+                    val message = UiStringRes(R.string.threat_ignore_error_message)
+                    updateSnackbarMessageEvent(SnackbarMessageHolder(message))
+                }
+            }
+        }
     }
 
     private fun onFixThreatButtonClicked() { // TODO ashiagr to be implemented
@@ -78,6 +98,10 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
+    }
+
+    private fun updateSnackbarMessageEvent(messageHolder: SnackbarMessageHolder) {
+        _snackbarEvents.value = Event(messageHolder)
     }
 
     private fun updateNavigationEvent(navigationEvent: ThreatDetailsNavigationEvents) {
