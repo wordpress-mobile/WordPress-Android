@@ -59,7 +59,7 @@ class VisitsAndViewsStoreTest {
                 appLogWrapper
         )
         val currentDate = Date(0)
-        whenever(currentTimeProvider.currentDate).thenReturn(currentDate)
+        whenever(currentTimeProvider.currentDate()).thenReturn(currentDate)
         val timeZone = "GMT"
         whenever(site.timezone).thenReturn(timeZone)
         whenever(
