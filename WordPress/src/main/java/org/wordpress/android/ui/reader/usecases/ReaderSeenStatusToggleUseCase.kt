@@ -26,38 +26,62 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     private val accountStore: AccountStore,
     private val readerPostTableWrapper: ReaderPostTableWrapper
 ) {
+
+    /**
+     * Convenience method for toggling seen status based on the current state in local DB
+     */
     suspend fun toggleSeenStatus(post: ReaderPost) = flow {
-        if (!accountStore.hasAccessToken()) {
-            emit(UserNotAuthenticated)
+        val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
+        val status = if (isAskingToMarkAsSeen) {
+            markPostAsSeen(post)
         } else {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(Failure(UiStringRes(string.error_network_connection)))
+            markPostAsUnseen(post)
+        }
+
+        emit(status)
+    }
+
+    suspend fun markPostAsSeenIfNecessary(post: ReaderPost) = flow {
+        if (!readerPostTableWrapper.isPostSeen(post)) {
+            val status = markPostAsSeen(post)
+            emit(status)
+        }
+    }
+
+   private suspend fun markPostAsSeen(post: ReaderPost): PostSeenState {
+        if (!accountStore.hasAccessToken()) {
+            return UserNotAuthenticated
+        } else {
+            return if (!networkUtilsWrapper.isNetworkAvailable()) {
+                Failure(UiStringRes(string.error_network_connection))
             } else {
-                val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
-
-                val status = if (isAskingToMarkAsSeen) {
-                    apiCallsProvider.markPostAsSeen(post)
-                } else {
-                    apiCallsProvider.markPostAsUnseen(post)
-                }
-
-                when (status) {
+                when (val status =  apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
-                        readerPostTableWrapper.makPostAsSeenLocally(post, isAskingToMarkAsSeen)
-                        emit(
-                                PostSeenStateChanged(
-                                        isAskingToMarkAsSeen,
-                                        UiStringRes(
-                                                if (isAskingToMarkAsSeen)
-                                                    string.reader_marked_post_as_seen
-                                                else
-                                                    string.reader_marked_post_as_unseen
-                                        )
-                                )
-                        )
+                        readerPostTableWrapper.makPostAsSeenLocally(post, true)
+                        PostSeenStateChanged(true, UiStringRes(string.reader_marked_post_as_seen))
                     }
                     is SeenStatusToggleCallResult.Failure -> {
-                        emit(Failure(UiStringText(status.error)))
+                        Failure(UiStringText(status.error))
+                    }
+                }
+            }
+        }
+    }
+
+    private suspend fun markPostAsUnseen(post: ReaderPost): PostSeenState {
+        if (!accountStore.hasAccessToken()) {
+            return UserNotAuthenticated
+        } else {
+            return if (!networkUtilsWrapper.isNetworkAvailable()) {
+                Failure(UiStringRes(string.error_network_connection))
+            } else {
+                when (val status =  apiCallsProvider.markPostAsUnseen(post)) {
+                    is Success -> {
+                        readerPostTableWrapper.makPostAsSeenLocally(post, false)
+                        PostSeenStateChanged(false, UiStringRes(string.reader_marked_post_as_unseen))
+                    }
+                    is SeenStatusToggleCallResult.Failure -> {
+                        Failure(UiStringText(status.error))
                     }
                 }
             }
