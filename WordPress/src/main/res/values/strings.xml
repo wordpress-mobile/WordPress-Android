@@ -3465,4 +3465,13 @@ translators: sample content for "Services" page template -->
     <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
     <string name="restore_generic_failure">There was a problem handling the request. Please try again later.</string>
     <string name="restore_another_restore_running">There is another restore running.</string>
+
+    <string name="restore_progress_page_title">@string/restore</string>
+    <string name="restore_progress_header">Currently restoring site</string>
+    <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
+    <string name="restore_progress_action_button">@string/backup_download_progress_action_button</string>
+    <string name="restore_progress_icon_content_description">Restore site icon</string>
+    <string name="restore_progress_action_button_content_description">@string/backup_download_progress_action_button_content_description</string>
+    <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
+    <string name="restore_progress_label">%1$s%%</string>
 </resources>
