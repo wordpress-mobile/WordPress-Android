@@ -13,5 +13,7 @@ data class StarterDesignModel(
     @SerializedName("demo_url") val demoUrl: String?,
     val theme: String?,
     @SerializedName("segment_id") val segmentId: Long?,
-    val screenshot: String?
+    val screenshot: String?,
+    @SerializedName("mobile_screenshot") val mobileScreenshot: String?,
+    @SerializedName("tablet_screenshot") val tabletScreenshot: String?
 ) : Parcelable
