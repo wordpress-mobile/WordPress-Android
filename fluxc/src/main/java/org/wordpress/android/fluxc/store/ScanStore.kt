@@ -81,7 +81,7 @@ class ScanStore @Inject constructor(
 
     fun getScanStateForSite(site: SiteModel): ScanStateModel? {
         val scanStateModel = scanSqlUtils.getScanStateForSite(site)
-        val threats = scanStateModel?.let { threatSqlUtils.getThreatsForSite(site) }
+        val threats = scanStateModel?.let { threatSqlUtils.getThreatsForSite(site, listOf(CURRENT)) }
         return scanStateModel?.copy(threats = threats)
     }
 

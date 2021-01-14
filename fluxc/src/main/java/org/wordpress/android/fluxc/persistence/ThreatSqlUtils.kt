@@ -36,10 +36,11 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
         WellSql.insert(threatModels.map { it.toBuilder(site) }).execute()
     }
 
-    fun getThreatsForSite(site: SiteModel): List<ThreatModel> {
+    fun getThreatsForSite(site: SiteModel, statuses: List<ThreatStatus>): List<ThreatModel> {
         return WellSql.select(ThreatBuilder::class.java)
             .where()
             .equals(ThreatModelTable.LOCAL_SITE_ID, site.id)
+            .isIn(ThreatModelTable.STATUS, statuses.map { it.value })
             .endWhere()
             .asModel
             .map { it.build(gson, threatMapper) }

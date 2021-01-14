@@ -33,11 +33,12 @@ class ThreatSqlUtilsTest {
     private val threatSqlUtils = ThreatSqlUtils(gson, threatMapper)
     private lateinit var site: SiteModel
 
+    private val threatStatus = CURRENT
     private val dummyBaseThreatModel = BaseThreatModel(
         id = 1L,
         signature = "test signature",
         description = "test description",
-        status = ThreatStatus.CURRENT,
+        status = threatStatus,
         firstDetected = Date(0)
     )
 
@@ -57,7 +58,7 @@ class ThreatSqlUtilsTest {
         val threat = GenericThreatModel(baseThreatModel = dummyBaseThreatModel)
 
         threatSqlUtils.insertThreats(site, listOf(threat))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         with(threats.first().baseThreatModel) {
@@ -77,7 +78,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(DatabaseThreatModel::class.java)
@@ -96,7 +97,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(CoreFileModificationThreatModel::class.java)
@@ -120,7 +121,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(VulnerableExtensionThreatModel::class.java)
@@ -144,7 +145,7 @@ class ThreatSqlUtilsTest {
         )
 
         threatSqlUtils.insertThreats(site, listOf(dummyThreat))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, listOf(threatStatus))
 
         assertEquals(1, threats.size)
         assertThat(threats.first()).isInstanceOf(FileThreatModel::class.java)
@@ -174,7 +175,7 @@ class ThreatSqlUtilsTest {
         threatSqlUtils.insertThreats(site, listOf(threat1, threat2))
 
         threatSqlUtils.removeThreatsWithStatus(site, listOf(CURRENT))
-        val threats = threatSqlUtils.getThreatsForSite(site)
+        val threats = threatSqlUtils.getThreatsForSite(site, ThreatStatus.values().toList())
 
         assertEquals(1, threats.size)
     }

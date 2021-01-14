@@ -146,12 +146,12 @@ class ScanStoreTest {
     fun `get scan state returns state and threats from the db`() {
         val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threat))
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
-        whenever(threatSqlUtils.getThreatsForSite(siteModel)).thenReturn(listOf(threat))
+        whenever(threatSqlUtils.getThreatsForSite(siteModel, listOf(CURRENT))).thenReturn(listOf(threat))
 
         val scanStateFromDb = scanStore.getScanStateForSite(siteModel)
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
-        verify(threatSqlUtils).getThreatsForSite(siteModel)
+        verify(threatSqlUtils).getThreatsForSite(siteModel, listOf(CURRENT))
         Assert.assertEquals(scanStateModel, scanStateFromDb)
     }
 
