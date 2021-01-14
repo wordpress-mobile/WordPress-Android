@@ -294,7 +294,7 @@ public class WPMediaUtils {
         intent.setType(intentType);
         intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
         if (multiSelect) {
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, multiSelect);
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
         return Intent.createChooser(intent, context.getString(title));
     }
