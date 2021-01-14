@@ -54,8 +54,6 @@ class RestoreViewModel @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
-                    // todo: annmarie when moving back from warning - need state to not clear
-                    Log.i(javaClass.simpleName, "***=> in the navigationTargetObserverable")
                     clearOldRestoreState(it)
                     WizardNavigationTarget(it, restoreState)
                 }
