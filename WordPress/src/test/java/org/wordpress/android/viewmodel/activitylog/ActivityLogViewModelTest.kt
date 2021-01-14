@@ -488,10 +488,10 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onSecondaryActionClickRestoreNavigationEventIsShowRestore() {
+    fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
         viewModel.onSecondaryActionClicked(RESTORE, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
+        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
