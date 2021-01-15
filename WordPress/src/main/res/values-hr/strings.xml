@@ -1,11 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-08-26 21:31:09+0000
+Translation-Revision-Date: 2021-01-09 10:49:53+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: hr
 -->
 <resources>
+    <string name="color_picker_label_background">Pozadina</string>
+    <string name="color_picker_label_text">Tekst</string>
+    <string name="dialog_discard_story_ok_button_edit">Odbaci</string>
+    <string name="dialog_discard_story_message_edit">Sve izvršene promjene neće biti spremljene.</string>
+    <string name="dialog_discard_story_title_edit">Odbaciti promjene?</string>
+    <string name="label_done_button">Gotovo</string>
+    <string name="label_next_button">Sljedeće</string>
+    <string name="delete_button_alt">Izbrisati</string>
+    <string name="scan">Skeniraj</string>
+    <string name="reader_discover_empty_title">Dobro došli!</string>
+    <string name="hpp_skip_button">Preskoči</string>
+    <string name="hpp_choose_button">Odaberi</string>
+    <string name="hpp_title">Odaberite dizajn</string>
+    <string name="prepublishing_nudges_add_category_button">Dodaj Kategoriju</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Dodaj novu kategoriju</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Kategorije</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Nije postavljeno</string>
+    <string name="prepublishing_nudges_categories_action">Kategorije</string>
+    <string name="login_prologue_fifth_caption_three">Muzeji u Londonu</string>
+    <string name="login_prologue_fifth_tag_six">Politika</string>
+    <string name="login_prologue_fifth_tag_five">Glazba</string>
+    <string name="login_prologue_fifth_tag_four">Vrtlarstvo</string>
+    <string name="login_prologue_fifth_tag_three">Nogomet</string>
+    <string name="login_prologue_fifth_tag_two">Kuhanje</string>
+    <string name="login_prologue_fifth_tag_one">Umjetnost</string>
+    <string name="login_prologue_fifth_subtitle_one">Pamela Nguyen</string>
+    <string name="media_loading_failed">Učitavanje sadržaja nije uspjelo</string>
+    <string name="gutenberg_native_we_are_working_hard_to_add_more_blocks_with_each_release">Dajemo sve od sebe da uz svaku objavu dodajemo nove blokove.</string>
+    <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nije u potpunosti podržan</string>
+    <string name="gutenberg_native_help_button">Gumb za pomoć</string>
+    <string name="gutenberg_native_edit_using_web_editor">Uređujte pomoću web uređivača</string>
+    <string name="gutenberg_native_choose_images">Odaberite slike</string>
+    <string name="stories_intro_create_story_post_label">Napravite članak o priči</string>
+    <string name="stories_intro_title_second">Članci priče ne nestaju</string>
+    <string name="stories_intro_title_first">Priče su sada za sve</string>
+    <string name="stories_intro_image_caption_second">Primjer naslova priče</string>
+    <string name="stories_intro_image_caption_first">Kako napraviti članak iz priče</string>
+    <string name="stories_intro_main_title">Predstavljamo vam članke priče</string>
+    <string name="mlp_notice_blank_page_created">Izrađena je prazna stranica</string>
+    <string name="mlp_notice_page_created">Stranica kreirana</string>
+    <string name="mlp_preview_title">Pretpregled izgleda</string>
+    <string name="reader_label_toolbar_back">Povratak</string>
+    <string name="reader_discover_empty_button_text">Započnite</string>
+    <string name="reader_post_details_header_by_author_name">Od</string>
+    <string name="mlp_selected_description">%s odabrano</string>
+    <string name="permission_microphone">Mikrofon</string>
+    <string name="reader_menu_report_post">Prijavi ovaj članak</string>
+    <string name="reader_welcome_banner">Dobrodošli u čitateljicu. Otkrijte milijune blogova na dohvat ruke.</string>
+    <string name="error_media_xmlrcp_server_error">Dogodila se interna pogreška poslužitelja</string>
+    <string name="error_media_xmlrpc_not_allowed">Vaša radnja nije dopuštena</string>
+    <string name="show_n_hidden_items_desc">Još %1$s stavki</string>
+    <string name="gutenberg_native_select_a_layout">Odaberite raspored</string>
+    <string name="create_post_story_fab_tooltip">Napravite članak ili priču</string>
+    <string name="create_page_fab_tooltip">Stvorite stranicu</string>
+    <string name="create_post_fab_tooltip">Napravite članak</string>
+    <string name="reader_discover_interests_header">Možda ti se sviđa</string>
+    <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Sakriti</string>
+    <string name="gutenberg_native_video_caption_empty">Video natpis. Prazan</string>
+    <string name="gutenberg_native_updates_the_title">Ažurira naslov.</string>
+    <string name="gutenberg_native_paste_block_after">Zalijepite blok nakon</string>
+    <string name="gutenberg_native_page_title_s">Naslov stranice. %s</string>
+    <string name="gutenberg_native_page_title_empty">Naslov stranice. Prazan</string>
+    <string name="toast_error_playing_video">Došlo je do pogreške tijekom reprodukcije vašeg videozapisa</string>
+    <string name="camera_error">Ovaj uređaj ne podržava API Camera2.</string>
+    <string name="toast_error_saving_video">Videozapis nije moguće spremiti</string>
+    <string name="toast_error_saving_image">Pogreška prilikom spremanja slike</string>
+    <string name="toast_capture_operation_in_progress">Operacija je u tijeku, pokušajte ponovo</string>
+    <string name="toast_story_page_not_found">Slajd Story nije pronađen</string>
+    <string name="dialog_insufficient_device_storage_error_ok_button">Pogledajte spremište</string>
     <string name="label_close_button">Zatvori</string>
     <string name="label_share_to">Podijeli</string>
     <string name="label_control_retry">Pokušaj ponovno</string>
@@ -15,15 +84,24 @@ Language: hr
     <string name="text_button_alt">Tekst</string>
     <string name="stickers_button_alt">Naljepnice</string>
     <string name="alignment_none">Ništa</string>
+    <string name="alignment_right">Desno</string>
+    <string name="alignment_left">Lijevo</string>
     <string name="title_follower">Sljedbenik</string>
     <string name="people_fetching">Dohvaćanje korisnika…</string>
     <string name="people_dropdown_item_viewers">Posjetitelji</string>
     <string name="people_dropdown_item_followers">Pratitelji</string>
+    <string name="image_width">Širina</string>
+    <string name="image_link_to">Poveznica za</string>
+    <string name="image_caption">Naslov</string>
+    <string name="image_settings_save_toast">Promijene spremljene.</string>
     <string name="invite">Pozovi</string>
     <string name="invite_people">Pozovi osobe</string>
+    <string name="send_link">Pošalji link</string>
     <string name="send">Pošalji</string>
     <string name="people">Ljudi</string>
     <string name="role">Uloga</string>
+    <string name="plan">Plan</string>
+    <string name="plans">Planovi</string>
     <string name="show_purchases">Prikaži kupovine</string>
     <string name="delete_site_hint">Obriši web-stranicu</string>
     <string name="primary_domain">Primarna domena</string>

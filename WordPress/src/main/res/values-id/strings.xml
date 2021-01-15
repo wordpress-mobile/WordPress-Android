@@ -15,7 +15,6 @@ Language: id
     <string name="backup_download_details_icon_content_description">Buat ikon cadangan yang dapat diunduh</string>
     <string name="backup_download_details_action_button">Buat file yang dapat diunduh</string>
     <string name="backup_download_details_choose_items_header">Pilih item yang ingin Anda sertakan dalam unduhan:</string>
-    <string name="backup_download_details_description">%1$s adalah titik yang dipilih untuk membuat cadangan yang dapat diunduh.</string>
     <string name="backup_download_details_header">Buat cadangan yang dapat diunduh</string>
     <string name="backup_download_details_page_title">Unduh Cadangan</string>
     <string name="backup_download">Unduhan Cadangan</string>
@@ -23,8 +22,6 @@ Language: id
     <string name="gutenberg_native_choose_file">Pilih berkas</string>
     <string name="activity_log_item_menu_download_backup_label">Unduh cadangan</string>
     <string name="activity_log_item_menu_restore_label">Pulihkan hingga ke titik ini</string>
-    <string name="activity_log_activity_type_filter_label">Jenis aktivitas</string>
-    <string name="activity_log_date_range_filter_label">Rentang tanggal</string>
     <string name="activity_log_activity_type_filter_header">Saring Berdasarkan Tipe Aktivitas</string>
     <string name="dialog_confirm_copy_local_copy_button">Salin versi dari aplikasi ini</string>
     <string name="dialog_confirm_copy_local_edit_button">Sunting pos terlebih dahulu</string>
@@ -314,7 +311,6 @@ Language: id
     <string name="gutenberg_native_gradient_type">Jenis Gradasi</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ketuk dua kali untuk memilih opsi</string>
     <string name="gutenberg_native_customize_gradient">Kustomisasi Gradasi</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Pembuat halaman</string>
     <string name="photo_picker_use_gif">Gunakan GIF ini</string>
     <string name="error_media_thumbnail_not_loaded">Thumbnail media tidak dapat dimuat</string>
@@ -350,7 +346,6 @@ Language: id
     <string name="ccpa_privacy_notice_header">Pemberitahuan privasi untuk pengguna di California</string>
     <string name="status_and_visibility">Status &amp; Keterlihatan</string>
     <string name="update_now">Perbarui Sekarang</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Coba tampilan pengantar</string>
     <string name="gutenberg_native_open_block_actions_menu">Buka Menu Tindakan Blokir</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ketuk dua kali untuk membuka Lembar Bawah dengan opsi yang tersedia</string>
@@ -358,8 +353,6 @@ Language: id
     <string name="pages_cannot_be_started">Saat ini kami tidak dapat membuka halaman. Harap coba lagi nanti</string>
     <string name="pages_set_as_posts_page">Atur sebagai Halaman Pos</string>
     <string name="pages_set_as_homepage">Atur sebagai Beranda</string>
-    <string name="suggestion_no_matching_users">\"Tidak ada pengguna yang sesuai.\"</string>
-    <string name="suggestion_invalid_user">\"%s bukan pengguna yang valid\"</string>
     <string name="site_settings_select_page">Pilih Halaman</string>
     <string name="site_settings_posts_page">Halaman Pos</string>
     <string name="site_settings_static_homepage">Beranda Statis</string>
@@ -532,7 +525,6 @@ Language: id
     <string name="stats_management_add_new_stats_card">Tambahkan kartu statistik baru</string>
     <string name="reader_self_hosted_select_filter">Gunakan tombol penyaring untuk menemukan pos pada subjek tertentu</string>
     <string name="reader_bottom_sheet_content_description">Pilih Tag atau Situs, Jendela Pop Up</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Terpilih</string>
     <string name="reader_btn_select_filter_content_description">Pilih Situs atau Tag untuk menyaring pos</string>
     <string name="reader_btn_remove_filter_content_description">Hapus penyaring saat ini</string>
     <string name="reader_title_subs">Kelola Topik &amp; Situs</string>
@@ -609,7 +601,6 @@ Language: id
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Kami saat ini tidak dapat membuka pos. Harap coba lagi nanti</string>
     <string name="site_cannot_be_loaded">Kami saat ini tidak dapat memuat data untuk situs Anda. Harap coba lagi nanti</string>
     <string name="gutenberg_native_wordpress_media_library">Pustaka Media WordPress</string>
@@ -1244,14 +1235,8 @@ Language: id
     <string name="support_contact_email">Email kontak</string>
     <string name="application_log_button">Log aplikasi</string>
     <string name="my_tickets">Tiket Saya</string>
-    <string name="activity_log_rewind_dialog_message">Apakah Anda yakin ingin memutar balik situs Anda ke tanggal %1$s jam %2$s? Tindakan ini akan menghapus semua konten dan opsi yang dibuat atau diubah sejak saat itu.</string>
-    <string name="activity_log_rewind_site">Putar Balik Situs</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Putar balik sedang berlangsung</string>
-    <string name="activity_log_currently_restoring_message">Memutar balik ke %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sedang memulihkan situs Anda</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Situs Anda berhasil dipulihkan</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Situs Anda berhasil dipulihkan\nDiputar balik ke %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Situs Anda sedang dipulihkan\nMemutar balik ke %1$s %2$s</string>
     <string name="activity_log_button">Tombol tindakan Log Aktivitas</string>
     <string name="plugin_auto_managed">Pengelolaan otomatis</string>
     <string name="reader_save_posts_locally_dialog_message">Simpan pos ini, dan buka kembali untuk membacanya kapan saja. Pos ini hanya akan tersedia pada perangkat ini — pos yang disimpan tidak disinkronkan ke perangkat Anda yang lain.</string>
@@ -1294,7 +1279,6 @@ Language: id
     <string name="reader_btn_notifications_on">Aktifkan pemberitahuan situs</string>
     <string name="reader_btn_notifications_off">Nonaktifkan pemberitahuan situs</string>
     <string name="activity_log_jetpack_icon">Ikon Jetpack</string>
-    <string name="rewind">Putar Balik</string>
     <string name="activity_log_event">Peristiwa</string>
     <string name="activity_log_icon">Ikon aktivitas</string>
     <string name="activity_log">Log Aktivitas</string>

@@ -59,7 +59,6 @@ import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
@@ -99,7 +98,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
-    @Inject lateinit var modalLayoutPickerFeatureConfig: ModalLayoutPickerFeatureConfig
 
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
@@ -347,7 +345,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.createNewPage.observe(viewLifecycleOwner, Observer {
-            if (modalLayoutPickerFeatureConfig.isEnabled() && mlpViewModel.canShowModalLayoutPicker()) {
+            if (mlpViewModel.canShowModalLayoutPicker()) {
                 mlpViewModel.createPageFlowTriggered()
             } else {
                 createNewPage()

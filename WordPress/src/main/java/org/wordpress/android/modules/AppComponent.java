@@ -49,8 +49,14 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
 import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteFragment;
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsFragment;
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment;
+import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
+import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteFragment;
+import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsFragment;
+import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressFragment;
+import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningFragment;
 import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -472,6 +478,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ScanFragment object);
 
+    void inject(ScanHistoryFragment object);
+
     void inject(ThreatDetailsFragment object);
 
     void inject(PluginListFragment object);
@@ -637,6 +645,16 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BackupDownloadProgressFragment object);
 
     void inject(BackupDownloadCompleteFragment object);
+
+    void inject(RestoreActivity object);
+
+    void inject(RestoreDetailsFragment object);
+
+    void inject(RestoreWarningFragment object);
+
+    void inject(RestoreProgressFragment object);
+
+    void inject(RestoreCompleteFragment object);
 
     void inject(QuickStartMenuFragment object);
 

@@ -15,7 +15,6 @@ Language: ja_JP
     <string name="backup_download_details_icon_content_description">ダウンロード可能なバックアップアイコンを作成</string>
     <string name="backup_download_details_action_button">ダウンロード可能なファイルを作成</string>
     <string name="backup_download_details_choose_items_header">ダウンロードに含める項目を以下から選択してください。</string>
-    <string name="backup_download_details_description">ダウンロード可能なバックアップを作成するタイミングとして、%1$s を選択しています。</string>
     <string name="backup_download_details_header">ダウンロード可能なバックアップを作成</string>
     <string name="backup_download_details_page_title">バックアップをダウンロードする</string>
     <string name="backup_download">バックアップのダウンロード</string>
@@ -23,8 +22,6 @@ Language: ja_JP
     <string name="gutenberg_native_choose_file">ファイルを選択</string>
     <string name="activity_log_item_menu_download_backup_label">バックアップをダウンロード</string>
     <string name="activity_log_item_menu_restore_label">このポイントに復元</string>
-    <string name="activity_log_activity_type_filter_label">アクティビティタイプ</string>
-    <string name="activity_log_date_range_filter_label">日付の範囲</string>
     <string name="activity_log_activity_type_filter_header">アクティビティタイプで絞り込み</string>
     <string name="dialog_confirm_copy_local_copy_button">このアプリからバージョンをコピー</string>
     <string name="dialog_confirm_copy_local_edit_button">最初に投稿を編集する</string>
@@ -313,7 +310,6 @@ Language: ja_JP
     <string name="gutenberg_native_gradient_type">グラデーションタイプ</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">ダブルタップしてオプションを選択</string>
     <string name="gutenberg_native_customize_gradient">グラデーションをカスタマイズ</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">ページ作成者</string>
     <string name="photo_picker_use_gif">この GIF を使う</string>
     <string name="error_media_thumbnail_not_loaded">メディアサムネイルを読み込めませんでした</string>
@@ -349,7 +345,6 @@ Language: ja_JP
     <string name="ccpa_privacy_notice_header">カリフォルニア州のユーザーへのプライバシー通知</string>
     <string name="status_and_visibility">ステータスと公開状態</string>
     <string name="update_now">今すぐ更新</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">スターターレイアウトを試す</string>
     <string name="gutenberg_native_open_block_actions_menu">ブロックの操作メニューを開く</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">ダブルタップして「下部シート」と利用可能オプションを開く</string>
@@ -357,8 +352,6 @@ Language: ja_JP
     <string name="pages_cannot_be_started">現在、一時的にページを開けません。後ほどもう一度お試しください</string>
     <string name="pages_set_as_posts_page">投稿ページとして設定</string>
     <string name="pages_set_as_homepage">ホームページに設定する</string>
-    <string name="suggestion_no_matching_users">「マッチするユーザーがいません」</string>
-    <string name="suggestion_invalid_user">「%s は有効なユーザーではありません」</string>
     <string name="site_settings_select_page">ページを選択</string>
     <string name="site_settings_posts_page">投稿ページ</string>
     <string name="site_settings_static_homepage">固定ホームページ</string>
@@ -531,7 +524,6 @@ Language: ja_JP
     <string name="stats_management_add_new_stats_card">新しい統計カードを追加</string>
     <string name="reader_self_hosted_select_filter">フィルターボタンを使って指定トピックの投稿を検索</string>
     <string name="reader_bottom_sheet_content_description">タグまたはサイトを選択 (ポップアップウィンドウ)</string>
-    <string name="reader_btn_selected_filter_tick_content_description">選択済</string>
     <string name="reader_btn_select_filter_content_description">投稿を絞り込むためのサイトまたはタグを選択</string>
     <string name="reader_btn_remove_filter_content_description">現在のフィルターを削除</string>
     <string name="reader_title_subs">トピックとサイトを管理</string>
@@ -608,7 +600,6 @@ Language: ja_JP
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">現在、投稿を開くことができません。後ほど、もう一度お試しください</string>
     <string name="site_cannot_be_loaded">現在、サイトのデータを読み込めません。後ほど、もう一度お試しください</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress メディアライブラリ</string>
@@ -1243,14 +1234,8 @@ Language: ja_JP
     <string name="support_contact_email">連絡先メールアドレス</string>
     <string name="application_log_button">アプリケーションログ</string>
     <string name="my_tickets">自分のチケット</string>
-    <string name="activity_log_rewind_dialog_message">お使いのサイトを%1$s %2$sに巻き戻してもよいですか ? この操作により、作成したすべてのコンテンツとオプション、および作成後に行ったすべての変更が削除されます。</string>
-    <string name="activity_log_rewind_site">サイトの巻き戻し</string>
-    <string name="activity_log_currently_restoring_message_no_dates">巻き戻し中</string>
-    <string name="activity_log_currently_restoring_message">%1$s%2$sまで巻き戻しています</string>
     <string name="activity_log_currently_restoring_title">現在サイトを復元中です</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">サイトが正常に復元されました</string>
-    <string name="activity_log_rewind_finished_snackbar_message">サイトを復元しました\n%1$s%2$sまで巻き戻しました</string>
-    <string name="activity_log_rewind_started_snackbar_message">現在サイトを復元中です\n%1$s%2$sまで巻き戻しています</string>
     <string name="activity_log_button">「アクティビティログ」アクションボタン</string>
     <string name="plugin_auto_managed">自動管理中</string>
     <string name="reader_save_posts_locally_dialog_message">この投稿を保存し、いつでも戻ってきたときに読むことができます。この端末上のみで利用でき、保存した投稿は他の端末とは同期されません。</string>
@@ -1293,7 +1278,6 @@ Language: ja_JP
     <string name="reader_btn_notifications_on">サイト通知を有効にする</string>
     <string name="reader_btn_notifications_off">サイト通知を無効にする</string>
     <string name="activity_log_jetpack_icon">Jetpack アイコン</string>
-    <string name="rewind">巻き戻す</string>
     <string name="activity_log_event">イベント</string>
     <string name="activity_log_icon">アクティビティアイコン</string>
     <string name="activity_log">アクティビティログ</string>

@@ -647,6 +647,11 @@
             android:label="@string/scan"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <activity
+            android:name=".ui.jetpack.scan.history.ScanHistoryActivity"
+            android:label="@string/scan_history"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Jetpack - Threat Details-->
         <activity
             android:name=".ui.jetpack.scan.details.ThreatDetailsActivity"
@@ -679,6 +684,12 @@
         <activity
             android:name=".ui.jetpack.backup.download.BackupDownloadActivity"
             android:label="@string/backup_download"
+            android:theme="@style/WordPress.NoActionBar"/>
+
+        <!-- Jetpack restore -->
+        <activity
+            android:name=".ui.jetpack.restore.RestoreActivity"
+            android:label="@string/restore"
             android:theme="@style/WordPress.NoActionBar"/>
 
         <!-- Services -->
