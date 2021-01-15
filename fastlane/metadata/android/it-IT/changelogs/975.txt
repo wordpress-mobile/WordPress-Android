@@ -1,0 +1,9 @@
+16.4:
+Novità:
+
+Editor a blocchi: ora puoi inserire un blocco file che colloca un pulsante di scaricamento per file come documenti.  Abbiamo anche risolto i problemi relativi ai blocchi Titolo e Galleria.
+
+Elenco di articoli: ora puoi copiare un articolo nel tuo elenco di articoli del blog con il pulsante "Duplica".
+
+Il mio sito: abbiamo anche risolto un arresto anomalo che si verificava durante la modifica del titolo del sito.
+

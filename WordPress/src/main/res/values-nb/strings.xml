@@ -1,15 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-01 08:32:12+0000
+Translation-Revision-Date: 2020-12-30 18:19:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="backup_item_sqls">Nettstedsdatabase (SQL)</string>
+    <string name="backup_item_contents">Mappen WP-content (unntatt temaer, utvidelser og opplastinger)</string>
+    <string name="backup_item_roots">WordPress-roten (inkludert wp-config.php og filer som ikke tilhærer WordPress)</string>
+    <string name="backup_item_media_uploads">Media-opplastinger</string>
+    <string name="backup_item_plugins">WordPress-utvidelser</string>
+    <string name="backup_item_themes">WordPress-temaer</string>
+    <string name="backup_download_details_icon_content_description">Lag ikon for nedlastbar sikkerhetskopi</string>
+    <string name="backup_download_details_action_button">Lag nedlastbar fil</string>
+    <string name="backup_download_details_choose_items_header">Velg elementene du ønsker å ha med i nedlastingen:</string>
+    <string name="backup_download_details_description">%1$s er det valgte tidspunktet for å lage en nedlastbar sikkerhetskopi.</string>
+    <string name="backup_download_details_header">Lag nedlastbar sikkerhetskopi</string>
+    <string name="backup_download_details_page_title">Last ned sikkerhetskopi</string>
+    <string name="backup_download">Nedlasting av sikkerhetskopi</string>
+    <string name="gutenberg_native_error">Feil</string>
+    <string name="gutenberg_native_choose_file">Velg fil</string>
+    <string name="activity_log_item_menu_download_backup_label">Last  ned sikkerhetskopi</string>
+    <string name="activity_log_item_menu_restore_label">Gjenopprett til dette tidspunktet</string>
+    <string name="activity_log_activity_type_filter_label">Aktivitetstype</string>
+    <string name="activity_log_date_range_filter_label">Datointervall</string>
+    <string name="activity_log_activity_type_filter_header">Filtrer på aktivitetstype</string>
+    <string name="dialog_confirm_copy_local_copy_button">Kopier versjonen fra denne appen</string>
+    <string name="dialog_confirm_copy_local_edit_button">Rediger innlegget først</string>
+    <string name="button_copy">Dupliser</string>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
     <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="activity_log_activity_type_filter_clear">Tøm</string>
+    <string name="activity_log_activity_type_filter_apply">Bruk</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF-filer ikke støttet</string>
     <string name="color_picker_label_background">Bakgrunn</string>
     <string name="color_picker_label_text">Tekst</string>
