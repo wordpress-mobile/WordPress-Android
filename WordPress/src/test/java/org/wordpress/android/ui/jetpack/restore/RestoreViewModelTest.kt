@@ -80,10 +80,10 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given in details step, when finished, then process moves to next step`() {
         viewModel.start(null)
         // need to clear invocations because nextStep is called on start
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         viewModel.onRestoreDetailsFinished(rewindId, optionsSelected, published)
-        Mockito.verify(wizardManager).showNextStep()
+        verify(wizardManager).showNextStep()
     }
 
     @Test
@@ -91,7 +91,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         val navigationTargets = initObservers().navigationTargets
 
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
         whenever(wizardManager.showNextStep()).then {
             wizardManagerNavigatorLiveData.value = RestoreStep.WARNING
             Unit
@@ -99,7 +99,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.onRestoreDetailsFinished(rewindId, optionsSelected, published)
 
-        Assertions.assertThat(navigationTargets.last().wizardState)
+        assertThat(navigationTargets.last().wizardState)
                 .isEqualTo(RestoreState(
                         rewindId = rewindId,
                         optionsSelected = optionsSelected,
@@ -123,12 +123,12 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given in warning step, when onBackPressed, then process moves to previous step `() {
         val onBackPressedObserver = initObservers().onBackPressedObserver
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.WARNING.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(onBackPressedObserver.last()).isInstanceOf(Unit::class.java)
+        assertThat(onBackPressedObserver.last()).isInstanceOf(Unit::class.java)
     }
 
     @Test
@@ -169,7 +169,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(WarningToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(WarningToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(WarningToolbarState::class.java)
     }
 
     @Test
