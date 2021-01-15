@@ -7,7 +7,7 @@ sealed class RestoreRequestState {
         val restoreId: Long?
     ) : RestoreRequestState()
     data class Progress(val rewindId: String, val progress: Int?) : RestoreRequestState()
-    data class Complete(val rewindId: String, val restoreId: Long, val url: String?) :
+    data class Complete(val rewindId: String, val restoreId: Long) :
             RestoreRequestState()
     sealed class Failure : RestoreRequestState() {
         object NetworkUnavailable : Failure()

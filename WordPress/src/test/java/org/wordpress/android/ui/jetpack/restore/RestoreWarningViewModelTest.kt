@@ -44,7 +44,6 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
                     Pair(SQLS.id, true),
                     Pair(ROOTS.id, true),
                     Pair(CONTENTS.id, true)),
-            url = null,
             published = Date(1609690147756)
     )
 

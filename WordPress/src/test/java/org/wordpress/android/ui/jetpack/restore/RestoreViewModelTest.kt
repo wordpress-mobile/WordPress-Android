@@ -18,8 +18,10 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -39,14 +41,12 @@ class RestoreViewModelTest : BaseUnitTest() {
     private val rewindId = "rewindId"
     private val restoreId = 100L
     private val published = Date(1609690147756)
-    private val url = "url"
 
     private val restoreState = RestoreState(
             activityId = "activityId",
             rewindId = "rewindId",
             restoreId = 100L,
             siteId = 200L,
-            url = null,
             published = Date(1609690147756)
     )
 
@@ -132,6 +132,19 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given in progress step, when onBackPressed, then invokes wizard finished with RestoreInProgress`() {
+        val wizardFinishedObserver = initObservers().wizardFinishedObserver
+        viewModel.start(null)
+        clearInvocations(wizardManager)
+        viewModel.onProgressExit(restoreId)
+
+        whenever(wizardManager.currentStep).thenReturn(RestoreStep.PROGRESS.id)
+        viewModel.onBackPressed()
+
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
+    }
+
+    @Test
     fun `given viewModel, when starts, toolbarState contains no entries`() {
         val toolbarStates = initObservers().toolbarState
 
@@ -170,6 +183,17 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.setToolbarState(WarningToolbarState())
 
         assertThat(toolbarStates.last()).isInstanceOf(WarningToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in progress step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+
+        viewModel.start(null)
+
+        viewModel.setToolbarState(ProgressToolbarState())
+
+        assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
     }
 
     @Test
