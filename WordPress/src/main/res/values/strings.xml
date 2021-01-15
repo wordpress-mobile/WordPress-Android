@@ -3449,5 +3449,10 @@ translators: sample content for "Services" page template -->
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
     <string name="restore_details_page_title">@string/restore</string>
-
+    <string name="restore_details_choose_items_header">Choose the items to restore:</string>
+    <string name="restore_details_header">Restore Site</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s is the selected point for your restore.</string>
+    <string name="restore_details_action_button">Restore site</string>
+    <string name="restore_details_icon_content_description">Restore icon</string>
+    <string name="restore_details_action_button_content_description">Restore site button</string>
 </resources>

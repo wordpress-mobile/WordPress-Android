@@ -15,6 +15,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
@@ -33,6 +34,7 @@ data class RestoreState(
     val siteId: Long? = null,
     val activityId: String? = null,
     val rewindId: String? = null,
+    val optionsSelected: List<Pair<Int, Boolean>>? = null,
     val restoreId: Long? = null,
     val published: Date? = null,
     val url: String? = null,
@@ -51,6 +53,7 @@ class RestoreViewModel @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
+                    // todo: annmarie when moving back from warning - need state to not clear
                     clearOldRestoreState(it)
                     WizardNavigationTarget(it, restoreState)
                 }
@@ -108,6 +111,7 @@ class RestoreViewModel @Inject constructor(
             DETAILS.id -> {
                 _wizardFinishedObservable.value = Event(RestoreCanceled)
             }
+            // todo: annmarie back press is allowed on the warning view
         }
     }
 
@@ -117,16 +121,26 @@ class RestoreViewModel @Inject constructor(
                     rewindId = null,
                     restoreId = null,
                     url = null,
-                    errorType = null
+                    errorType = null,
+                    optionsSelected = null,
+                    published = null
             )
         }
     }
 
-    fun onRestoreDetailsFinished(rewindId: String?, restoreId: Long?, published: Date) {
+    fun onRestoreDetailsFinished(rewindId: String?, optionsSelected: List<Pair<Int, Boolean>>?, published: Date?) {
         restoreState = restoreState.copy(
                 rewindId = rewindId,
-                restoreId = restoreId,
+                optionsSelected = optionsSelected,
                 published = published)
+        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("made it to onRestoreDetailsFinished"))))
+        // todo: annmarie uncomment the show next stop
+        // wizardManager.showNextStep()
+    }
+
+    fun onRestoreWarningFinished(rewindId: String?, restoreId: Long?) {
+        restoreState = restoreState.copy(restoreId = restoreId)
+        // todo: annmarie add other information from the success submitted
         wizardManager.showNextStep()
     }
 
