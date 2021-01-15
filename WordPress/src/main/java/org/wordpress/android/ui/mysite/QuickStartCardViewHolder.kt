@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
@@ -27,7 +28,8 @@ import org.wordpress.android.widgets.RecyclerItemDecoration
 class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val viewPool: RecycledViewPool,
-    private val nestedScrollStates: Bundle
+    private val nestedScrollStates: Bundle,
+    private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder(parent, R.layout.quick_start_card) {
     private var currentItem: QuickStartCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
@@ -71,7 +73,7 @@ class QuickStartCardViewHolder(
             quick_start_card_progress.progressDrawable = progressDrawable
         }
 
-        quick_start_card_title.text = item.title
+        quick_start_card_title.text = uiHelpers.getTextOfUiString(context, item.title)
         (quick_start_card_recycler_view.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
         restoreScrollState(quick_start_card_recycler_view, item.id)
         quick_start_card_more_button.setOnClickListener { item.onMoreClick?.click() }

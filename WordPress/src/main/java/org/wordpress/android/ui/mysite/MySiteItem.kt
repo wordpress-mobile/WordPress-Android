@@ -49,7 +49,7 @@ sealed class MySiteItem(val type: Type) {
 
     data class QuickStartCard(
         val id: String,
-        val title: String,
+        val title: UiString,
         val taskCards: List<QuickStartTaskCard>,
         @ColorRes val accentColor: Int,
         val onMoreClick: ListItemInteraction? = null

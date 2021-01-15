@@ -207,7 +207,7 @@ class MySiteViewModel
             siteItems.add(
                     QuickStartCard(
                             "customize_your_site",
-                            "Customize your Site",
+                            UiStringText("Customize your Site"),
                             dummyTaskCards1,
                             R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
@@ -216,7 +216,7 @@ class MySiteViewModel
             siteItems.add(
                     QuickStartCard(
                             "grow_your_audience",
-                            "Grow your Audience",
+                            UiStringText("Grow your Audience"),
                             dummyTaskCards2,
                             R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
