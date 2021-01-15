@@ -137,10 +137,10 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Test
     fun `given in progress step, when finished, then process moves to next step`() {
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         viewModel.onRestoreProgressFinished()
-        Mockito.verify(wizardManager).showNextStep()
+        verify(wizardManager).showNextStep()
     }
 
     @Test
@@ -160,12 +160,12 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given in complete step, when onBackPressed, then invokes wizard finished with RestoreCompleted`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.COMPLETE.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCompleted::class.java)
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCompleted::class.java)
     }
 
     @Test
@@ -228,7 +228,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(CompleteToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(CompleteToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(CompleteToolbarState::class.java)
     }
 
     @Test
@@ -238,7 +238,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(ErrorToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test

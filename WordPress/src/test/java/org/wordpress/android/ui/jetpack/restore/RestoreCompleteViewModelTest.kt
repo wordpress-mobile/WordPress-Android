@@ -2,7 +2,7 @@ package org.wordpress.android.ui.jetpack.restore
 
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -47,7 +47,7 @@ class RestoreCompleteViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        Assertions.assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
+        assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
     }
 
     @Test
@@ -61,7 +61,7 @@ class RestoreCompleteViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).last { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        Assertions.assertThat(navigationEvents.last()).isInstanceOf(VisitSite::class.java)
+        assertThat(navigationEvents.last()).isInstanceOf(VisitSite::class.java)
     }
 
     private fun initObservers(): Observers {
