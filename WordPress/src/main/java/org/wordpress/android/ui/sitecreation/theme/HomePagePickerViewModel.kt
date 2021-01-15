@@ -64,6 +64,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<PreviewMode>()
+    val onPreviewModeButtonPressed: LiveData<PreviewMode> = _onPreviewModeButtonPressed
+
     private val _thumbnailMode = SingleLiveEvent<PreviewMode>()
     val thumbnailMode: LiveData<PreviewMode> = _thumbnailMode
 
@@ -209,6 +212,10 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onBackPressed() {
         _onBackButtonPressed.call()
+    }
+
+    fun onPreviewModePressed() {
+        _onPreviewModeButtonPressed.value = _thumbnailMode.value
     }
 
     fun onRetryClicked() {
