@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.restore.details
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -75,6 +74,6 @@ class RestoreDetailsStateListItemBuilder @Inject constructor() {
     )
 
     private fun buildDetailsSubHeader() = SubHeaderState(
-            text = UiStringRes(string.restore_details_choose_items_header)
+            text = UiStringRes(R.string.restore_details_choose_items_header)
     )
 }
