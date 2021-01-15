@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import javax.inject.Inject
 
 class ThreatDetailsViewModel @Inject constructor(
