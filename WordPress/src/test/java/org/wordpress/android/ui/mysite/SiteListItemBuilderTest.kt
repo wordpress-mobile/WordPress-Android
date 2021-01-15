@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 
@@ -22,7 +22,7 @@ class SiteListItemBuilderTest {
     @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
-    @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
     private lateinit var siteListItemBuilder: SiteListItemBuilder
@@ -34,7 +34,7 @@ class SiteListItemBuilderTest {
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
                 backupScreenFeatureConfig,
-                scanFeatureConfig,
+                scanScreenFeatureConfig,
                 themeBrowserUtils
         )
     }
@@ -126,9 +126,9 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `scan item built if scan feature config enabled & scan feature is available`() {
+    fun `scan item built if scan screen feature config enabled & scan feature is available`() {
         val isScanAvailable = true
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
 
         val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION, isScanAvailable)
 
@@ -136,8 +136,8 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `scan item not built if scan feature config not enabled`() {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
+    fun `scan item not built if scan screen feature config not enabled`() {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
 
         val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)
 

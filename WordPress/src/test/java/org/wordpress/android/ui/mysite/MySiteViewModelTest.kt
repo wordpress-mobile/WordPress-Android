@@ -84,7 +84,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
@@ -107,7 +107,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
     @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-    @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -156,7 +156,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 backupScreenFeatureConfig,
                 displayUtilsWrapper,
                 jetpackCapabilitiesUseCase,
-                scanFeatureConfig
+                scanScreenFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -738,7 +738,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `jetpack capabilities requested, when selected site changes`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
 
         onSiteChange.postValue(site)
 
@@ -746,8 +746,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `jetpack capabilities not requested, when scanFeatureConfig flag is off`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
+    fun `jetpack capabilities not requested, when scan screen feature flag is off`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
 
         onSiteChange.postValue(site)
 
@@ -770,7 +770,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
                 listOf(JetpackCapability.SCAN)
         )

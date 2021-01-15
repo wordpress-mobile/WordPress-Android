@@ -7,11 +7,11 @@ import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
 /**
- * Configuration of the Scan feature.
+ * Configuration of the 'Jetpack Scan Screen' feature.
  */
 @FeatureInDevelopment
-class ScanFeatureConfig
+class ScanScreenFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.SCAN_AVAILABLE
+        BuildConfig.SCAN_SCREEN_AVAILABLE
 )

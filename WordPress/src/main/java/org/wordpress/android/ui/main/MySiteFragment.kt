@@ -155,7 +155,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -208,7 +208,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
     @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
-    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
@@ -283,7 +283,7 @@ class MySiteFragment : Fragment(),
     private fun updateScanMenuVisibility() {
         uiScope.launch {
             val show = withContext(bgDispatcher) {
-                scanFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
+                scanScreenFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
                     jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
                             .find { it == SCAN } != null
                 } ?: false

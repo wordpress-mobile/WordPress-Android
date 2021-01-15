@@ -12,7 +12,7 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import java.util.GregorianCalendar
@@ -25,7 +25,7 @@ class SiteListItemBuilder
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
     private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
-    private val scanFeatureConfig: ScanFeatureConfig,
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -52,7 +52,7 @@ class SiteListItemBuilder
     }
 
     fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
-        return if (scanFeatureConfig.isEnabled() && isScanAvailable) {
+        return if (scanScreenFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
                     R.drawable.ic_scan_alt_white_24dp,
                     UiStringRes(R.string.scan),
