@@ -12,9 +12,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
-import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {

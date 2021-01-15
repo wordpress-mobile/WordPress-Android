@@ -12,9 +12,9 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject

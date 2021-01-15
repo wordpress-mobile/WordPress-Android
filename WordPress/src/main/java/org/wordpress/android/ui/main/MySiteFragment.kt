@@ -155,7 +155,6 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
-import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -163,6 +162,7 @@ import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager

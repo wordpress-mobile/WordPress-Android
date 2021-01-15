@@ -84,10 +84,10 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ScanScreenFeatureConfig
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)

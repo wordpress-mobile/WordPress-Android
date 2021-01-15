@@ -13,7 +13,7 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.modules.UI_SCOPE
-import org.wordpress.android.util.ScanScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
