@@ -80,7 +80,7 @@ android {
         buildConfigField "boolean", "SCAN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
-        buildConfigField "boolean", "BACKUP_AVAILABLE", "false"
+        buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "UNREAD_POSTS_COUNT", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"

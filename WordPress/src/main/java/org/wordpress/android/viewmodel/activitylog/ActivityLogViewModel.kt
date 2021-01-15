@@ -40,7 +40,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.BackupDownloadFeatureConfig
 import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
@@ -80,7 +80,7 @@ class ActivityLogViewModel @Inject constructor(
     private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
-    private val backupFeatureConfig: BackupFeatureConfig,
+    private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
@@ -432,8 +432,9 @@ class ActivityLogViewModel @Inject constructor(
             val currentItem = ActivityLogListItem.Event(
                     model,
                     disableActions,
-                    backupFeatureConfig.isEnabled(),
-                    restoreFeatureConfig.isEnabled())
+                    backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureConfig.isEnabled()
+            )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(Header(currentItem.formattedDate))
@@ -465,7 +466,7 @@ class ActivityLogViewModel @Inject constructor(
         return activityLogModel?.let {
             val rewoundEvent = ActivityLogListItem.Event(
                     model = it,
-                    backupFeatureEnabled = backupFeatureConfig.isEnabled(),
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
                     restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
             )
             ActivityLogListItem.Progress(
@@ -511,8 +512,9 @@ class ActivityLogViewModel @Inject constructor(
         rewindStatusService.rewindingActivity?.let {
             val event = ActivityLogListItem.Event(
                     model = it,
-                    backupFeatureEnabled = backupFeatureConfig.isEnabled(),
-                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled())
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
+            )
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
@@ -526,8 +528,9 @@ class ActivityLogViewModel @Inject constructor(
         if (item != null) {
             val event = ActivityLogListItem.Event(
                     model = item,
-                    backupFeatureEnabled = backupFeatureConfig.isEnabled(),
-                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled())
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
+            )
             _showSnackbarMessage.value =
                     resourceProvider.getString(
                             R.string.activity_log_rewind_finished_snackbar_message,

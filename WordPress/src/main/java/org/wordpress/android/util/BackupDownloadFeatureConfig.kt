@@ -7,11 +7,11 @@ import org.wordpress.android.util.config.FeatureConfig
 import javax.inject.Inject
 
 /**
- * Configuration of the Jetpack Prepare Backup Download feature.
+ * Configuration of the 'Jetpack Backup Download' feature.
  */
 @FeatureInDevelopment
-class BackupFeatureConfig
+class BackupDownloadFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.BACKUP_AVAILABLE
+        BuildConfig.BACKUP_DOWNLOAD_AVAILABLE
 )

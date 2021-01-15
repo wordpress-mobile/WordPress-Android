@@ -59,7 +59,7 @@ import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.BackupDownloadFeatureConfig
 import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
@@ -87,7 +87,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
-    @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
+    @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
@@ -153,7 +153,7 @@ class ActivityLogViewModelTest {
                 rewindStatusService,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
-                backupFeatureConfig,
+                backupDownloadFeatureConfig,
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
