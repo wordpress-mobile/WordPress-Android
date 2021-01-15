@@ -75,7 +75,9 @@ class HomePagePickerViewModelTest {
                                 mockedDesignDemoUrl,
                                 "theme",
                                 mockedDesignSegmentId,
-                                "image"
+                                "desktopThumbnail",
+                                "mobileThumbnail",
+                                "tabletThumbnail"
                         )
                 ),
                 null
