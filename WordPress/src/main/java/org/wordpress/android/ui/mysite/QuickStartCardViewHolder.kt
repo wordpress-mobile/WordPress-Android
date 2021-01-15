@@ -38,7 +38,7 @@ class QuickStartCardViewHolder(
         itemView.apply {
             quick_start_card_more_button.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
             quick_start_card_recycler_view.apply {
-                adapter = QuickStartTaskCardAdapter()
+                adapter = QuickStartTaskCardAdapter(uiHelpers)
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
                 addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 10), 0))

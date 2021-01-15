@@ -11,8 +11,9 @@ import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.QuickStartTaskCardViewHolder
+import org.wordpress.android.ui.utils.UiHelpers
 
-class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
+class QuickStartTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapter<QuickStartTaskCardViewHolder>() {
     private var items = listOf<QuickStartTaskCard>()
 
     fun loadData(newItems: List<QuickStartTaskCard>) {
@@ -33,8 +34,8 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
 
     inner class QuickStartTaskCardViewHolder(itemView: View) : ViewHolder(itemView) {
         fun bind(taskCard: QuickStartTaskCard) = itemView.apply {
-            task_card_title.text = taskCard.title
-            task_card_description.text = taskCard.description
+            task_card_title.text = uiHelpers.getTextOfUiString(context, taskCard.title)
+            task_card_description.text = uiHelpers.getTextOfUiString(context, taskCard.description)
             task_card_illustration.setImageResource(taskCard.illustration)
 
             task_card_view.apply {

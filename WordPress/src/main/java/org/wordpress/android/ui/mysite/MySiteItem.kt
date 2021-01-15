@@ -59,8 +59,8 @@ sealed class MySiteItem(val type: Type) {
 
         data class QuickStartTaskCard(
             val id: String,
-            val title: String,
-            val description: String,
+            val title: UiString,
+            val description: UiString,
             @DrawableRes val illustration: Int,
             @ColorRes val accentColor: Int,
             val done: Boolean = false,
