@@ -110,9 +110,7 @@ class RestoreActivity : LocaleAwareActivity() {
         viewModel.navigationEvents.observe(this, {
             it.applyIfNotHandled {
                 when (this) {
-                    is VisitSite -> {
-                        ActivityLauncher.openUrlExternal(this@RestoreActivity, url)
-                    }
+                    is VisitSite -> ActivityLauncher.openUrlExternal(this@RestoreActivity, url)
                 }
             }
         })

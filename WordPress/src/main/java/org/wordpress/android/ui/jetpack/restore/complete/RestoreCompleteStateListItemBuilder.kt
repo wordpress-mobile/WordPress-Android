@@ -64,8 +64,8 @@ class RestoreCompleteStateListItemBuilder @Inject constructor() {
     )
 
     fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
-                buildErrorIconState(),
-                buildErrorDescriptionState(),
+            buildErrorIconState(),
+            buildErrorDescriptionState(),
             buildErrorDoneActionState(onDoneClick)
     )
 

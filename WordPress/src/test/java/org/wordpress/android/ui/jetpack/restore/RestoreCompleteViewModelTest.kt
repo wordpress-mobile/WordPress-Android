@@ -51,10 +51,9 @@ class RestoreCompleteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given visit site is clicked, then a navigationEvent is posted`() = test {
+    fun `when visit site is clicked, then a navigationEvent is posted`() = test {
         val uiStates = initObservers().uiStates
         val navigationEvents = initObservers().navigationEvents
-        whenever(site.url).thenReturn("www.google.com")
 
         viewModel.start(site, restoreState, parentViewModel)
         whenever(site.url).thenReturn("www.google.com")
