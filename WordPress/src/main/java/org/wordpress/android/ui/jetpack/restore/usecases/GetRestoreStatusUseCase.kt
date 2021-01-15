@@ -22,17 +22,17 @@ class GetRestoreStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore
 ) {
     suspend fun getRestoreStatus(site: SiteModel, restoreId: Long) = flow {
-        // start off with a delay until "queued" status is implemented in RewindStatusModel
-        delay(DELAY_MILLIS)
-
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
                 return@flow
             }
 
-            val statusForSite = activityLogStore.getRewindStatusForSite(site)
-            val rewind = statusForSite?.rewind
+            // start off with a delay until "queued" status is implemented in RewindStatusModel
+            // this will be moved to after the result check once queued is added
+            delay(DELAY_MILLIS)
+
+            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
             if (rewind != null && rewind.restoreId == restoreId) {
                 when (rewind.status) {
                     FINISHED -> {
@@ -58,7 +58,6 @@ class GetRestoreStatusUseCase @Inject constructor(
                 emit(RemoteRequestFailure)
                 return@flow
             }
-            delay(DELAY_MILLIS)
         }
     }
 }

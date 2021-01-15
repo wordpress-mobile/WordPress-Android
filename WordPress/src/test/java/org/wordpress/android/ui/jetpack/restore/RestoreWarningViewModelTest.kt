@@ -3,7 +3,7 @@ package org.wordpress.android.ui.jetpack.restore
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -67,9 +67,9 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
-        Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.NetworkUnavailable)
+        assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.NetworkUnavailable)
     }
 
     @Test
@@ -82,9 +82,9 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
-        Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.RemoteRequestFailure)
+        assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.RemoteRequestFailure)
     }
 
     @Test
@@ -97,9 +97,13 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
-        Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.OtherRequestRunning)
+        assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.OtherRequestRunning)
+    }
+
+    private fun triggerRestore(uiStates: List<UiState>) {
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
     }
 
     private fun initObservers(): Observers {

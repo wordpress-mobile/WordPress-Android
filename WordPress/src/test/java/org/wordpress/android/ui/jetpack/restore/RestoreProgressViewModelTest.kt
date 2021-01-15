@@ -4,7 +4,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -54,7 +54,7 @@ class RestoreProgressViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        Assertions.assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
+        assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
     }
 
     @Test
@@ -63,7 +63,7 @@ class RestoreProgressViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        Assertions.assertThat(((uiStates[0].items).first { it is ProgressState } as ProgressState).progress)
+        assertThat(((uiStates[0].items).first { it is ProgressState } as ProgressState).progress)
                 .isEqualTo(0)
     }
 

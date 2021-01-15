@@ -5,11 +5,10 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
@@ -30,6 +29,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.Wa
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
+import org.mockito.Mockito.clearInvocations
+import org.mockito.Mockito.verify
 
 @InternalCoroutinesApi
 class RestoreViewModelTest : BaseUnitTest() {
@@ -72,20 +73,20 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given view model, when started, then process moves to next step`() {
+    fun `when started, then process moves to next step`() {
         viewModel.start(null)
 
-        Mockito.verify(wizardManager).showNextStep()
+        verify(wizardManager).showNextStep()
     }
 
     @Test
     fun `given in details step, when finished, then process moves to next step`() {
         viewModel.start(null)
         // need to clear invocations because nextStep is called on start
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         viewModel.onRestoreDetailsFinished(rewindId, optionsSelected, published)
-        Mockito.verify(wizardManager).showNextStep()
+        verify(wizardManager).showNextStep()
     }
 
     @Test
@@ -93,7 +94,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         val navigationTargets = initObservers().navigationTargets
 
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
         whenever(wizardManager.showNextStep()).then {
             wizardManagerNavigatorLiveData.value = RestoreStep.WARNING
             Unit
@@ -101,7 +102,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.onRestoreDetailsFinished(rewindId, optionsSelected, published)
 
-        Assertions.assertThat(navigationTargets.last().wizardState)
+        assertThat(navigationTargets.last().wizardState)
                 .isEqualTo(RestoreState(
                         rewindId = rewindId,
                         optionsSelected = optionsSelected,
@@ -113,24 +114,24 @@ class RestoreViewModelTest : BaseUnitTest() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
 
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.DETAILS.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCanceled::class.java)
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCanceled::class.java)
     }
 
     @Test
     fun `given in warning step, when onBackPressed, then process moves to previous step `() {
         val onBackPressedObserver = initObservers().onBackPressedObserver
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.WARNING.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(onBackPressedObserver.last()).isInstanceOf(Unit::class.java)
+        assertThat(onBackPressedObserver.last()).isInstanceOf(Unit::class.java)
     }
 
     @Test
@@ -146,13 +147,13 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given in progress step, when onBackPressed, then invokes wizard finished with RestoreInProgress`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
         viewModel.onProgressExit(restoreId)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.PROGRESS.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
     }
 
     @Test
@@ -173,7 +174,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.start(null)
 
-        Assertions.assertThat(toolbarStates.size).isEqualTo(0)
+        assertThat(toolbarStates.size).isEqualTo(0)
     }
 
     @Test
@@ -182,7 +183,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.writeToBundle(savedInstanceState)
 
-        Mockito.verify(savedInstanceState)
+        verify(savedInstanceState)
                 .putParcelable(any(), argThat { this is RestoreState })
     }
 
@@ -194,7 +195,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(DetailsToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(DetailsToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(DetailsToolbarState::class.java)
     }
 
     @Test
@@ -205,7 +206,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(WarningToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(WarningToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(WarningToolbarState::class.java)
     }
 
     @Test
@@ -216,7 +217,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(ProgressToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
     }
 
     @Test
@@ -250,7 +251,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.start(savedInstanceState = savedInstanceState)
 
-        Mockito.verify(wizardManager).setCurrentStepIndex(index)
+        verify(wizardManager).setCurrentStepIndex(index)
     }
 
     private fun initObservers(): Observers {
