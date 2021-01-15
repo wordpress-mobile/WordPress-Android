@@ -287,7 +287,6 @@ Language: zh_CN
     <string name="gutenberg_native_gradient_type">渐变类型</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">轻点两下以选择选项</string>
     <string name="gutenberg_native_customize_gradient">自定义渐变</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">页面作者</string>
     <string name="photo_picker_use_gif">使用此 GIF</string>
     <string name="error_media_thumbnail_not_loaded">无法加载媒体缩略图</string>
@@ -323,7 +322,6 @@ Language: zh_CN
     <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
-    <string name="pages_item_subtitle">%1$s· %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">试用初学者布局</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
@@ -331,8 +329,6 @@ Language: zh_CN
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
     <string name="pages_set_as_posts_page">设为文章页面</string>
     <string name="pages_set_as_homepage">设为主页</string>
-    <string name="suggestion_no_matching_users">\"没有找到匹配的用户。\"</string>
-    <string name="suggestion_invalid_user">\"%s不是有效用户\"</string>
     <string name="site_settings_select_page">选择页面</string>
     <string name="site_settings_posts_page">文章页面</string>
     <string name="site_settings_static_homepage">静态主页</string>
@@ -505,7 +501,6 @@ Language: zh_CN
     <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
     <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
     <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
-    <string name="reader_btn_selected_filter_tick_content_description">已选择</string>
     <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
     <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
     <string name="reader_title_subs">管理主题和站点</string>
@@ -582,7 +577,6 @@ Language: zh_CN
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="site_cannot_be_loaded">我们现在无法为您的站点加载数据。请稍后重试</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒体库</string>
@@ -1217,14 +1211,8 @@ Language: zh_CN
     <string name="support_contact_email">联系人电子邮件</string>
     <string name="application_log_button">应用程序日志</string>
     <string name="my_tickets">我的工单</string>
-    <string name="activity_log_rewind_dialog_message">是否确定要在 %2$s 将站点还原至 %1$s？此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
-    <string name="activity_log_rewind_site">还原站点</string>
-    <string name="activity_log_currently_restoring_message_no_dates">正在还原</string>
-    <string name="activity_log_currently_restoring_message">正在还原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功恢复您的站点</string>
-    <string name="activity_log_rewind_finished_snackbar_message">已成功恢复您的站点\n已还原至 %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %1$s %2$s</string>
     <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
     <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备</string>
@@ -1267,7 +1255,6 @@ Language: zh_CN
     <string name="reader_btn_notifications_on">打开站点通知</string>
     <string name="reader_btn_notifications_off">关闭站点通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 图标</string>
-    <string name="rewind">还原</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活动图标</string>
     <string name="activity_log">活动日志</string>

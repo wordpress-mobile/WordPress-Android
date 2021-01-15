@@ -129,7 +129,6 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
-        GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -885,14 +884,6 @@ public class AppPrefs {
 
     public static void removeSupportName() {
         remove(DeletablePrefKey.SUPPORT_NAME);
-    }
-
-    public static void setGutenbergStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        setBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, tooltipShown);
-    }
-
-    public static boolean getGutenbergStarterPageTemplatesTooltipShown() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, false);
     }
 
     /*
