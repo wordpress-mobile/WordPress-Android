@@ -8,15 +8,15 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
-import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.merge
 import javax.inject.Inject
 
 class QuickStartRepository
 @Inject constructor(
     private val quickStartStore: QuickStartStore,
+    private val quickStartUtils: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository
 ) {
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
@@ -29,13 +29,15 @@ class QuickStartRepository
     }
 
     fun startQuickStart() {
-        quickStartStore.setDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE, true)
-        refreshCustomizeTasks()
-        refreshGrowTasks()
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            quickStartStore.setDoneTask(site.id.toLong(), CREATE_SITE, true)
+            refreshCustomizeTasks()
+            refreshGrowTasks()
+        }
     }
 
     fun refreshIfNecessary() {
-        if (quickStartModel.value == null && QuickStartUtils.isQuickStartInProgress(quickStartStore)) {
+        if (quickStartModel.value == null && quickStartUtils.isQuickStartInProgress()) {
             refreshCustomizeTasks()
             refreshGrowTasks()
         }
@@ -46,9 +48,9 @@ class QuickStartRepository
             customizeTasks.postValue(
                     QuickStartCategory(
                             CUSTOMIZE,
-                            uncompletedTasks = quickStartStore.getUncompletedTasksByType(site.siteId, CUSTOMIZE)
+                            uncompletedTasks = quickStartStore.getUncompletedTasksByType(site.id.toLong(), CUSTOMIZE)
                                     .mapNotNull { detailsMap[it] },
-                            completedTasks = quickStartStore.getCompletedTasksByType(site.siteId, CUSTOMIZE)
+                            completedTasks = quickStartStore.getCompletedTasksByType(site.id.toLong(), CUSTOMIZE)
                                     .mapNotNull { detailsMap[it] })
             )
         }
@@ -59,9 +61,9 @@ class QuickStartRepository
             growTasks.postValue(
                     QuickStartCategory(
                             GROW,
-                            uncompletedTasks = quickStartStore.getUncompletedTasksByType(site.siteId, GROW)
+                            uncompletedTasks = quickStartStore.getUncompletedTasksByType(site.id.toLong(), GROW)
                                     .mapNotNull { detailsMap[it] },
-                            completedTasks = quickStartStore.getCompletedTasksByType(site.siteId, GROW)
+                            completedTasks = quickStartStore.getCompletedTasksByType(site.id.toLong(), GROW)
                                     .mapNotNull { detailsMap[it] })
             )
         }

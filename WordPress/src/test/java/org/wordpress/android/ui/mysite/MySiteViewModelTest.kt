@@ -109,6 +109,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -156,7 +158,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 backupsFeatureConfig,
                 displayUtilsWrapper,
                 jetpackCapabilitiesUseCase,
-                scanFeatureConfig
+                scanFeatureConfig,
+                quickStartRepository,
+                quickStartItemBuilder
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
