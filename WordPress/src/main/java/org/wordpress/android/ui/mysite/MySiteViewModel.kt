@@ -207,7 +207,12 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
 
-            siteItems.addAll(quickStartCategories.map { quickStartItemBuilder.build(it, this::onQuickStartCardMoreClick) })
+            siteItems.addAll(quickStartCategories.map {
+                quickStartItemBuilder.build(
+                        it,
+                        this::onQuickStartCardMoreClick
+                )
+            })
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(

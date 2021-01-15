@@ -23,8 +23,10 @@ class QuickStartRepository
             .associateBy { it.task }
     private val customizeTasks = MutableLiveData<QuickStartCategory>()
     private val growTasks = MutableLiveData<QuickStartCategory>()
-    val quickStartModel: LiveData<List<QuickStartCategory>> = merge(customizeTasks, growTasks)
-    { customizeCategory, growCategory ->
+    val quickStartModel: LiveData<List<QuickStartCategory>> = merge(
+            customizeTasks,
+            growTasks
+    ) { customizeCategory, growCategory ->
         listOfNotNull(customizeCategory, growCategory)
     }
 
@@ -75,4 +77,3 @@ class QuickStartRepository
         val completedTasks: List<QuickStartTaskDetails>
     )
 }
-

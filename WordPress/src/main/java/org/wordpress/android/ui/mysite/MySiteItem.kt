@@ -12,7 +12,6 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import kotlin.math.roundToInt
 
 sealed class MySiteItem(val type: Type) {
     enum class Type {

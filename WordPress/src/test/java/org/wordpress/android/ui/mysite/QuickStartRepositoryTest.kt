@@ -53,7 +53,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.refreshIfNecessary()
 
-        assertModel(2)
+        assertModel()
     }
 
     @Test
@@ -64,11 +64,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.refreshIfNecessary()
 
-        assertModel(2)
+        assertModel()
 
         quickStartRepository.refreshIfNecessary()
 
-        assertModel(2)
+        assertModel()
     }
 
     @Test
@@ -88,7 +88,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.startQuickStart()
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
-        assertModel(2)
+        assertModel()
     }
 
     private fun initStore() {
@@ -107,8 +107,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
     }
 
-    private fun assertModel(size: Int) {
-        assertThat(models).hasSize(size)
+    private fun assertModel() {
+        assertThat(models).hasSize(2)
         models.last().let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
@@ -119,9 +119,4 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             assertThat(categories[1].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
         }
     }
-
-    /*
-    return !quickStartStore.getQuickStartCompleted(AppPrefs.getSelectedSite().toLong()) &&
-                    quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE)
-     */
 }
