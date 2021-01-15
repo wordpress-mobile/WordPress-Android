@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.backup.download.viewholders.BackupDownloadAdditionalInformationViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreAdditionalInformationViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
@@ -34,8 +34,8 @@ class BackupDownloadCompleteAdapter(
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_ADDITIONAL_INFORMATION.id ->
-                BackupDownloadAdditionalInformationViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_ADDITIONAL_INFORMATION.id ->
+                JetpackBackupRestoreAdditionalInformationViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
@@ -76,7 +76,6 @@ class BackupDownloadCompleteAdapter(
                 return false
             }
 
-            // todo: annmarie - adjust this
             return oldItem.longId() == newItem.longId()
         }
 

@@ -6,13 +6,13 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreSubHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackCheckboxViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
-import org.wordpress.android.ui.jetpack.restore.viewholders.RestoreSubHeaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -36,7 +36,7 @@ class RestoreDetailsAdapter(
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
-            ViewType.RESTORE_SUB_HEADER.id -> RestoreSubHeaderViewHolder(
+            ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
                     uiHelpers,
                     parent
             )

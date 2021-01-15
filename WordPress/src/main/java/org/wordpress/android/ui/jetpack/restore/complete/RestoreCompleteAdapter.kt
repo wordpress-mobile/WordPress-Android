@@ -6,12 +6,12 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreAdditionalInformationViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
-import org.wordpress.android.ui.jetpack.restore.viewholders.RestoreAdditionalInformationViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
@@ -34,8 +34,8 @@ class RestoreCompleteAdapter(
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
-            ViewType.RESTORE_ADDITIONAL_INFORMATION.id ->
-                RestoreAdditionalInformationViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_ADDITIONAL_INFORMATION.id ->
+                JetpackBackupRestoreAdditionalInformationViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

@@ -1,14 +1,13 @@
-package org.wordpress.android.ui.jetpack.restore.viewholders
+package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.jetpack_backup_restore_list_additional_information_item.*
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
-import org.wordpress.android.ui.jetpack.restore.RestoreListItemState.AdditionalInformationState
 import org.wordpress.android.ui.utils.UiHelpers
 
-class RestoreAdditionalInformationViewHolder(
+class JetpackBackupRestoreAdditionalInformationViewHolder(
     private val uiHelpers: UiHelpers,
     parent: ViewGroup
 ) : JetpackViewHolder(R.layout.jetpack_backup_restore_list_additional_information_item, parent) {
