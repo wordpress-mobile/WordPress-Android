@@ -67,6 +67,12 @@ class HomePagePickerViewModel @Inject constructor(
     private val _previewMode = SingleLiveEvent<PreviewMode>()
     val previewMode: LiveData<PreviewMode> = _previewMode
 
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
+    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
+    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
+
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
@@ -213,6 +219,14 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onBackPressed() {
         _onBackButtonPressed.call()
+    }
+
+    fun onThumbnailModePressed() {
+        _onThumbnailModeButtonPressed.call()
+    }
+
+    fun onPreviewModePressed() {
+        _onPreviewModeButtonPressed.call()
     }
 
     fun onRetryClicked() {

@@ -76,6 +76,7 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ToastUtils.showToast
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -156,6 +157,14 @@ class ImprovedMySiteFragment : Fragment(),
 
         recycler_view.layoutManager = layoutManager
 
+        val adapter = MySiteAdapter(imageManager, uiHelpers)
+
+        savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
+            adapter.onRestoreInstanceState(it)
+        }
+
+        recycler_view.adapter = adapter
+
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
@@ -190,6 +199,12 @@ class ImprovedMySiteFragment : Fragment(),
                 )
                 inputDialog.setTargetFragment(this, 0)
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
+            }
+        })
+        viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { id ->
+                // TODO Show bottom sheet menu
+                showToast(context, id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
@@ -308,6 +323,9 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
+        (recycler_view.adapter as? MySiteAdapter)?.let {
+            outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
+        }
     }
 
     private fun loadGravatar(avatarUrl: String) = avatar?.let {
@@ -381,11 +399,7 @@ class ImprovedMySiteFragment : Fragment(),
     private fun loadData(items: List<MySiteItem>) {
         recycler_view.setVisible(true)
         actionable_empty_view.setVisible(false)
-        if (recycler_view.adapter == null) {
-            recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
-        }
-        val adapter = recycler_view.adapter as MySiteAdapter
-        adapter.loadData(items)
+        (recycler_view.adapter as? MySiteAdapter)?.loadData(items)
     }
 
     private fun loadEmptyView(shouldShowEmptyViewImage: Boolean) {
@@ -415,6 +429,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
+        private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }

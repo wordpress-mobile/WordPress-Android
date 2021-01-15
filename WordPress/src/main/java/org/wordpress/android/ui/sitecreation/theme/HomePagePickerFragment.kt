@@ -114,6 +114,10 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+            previewModeSelectorPopup.show(viewModel)
+        })
+
         viewModel.start(displayUtils.isTablet())
     }
 
@@ -129,7 +133,7 @@ class HomePagePickerFragment : Fragment() {
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         backButton.setOnClickListener { viewModel.onBackPressed() }
-        previewTypeSelectorButton.setOnClickListener { previewModeSelectorPopup.show(viewModel) }
+        previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 

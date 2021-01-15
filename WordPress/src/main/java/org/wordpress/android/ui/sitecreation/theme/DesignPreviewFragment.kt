@@ -107,13 +107,17 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
 
         viewModel.previewMode.observe(viewLifecycleOwner, Observer { load() })
 
+        viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, Observer {
+            previewModeSelectorPopup.show(viewModel)
+        })
+
         previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
 
         backButton.setOnClickListener { closeModal() }
 
         chooseButton.setOnClickListener { viewModel.onPreviewChooseTapped() }
 
-        previewTypeSelectorButton.setOnClickListener { previewModeSelectorPopup.show(viewModel) }
+        previewTypeSelectorButton.setOnClickListener { viewModel.onPreviewModePressed() }
 
         webView.settings.userAgentString = WordPress.getUserAgent()
         webView.webViewClient = object : WebViewClient() {

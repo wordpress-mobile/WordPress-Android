@@ -566,14 +566,8 @@ Language: en_AU
     <string name="support_contact_email">Contact email</string>
     <string name="application_log_button">Application log</string>
     <string name="my_tickets">My Tickets</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
-    <string name="activity_log_rewind_site">Rewind Site</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
-    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="plugin_auto_managed">Auto-managed</string>
     <string name="reader_save_posts_locally_dialog_title">Save Posts for Later</string>
@@ -615,7 +609,6 @@ Language: en_AU
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_notifications_off">Turn off site notifications</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
-    <string name="rewind">Rewind</string>
     <string name="activity_log_event">Event</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log">Activity Log</string>
