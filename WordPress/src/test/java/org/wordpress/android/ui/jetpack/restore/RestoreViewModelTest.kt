@@ -5,11 +5,10 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.MEDIA_UPLOADS
@@ -25,6 +24,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.Wa
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
+import org.mockito.Mockito.clearInvocations
+import org.mockito.Mockito.verify
 
 @InternalCoroutinesApi
 class RestoreViewModelTest : BaseUnitTest() {
@@ -69,10 +70,10 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given view model, when started, then process moves to next step`() {
+    fun `when started, then process moves to next step`() {
         viewModel.start(null)
 
-        Mockito.verify(wizardManager).showNextStep()
+        verify(wizardManager).showNextStep()
     }
 
     @Test
@@ -110,12 +111,12 @@ class RestoreViewModelTest : BaseUnitTest() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
 
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.DETAILS.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCanceled::class.java)
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCanceled::class.java)
     }
 
     @Test
@@ -136,7 +137,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.start(null)
 
-        Assertions.assertThat(toolbarStates.size).isEqualTo(0)
+        assertThat(toolbarStates.size).isEqualTo(0)
     }
 
     @Test
@@ -145,7 +146,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.writeToBundle(savedInstanceState)
 
-        Mockito.verify(savedInstanceState)
+        verify(savedInstanceState)
                 .putParcelable(any(), argThat { this is RestoreState })
     }
 
@@ -157,7 +158,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(DetailsToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(DetailsToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(DetailsToolbarState::class.java)
     }
 
     @Test
@@ -181,7 +182,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.start(savedInstanceState = savedInstanceState)
 
-        Mockito.verify(wizardManager).setCurrentStepIndex(index)
+        verify(wizardManager).setCurrentStepIndex(index)
     }
 
     private fun initObservers(): Observers {

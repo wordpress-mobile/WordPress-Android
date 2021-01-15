@@ -3,7 +3,7 @@ package org.wordpress.android.ui.jetpack.restore
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -45,12 +45,12 @@ class RestoreDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when available items are fetched, the content view is shown`() = test {
+    fun `when available items are fetched, then content view is shown`() = test {
         val uiStates = initObservers().uiStates
 
         viewModel.start(site, activityId, parentViewModel)
 
-        Assertions.assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
+        assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
     }
 
     @Test
@@ -61,7 +61,7 @@ class RestoreDetailsViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
-        Assertions.assertThat((((uiStates.last()).items)
+        assertThat((((uiStates.last()).items)
                 .first { it is CheckboxState } as CheckboxState).checked).isFalse
     }
 
@@ -74,7 +74,7 @@ class RestoreDetailsViewModelTest : BaseUnitTest() {
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
-        Assertions.assertThat(((uiStates.last().items).first { it is CheckboxState } as CheckboxState).checked).isTrue
+        assertThat(((uiStates.last().items).first { it is CheckboxState } as CheckboxState).checked).isTrue
     }
 
     private fun initObservers(): Observers {
