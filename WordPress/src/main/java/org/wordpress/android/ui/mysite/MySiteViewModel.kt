@@ -247,7 +247,9 @@ class MySiteViewModel
                 QuickStartTaskCard(
                         id = "dummy_task_$it",
                         title = UiStringText("Dummy Task $it"),
-                        description = UiStringText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat."),
+                        description = UiStringText(
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat."
+                        ),
                         illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
                         accentColor = R.color.orange_40,
                         done = it % 2 == 0,
