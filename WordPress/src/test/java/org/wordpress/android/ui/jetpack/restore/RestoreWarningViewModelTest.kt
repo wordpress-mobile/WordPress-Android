@@ -68,7 +68,7 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
         Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.NetworkUnavailable)
     }
@@ -83,7 +83,7 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
         Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.RemoteRequestFailure)
     }
@@ -98,9 +98,13 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, restoreState, parentViewModel)
 
-        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        triggerRestore(uiStates)
 
         Assertions.assertThat(errorEvents.last()).isEqualTo(RestoreErrorTypes.OtherRequestRunning)
+    }
+
+    private fun triggerRestore(uiStates: List<UiState>) {
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
     }
 
     private fun initObservers(): Observers {
