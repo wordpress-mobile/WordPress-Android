@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
+import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -53,7 +54,6 @@ class RestoreViewModel @Inject constructor(
     val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
         SingleEventObservable(
                 Transformations.map(wizardManager.navigatorLiveData) {
-                    // todo: annmarie when moving back from warning - need state to not clear
                     clearOldRestoreState(it)
                     WizardNavigationTarget(it, restoreState)
                 }
@@ -74,6 +74,9 @@ class RestoreViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<RestoreNavigationEvents>>()
     val navigationEvents: LiveData<Event<RestoreNavigationEvents>> = _navigationEvents
+
+    private val _onBackPressedObservable = MutableLiveData<Unit>()
+    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
 
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -111,7 +114,10 @@ class RestoreViewModel @Inject constructor(
             DETAILS.id -> {
                 _wizardFinishedObservable.value = Event(RestoreCanceled)
             }
-            // todo: annmarie back press is allowed on the warning view
+            WARNING.id -> {
+                wizardManager.onBackPressed()
+                _onBackPressedObservable.value = Unit
+            }
         }
     }
 
@@ -133,15 +139,14 @@ class RestoreViewModel @Inject constructor(
                 rewindId = rewindId,
                 optionsSelected = optionsSelected,
                 published = published)
-        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("made it to onRestoreDetailsFinished"))))
-        // todo: annmarie uncomment the show next stop
-        // wizardManager.showNextStep()
+        wizardManager.showNextStep()
     }
 
     fun onRestoreWarningFinished(rewindId: String?, restoreId: Long?) {
-        restoreState = restoreState.copy(restoreId = restoreId)
-        // todo: annmarie add other information from the success submitted
-        wizardManager.showNextStep()
+        restoreState = restoreState.copy(rewindId = rewindId, restoreId = restoreId)
+        _snackbarEvents.postValue(Event(SnackbarMessageHolder(UiStringText("Warning finished"))))
+        // todo: annmarie uncomment the showNextSteps
+        // wizardManager.showNextStep()
     }
 
     fun onRestoreCanceled() {
@@ -181,6 +186,11 @@ class RestoreViewModel @Inject constructor(
         data class DetailsToolbarState(
             @StringRes override val title: Int = R.string.restore_details_page_title,
             @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
+        ) : ToolbarState()
+
+        data class WarningToolbarState(
+            @StringRes override val title: Int = R.string.restore_warning_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }
 }
