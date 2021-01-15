@@ -130,6 +130,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -597,6 +598,9 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private void trackPost(long blogId, long postId) {
         // bump the page view
         ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
+
+        mPostSeenStatusWrapper.markPostAsSeenSilently(ReaderPostTable.getBlogPost(
+                blogId, postId, true));
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(
