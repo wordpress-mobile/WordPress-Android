@@ -59,10 +59,10 @@ import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
+import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
