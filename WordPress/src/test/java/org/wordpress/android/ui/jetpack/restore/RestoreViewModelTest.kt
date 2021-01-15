@@ -135,13 +135,13 @@ class RestoreViewModelTest : BaseUnitTest() {
     fun `given in progress step, when onBackPressed, then invokes wizard finished with RestoreInProgress`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
-        Mockito.clearInvocations(wizardManager)
+        clearInvocations(wizardManager)
         viewModel.onProgressExit(restoreId)
 
         whenever(wizardManager.currentStep).thenReturn(RestoreStep.PROGRESS.id)
         viewModel.onBackPressed()
 
-        Assertions.assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
     }
 
     @Test
@@ -193,7 +193,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         viewModel.setToolbarState(ProgressToolbarState())
 
-        Assertions.assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+        assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
     }
 
     @Test
