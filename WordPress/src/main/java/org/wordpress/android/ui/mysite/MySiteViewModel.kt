@@ -94,7 +94,7 @@ import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.merge
@@ -122,7 +122,7 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    private val backupsFeatureConfig: BackupsFeatureConfig,
+    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
     private val scanFeatureConfig: ScanFeatureConfig
@@ -184,7 +184,7 @@ class MySiteViewModel
                     siteItemsBuilder.buildSiteItems(
                             site,
                             this::onItemClick,
-                            backupsFeatureConfig.isEnabled(),
+                            backupScreenFeatureConfig.isEnabled(),
                             scanAvailable ?: false
                     )
             )

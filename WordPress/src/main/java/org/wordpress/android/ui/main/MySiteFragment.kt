@@ -161,7 +161,7 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
@@ -207,7 +207,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
-    @Inject lateinit var backupsFeatureConfig: BackupsFeatureConfig
+    @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
@@ -277,7 +277,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateBackupMenuVisibility() {
-        row_backup.setVisible(backupsFeatureConfig.isEnabled())
+        row_backup.setVisible(backupScreenFeatureConfig.isEnabled())
     }
 
     private fun updateScanMenuVisibility() {

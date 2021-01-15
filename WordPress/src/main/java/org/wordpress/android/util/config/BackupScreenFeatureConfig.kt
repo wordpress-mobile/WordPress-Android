@@ -5,11 +5,11 @@ import org.wordpress.android.annotation.FeatureInDevelopment
 import javax.inject.Inject
 
 /**
- * Configuration of the 'Jetpack Backups' feature.
+ * Configuration of the 'Jetpack Backup Screen' feature.
  */
 @FeatureInDevelopment
-class BackupsFeatureConfig
+class BackupScreenFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.BACKUPS_AVAILABLE
+        BuildConfig.BACKUP_SCREEN_AVAILABLE
 )

@@ -34,7 +34,7 @@ allOpen {
 android.defaultConfig.javaCompileOptions.annotationProcessorOptions.includeCompileClasspath = true
 
 android {
-    useLibrary 'android.test.runner'
+//    useLibrary 'android.test.runner'
 
     useLibrary 'android.test.base'
     useLibrary 'android.test.mock'
@@ -76,7 +76,7 @@ android {
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
-        buildConfigField "boolean", "BACKUPS_AVAILABLE", "false"
+        buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "SCAN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
