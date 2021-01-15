@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.restore_progress_fragment.*
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -19,7 +19,7 @@ import javax.inject.Inject
 
 private const val ARG_DATA = "arg_restore_restore_progress_data"
 
-class RestoreProgressFragment : Fragment(R.layout.restore_progress_fragment) {
+class RestoreProgressFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager

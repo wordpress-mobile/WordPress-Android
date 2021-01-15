@@ -7,14 +7,13 @@
     android:layout_height="?attr/listPreferredItemHeight">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/subheader"
-        style="@style/Jetpack.SecondaryHeader"
+        android:id="@+id/additional_information"
+        style="@style/Jetpack.Backup.ListItem.AdditionalInformation"
         android:layout_marginTop="13dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="Items included in this download"
-        android:text="@string/backup_download_details_choose_items_header"/>
+        tools:text="Additional information"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
