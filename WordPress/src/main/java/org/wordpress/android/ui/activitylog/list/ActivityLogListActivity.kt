@@ -10,7 +10,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog
-import org.wordpress.android.util.BackupDownloadFeatureConfig
+import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import javax.inject.Inject
