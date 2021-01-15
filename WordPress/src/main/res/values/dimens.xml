@@ -160,7 +160,7 @@
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
     <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">100dp</dimen>
+    <dimen name="scrim_visible_height_trigger">150dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_low
