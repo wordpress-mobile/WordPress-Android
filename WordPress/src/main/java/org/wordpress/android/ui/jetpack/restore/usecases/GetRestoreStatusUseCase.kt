@@ -32,8 +32,7 @@ class GetRestoreStatusUseCase @Inject constructor(
             // this will be moved to after the result check once queued is added
             delay(DELAY_MILLIS)
 
-            val statusForSite = activityLogStore.getRewindStatusForSite(site)
-            val rewind = statusForSite?.rewind
+            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
             if (rewind != null && rewind.restoreId == restoreId) {
                 when (rewind.status) {
                     FINISHED -> {
