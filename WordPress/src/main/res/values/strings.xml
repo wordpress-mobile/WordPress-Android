@@ -3452,5 +3452,27 @@ translators: sample content for "Services" page template -->
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
     <string name="restore_details_page_title">@string/restore</string>
+    <string name="restore_details_choose_items_header">Choose the items to restore:</string>
+    <string name="restore_details_header">Restore Site</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s is the selected point for your restore.</string>
+    <string name="restore_details_action_button">Restore site</string>
+    <string name="restore_details_icon_content_description">Restore icon</string>
+    <string name="restore_details_action_button_content_description">Restore site button</string>
 
+    <string name="restore_warning_page_title">@string/restore</string>
+    <string name="restore_warning_header">Warning</string>
+    <string name="restore_warning_description_with_two_parameters">Are you sure you want to rewind your site back to %1$s at %2$s?
+        This will remove all content and options created or changed since then.</string>
+    <string name="restore_warning_action_button">Confirm restore site</string>
+    <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
+    <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
+
+    <string name="restore_progress_page_title">@string/restore</string>
+    <string name="restore_progress_header">Currently restoring site</string>
+    <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
+    <string name="restore_progress_action_button">@string/backup_download_progress_action_button</string>
+    <string name="restore_progress_icon_content_description">Restore site icon</string>
+    <string name="restore_progress_action_button_content_description">@string/backup_download_progress_action_button_content_description</string>
+    <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
+    <string name="restore_progress_label">%1$s%%</string>
 </resources>

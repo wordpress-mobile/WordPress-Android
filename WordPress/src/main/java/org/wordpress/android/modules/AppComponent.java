@@ -51,6 +51,8 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment;
 import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsFragment;
+import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressFragment;
+import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningFragment;
 import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
@@ -645,6 +647,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(RestoreActivity object);
 
     void inject(RestoreDetailsFragment object);
+
+    void inject(RestoreWarningFragment object);
+
+    void inject(RestoreProgressFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

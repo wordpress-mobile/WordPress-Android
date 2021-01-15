@@ -14,7 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 
 @InternalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {

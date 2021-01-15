@@ -289,7 +289,6 @@ Language: fr
     <string name="gutenberg_native_gradient_type">Type de dégradé</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Touchez deux fois pour sélectionner l’option</string>
     <string name="gutenberg_native_customize_gradient">Personnaliser le dégradé</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Auteur de la page</string>
     <string name="photo_picker_use_gif">Utiliser ce GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniature n’a pas pu être chargée</string>
@@ -325,7 +324,6 @@ Language: fr
     <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Essayer une mise en page de démarrage</string>
     <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille du bas avec des options disponibles</string>
@@ -333,8 +331,6 @@ Language: fr
     <string name="pages_cannot_be_started">Impossible d’ouvrir des pages pour le moment. Réessayez ultérieurement.</string>
     <string name="pages_set_as_posts_page">Définir comme page d’articles</string>
     <string name="pages_set_as_homepage">Définir comme page d’accueil</string>
-    <string name="suggestion_no_matching_users">« Aucun utilisateur correspondant disponible. »</string>
-    <string name="suggestion_invalid_user">« %s n’est pas un utilisateur valide »</string>
     <string name="site_settings_select_page">Sélectionner une page</string>
     <string name="site_settings_posts_page">Page des articles</string>
     <string name="site_settings_static_homepage">Page d’accueil statique</string>
@@ -507,7 +503,6 @@ Language: fr
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
     <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Sélectionné</string>
     <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_title_subs">Gérer les sujets et les sites</string>
@@ -584,7 +579,6 @@ Language: fr
     <string name="suffix_1_000_000_000_000">%s billion</string>
     <string name="suffix_1_000_000_000">%s milliard</string>
     <string name="suffix_1_000_000">%s million</string>
-    <string name="suffix_1_000">%s mille</string>
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="site_cannot_be_loaded">Nous ne pouvons pas charger les données de votre site pour le moment. Réessayez ultérieurement.</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliothèque des médias WordPress</string>
@@ -1219,14 +1213,8 @@ Language: fr
     <string name="support_contact_email">E-mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
-    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %1$s à %2$s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
-    <string name="activity_log_rewind_site">Retour en arrière du site</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
-    <string name="activity_log_currently_restoring_message">Retour en arrière de %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto-géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article pour le consulter de nouveau quand vous le désirez. Il ne sera disponible que sur cet appareil. En effet, la synchronisation entre appareils n\'est pas disponible pour les articles enregistrés.</string>
@@ -1269,7 +1257,6 @@ Language: fr
     <string name="reader_btn_notifications_on">Activer les notifications de site</string>
     <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
-    <string name="rewind">Rembobiner</string>
     <string name="activity_log_event">Événement</string>
     <string name="activity_log_icon">Icône d\'activité</string>
     <string name="activity_log">Journal d\'activités</string>

@@ -5,7 +5,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 enum class RestoreStep(val id: Int) : WizardStep {
-    DETAILS(0), WARNING(1), PROGRESS(1), COMPLETE(2);
+    DETAILS(0), WARNING(1), PROGRESS(2), COMPLETE(3);
 
     companion object {
         fun fromString(input: String): RestoreStep = when (input) {

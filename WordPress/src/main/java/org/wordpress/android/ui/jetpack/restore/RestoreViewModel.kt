@@ -13,7 +13,10 @@ import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
+import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
@@ -33,9 +36,9 @@ data class RestoreState(
     val siteId: Long? = null,
     val activityId: String? = null,
     val rewindId: String? = null,
+    val optionsSelected: List<Pair<Int, Boolean>>? = null,
     val restoreId: Long? = null,
     val published: Date? = null,
-    val url: String? = null,
     val errorType: Int? = null
 ) : WizardState, Parcelable
 
@@ -71,6 +74,9 @@ class RestoreViewModel @Inject constructor(
 
     private val _navigationEvents = MediatorLiveData<Event<RestoreNavigationEvents>>()
     val navigationEvents: LiveData<Event<RestoreNavigationEvents>> = _navigationEvents
+
+    private val _onBackPressedObservable = MutableLiveData<Unit>()
+    val onBackPressedObservable: LiveData<Unit> = _onBackPressedObservable
 
     fun start(savedInstanceState: Bundle?) {
         if (isStarted) return
@@ -108,6 +114,10 @@ class RestoreViewModel @Inject constructor(
             DETAILS.id -> {
                 _wizardFinishedObservable.value = Event(RestoreCanceled)
             }
+            WARNING.id -> {
+                wizardManager.onBackPressed()
+                _onBackPressedObservable.value = Unit
+            }
         }
     }
 
@@ -116,17 +126,28 @@ class RestoreViewModel @Inject constructor(
             restoreState = restoreState.copy(
                     rewindId = null,
                     restoreId = null,
-                    url = null,
-                    errorType = null
+                    errorType = null,
+                    optionsSelected = null,
+                    published = null
             )
         }
     }
 
-    fun onRestoreDetailsFinished(rewindId: String?, restoreId: Long?, published: Date) {
+    fun onRestoreDetailsFinished(
+        rewindId: String?,
+        optionsSelected: List<Pair<Int, Boolean>>?,
+        published: Date?
+    ) {
         restoreState = restoreState.copy(
                 rewindId = rewindId,
-                restoreId = restoreId,
-                published = published)
+                optionsSelected = optionsSelected,
+                published = published
+        )
+        wizardManager.showNextStep()
+    }
+
+    fun onRestoreWarningFinished(rewindId: String?, restoreId: Long?) {
+        restoreState = restoreState.copy(rewindId = rewindId, restoreId = restoreId)
         wizardManager.showNextStep()
     }
 
@@ -134,9 +155,15 @@ class RestoreViewModel @Inject constructor(
         _wizardFinishedObservable.value = Event(RestoreCanceled)
     }
 
-    fun onRestoreProgressFinished(url: String?) {
-        restoreState = restoreState.copy(url = url)
-        wizardManager.showNextStep()
+    fun onProgressExit(restoreId: Long) {
+        restoreState = restoreState.copy(restoreId = restoreId)
+        _wizardFinishedObservable.value = Event(RestoreInProgress(restoreId))
+    }
+
+    fun onRestoreProgressFinished() {
+        // todo: annmarie remove first line & uncomment nextStep
+        _wizardFinishedObservable.value = Event(RestoreCompleted)
+        // wizardManager.showNextStep()
     }
 
     fun setToolbarState(toolbarState: ToolbarState) {
@@ -167,6 +194,16 @@ class RestoreViewModel @Inject constructor(
         data class DetailsToolbarState(
             @StringRes override val title: Int = R.string.restore_details_page_title,
             @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
+        ) : ToolbarState()
+
+        data class WarningToolbarState(
+            @StringRes override val title: Int = R.string.restore_warning_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
+
+        data class ProgressToolbarState(
+            @StringRes override val title: Int = R.string.restore_progress_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }
 }

@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: eu_ES
 -->
 <resources>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000">%sB</string>

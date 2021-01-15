@@ -154,6 +154,10 @@ class BackupDownloadViewModel @Inject constructor(
         _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
     }
 
+    fun onBackupDownloadProgressExit() {
+        _wizardFinishedObservable.value = Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
+    }
+
     fun onBackupDownloadProgressFinished(url: String?) {
         backupDownloadState = backupDownloadState.copy(url = url)
         wizardManager.showNextStep()
