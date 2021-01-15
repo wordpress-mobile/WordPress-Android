@@ -32,7 +32,6 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
     fun setup() = test {
         useCase = IgnoreThreatUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(scanStore.ignoreThreat(any())).thenReturn(OnIgnoreThreatStarted(IGNORE_THREAT))
     }
 
     @Test
@@ -57,6 +56,8 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when ignore threat is triggered, then Success is returned on success`() = test {
+        whenever(scanStore.ignoreThreat(any())).thenReturn(OnIgnoreThreatStarted(IGNORE_THREAT))
+
         val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
 
         assertThat(result).isEqualTo(Success)
