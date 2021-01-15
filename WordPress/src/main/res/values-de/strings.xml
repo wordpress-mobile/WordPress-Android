@@ -1,11 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-04 14:48:49+0000
+Translation-Revision-Date: 2021-01-12 18:47:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="jetpack_icon_content_description">Icon</string>
+    <string name="backup_download_complete_info">Wir haben dir auch einen Link zu deiner Datei per E-Mail geschickt.</string>
+    <string name="backup_download_complete_download_action_button_content_description">Download-Button</string>
+    <string name="backup_download_complete_download_action_button">Herunterladen</string>
+    <string name="backup_download_complete_header">Du kannst dein Backup nun herunterladen</string>
+    <string name="backup_download_complete_page_title">Dein Backup</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_page_title">Backup herunterladen</string>
+    <string name="backup_download_generic_failure">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
+    <string name="suggestion_user">Benutzer</string>
+    <string name="threat_ignore">Bedrohung ignorieren</string>
+    <string name="threat_fix">Bedrohung beheben</string>
+    <string name="threat_get_free_estimate">Kostenloses Angebot einholen</string>
+    <string name="threats_fix_all">Alles beheben</string>
+    <string name="scan_in_few_seconds">in wenigen Sekunden</string>
+    <string name="scan_this_site">diese Website</string>
+    <string name="scan_in_hours_ago">vor %s Stunden</string>
+    <string name="scan_in_minutes_ago">vor %s Minuten</string>
+    <string name="threats_found">Bedrohungen gefunden</string>
+    <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
+    <string name="threat_item_header_infected_core_file">%s: infizierte Core-Dateien</string>
+    <string name="backup">Backup</string>
+    <string name="scan_now">Jetzt scannen</string>
+    <string name="scan_again">Erneut scannen</string>
+    <string name="scan_scanning_title">Scannen wird vorbereitet</string>
+    <string name="scan_idle_no_threats_found_title">Mach dir keine Sorgen</string>
+    <string name="scan_idle_threats_found_title">Deine Website ist möglicherweise gefährdet</string>
+    <string name="activity_log_active_filter_empty_title">Keine passenden Ereignisse gefunden</string>
+    <string name="rewind">Wiederherstellen</string>
     <string name="backup_item_sqls">Website-Datenbank (SQL)</string>
     <string name="backup_item_media_uploads">Medien-Uploads</string>
     <string name="backup_item_themes">WordPress-Themes</string>
@@ -20,11 +49,9 @@ Language: de
     <string name="gutenberg_native_error">Fehler</string>
     <string name="backup_download_details_page_title">Backup herunterladen</string>
     <string name="backup_download_details_header">Herunterladbares Backup erstellen</string>
-    <string name="backup_download_details_description">%1$s ist der ausgewählte Punkt, um ein herunterladbares Backup zu erstellen.</string>
     <string name="backup_download">Backup-Download</string>
     <string name="backup_download_details_choose_items_header">Wähle die Elemente aus, die du in den Download aufnehmen möchtest:</string>
     <string name="backup_download_details_action_button">Herunterladbare Datei erstellen</string>
-    <string name="activity_log_date_range_filter_label">Zeitraum</string>
     <string name="button_copy">Duplizieren</string>
     <string name="activity_log_activity_type_filter_header">Nach Aktivitätstyp filtern</string>
     <string name="dialog_confirm_copy_local_copy_button">Die Version von dieser App kopieren</string>
@@ -314,7 +341,6 @@ Language: de
     <string name="gutenberg_native_gradient_type">Verlaufstyp</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Zum Auswählen der Option zweimal tippen</string>
     <string name="gutenberg_native_customize_gradient">Verlauf anpassen</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Seitenautor</string>
     <string name="photo_picker_use_gif">Dieses GIF verwenden</string>
     <string name="error_media_thumbnail_not_loaded">Medien-Vorschaubild konnte nicht geladen werden</string>
@@ -350,7 +376,6 @@ Language: de
     <string name="update_now">Jetzt aktualisieren</string>
     <string name="status_and_visibility">Status und Sichtbarkeit</string>
     <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_try_a_starter_layout">Probiere ein Layout für Neueinsteiger aus</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
@@ -361,8 +386,6 @@ Language: de
     <string name="pages_set_as_homepage">Als Homepage festlegen</string>
     <string name="pages_set_as_posts_page">Als Beitragsseite festlegen</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Die ausgewählte Homepage und die Seite für Beiträge können nicht identisch sein.</string>
-    <string name="suggestion_invalid_user">„%s ist ist kein gültiger Benutzer“</string>
-    <string name="suggestion_no_matching_users">„Keine passenden Benutzer verfügbar.“</string>
     <string name="pages_cannot_be_started">Wir können die Seiten momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_settings_static_homepage">Statische Seite</string>
     <string name="site_settings_homepage_settings">Homepage-Einstellungen</string>
@@ -493,6 +516,7 @@ Language: de
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mein Portfolio zeigt verschiedene Projekte, die im Laufe meiner Karriere entstanden sind. Meine Kontaktinformationen findest du unten. Setz dich mit mir in Verbindung.</string>
     <string name="gutenberg_native_only_show_excerpt">Nur Textauszug anzeigen</string>
     <string name="gutenberg_native_portfolio">Portfolio</string>
+    <string name="gutenberg_native_link_settings">Link-Einstellungen</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Lasst uns gemeinsam etwas aufbauen!</string>
     <string name="gutenberg_native_let_s_build_something_together">Lasst uns gemeinsam etwas aufbauen!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -533,7 +557,6 @@ Language: de
     <string name="reader_bottom_sheet_content_description">Wähle ein Schlagwort oder eine Website, ein Popup-Fenster aus</string>
     <string name="reader_btn_remove_filter_content_description">Entferne den aktuellen Filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Melde dich bei WordPress.com an</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Ausgewählt</string>
     <string name="reader_btn_select_filter_content_description">Wähle eine Website oder ein Schlagwort aus, um Beiträge zu filtern</string>
     <string name="reader_self_hosted_select_filter">Verwende den Filter-Button, um Beiträge zu bestimmten Themen zu finden</string>
     <string name="reader_title_subs">Themen und Websites verwalten</string>
@@ -1244,15 +1267,15 @@ Language: de
     <string name="support_contact_email">Kontakt-E-Mail-Adresse</string>
     <string name="application_log_button">Anwendungsprotokoll</string>
     <string name="my_tickets">Meine Tickets</string>
-    <string name="activity_log_rewind_site">Website zurücksetzen</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Zurücksetzung in Bearbeitung</string>
-    <string name="activity_log_currently_restoring_message">Wird zurückgesetzt auf %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %1$s um %2$s zurücksetzen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Wiederherstellung in Bearbeitung</string>
+    <string name="activity_log_rewind_site">Website wiederherstellen</string>
+    <string name="activity_log_currently_restoring_message">Wird wiederhergestellt auf %1$s %2$s</string>
+    <string name="activity_log_rewind_dialog_message">Bist du sicher, dass du deine Website auf %1$s um %2$s wiederherstellen willst? Damit werden alle Inhalte und Optionen, die seit diesem Zeitpunkt erstellt oder geändert wurden, entfernt.</string>
     <string name="activity_log_currently_restoring_title">Deine Website wird derzeit wiederhergestellt</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Deine Website wurde erfolgreich wiederhergestellt</string>
     <string name="activity_log_button">Aktions-Button für Aktivitätsprotokoll</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Deine Website wurde erfolgreich wiederhergestellt\nZurückgesetzt auf %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird zurückgesetzt auf %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Deine Website wurde erfolgreich wiederhergestellt\nWiederhergestellt auf %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Deine Website wird wiederhergestellt\nWird wiederhergestellt auf %1$s %2$s</string>
     <string name="plugin_auto_managed">Automatisch verwaltet</string>
     <string name="reader_save_posts_locally_dialog_message">Speichere diesen Beitrag, um ihn später zu lesen. Er wird nur auf diesem Gerät zur Verfügung stehen – gespeicherte Beiträge werden nicht mit deinen anderen Geräten synchronisiert.</string>
     <string name="reader_save_posts_locally_dialog_title">Beiträge für später speichern</string>
@@ -1294,7 +1317,6 @@ Language: de
     <string name="reader_btn_notifications_on">Website-Benachrichtigungen aktivieren</string>
     <string name="reader_btn_notifications_off">Website-Benachrichtigungen deaktivieren</string>
     <string name="activity_log_jetpack_icon">Jetpack-Symbol</string>
-    <string name="rewind">Zurücksetzen</string>
     <string name="activity_log_event">Ereignis</string>
     <string name="activity_log_icon">Aktivitätssymbol</string>
     <string name="activity_log">Aktivitätsprotokoll</string>

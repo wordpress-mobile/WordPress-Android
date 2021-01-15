@@ -15,7 +15,6 @@ Language: sq_AL
     <string name="backup_download_details_icon_content_description">Krijoni ikonë kopjeruajtjesh të shkarkueshme</string>
     <string name="backup_download_details_action_button">Krijoni kartelë të shkarkueshme</string>
     <string name="backup_download_details_choose_items_header">Zgjidhni objektet që doni të përfshihen te shkarkimi:</string>
-    <string name="backup_download_details_description">%1$s është pika e përzgjedhur për krijim të një kopjeruajtjeje të shkarkueshme.</string>
     <string name="backup_download_details_header">Krijoni kopjeruajtje të shkarkueshme</string>
     <string name="backup_download_details_page_title">Shkarkoni Kopjeruatjen</string>
     <string name="backup_download">Shkarkim Kopjeruajtjeje</string>
@@ -23,8 +22,6 @@ Language: sq_AL
     <string name="gutenberg_native_choose_file">Zgjidhni kartelë</string>
     <string name="activity_log_item_menu_download_backup_label">Shkarko kopjeruajtje</string>
     <string name="activity_log_item_menu_restore_label">Riktheje në këtë pikë</string>
-    <string name="activity_log_activity_type_filter_label">Lloj veprimtarie</string>
-    <string name="activity_log_date_range_filter_label">Interval datash</string>
     <string name="activity_log_activity_type_filter_header">Filtroji sipas Llojesh Veprimtarie</string>
     <string name="dialog_confirm_copy_local_copy_button">Zgjidhni versionin prej këtij aplikacioni</string>
     <string name="dialog_confirm_copy_local_edit_button">Përpunoni postimin së pari</string>
@@ -312,7 +309,6 @@ Language: sq_AL
     <string name="gutenberg_native_gradient_type">Lloj Gradienti</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Që të përzgjidhni mundësinë, prekeni dyfish</string>
     <string name="gutenberg_native_customize_gradient">Përshtatni Gradientë</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor faqeje</string>
     <string name="photo_picker_use_gif">Përdor këtë GIF</string>
     <string name="error_media_thumbnail_not_loaded">S’u ngarkua dot miniaturë mediash</string>
@@ -348,7 +344,6 @@ Language: sq_AL
     <string name="ccpa_privacy_notice_header">Shënim mbi privatësinë për përdorues në Kaliforni</string>
     <string name="status_and_visibility">Gjendje &amp; Dukshmëri</string>
     <string name="update_now">Përditësojeni Tani</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Provoni një skemë sa për fillim</string>
     <string name="gutenberg_native_open_block_actions_menu">Hap Menu Veprimesh Blloqesh</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Prekeni dyfish që të hapet Fleta e Poshtme me mundësitë e gatshme</string>
@@ -356,8 +351,6 @@ Language: sq_AL
     <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
     <string name="pages_set_as_posts_page">Caktojeni Faqe Postimesh</string>
     <string name="pages_set_as_homepage">Caktojeni si Faqen hyrëse</string>
-    <string name="suggestion_no_matching_users">\"S’ka përdorues me përputhje.\"</string>
-    <string name="suggestion_invalid_user">\"%s s’është përdorues i vlefshëm\"</string>
     <string name="site_settings_select_page">Përzgjidhe Faqen</string>
     <string name="site_settings_posts_page">Faqe Postimesh</string>
     <string name="site_settings_static_homepage">Faqe Hyrëse Statike</string>
@@ -530,7 +523,6 @@ Language: sq_AL
     <string name="stats_management_add_new_stats_card">Shtoni kartë të re statistikash</string>
     <string name="reader_self_hosted_select_filter">Përdorni butonin e filtrave që të gjeni postime rreth subjektesh specifike</string>
     <string name="reader_bottom_sheet_content_description">Përzgjidhni një Etiketë ose Sajt, Dritare Flluskë</string>
-    <string name="reader_btn_selected_filter_tick_content_description">E përzgjedhur</string>
     <string name="reader_btn_select_filter_content_description">Përzgjidhni një Sajt ose Etiketë që të filtrohen postime</string>
     <string name="reader_btn_remove_filter_content_description">Hiqe filtrin e tanishme</string>
     <string name="reader_title_subs">Administroni Tema &amp; Sajte</string>
@@ -607,7 +599,6 @@ Language: sq_AL
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">S’i hapim dot postimet tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
@@ -1242,14 +1233,8 @@ Language: sq_AL
     <string name="support_contact_email">Email kontaktesh</string>
     <string name="application_log_button">Regjistër aplikacioni</string>
     <string name="my_tickets">Çështjet e Mia</string>
-    <string name="activity_log_rewind_dialog_message">Jeni i sigurt se doni të rikthehet sajti juaj në %1$s më %2$s? Kjo të sjellë heqjen e krejt lëndës së krijuar apo ndryshuar dhe mundësive të ndryshuara që nga ajo datë.</string>
-    <string name="activity_log_rewind_site">Riktheni Sajtin Në Një Datë të Dikurshme</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rikthim në ecuri e sipër</string>
-    <string name="activity_log_currently_restoring_message">Po rikthehet te %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sajti juaj po rikthehet</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Sajti juaj u rikthye me sukses</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Sajti juaj u rikthye me sukses\nU rikthye te %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Sajti juaj po rikthehet\nRikthim te %1$s %2$s</string>
     <string name="activity_log_button">Buton veprimesh Regjistri Veprimtarie</string>
     <string name="plugin_auto_managed">E vetëadministruar</string>
     <string name="reader_save_posts_locally_dialog_message">Ruajeni këtë postim, dhe rikthejuni leximit kur të doni. Do ta keni vetëm në këtë pajisje — postimet e ruajtur nuk njëkohësohen në pajisje të tjera.</string>
@@ -1292,7 +1277,6 @@ Language: sq_AL
     <string name="reader_btn_notifications_on">Aktivizoni njoftime sajti</string>
     <string name="reader_btn_notifications_off">Çaktivizoni njoftime sajti</string>
     <string name="activity_log_jetpack_icon">Ikonë Jetpack</string>
-    <string name="rewind">Rikthim</string>
     <string name="activity_log_event">Veprimtari</string>
     <string name="activity_log_icon">Ikonë veprimtarie</string>
     <string name="activity_log">Regjistër Veprimtarish</string>

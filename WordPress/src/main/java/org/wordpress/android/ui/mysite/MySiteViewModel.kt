@@ -49,6 +49,8 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -133,12 +135,14 @@ class MySiteViewModel
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
+    private val _onQuickStartMenuShown = MutableLiveData<Event<String>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
 
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
+    val onQuickStartMenuShown = _onQuickStartMenuShown as LiveData<Event<String>>
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
@@ -180,6 +184,30 @@ class MySiteViewModel
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
+
+            // TODO We should extract the code block below to a proper builder class once we implement the actual logic
+            val dummyTasks = (1..5).map { DummyTask("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
+            val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
+                    .sortedWith(compareBy(DummyTask::done).thenBy(DummyTask::id))
+            siteItems.add(
+                    QuickStartCard(
+                            "customize_your_site",
+                            "Customize your Site",
+                            dummyTasks,
+                            R.color.green_20,
+                            ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
+                    )
+            )
+            siteItems.add(
+                    QuickStartCard(
+                            "grow_your_audience",
+                            "Grow your Audience",
+                            dummyTasksCompleted,
+                            R.color.orange_40,
+                            ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
+                    )
+            )
+
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
                             site,
@@ -229,6 +257,10 @@ class MySiteViewModel
             }
             _onNavigation.postValue(Event(navigationAction))
         } ?: _onSnackbarMessage.postValue(Event(SnackbarMessageHolder(UiStringRes(R.string.site_cannot_be_loaded))))
+    }
+
+    private fun onQuickStartCardMoreClick(id: String) {
+        _onQuickStartMenuShown.postValue(Event(id))
     }
 
     private fun titleClick(selectedSite: SiteModel) {
