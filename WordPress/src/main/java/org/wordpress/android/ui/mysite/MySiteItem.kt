@@ -54,11 +54,9 @@ sealed class MySiteItem(val type: Type) {
         val title: UiStringRes,
         val tasks: List<QuickStartTaskItem>,
         @ColorRes val accentColor: Int,
+        val progress: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
-        val doneTasks = tasks.filter { it.done }
-        val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
-
         data class QuickStartTaskItem(
             val task: QuickStartTask,
             val title: UiString,
