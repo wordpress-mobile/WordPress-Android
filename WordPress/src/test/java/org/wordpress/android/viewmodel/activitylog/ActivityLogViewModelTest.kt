@@ -14,7 +14,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.runBlocking
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -43,9 +43,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
@@ -55,11 +53,14 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.RestoreFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -90,12 +91,12 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var dateUtils: DateUtils
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
-    private var rewindDialogs: MutableList<ActivityLogListItem?> = mutableListOf()
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private var snackbarMessages: MutableList<String?> = mutableListOf()
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
@@ -143,6 +144,8 @@ class ActivityLogViewModelTest {
             null
     )
 
+    private val rewindableOnly = false
+
     @Before
     fun setUp() = runBlocking<Unit> {
         viewModel = ActivityLogViewModel(
@@ -154,13 +157,14 @@ class ActivityLogViewModelTest {
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
+                restoreFeatureConfig,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
+        viewModel.rewindableOnly = rewindableOnly
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
         viewModel.showItemDetail.observeForever { itemDetails.add(it) }
-        viewModel.showRewindDialog.observeForever { rewindDialogs.add(it) }
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
@@ -169,7 +173,7 @@ class ActivityLogViewModelTest {
         formatDateRangeTimezoneCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
-        whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
         whenever(store.getRewindStatusForSite(site)).thenReturn(rewindStatusModel)
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
@@ -185,7 +189,7 @@ class ActivityLogViewModelTest {
         assertNull(viewModel.events.value)
         assertTrue(eventListStatuses.isEmpty())
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(
                 viewModel.events.value,
@@ -210,7 +214,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(
                 viewModel.events.value,
@@ -225,7 +229,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         reset(store)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
@@ -240,7 +244,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(
                 viewModel.events.value,
@@ -256,7 +260,7 @@ class ActivityLogViewModelTest {
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(
                 viewModel.events.value,
@@ -269,9 +273,9 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true, false)
-        val second = Event(activityLogList[1], true, false)
-        val third = Event(activityLogList[2], true, false)
+        val first = Event(activityLogList[0], true, false, false)
+        val second = Event(activityLogList[1], true, false, false)
+        val third = Event(activityLogList[2], true, false, false)
         activityLogListItems.add(Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
@@ -291,7 +295,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         reset(store)
 
@@ -306,7 +310,7 @@ class ActivityLogViewModelTest {
 
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertTrue(moveToTopEvents.isNotEmpty())
     }
@@ -317,9 +321,9 @@ class ActivityLogViewModelTest {
 
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
-        verify(store).getActivityLogForSite(site, false)
+        verify(store).getActivityLogForSite(site, rewindableOnly)
     }
 
     @Test
@@ -327,7 +331,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertTrue(events.last()?.get(0) is Header)
         assertTrue(events.last()?.get(3) is Header)
@@ -344,16 +348,14 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActionButtonClickShowsRewindDialog() {
-        assertTrue(rewindDialogs.isEmpty())
-
         viewModel.onActionButtonClicked(event)
 
-        assertEquals(rewindDialogs.firstOrNull(), event)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
     fun onRewindConfirmedTriggersRewindOperation() {
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
         val rewindId = "rewindId"
 
         viewModel.onRewindConfirmed(rewindId)
@@ -377,7 +379,7 @@ class ActivityLogViewModelTest {
     fun loadsNextPageOnScrollToBottom() = runBlocking {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
         reset(store)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
 
@@ -390,7 +392,7 @@ class ActivityLogViewModelTest {
     fun filtersAreNotVisibleWhenFiltersFeatureFlagIsDisabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
@@ -399,7 +401,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenFiltersFeatureFlagIsEnabled() = runBlocking {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -409,7 +411,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(false)
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -419,7 +421,7 @@ class ActivityLogViewModelTest {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(false, viewModel.filtersUiState.value!!.visibility)
     }
@@ -431,7 +433,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(SITE_ID))
                 .thenReturn(listOf(BACKUP))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -443,7 +445,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
                 .thenReturn(listOf(BACKUP_DAILY))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -455,7 +457,7 @@ class ActivityLogViewModelTest {
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong()))
                 .thenReturn(listOf(BACKUP_REALTIME))
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
 
         assertEquals(true, viewModel.filtersUiState.value!!.visibility)
     }
@@ -488,17 +490,17 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onSecondaryActionClickRestoreNavigationEventIsShowRestore() {
+    fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
         viewModel.onSecondaryActionClicked(RESTORE, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRestore::class.java)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
     fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
         viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
 
-        Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
     }
 
     @Test
@@ -509,7 +511,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(dateRange)
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action != null).isTrue
+        assertThat(action != null).isTrue
     }
 
     @Test
@@ -517,7 +519,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(null)
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
@@ -528,14 +530,14 @@ class ActivityLogViewModelTest {
         (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
     fun basicDateRangeLabelShownWhenFilterEmpty() {
         viewModel.onDateRangeSelected(null)
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
                 .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
     }
 
@@ -545,7 +547,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
                 .isEqualTo(UiStringText("TEST"))
     }
 
@@ -561,7 +563,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        Assertions.assertThat(formatDateRangeTimezoneCaptor.firstValue)
+        assertThat(formatDateRangeTimezoneCaptor.firstValue)
                 .isEqualTo(TIMEZONE_GMT_0)
     }
 
@@ -574,7 +576,7 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
         viewModel.dateRangePickerClicked()
 
-        Assertions.assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
+        assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
                 Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS)
         )
     }
@@ -584,7 +586,7 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action != null).isTrue
+        assertThat(action != null).isTrue
     }
 
     @Test
@@ -592,7 +594,7 @@ class ActivityLogViewModelTest {
         viewModel.onActivityTypesSelected(listOf())
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
@@ -604,14 +606,14 @@ class ActivityLogViewModelTest {
         (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
         val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
-        Assertions.assertThat(action == null).isTrue
+        assertThat(action == null).isTrue
     }
 
     @Test
     fun basicActivityTypeLabelShownWhenFilterEmpty() {
         viewModel.onActivityTypesSelected(listOf())
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
     }
 
@@ -621,8 +623,8 @@ class ActivityLogViewModelTest {
         val activityTypeCount = 5
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(UiStringText("$activityTypeName ($activityTypeCount)"))
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(UiStringText(activityTypeName))
     }
 
     @Test
@@ -634,7 +636,7 @@ class ActivityLogViewModelTest {
                 )
         )
 
-        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+        assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_active_label,
@@ -644,27 +646,46 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenFiltersAreEmpty() {
+    fun verifyActivityLogEmptyScreenTextsWhenFiltersAreEmpty() {
         viewModel.onClearDateRangeFilterClicked()
         viewModel.onClearActivityTypeFilterClicked()
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.EmptyFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.EmptyFilters)
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenDateRangeFilterSet() {
+    fun verifyActivityLogEmptyScreenTextsWhenDateRangeFilterSet() {
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
     }
 
     @Test
-    fun verifyEmptyScreenTextsWhenActivityTypeFilterSet() {
+    fun verifyActivityLogEmptyScreenTextsWhenActivityTypeFilterSet() {
         viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
-        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActivityLog.ActiveFilters)
+    }
+
+    @Test
+    fun verifyBackupEmptyScreenTextsWhenFilterIsEmpty() {
+        viewModel.rewindableOnly = true
+
+        viewModel.onClearDateRangeFilterClicked()
+
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.EmptyFilters)
+    }
+
+    @Test
+    fun verifyBackupEmptyScreenTextsWhenDateRangeFilterSet() {
+        viewModel.rewindableOnly = true
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(1L, 2L))
+
+        assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
@@ -686,7 +707,7 @@ class ActivityLogViewModelTest {
                 "", true, "", birthday.time
         )
         list.add(activity)
-        list.add(activity.copy())
+        list.add(activity.copy(rewindable = false))
 
         birthday.set(1987, 5, 26)
         list.add(activity.copy(published = birthday.time))
