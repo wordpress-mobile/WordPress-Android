@@ -83,6 +83,7 @@ android {
         buildConfigField "boolean", "BACKUP_AVAILABLE", "false"
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "UNREAD_POSTS_COUNT", "false"
+        buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using

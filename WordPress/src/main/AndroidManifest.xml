@@ -686,6 +686,12 @@
             android:label="@string/backup_download"
             android:theme="@style/WordPress.NoActionBar"/>
 
+        <!-- Jetpack restore -->
+        <activity
+            android:name=".ui.jetpack.restore.RestoreActivity"
+            android:label="@string/restore"
+            android:theme="@style/WordPress.NoActionBar"/>
+
         <!-- Services -->
         <service
             android:name=".ui.uploads.UploadService"
