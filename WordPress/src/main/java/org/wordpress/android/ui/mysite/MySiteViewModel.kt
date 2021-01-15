@@ -192,6 +192,7 @@ class MySiteViewModel
                         id = "dummy_task_$it",
                         title = "Dummy Task $it",
                         description = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
+                        illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
                         accentColor = R.color.green_20,
                         done = it > 4,
                         onClick = ListItemInteraction.create("dummy_task_$it", this::onQuickStartTaskCardClick)

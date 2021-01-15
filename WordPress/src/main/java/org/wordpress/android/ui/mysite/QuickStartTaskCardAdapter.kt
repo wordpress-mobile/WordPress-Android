@@ -35,6 +35,7 @@ class QuickStartTaskCardAdapter : Adapter<QuickStartTaskCardViewHolder>() {
         fun bind(taskCard: QuickStartTaskCard) = itemView.apply {
             task_card_title.text = taskCard.title
             task_card_description.text = taskCard.description
+            task_card_illustration.setImageResource(taskCard.illustration)
 
             task_card_view.apply {
                 checkedIconTint = ContextCompat.getColorStateList(context, taskCard.accentColor)

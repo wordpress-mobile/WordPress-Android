@@ -61,6 +61,7 @@ sealed class MySiteItem(val type: Type) {
             val id: String,
             val title: String,
             val description: String,
+            @DrawableRes val illustration: Int,
             @ColorRes val accentColor: Int,
             val done: Boolean = false,
             val onClick: ListItemInteraction
