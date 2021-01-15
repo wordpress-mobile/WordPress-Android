@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -10,6 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import kotlin.math.roundToInt
 
 sealed class MySiteItem(val type: Type) {
@@ -49,18 +51,18 @@ sealed class MySiteItem(val type: Type) {
 
     data class QuickStartCard(
         val id: String,
-        val title: String,
-        val tasks: List<DummyTask>,
+        val title: UiStringRes,
+        val tasks: List<QuickStartTaskItem>,
         @ColorRes val accentColor: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
         val doneTasks = tasks.filter { it.done }
         val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
 
-        data class DummyTask(
-            val id: String,
-            val title: String,
-            val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
+        data class QuickStartTaskItem(
+            val task: QuickStartTask,
+            val title: UiString,
+            val description: UiString,
             val done: Boolean = false
         )
     }

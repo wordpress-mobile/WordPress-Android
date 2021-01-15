@@ -25,17 +25,19 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.DummyTaskAdapter.DummyTaskViewHolder
+import org.wordpress.android.ui.mysite.QuickStartTaskAdapter.QuickStartTaskViewHolder
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskItem
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 
 class QuickStartCardViewHolder(
     parent: ViewGroup,
     private val viewPool: RecycledViewPool,
-    private val nestedScrollStates: Bundle
+    private val nestedScrollStates: Bundle,
+    private val uiHelpers: UiHelpers
 ) : MySiteItemViewHolder(parent, R.layout.quick_start_card) {
     private var currentItem: QuickStartCard? = null
     private val lowEmphasisAlpha = ResourcesCompat.getFloat(itemView.resources, R.dimen.emphasis_low)
@@ -44,7 +46,7 @@ class QuickStartCardViewHolder(
         itemView.apply {
             quick_start_card_more_button.let { TooltipCompat.setTooltipText(it, it.contentDescription) }
             quick_start_card_recycler_view.apply {
-                adapter = DummyTaskAdapter()
+                adapter = QuickStartTaskAdapter(uiHelpers)
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
                 addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 10), 0))
@@ -79,8 +81,8 @@ class QuickStartCardViewHolder(
             quick_start_card_progress.progressDrawable = progressDrawable
         }
 
-        quick_start_card_title.text = item.title
-        (quick_start_card_recycler_view.adapter as? DummyTaskAdapter)?.loadData(item.tasks)
+        uiHelpers.setTextOrHide(quick_start_card_title, item.title)
+        (quick_start_card_recycler_view.adapter as? QuickStartTaskAdapter)?.loadData(item.tasks)
         restoreScrollState(quick_start_card_recycler_view, item.id)
         quick_start_card_more_button.setOnClickListener { item.onMoreClick?.click() }
     }
@@ -106,29 +108,29 @@ class QuickStartCardViewHolder(
     }
 }
 
-class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
-    private var items = listOf<DummyTask>()
+class QuickStartTaskAdapter(private val uiHelpers: UiHelpers) : Adapter<QuickStartTaskViewHolder>() {
+    private var items = listOf<QuickStartTaskItem>()
 
-    fun loadData(newItems: List<DummyTask>) {
-        val diffResult = DiffUtil.calculateDiff(DummyTaskAdapterDiffCallback(items, newItems))
+    fun loadData(newItems: List<QuickStartTaskItem>) {
+        val diffResult = DiffUtil.calculateDiff(QuickStartTaskAdapterDiffCallback(items, newItems))
         items = newItems
         diffResult.dispatchUpdatesTo(this)
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = DummyTaskViewHolder(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = QuickStartTaskViewHolder(
             LayoutInflater.from(parent.context).inflate(R.layout.quick_start_task_card, parent, false)
     )
 
-    override fun onBindViewHolder(holder: DummyTaskViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: QuickStartTaskViewHolder, position: Int) {
         holder.bind(items[position])
     }
 
     override fun getItemCount() = items.size
 
-    inner class DummyTaskViewHolder(itemView: View) : ViewHolder(itemView) {
-        fun bind(task: DummyTask) = itemView.apply {
-            dummy_task_title.text = task.title
-            dummy_task_description.text = task.description
+    inner class QuickStartTaskViewHolder(itemView: View) : ViewHolder(itemView) {
+        fun bind(task: QuickStartTaskItem) = itemView.apply {
+            uiHelpers.setTextOrHide(dummy_task_title, task.title)
+            uiHelpers.setTextOrHide(dummy_task_description, task.description)
 
             val alpha = if (task.done) 0.2f else 1.0f
             dummy_task_title.alpha = alpha
@@ -137,16 +139,16 @@ class DummyTaskAdapter : Adapter<DummyTaskViewHolder>() {
         }
     }
 
-    inner class DummyTaskAdapterDiffCallback(
-        private val oldItems: List<DummyTask>,
-        private val newItems: List<DummyTask>
+    inner class QuickStartTaskAdapterDiffCallback(
+        private val oldItems: List<QuickStartTaskItem>,
+        private val newItems: List<QuickStartTaskItem>
     ) : DiffUtil.Callback() {
         override fun getOldListSize() = oldItems.size
 
         override fun getNewListSize() = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldItems[oldItemPosition].id == newItems[newItemPosition].id
+                oldItems[oldItemPosition].task == newItems[newItemPosition].task
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
                 oldItems[oldItemPosition] == newItems[newItemPosition]
