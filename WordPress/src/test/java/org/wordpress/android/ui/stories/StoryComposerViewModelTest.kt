@@ -109,16 +109,20 @@ class StoryComposerViewModelTest : BaseUnitTest() {
         // arrange
         val postEditorAnalyticsSession: PostEditorAnalyticsSession? = null
         whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(mock())
+
+        whenever(
                 postEditorAnalyticsSessionWrapper.getNewPostEditorAnalyticsSession(
                         any(),
-                        anyOrNull(),
+                        any(),
                         anyOrNull(),
                         any()
                 )
         ).thenReturn(mock())
 
         // act
-        viewModel.start(site, editPostRepository, LocalId(0), postEditorAnalyticsSession, mock())
+        viewModel.start(site, editPostRepository, LocalId(1), postEditorAnalyticsSession, mock())
 
         // assert
         verify(postEditorAnalyticsSessionWrapper, times(1)).getNewPostEditorAnalyticsSession(
@@ -248,5 +252,33 @@ class StoryComposerViewModelTest : BaseUnitTest() {
 
         // assert
         assertThat(viewModel.mediaFilesUris).isNotNull
+    }
+
+    @Test
+    fun `if editPostRepository does not have a post then vm start() returns false`() {
+        // arrange
+        whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(null)
+
+        // act
+        val result = viewModel.start(site, editPostRepository, LocalId(2), mock(), mock())
+
+        // assert
+        assertThat(result).isFalse()
+    }
+
+    @Test
+    fun `if editPostRepository does have a post then vm start() returns true`() {
+        // arrange
+        whenever(
+                postStore.getPostByLocalPostId(any())
+        ).thenReturn(mock())
+
+        // act
+        val result = viewModel.start(site, editPostRepository, LocalId(2), mock(), mock())
+
+        // assert
+        assertThat(result).isTrue()
     }
 }
