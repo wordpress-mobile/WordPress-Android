@@ -22,11 +22,11 @@
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/task_card_illustration"
             android:layout_width="match_parent"
-            android:layout_height="@dimen/quick_start_task_card_illustration_height"
+            android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:src="@drawable/bg_rectangle_placeholder_radius_4dp"
             app:shapeAppearance="@style/ShapeAppearance.QuickStartTaskCardIllustration"
-            tools:ignore="ContentDescription" />
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/img_illustration_quick_start_task_set_site_title" />
 
         <TextView
             android:id="@+id/task_card_title"
