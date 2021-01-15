@@ -60,7 +60,7 @@ sealed class MySiteItem(val type: Type) {
         data class QuickStartTaskCard(
             val id: String,
             val title: String,
-            val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
+            val description: String,
             @ColorRes val accentColor: Int,
             val done: Boolean = false,
             val onClick: ListItemInteraction
