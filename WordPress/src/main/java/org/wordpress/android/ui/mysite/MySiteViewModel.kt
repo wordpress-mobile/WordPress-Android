@@ -187,28 +187,78 @@ class MySiteViewModel
             }
 
             // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val dummyTaskCards1 = (1..5).map {
+            val customizeYourSiteSampleTaskCards = listOf(
+                    QuickStartTaskCard(
+                            id = "set_site_title",
+                            title = UiStringRes(R.string.quick_start_list_update_site_title_title),
+                            description = UiStringRes(R.string.quick_start_list_update_site_title_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_set_site_title,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("set_site_title", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "edit_site_icon",
+                            title = UiStringRes(R.string.quick_start_list_upload_icon_title),
+                            description = UiStringRes(R.string.quick_start_list_upload_icon_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("edit_site_icon", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "edit_your_homepage",
+                            title = UiStringText("Edit your homepage"),
+                            description = UiStringText("Change, add, or remove content from your site's homepage."),
+                            illustration = R.drawable.img_illustration_quick_start_task_edit_your_homepage,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("edit_your_homepage", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "review_site_pages",
+                            title = UiStringText("Review site pages"),
+                            description = UiStringText("Change, add, or remove your site's pages."),
+                            illustration = R.drawable.img_illustration_quick_start_task_review_site_pages,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("review_site_pages", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "visit_your_site",
+                            title = UiStringRes(R.string.quick_start_list_view_site_title),
+                            description = UiStringRes(R.string.quick_start_list_view_site_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("visit_your_site", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "sample_done_task",
+                            title = UiStringText("Sample done task"),
+                            description = UiStringText("This is a sample task that has been completed."),
+                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
+                            accentColor = R.color.green_20,
+                            done = true,
+                            onClick = ListItemInteraction.create("sample_done_task", this::onQuickStartTaskCardClick)
+                    )
+            )
+            val dummyTaskCards = (1..5).map {
                 QuickStartTaskCard(
                         id = "dummy_task_$it",
                         title = UiStringText("Dummy Task $it"),
                         description = UiStringText("Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat."),
                         illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
-                        accentColor = R.color.green_20,
-                        done = it > 4,
+                        accentColor = R.color.orange_40,
+                        done = it % 2 == 0,
                         onClick = ListItemInteraction.create("dummy_task_$it", this::onQuickStartTaskCardClick)
                 )
-            }.toList()
-            val dummyTaskCards2 = dummyTaskCards1.mapIndexed { i, task ->
-                task.copy(
-                        accentColor = R.color.orange_40,
-                        done = i % 2 == 0
-                )
-            }.sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id))
+            }.sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id)).toList()
             siteItems.add(
                     QuickStartCard(
                             "customize_your_site",
                             UiStringText("Customize your Site"),
-                            dummyTaskCards1,
+                            customizeYourSiteSampleTaskCards,
                             R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
                     )
@@ -217,7 +267,7 @@ class MySiteViewModel
                     QuickStartCard(
                             "grow_your_audience",
                             UiStringText("Grow your Audience"),
-                            dummyTaskCards2,
+                            dummyTaskCards,
                             R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
                     )
