@@ -90,16 +90,6 @@ class ScanViewModel @Inject constructor(
     private fun fixAllThreats() { // TODO ashiagr to be implemented
     }
 
-    private fun buildContentUiState(model: ScanStateModel) = Content(
-        scanStateListItemsBuilder.buildScanStateListItems(
-            model,
-            site,
-            this@ScanViewModel::onScanButtonClicked,
-            this@ScanViewModel::onFixAllButtonClicked,
-            this@ScanViewModel::onThreatItemClicked
-        )
-    )
-
     private fun onScanButtonClicked() {
         startScan()
     }
@@ -128,6 +118,16 @@ class ScanViewModel @Inject constructor(
     private fun updateUiState(contentState: Content) {
         _uiState.value = contentState
     }
+
+    private fun buildContentUiState(model: ScanStateModel) = Content(
+        scanStateListItemsBuilder.buildScanStateListItems(
+            model,
+            site,
+            this@ScanViewModel::onScanButtonClicked,
+            this@ScanViewModel::onFixAllButtonClicked,
+            this@ScanViewModel::onThreatItemClicked
+        )
+    )
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
         data class Content(val items: List<JetpackListItemState>) : UiState()
