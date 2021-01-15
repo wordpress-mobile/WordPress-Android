@@ -96,6 +96,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
+    private lateinit var quickStartMenuViewModel: QuickStartMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,6 +104,8 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
+        quickStartMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(QuickStartMenuViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -203,8 +206,9 @@ class ImprovedMySiteFragment : Fragment(),
         })
         viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { id ->
-                // TODO Show bottom sheet menu
-                showToast(context, id)
+                ((parentFragmentManager.findFragmentByTag(id) as? QuickStartMenuFragment)
+                        ?: QuickStartMenuFragment.newInstance(id))
+                        .show(parentFragmentManager, id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
@@ -275,6 +279,10 @@ class ImprovedMySiteFragment : Fragment(),
         })
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
+        })
+        quickStartMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
+            // TODO Handle Quick Start menu interaction
+            it?.getContentIfNotHandled()?.let { interaction -> showToast(context, interaction.toString()) }
         })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->

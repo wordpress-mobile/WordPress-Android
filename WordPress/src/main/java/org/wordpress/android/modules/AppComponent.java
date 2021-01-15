@@ -76,6 +76,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.QuickStartMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -654,6 +655,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(RestoreProgressFragment object);
 
     void inject(RestoreCompleteFragment object);
+
+    void inject(QuickStartMenuFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
