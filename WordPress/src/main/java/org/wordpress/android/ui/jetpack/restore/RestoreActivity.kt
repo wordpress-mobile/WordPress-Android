@@ -9,6 +9,7 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.restore_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
@@ -18,12 +19,12 @@ import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
+import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteFragment
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsFragment
 import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressFragment
 import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -88,10 +89,7 @@ class RestoreActivity : LocaleAwareActivity() {
 
         viewModel.errorEvents.observe(this, {
             it?.applyIfNotHandled {
-                // todo: annmarie uncomment when complete step has been added & remove other
-                // viewModel.transitionToError(this)
-                ToastUtils.showToast(this@RestoreActivity, "Error - closing wizard")
-                finish()
+                viewModel.transitionToError(this)
             }
         })
 
@@ -112,9 +110,7 @@ class RestoreActivity : LocaleAwareActivity() {
         viewModel.navigationEvents.observe(this, {
             it.applyIfNotHandled {
                 when (this) {
-                    is VisitSite -> {
-                        // todo annmarie add to ActivityLauncher
-                    }
+                    is VisitSite -> ActivityLauncher.openUrlExternal(this@RestoreActivity, url)
                 }
             }
         })
@@ -147,8 +143,7 @@ class RestoreActivity : LocaleAwareActivity() {
             DETAILS -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
             WARNING -> RestoreWarningFragment.newInstance(intent?.extras, target.wizardState)
             PROGRESS -> RestoreProgressFragment.newInstance(intent?.extras, target.wizardState)
-            // todo: annmarie add fragments as they become available
-            COMPLETE -> RestoreDetailsFragment.newInstance(intent?.extras, target.wizardState)
+            COMPLETE -> RestoreCompleteFragment.newInstance(intent?.extras, target.wizardState)
         }
 
         slideInFragment(fragment, target.wizardStep.toString())

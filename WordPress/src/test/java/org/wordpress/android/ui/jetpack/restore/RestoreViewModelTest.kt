@@ -18,9 +18,12 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
 import org.wordpress.android.util.wizard.WizardManager
@@ -132,6 +135,15 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given in progress step, when finished, then process moves to next step`() {
+        viewModel.start(null)
+        clearInvocations(wizardManager)
+
+        viewModel.onRestoreProgressFinished()
+        verify(wizardManager).showNextStep()
+    }
+
+    @Test
     fun `given in progress step, when onBackPressed, then invokes wizard finished with RestoreInProgress`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
         viewModel.start(null)
@@ -142,6 +154,18 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.onBackPressed()
 
         assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreInProgress::class.java)
+    }
+
+    @Test
+    fun `given in complete step, when onBackPressed, then invokes wizard finished with RestoreCompleted`() {
+        val wizardFinishedObserver = initObservers().wizardFinishedObserver
+        viewModel.start(null)
+        clearInvocations(wizardManager)
+
+        whenever(wizardManager.currentStep).thenReturn(RestoreStep.COMPLETE.id)
+        viewModel.onBackPressed()
+
+        assertThat(wizardFinishedObserver.last()).isInstanceOf(RestoreCompleted::class.java)
     }
 
     @Test
@@ -194,6 +218,27 @@ class RestoreViewModelTest : BaseUnitTest() {
         viewModel.setToolbarState(ProgressToolbarState())
 
         assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+
+        viewModel.start(null)
+
+        viewModel.setToolbarState(CompleteToolbarState())
+
+        assertThat(toolbarStates.last()).isInstanceOf(CompleteToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete error step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+        viewModel.start(null)
+
+        viewModel.setToolbarState(ErrorToolbarState())
+
+        assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test
