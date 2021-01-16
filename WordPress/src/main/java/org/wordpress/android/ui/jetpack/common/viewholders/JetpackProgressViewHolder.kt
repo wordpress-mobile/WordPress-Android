@@ -6,6 +6,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.setVisible
 
 class JetpackProgressViewHolder(
     private val uiHelpers: UiHelpers,
@@ -13,6 +14,15 @@ class JetpackProgressViewHolder(
 ) : JetpackViewHolder(R.layout.backup_list_progress_item, parent) { // TODO ashiagr replace layout
     override fun onBind(itemUiState: JetpackListItemState) {
         val state = itemUiState as ProgressState
-        progress_label.text = uiHelpers.getTextOfUiString(itemView.context, state.label)
+        with(progress_label) {
+            setVisible(state.isLabelVisible)
+            text = uiHelpers.getTextOfUiString(itemView.context, state.label)
+        }
+
+        with(progress_bar) {
+            setVisible(state.isVisible)
+            isIndeterminate = state.isIndeterminate
+            progress = state.progress
+        }
     }
 }
