@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
@@ -74,7 +75,11 @@ class SubFilterViewModelTest {
                 readerTracker
         )
 
-        viewModel.start(initialTag, any(), json)
+        val bundle = Bundle()
+        bundle.putString(SubFilterViewModel.ARG_CURRENT_SUBFILTER_JSON, json)
+        bundle.putBoolean(SubFilterViewModel.ARG_IS_FIRST_LOAD, false)
+
+        viewModel.start(initialTag, any(), bundle)
     }
 
     @Test
