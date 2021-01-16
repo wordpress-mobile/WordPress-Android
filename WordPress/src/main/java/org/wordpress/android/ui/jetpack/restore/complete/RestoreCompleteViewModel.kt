@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ErrorToolbarState
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
@@ -20,7 +21,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class RestoreCompleteViewModel @Inject constructor(
-    private val stateListItemBuilder: RestoreCompleteStateListItemBuilder,
+    private val stateListItemBuilder: RestoreStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel
