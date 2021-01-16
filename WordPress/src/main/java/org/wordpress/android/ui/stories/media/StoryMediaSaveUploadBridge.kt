@@ -151,6 +151,9 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             val oldTemporaryId = frame.id ?: ""
                             frame.id = it.id.toString()
 
+                            // set alt text on MediaModel too
+                            mediaModel.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+
                             // if prefs has this Slide with the temporary key, replace it
                             // if not, let's now save the new slide with the local key
                             storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
