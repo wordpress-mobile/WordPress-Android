@@ -111,7 +111,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
             val localEditorMediaListener = object : EditorMediaListener {
                 override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
                     if (!isEditMode) {
-                        assignAltOnEachMediaFile(frames, ArrayList(mediaFiles.values))
+                        saveStoryGutenbergBlockUseCase.assignAltOnEachMediaFile(frames, ArrayList(mediaFiles.values))
                         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
                                 editPostRepository,
                                 ArrayList(mediaFiles.values)
@@ -222,18 +222,6 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
     private fun cancelAddMediaToEditorActions() {
         job.cancel()
-    }
-
-    private fun assignAltOnEachMediaFile(
-        frames: List<StoryFrameItem>,
-        mediaFiles: ArrayList<MediaFile>
-    ): List<MediaFile> {
-        return mediaFiles.mapIndexed { index, mediaFile -> run {
-                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
-                mediaFile
-            }
-            mediaFile
-        }
     }
 
     @Subscribe(sticky = true, threadMode = MAIN)

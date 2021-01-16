@@ -177,6 +177,18 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         }
     }
 
+    fun assignAltOnEachMediaFile(
+        frames: List<StoryFrameItem>,
+        mediaFiles: ArrayList<MediaFile>
+    ): List<MediaFile> {
+        return mediaFiles.mapIndexed { index, mediaFile -> run {
+            mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
+            mediaFile
+        }
+            mediaFile
+        }
+    }
+
     private fun createGBStoryBlockStringFromJson(storyBlock: StoryBlockData): String {
         val gson = Gson()
         return HEADING_START + gson.toJson(storyBlock) + HEADING_END + DIV_PART + CLOSING_TAG
