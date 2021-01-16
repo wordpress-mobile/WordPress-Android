@@ -119,11 +119,11 @@ class SubFilterViewModel @Inject constructor(
                 val organization = mainStreamTag?.organization
 
                 val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
-                    // Filtering out Discover and all blogs not belonging to this VM organization if valid
+                    // Filtering out all blogs not belonging to this VM organization if valid
                     blogList.filter { blog ->
-                        !(blog.url.startsWith("https://discover.wordpress.com")) && (organization?.let {
+                        organization?.let {
                             blog.organizationId == organization.orgId
-                        } ?: false)
+                        } ?: false
                     }
                 }
 
