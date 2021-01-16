@@ -45,7 +45,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = mediaFile.id.toString(),
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
@@ -57,7 +57,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = temporaryId, // mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
