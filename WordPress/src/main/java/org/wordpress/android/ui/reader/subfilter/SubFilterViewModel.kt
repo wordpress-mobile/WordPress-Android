@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.subfilter
 
+import android.os.Bundle
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -78,28 +79,33 @@ class SubFilterViewModel @Inject constructor(
 
     private var isStarted = false
     private var isFirstLoad = true
-    private var shouldRequestNewerPosts = true
     private var mainStreamTag: ReaderTag? = null
 
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(mainStreamTag: ReaderTag?, tag: ReaderTag?, subfilterJson: String?) {
+    fun start(mainStreamTag: ReaderTag?, tag: ReaderTag?, savedInstanceState: Bundle?) {
         if (isStarted) {
             return
         }
 
         isStarted = true
 
-        shouldRequestNewerPosts = subfilterJson == null
-
         this.mainStreamTag = mainStreamTag
+
+        var subfilterJson: String? = null
+
+        savedInstanceState?.let {
+            isFirstLoad = it.getBoolean(ARG_IS_FIRST_LOAD)
+            subfilterJson = it.getString(ARG_CURRENT_SUBFILTER_JSON)
+        }
+
         eventBusWrapper.register(this)
 
         tag?.let {
-            val currentSubfilter = subfilterJson?.let {
+            val currentSubfilter = subfilterJson?.let { json ->
                 subfilterListItemMapper.fromJson(
-                        json = subfilterJson,
+                        json = json,
                         onClickAction = ::onSubfilterClicked,
                         isSelected = true
                 )
@@ -181,7 +187,7 @@ class SubFilterViewModel @Inject constructor(
         )
     }
 
-    fun getCurrentSubfilterJson(): String {
+    private fun getCurrentSubfilterJson(): String {
         return subfilterListItemMapper.toJson(getCurrentSubfilterValue())
     }
 
@@ -270,10 +276,7 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        changeSubfilter(subfilterListItem, shouldRequestNewerPosts, mainStreamTag)
-        if (!shouldRequestNewerPosts) {
-            shouldRequestNewerPosts = true
-        }
+        changeSubfilter(subfilterListItem, true, mainStreamTag)
     }
 
     fun onSubfilterReselected() {
@@ -338,6 +341,13 @@ class SubFilterViewModel @Inject constructor(
         }
     }
 
+    fun onSaveInstanceState(outState: Bundle) {
+        outState.putString(
+                ARG_CURRENT_SUBFILTER_JSON, getCurrentSubfilterJson()
+        )
+        outState.putBoolean(ARG_IS_FIRST_LOAD, isFirstLoad)
+    }
+
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onEventMainThread(event: ReaderEvents.FollowedTagsChanged) {
         AppLog.d(T.READER, "Subfilter bottom sheet > followed tags changed")
@@ -357,5 +367,8 @@ class SubFilterViewModel @Inject constructor(
 
     companion object {
         const val SUBFILTER_VM_BASE_KEY = "SUBFILTER_VIEW_MODEL_BASE_KEY"
+
+        const val ARG_CURRENT_SUBFILTER_JSON = "current_subfilter_json"
+        const val ARG_IS_FIRST_LOAD = "is_first_load"
     }
 }

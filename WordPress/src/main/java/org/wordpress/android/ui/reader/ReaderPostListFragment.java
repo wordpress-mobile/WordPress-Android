@@ -607,11 +607,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
             });
         });
 
-        String currentSubfilterJson = savedInstanceState != null
-                ? savedInstanceState.getString(ReaderConstants.ARG_READER_TAB_SUBFILTER)
-                : null;
-
-        mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, currentSubfilterJson);
+        mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 
     private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
@@ -952,9 +948,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         if (isFilterableTag(mTagFragmentStartedWith) && mSubFilterViewModel != null) {
-            outState.putString(
-                    ReaderConstants.ARG_READER_TAB_SUBFILTER, mSubFilterViewModel.getCurrentSubfilterJson()
-            );
+            mSubFilterViewModel.onSaveInstanceState(outState);
         }
 
         super.onSaveInstanceState(outState);
