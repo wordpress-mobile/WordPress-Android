@@ -224,6 +224,10 @@ public class ReaderTag implements Serializable, FilterCriteria {
         }
     }
 
+    public String getKeyString() {
+        return tagType.toInt() + getTagSlug();
+    }
+
     /*
      * the label is the text displayed in the dropdown filter
      */

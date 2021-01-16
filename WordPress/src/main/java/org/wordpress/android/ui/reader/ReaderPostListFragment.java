@@ -177,7 +177,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private View mRemoveFilterButton;
 
     private boolean mIsTopLevel = false;
-    private int mPosition = -1;
     private static final String SUBFILTER_BOTTOM_SHEET_TAG = "SUBFILTER_BOTTOM_SHEET_TAG";
 
     private BottomNavController mBottomNavController;
@@ -257,14 +256,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
     static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType) {
-        return newInstanceForTag(tag, listType, false, -1);
+        return newInstanceForTag(tag, listType, false);
     }
 
     static ReaderPostListFragment newInstanceForTag(
             ReaderTag tag,
             ReaderPostListType listType,
-            boolean isTopLevel,
-            int position
+            boolean isTopLevel
     ) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
@@ -275,9 +273,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         args.putSerializable(ReaderConstants.ARG_TAG, tag);
         args.putSerializable(ReaderConstants.ARG_POST_LIST_TYPE, listType);
         args.putBoolean(ReaderConstants.ARG_IS_TOP_LEVEL, isTopLevel);
-        if (isTopLevel) {
-            args.putInt(ReaderConstants.ARG_MAIN_READER_TAB_POSITION, position);
-        }
 
         ReaderPostListFragment fragment = new ReaderPostListFragment();
         fragment.setArguments(args);
@@ -355,10 +350,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mIsTopLevel = args.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL);
             }
 
-            if (args.containsKey(ReaderConstants.ARG_MAIN_READER_TAB_POSITION)) {
-                mPosition = args.getInt(ReaderConstants.ARG_MAIN_READER_TAB_POSITION);
-            }
-
             mCurrentBlogId = args.getLong(ReaderConstants.ARG_BLOG_ID);
             mCurrentFeedId = args.getLong(ReaderConstants.ARG_FEED_ID);
             mCurrentSearchQuery = args.getString(ReaderConstants.ARG_SEARCH_QUERY);
@@ -402,10 +393,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             if (savedInstanceState.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
                 mTagFragmentStartedWith =
                         (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG);
-            }
-
-            if (savedInstanceState.containsKey(ReaderConstants.ARG_MAIN_READER_TAB_POSITION)) {
-                mPosition = savedInstanceState.getInt(ReaderConstants.ARG_MAIN_READER_TAB_POSITION);
             }
 
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
@@ -538,7 +525,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
         mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
-                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mPosition,
+                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
                 SubFilterViewModel.class
         );
 
@@ -583,7 +570,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                         mSubFilterViewModel.loadSubFilters();
                         BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
                         bottomSheet = SubfilterBottomSheetFragment.newInstance(
-                                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mPosition,
+                                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
                                 visibleState.getCategories(),
                                 mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
                         );
@@ -934,8 +921,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (mTagFragmentStartedWith != null) {
             outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, mTagFragmentStartedWith);
         }
-
-        outState.putInt(ReaderConstants.ARG_MAIN_READER_TAB_POSITION, mPosition);
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
             mTagPreviewHistory.saveInstance(outState);

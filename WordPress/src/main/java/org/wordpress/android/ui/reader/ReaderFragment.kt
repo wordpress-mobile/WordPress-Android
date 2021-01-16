@@ -196,8 +196,7 @@ class ReaderFragment : Fragment(R.layout.reader_fragment_layout), ScrollableView
                 ReaderPostListFragment.newInstanceForTag(
                         tags[position],
                         ReaderPostListType.TAG_FOLLOWED,
-                        true,
-                        position
+                        true
                 )
             }
         }

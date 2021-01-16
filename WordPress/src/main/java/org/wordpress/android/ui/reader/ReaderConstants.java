@@ -51,8 +51,6 @@ public class ReaderConstants {
     static final String ARG_VIDEO_URL = "video_url";
     static final String ARG_IS_TOP_LEVEL = "is_top_level";
     static final String ARG_SUBS_TAB_POSITION = "subs_tab_position";
-    static final String ARG_MAIN_READER_TAB_POSITION = "main_reader_tab_position";
-    static final String ARG_READER_TAB_SUBFILTER = "reader_tab_subfilter";
 
     static final String KEY_POST_SLUGS_RESOLUTION_UNDERWAY = "post_slugs_resolution_underway";
     static final String KEY_ALREADY_UPDATED = "already_updated";
