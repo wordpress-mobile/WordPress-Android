@@ -17,12 +17,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
@@ -47,6 +50,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
     @Mock private lateinit var startScanUseCase: StartScanUseCase
     @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
+    @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
 
     private lateinit var viewModel: ScanViewModel
 
@@ -61,6 +65,7 @@ class ScanViewModelTest : BaseUnitTest() {
             fetchScanStateUseCase,
             startScanUseCase,
             fixThreatsUseCase,
+            fetchFixThreatsStatusUseCase,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
@@ -210,9 +215,79 @@ class ScanViewModelTest : BaseUnitTest() {
         assertThat(enabledActionButtons.size).isEqualTo(2)
     }
 
+    @Test
+    fun `given threats are fixed successfully, when threats fix status is checked, then success message is shown`() =
+        test {
+            val expectedSuccessSnackBarMsg = SnackbarMessageHolder(
+                UiStringRes(R.string.threat_fix_all_status_success_message)
+            )
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Complete)
+            )
+            val observers = init()
+
+            fetchFixThreatsStatus(observers)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+        }
+
+    @Test
+    fun `given no network, when threats fix status is checked, then network error message is shown`() = test {
+        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.NetworkUnavailable)
+        )
+        val observers = init()
+
+        fetchFixThreatsStatus(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+    }
+
+    @Test
+    fun `given server is unavailable, when threats fix status is checked, then error message is shown`() = test {
+        val expectedFailureSnackBarMsg = SnackbarMessageHolder(
+            UiStringRes(R.string.threat_fix_all_status_error_message)
+        )
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.RemoteRequestFailure)
+        )
+        val observers = init()
+
+        fetchFixThreatsStatus(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+    }
+
+    @Test
+    fun `given a threat not fixed, when threats fix status checked, then some threats not fixed error message shown`() =
+        test {
+            val expectedFailureSnackBarMsg = SnackbarMessageHolder(
+                UiStringRes(R.string.threat_fix_all_status_some_threats_not_fixed_error_message)
+            )
+            whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Failure.FixFailure)
+            )
+            val observers = init()
+
+            triggerFixThreatsAction(observers)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+        }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
+    }
+
+    private suspend fun fetchFixThreatsStatus(observers: Observers) {
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+        triggerFixThreatsAction(observers)
     }
 
     private fun createDummyScanStateListItems(
@@ -231,6 +306,12 @@ class ScanViewModelTest : BaseUnitTest() {
             contentDescription = fakeUiStringText,
             isSecondary = true,
             onClick = onFixAllButtonClicked
+        ),
+        ProgressState(
+            progress = 0,
+            label = fakeUiStringText,
+            isIndeterminate = true,
+            isVisible = false
         ),
         ThreatItemState(
             threatId = fakeThreatId,
