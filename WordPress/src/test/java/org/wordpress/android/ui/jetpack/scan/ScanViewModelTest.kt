@@ -280,6 +280,40 @@ class ScanViewModelTest : BaseUnitTest() {
             assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
         }
 
+    @Test
+    fun `given threats are fixing, when threats fix status is checked, then an indeterminate progress bar is shown`() =
+        test {
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.InProgress)
+            )
+            val observers = init()
+
+            fetchFixThreatsStatus(observers)
+
+            val indeterminateProgressBars = (observers.uiStates.last() as Content).items
+                .filterIsInstance<ProgressState>()
+                .filter { it.isIndeterminate && it.isVisible }
+
+            assertThat(indeterminateProgressBars.isNotEmpty()).isTrue
+        }
+
+    @Test
+    fun `given threats not fixing, when threats fix status is checked, then indeterminate progress bar is not shown`() =
+        test {
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Complete)
+            )
+            val observers = init()
+
+            fetchFixThreatsStatus(observers)
+
+            val indeterminateProgressBars = (observers.uiStates.last() as Content).items
+                .filterIsInstance<ProgressState>()
+                .filter { it.isIndeterminate && it.isVisible }
+
+            assertThat(indeterminateProgressBars.isEmpty()).isTrue
+        }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
