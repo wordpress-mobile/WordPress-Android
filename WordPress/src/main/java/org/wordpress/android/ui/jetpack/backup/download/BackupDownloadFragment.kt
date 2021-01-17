@@ -1,0 +1,223 @@
+package org.wordpress.android.ui.jetpack.backup.download
+
+import android.app.Activity.RESULT_CANCELED
+import android.app.Activity.RESULT_OK
+import android.content.Intent
+import android.os.Bundle
+import android.view.View
+import android.view.ViewGroup
+import androidx.activity.OnBackPressedCallback
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
+import org.wordpress.android.R
+import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.ERROR
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
+import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.util.wizard.WizardNavigationTarget
+import org.wordpress.android.widgets.WPSnackbar
+import javax.inject.Inject
+
+const val KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID = "key_backup_download_download_id"
+
+class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
+    @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
+    private lateinit var viewModel: BackupDownloadViewModel
+
+    private var viewGroup: ViewGroup? = null
+    private var shortAnimationDuration: Int = 0
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        viewGroup = view.findViewById(R.id.main_layout)
+        shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
+
+        initDagger()
+        initBackPressHandler()
+        initRecyclerView()
+        initAdapter()
+        initViewModel(savedInstanceState)
+    }
+
+    private fun initDagger() {
+        (requireActivity().application as WordPress).component().inject(this)
+    }
+
+    private fun initBackPressHandler() {
+        requireActivity().onBackPressedDispatcher.addCallback(
+                viewLifecycleOwner,
+                object : OnBackPressedCallback(
+                        true
+                ) {
+                    override fun handleOnBackPressed() {
+                        onBackPressed()
+                    }
+                })
+    }
+
+    private fun onBackPressed() {
+        viewModel.onBackPressed()
+    }
+
+    private fun initRecyclerView() {
+        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        initAdapter()
+    }
+
+    private fun initAdapter() {
+        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
+        recycler_view_2.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
+    }
+
+    private fun initViewModel(savedInstanceState: Bundle?) {
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(BackupDownloadViewModel::class.java)
+
+        val (site, activityId) = when {
+            requireActivity().intent?.extras != null -> {
+                val site = requireNotNull(requireActivity().intent.extras).getSerializable(WordPress.SITE) as SiteModel
+                val activityId = requireNotNull(requireActivity().intent.extras).getString(
+                        KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
+                ) as String
+                site to activityId
+            }
+            else -> throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")
+        }
+
+        initObservers()
+
+        viewModel.start(site, activityId, savedInstanceState)
+    }
+
+    private fun initObservers() {
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            updateToolbar(it.toolbarState)
+            showView(it)
+        })
+
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, {
+            it?.applyIfNotHandled {
+                showSnackbar()
+            }
+        })
+
+        viewModel.errorEvents.observe(viewLifecycleOwner, {
+            it?.applyIfNotHandled {
+                viewModel.transitionToError(this)
+            }
+        })
+
+        viewModel.navigationEvents.observe(viewLifecycleOwner, {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShareLink -> {
+                        ActivityLauncher.shareBackupDownloadFileLink(requireContext(), url)
+                    }
+                    is DownloadFile -> {
+                        ActivityLauncher.downloadBackupDownloadFile(requireContext(), url)
+                    }
+                }
+            }
+        })
+
+        viewModel.navigationTargetObservable.observe(viewLifecycleOwner, { target ->
+            target?.let {
+                showStep(target)
+            }
+        })
+
+        viewModel.wizardFinishedObservable.observe(viewLifecycleOwner, {
+            it.applyIfNotHandled {
+                val intent = Intent()
+                val (backupDownloadCreated, downloadId) = when (this) {
+                    is BackupDownloadCanceled -> Pair(false, null)
+                    is BackupDownloadInProgress -> Pair(true, downloadId)
+                    is BackupDownloadCompleted -> Pair(true, null)
+                }
+                intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, downloadId)
+                requireActivity().setResult(
+                        if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED,
+                        intent
+                )
+                requireActivity().finish()
+            }
+        })
+    }
+
+    private fun showView(state: BackupDownloadUiState) {
+            ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(state.items)
+    }
+
+    private fun updateToolbar(toolbarState: ToolbarState) {
+        val activity = requireActivity() as? AppCompatActivity
+        activity?.supportActionBar?.let {
+            it.title = getString(toolbarState.title)
+            it.setHomeAsUpIndicator(toolbarState.icon)
+        }
+    }
+
+    private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
+        when (target.wizardStep) {
+            DETAILS -> viewModel.buildDetails()
+            PROGRESS -> viewModel.buildProgress()
+            COMPLETE -> viewModel.buildComplete()
+            ERROR -> viewModel.buildError(
+                    BackupDownloadErrorTypes.fromInt(
+                            target.wizardState.errorType ?: BackupDownloadErrorTypes.GenericFailure.id
+                    )
+            )
+        }
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        activity?.findViewById<View>(R.id.coordinator_layout)?.let { coordinator ->
+            val snackbar = WPSnackbar.make(
+                    coordinator,
+                    uiHelpers.getTextOfUiString(requireContext(), this.message),
+                    Snackbar.LENGTH_LONG
+            )
+            if (this.buttonTitle != null) {
+                snackbar.setAction(
+                        uiHelpers.getTextOfUiString(
+                                requireContext(),
+                                this.buttonTitle
+                        )
+                ) {
+                    this.buttonAction.invoke()
+                }
+            }
+            snackbar.show()
+        }
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        viewModel.writeToBundle(outState)
+        super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        const val TAG = "BACKUP_DOWNLOAD_FRAGMENT"
+        fun newInstance(bundle: Bundle?): BackupDownloadFragment {
+            return BackupDownloadFragment().apply { arguments = bundle }
+        }
+    }
+}
