@@ -25,9 +25,12 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.ScanningStateUpdatedInDb
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -43,6 +46,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
     @Mock private lateinit var startScanUseCase: StartScanUseCase
+    @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
 
     private lateinit var viewModel: ScanViewModel
 
@@ -56,6 +60,7 @@ class ScanViewModelTest : BaseUnitTest() {
             scanStateItemsBuilder,
             fetchScanStateUseCase,
             startScanUseCase,
+            fixThreatsUseCase,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
@@ -144,6 +149,48 @@ class ScanViewModelTest : BaseUnitTest() {
         }
     }
 
+    @Test
+    fun `given no network, when fix threats is triggered, then network error message is shown`() = test {
+        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
+        whenever(fixThreatsUseCase.fixThreats(any(), any()))
+            .thenReturn(FixThreatsState.Failure.NetworkUnavailable)
+        val observers = init()
+
+        triggerFixThreatsAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+    }
+
+    @Test
+    fun `when request to fix threats succeeds, then fix started message is shown`() = test {
+        val expectedSuccessSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_started_message))
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+        val observers = init()
+
+        triggerFixThreatsAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+    }
+
+    @Test
+    fun `when request to fix threats fails, then fix threats error message is shown`() = test {
+        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message))
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+        val observers = init()
+
+        triggerFixThreatsAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+    }
+
+    private fun triggerFixThreatsAction(observers: Observers) {
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+        (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
+    }
+
     private fun createDummyScanStateListItems(
         onStartScanButtonClicked: (() -> Unit),
         onFixAllButtonClicked: (() -> Unit),
@@ -174,6 +221,10 @@ class ScanViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             uiStates.add(it)
         }
+        val snackbarMsgs = mutableListOf<Event<SnackbarMessageHolder>>()
+        viewModel.snackbarEvents.observeForever {
+            snackbarMsgs.add(it)
+        }
         val navigation = mutableListOf<Event<ScanNavigationEvents>>()
         viewModel.navigationEvents.observeForever {
             navigation.add(it)
@@ -181,8 +232,12 @@ class ScanViewModelTest : BaseUnitTest() {
 
         viewModel.start(site)
 
-        return Observers(uiStates, navigation)
+        return Observers(uiStates, snackbarMsgs, navigation)
     }
 
-    private data class Observers(val uiStates: List<UiState>, val navigation: List<Event<ScanNavigationEvents>>)
+    private data class Observers(
+        val uiStates: List<UiState>,
+        val snackBarMsgs: List<Event<SnackbarMessageHolder>>,
+        val navigation: List<Event<ScanNavigationEvents>>
+    )
 }
