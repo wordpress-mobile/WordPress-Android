@@ -85,7 +85,6 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
 
     private fun initAdapter() {
         recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
-        recycler_view_2.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
