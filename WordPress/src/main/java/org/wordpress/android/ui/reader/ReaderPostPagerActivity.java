@@ -59,6 +59,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
