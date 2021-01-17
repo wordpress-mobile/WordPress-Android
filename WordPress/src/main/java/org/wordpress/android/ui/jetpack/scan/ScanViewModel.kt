@@ -6,10 +6,12 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
@@ -17,6 +19,7 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -76,6 +79,9 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    private fun fixAllThreats() { // TODO ashiagr to be implemented
+    }
+
     private fun buildContentUiState(model: ScanStateModel) = Content(
         scanStateListItemsBuilder.buildScanStateListItems(
             model,
@@ -90,11 +96,22 @@ class ScanViewModel @Inject constructor(
         startScan()
     }
 
-    private fun onFixAllButtonClicked() { // TODO ashiagr to be implemented
+    private fun onFixAllButtonClicked() {
+        updateNavigationEvent(
+            OpenFixThreatsConfirmationDialog(
+                title = UiStringRes(R.string.threat_fix_all_warning_title),
+                message = UiStringRes(R.string.threat_fix_all_warning_message),
+                okButtonAction = this@ScanViewModel::fixAllThreats
+            )
+        )
     }
 
     private fun onThreatItemClicked(threatId: Long) {
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
+    }
+
+    private fun updateNavigationEvent(navigationEvent: ScanNavigationEvents) {
+        _navigationEvents.value = Event(navigationEvent)
     }
 
     private fun updateUiState(contentState: Content) {

@@ -3,14 +3,18 @@ package org.wordpress.android.ui.jetpack.scan
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
@@ -23,6 +27,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanViewModel
+    private var fixThreatsConfirmationDialog: AlertDialog? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,8 +69,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             viewLifecycleOwner,
             {
                 it.applyIfNotHandled {
-                    if (this is ScanNavigationEvents.ShowThreatDetails) {
-                        ActivityLauncher.viewThreatDetailsForResult(this@ScanFragment, threatId)
+                    when (this) {
+                        is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(this)
+                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetailsForResult(
+                            this@ScanFragment,
+                            threatId
+                        )
                     }
                 }
             }
@@ -74,6 +83,22 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun refreshContentScreen(content: Content) {
         ((recycler_view.adapter) as ScanAdapter).update(content.items)
+    }
+
+    private fun showFixThreatsConfirmationDialog(holder: OpenFixThreatsConfirmationDialog) {
+        fixThreatsConfirmationDialog = MaterialAlertDialogBuilder(requireActivity())
+            .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
+            .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
+            .setPositiveButton(holder.positiveButtonLabel) { _, _ -> holder.okButtonAction.invoke() }
+            .setNegativeButton(holder.negativeButtonLabel) { _, _ -> fixThreatsConfirmationDialog?.dismiss() }
+            .setCancelable(true)
+            .create()
+        fixThreatsConfirmationDialog?.show()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        fixThreatsConfirmationDialog?.dismiss()
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
