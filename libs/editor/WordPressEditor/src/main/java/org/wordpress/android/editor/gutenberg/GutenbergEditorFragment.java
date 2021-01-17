@@ -95,6 +95,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
     public static final String ARG_STORY_BLOCK_ID = "story_block_id";
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
+    public static final String ARG_STORY_BLOCK_EDITING_ID = "story_block_original_id";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
@@ -130,6 +131,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorDidMount;
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
     private boolean mUpdateCapabilitiesOnCreate = false;
+    private String mBlockExternallyEditedId = null;
+
+    private String mUpdatedStoryBlockContent = null;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -191,6 +195,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
+            mBlockExternallyEditedId = savedInstanceState.getString(ARG_STORY_BLOCK_EDITING_ID);
         }
     }
 
@@ -376,7 +381,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.showXpostSuggestions(onResult);
                     }
                 },
-        new OnStarterPageTemplatesTooltipShownEventListener() {
+                new OnStarterPageTemplatesTooltipShownEventListener() {
                     @Override
                     public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
                         mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
@@ -389,6 +394,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnMediaFilesCollectionBasedBlockEditorListener() {
                     @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
+                        // let's first save the original blockId array, this will let us
+                        // identify the block later when we need to replace it as we come back from the Story
+                        // composer
+                        mBlockExternallyEditedId = blockId;
+
+                        // now pass the signal up to the EditorFragmentListener
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
                     }
 
@@ -402,6 +413,24 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override public void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles) {
                         showCancelMediaCollectionSaveDialog(mediaFiles);
+                    }
+
+                    @Override public void onQueryBlockIdForMediaFiles(ArrayList<Object> mediaFiles, String blockId) {
+                        // the blockEditingId attributtet should be set on all mediaFiles, just get the first one
+                        String blockEditingId =
+                                (String) ((HashMap<String, Object>)(mediaFiles.get(0))).get("blockEditingId");
+                        if (mBlockExternallyEditedId != null && blockEditingId != null &&
+                            mBlockExternallyEditedId.contentEquals(blockEditingId)) {
+                            if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
+                                getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
+                            } else {
+                                // TODO handle / log error here, or maybe just skip it
+                            }
+                        } else {
+                            // no op
+                            // the arrays don't match means we're getting a signal to sync a different Story block,
+                            // other than the one that was actually edited. Just skip it.
+                        }
                     }
                 },
                 GutenbergUtils.isDarkMode(getActivity()));
@@ -496,10 +525,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             }
         } else if (requestCode == mStoryBlockEditRequestCode) {
             if (resultCode == Activity.RESULT_OK) {
-                // handle edited block content
+                // handle edited block content, also keep edited block content to handle later if Gutenberg not
+                // mounted right now
                 String blockId = data.getStringExtra(ARG_STORY_BLOCK_ID);
-                String updatedBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
-                getGutenbergContainerFragment().replaceStoryEditedBlock(updatedBlockContent, blockId);
+                mUpdatedStoryBlockContent = data.getStringExtra(ARG_STORY_BLOCK_UPDATED_CONTENT);
+                getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
                 // TODO maybe we need to track something here?
             } else {
                 // TODO maybe we need to track something here?
@@ -802,6 +832,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
+        outState.putString(ARG_STORY_BLOCK_EDITING_ID, mBlockExternallyEditedId);
     }
 
     @Override

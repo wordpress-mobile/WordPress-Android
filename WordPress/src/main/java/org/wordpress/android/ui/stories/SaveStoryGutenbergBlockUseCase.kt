@@ -47,6 +47,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         return StoryMediaFileData(
                 alt = "",
                 id = mediaFile.id.toString(),
+                storyBlockEditingId = "",
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
                 mime = StringUtils.notNullStr(mediaFile.mimeType),
@@ -59,6 +60,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         return StoryMediaFileData(
                 alt = "",
                 id = temporaryId, // mediaFile.id,
+                storyBlockEditingId = "",
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
                 mime = StringUtils.notNullStr(mediaFile.mimeType),
@@ -75,6 +77,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         return StoryMediaFileData(
                 alt = "",
                 id = temporaryId, // mediaFile.id,
+                storyBlockEditingId = "",
                 link = url,
                 type = if (isVideo) "video" else "image",
                 mime = "",
@@ -193,6 +196,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     data class StoryMediaFileData(
         var alt: String,
         var id: String,
+        @Transient var storyBlockEditingId: String, // used for identifying mobile Gutenberg's blocks only, not serialized
         var link: String,
         val type: String,
         val mime: String,

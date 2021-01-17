@@ -518,7 +518,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
             // rendered as non-empty on mobile gutenberg while the actual flattening happens on the service.
             val updatedStoryBlock =
                     saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockStringFromStoryMediaFileData(
-                            buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex)
+                            buildStoryMediaFileDataListFromStoryFrameIndexes(storyIndex, blockId ?: "")
                     )
 
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
@@ -537,7 +537,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
     }
 
     private fun buildStoryMediaFileDataListFromStoryFrameIndexes(
-        storyIndex: StoryIndex
+        storyIndex: StoryIndex,
+        storyBlockEditingId: String
     ): ArrayList<StoryMediaFileData> {
         val storyMediaFileDataList = ArrayList<StoryMediaFileData>() // holds media files
         val story = storyRepositoryWrapper.getStoryAtIndex(storyIndex)
@@ -557,6 +558,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             assignedTempId
                     )
                     frame.id = storyMediaFileData.id
+                    storyMediaFileData.storyBlockEditingId = storyBlockEditingId
                     storyMediaFileDataList.add(storyMediaFileData)
                 }
                 // if the frame.id is populated and is not a temporary id, this should be an actual MediaModel mediaId so,
@@ -568,6 +570,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                     frame,
                                     it
                             )
+                            storyMediaFileData.storyBlockEditingId = storyBlockEditingId
                             storyMediaFileDataList.add(storyMediaFileData)
                         } else {
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
@@ -579,6 +582,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                                                 temporaryId = assignedTempId
                                         )
                                 frame.id = storyMediaFileData.id
+                                storyMediaFileData.storyBlockEditingId = storyBlockEditingId
                                 storyMediaFileDataList.add(storyMediaFileData)
                             }
                         }
