@@ -186,6 +186,30 @@ class ScanViewModelTest : BaseUnitTest() {
         assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
     }
 
+    @Test
+    fun `when ok button on fix threats action confirmation dialog is clicked, then action buttons are disabled`() =
+        test {
+            val observers = init()
+
+            triggerFixThreatsAction(observers)
+
+            val contentItems = (observers.uiStates.last() as Content).items
+            val disabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { !it.isEnabled }
+            assertThat(disabledActionButtons.size).isEqualTo(2)
+        }
+
+    @Test
+    fun `when request to fix threats fails, then action buttons are enabled`() = test {
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+        val observers = init()
+
+        triggerFixThreatsAction(observers)
+
+        val contentItems = (observers.uiStates.last() as Content).items
+        val enabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { it.isEnabled }
+        assertThat(enabledActionButtons.size).isEqualTo(2)
+    }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
