@@ -11,12 +11,14 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
@@ -26,10 +28,13 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.Fetc
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState.ScanningStateUpdatedInDb
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 
 private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 2
+private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 4
 
 @InternalCoroutinesApi
@@ -57,6 +62,7 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any())).thenAnswer {
             createDummyScanStateListItems(
                 it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION),
                 it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
             )
         }
@@ -116,8 +122,31 @@ class ScanViewModelTest : BaseUnitTest() {
         verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
     }
 
+    @Test
+    fun `when fix all threats button is clicked, then fix all threats action confirmation dialog is shown`() = test {
+        val expectedDialogTitle = UiStringRes(R.string.threat_fix_all_warning_title)
+        val expectedDialogMessage = UiStringResWithParams(
+            R.string.threat_fix_all_warning_message,
+            listOf(UiStringText("1"))
+        )
+        val expectedPositiveButtonLabel = R.string.dialog_button_ok
+        val expectedNegativeButtonLabel = R.string.dialog_button_cancel
+        val observers = init()
+
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+
+        val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
+        with(confirmationDialog) {
+            assertThat(title).isEqualTo(expectedDialogTitle)
+            assertThat(message).isEqualTo(expectedDialogMessage)
+            assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
+            assertThat(negativeButtonLabel).isEqualTo(expectedNegativeButtonLabel)
+        }
+    }
+
     private fun createDummyScanStateListItems(
         onStartScanButtonClicked: (() -> Unit),
+        onFixAllButtonClicked: (() -> Unit),
         onThreatItemClicked: (Long) -> Unit
     ) = listOf(
         ActionButtonState(
@@ -126,8 +155,15 @@ class ScanViewModelTest : BaseUnitTest() {
             isSecondary = false,
             onClick = onStartScanButtonClicked
         ),
+        ActionButtonState(
+            text = fakeUiStringText,
+            contentDescription = fakeUiStringText,
+            isSecondary = true,
+            onClick = onFixAllButtonClicked
+        ),
         ThreatItemState(
             threatId = fakeThreatId,
+            isFixable = true,
             header = fakeUiStringText,
             subHeader = fakeUiStringText
         ) { onThreatItemClicked(fakeThreatId) }
