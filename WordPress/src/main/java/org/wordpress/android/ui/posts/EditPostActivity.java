@@ -2257,7 +2257,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                                 gutenbergWebViewAuthorizationData,
                                 mTenorFeatureConfig.isEnabled(),
                                 gutenbergPropsBuilder,
-                                RequestCodes.EDIT_STORY
+                                RequestCodes.EDIT_STORY,
+                                mSite.getHasFreePlan()
                         );
                     } else {
                         // If gutenberg editor is not selected, default to Aztec.

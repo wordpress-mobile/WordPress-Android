@@ -93,6 +93,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final String ARG_GUTENBERG_PROPS_BUILDER = "param_gutenberg_props_builder";
     private static final String ARG_STORY_EDITOR_REQUEST_CODE = "param_sory_editor_request_code";
     public static final String ARG_STORY_BLOCK_ID = "story_block_id";
+    public static final String ARG_HAS_FREE_PLAN = "has_free_plan";
     public static final String ARG_STORY_BLOCK_UPDATED_CONTENT = "story_block_updated_content";
 
     private static final int CAPTURE_PHOTO_PERMISSION_REQUEST_CODE = 101;
@@ -141,7 +142,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                                       GutenbergWebViewAuthorizationData webViewAuthorizationData,
                                                       boolean tenorEnabled,
                                                       GutenbergPropsBuilder gutenbergPropsBuilder,
-                                                      int storyBlockEditRequestCode) {
+                                                      int storyBlockEditRequestCode,
+                                                      boolean hasFreePlan
+                                                      ) {
         GutenbergEditorFragment fragment = new GutenbergEditorFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM_TITLE, title);
@@ -151,6 +154,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         args.putBoolean(ARG_TENOR_ENABLED, tenorEnabled);
         args.putParcelable(ARG_GUTENBERG_PROPS_BUILDER, gutenbergPropsBuilder);
         args.putInt(ARG_STORY_EDITOR_REQUEST_CODE, storyBlockEditRequestCode);
+        args.putBoolean(ARG_HAS_FREE_PLAN, hasFreePlan);
         fragment.setArguments(args);
         return fragment;
     }
@@ -1183,9 +1187,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
-        if (errorMessage.equals(FILE_TYPE_NOT_PERMITTED_ERROR)) {
-            getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId),
-                    getString(R.string.error_file_type_not_supported));
+        if (errorMessage.equals(FILE_TYPE_NOT_PERMITTED_ERROR) && getArguments() != null) {
+            if (getArguments().getBoolean(ARG_HAS_FREE_PLAN)) {
+                getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId),
+                        getString(R.string.error_file_type_not_supported));
+            }
         } else {
             getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId), null);
         }
