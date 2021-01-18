@@ -82,14 +82,10 @@ class ScanViewModel @Inject constructor(
     private fun startScan() {
         launch {
             startScanUseCase.startScan(site)
-                .collect { startScanState ->
-                    when (startScanState) {
-                        is StartScanState.ScanningStateUpdatedInDb -> updateUiState(
-                            buildContentUiState(startScanState.model)
-                        )
-
+                .collect { state ->
+                    when (state) {
+                        is StartScanState.ScanningStateUpdatedInDb -> updateUiState(buildContentUiState(state.model))
                         is StartScanState.Success -> fetchScanState()
-
                         is StartScanState.Failure -> TODO() // TODO ashiagr to be implemented
                     }
                 }
