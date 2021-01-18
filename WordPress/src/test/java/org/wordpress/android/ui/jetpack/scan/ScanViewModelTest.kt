@@ -128,26 +128,38 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when fix all threats button is clicked, then fix all threats action confirmation dialog is shown`() = test {
-        val expectedDialogTitle = UiStringRes(R.string.threat_fix_all_warning_title)
-        val expectedDialogMessage = UiStringResWithParams(
-            R.string.threat_fix_all_warning_message,
-            listOf(UiStringText("1"))
-        )
-        val expectedPositiveButtonLabel = R.string.dialog_button_ok
-        val expectedNegativeButtonLabel = R.string.dialog_button_cancel
-        val observers = init()
+    fun `when fix all threats button is clicked, then fix threats confirmation dialog action is triggered`() =
+        test {
+            val observers = init()
 
-        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
 
-        val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
-        with(confirmationDialog) {
-            assertThat(title).isEqualTo(expectedDialogTitle)
-            assertThat(message).isEqualTo(expectedDialogMessage)
-            assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
-            assertThat(negativeButtonLabel).isEqualTo(expectedNegativeButtonLabel)
+            val fixThreatsDialogAction = observers.navigation.last().peekContent()
+            assertThat(fixThreatsDialogAction).isInstanceOf(OpenFixThreatsConfirmationDialog::class.java)
         }
-    }
+
+    @Test
+    fun `when fix threats confirmation dialog action is triggered, then fix threats confirmation dialog is shown`() =
+        test {
+            val expectedDialogTitle = UiStringRes(R.string.threat_fix_all_warning_title)
+            val expectedDialogMessage = UiStringResWithParams(
+                R.string.threat_fix_all_warning_message,
+                listOf(UiStringText("1"))
+            )
+            val expectedPositiveButtonLabel = R.string.dialog_button_ok
+            val expectedNegativeButtonLabel = R.string.dialog_button_cancel
+            val observers = init()
+
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
+            with(confirmationDialog) {
+                assertThat(title).isEqualTo(expectedDialogTitle)
+                assertThat(message).isEqualTo(expectedDialogMessage)
+                assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
+                assertThat(negativeButtonLabel).isEqualTo(expectedNegativeButtonLabel)
+            }
+        }
 
     @Test
     fun `given no network, when fix threats is triggered, then network error message is shown`() = test {
