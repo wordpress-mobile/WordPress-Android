@@ -170,11 +170,11 @@ class ActivityLogRestClient(
                 this,
                 url,
                 mapOf(),
-                BackupDownloadStatusResponse::class.java
+                Array<BackupDownloadStatusResponse>::class.java
         )
         return when (response) {
             is Success -> {
-                buildBackupDownloadStatusPayload(response.data, site)
+                buildBackupDownloadStatusPayload(response.data[0], site)
             }
             is Error -> {
                 val errorType = NetworkErrorMapper.map(

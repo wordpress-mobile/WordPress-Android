@@ -5,7 +5,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatM
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType.UNKNOWN
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
@@ -70,11 +69,7 @@ class ThreatMapper @Inject constructor() {
 
         val fixable = response.fixable?.let {
             val fixType = FixType.fromValue(it.fixer)
-            if (fixType != UNKNOWN) {
-                Fixable(file = it.file, fixer = fixType, target = it.target)
-            } else {
-                null
-            }
+            Fixable(file = it.file, fixer = fixType, target = it.target)
         }
 
         return BaseThreatModel(
