@@ -146,7 +146,7 @@ class ScanViewModel @Inject constructor(
                     }
                 }
                 updateActionButtons(isEnabled = !isFixing)
-                showProgressBar(isFixing)
+                updateFixThreatsStatusProgressBar(isVisible = isFixing)
                 messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
         }
@@ -186,11 +186,11 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun showProgressBar(show: Boolean) {
+    private fun updateFixThreatsStatusProgressBar(isVisible: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
-                if (contentItem is ProgressState) {
-                    contentItem.copy(isVisible = show)
+                if (contentItem is ProgressState && contentItem.isIndeterminate) {
+                    contentItem.copy(isVisible = isVisible)
                 } else {
                     contentItem
                 }
