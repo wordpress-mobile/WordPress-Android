@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-26 22:01:55+0000
+Translation-Revision-Date: 2021-01-01 03:32:53+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -15,7 +15,6 @@ Language: ar
     <string name="backup_download_details_icon_content_description">إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>
     <string name="backup_download_details_action_button">إنشاء ملف قابل للتنزيل</string>
     <string name="backup_download_details_choose_items_header">اختر العناصر التي ترغب في تضمينها في التنزيل:</string>
-    <string name="backup_download_details_description">تمثِّل ⁦%1$s⁩ النقطة المُحدَّدة لإنشاء نسخة احتياطية قابلة للتنزيل.</string>
     <string name="backup_download_details_header">إنشاء نسخة احتياطية قابلة للتنزيل</string>
     <string name="backup_download_details_page_title">تنزيل النسخ الاحتياطي</string>
     <string name="backup_download">تنزيل النسخ الاحتياطي</string>
@@ -23,8 +22,6 @@ Language: ar
     <string name="gutenberg_native_choose_file">اختيار ملف</string>
     <string name="activity_log_item_menu_download_backup_label">تنزيل النسخة الاحتياطية</string>
     <string name="activity_log_item_menu_restore_label">استعادة إلى هذه النقطة</string>
-    <string name="activity_log_activity_type_filter_label">نوع النشاط</string>
-    <string name="activity_log_date_range_filter_label">نطاق التاريخ</string>
     <string name="activity_log_activity_type_filter_header">تصفية حسب نوع النشاط</string>
     <string name="dialog_confirm_copy_local_copy_button">نسخ الإصدار من هذا التطبيق</string>
     <string name="dialog_confirm_copy_local_edit_button">تحرير المقالة أولاً</string>
@@ -61,7 +58,7 @@ Language: ar
     <string name="dialog_edit_story_unavailable_title">لا يمكن تحرير القصة</string>
     <string name="dialog_edit_story_limited_message">تم تحرير هذه القصة على جهاز مختلف وقد تكون القدرة محدودة على تحرير كائنات معينة.</string>
     <string name="dialog_edit_story_limited_title">تحرير قصة محدودة</string>
-    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول تحرير قصتك.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">تمت إزالة الوسائط. حاول إعادة إنشاء قصتك.</string>
     <string name="color_picker_label_background">الخلفية</string>
     <string name="color_picker_label_text">النص</string>
     <string name="dialog_discard_story_ok_button_edit">تجاهل</string>
@@ -314,7 +311,6 @@ Language: ar
     <string name="gutenberg_native_gradient_type">نوع التدرج</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">الضغط ضغطًا مزدوجًا لتحديد الخيار</string>
     <string name="gutenberg_native_customize_gradient">تخصيص التدرج</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">كاتب الصفحة</string>
     <string name="photo_picker_use_gif">استخدام تنسيق GIF هذا</string>
     <string name="error_media_thumbnail_not_loaded">تعذر تحميل الصورة المصغَّرة للوسائط</string>
@@ -350,7 +346,6 @@ Language: ar
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="update_now">قم بالتحديث الآن</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">تجربة تخطيط بدء العمل</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
@@ -358,8 +353,6 @@ Language: ar
     <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
     <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
-    <string name="suggestion_no_matching_users">\"لا يتوافر أي مستخدمين متطابقين\".</string>
-    <string name="suggestion_invalid_user">\"إنَّ %s مستخدم غير صالح\"</string>
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_posts_page">صفحة المقالات</string>
     <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
@@ -532,7 +525,6 @@ Language: ar
     <string name="stats_management_add_new_stats_card">إضافة بطاقة إحصاءات جديدة</string>
     <string name="reader_self_hosted_select_filter">استخدام زر الفلترة للعثور على مقالات في مواضيع معينة</string>
     <string name="reader_bottom_sheet_content_description">تحديد وسم أو موقع، نافذة منبثقة</string>
-    <string name="reader_btn_selected_filter_tick_content_description">مُحدَّد</string>
     <string name="reader_btn_select_filter_content_description">تحديد موقع أو وسم لفلترة المقالات</string>
     <string name="reader_btn_remove_filter_content_description">إزالة الفلتر الحالي</string>
     <string name="reader_title_subs">إدارة المواضيع والمواقع</string>
@@ -609,7 +601,6 @@ Language: ar
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
@@ -1244,14 +1235,8 @@ Language: ar
     <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
     <string name="application_log_button">سجل التطبيق</string>
     <string name="my_tickets">تذاكري</string>
-    <string name="activity_log_rewind_dialog_message">هل أنت متأكد من رغبتك في استرجاع موقعك مرة أخرى إلى  %1$s في %2$s؟ سيؤدي هذا الإجراء إلى حذف كل المحتوى والخيارات التي تم إنشاؤها أو تغييرها من ذلك الحين.</string>
-    <string name="activity_log_rewind_site">إرجاع الموقع</string>
-    <string name="activity_log_currently_restoring_message_no_dates">الإرجاع قيد التقدّم</string>
-    <string name="activity_log_currently_restoring_message">الإرجاع إلى %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
-    <string name="activity_log_rewind_finished_snackbar_message">تمت استعادة موقعك بنجاح\nتم الإرجاع إلى %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">يتم الآن استعادة موقعك\nالاسترجاع إلى %1$s %2$s</string>
     <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
     <string name="plugin_auto_managed">إدارة تلقائية</string>
     <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تتوافر إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة إلى أجهزتك الأخرى.</string>
@@ -1294,7 +1279,6 @@ Language: ar
     <string name="reader_btn_notifications_on">تشغيل التنبيهات في الموقع</string>
     <string name="reader_btn_notifications_off">إيقاف تشغيل التنبيهات في الموقع</string>
     <string name="activity_log_jetpack_icon">أيقونة Jetpack</string>
-    <string name="rewind">إرجاع</string>
     <string name="activity_log_event">الحدث</string>
     <string name="activity_log_icon">أيقونة النشاط</string>
     <string name="activity_log">سجل النشاط</string>

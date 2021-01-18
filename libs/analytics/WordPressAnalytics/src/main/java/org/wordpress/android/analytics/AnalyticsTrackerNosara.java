@@ -1673,6 +1673,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_detail_opened";
             case ACTIVITY_LOG_REWIND_STARTED:
                 return "activity_log_rewind_started";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "activitylog_filterbar_range_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED:
+                return "activitylog_filterbar_type_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "activitylog_filterbar_select_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED:
+                return "activitylog_filterbar_select_type";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET:
+                return "activitylog_filterbar_reset_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
+                return "activitylog_filterbar_reset_type";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:

@@ -4,7 +4,7 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.backup.download.details.adapters.viewholders.BackupDownloadDetailsSubHeaderViewHolder
+import org.wordpress.android.ui.jetpack.backup.download.viewholders.BackupDownloadSubHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
@@ -36,7 +36,7 @@ class BackupDownloadDetailsAdapter(
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_SUB_HEADER.id -> BackupDownloadDetailsSubHeaderViewHolder(
+            ViewType.BACKUP_SUB_HEADER.id -> BackupDownloadSubHeaderViewHolder(
                     uiHelpers,
                     parent
             )

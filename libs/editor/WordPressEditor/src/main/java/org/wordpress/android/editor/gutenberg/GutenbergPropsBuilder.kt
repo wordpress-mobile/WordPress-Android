@@ -15,7 +15,6 @@ data class GutenbergPropsBuilder(
     private val enableUnsupportedBlockEditor: Boolean,
     private val unsupportedBlockEditorSwitch: Boolean,
     private val enablePreviewMode: Boolean,
-    private val enableModalLayoutPicker: Boolean,
     private val localeSlug: String,
     private val postType: String,
     private val editorTheme: Bundle?
@@ -33,7 +32,6 @@ data class GutenbergPropsBuilder(
             translations = GutenbergUtils.getTranslations(activity),
             isDarkMode = GutenbergUtils.isDarkMode(activity),
             htmlModeEnabled = isHtmlModeEnabled,
-            isPreview = enablePreviewMode,
-            isModalLayoutPickerEnabled = enableModalLayoutPicker
+            isPreview = enablePreviewMode
     )
 }

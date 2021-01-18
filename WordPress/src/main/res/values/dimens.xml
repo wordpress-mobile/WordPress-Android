@@ -160,7 +160,7 @@
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
     <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">100dp</dimen>
+    <dimen name="scrim_visible_height_trigger">150dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_low
@@ -213,6 +213,8 @@
     <dimen name="reader_subfilter_url_margin_bottom">14dp</dimen>
 
     <dimen name="reader_subfilter_component_height">48dp</dimen>
+
+    <dimen name="reader_subfilter_unseen_count_height">30dp</dimen>
 
     <item name="reader_photo_title_shadow_offset" format="float" type="dimen">3.0</item>
     <item name="reader_photo_title_shadow_radius" format="float" type="dimen">1.5</item>
@@ -409,6 +411,10 @@
     <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
     <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
+
+    <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
+    <dimen name="quick_start_task_card_width">168dp</dimen>
+    <dimen name="quick_start_task_card_illustration_height">94dp</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>

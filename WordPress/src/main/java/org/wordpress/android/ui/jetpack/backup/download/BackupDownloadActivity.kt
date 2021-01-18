@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpack.backup.download
 
-import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
@@ -10,7 +9,10 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.backup_download_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
@@ -26,9 +28,9 @@ import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+const val KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID = "key_backup_download_download_id"
+
 class BackupDownloadActivity : LocaleAwareActivity() {
-    // todo: annmarie add listeners if needed
-    // todo: annmarie get the values from the bundle for site & activityId
     @Inject internal lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject internal lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: BackupDownloadViewModel
@@ -84,30 +86,39 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             }
         })
 
-        // Canceled, Running, Complete -> (Running = kick off status)
+        viewModel.errorEvents.observe(this, {
+            it?.applyIfNotHandled {
+                viewModel.transitionToError(this)
+            }
+        })
+
         viewModel.wizardFinishedObservable.observe(this, {
             it.applyIfNotHandled {
                 val intent = Intent()
-                val (backupDownloadCreated, _) = when (this) {
-                    // teh request was canceled
+                val (backupDownloadCreated, downloadId) = when (this) {
                     is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress -> Pair(true, activityId)
-                    is BackupDownloadCompleted -> Pair(true, activityId)
+                    is BackupDownloadInProgress -> Pair(true, downloadId)
+                    is BackupDownloadCompleted -> Pair(true, null)
                 }
-                // todo: annmarie what information do I need to send back - just to kick off status
-                // intent.putExtra(SOME_KEY_THAT_DESCRIBES_THE_ID, activityId )
+                intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, downloadId)
                 setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
                 finish()
             }
         })
 
-        viewModel.exitFlowObservable.observe(this, {
-            setResult(Activity.RESULT_CANCELED)
-            finish()
+        viewModel.navigationEvents.observe(this, {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShareLink -> {
+                        ActivityLauncher.shareBackupDownloadFileLink(this@BackupDownloadActivity, url)
+                    }
+                    is DownloadFile -> {
+                        ActivityLauncher.downloadBackupDownloadFile(this@BackupDownloadActivity, url)
+                    }
+                }
+            }
         })
-        viewModel.onBackPressedObservable.observe(this, {
-            super.onBackPressed()
-        })
+
         viewModel.start(savedInstanceState)
     }
 
@@ -130,8 +141,8 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
         val fragment = when (target.wizardStep) {
             DETAILS -> BackupDownloadDetailsFragment.newInstance(intent?.extras)
-            PROGRESS -> BackupDownloadProgressFragment.newInstance()
-            COMPLETE -> BackupDownloadCompleteFragment.newInstance()
+            PROGRESS -> BackupDownloadProgressFragment.newInstance(intent?.extras, target.wizardState)
+            COMPLETE -> BackupDownloadCompleteFragment.newInstance(intent?.extras, target.wizardState)
         }
         slideInFragment(fragment, target.wizardStep.toString())
     }

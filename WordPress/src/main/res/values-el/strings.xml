@@ -1,11 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-07-06 12:41:50+0000
+Translation-Revision-Date: 2020-12-31 12:29:54+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: el_GR
 -->
 <resources>
+    <string name="gutenberg_native_error">Σφάλμα </string>
+    <string name="gutenberg_native_choose_file">Επιλέξτε αρχείο</string>
+    <string name="button_copy">Διπλότυπο</string>
+    <string name="toast_edit_story_update_in_progress_title">Η ιστορία αποθηκευεται, παρακαλούμε περιμένετε…</string>
+    <string name="gutenberg_native_file_name">Όνομα αρχείου</string>
+    <string name="gutenberg_native_choose_a_file">ΕΠΙΛΕΞΤΕ ΕΝΑ ΑΡΧΕΙΟ</string>
+    <string name="activity_log_activity_type_filter_apply">Εκτέλεση</string>
+    <string name="activity_log_activity_type_filter_clear">Καθαρισμός</string>
+    <string name="label_done_button">Ολοκληρώθηκε</string>
+    <string name="dialog_discard_story_title_edit">Απόρριψη αλλαγών;</string>
+    <string name="dialog_discard_story_ok_button_edit">Απόρριψη</string>
+    <string name="color_picker_label_background">Φόντο</string>
+    <string name="prepublishing_nudges_add_category_button">Προσθήκη κατηγορίας</string>
+    <string name="prepublishing_nudges_toolbar_title_add_categories">Προσθήκη Νέας Κατηγορίας</string>
+    <string name="prepublishing_nudges_toolbar_title_categories">Κατηγορίες</string>
+    <string name="prepublishing_nudges_home_categories_not_set">Δεν έχει οριστεί</string>
+    <string name="prepublishing_nudges_categories_action">Κατηγορίες</string>
+    <string name="login_prologue_fifth_caption_three">Μουσεία στο Λονδίνο</string>
+    <string name="gutenberg_native_help_button">Κουμπί Βοήθειας</string>
+    <string name="gutenberg_native_choose_images">Επιλέξτε εικόνες</string>
+    <string name="stories_intro_create_story_post_label">Δημιουργήστε μια ιστορία</string>
     <string name="gutenberg_native_move_image_forward">Μετακίνηση εικόνας εμπρός</string>
     <string name="gutenberg_native_move_image_backward">Μετακίνηση εικόνας πίσω</string>
     <string name="gutenberg_native_1_s_current_value_is_2_s">%1$s. Η τρέχουσα τιμή είναι %2$s</string>
@@ -18,6 +39,7 @@ Language: el_GR
     <string name="my_site_bottom_sheet_add_page">Σελίδες του ιστότοπου</string>
     <string name="reader_filter_sites_title">Ιστότοποι</string>
     <string name="reader_save_for_later_display_name">Αποθηκεύτηκε</string>
+    <string name="reader_filter_tags_title">Θέματα</string>
     <string name="gutenberg_native_translate">Μετάφραση</string>
     <string name="gutenberg_native_title">Τίτλος:</string>
     <string name="gutenberg_native_take_a_video">Λήψη βίντεο</string>
@@ -156,6 +178,7 @@ Language: el_GR
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
     <string name="quick_start_dialog_choose_theme_message">Περιηγηθείτε σε όλα μας τα θέματα για να βρείτε το ιδανικό για εσάς.</string>
     <string name="content_description_more">Περισσότερα</string>
+    <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
     <string name="install_jetpack_retry">Προσπαθήστε ξανά</string>
     <string name="jetpack">Jetpack</string>
@@ -273,6 +296,7 @@ Language: el_GR
     <string name="notifications_screen_title">Ειδοποιήσεις</string>
     <string name="reader_screen_title">Αναγνώστης</string>
     <string name="media_settings_screen_title">Λεπτομέρειες αρχείου</string>
+    <string name="my_site_section_screen_title">Ο ιστότοπος μου</string>
     <string name="release_notes_screen_title">Σημειώσεις έκδοσης</string>
     <string name="permissions_denied_title">Δικαιώματα</string>
     <string name="plugin_caption_featured">Προτεινόμενα</string>
@@ -414,6 +438,7 @@ Language: el_GR
     <string name="media_edit_filename_caption">Όνομα Αρχείου</string>
     <string name="media_edit_url_caption">URL</string>
     <string name="media_edit_alttext_text">Ενναλακτικό κείμενο</string>
+    <string name="connect_site">Σύνδεση ιστότοπου</string>
     <string name="notification_settings_item_sights_and_sounds_vibrate_device">Δόνηση συσκευής</string>
     <string name="notification_settings_item_sights_and_sounds_choose_sound">Επιλογή ήχου</string>
     <string name="notification_settings_category_sights_and_sounds">Εικόνες και Ήχοι</string>
@@ -700,6 +725,7 @@ Language: el_GR
     <string name="confirm_delete_site_prompt">Παρακαλούμε πληκτρολογήστε %1$s στο παρακάτω πεδίο για επιβεβαίωση. Ο ιστότοπός σας μετά θα εξαφανιστεί για πάντα.</string>
     <string name="site_settings_export_content_title">Εξαγωγή περιεχομένου</string>
     <string name="confirm_delete_site">Επιβεβαίωση Διαγραφής Ιστοτόπου</string>
+    <string name="contact_support">Επικοινωνήστε με την υποστήριξη</string>
     <string name="start_over_text">Αν θέλετε να διατηρήσετε έναν ιστότοπο αλλά δεν θέλετε κανένα από τα άρθρα και τις σελίδες που έχετε τώρα, η ομάδα υποστήριξής μας μπορεί να διαγράψει τα άρθρα, τις σελίδες τα πολυμέσα και τα σχόλια για λογαριασμό σας.\n\nΑυτό θα διατηρήσει ενεργά τον ιστότοπο και το URL σας αλλά θα σας επιτρέψει ένα νέο ξεκίνημα στη δημιουργία περιεχομένου. Απλά επικοινωνήστε μαζί μας για να γίνει εκκαθάριση του τρέχοντος περιεχομένου σας.</string>
     <string name="site_settings_start_over_hint">Ξεκινήστε τον ιστότοπό σας από την αρχή</string>
     <string name="let_us_help">Αφήστε μας να βοηθήσουμε</string>
@@ -1159,6 +1185,7 @@ Language: el_GR
     <string name="empty_list_default">Αυτή η λίστα είναι κενή</string>
     <string name="reader_hint_comment_on_comment">Απάντηση σ\' αυτό το σχόλιο…</string>
     <string name="reader_label_removed_tag">Αφαιρέθηκε το %s</string>
+    <string name="sign_up_label">Εγγραφή</string>
     <string name="stats">Στατιστικά</string>
     <string name="themes">Θέμα</string>
     <string name="media_gallery_type_squares">Τετράγωνα</string>

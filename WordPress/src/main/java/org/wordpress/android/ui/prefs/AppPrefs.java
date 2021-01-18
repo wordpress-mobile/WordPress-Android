@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.prefs;
 
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.text.TextUtils;
 
@@ -10,6 +11,7 @@ import androidx.annotation.Nullable;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.analytics.AnalyticsTracker;
 import org.wordpress.android.analytics.AnalyticsTracker.Stat;
+import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
 import org.wordpress.android.models.PeopleListFilter;
@@ -26,6 +28,7 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -126,7 +129,6 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
-        GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -155,7 +157,9 @@ public class AppPrefs {
         READER_RECOMMENDED_TAGS_DELETED_FOR_LOGGED_OUT_USER,
 
         READER_DISCOVER_WELCOME_BANNER_SHOWN,
-        MANUAL_FEATURE_CONFIG
+        MANUAL_FEATURE_CONFIG,
+        SITE_JETPACK_CAPABILITIES,
+        SITE_JETPACK_CAPABILITIES_LAST_UPDATED
     }
 
     /**
@@ -882,14 +886,6 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
-    public static void setGutenbergStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        setBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, tooltipShown);
-    }
-
-    public static boolean getGutenbergStarterPageTemplatesTooltipShown() {
-        return getBoolean(DeletablePrefKey.GUTENBERG_STARTER_PAGE_TEMPLATES_TOOLTIP_SHOWN, false);
-    }
-
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -1262,5 +1258,40 @@ public class AppPrefs {
             return true;
         }
         return false;
+    }
+
+    public static void setSiteJetpackCapabilities(long remoteSiteId, List<JetpackCapability> capabilities) {
+        HashSet<String> capabilitiesSet = new HashSet(capabilities.size());
+        for (JetpackCapability item : capabilities) {
+            capabilitiesSet.add(item.toString());
+        }
+
+        Editor editor = prefs().edit();
+        editor.putLong(
+                DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId),
+                new Date().getTime()
+        );
+        editor.putStringSet(
+                DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
+                capabilitiesSet
+        );
+        editor.apply();
+    }
+
+    public static List<JetpackCapability> getSiteJetpackCapabilities(long remoteSiteId) {
+        List<JetpackCapability> capabilities = new ArrayList<>();
+        Set<String> strings = prefs().getStringSet(
+                DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
+                new HashSet<>()
+        );
+        for (String item : strings) {
+            capabilities.add(JetpackCapability.Companion.fromString(item));
+        }
+        return capabilities;
+    }
+
+    public static long getSiteJetpackCapabilitiesLastUpdated(long remoteSiteId) {
+        return prefs()
+                .getLong(DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId), 0);
     }
 }
