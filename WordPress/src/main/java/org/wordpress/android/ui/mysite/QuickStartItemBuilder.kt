@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
@@ -87,14 +88,15 @@ class QuickStartItemBuilder
                 this.task,
                 UiStringRes(this.titleResId),
                 UiStringRes(this.subtitleResId),
-                getIllutration(this.task),
+                getIllustration(this.task),
                 accentColor,
                 done,
                 ListItemInteraction.create(this.task, onQuickStartTaskClick)
         )
     }
 
-    private fun getIllutration(task: QuickStartTask): Int {
+    @DrawableRes
+    private fun getIllustration(task: QuickStartTask): Int {
         return when (task) {
             UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
             UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
