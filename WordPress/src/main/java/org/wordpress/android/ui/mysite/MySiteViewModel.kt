@@ -213,7 +213,7 @@ class MySiteViewModel
                 quickStartItemBuilder.build(
                         it,
                         this::onQuickStartCardMoreClick,
-                        this::onQuickStartItemClick
+                        this::onQuickStartTaskCardClick
                 )
             } ?: listOf())
 
@@ -272,7 +272,7 @@ class MySiteViewModel
         _onQuickStartMenuShown.postValue(Event(id))
     }
 
-    private fun onQuickStartItemClick(task: QuickStartTask) {
+    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
         quickStartRepository.setActiveTask(task)
     }
 

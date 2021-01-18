@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:paddingBottom="@dimen/margin_extra_large">
+    android:paddingBottom="@dimen/margin_medium">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -22,7 +22,7 @@
             style="?android:progressBarStyleHorizontal"
             android:layout_width="@dimen/quick_start_card_progress_indicator_size"
             android:layout_height="@dimen/quick_start_card_progress_indicator_size"
-            android:layout_marginEnd="@dimen/my_site_list_row_icon_margin_right"
+            android:layout_marginEnd="@dimen/margin_extra_large"
             android:layout_marginStart="@dimen/content_margin_site_row_start"
             android:indeterminate="false"
             android:progressDrawable="@drawable/quick_start_card_progress_drawable"

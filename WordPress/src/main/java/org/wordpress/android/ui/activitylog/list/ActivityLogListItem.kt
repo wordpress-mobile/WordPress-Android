@@ -33,14 +33,20 @@ sealed class ActivityLogListItem(val type: ViewType) {
         override val isButtonVisible: Boolean,
         val buttonIcon: Icon,
         val isProgressBarVisible: Boolean = false,
-        val showMoreMenu: Boolean = false
+        val showMoreMenu: Boolean = false,
+        val launchRestoreWizard: Boolean = false
     ) : ActivityLogListItem(EVENT), IActionableItem {
         val formattedDate: String = date.toFormattedDateString()
         val formattedTime: String = date.toFormattedTimeString()
         val icon = Icon.fromValue(gridIcon)
         val status = Status.fromValue(eventStatus)
 
-        constructor(model: ActivityLogModel, rewindDisabled: Boolean = false, backupFeatureEnabled: Boolean) : this(
+        constructor(
+            model: ActivityLogModel,
+            rewindDisabled: Boolean = false,
+            backupFeatureEnabled: Boolean,
+            restoreFeatureEnabled: Boolean
+        ) : this(
                 model.activityID,
                 model.summary,
                 model.content?.text ?: "",
@@ -51,7 +57,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
                 buttonIcon = if (backupFeatureEnabled) MORE else HISTORY,
-                showMoreMenu = backupFeatureEnabled
+                showMoreMenu = backupFeatureEnabled,
+                launchRestoreWizard = restoreFeatureEnabled
         )
 
         override fun longId(): Long = activityId.hashCode().toLong()

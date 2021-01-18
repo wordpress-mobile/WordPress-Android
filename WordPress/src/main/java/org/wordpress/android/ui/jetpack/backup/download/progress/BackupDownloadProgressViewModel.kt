@@ -131,7 +131,7 @@ class BackupDownloadProgressViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        parentViewModel.onBackupDownloadDetailsCanceled()
+        parentViewModel.onBackupDownloadProgressExit()
     }
 
     data class UiState(

@@ -51,18 +51,20 @@ sealed class MySiteItem(val type: Type) {
 
     data class QuickStartCard(
         val id: String,
-        val title: UiStringRes,
-        val tasks: List<QuickStartTaskItem>,
+        val title: UiString,
+        val taskCards: List<QuickStartTaskCard>,
         @ColorRes val accentColor: Int,
         val progress: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
-        data class QuickStartTaskItem(
-            val task: QuickStartTask,
+        data class QuickStartTaskCard(
+            val id: QuickStartTask,
             val title: UiString,
             val description: UiString,
+            @DrawableRes val illustration: Int,
+            @ColorRes val accentColor: Int,
             val done: Boolean = false,
-            val onItemClick: ListItemInteraction
+            val onClick: ListItemInteraction
         )
     }
 
