@@ -11,9 +11,34 @@
       <entry name="!?*.kt" />
       <entry name="!?*.clj" />
     </wildcardResourcePatterns>
-    <bytecodeTargetLevel>
+    <bytecodeTargetLevel target="1.7">
       <module name="fluxc-annotations" target="1.7" />
       <module name="fluxc-processor" target="1.7" />
+      <module name="WordPress-Android.@react-native-community_masked-view" target="1.8" />
+      <module name="WordPress-Android.@react-native-community_slider" target="1.8" />
+      <module name="WordPress-Android.@wordpress_react-native-aztec" target="1.8" />
+      <module name="WordPress-Android.@wordpress_react-native-bridge" target="1.8" />
+      <module name="WordPress-Android.libs.analytics.WordPressAnalytics" target="1.8" />
+      <module name="WordPress-Android.libs.editor.WordPressEditor" target="1.8" />
+      <module name="WordPress-Android.libs.image-editor.ImageEditor" target="1.8" />
+      <module name="WordPress-Android.libs.login.WordPressLoginFlow" target="1.8" />
+      <module name="WordPress-Android.libs.networking.WordPressNetworking" target="1.8" />
+      <module name="WordPress-Android.libs.stories-android.stories" target="1.8" />
+      <module name="WordPress-Android.mp4compose" target="1.8" />
+      <module name="WordPress-Android.photoeditor" target="1.8" />
+      <module name="WordPress-Android.react-native-aztec" target="1.8" />
+      <module name="WordPress-Android.react-native-gesture-handler" target="1.8" />
+      <module name="WordPress-Android.react-native-get-random-values" target="1.8" />
+      <module name="WordPress-Android.react-native-gutenberg-bridge" target="1.8" />
+      <module name="WordPress-Android.react-native-linear-gradient" target="1.8" />
+      <module name="WordPress-Android.react-native-reanimated" target="1.8" />
+      <module name="WordPress-Android.react-native-safe-area-context" target="1.8" />
+      <module name="WordPress-Android.react-native-screens" target="1.8" />
+      <module name="WordPress-Android.react-native-svg" target="1.8" />
+      <module name="WordPress-Android.react-native-video" target="1.8" />
+      <module name="WordPress-Android.WordPress" target="1.8" />
+      <module name="WordPress-Android.WordPressMocks" target="1.8" />
+      <module name="WordPress-Utils-Android.WordPressUtils" target="1.8" />
       <module name="WordPressAnnotations" target="1.7" />
       <module name="WordPressProcessors" target="1.7" />
     </bytecodeTargetLevel>

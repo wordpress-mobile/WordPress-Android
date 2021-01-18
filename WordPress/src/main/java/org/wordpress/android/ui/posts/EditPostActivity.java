@@ -212,6 +212,7 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
+import org.wordpress.android.util.config.ContactInfoBlockFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.config.WPStoriesFeatureConfig;
@@ -411,6 +412,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject StoriesPrefs mStoriesPrefs;
     @Inject StoriesEventListener mStoriesEventListener;
     @Inject WPStoriesFeatureConfig mWPStoriesFeatureConfig;
+    @Inject ContactInfoBlockFeatureConfig mContactInfoBlockFeatureConfig;
 
     private StorePostViewModel mViewModel;
 
@@ -2339,7 +2341,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
         return new GutenbergPropsBuilder(
-                SiteUtils.supportsContactInfoFeature(mSite),
+                mContactInfoBlockFeatureConfig.isEnabled() && SiteUtils.supportsContactInfoFeature(mSite),
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 enableXPosts,
