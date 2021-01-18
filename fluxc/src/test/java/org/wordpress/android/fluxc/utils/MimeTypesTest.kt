@@ -108,4 +108,19 @@ class MimeTypesTest {
                 )
         )
     }
+
+    @Test
+    fun `returns audio only mime types as strings`() {
+        val allTypes = mimeTypes.getAudioTypesOnly()
+
+        assertThat(allTypes).isEqualTo(
+                arrayOf(
+                        "audio/mpeg",
+                        "audio/mp4",
+                        "audio/ogg",
+                        "application/ogg",
+                        "audio/x-wav"
+                )
+        )
+    }
 }

@@ -40,6 +40,16 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
             .map { it.build(gson, threatMapper) }
     }
 
+    fun getThreatByThreatId(threatId: Long): ThreatModel? {
+        return WellSql.select(ThreatBuilder::class.java)
+            .where()
+            .equals(ThreatModelTable.THREAT_ID, threatId)
+            .endWhere()
+            .asModel
+            .firstOrNull()
+            ?.build(gson, threatMapper)
+    }
+
     private fun ThreatModel.toBuilder(site: SiteModel): ThreatBuilder {
         var fileName: String? = null
         var diff: String? = null
@@ -114,7 +124,7 @@ class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val thr
         @Column var rows: String? = null,
         @Column var context: String? = null
     ) : Identifiable {
-        constructor() : this(-1, 0, 0, 0, "", "", "", 0, 0, "", "", "")
+        constructor() : this(-1, 0, 0, 0, "", "", "", 0, 0)
 
         override fun setId(id: Int) {
             this.id = id
