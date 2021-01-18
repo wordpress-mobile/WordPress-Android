@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
@@ -87,7 +88,10 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun fixAllThreats() { // TODO ashiagr to be implemented
+    private fun fixAllThreats() {
+        launch {
+            disableActionButtons(true)
+        }
     }
 
     private fun onScanButtonClicked() {
@@ -109,6 +113,19 @@ class ScanViewModel @Inject constructor(
 
     private fun onThreatItemClicked(threatId: Long) {
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
+    }
+
+    private fun disableActionButtons(disable: Boolean) {
+        (_uiState.value as? Content)?.let { content ->
+            val updatesContentItems = content.items.map { contentItem ->
+                if (contentItem is ActionButtonState) {
+                    contentItem.copy(isEnabled = !disable)
+                } else {
+                    contentItem
+                }
+            }
+            updateUiState(content.copy(items = updatesContentItems))
+        }
     }
 
     private fun updateNavigationEvent(navigationEvent: ScanNavigationEvents) {
