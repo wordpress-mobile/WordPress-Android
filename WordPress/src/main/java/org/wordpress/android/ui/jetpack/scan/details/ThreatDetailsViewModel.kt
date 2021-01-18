@@ -78,6 +78,7 @@ class ThreatDetailsViewModel @Inject constructor(
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
                 is IgnoreThreatState.Success -> {
+                    // TODO ashiagr consider showing success message in the scan state screen
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
 
                     withContext(bgDispatcher) { delay(DELAY_MILLIS) }
