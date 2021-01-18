@@ -24,6 +24,7 @@ import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCas
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -77,8 +78,7 @@ class ThreatDetailsViewModel @Inject constructor(
             disableThreatActionButtons(true)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
                 is IgnoreThreatState.Success -> {
-                    val message = UiStringRes(R.string.threat_ignore_success_message)
-                    updateSnackbarMessageEvent(SnackbarMessageHolder(message))
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
 
                     withContext(bgDispatcher) { delay(DELAY_MILLIS) }
                     updateNavigationEvent(ShowUpdatedScanState)
@@ -86,12 +86,12 @@ class ThreatDetailsViewModel @Inject constructor(
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
                     disableThreatActionButtons(false)
-                    updateSnackbarMessageEvent(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+                    updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
 
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
                     disableThreatActionButtons(false)
-                    updateSnackbarMessageEvent(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message)))
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
                 }
             }
         }
@@ -132,8 +132,8 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun updateSnackbarMessageEvent(messageHolder: SnackbarMessageHolder) {
-        _snackbarEvents.value = Event(messageHolder)
+    private fun updateSnackbarMessageEvent(message: UiString) {
+        _snackbarEvents.value = Event(SnackbarMessageHolder((message)))
     }
 
     private fun updateNavigationEvent(navigationEvent: ThreatDetailsNavigationEvents) {
