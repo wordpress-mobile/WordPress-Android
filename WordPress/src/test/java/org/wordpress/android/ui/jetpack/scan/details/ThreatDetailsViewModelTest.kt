@@ -123,9 +123,22 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ignore threat fails, then error message is shown`() = test {
-        val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message))
-        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
+    fun `given server unavailable, when ignore threat action is triggered, then ignore threat error msg is shown`() =
+        test {
+            val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message))
+            whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
+            val observers = init()
+
+            triggerIgnoreThreatAction(observers)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(expectedErrorSnackBarMsg)
+        }
+
+    @Test
+    fun `given no network, when ignore threat action is triggered, then network error msg is shown`() = test {
+        val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
+        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.NetworkUnavailable)
         val observers = init()
 
         triggerIgnoreThreatAction(observers)
