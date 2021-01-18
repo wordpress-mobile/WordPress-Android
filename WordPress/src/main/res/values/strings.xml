@@ -141,6 +141,7 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="pick_audio">Select audio</string>
     <string name="pick_media">Add image or video</string>
     <string name="pick_file">Add file</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
@@ -2446,6 +2447,7 @@
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_choose_file">Choose from device</string>
+    <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
@@ -2456,6 +2458,7 @@
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>

@@ -37,6 +37,7 @@ public class RequestCodes {
     public static final int VIDEO_LIBRARY = 2200;
     public static final int MEDIA_LIBRARY = 2210;
     public static final int FILE_LIBRARY = 2220;
+    public static final int AUDIO_LIBRARY = 2230;
     public static final int TAKE_VIDEO = 2300;
     public static final int CROP_PHOTO = 2400;
     public static final int PICTURE_LIBRARY_OR_CAPTURE = 2500;

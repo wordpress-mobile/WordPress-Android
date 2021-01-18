@@ -2753,6 +2753,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
+                case RequestCodes.AUDIO_LIBRARY:
                     if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                             List<Uri> uriResults = convertStringArrayIntoUrisList(
@@ -2764,7 +2765,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         }
                     } else {
                         uris = WPMediaUtils.retrieveMediaUris(data);
-                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+
+                        switch (requestCode) {
+                            case RequestCodes.FILE_LIBRARY:
+                                mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+                                break;
+                            case RequestCodes.AUDIO_LIBRARY:
+                                mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY);
+                                break;
+                        }
+
                         for (Uri item : uris) {
                             mEditorMedia.addNewMediaToEditorAsync(item, false);
                         }
@@ -2975,6 +2985,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
+    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher
+                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -3026,6 +3041,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+    }
+
+    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
     }
 
     @Override
