@@ -19,8 +19,12 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -33,12 +37,16 @@ class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
     private val fetchScanStateUseCase: FetchScanStateUseCase,
     private val startScanUseCase: StartScanUseCase,
+    private val fixThreatsUseCase: FixThreatsUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
+
+    private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
+    val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
     private val _navigationEvents = MediatorLiveData<Event<ScanNavigationEvents>>()
     val navigationEvents: LiveData<Event<ScanNavigationEvents>> = _navigationEvents
@@ -91,6 +99,20 @@ class ScanViewModel @Inject constructor(
     private fun fixAllThreats() {
         launch {
             disableActionButtons(true)
+            when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
+                is FixThreatsState.Success -> {
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
+                    // TODO ashiagr check for fix status
+                }
+                is FixThreatsState.Failure.NetworkUnavailable -> {
+                    disableActionButtons(false)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                }
+                is FixThreatsState.Failure.RemoteRequestFailure -> {
+                    disableActionButtons(false)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
+                }
+            }
         }
     }
 
@@ -126,6 +148,10 @@ class ScanViewModel @Inject constructor(
             }
             updateUiState(content.copy(items = updatesContentItems))
         }
+    }
+
+    private fun updateSnackbarMessageEvent(message: UiString) {
+        _snackbarEvents.value = Event(SnackbarMessageHolder(message))
     }
 
     private fun updateNavigationEvent(navigationEvent: ScanNavigationEvents) {

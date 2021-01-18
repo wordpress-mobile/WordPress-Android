@@ -1127,6 +1127,8 @@
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
+    <string name="threat_fix_all_started_message">We\'re hard at work fixing these threats in the background. Please check back shortly.</string>
+    <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>

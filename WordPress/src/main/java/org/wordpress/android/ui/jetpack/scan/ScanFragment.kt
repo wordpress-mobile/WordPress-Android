@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.scan_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -18,8 +19,10 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDeta
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
 class ScanFragment : Fragment(R.layout.scan_fragment) {
@@ -65,6 +68,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             }
         )
 
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
+
         viewModel.navigationEvents.observe(
             viewLifecycleOwner,
             {
@@ -83,6 +88,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun refreshContentScreen(content: Content) {
         ((recycler_view.adapter) as ScanAdapter).update(content.items)
+    }
+
+    private fun SnackbarMessageHolder.showSnackbar() {
+        val snackbar = WPSnackbar.make(
+            scan_state_layout,
+            uiHelpers.getTextOfUiString(requireContext(), this.message),
+            Snackbar.LENGTH_LONG
+        )
+        snackbar.show()
     }
 
     private fun showFixThreatsConfirmationDialog(holder: OpenFixThreatsConfirmationDialog) {
