@@ -13,6 +13,7 @@ import javax.inject.Inject
 class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ScanHistoryListViewModel
+    private lateinit var parentViewModel: ScanHistoryViewModel
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -34,8 +35,9 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
 
     private fun initViewModel(site: SiteModel) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
+        parentViewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryViewModel::class.java)
         setupObservers()
-        viewModel.start(site)
+        viewModel.start(site, parentViewModel)
     }
 
     private fun setupObservers() {
