@@ -124,7 +124,8 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
-import org.wordpress.android.ui.SuggestUsersActivity;
+import org.wordpress.android.ui.posts.editor.XPostsCapabilityChecker;
+import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.media.MediaBrowserActivity;
@@ -173,6 +174,7 @@ import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper;
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs;
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase;
+import org.wordpress.android.ui.suggestion.SuggestionType;
 import org.wordpress.android.ui.uploads.PostEvents;
 import org.wordpress.android.ui.uploads.UploadService;
 import org.wordpress.android.ui.uploads.UploadUtils;
@@ -211,7 +213,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -298,8 +299,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private static final String STATE_KEY_REVISION = "stateKeyRevision";
     private static final String STATE_KEY_EDITOR_SESSION_DATA = "stateKeyEditorSessionData";
     private static final String STATE_KEY_GUTENBERG_IS_SHOWN = "stateKeyGutenbergIsShown";
-    private static final String TAG_GB_INFORMATIVE_DIALOG = "tag_gb_informative_dialog";
-    private static final String TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG = "tag_gb_rollout_v2_informative_dialog";
 
     private static final int PAGE_CONTENT = 0;
     private static final int PAGE_SETTINGS = 1;
@@ -354,8 +353,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mHasSetPostContent;
     private boolean mIsPreview;
     private PostLoadingState mPostLoadingState = PostLoadingState.NONE;
+    @Nullable private Boolean mIsXPostsCapable = null;
 
-    @Nullable Consumer<String> mOnGetMentionResult;
+    @Nullable Consumer<String> mOnGetSuggestionResult;
 
     // For opening the context menu after permissions have been granted
     private View mMenuView = null;
@@ -402,7 +402,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject PublishPostImmediatelyUseCase mPublishPostImmediatelyUseCase;
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
+    @Inject XPostsCapabilityChecker mXpostsCapabilityChecker;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
@@ -679,15 +679,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         setupPrepublishingBottomSheetRunnable();
 
-        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository);
+        mStoriesEventListener.start(this.getLifecycle(), mSite, mEditPostRepository, this);
         setupPreviewUI();
     }
 
     private void presentNewPageNoticeIfNeeded() {
         if (mIsPreview
             || !mIsPage
-            || !mIsNewPost
-            || !mModalLayoutPickerFeatureConfig.isEnabled()) {
+            || !mIsNewPost) {
             return;
         }
         String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
@@ -759,8 +758,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (mIsJetpackSsoEnabled != isJetpackSsoEnabled) {
             mIsJetpackSsoEnabled = isJetpackSsoEnabled;
             if (mEditorFragment instanceof GutenbergEditorFragment) {
-                ((GutenbergEditorFragment) mEditorFragment)
-                        .updateCapabilities(mIsJetpackSsoEnabled, getGutenbergPropsBuilder());
+                GutenbergEditorFragment gutenbergFragment = (GutenbergEditorFragment) mEditorFragment;
+                gutenbergFragment.setJetpackSsoEnabled(mIsJetpackSsoEnabled);
+                gutenbergFragment.updateCapabilities(getGutenbergPropsBuilder());
             }
         }
     }
@@ -1647,27 +1647,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     private void showGutenbergInformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                mEditPostRepository.isPage() ? getString(R.string.dialog_gutenberg_informative_description_page)
-                        : getString(R.string.dialog_gutenberg_informative_description_post),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
     private void showGutenbergRolloutV2InformativeDialog() {
-        // Show the GB informative dialog on editing GB posts
-        final PromoDialog gbInformativeDialog = new PromoDialog();
-        gbInformativeDialog.initialize(TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG,
-                getString(R.string.dialog_gutenberg_informative_title),
-                getString(R.string.dialog_gutenberg_informative_description_v2),
-                getString(org.wordpress.android.editor.R.string.dialog_button_ok));
+        // We are no longer showing the dialog, but we are leaving all the surrounding logic because
+        // this is going in shortly before release, and we're going to remove all this logic in the
+        // very near future.
 
-        gbInformativeDialog.show(getSupportFragmentManager(), TAG_GB_ROLLOUT_V2_INFORMATIVE_DIALOG);
         AppPrefs.setGutenbergInfoPopupDisplayed(mSite.getUrl(), true);
     }
 
@@ -2238,6 +2229,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
+                        mXpostsCapabilityChecker.retrieveCapability(mSite,
+                                EditPostActivity.this::onXpostsSettingsCapability);
 
                         boolean isWpCom = getSite().isWPCom() || mSite.isPrivateWPComAtomic() || mSite.isWPComAtomic();
                         GutenbergPropsBuilder gutenbergPropsBuilder = getGutenbergPropsBuilder();
@@ -2319,6 +2312,13 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
     }
 
+    private void onXpostsSettingsCapability(boolean isXpostsCapable) {
+        mIsXPostsCapable = isXpostsCapable;
+        if (mEditorFragment instanceof GutenbergEditorFragment) {
+            ((GutenbergEditorFragment) mEditorFragment).updateCapabilities(getGutenbergPropsBuilder());
+        }
+    }
+
     private GutenbergPropsBuilder getGutenbergPropsBuilder() {
         String postType = mIsPage ? "page" : "post";
         String languageString = LocaleManager.getLanguage(EditPostActivity.this);
@@ -2326,6 +2326,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean isSiteUsingWpComRestApi = mSite.isUsingWpComRestApi();
         boolean enableMentions = isSiteUsingWpComRestApi && mGutenbergMentionsFeatureConfig.isEnabled();
+
+        // If this.mIsXPostsCapable has not been set, default to allowing xPosts
+        boolean enableXPosts = mIsXPostsCapable == null || mIsXPostsCapable;
 
         EditorTheme editorTheme = mEditorThemeStore.getEditorThemeForSite(mSite);
         Bundle themeBundle = (editorTheme != null) ? editorTheme.getThemeSupport().toBundle() : null;
@@ -2338,10 +2341,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
         return new GutenbergPropsBuilder(
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
+                enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
                 mIsPreview,
-                mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
                 themeBundle
@@ -2742,11 +2745,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.SELECTED_USER_MENTION:
-                    if (mOnGetMentionResult != null) {
-                        String selectedMention = data.getStringExtra(SuggestUsersActivity.SELECTED_USER_ID);
-                        mOnGetMentionResult.accept(selectedMention);
+                    if (mOnGetSuggestionResult != null) {
+                        String selectedMention = data.getStringExtra(SuggestionActivity.SELECTED_VALUE);
+                        mOnGetSuggestionResult.accept(selectedMention);
                         // Clear the callback once we have gotten a result
-                        mOnGetMentionResult = null;
+                        mOnGetSuggestionResult = null;
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
@@ -2972,11 +2975,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
-    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher
-                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
-    }
-
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -3028,10 +3026,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
-    }
-
-    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
-        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
     }
 
     @Override
@@ -3287,17 +3281,17 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mPostEditorAnalyticsSession.previewTemplate(template);
     }
 
-    @Override public void getMention(Consumer<String> onResult) {
-        mOnGetMentionResult = onResult;
-        ActivityLauncher.viewSuggestUsersForResult(this, mSite);
+    @Override public void showUserSuggestions(Consumer<String> onResult) {
+        showSuggestions(SuggestionType.Users, onResult);
     }
 
-    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
+    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+        showSuggestions(SuggestionType.XPosts, onResult);
     }
 
-    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
-        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
+    private void showSuggestions(SuggestionType type, Consumer<String> onResult) {
+        mOnGetSuggestionResult = onResult;
+        ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
     }
 
     @Override

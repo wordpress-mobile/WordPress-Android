@@ -95,23 +95,31 @@
         <item name="layoutPickerBackground">@color/white</item>
 
         <!-- Material Date Range Picker -->
-        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
+        <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
         <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
-    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar">
-    </style>
-
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
+        <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
         <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
         <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
         <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
         <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
         <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
+        <!--    Days of week header    -->
+        <item name="textAppearanceBody2">@style/WordPress.TextAppearance.MaterialCalendarDaysOfWeek</item>
+        <!-- Grid day items  -->
+        <item name="materialCalendarDay">@style/WordPress.MaterialCalendarDayTextView</item>
         <!-- Used to color the cancel button which doesn't use any overridable styles -->
         <item name="colorOnPrimary">?attr/colorOnSurface</item>
+        <item name="android:background">?attr/colorSurface</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarStyle" parent="Widget.MaterialComponents.MaterialCalendar.Fullscreen">
+        <!-- Grid selected day item  -->
+        <item name="daySelectedStyle">@style/WordPress.MaterialCalendarSelectedDay</item>
     </style>
 
     <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
@@ -127,6 +135,8 @@
 
     <style name="WordPress.MaterialCalendarHeaderSelection" parent="Widget.MaterialComponents.MaterialCalendar.HeaderSelection.Fullscreen">
         <item name="android:textColor">?attr/colorOnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceHeadline5</item>
+        <item name="android:background">@color/transparent</item>
     </style>
 
     <style name="WordPress.MaterialCalendarHeaderToggleButton" parent="Widget.MaterialComponents.MaterialCalendar.HeaderToggleButton">
@@ -140,7 +150,19 @@
 
     <style name="WordPress.MaterialCalendarHeaderDivider" parent="Widget.MaterialComponents.MaterialCalendar.HeaderDivider">
         <item name="android:visibility">visible</item>
-        <item name="android:background">?attr/colorOnSurface</item>
+        <item name="android:background">?attr/wpColorSurfaceSecondary</item>
+    </style>
+
+    <style name="WordPress.TextAppearance.MaterialCalendarDaysOfWeek" parent="TextAppearance.MaterialComponents.Body2">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarDayTextView" parent="Widget.MaterialComponents.MaterialCalendar.DayTextView">
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+    </style>
+
+    <style name="WordPress.MaterialCalendarSelectedDay" parent="Widget.MaterialComponents.MaterialCalendar.Day.Selected">
+        <item name="itemTextColor">?attr/colorOnSecondary</item>
     </style>
 
     <style name="WordPress.ActionMode" parent="@style/Widget.AppCompat.ActionMode">
@@ -1198,6 +1220,7 @@
         <item name="android:fontFamily">sans-serif-medium</item>
         <item name="android:paddingTop">0dp</item>
         <item name="android:paddingBottom">0dp</item>
+        <item name="android:textAllCaps">true</item>
     </style>
 
     <style name="SubfilterDividerItem">

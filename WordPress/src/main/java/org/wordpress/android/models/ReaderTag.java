@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
@@ -17,6 +18,7 @@ public class ReaderTag implements Serializable, FilterCriteria {
             ReaderConstants.DISCOVER_SITE_ID);
 
     public static final String TAG_TITLE_FOLLOWED_SITES = "Followed Sites";
+    public static final String TAG_SLUG_P2 = "p2";
     public static final String TAG_SLUG_BOOKMARKED = "bookmarked-posts";
     public static final String TAG_TITLE_DEFAULT = TAG_TITLE_FOLLOWED_SITES;
     public static final String TAG_ENDPOINT_DEFAULT = FOLLOWING_PATH;
@@ -191,9 +193,39 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/tags/");
     }
 
+    public boolean isP2() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/following/p2");
+    }
+
+    public boolean isA8C() {
+        String endpoint = getEndpoint();
+        return endpoint.toLowerCase(Locale.ROOT).contains("/read/a8c");
+    }
+
+    public boolean isFilterable() {
+        return this.isFollowedSites() || this.isA8C() || this.isP2();
+    }
+
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/list/");
+    }
+
+    public Organization getOrganization() {
+        if (this.isA8C()) {
+            return Organization.A8C;
+        } else if (this.isP2()) {
+            return Organization.P2;
+        } else if (this.isFollowedSites() || this.isDefaultInMemoryTag()) {
+            return Organization.NO_ORGANIZATION;
+        } else {
+            return Organization.UNKNOWN;
+        }
+    }
+
+    public String getKeyString() {
+        return tagType.toInt() + getTagSlug();
     }
 
     /*

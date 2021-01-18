@@ -183,7 +183,6 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
         void onAddLibraryMediaClicked(boolean allowMultipleSelection);
         void onAddLibraryFileClicked(boolean allowMultipleSelection);
-        void onAddLibraryAudioFileClicked(boolean allowMultipleSelection);
         void onAddPhotoClicked(boolean allowMultipleSelection);
         void onCapturePhotoClicked();
         void onAddVideoClicked(boolean allowMultipleSelection);
@@ -202,13 +201,11 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddStockMediaClicked(boolean allowMultipleSelection);
         void onAddGifClicked(boolean allowMultipleSelection);
         void onAddFileClicked(boolean allowMultipleSelection);
-        void onAddAudioFileClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
-        void getMention(Consumer<String> onResult);
-        void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
-        boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+        void showUserSuggestions(Consumer<String> onResult);
+        void showXpostSuggestions(Consumer<String> onResult);
         String getErrorMessageFromMedia(int mediaId);
         void showJetpackSettings();
         void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);

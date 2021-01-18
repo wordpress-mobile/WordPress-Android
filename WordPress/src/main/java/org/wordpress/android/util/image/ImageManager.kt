@@ -25,6 +25,7 @@ import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.DownsampleStrategy
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.AppWidgetTarget
 import com.bumptech.glide.request.target.BaseTarget
 import com.bumptech.glide.request.target.CustomTarget
@@ -98,6 +99,33 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
                 .addFallback(imageType)
                 .addPlaceholder(imageType)
                 .applyScaleType(scaleType)
+                .into(imageView)
+                .clearOnDetach()
+    }
+
+    /**
+     * Loads the first frame from the "videoUrl" as an image into the ImageView.
+     * Adds a placeholder and an error placeholder depending on the ImageType.
+     *
+     * If no URL is provided, it only loads the placeholder
+     */
+    @JvmOverloads
+    fun loadThumbnailFromVideoUrl(
+        imageView: ImageView,
+        imageType: ImageType,
+        videoUrl: String = "",
+        scaleType: ScaleType = CENTER,
+        requestListener: RequestListener<Drawable>? = null
+    ) {
+        val context = imageView.context
+        if (!context.isAvailable()) return
+        GlideApp.with(context)
+                .load(videoUrl)
+                .addFallback(imageType)
+                .addPlaceholder(imageType)
+                .applyScaleType(scaleType)
+                .attachRequestListener(requestListener)
+                .apply(RequestOptions().frame(0))
                 .into(imageView)
                 .clearOnDetach()
     }

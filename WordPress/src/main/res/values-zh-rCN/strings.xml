@@ -14,7 +14,6 @@ Language: zh_CN
     <string name="gutenberg_native_copy_file_url">复制文件 URL</string>
     <string name="gutenberg_native_choose_a_file">选择文件</string>
     <string name="new_site_creation_domain_header_title">选择域</string>
-    <string name="my_site_bottom_sheet_story_tag_new">新建</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 设置</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">已关注对话</string>
@@ -36,7 +35,6 @@ Language: zh_CN
     <string name="dialog_edit_story_unavailable_title">无法编辑故事</string>
     <string name="dialog_edit_story_limited_message">这个故事是在其他设备上编辑的，因此编辑某些对象时可能会受到限制。</string>
     <string name="dialog_edit_story_limited_title">受限故事编辑</string>
-    <string name="cannot_retry_deleted_media_item_fatal">媒体已被删除。 尝试编辑您的故事。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">文本</string>
     <string name="dialog_discard_story_ok_button_edit">丢弃</string>
@@ -289,7 +287,6 @@ Language: zh_CN
     <string name="gutenberg_native_gradient_type">渐变类型</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">轻点两下以选择选项</string>
     <string name="gutenberg_native_customize_gradient">自定义渐变</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">页面作者</string>
     <string name="photo_picker_use_gif">使用此 GIF</string>
     <string name="error_media_thumbnail_not_loaded">无法加载媒体缩略图</string>
@@ -325,7 +322,6 @@ Language: zh_CN
     <string name="ccpa_privacy_notice_header">面向加州用户的隐私声明</string>
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
-    <string name="pages_item_subtitle">%1$s· %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">试用初学者布局</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
@@ -333,8 +329,6 @@ Language: zh_CN
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
     <string name="pages_set_as_posts_page">设为文章页面</string>
     <string name="pages_set_as_homepage">设为主页</string>
-    <string name="suggestion_no_matching_users">\"没有找到匹配的用户。\"</string>
-    <string name="suggestion_invalid_user">\"%s不是有效用户\"</string>
     <string name="site_settings_select_page">选择页面</string>
     <string name="site_settings_posts_page">文章页面</string>
     <string name="site_settings_static_homepage">静态主页</string>
@@ -507,7 +501,6 @@ Language: zh_CN
     <string name="stats_management_add_new_stats_card">添加新统计信息卡片</string>
     <string name="reader_self_hosted_select_filter">使用“过滤器”按钮查找特定主题的文章</string>
     <string name="reader_bottom_sheet_content_description">选择标签、站点或弹出窗口</string>
-    <string name="reader_btn_selected_filter_tick_content_description">已选择</string>
     <string name="reader_btn_select_filter_content_description">选择站点或标签来过滤文章</string>
     <string name="reader_btn_remove_filter_content_description">删除当前过滤器</string>
     <string name="reader_title_subs">管理主题和站点</string>
@@ -560,7 +553,6 @@ Language: zh_CN
     <string name="my_site_bottom_sheet_add_post">博客文章</string>
     <string name="my_site_bottom_sheet_title">新增</string>
     <string name="post_settings_publish">发布</string>
-    <string name="dialog_gutenberg_informative_description_v2">我们对区块编辑器进行了重大改进，绝对值得一试！我们已为新文章和页面启用该编辑器，但是，如果您想改用经典编辑器，请转到“我的站点”>“站点设置”。</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
     <string name="dialog_confirm_scheduled_post_sync_message">此文章将立即同步。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">准备好同步了？</string>
@@ -585,7 +577,6 @@ Language: zh_CN
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="site_cannot_be_loaded">我们现在无法为您的站点加载数据。请稍后重试</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒体库</string>
@@ -662,8 +653,6 @@ Language: zh_CN
     <string name="notifications_tab_dialog_master_hint_on">为此站点禁用在“通知”选项卡上显示通知</string>
     <string name="notifications_tab_dialog_master_status_off">此站点的通知</string>
     <string name="notifications_tab_dialog_master_status_on">此站点的通知</string>
-    <string name="dialog_gutenberg_informative_description_page">您现在正在使用区块编辑器创建新页面，太棒了！如果您想要改为使用经典编辑器，请转至“我的站点”>“站点设置”。</string>
-    <string name="dialog_gutenberg_informative_description_post">您现在正在使用区块编辑器撰写新文章，太棒了！如果您想要改为使用经典编辑器，请转至“我的站点”>“站点设置”。</string>
     <string name="pick_media">添加图片或视频</string>
     <string name="error_post_not_submitted_retrying">我们无法提交这篇文章以进行审核，但我们会稍后重试。</string>
     <string name="error_post_not_scheduled_retrying">我们无法安排此文章的发布时间，但我们会稍后重试。</string>
@@ -936,7 +925,6 @@ Language: zh_CN
     <string name="stats_loading_error">无法加载数据</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用区块编辑器编辑新的文章和页面</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用区块编辑器</string>
-    <string name="dialog_gutenberg_informative_title">已启用区块编辑器</string>
     <string name="exit">退出</string>
     <string name="quick_start_sites_type_subtitle">已完成 %1$d 个（共 %2$d 个）</string>
     <string name="quick_start_sites_type_grow">增加您的受众</string>
@@ -1223,14 +1211,8 @@ Language: zh_CN
     <string name="support_contact_email">联系人电子邮件</string>
     <string name="application_log_button">应用程序日志</string>
     <string name="my_tickets">我的工单</string>
-    <string name="activity_log_rewind_dialog_message">是否确定要在 %2$s 将站点还原至 %1$s？此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
-    <string name="activity_log_rewind_site">还原站点</string>
-    <string name="activity_log_currently_restoring_message_no_dates">正在还原</string>
-    <string name="activity_log_currently_restoring_message">正在还原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在恢复您的站点</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功恢复您的站点</string>
-    <string name="activity_log_rewind_finished_snackbar_message">已成功恢复您的站点\n已还原至 %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">正在恢复您的站点\n正在还原至 %1$s %2$s</string>
     <string name="activity_log_button">活动日志操作按钮</string>
     <string name="plugin_auto_managed">已自动托管</string>
     <string name="reader_save_posts_locally_dialog_message">保存此文章，方便您随时回来阅读。但您只能在此设备上阅读该文章，也就是说已保存的文章不会同步到其他设备</string>
@@ -1273,7 +1255,6 @@ Language: zh_CN
     <string name="reader_btn_notifications_on">打开站点通知</string>
     <string name="reader_btn_notifications_off">关闭站点通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 图标</string>
-    <string name="rewind">还原</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活动图标</string>
     <string name="activity_log">活动日志</string>

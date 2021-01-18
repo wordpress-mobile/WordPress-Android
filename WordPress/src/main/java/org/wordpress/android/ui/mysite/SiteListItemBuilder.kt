@@ -12,8 +12,9 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -23,7 +24,8 @@ class SiteListItemBuilder
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val scanFeatureConfig: ScanFeatureConfig,
+    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -39,8 +41,18 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit): ListItem? {
-        return if (scanFeatureConfig.isEnabled()) {
+    fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
+        return if (backupScreenFeatureConfig.isEnabled() && isBackupAvailable) {
+            ListItem(
+                    R.drawable.ic_backup_alt_white_24dp,
+                    UiStringRes(R.string.backup),
+                    onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
+            )
+        } else null
+    }
+
+    fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
+        return if (scanScreenFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
                     R.drawable.ic_scan_alt_white_24dp,
                     UiStringRes(R.string.scan),

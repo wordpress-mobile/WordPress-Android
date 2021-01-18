@@ -45,12 +45,19 @@ import org.wordpress.android.ui.domains.DomainSuggestionsFragment;
 import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadActivity;
-import org.wordpress.android.ui.jetpack.backup.complete.BackupDownloadCompleteFragment;
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsFragment;
-import org.wordpress.android.ui.jetpack.backup.progress.BackupDownloadProgressFragment;
-import org.wordpress.android.ui.jetpack.scan.ScanActivity;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
+import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteFragment;
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsFragment;
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment;
+import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
+import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteFragment;
+import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsFragment;
+import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressFragment;
+import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningFragment;
 import org.wordpress.android.ui.jetpack.scan.ScanFragment;
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -70,6 +77,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.QuickStartMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -193,6 +201,8 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.views.ViewsWidgetList
 import org.wordpress.android.ui.stockmedia.StockMediaPickerActivity;
 import org.wordpress.android.ui.stories.StoryComposerActivity;
 import org.wordpress.android.ui.stories.intro.StoriesIntroDialogFragment;
+import org.wordpress.android.ui.suggestion.SuggestionActivity;
+import org.wordpress.android.ui.suggestion.SuggestionSourceSubcomponent.SuggestionSourceModule;
 import org.wordpress.android.ui.suggestion.adapters.SuggestionAdapter;
 import org.wordpress.android.ui.themes.ThemeBrowserActivity;
 import org.wordpress.android.ui.themes.ThemeBrowserFragment;
@@ -229,6 +239,7 @@ import dagger.android.support.AndroidSupportInjectionModule;
         SupportModule.class,
         ThreadModule.class,
         TrackerModule.class,
+        SuggestionSourceModule.class,
         // Login flow library
         LoginAnalyticsModule.class,
         LoginFragmentModule.class,
@@ -466,9 +477,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ActivityLogDetailFragment object);
 
-    void inject(ScanActivity object);
-
     void inject(ScanFragment object);
+
+    void inject(ScanHistoryFragment object);
+
+    void inject(ScanHistoryListFragment object);
+
+    void inject(ThreatDetailsFragment object);
 
     void inject(PluginListFragment object);
 
@@ -610,6 +625,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ReaderDiscoverService object);
 
+    void inject(SuggestionActivity object);
+
     void inject(MediaPickerActivity object);
 
     void inject(MediaPickerFragment object);
@@ -631,6 +648,18 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BackupDownloadProgressFragment object);
 
     void inject(BackupDownloadCompleteFragment object);
+
+    void inject(RestoreActivity object);
+
+    void inject(RestoreDetailsFragment object);
+
+    void inject(RestoreWarningFragment object);
+
+    void inject(RestoreProgressFragment object);
+
+    void inject(RestoreCompleteFragment object);
+
+    void inject(QuickStartMenuFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

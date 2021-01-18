@@ -24,6 +24,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Consumer;
 import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
@@ -53,6 +54,7 @@ import org.wordpress.android.util.helpers.MediaFile;
 import org.wordpress.android.util.helpers.MediaGallery;
 import org.wordpress.aztec.IHistoryListener;
 import org.wordpress.mobile.ReactNativeGutenbergBridge.GutenbergBridgeJS2Parent.GutenbergUserEvent;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.Media;
 import org.wordpress.mobile.WPAndroidGlue.MediaOption;
 import org.wordpress.mobile.WPAndroidGlue.UnsupportedBlock;
@@ -64,7 +66,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnGutenbergDidSendBu
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
 
@@ -98,7 +99,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_FILE = "MEDIA_SOURCE_FILE";
-    private static final String MEDIA_SOURCE_AUDIO_FILE = "MEDIA_SOURCE_AUDIO_FILE";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
     private static final String GIF_MEDIA = "GIF_MEDIA";
 
@@ -128,6 +128,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private boolean mEditorDidMount;
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
+    private boolean mUpdateCapabilitiesOnCreate = false;
 
     private ProgressDialog mSavingContentProgressDialog;
 
@@ -179,6 +180,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             fragmentTransaction.commitNow();
         }
 
+        if (mUpdateCapabilitiesOnCreate) {
+            getGutenbergContainerFragment().updateCapabilities(mCurrentGutenbergPropsBuilder);
+        }
+
         ProfilingUtils.start("Visual Editor Startup");
         ProfilingUtils.split("EditorFragment.onCreate");
 
@@ -222,11 +227,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override public void onMediaLibraryFileButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
                         mEditorFragmentListener.onAddLibraryFileClicked(allowMultipleSelection);
-                    }
-
-                    @Override public void onMediaLibraryAudioButtonClicked(boolean allowMultipleSelection) {
-                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddLibraryAudioFileClicked(allowMultipleSelection);
                     }
 
                     @Override
@@ -281,10 +281,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return otherMediaFileOptions;
                     }
 
-                    @Override public ArrayList<MediaOption> onGetOtherMediaAudioFileOptions() {
-                        return initOtherMediaAudioFileOptions();
-                    }
-
                     @Override
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
                         switch (mediaSource) {
@@ -296,9 +292,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                             case MEDIA_SOURCE_FILE:
                                 mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
-                                break;
-                            case MEDIA_SOURCE_AUDIO_FILE:
-                                mEditorFragmentListener.onAddAudioFileClicked(allowMultipleSelection);
                                 break;
                             default:
                                 AppLog.e(T.EDITOR,
@@ -373,18 +366,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.showJetpackSettings();
                     }
                 },
-                mEditorFragmentListener::getMention,
-                new OnStarterPageTemplatesTooltipShownEventListener() {
-                    @Override
-                    public void onSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-                        mEditorFragmentListener.onGutenbergEditorSetStarterPageTemplatesTooltipShown(tooltipShown);
+
+                new ShowSuggestionsUtil() {
+                    @Override public void showUserSuggestions(Consumer<String> onResult) {
+                        mEditorFragmentListener.showUserSuggestions(onResult);
                     }
 
-                    @Override
-                    public boolean onRequestStarterPageTemplatesTooltipShown() {
-                        return mEditorFragmentListener.onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+                    @Override public void showXpostSuggestions(Consumer<String> onResult) {
+                        mEditorFragmentListener.showXpostSuggestions(onResult);
                     }
                 },
+
                 new OnMediaFilesCollectionBasedBlockEditorListener() {
                     @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
@@ -553,26 +545,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
         otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(chooseFileResourceId)));
-
-        return otherMediaOptions;
-    }
-
-    private ArrayList<MediaOption> initOtherMediaAudioFileOptions() {
-        ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
-
-        FragmentActivity activity = getActivity();
-        if (activity == null) {
-            AppLog.e(T.EDITOR,
-                    "Failed to initialize other media options because the activity is null");
-            return otherMediaOptions;
-        }
-
-        String packageName = activity.getApplication().getPackageName();
-
-        int chooseAudioFileResourceId =
-                getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
-
-        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_AUDIO_FILE, getString(chooseAudioFileResourceId)));
 
         return otherMediaOptions;
     }
@@ -910,10 +882,17 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         getGutenbergContainerFragment().setContent(postContent);
     }
 
-    public void updateCapabilities(boolean isJetpackSsoEnabled, GutenbergPropsBuilder gutenbergPropsBuilder) {
-        mIsJetpackSsoEnabled = isJetpackSsoEnabled;
+    public void setJetpackSsoEnabled(boolean jetpackSsoEnabled) {
+        mIsJetpackSsoEnabled = jetpackSsoEnabled;
+    }
+
+    public void updateCapabilities(GutenbergPropsBuilder gutenbergPropsBuilder) {
         mCurrentGutenbergPropsBuilder = gutenbergPropsBuilder;
-        getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+        if (isAdded()) {
+            getGutenbergContainerFragment().updateCapabilities(gutenbergPropsBuilder);
+        } else {
+            mUpdateCapabilitiesOnCreate = true;
+        }
     }
 
     public void onToggleHtmlMode() {

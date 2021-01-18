@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 13:54:10+0000
+Translation-Revision-Date: 2021-01-06 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="backup_item_sqls">網站資料庫 (SQL)</string>
+    <string name="backup_item_contents">WP 內容目錄 (不包括佈景主題、外掛程式和上傳內容)</string>
+    <string name="backup_item_roots">WordPress 根目錄 (包括 wp-config.php 和任何非 WordPress 檔案)</string>
+    <string name="backup_item_media_uploads">媒體上傳</string>
+    <string name="backup_item_plugins">WordPress 外掛程式</string>
+    <string name="backup_item_themes">WordPress 佈景主題</string>
+    <string name="backup_download_details_icon_content_description">建立可下載的備份圖示</string>
+    <string name="backup_download_details_action_button">建立可下載檔案</string>
+    <string name="backup_download_details_choose_items_header">選擇要加入下載的項目：</string>
+    <string name="backup_download_details_header">建立可下載的備份</string>
+    <string name="backup_download_details_page_title">下載備份</string>
+    <string name="backup_download">備份下載</string>
+    <string name="gutenberg_native_error">錯誤</string>
+    <string name="gutenberg_native_choose_file">選擇檔案</string>
+    <string name="activity_log_item_menu_download_backup_label">下載備份</string>
+    <string name="activity_log_item_menu_restore_label">還原至此時間點</string>
+    <string name="activity_log_activity_type_filter_header">依活動類型篩選</string>
+    <string name="dialog_confirm_copy_local_copy_button">複製此應用程式的版本</string>
+    <string name="dialog_confirm_copy_local_edit_button">首先編輯文章</string>
+    <string name="dialog_confirm_copy_local_message">你嘗試複製的文章有兩個互相不一致的版本，或者你最近進行變更但沒有儲存。\n首先編輯文章，解決任何不一致，或繼續複製此應用程式的版本。</string>
+    <string name="dialog_confirm_copy_local_title">文章同步不一致</string>
+    <string name="button_copy">複製</string>
+    <string name="toast_edit_story_update_in_progress_title">正在儲存故事，請稍候…</string>
     <string name="gutenberg_native_file_name">檔案名稱</string>
     <string name="gutenberg_native_file_block_settings">檔案區塊設定</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">上傳檔案失敗。\n請點選以顯示選項。</string>
@@ -14,7 +37,6 @@ Language: zh_TW
     <string name="gutenberg_native_copy_file_url">複製檔案 URL</string>
     <string name="gutenberg_native_choose_a_file">選擇檔案</string>
     <string name="new_site_creation_domain_header_title">選擇網域</string>
-    <string name="my_site_bottom_sheet_story_tag_new">新增</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">我追蹤的討論</string>
@@ -36,7 +58,7 @@ Language: zh_TW
     <string name="dialog_edit_story_unavailable_title">無法編輯限時動態</string>
     <string name="dialog_edit_story_limited_message">這個限時動態已在不同裝置上編輯過，因此特定物件的編輯功能可能受到限制。</string>
     <string name="dialog_edit_story_limited_title">限時動態編輯功能受限</string>
-    <string name="cannot_retry_deleted_media_item_fatal">媒體已移除。 請嘗試編輯你的限時動態。</string>
+    <string name="cannot_retry_deleted_media_item_fatal">已移除媒體。 請嘗試重新建立你的限時動態。</string>
     <string name="color_picker_label_background">背景</string>
     <string name="color_picker_label_text">文字</string>
     <string name="dialog_discard_story_ok_button_edit">捨棄</string>
@@ -287,7 +309,6 @@ Language: zh_TW
     <string name="gutenberg_native_gradient_type">漸層色彩類型</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">按兩下以選擇</string>
     <string name="gutenberg_native_customize_gradient">自訂漸層色彩</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">頁面作者</string>
     <string name="photo_picker_use_gif">使用此 GIF</string>
     <string name="error_media_thumbnail_not_loaded">無法載入媒體縮圖</string>
@@ -323,7 +344,6 @@ Language: zh_TW
     <string name="ccpa_privacy_notice_header">加州使用者的隱私權聲明</string>
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">馬上更新</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">試用入門版面配置</string>
     <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
@@ -331,8 +351,6 @@ Language: zh_TW
     <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
     <string name="pages_set_as_posts_page">設為文章頁面</string>
     <string name="pages_set_as_homepage">設為首頁</string>
-    <string name="suggestion_no_matching_users">「沒有符合條件的使用者。」</string>
-    <string name="suggestion_invalid_user">「%s不是有效的使用者」</string>
     <string name="site_settings_select_page">選取頁面</string>
     <string name="site_settings_posts_page">文章列表頁面</string>
     <string name="site_settings_static_homepage">靜態首頁</string>
@@ -505,7 +523,6 @@ Language: zh_TW
     <string name="stats_management_add_new_stats_card">新增統計資料卡片</string>
     <string name="reader_self_hosted_select_filter">使用篩選按鈕尋找特定主題的文章</string>
     <string name="reader_bottom_sheet_content_description">選擇一個標籤或網站、快顯視窗</string>
-    <string name="reader_btn_selected_filter_tick_content_description">已選取</string>
     <string name="reader_btn_select_filter_content_description">選擇網站或標籤以篩選文章</string>
     <string name="reader_btn_remove_filter_content_description">移除目前的篩選條件</string>
     <string name="reader_title_subs">管理主題和網站</string>
@@ -558,7 +575,6 @@ Language: zh_TW
     <string name="my_site_bottom_sheet_add_post">網誌文章</string>
     <string name="my_site_bottom_sheet_title">新增</string>
     <string name="post_settings_publish">發佈</string>
-    <string name="dialog_gutenberg_informative_description_v2">我們大幅改進了區塊編輯器，值得你一試！我們為新文章和頁面啟用了這項功能，但如果你希望變更為傳統編輯器，請前往「我的網站」>「網站設定」進行變更。</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">立即同步</string>
     <string name="dialog_confirm_scheduled_post_sync_message">此文章會立即同步。</string>
     <string name="dialog_confirm_scheduled_post_sync_title">準備好要同步了嗎？</string>
@@ -583,7 +599,6 @@ Language: zh_TW
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒體庫</string>
@@ -660,8 +675,6 @@ Language: zh_TW
     <string name="notifications_tab_dialog_master_hint_on">停用此網站通知分頁的通知顯示</string>
     <string name="notifications_tab_dialog_master_status_off">此網站的通知</string>
     <string name="notifications_tab_dialog_master_status_on">此網站的通知</string>
-    <string name="dialog_gutenberg_informative_description_page">你正在使用區塊編輯器編輯新頁面，太棒了！ 如想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
-    <string name="dialog_gutenberg_informative_description_post">你正在使用區塊編輯器編輯新文章，太棒了！ 如想改用傳統編輯器，請前往「我的網站」>「網站設定」。</string>
     <string name="pick_media">新增圖片或視訊</string>
     <string name="error_post_not_submitted_retrying">我們無法將這篇文章提交送審，但稍後會再試一次。</string>
     <string name="error_post_not_scheduled_retrying">我們無法排程這篇文章，但稍後會再試一次。</string>
@@ -927,7 +940,6 @@ Language: zh_TW
     <string name="stats_loading_error">未載入資料</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">使用區塊編輯器編輯新文章和網頁</string>
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
-    <string name="dialog_gutenberg_informative_title">已啟用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
     <string name="quick_start_sites_type_grow">拓展你的讀者群</string>
@@ -1210,14 +1222,8 @@ Language: zh_TW
     <string name="support_contact_email">聯絡電子郵件</string>
     <string name="application_log_button">應用程式記錄檔</string>
     <string name="my_tickets">我的票證</string>
-    <string name="activity_log_rewind_dialog_message">確定要將你的網站還原至 %1$s 的 %2$s？這將移除在該時間點之後所建立或變更的全部內容和選項。</string>
-    <string name="activity_log_rewind_site">還原網站</string>
-    <string name="activity_log_currently_restoring_message_no_dates">正在還原</string>
-    <string name="activity_log_currently_restoring_message">正在還原至 %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">目前正在還原你的網站</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">已成功還原你的網站</string>
-    <string name="activity_log_rewind_finished_snackbar_message">已成功還原你的網站\n已還原至 %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">正在還原網站\n正在還原至 %1$s %2$s</string>
     <string name="activity_log_button">活動記錄動作按鈕</string>
     <string name="plugin_auto_managed">自動管理</string>
     <string name="reader_save_posts_locally_dialog_message">儲存這篇文章，即可隨時返回閱讀。儲存的文章不會同步至其他裝置，因此你只能在這部裝置上存取文章。</string>
@@ -1260,7 +1266,6 @@ Language: zh_TW
     <string name="reader_btn_notifications_on">開啟網站通知</string>
     <string name="reader_btn_notifications_off">關閉網站通知</string>
     <string name="activity_log_jetpack_icon">Jetpack 圖示</string>
-    <string name="rewind">還原</string>
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活動圖示</string>
     <string name="activity_log">活動記錄</string>

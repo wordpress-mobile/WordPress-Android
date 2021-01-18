@@ -1,11 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 15:54:10+0000
+Translation-Revision-Date: 2021-01-05 13:54:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="backup_item_sqls">בסיס הנתונים של האתר (SQL)</string>
+    <string name="backup_item_contents">ספריית WP-content (לא כולל ערכות עיצוב, תוספים והעלאות)</string>
+    <string name="backup_item_roots">בסיס WordPress (כולל wp-config.php וקבצים שאינם WordPress)</string>
+    <string name="backup_item_media_uploads">העלאות מדיה</string>
+    <string name="backup_item_plugins">תוספים של WordPress</string>
+    <string name="backup_item_themes">ערכות עיצוב של WordPress</string>
+    <string name="backup_download_details_icon_content_description">סמל ליצירת גיבוי להורדה</string>
+    <string name="backup_download_details_action_button">ליצור קובץ להורדה</string>
+    <string name="backup_download_details_choose_items_header">יש לבחור את הפריטים שברצונך להוסיף להורדה:</string>
+    <string name="backup_download_details_header">ליצור גיבוי להורדה</string>
+    <string name="backup_download_details_page_title">להוריד גיבוי</string>
+    <string name="backup_download">הורדת גיבוי</string>
+    <string name="gutenberg_native_error">שגיאה</string>
+    <string name="gutenberg_native_choose_file">לבחור קובץ</string>
+    <string name="activity_log_item_menu_download_backup_label">להוריד גיבוי</string>
+    <string name="activity_log_item_menu_restore_label">לשחזר לנקודה זאת</string>
+    <string name="activity_log_activity_type_filter_header">לסנן לפי סוג הפעילות</string>
+    <string name="dialog_confirm_copy_local_copy_button">להעתיק את הגרסה מהאפליקציה הזאת</string>
+    <string name="dialog_confirm_copy_local_edit_button">לערוך את הפוסט קודם כל</string>
+    <string name="dialog_confirm_copy_local_message">לפוסט שברצונך להעתיק קיימות שתי גרסאות שונות זו מזו, או שערכת את הפוסט אבל לא שמרת את השינויים.\n עליך קודם לערוך את הפוסט כדי לפתור התנגשויות בין הגרסאות ואז להמשיך בפעולת ההעתקה של הגרסה מהאפליקציה.</string>
+    <string name="dialog_confirm_copy_local_title">התנגשות בסנכרון הפוסט</string>
+    <string name="button_copy">לשכפל</string>
+    <string name="toast_edit_story_update_in_progress_title">הסטורי נשמר, רק רגע…</string>
     <string name="gutenberg_native_file_name">שם קובץ</string>
     <string name="gutenberg_native_file_block_settings">הגדרות של בלוק הקובץ</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">העלאת קבצים נכשלה.\nיש להקיש לאפשרויות.</string>
@@ -14,7 +37,6 @@ Language: he_IL
     <string name="gutenberg_native_copy_file_url">להעתיק כתובת URL של קובץ</string>
     <string name="gutenberg_native_choose_a_file">לבחור קובץ</string>
     <string name="new_site_creation_domain_header_title">לבחור דומיין</string>
-    <string name="my_site_bottom_sheet_story_tag_new">חדש</string>
     <string name="my_site_btn_jetpack_settings">הגדרות Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">הופעל מעקב אחר השיחה</string>
@@ -36,7 +58,7 @@ Language: he_IL
     <string name="dialog_edit_story_unavailable_title">אין אפשרות לערוך את הסטורי</string>
     <string name="dialog_edit_story_limited_message">הסטורי הזה נערך במכשיר שונה והאפשרות לערוך אובייקטים מסוימים עלולה להיות מוגבלת.</string>
     <string name="dialog_edit_story_limited_title">עריכה מוגבלת של הסטורי</string>
-    <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. מומלץ לנסות לערוך את הסטורי שלך.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">פריט המדיה הוסר. כדאי לנסות ליצור את הסיפור שלך מחדש.</string>
     <string name="color_picker_label_background">רקע</string>
     <string name="color_picker_label_text">טקסט</string>
     <string name="dialog_discard_story_ok_button_edit">ביטול</string>
@@ -284,7 +306,6 @@ Language: he_IL
     <string name="gutenberg_native_gradient_type">סוג מעבר צבע</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">יש להקיש פעמיים כדי לבחור את האפשרות</string>
     <string name="gutenberg_native_customize_gradient">להתאים אישית את מעבר הצבע</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">מחבר העמוד</string>
     <string name="photo_picker_use_gif">להשתמש בקובץ GIF זה</string>
     <string name="error_media_thumbnail_not_loaded">לא ניתן לטעון את התמונה הממוזערת של המדיה</string>
@@ -320,7 +341,6 @@ Language: he_IL
     <string name="ccpa_privacy_notice_header">הצהרת פרטיות למשתמשים מקליפורניה</string>
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">לנסות את הפריסה למתחילים</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
@@ -328,8 +348,6 @@ Language: he_IL
     <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="pages_set_as_posts_page">להגדיר כעמוד פוסטים</string>
     <string name="pages_set_as_homepage">להגדיר כעמוד הבית</string>
-    <string name="suggestion_no_matching_users">\"לא נמצאו משתמשים מתאימים.\"</string>
-    <string name="suggestion_invalid_user">\"המשתמש %s לא חוקי\"</string>
     <string name="site_settings_select_page">לבחור עמוד</string>
     <string name="site_settings_posts_page">עמוד הפוסטים</string>
     <string name="site_settings_static_homepage">עמוד בית קבוע</string>
@@ -502,7 +520,6 @@ Language: he_IL
     <string name="stats_management_add_new_stats_card">להוסיף כרטיס חדש של נתונים סטטיסטיים</string>
     <string name="reader_self_hosted_select_filter">להשתמש בכפתור הסינון לחיפוש פוסטים בנושאים מסוימים</string>
     <string name="reader_bottom_sheet_content_description">לבחור תגית או אתר, חלון קופץ</string>
-    <string name="reader_btn_selected_filter_tick_content_description">נבחר</string>
     <string name="reader_btn_select_filter_content_description">לבחור אתר או תגית כדי לסנן את הפוסטים</string>
     <string name="reader_btn_remove_filter_content_description">להסיר את המסנן הנוכחי</string>
     <string name="reader_title_subs">לנהל נושאים ואתרים</string>
@@ -555,7 +572,6 @@ Language: he_IL
     <string name="my_site_bottom_sheet_add_post">פוסט בבלוג</string>
     <string name="my_site_bottom_sheet_title">להוסיף חדש</string>
     <string name="post_settings_publish">פרסום</string>
-    <string name="dialog_gutenberg_informative_description_v2">שיפרנו באופן משמעותי את עורך הבלוקים ואנחנו חושבים שכדאי לנסות אותו! הפעלנו אותו בפוסטים ובעמודים חדשים אבל אם ברצונך לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">לסנכרן עכשיו</string>
     <string name="dialog_confirm_scheduled_post_sync_message">הפוסט הנוכחי יסונכרן באופן מיידי.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">הכול מוכן לסנכרון?</string>
@@ -580,7 +596,6 @@ Language: he_IL
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">אין לנו אפשרות לפתוח את הפוסטים כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="site_cannot_be_loaded">אין לנו אפשרות לטעון את הנתונים של האתר שלך כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
@@ -657,8 +672,6 @@ Language: he_IL
     <string name="notifications_tab_dialog_master_hint_on">השבתת הצגת הודעות בלשונית \'הודעות\' של אתר זה</string>
     <string name="notifications_tab_dialog_master_status_off">הודעות עבור אתר זה</string>
     <string name="notifications_tab_dialog_master_status_on">הודעות עבור אתר זה</string>
-    <string name="dialog_gutenberg_informative_description_page">התחלת להשתמש בעורך הבלוקים ליצירת עמודים חדשים, מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">התחלת להשתמש בעורך הבלוקים ליצירת פוסטים חדשים, מעולה! כדי לחזור לעורך הקלאסי, יש לעבור אל \'האתר שלי\' > \'הגדרות אתר\'.</string>
     <string name="pick_media">להוסיף תמונה או וידאו</string>
     <string name="error_post_not_submitted_retrying">לא הצלחנו לשלוח את הפוסט לבדיקה אבל ננסה שוב מאוחר יותר. </string>
     <string name="error_post_not_scheduled_retrying">לא הצלחנו לתזמן את הפוסט אבל ננסה שוב מאוחר יותר.</string>
@@ -929,7 +942,6 @@ Language: he_IL
     <string name="stats_loading_error">הנתונים לא נטענו</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">לעריכת פוסטים ועמודים חדשים עם עורך הבלוקים</string>
     <string name="site_settings_gutenberg_default_for_new_posts">שימוש בעורך הבלוקים</string>
-    <string name="dialog_gutenberg_informative_title">עורך הבלוקים הופעל</string>
     <string name="exit">יציאה</string>
     <string name="quick_start_sites_type_subtitle">%1$d מתוך %2$d הושלם</string>
     <string name="quick_start_sites_type_grow">הגדלת הקהל שלך</string>
@@ -1215,14 +1227,8 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
-    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד %1$s בשעה %2$s? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
-    <string name="activity_log_rewind_site">שחזור גרסה קודמת של האתר</string>
-    <string name="activity_log_currently_restoring_message_no_dates">השחזור בתהליך</string>
-    <string name="activity_log_currently_restoring_message">משחזר לתאריך  %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
-    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לתאריך %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לתאריך %1$s %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים.</string>
@@ -1265,7 +1271,6 @@ Language: he_IL
     <string name="reader_btn_notifications_on">הפעלת הודעות אתר</string>
     <string name="reader_btn_notifications_off">השבתת הודעות אתר</string>
     <string name="activity_log_jetpack_icon">סמל Jetpack</string>
-    <string name="rewind">שחזור לגרסה קודמת</string>
     <string name="activity_log_event">אירוע</string>
     <string name="activity_log_icon">סמל פעילות</string>
     <string name="activity_log">יומן פעילות</string>

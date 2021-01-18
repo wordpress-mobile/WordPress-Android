@@ -15,8 +15,10 @@ import org.wordpress.android.ui.accounts.signup.SettingsUsernameChangerFragment;
 import org.wordpress.android.ui.accounts.signup.UsernameChangerFullScreenDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.CountryPickerDialogFragment;
 import org.wordpress.android.ui.domains.DomainRegistrationDetailsFragment.StatePickerDialogFragment;
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStep;
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadStepsProvider;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStepsProvider;
+import org.wordpress.android.ui.jetpack.restore.RestoreStep;
+import org.wordpress.android.ui.jetpack.restore.RestoreStepsProvider;
 import org.wordpress.android.ui.mediapicker.loader.TenorGifClient;
 import org.wordpress.android.ui.posts.BasicDialog;
 import org.wordpress.android.ui.reader.ReaderPostWebViewCachingFragment;
@@ -138,6 +140,12 @@ public abstract class ApplicationModule {
     @Provides
     public static WizardManager<BackupDownloadStep> provideBackupDownloadWizardManager(
             BackupDownloadStepsProvider stepsProvider) {
+        return new WizardManager<>(stepsProvider.getSteps());
+    }
+
+    @Provides
+    public static WizardManager<RestoreStep> provideRestoreWizardManager(
+            RestoreStepsProvider stepsProvider) {
         return new WizardManager<>(stepsProvider.getSteps());
     }
 }

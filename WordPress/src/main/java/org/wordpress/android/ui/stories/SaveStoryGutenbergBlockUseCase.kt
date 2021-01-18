@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.stories
 
+import android.text.TextUtils
 import com.google.gson.Gson
 import com.wordpress.stories.compose.frame.FrameIndex
 import com.wordpress.stories.compose.story.StoryFrameItem
@@ -114,6 +115,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     }
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+        if (TextUtils.isEmpty(mediaFile.mediaId)) {
+            // if for any reason we couldn't obtain a remote mediaId, it's not worth spending time
+            // looking to replace anything in the Post. Skip processing for later in error handling.
+            return
+        }
         val gson = Gson()
         findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                 postModel,

@@ -14,7 +14,6 @@ Language: pt_BR
     <string name="gutenberg_native_copy_file_url">Copiar URL do arquivo</string>
     <string name="gutenberg_native_choose_a_file">Escolha um arquivo</string>
     <string name="new_site_creation_domain_header_title">Escolha um domínio</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Novo</string>
     <string name="my_site_btn_jetpack_settings">Configurações do Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Seguindo a conversa</string>
@@ -36,7 +35,6 @@ Language: pt_BR
     <string name="dialog_edit_story_unavailable_title">Não é possível editar o story</string>
     <string name="dialog_edit_story_limited_message">Este story foi editado em outro dispositivo e a possibilidade de edição de certos objetos pode estar limitada.</string>
     <string name="dialog_edit_story_limited_title">Edição limitada de story</string>
-    <string name="cannot_retry_deleted_media_item_fatal">A mídia foi removida. Tente editar o Story novamente.</string>
     <string name="color_picker_label_background">Fundo</string>
     <string name="color_picker_label_text">Texto</string>
     <string name="dialog_discard_story_ok_button_edit">Descartar</string>
@@ -287,7 +285,6 @@ Language: pt_BR
     <string name="gutenberg_native_gradient_type">Tipo de gradiente</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toque duas vezes para selecionar a opção</string>
     <string name="gutenberg_native_customize_gradient">Personalizar o gradiente</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Ir para a personalização de gradiente</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Ir para o seletor de cores personalizadas</string>
     <string name="pages_list_author">Autor da página</string>
@@ -325,7 +322,6 @@ Language: pt_BR
     <string name="status_and_visibility">Status e visibilidade</string>
     <string name="update_now">Atualizar agora</string>
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuários na Califórnia</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir menu de ações do bloco</string>
     <string name="gutenberg_native_try_a_starter_layout">Experimente começar com um modelo</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toque duas vezes para abrir a janela inferior com as opções disponíveis</string>
@@ -333,8 +329,6 @@ Language: pt_BR
     <string name="pages_cannot_be_started">Não conseguimos abrir as páginas agora. Tente novamente mais tarde.</string>
     <string name="pages_set_as_homepage">Definir como página inicial</string>
     <string name="pages_set_as_posts_page">Definir como página de posts</string>
-    <string name="suggestion_no_matching_users">\"Nenhum usuário correspondente disponível\"</string>
-    <string name="suggestion_invalid_user">\"%s não é um usuário válido\"</string>
     <string name="site_settings_select_page">Selecionar página</string>
     <string name="site_settings_posts_page">Página de posts</string>
     <string name="site_settings_static_homepage">Página inicial estática</string>
@@ -506,7 +500,6 @@ Language: pt_BR
     <string name="stats_management_screen_title">Adicionar novo cartão</string>
     <string name="stats_management_add_new_stats_card">Adicionar novo cartão de estatísticas</string>
     <string name="reader_self_hosted_select_filter">Use o botão de filtro para encontrar posts de assuntos específicos</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Selecionado</string>
     <string name="reader_btn_select_filter_content_description">Selecione um site ou tag para filtrar posts</string>
     <string name="reader_btn_remove_filter_content_description">Remover o filtro atual</string>
     <string name="reader_bottom_sheet_content_description">Selecione um site ou tag para filtrar posts, janela popup</string>
@@ -560,7 +553,6 @@ Language: pt_BR
     <string name="photo_picker_image_thumbnail_content_description">Miniatura da imagem</string>
     <string name="my_site_bottom_sheet_add_post">Posts do blog</string>
     <string name="post_settings_publish">Publicar</string>
-    <string name="dialog_gutenberg_informative_description_v2">Fizemos grandes melhorias no editor de blocos e achamos que vale a pena testá-lo. O editor de blocos foi ativado para novos posts e páginas, mas caso você queira voltar ao editor clássico, é possível fazer a alteração em Meu site > Configurações do site.</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizar agora</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Este post será sincronizado imediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Pronto para sincronizar?</string>
@@ -576,7 +568,6 @@ Language: pt_BR
     <string name="my_site_bottom_sheet_add_page">Página do site</string>
     <string name="enter_site_credentials_instead">Acessar com as credenciais do site.</string>
     <string name="posts_cannot_be_started">Não conseguimos abrir os posts agora. Tente novamente mais tarde.</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -662,8 +653,6 @@ Language: pt_BR
     <string name="notifications_tab_dialog_master_status_off">Notificações para esse site</string>
     <string name="notifications_tab_dialog_master_status_on">Notificações para esse site</string>
     <string name="notifications_tab_dialog_master_hint_on">Desativar a exibição de notificações deste site na aba notificações</string>
-    <string name="dialog_gutenberg_informative_description_page">Agora você está usando o editor de blocos para novas páginas.Ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
-    <string name="dialog_gutenberg_informative_description_post">Agora você está usando o editor de blocos para novos posts. Ótimo! Se você quiser mudar para o editar clássico, acesse \'Meu site\' > \'Configurações do site\'.</string>
     <string name="pick_media">Adicionar imagem ou vídeo</string>
     <string name="error_post_not_submitted_retrying">Não foi possível enviar este post para revisão, mas tentaremos novamente mais tarde.</string>
     <string name="error_post_not_scheduled_retrying">Não foi possível agendar esse post, mas tentaremos novamente mais tarde.</string>
@@ -936,7 +925,6 @@ Language: pt_BR
     <string name="stats_loading_block_error">Ocorreu um problema ao carregar seus dados. Atualize sua página para tentar novamente.</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Editar novos posts e páginas com o editor de blocos.</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
-    <string name="dialog_gutenberg_informative_title">Editor de blocos ativado</string>
     <string name="exit">sair</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
     <string name="quick_start_sites_type_grow">Aumente sua audiência</string>
@@ -1221,15 +1209,9 @@ Language: pt_BR
     <string name="support_contact_email_not_set">Não informado</string>
     <string name="support_contact_email">E-mail de contato</string>
     <string name="application_log_button">Log do aplicativo</string>
-    <string name="activity_log_rewind_site">Retroceder site</string>
-    <string name="activity_log_currently_restoring_message">Retrocedendo para %1$s %2$s</string>
     <string name="notification_channel_transient_title">Transitório</string>
     <string name="my_tickets">Meus tickets</string>
-    <string name="activity_log_rewind_dialog_message">Tem certeza de que deseja retroceder seu site para %1$s as %2$s? Isso removerá todo conteúdo e opções criadas ou alteradas a partir desse momento.</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Retrocesso em progresso</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Seu site foi restaurado com sucesso</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Seu site foi restaurado com sucesso\nRetrocedido para %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Seu site está sendo restaurado\nRetrocedendo para %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Seu site está sendo restaurado</string>
     <string name="activity_log_button">Botão do histórico de atividades</string>
     <string name="plugin_auto_managed">Auto gerenciado</string>
@@ -1273,7 +1255,6 @@ Language: pt_BR
     <string name="reader_btn_notifications_on">Ativar notificações do site</string>
     <string name="reader_btn_notifications_off">Desativar notificações do site</string>
     <string name="activity_log_jetpack_icon">Ícone do Jetpack</string>
-    <string name="rewind">Retroceder</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Ícone da atividade</string>
     <string name="activity">Atividade</string>

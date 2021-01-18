@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.ExceptionLogger;
 import org.wordpress.android.editor.R;
-import org.wordpress.mobile.WPAndroidGlue.AddMentionUtil;
+import org.wordpress.mobile.WPAndroidGlue.ShowSuggestionsUtil;
 import org.wordpress.mobile.WPAndroidGlue.GutenbergProps;
 import org.wordpress.mobile.WPAndroidGlue.RequestExecutor;
 import org.wordpress.mobile.WPAndroidGlue.Media;
@@ -26,7 +26,6 @@ import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnImageFullscreenPre
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnLogGutenbergUserEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaSavingQueryListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnReattachMediaUploadQueryListener;
-import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnStarterPageTemplatesTooltipShownEventListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaEditorListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaLibraryButtonListener;
 import org.wordpress.mobile.WPAndroidGlue.WPAndroidGlueCode.OnMediaFilesCollectionBasedBlockEditorListener;
@@ -68,8 +67,7 @@ public class GutenbergContainerFragment extends Fragment {
                                           onGutenbergDidRequestUnsupportedBlockFallbackListener,
                                   OnGutenbergDidSendButtonPressedActionListener
                                           onGutenbergDidSendButtonPressedActionListener,
-                                  AddMentionUtil addMentionUtil,
-                                  OnStarterPageTemplatesTooltipShownEventListener onSPTTooltipShownEventListener,
+                                  ShowSuggestionsUtil showSuggestionsUtil,
                                   OnMediaFilesCollectionBasedBlockEditorListener
                                           onMediaFilesCollectionBasedBlockEditorListener,
                                   boolean isDarkMode) {
@@ -87,8 +85,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onLogGutenbergUserEventListener,
                     onGutenbergDidRequestUnsupportedBlockFallbackListener,
                     onGutenbergDidSendButtonPressedActionListener,
-                    addMentionUtil,
-                    onSPTTooltipShownEventListener,
+                    showSuggestionsUtil,
                     onMediaFilesCollectionBasedBlockEditorListener,
                     isDarkMode);
     }

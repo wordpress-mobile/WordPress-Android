@@ -1,11 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-01 07:51:07+0000
+Translation-Revision-Date: 2021-01-07 13:54:09+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="toast_edit_story_update_in_progress_title">La story a été enregistrée, veuillez patienter…</string>
     <string name="gutenberg_native_file_name">Nom du fichier</string>
     <string name="gutenberg_native_file_block_settings">Réglages du bloc fichier</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Le téléversement des fichiers a échoué.\nVeuillez toucher pour accéder aux options.</string>
@@ -14,7 +15,6 @@ Language: fr
     <string name="gutenberg_native_copy_file_url">Copier l’URL du fichier</string>
     <string name="gutenberg_native_choose_a_file">Choisir un fichier</string>
     <string name="new_site_creation_domain_header_title">Choisir un domaine</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Nouveau</string>
     <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Discussion suivie</string>
@@ -36,7 +36,7 @@ Language: fr
     <string name="dialog_edit_story_unavailable_title">Impossible de modifier la Story</string>
     <string name="dialog_edit_story_limited_message">Cette Story a été modifiée sur un appareil différent et la possibilité de modifier certains objets peut être limitée.</string>
     <string name="dialog_edit_story_limited_title">Modification de la Story limitée</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de modifier votre Story.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Le média a été supprimé. Essayez de créer à nouveau votre story.</string>
     <string name="color_picker_label_background">Arrière-plan</string>
     <string name="color_picker_label_text">Texte</string>
     <string name="dialog_discard_story_ok_button_edit">Rejeter</string>
@@ -102,6 +102,7 @@ Language: fr
     <string name="gutenberg_native_choose_images">Choisir des images</string>
     <string name="stories_intro_create_story_post_label">Créer une publication de story</string>
     <string name="stories_intro_description_second">Elles sont publiées en tant que nouvel article de blog sur votre site afin que votre public ne rate jamais rien.</string>
+    <string name="stories_intro_title_second">Les publications de story ne disparaissent pas.</string>
     <string name="stories_intro_description_first">Combinez des photos, des vidéos et du texte pour créer des publications de story engageantes et sur lesquelles on peut appuyer. Vos visiteurs apprécieront.</string>
     <string name="stories_intro_title_first">Maintenant, les stories sont pour tout le monde</string>
     <string name="stories_intro_image_caption_second">Exemple de titre de story</string>
@@ -288,7 +289,6 @@ Language: fr
     <string name="gutenberg_native_gradient_type">Type de dégradé</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Touchez deux fois pour sélectionner l’option</string>
     <string name="gutenberg_native_customize_gradient">Personnaliser le dégradé</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Auteur de la page</string>
     <string name="photo_picker_use_gif">Utiliser ce GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniature n’a pas pu être chargée</string>
@@ -324,7 +324,6 @@ Language: fr
     <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Essayer une mise en page de démarrage</string>
     <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille du bas avec des options disponibles</string>
@@ -332,8 +331,6 @@ Language: fr
     <string name="pages_cannot_be_started">Impossible d’ouvrir des pages pour le moment. Réessayez ultérieurement.</string>
     <string name="pages_set_as_posts_page">Définir comme page d’articles</string>
     <string name="pages_set_as_homepage">Définir comme page d’accueil</string>
-    <string name="suggestion_no_matching_users">« Aucun utilisateur correspondant disponible. »</string>
-    <string name="suggestion_invalid_user">« %s n’est pas un utilisateur valide »</string>
     <string name="site_settings_select_page">Sélectionner une page</string>
     <string name="site_settings_posts_page">Page des articles</string>
     <string name="site_settings_static_homepage">Page d’accueil statique</string>
@@ -506,7 +503,6 @@ Language: fr
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
     <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Sélectionné</string>
     <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_title_subs">Gérer les sujets et les sites</string>
@@ -559,7 +555,6 @@ Language: fr
     <string name="my_site_bottom_sheet_add_post">Article de blog</string>
     <string name="my_site_bottom_sheet_title">Ajouter</string>
     <string name="post_settings_publish">Publier</string>
-    <string name="dialog_gutenberg_informative_description_v2">Nous avons apporté de grandes améliorations à l\'éditeur de blocs. Essayez-le vite ! Nous l\'avons rendu disponible pour les nouveaux articles et les nouvelles pages, mais si vous souhaitez repasser à l\'éditeur classique, accédez à « Mon site » > « Paramètres du site ».</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Synchroniser maintenant</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Cet article sera synchronisé immédiatement.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">Prêt à synchroniser ?</string>
@@ -584,7 +579,6 @@ Language: fr
     <string name="suffix_1_000_000_000_000">%s billion</string>
     <string name="suffix_1_000_000_000">%s milliard</string>
     <string name="suffix_1_000_000">%s million</string>
-    <string name="suffix_1_000">%s mille</string>
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="site_cannot_be_loaded">Nous ne pouvons pas charger les données de votre site pour le moment. Réessayez ultérieurement.</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliothèque des médias WordPress</string>
@@ -661,8 +655,6 @@ Language: fr
     <string name="notifications_tab_dialog_master_hint_on">Désactiver l\'affichage des notifications sur l\'onglet des notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_off">Notifications pour ce site</string>
     <string name="notifications_tab_dialog_master_status_on">Notifications pour ce site</string>
-    <string name="dialog_gutenberg_informative_description_page">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouvelles pages. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
-    <string name="dialog_gutenberg_informative_description_post">Vous utilisez actuellement le nouvel éditeur de blocs pour les nouveaux articles. C’est super ! Si vous souhaitez revenir à l’éditeur classique, allez sur « Mon site » > « Réglages du site ».</string>
     <string name="pick_media">Ajouter une image ou une vidéo</string>
     <string name="error_post_not_submitted_retrying">Nous n\'avons pas pu soumettre cet article pour révision, mais nous réessayerons plus tard. </string>
     <string name="error_post_not_scheduled_retrying">Nous n\'avons pas pu planifier la publication de cet article, mais nous réessayerons plus tard.</string>
@@ -935,7 +927,6 @@ Language: fr
     <string name="stats_loading_error">Données non chargées</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Modifier les nouvelles publications et pages avec l’éditeur de blocs</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Utiliser l’éditeur de blocs</string>
-    <string name="dialog_gutenberg_informative_title">Éditeur de blocs activé</string>
     <string name="exit">sortir</string>
     <string name="quick_start_sites_type_subtitle">Fait : %1$d of %2$d</string>
     <string name="quick_start_sites_type_grow">Développez votre audience</string>
@@ -1222,14 +1213,8 @@ Language: fr
     <string name="support_contact_email">E-mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
-    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %1$s à %2$s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
-    <string name="activity_log_rewind_site">Retour en arrière du site</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
-    <string name="activity_log_currently_restoring_message">Retour en arrière de %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto-géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article pour le consulter de nouveau quand vous le désirez. Il ne sera disponible que sur cet appareil. En effet, la synchronisation entre appareils n\'est pas disponible pour les articles enregistrés.</string>
@@ -1272,7 +1257,6 @@ Language: fr
     <string name="reader_btn_notifications_on">Activer les notifications de site</string>
     <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
-    <string name="rewind">Rembobiner</string>
     <string name="activity_log_event">Événement</string>
     <string name="activity_log_icon">Icône d\'activité</string>
     <string name="activity_log">Journal d\'activités</string>

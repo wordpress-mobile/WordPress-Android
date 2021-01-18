@@ -1,11 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-05 04:05:14+0000
+Translation-Revision-Date: 2020-12-16 14:21:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_CO
 -->
 <resources>
+    <string name="backup_item_sqls">Base de datos del sitio (SQL)</string>
+    <string name="backup_item_contents">Directorio wp-content (excluye themes, plugins y uploads)</string>
+    <string name="backup_item_media_uploads">Subidas de medios</string>
+    <string name="backup_item_plugins">Plugins de WordPress</string>
+    <string name="backup_item_themes">Temas de WordPress</string>
+    <string name="backup_download_details_icon_content_description">Crea un ícono de copia de seguridad descargable</string>
+    <string name="backup_download_details_action_button">Crear un archivo descargable</string>
+    <string name="backup_download_details_choose_items_header">Elige los elementos que quieres incluir en la descarga:</string>
+    <string name="backup_download_details_header">Crear una copia de seguridad descargable</string>
+    <string name="backup_download_details_page_title">Descargar copia de seguridad</string>
+    <string name="backup_download">Descarga de la copia de seguridad</string>
+    <string name="gutenberg_native_error">Error</string>
+    <string name="gutenberg_native_choose_file">Elegir archivo</string>
+    <string name="activity_log_item_menu_download_backup_label">Descargar copia de seguridad</string>
+    <string name="activity_log_item_menu_restore_label">Restaurar hasta este punto</string>
+    <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividad</string>
+    <string name="dialog_confirm_copy_local_copy_button">Copiar la versión de esta aplicación</string>
+    <string name="dialog_confirm_copy_local_edit_button">Editar la entrada primero</string>
+    <string name="dialog_confirm_copy_local_message">La entrada que estás tratando de copiar tiene dos versiones que están en conflicto o has hecho cambios recientemente, pero no los has guardado.\nEdita la entrada primero para resolver cualquier conflicto o procede a copiar la versión de esta aplicación.</string>
+    <string name="dialog_confirm_copy_local_title">Conflicto de sincronización de la entrada</string>
+    <string name="button_copy">Duplicar</string>
+    <string name="toast_edit_story_update_in_progress_title">La historia se está guardando, por favor, espera…</string>
     <string name="gutenberg_native_file_name">Nombre del archivo</string>
     <string name="gutenberg_native_file_block_settings">Ajustes del archivo del bloque</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Fallo al subir los archivos.\nPor favor, toca para ver las opciones.</string>
@@ -14,7 +36,6 @@ Language: es_CO
     <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
     <string name="gutenberg_native_choose_a_file">ELEGIR UN ARCHIVO</string>
     <string name="new_site_creation_domain_header_title">Elige un dominio</string>
-    <string name="my_site_bottom_sheet_story_tag_new">Nuevo</string>
     <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Siguiendo la conversación</string>
@@ -36,7 +57,6 @@ Language: es_CO
     <string name="dialog_edit_story_unavailable_title">No se puede editar la historia</string>
     <string name="dialog_edit_story_limited_message">Esta historia se ha editado en un dispositivo diferente y la posibilidad de editar ciertos objetos puede estar limitada.</string>
     <string name="dialog_edit_story_limited_title">Edición limitada de la historia</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Los medios han sido eliminados. Intenta editar tu historia.</string>
     <string name="color_picker_label_background">Fondo</string>
     <string name="color_picker_label_text">Texto</string>
     <string name="dialog_discard_story_ok_button_edit">Descartar</string>
@@ -289,7 +309,6 @@ Language: es_CO
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor de la página</string>
     <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
@@ -325,7 +344,6 @@ Language: es_CO
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
@@ -333,8 +351,6 @@ Language: es_CO
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
     <string name="pages_set_as_homepage">Establecer como página de inicio</string>
-    <string name="suggestion_no_matching_users">«No hay disponibles usuarios que coincidan.»</string>
-    <string name="suggestion_invalid_user">«%s no es un usuario válido»</string>
     <string name="site_settings_select_page">Seleccionar la página</string>
     <string name="site_settings_posts_page">Página de entradas</string>
     <string name="site_settings_static_homepage">Página de inicio estática</string>
@@ -507,7 +523,6 @@ Language: es_CO
     <string name="stats_management_add_new_stats_card">Añadir una nueva tarjeta de estadísticas</string>
     <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
     <string name="reader_title_subs">Gestionar temas y sitios</string>
@@ -560,7 +575,6 @@ Language: es_CO
     <string name="my_site_bottom_sheet_add_post">Entrada del blog</string>
     <string name="my_site_bottom_sheet_title">Añadir nueva</string>
     <string name="post_settings_publish">Publicar</string>
-    <string name="dialog_gutenberg_informative_description_v2">Hemos hecho grandes mejoras en el editor de bloques y creemos que ¡vale la pena probarlo! Lo hemos activado para nuevas entradas y páginas, pero si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
     <string name="dialog_confirm_scheduled_post_sync_yes">Sincronizar ahora</string>
     <string name="dialog_confirm_scheduled_post_sync_message">Esta entrada se sincronizará inmediatamente.</string>
     <string name="dialog_confirm_scheduled_post_sync_title">¿Preparado para sincronizar?</string>
@@ -585,7 +599,6 @@ Language: es_CO
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="site_cannot_be_loaded">No podemos cargar los datos para tu sitio en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
@@ -662,8 +675,6 @@ Language: es_CO
     <string name="notifications_tab_dialog_master_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
     <string name="notifications_tab_dialog_master_status_off">Avisos para este sitio</string>
     <string name="notifications_tab_dialog_master_status_on">Avisos para este sitio</string>
-    <string name="dialog_gutenberg_informative_description_page">Ahora estás usando el editor de bloques para las nuevas páginas, ¡genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
-    <string name="dialog_gutenberg_informative_description_post">Ahora estás usando el editor de bloques para las nuevas entradas, ¡genial! Si quieres cambiar al editor clásico, ve a «Mi sitio > Ajustes del sitio».</string>
     <string name="pick_media">Añadir imagen o video</string>
     <string name="error_post_not_submitted_retrying">No hemos podido enviar esta entrada a revisión, pero lo intentaremos de nuevo más tarde. </string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
@@ -936,7 +947,6 @@ Language: es_CO
     <string name="stats_loading_error">Datos no cargados</string>
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Edita las nuevas entradas y páginas con el editor de bloques</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
-    <string name="dialog_gutenberg_informative_title">Editor de bloques activado</string>
     <string name="exit">salir</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
     <string name="quick_start_sites_type_grow">Haz crecer tu audiencia</string>
@@ -1223,14 +1233,8 @@ Language: es_CO
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Registro de la aplicación</string>
     <string name="my_tickets">Mis tickets</string>
-    <string name="activity_log_rewind_dialog_message">¿Quieres rebobinar tu sitio al %1$s a las %2$s? Esto borrará todo el contenido y opciones creadas o cambiadas desde entonces.</string>
-    <string name="activity_log_rewind_site">Rebobinar sitio</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rebobinado en curso</string>
-    <string name="activity_log_currently_restoring_message">Rebobinando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Tu sitio ha sido restaurado satisfactoriamente\nRebobinado a %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Tu sitio está siendo restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
     <string name="plugin_auto_managed">Gestionado automáticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Guarda esta entrada y vuelve cuando quieras para leerla. Solo estará disponible en este dispositivo — las entradas guardadas no se sincronizan con otros dispositivos.</string>
@@ -1273,7 +1277,6 @@ Language: es_CO
     <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>
     <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
     <string name="activity_log_jetpack_icon">Icono de Jetpack</string>
-    <string name="rewind">Rebobinar</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icono de actividad</string>
     <string name="activity_log">Registro de actividad</string>
