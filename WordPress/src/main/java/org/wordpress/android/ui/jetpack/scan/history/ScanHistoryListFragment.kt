@@ -8,10 +8,17 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ViewPagerFragment
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var imageManager: ImageManager
+    @Inject lateinit var uiHelpers: UiHelpers
+
     private lateinit var viewModel: ScanHistoryListViewModel
     private lateinit var parentViewModel: ScanHistoryViewModel
 
@@ -31,6 +38,8 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun initAdapter() {
+        recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
+        recycler_view.itemAnimator = null
     }
 
     private fun initViewModel(site: SiteModel) {
@@ -41,6 +50,16 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun setupObservers() {
+        viewModel.uiState.observe(
+                viewLifecycleOwner,
+                { listItems ->
+                    refreshContentScreen(listItems)
+                }
+        )
+    }
+
+    private fun refreshContentScreen(items: List<ScanListItemState>) {
+        ((recycler_view.adapter) as ScanAdapter).update(items)
     }
 
     private fun getSite(savedInstanceState: Bundle?): SiteModel {
@@ -51,7 +70,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         }
     }
 
-    override fun getScrollableViewForUniqueIdProvision(): View? = nested_scroll_view
+    override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)

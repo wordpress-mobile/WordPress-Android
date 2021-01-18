@@ -1,37 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nested_scroll_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
+        android:id="@+id/recycler_view"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <com.google.android.material.textview.MaterialTextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer viverra elit ac imperdiet tempus. Morbi ullamcorper velit ac ex facilisis eleifend. In vehicula lacus diam, at mattis nibh pharetra eu. Fusce pharetra, tellus id rhoncus suscipit, elit sem blandit enim, vel blandit ipsum lacus quis neque. Nulla interdum semper urna sed congue. Ut vulputate lorem nibh, sed ullamcorper diam eleifend quis. Sed eget dui aliquet dolor convallis egestas sit amet ut lorem. Mauris malesuada augue velit, nec pellentesque velit bibendum dictum. Duis egestas placerat pulvinar. Aenean ullamcorper vitae lacus vitae luctus. Etiam sed fermentum erat. Phasellus mattis aliquam tempus. Duis dictum quam odio, ut gravida est molestie at. Integer mattis consectetur ex. Donec iaculis magna at nunc pellentesque, ac ultrices ex posuere.
-
-Donec maximus turpis a eros elementum, quis rhoncus diam tempus. Sed magna quam, eleifend ut laoreet vel, pulvinar ac turpis. Cras vitae volutpat erat, ullamcorper venenatis est. Nullam iaculis enim neque, at scelerisque magna dictum eget. Aliquam eleifend convallis tempor. Pellentesque aliquam gravida accumsan. Suspendisse ac sem ex. Nullam posuere fringilla faucibus. Aliquam venenatis nec elit id lobortis. Cras id imperdiet felis, eget maximus tortor. Quisque hendrerit lorem ac ante porttitor, in scelerisque nisi vulputate. In dapibus urna sed luctus interdum.
-
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis ac felis a felis condimentum malesuada tristique ut justo. Etiam velit quam, volutpat a mi vitae, fringilla sagittis ante. Proin semper, metus quis dignissim porttitor, ante nisl viverra urna, vel iaculis ante elit viverra leo. Etiam posuere ultrices eros non vestibulum. Ut finibus, velit efficitur semper fringilla, nisi nibh pharetra magna, vitae ornare mi massa et elit. Sed quis augue porta, aliquam enim id, bibendum elit. Integer congue, ante ac porttitor porta, nulla massa tincidunt risus, sed placerat ex odio eget lacus. Proin ex tortor, efficitur eu fermentum sed, congue interdum enim. Pellentesque non sagittis eros. Quisque ut rutrum mauris. Maecenas lacus diam, congue vel scelerisque id, finibus ac tortor.
-
-Pellentesque vitae semper turpis, quis commodo enim. Integer mollis venenatis felis ac blandit. Ut vel ex dignissim erat suscipit aliquet. Vestibulum porta lectus eget tellus congue, nec feugiat nulla sodales. Proin et consectetur odio. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; Nullam accumsan mi non neque lobortis tempor. In tincidunt mauris sit amet odio facilisis vestibulum. Praesent consequat congue justo eu laoreet. Sed malesuada eros vitae tempor consectetur. Morbi rutrum, leo vel fringilla lobortis, lacus lacus finibus neque, sed tincidunt sapien massa et sapien. Praesent a felis gravida, lobortis nulla sit amet, consectetur tortor.
-
-Donec molestie odio at sem tempor suscipit. Ut eget tempor magna. Nullam facilisis elit interdum leo scelerisque consectetur. In placerat pellentesque sollicitudin. Sed consectetur id metus tempus aliquet. Donec ut turpis purus. Nam viverra, turpis vitae ultrices elementum, risus dolor luctus erat, sed tempus leo mi ac enim. In consequat nisl sed erat vestibulum, eu venenatis quam sollicitudin. Morbi fringilla vitae nisl vitae varius. Maecenas libero nisi, semper pretium cursus eu, facilisis id orci. "
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="HardcodedText" />
-
-    </androidx.core.widget.NestedScrollView>
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
