@@ -21,7 +21,10 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiSt
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Failure
+import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Success
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -106,6 +109,35 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             }
         }
 
+    @Test
+    fun `when ignore threat is successful, then success message is shown`() = test {
+        val expectedSuccessSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message))
+        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
+        val observers = init()
+
+        triggerIgnoreThreatAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+    }
+
+    @Test
+    fun `when ignore threat fails, then error message is shown`() = test {
+        val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message))
+        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
+        val observers = init()
+
+        triggerIgnoreThreatAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(expectedErrorSnackBarMsg)
+    }
+
+    private fun triggerIgnoreThreatAction(observers: Observers) {
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+        (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
+    }
+
     private fun createDummyThreatDetailsListItems(
         onIgnoreThreatItemClicked: () -> Unit
     ) = listOf(
@@ -122,6 +154,10 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         viewModel.uiState.observeForever {
             uiStates.add(it)
         }
+        val snackbarMsgs = mutableListOf<Event<SnackbarMessageHolder>>()
+        viewModel.snackbarEvents.observeForever {
+            snackbarMsgs.add(it)
+        }
         val navigation = mutableListOf<Event<ThreatDetailsNavigationEvents>>()
         viewModel.navigationEvents.observeForever {
             navigation.add(it)
@@ -129,11 +165,12 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(threatId)
 
-        return Observers(uiStates, navigation)
+        return Observers(uiStates, snackbarMsgs, navigation)
     }
 
     private data class Observers(
         val uiStates: List<UiState>,
+        val snackBarMsgs: List<Event<SnackbarMessageHolder>>,
         val navigation: List<Event<ThreatDetailsNavigationEvents>>
     )
 }
