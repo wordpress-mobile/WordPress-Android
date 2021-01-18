@@ -10,6 +10,7 @@ import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
 import org.wordpress.android.ui.jetpack.restore.RestoreState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressViewModel.UiState
@@ -47,7 +48,7 @@ class RestoreProgressFragment : Fragment(R.layout.jetpack_backup_restore_fragmen
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = RestoreProgressAdapter(imageManager, uiHelpers)
+        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel() {
@@ -73,7 +74,7 @@ class RestoreProgressFragment : Fragment(R.layout.jetpack_backup_restore_fragmen
     }
 
     private fun showView(uiState: UiState) {
-        ((recycler_view.adapter) as RestoreProgressAdapter).update(uiState.items)
+        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(uiState.items)
     }
 
     companion object {

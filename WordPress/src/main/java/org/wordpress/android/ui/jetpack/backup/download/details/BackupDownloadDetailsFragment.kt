@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
-import org.wordpress.android.ui.jetpack.backup.download.details.adapters.BackupDownloadDetailsAdapter
+import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -50,7 +50,7 @@ class BackupDownloadDetailsFragment : Fragment() {
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = BackupDownloadDetailsAdapter(imageManager, uiHelpers)
+        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel() {
@@ -77,7 +77,7 @@ class BackupDownloadDetailsFragment : Fragment() {
     }
 
     private fun showView(content: UiState) {
-        ((recycler_view.adapter) as BackupDownloadDetailsAdapter).update(content.items)
+        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(content.items)
     }
 
     companion object {

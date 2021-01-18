@@ -1,22 +1,24 @@
-package org.wordpress.android.ui.jetpack.backup.download.details.adapters
+package org.wordpress.android.ui.jetpack.common.adapters
 
 import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreSubHeaderViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreAdditionalInformationViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreSubHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackCheckboxViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackDescriptionViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackProgressViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 
-class BackupDownloadDetailsAdapter(
+class JetpackBackupRestoreAdapter(
     private val imageManager: ImageManager,
     private val uiHelpers: UiHelpers
 ) : RecyclerView.Adapter<JetpackViewHolder>() {
@@ -34,8 +36,11 @@ class BackupDownloadDetailsAdapter(
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
+            ViewType.PROGRESS.id -> JetpackProgressViewHolder(uiHelpers, parent)
             ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_ADDITIONAL_INFORMATION.id ->
+                JetpackBackupRestoreAdditionalInformationViewHolder(uiHelpers, parent)
             ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
                     uiHelpers,
                     parent
@@ -59,7 +64,7 @@ class BackupDownloadDetailsAdapter(
     @MainThread
     fun update(newItems: List<JetpackListItemState>) {
         val diffResult = DiffUtil.calculateDiff(
-                BackupDownloadDetailsListDiffUtils(
+                JetpackBackupRestoreListDiffUtils(
                         items.toList(),
                         newItems
                 )
@@ -69,7 +74,7 @@ class BackupDownloadDetailsAdapter(
         diffResult.dispatchUpdatesTo(this)
     }
 
-    private class BackupDownloadDetailsListDiffUtils(
+    private class JetpackBackupRestoreListDiffUtils(
         val oldItems: List<JetpackListItemState>,
         val newItems: List<JetpackListItemState>
     ) : DiffUtil.Callback() {
@@ -80,7 +85,6 @@ class BackupDownloadDetailsAdapter(
                 return false
             }
 
-            // todo: annmarie - adjust this
             return oldItem.longId() == newItem.longId()
         }
 
