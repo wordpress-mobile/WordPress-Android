@@ -20,52 +20,36 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
     suspend fun markPostAsSeen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-        val jsonObject = JSONObject()
-
-        jsonObject.put("feed_id", post.feedId.toString())
-        jsonObject.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
-        jsonObject.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
+        val requestJson = JSONObject()
+        requestJson.put("feed_id", post.feedId.toString())
+        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
+        requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
 
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, true)
-//            AppLog.d(
-//                    T.READER,
-//                    "subscribeMeToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
-//            )
             cont.resume(result)
         }
         val errorListener = ErrorListener { volleyError ->
             cont.resume(Failure("error"))
         }
-
-        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/new", jsonObject, null, listener, errorListener)
+        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/new", requestJson, null, listener, errorListener)
     }
 
     suspend fun markPostAsUnseen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-
-        val jsonObject = JSONObject()
-
-            jsonObject.put("feed_id", post.feedId.toString())
-            jsonObject.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
-            jsonObject.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
-
-
+        val requestJson = JSONObject()
+        requestJson.put("feed_id", post.feedId.toString())
+        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
+        requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, false)
-//            AppLog.d(
-//                    T.READER,
-//                    "subscribeMeToPost > Succeeded [blogId=$blogId - postId=$postId - result = $result]"
-//            )
             cont.resume(result)
         }
         val errorListener = ErrorListener { volleyError ->
             cont.resume(Failure("error"))
         }
-
-        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/delete", jsonObject, null, listener, errorListener)
+        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/delete", requestJson, null, listener, errorListener)
     }
 
-    
     private fun seenStatusToggleSuccessful(json: JSONObject?, askedToMarkAsSeen: Boolean): SeenStatusToggleCallResult {
         return json?.let {
             val success = it.optBoolean("status", false)
