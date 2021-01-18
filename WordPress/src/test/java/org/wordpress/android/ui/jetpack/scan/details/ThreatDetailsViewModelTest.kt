@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
@@ -154,6 +155,16 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         val contentItems = (observers.uiStates.last() as Content).items
         val ignoreThreatButton = contentItems.filterIsInstance<ActionButtonState>().first()
         assertThat(ignoreThreatButton.isEnabled).isEqualTo(true)
+    }
+
+    @Test
+    fun `when threat action is successful, then action to update scan state is triggered`() = test {
+        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
+        val observers = init()
+
+        triggerIgnoreThreatAction(observers)
+
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedScanState)
     }
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
