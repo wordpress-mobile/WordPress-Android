@@ -99,7 +99,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private static final int CAPTURE_VIDEO_PERMISSION_REQUEST_CODE = 102;
 
     private static final String MEDIA_SOURCE_FILE = "MEDIA_SOURCE_FILE";
-    private static final String MEDIA_SOURCE_AUDIO_FILE = "MEDIA_SOURCE_AUDIO_FILE";
     private static final String MEDIA_SOURCE_STOCK_MEDIA = "MEDIA_SOURCE_STOCK_MEDIA";
     private static final String GIF_MEDIA = "GIF_MEDIA";
 
@@ -230,11 +229,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onAddLibraryFileClicked(allowMultipleSelection);
                     }
 
-                    @Override public void onMediaLibraryAudioButtonClicked(boolean allowMultipleSelection) {
-                        mEditorFragmentListener.onTrackableEvent(TrackableEvent.MEDIA_BUTTON_TAPPED);
-                        mEditorFragmentListener.onAddLibraryAudioFileClicked(allowMultipleSelection);
-                    }
-
                     @Override
                     public void onUploadPhotoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onAddPhotoClicked(allowMultipleSelection);
@@ -287,10 +281,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         return otherMediaFileOptions;
                     }
 
-                    @Override public ArrayList<MediaOption> onGetOtherMediaAudioFileOptions() {
-                        return initOtherMediaAudioFileOptions();
-                    }
-
                     @Override
                     public void onOtherMediaButtonClicked(String mediaSource, boolean allowMultipleSelection) {
                         switch (mediaSource) {
@@ -302,9 +292,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                 break;
                             case MEDIA_SOURCE_FILE:
                                 mEditorFragmentListener.onAddFileClicked(allowMultipleSelection);
-                                break;
-                            case MEDIA_SOURCE_AUDIO_FILE:
-                                mEditorFragmentListener.onAddAudioFileClicked(allowMultipleSelection);
                                 break;
                             default:
                                 AppLog.e(T.EDITOR,
@@ -543,14 +530,6 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     }
 
     private ArrayList<MediaOption> initOtherMediaFileOptions() {
-        return initOtherMediaFileOptions(MEDIA_SOURCE_FILE);
-    }
-
-    private ArrayList<MediaOption> initOtherMediaAudioFileOptions() {
-        return initOtherMediaFileOptions(MEDIA_SOURCE_AUDIO_FILE);
-    }
-
-    private ArrayList<MediaOption> initOtherMediaFileOptions(String mediaOptionId) {
         ArrayList<MediaOption> otherMediaOptions = new ArrayList<>();
 
         FragmentActivity activity = getActivity();
@@ -565,7 +544,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         int chooseFileResourceId =
                 getResources().getIdentifier("photo_picker_choose_file", "string", packageName);
 
-        otherMediaOptions.add(new MediaOption(mediaOptionId, getString(chooseFileResourceId)));
+        otherMediaOptions.add(new MediaOption(MEDIA_SOURCE_FILE, getString(chooseFileResourceId)));
 
         return otherMediaOptions;
     }

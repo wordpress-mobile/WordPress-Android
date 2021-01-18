@@ -12,6 +12,7 @@ import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.WARNING
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
@@ -104,6 +105,12 @@ class RestoreViewModel @Inject constructor(
         }
     }
 
+    fun addNavigationEventSource(navigationEvent: LiveData<Event<RestoreNavigationEvents>>) {
+        _navigationEvents.addSource(navigationEvent) { event ->
+            _navigationEvents.value = event
+        }
+    }
+
     fun writeToBundle(outState: Bundle) {
         outState.putInt(KEY_RESTORE_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_RESTORE_STATE, restoreState)
@@ -117,6 +124,9 @@ class RestoreViewModel @Inject constructor(
             WARNING.id -> {
                 wizardManager.onBackPressed()
                 _onBackPressedObservable.value = Unit
+            }
+            COMPLETE.id -> {
+                _wizardFinishedObservable.value = Event(RestoreCompleted)
             }
         }
     }
@@ -161,9 +171,7 @@ class RestoreViewModel @Inject constructor(
     }
 
     fun onRestoreProgressFinished() {
-        // todo: annmarie remove first line & uncomment nextStep
-        _wizardFinishedObservable.value = Event(RestoreCompleted)
-        // wizardManager.showNextStep()
+        wizardManager.showNextStep()
     }
 
     fun setToolbarState(toolbarState: ToolbarState) {
@@ -203,6 +211,16 @@ class RestoreViewModel @Inject constructor(
 
         data class ProgressToolbarState(
             @StringRes override val title: Int = R.string.restore_progress_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
+
+        data class CompleteToolbarState(
+            @StringRes override val title: Int = R.string.restore_complete_page_title,
+            @DrawableRes override val icon: Int = R.drawable.ic_close_24px
+        ) : ToolbarState()
+
+        data class ErrorToolbarState(
+            @StringRes override val title: Int = R.string.restore_complete_failed_title,
             @DrawableRes override val icon: Int = R.drawable.ic_close_24px
         ) : ToolbarState()
     }

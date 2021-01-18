@@ -141,7 +141,6 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
-    <string name="pick_audio">Select audio</string>
     <string name="pick_media">Add image or video</string>
     <string name="pick_file">Add file</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
@@ -2447,7 +2446,6 @@
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_choose_file">Choose from device</string>
-    <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
@@ -2458,7 +2456,6 @@
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
-    <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
@@ -2847,6 +2844,10 @@
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
+
+    <string name="quick_start_card_menu_pin">Pin this</string>
+    <string name="quick_start_card_menu_hide">Hide</string>
+    <string name="quick_start_card_menu_remove">Don\'t show again</string>
 
     <!-- Pages -->
     <string name="pages_published" tools:ignore="UnusedResources">Published</string>
@@ -3475,4 +3476,20 @@ translators: sample content for "Services" page template -->
     <string name="restore_progress_action_button_content_description">@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
+
+    <string name="restore_complete_page_title">@string/restore</string>
+    <string name="restore_complete_header">Your site has been restored</string>
+    <string name="restore_complete_description_with_two_parameters">All of your selected items are now restored back to %1$s %2$s.</string>
+    <string name="restore_complete_done_action_button">@string/label_done_button</string>
+    <string name="restore_complete_visit_site_action_button">Visit site</string>
+    <string name="restore_complete_icon_content_description">Restore icon</string>
+    <string name="restore_complete_done_button_content_description">Done button</string>
+    <string name="restore_complete_visit_site_button_content_description">Visit site button</string>
+
+    <string name="restore_complete_failed_title">Restore failed</string>
+    <string name="restore_complete_failed_description">We couldn\'t restore your site. Please try again later.</string>
+    <string name="restore_complete_failed_action_button">@string/label_done_button</string>
+    <string name="restore_complete_failed_action_button_content_description">Done button</string>
+    <string name="restore_complete_failed_icon_content_description">Error icon</string>
+
 </resources>

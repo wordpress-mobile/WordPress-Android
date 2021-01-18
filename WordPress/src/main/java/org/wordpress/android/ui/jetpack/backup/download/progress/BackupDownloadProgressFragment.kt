@@ -6,21 +6,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.backup_download_progress_fragment.*
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
-import org.wordpress.android.ui.jetpack.backup.download.progress.adapters.BackupDownloadProgressAdapter
+import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_backup_download_progress_data"
 
-class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progress_fragment) {
+class BackupDownloadProgressFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
@@ -48,7 +48,7 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = BackupDownloadProgressAdapter(imageManager, uiHelpers)
+        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel() {
@@ -74,7 +74,7 @@ class BackupDownloadProgressFragment : Fragment(R.layout.backup_download_progres
     }
 
     private fun showView(uiState: UiState) {
-        ((recycler_view.adapter) as BackupDownloadProgressAdapter).update(uiState.items)
+        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(uiState.items)
     }
 
     companion object {

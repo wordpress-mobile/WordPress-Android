@@ -84,10 +84,10 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -105,9 +105,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteIconUploadHandler: SiteIconUploadHandler
     @Mock lateinit var siteStoriesHandler: SiteStoriesHandler
     @Mock lateinit var domainRegistrationHandler: DomainRegistrationHandler
-    @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
+    @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
-    @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
@@ -153,10 +153,10 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteIconUploadHandler,
                 siteStoriesHandler,
                 domainRegistrationHandler,
-                backupsFeatureConfig,
+                backupScreenFeatureConfig,
                 displayUtilsWrapper,
                 jetpackCapabilitiesUseCase,
-                scanFeatureConfig
+                scanScreenFeatureConfig
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -221,7 +221,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
-        assertThat(getLastItems()).hasSize(2)
+        assertThat(getLastItems()).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
@@ -738,7 +738,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `jetpack capabilities requested, when selected site changes`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
 
         onSiteChange.postValue(site)
 
@@ -746,8 +746,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `jetpack capabilities not requested, when scanFeatureConfig flag is off`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(false)
+    fun `jetpack capabilities not requested, when scan screen feature flag is off`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
 
         onSiteChange.postValue(site)
 
@@ -755,22 +755,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site items builder invoked with the selected site's backups availability`() {
-        whenever(backupsFeatureConfig.isEnabled()).thenReturn(true)
+    fun `site items builder invoked with the selected site's backup screen availability`() {
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
 
         onSiteChange.postValue(site)
 
         verify(siteItemsBuilder, times(2)).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
-                isBackupsAvailable = eq(true),
+                isBackupAvailable = eq(true),
                 isScanAvailable = any()
         )
     }
 
     @Test
     fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
-        whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
                 listOf(JetpackCapability.SCAN)
         )
@@ -780,7 +780,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
-                isBackupsAvailable = any(),
+                isBackupAvailable = any(),
                 isScanAvailable = eq(true)
         )
     }

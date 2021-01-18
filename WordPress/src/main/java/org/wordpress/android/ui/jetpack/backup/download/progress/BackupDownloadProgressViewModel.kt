@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
@@ -23,7 +22,8 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.common.ViewType.BACKUP_PROGRESS
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.ViewType.PROGRESS
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
@@ -106,7 +106,7 @@ class BackupDownloadProgressViewModel @Inject constructor(
             is Progress -> {
                 _uiState.value?.let { content ->
                     val updatedList = content.items.map { contentState ->
-                        if (contentState.type == BACKUP_PROGRESS) {
+                        if (contentState.type == PROGRESS) {
                             contentState as ProgressState
                             contentState.copy(
                                     progress = state.progress ?: 0,

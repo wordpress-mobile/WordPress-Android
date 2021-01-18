@@ -14,7 +14,6 @@ public enum MediaBrowserType {
     GUTENBERG_SINGLE_MEDIA_PICKER, // select a single image or video to insert into a post
     GUTENBERG_MEDIA_PICKER, // select multiple images or videos to insert into a post
     GUTENBERG_SINGLE_FILE_PICKER, // select a file to insert into a post
-    GUTENBERG_SINGLE_AUDIO_FILE_PICKER, // select an audio file to insert into a post
     WP_STORIES_MEDIA_PICKER; // select multiple images or videos to insert as Story frames in a Story
 
     public boolean isPicker() {
@@ -58,7 +57,7 @@ public enum MediaBrowserType {
     }
 
     public boolean isAudioPicker() {
-        return this == GUTENBERG_SINGLE_FILE_PICKER || this == GUTENBERG_SINGLE_AUDIO_FILE_PICKER;
+        return this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isDocumentPicker() {
@@ -72,8 +71,7 @@ public enum MediaBrowserType {
                || this == GUTENBERG_SINGLE_VIDEO_PICKER
                || this == GUTENBERG_SINGLE_MEDIA_PICKER
                || this == GUTENBERG_MEDIA_PICKER
-               || this == GUTENBERG_SINGLE_FILE_PICKER
-               || this == GUTENBERG_SINGLE_AUDIO_FILE_PICKER;
+               || this == GUTENBERG_SINGLE_FILE_PICKER;
     }
 
     public boolean isWPStoriesPicker() {
@@ -82,10 +80,6 @@ public enum MediaBrowserType {
 
     public boolean isSingleFilePicker() {
         return this == GUTENBERG_SINGLE_FILE_PICKER;
-    }
-
-    public boolean isSingleAudioFilePicker() {
-        return this == GUTENBERG_SINGLE_AUDIO_FILE_PICKER;
     }
 
     public boolean isSingleMediaPicker() {

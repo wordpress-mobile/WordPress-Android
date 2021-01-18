@@ -12,11 +12,11 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import java.util.Date
 
 @InternalCoroutinesApi

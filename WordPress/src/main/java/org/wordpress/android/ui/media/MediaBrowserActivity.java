@@ -213,8 +213,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             filter = MediaFilter.FILTER_IMAGES;
         } else if (mBrowserType == MediaBrowserType.GUTENBERG_VIDEO_PICKER) {
             filter = MediaFilter.FILTER_VIDEOS;
-        } else if (mBrowserType == MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER) {
-            filter = MediaFilter.FILTER_AUDIO;
         } else if (savedInstanceState != null) {
             filter = (MediaFilter) savedInstanceState.getSerializable(ARG_FILTER);
         } else {
@@ -476,7 +474,6 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
             case RequestCodes.PICTURE_LIBRARY:
             case RequestCodes.VIDEO_LIBRARY:
             case RequestCodes.FILE_LIBRARY:
-            case RequestCodes.AUDIO_LIBRARY:
                 if (resultCode == Activity.RESULT_OK && data != null) {
                     if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
@@ -710,12 +707,11 @@ public class MediaBrowserActivity extends LocaleAwareActivity implements MediaGr
         // show detail view when tapped if we're browsing media, when used as a picker show detail
         // when long tapped (to mimic native photo picker)
         if (mBrowserType.isBrowser() && !isLongClick
-            || mBrowserType.isPicker() && isLongClick) {
+                || mBrowserType.isPicker() && isLongClick) {
             showMediaSettings(media);
         } else if ((mBrowserType.isSingleImagePicker() || mBrowserType.isSingleMediaPicker() || mBrowserType
-                .isSingleFilePicker() || mBrowserType
-                            .isSingleAudioFilePicker()) && !isLongClick) {
-            // if we're picking a single media item, we're done
+                .isSingleFilePicker()) && !isLongClick) {
+            // if we're picking a single image, we're done
             Intent intent = new Intent();
             ArrayList<Long> remoteMediaIds = new ArrayList<>();
             remoteMediaIds.add(media.getMediaId());

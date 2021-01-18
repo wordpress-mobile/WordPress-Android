@@ -12,7 +12,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.restore.RestoreListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressViewModel
 import org.wordpress.android.ui.jetpack.restore.progress.RestoreProgressViewModel.UiState
