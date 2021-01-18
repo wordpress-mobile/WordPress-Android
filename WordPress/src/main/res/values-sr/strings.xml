@@ -164,7 +164,6 @@ Language: sr_RS
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Несачуване измене</string>
     <string name="gutenberg_native_open_link_in_a_browser">Отвори везу у прегледачу</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Двапут тапни за одабир опције</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Аутор странице</string>
     <string name="photo_picker_use_gif">Користи овај GIF</string>
     <string name="everyone">Сви</string>
@@ -195,10 +194,8 @@ Language: sr_RS
     <string name="ccpa_privacy_notice_header">Објава везана за приватност за кориснике из Калифорније</string>
     <string name="status_and_visibility">Статус &amp; Видљивост</string>
     <string name="update_now">Ажурирај сада</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="pages_set_as_posts_page">Постави страницу чланака</string>
     <string name="pages_set_as_homepage">Постави почетну страницу</string>
-    <string name="suggestion_invalid_user">\"%s није исправан корисник\"</string>
     <string name="site_settings_select_page">Одабери страницу</string>
     <string name="site_settings_posts_page">Страница чланака</string>
     <string name="site_settings_static_homepage">Статична почетна страница</string>
@@ -309,7 +306,6 @@ Language: sr_RS
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="gutenberg_native_ungroup">Разгрупиши</string>
     <string name="gutenberg_native_translate">Преведи</string>
     <string name="gutenberg_native_title">Наслов:</string>
@@ -752,13 +748,8 @@ Language: sr_RS
     <string name="my_tickets">Моји тикети</string>
     <string name="notification_channel_transient_title">Пролазан</string>
     <string name="application_log_button">Дневник апликације</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Премотавање у току</string>
-    <string name="activity_log_currently_restoring_message">Премотавање на %1$s %2$s</string>
-    <string name="activity_log_rewind_site">Премотај сајт</string>
     <string name="activity_log_currently_restoring_title">Тренутно се Ваш сајт враћа у претходно стање</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ваш сајт је успешно враћен у претходно стање</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Ваш сајт је успешно враћен у претходно стање\nПремотан на %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Ваш сајт се враћа у претходно стање\nПремотавање на %1$s %2$s</string>
     <string name="activity_log_button">Акционо дугме дневника активности</string>
     <string name="plugin_auto_managed">Аутоматско управљање</string>
     <string name="reader_empty_search_title">Нема пронађених резултата</string>
@@ -803,7 +794,6 @@ Language: sr_RS
     <string name="cookie_policy_learn_more_header">Политика колачића</string>
     <string name="preference_privacy_settings">Подешавања приватности</string>
     <string name="preference_collect_information">Прикупи информације</string>
-    <string name="rewind">Премотај</string>
     <string name="post_submitted">Чланак је предат</string>
     <string name="login_email_button_signup">Немате налог? %1$sРегиструјте се%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Могућност додатка захтева да сајт буде добро позициониран.</string>

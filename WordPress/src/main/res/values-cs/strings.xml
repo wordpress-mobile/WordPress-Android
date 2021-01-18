@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-06 13:58:40+0000
+Translation-Revision-Date: 2021-01-12 20:31:05+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -406,9 +406,9 @@ Language: cs_CZ
     <string name="application_log_button">Aplikační log</string>
     <string name="my_tickets">Moje konverzace</string>
     <string name="activity_log_rewind_dialog_message">Opravdu chcete obnovit stav stránky z %1$s na %2$s? Akce nenávratně odstraní vše, včetně obsahu a změn nastavení, co jste od té doby udělali.</string>
-    <string name="activity_log_rewind_site">Obnovit</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Obnovuji</string>
-    <string name="activity_log_currently_restoring_message">Obnovuji k %1$s %2$s</string>
+    <string name="activity_log_rewind_site">Obnovit web</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Probíhá obnovení</string>
+    <string name="activity_log_currently_restoring_message">Obnovování k %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Obnovuji stránku</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Stránka úspěšně obnovena</string>
     <string name="activity_log_rewind_finished_snackbar_message">Vaše stránka byla úspěšně obnovena\nObnovit na %1$s %2$s</string>
@@ -455,7 +455,6 @@ Language: cs_CZ
     <string name="reader_btn_notifications_on">Zapnout notifikace</string>
     <string name="reader_btn_notifications_off">Vypnout notifikace</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
-    <string name="rewind">Přetočit</string>
     <string name="activity_log_event">Událost</string>
     <string name="activity_log_icon">Ikona aktivit</string>
     <string name="activity_log">Activity Log</string>
