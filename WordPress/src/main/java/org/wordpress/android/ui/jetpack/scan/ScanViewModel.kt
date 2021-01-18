@@ -122,8 +122,8 @@ class ScanViewModel @Inject constructor(
             @StringRes var messageRes: Int? = null
             var isFixing: Boolean
             fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
-                    remoteSiteId = site.siteId,
-                    fixableThreatIds = fixableThreatIds
+                remoteSiteId = site.siteId,
+                fixableThreatIds = fixableThreatIds
             ).collect { status ->
                 when (status) {
                     is FetchFixThreatsState.InProgress -> isFixing = true
@@ -145,7 +145,7 @@ class ScanViewModel @Inject constructor(
                         messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
                     }
                 }
-                disableActionButtons(isFixing)
+                updateActionButtons(isEnabled = !isFixing)
                 showProgressBar(isFixing)
                 messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
