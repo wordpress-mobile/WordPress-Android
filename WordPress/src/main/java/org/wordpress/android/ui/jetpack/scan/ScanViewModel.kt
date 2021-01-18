@@ -98,18 +98,18 @@ class ScanViewModel @Inject constructor(
 
     private fun fixAllThreats() {
         launch {
-            disableActionButtons(true)
+            updateActionButtons(isEnabled = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
                     // TODO ashiagr check for fix status
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
-                    disableActionButtons(false)
+                    updateActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
-                    disableActionButtons(false)
+                    updateActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
                 }
             }
@@ -137,11 +137,11 @@ class ScanViewModel @Inject constructor(
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
     }
 
-    private fun disableActionButtons(disable: Boolean) {
+    private fun updateActionButtons(isEnabled: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
-                    contentItem.copy(isEnabled = !disable)
+                    contentItem.copy(isEnabled = isEnabled)
                 } else {
                     contentItem
                 }
