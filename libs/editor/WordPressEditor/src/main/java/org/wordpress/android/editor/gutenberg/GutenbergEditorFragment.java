@@ -32,6 +32,7 @@ import androidx.lifecycle.LiveData;
 
 import com.android.volley.toolbox.ImageLoader;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
+import com.google.gson.Gson;
 
 import org.wordpress.android.editor.BuildConfig;
 import org.wordpress.android.editor.EditorEditMediaListener;
@@ -131,7 +132,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private boolean mEditorDidMount;
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
     private boolean mUpdateCapabilitiesOnCreate = false;
-    private String mBlockExternallyEditedId = null;
+    private String mExternallyEditedBlockOriginalHash = null;
 
     private String mUpdatedStoryBlockContent = null;
 
@@ -195,7 +196,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         if (savedInstanceState != null) {
             mHtmlModeEnabled = savedInstanceState.getBoolean(KEY_HTML_MODE_ENABLED);
             mEditorDidMount = savedInstanceState.getBoolean(KEY_EDITOR_DID_MOUNT);
-            mBlockExternallyEditedId = savedInstanceState.getString(ARG_STORY_BLOCK_EDITING_ID);
+            mExternallyEditedBlockOriginalHash = savedInstanceState.getString(ARG_STORY_BLOCK_EDITING_ID);
         }
     }
 
@@ -394,10 +395,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 },
                 new OnMediaFilesCollectionBasedBlockEditorListener() {
                     @Override public void onRequestMediaFilesEditorLoad(ArrayList<Object> mediaFiles, String blockId) {
-                        // let's first save the original blockId array, this will let us
+                        // let's first calculate the hash on this mediaFiles array, this will let us
                         // identify the block later when we need to replace it as we come back from the Story
                         // composer
-                        mBlockExternallyEditedId = blockId;
+                        mExternallyEditedBlockOriginalHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
 
                         // now pass the signal up to the EditorFragmentListener
                         mEditorFragmentListener.onStoryComposerLoadRequested(mediaFiles, blockId);
@@ -415,12 +416,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         showCancelMediaCollectionSaveDialog(mediaFiles);
                     }
 
-                    @Override public void onQueryBlockIdForMediaFiles(ArrayList<Object> mediaFiles, String blockId) {
-                        // the blockEditingId attributtet should be set on all mediaFiles, just get the first one
-                        String blockEditingId =
-                                (String) ((HashMap<String, Object>)(mediaFiles.get(0))).get("blockEditingId");
-                        if (mBlockExternallyEditedId != null && blockEditingId != null &&
-                            mBlockExternallyEditedId.contentEquals(blockEditingId)) {
+                    @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
+                        // caclulate the hash to verify whether this is the block that needs to get replaced
+                        // this is important given we could be receiving a request to sync from a different Story block
+                        // in the same Post otherwise
+                        String calculatedHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
+                        if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null &&
+                            mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
                             if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
                                 getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
                             } else {
@@ -462,6 +464,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
         }
 
         return view;
+    }
+
+    private String calculateHashOnMediaCollectionBasedBlock(ArrayList<Object> mediaFiles) {
+        Gson gson = new Gson();
+        return StringUtils.getMd5Hash(gson.toJson(mediaFiles));
     }
 
     private void initializeSavingProgressDialog() {
@@ -832,7 +839,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     public void onSaveInstanceState(Bundle outState) {
         outState.putBoolean(KEY_HTML_MODE_ENABLED, mHtmlModeEnabled);
         outState.putBoolean(KEY_EDITOR_DID_MOUNT, mEditorDidMount);
-        outState.putString(ARG_STORY_BLOCK_EDITING_ID, mBlockExternallyEditedId);
+        outState.putString(ARG_STORY_BLOCK_EDITING_ID, mExternallyEditedBlockOriginalHash);
     }
 
     @Override
@@ -1259,8 +1266,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     @Override public void onStorySaveResult(String storyFirstMediaId, boolean success) {
         if (!success) {
             mFailedMediaIds.add(storyFirstMediaId);
-            mUploadingMediaProgressMax.remove(storyFirstMediaId);
         }
+        mUploadingMediaProgressMax.remove(storyFirstMediaId);
         getGutenbergContainerFragment().onStorySaveResult(storyFirstMediaId, success);
     }
 
