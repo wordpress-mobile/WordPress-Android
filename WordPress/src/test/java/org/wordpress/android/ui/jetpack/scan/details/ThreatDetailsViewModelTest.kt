@@ -133,6 +133,29 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         assertThat(snackBarMsg).isEqualTo(expectedErrorSnackBarMsg)
     }
 
+    @Test
+    fun `when ok button on ignore action confirmation dialog is clicked, then action buttons are disabled`() = test {
+        val observers = init()
+
+        triggerIgnoreThreatAction(observers)
+
+        val contentItems = (observers.uiStates.last() as Content).items
+        val ignoreThreatButton = contentItems.filterIsInstance<ActionButtonState>().first()
+        assertThat(ignoreThreatButton.isEnabled).isEqualTo(false)
+    }
+
+    @Test
+    fun `when threat action fails, then action buttons are enabled`() = test {
+        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
+        val observers = init()
+
+        triggerIgnoreThreatAction(observers)
+
+        val contentItems = (observers.uiStates.last() as Content).items
+        val ignoreThreatButton = contentItems.filterIsInstance<ActionButtonState>().first()
+        assertThat(ignoreThreatButton.isEnabled).isEqualTo(true)
+    }
+
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
