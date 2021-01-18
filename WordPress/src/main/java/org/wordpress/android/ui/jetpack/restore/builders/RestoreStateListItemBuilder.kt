@@ -113,7 +113,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
                         onDoneClick),
                 buildActionButtonState(
                         R.string.restore_complete_visit_site_action_button,
-                        R.string.restore_complete_done_button_content_description,
+                        R.string.restore_complete_visit_site_button_content_description,
                         onVisitSiteClick)
         )
     }
