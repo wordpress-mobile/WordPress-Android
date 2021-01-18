@@ -162,8 +162,11 @@ class SitePreviewViewModel @Inject constructor(
     private fun startCreateSiteService(previousState: SiteCreationServiceState? = null) {
         if (networkUtils.isNetworkAvailable()) {
             siteCreationState.apply {
+                // A non-null [segmentId] may invalidate the [siteDesign] selection
+                // https://github.com/wordpress-mobile/WordPress-Android/issues/13749
+                val segmentIdentifier = if (siteDesign != null) null else segmentId
                 val serviceData = SiteCreationServiceData(
-                        segmentId,
+                        segmentIdentifier,
                         siteDesign,
                         urlWithoutScheme
                 )

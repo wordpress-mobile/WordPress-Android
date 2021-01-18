@@ -741,6 +741,11 @@
         <item name="android:textColor">?attr/wpColorOnSurfaceMedium</item>
     </style>
 
+    <style name="ShapeAppearance.QuickStartTaskCardIllustration" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">@dimen/quick_start_task_card_corner_radius</item>
+    </style>
+
     <!--People Management Styles-->
     <style name="PersonAvatar">
         <item name="android:layout_width">@dimen/people_avatar_sz</item>

@@ -246,14 +246,8 @@ Language: sk
     <string name="support_contact_email">Kontaktný email</string>
     <string name="application_log_button">Aplikačný záznam</string>
     <string name="my_tickets">Moje tickety</string>
-    <string name="activity_log_rewind_dialog_message">Naozaj chcete vrátiť svoje stránky späť na %1$s o %2$s? Tým sa odstráni všetok obsah a možnosti, ktoré boli odvtedy vytvorené alebo zmenené.</string>
-    <string name="activity_log_rewind_site">Obnoviť webovú stránku</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Prebieha obnovenie</string>
-    <string name="activity_log_currently_restoring_message">Prevíjanie na %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Prebieha obnovenie Vašej webovej stránky</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Vaša webová stránka bola úspešne obnovená</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Vaša webová stránka bola úspešne obnovená\nVrátená na %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Vaše webové stránky sa obnovujú\nNávrat na %1$s %2$s</string>
     <string name="activity_log_button">tlačidlo Záznamu aktivít</string>
     <string name="plugin_auto_managed">automaticky spravované</string>
     <string name="reader_save_posts_locally_dialog_message">Uložte tento článok a vráťte sa k jeho prečítaniu, kedykoľvek budete chcieť. Bude k dispozícii na tomto zariadení - uložené články sa nesynchronizujú s vašimi ďalšími zariadeniami.</string>
@@ -296,7 +290,6 @@ Language: sk
     <string name="reader_btn_notifications_on">Zapnúť upozornenia webovej stránky</string>
     <string name="reader_btn_notifications_off">Vypnúť upozornenia webovej stránky</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpack</string>
-    <string name="rewind">Obnoviť</string>
     <string name="activity_log_event">Udalosť</string>
     <string name="activity_log_icon">Ikonka aktivity</string>
     <string name="activity_log">Log aktivity</string>

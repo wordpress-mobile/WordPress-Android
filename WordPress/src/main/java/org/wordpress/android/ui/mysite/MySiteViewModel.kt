@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -49,6 +50,8 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
@@ -93,6 +96,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -210,7 +214,8 @@ class MySiteViewModel
             siteItems.addAll(quickStartCategories.map {
                 quickStartItemBuilder.build(
                         it,
-                        this::onQuickStartCardMoreClick
+                        this::onQuickStartCardMoreClick,
+                        this::onQuickStartTaskCardClick
                 )
             })
 
@@ -267,6 +272,10 @@ class MySiteViewModel
 
     private fun onQuickStartCardMoreClick(id: String) {
         _onQuickStartMenuShown.postValue(Event(id))
+    }
+
+    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(task.toString())))
     }
 
     private fun titleClick(selectedSite: SiteModel) {

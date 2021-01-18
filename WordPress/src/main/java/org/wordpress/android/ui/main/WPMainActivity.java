@@ -125,7 +125,6 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -208,7 +207,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
@@ -441,7 +439,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    if (mModalLayoutPickerFeatureConfig.isEnabled() && mMLPViewModel.canShowModalLayoutPicker()) {
+                    if (mMLPViewModel.canShowModalLayoutPicker()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
                         handleNewPageAction("", "", null,
