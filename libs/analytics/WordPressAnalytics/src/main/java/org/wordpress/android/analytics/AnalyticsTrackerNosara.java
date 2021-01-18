@@ -809,8 +809,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_photo_added";
             case EDITOR_ADDED_FILE_VIA_LIBRARY:
                 return "editor_file_added";
-            case EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY:
-                return "editor_audio_file_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
