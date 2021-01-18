@@ -13,16 +13,20 @@ import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.FetchScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.modules.UI_SCOPE
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton
 
+@Deprecated(
+    "This class is replaced in favour of FetchScanStateUseCase." +
+        "It will be removed after scan menu logic built upon it is replaced with scan capabilities logic."
+)
 @Singleton
 class ScanStatusService
 @Inject constructor(
     private val scanStore: ScanStore,
-    private val scanFeatureConfig: ScanFeatureConfig,
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     @param:Named(UI_SCOPE) private val uiScope: CoroutineScope
 ) {
     private var site: SiteModel? = null
@@ -38,7 +42,7 @@ class ScanStatusService
     private val _scanStateFetchError = MutableLiveData<ScanStateError>()
 
     fun start(site: SiteModel) {
-        if (!scanFeatureConfig.isEnabled()) {
+        if (!scanScreenFeatureConfig.isEnabled()) {
             return
         }
         if (this.site == null) {

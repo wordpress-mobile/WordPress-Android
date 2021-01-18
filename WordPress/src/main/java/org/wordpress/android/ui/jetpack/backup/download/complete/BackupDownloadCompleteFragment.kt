@@ -6,22 +6,21 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import kotlinx.android.synthetic.main.backup_download_progress_fragment.*
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.backup.download.complete.adapters.BackupDownloadCompleteAdapter
+import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel.UiState
+import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 private const val ARG_DATA = "arg_backup_download_complete_data"
 
-class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complete_fragment) {
+class BackupDownloadCompleteFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
@@ -49,7 +48,7 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
     }
 
     private fun initAdapter() {
-        recycler_view.adapter = BackupDownloadCompleteAdapter(imageManager, uiHelpers)
+        recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
     }
 
     private fun initViewModel() {
@@ -59,12 +58,7 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(BackupDownloadCompleteViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
-            when (uiState) {
-                is Content -> showContent(uiState)
-                is Error -> ToastUtils.showToast(requireContext(), "Implement Error")
-            }
-        })
+        viewModel.uiState.observe(viewLifecycleOwner, { showView(it) })
 
         val (site, state) = when {
             arguments != null -> {
@@ -79,8 +73,8 @@ class BackupDownloadCompleteFragment : Fragment(R.layout.backup_download_complet
         viewModel.start(site, state, parentViewModel)
     }
 
-    private fun showContent(content: Content) {
-        ((recycler_view.adapter) as BackupDownloadCompleteAdapter).update(content.items)
+    private fun showView(uiState: UiState) {
+        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(uiState.items)
     }
 
     companion object {

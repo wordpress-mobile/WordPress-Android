@@ -2,13 +2,13 @@ package org.wordpress.android.ui.jetpack.backup.download.progress
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.AdditionalInformationState
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText

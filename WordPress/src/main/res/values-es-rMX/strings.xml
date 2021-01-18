@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-06 21:36:13+0000
+Translation-Revision-Date: 2021-01-13 14:24:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_MX
 -->
 <resources>
+    <string name="backup_download_complete_info">También te hemos enviado por correo electrónico un enlace a tu archivo.</string>
+    <string name="jetpack_icon_content_description">icono</string>
+    <string name="label_control_upload">Subir</string>
+    <string name="backup_download_complete_header">Tu copia de seguridad ya está disponible para descargar</string>
+    <string name="backup_download_complete_description_with_two_parameters">Hemos creado con éxito una copia de seguridad de tu sitio desde %1$s %2$s.</string>
+    <string name="backup_download_complete_download_action_button">Descargar</string>
+    <string name="backup_download_complete_download_share_action_button">Compartir enlace</string>
+    <string name="backup_download_progress_header">Actualmente creando una copia de seguridad descargable de tu sitio</string>
+    <string name="backup_download_progress_description_with_two_parameters">Estamos creando una copia de seguridad descargable de tu sitio desde %1$s %2$s.</string>
+    <string name="backup_download_progress_action_button">¡Va, avísame!</string>
+    <string name="backup_download_progress_icon_content_description">Creando un icono de copia de seguridad descargable</string>
+    <string name="backup_download_progress_action_button_content_description">Botón de ¡Va, avísame!</string>
+    <string name="backup_download_progress_additional_info">No hay necesidad de esperar. Te avisaremos cuando tu copia de seguridad esté lista</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
+    <string name="backup_download_details_action_button_content_description">Crear un botón de copia de seguridad descargable</string>
+    <string name="backup_download_generic_failure">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="backup_download_another_download_running">Se está ejecutando otra descarga.</string>
+    <string name="backup_download_progress_page_title">Descargar copia de seguridad</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan eliminará el archivo o directorio afectado.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan actualizará a una versión más reciente (%s).</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan editará el archivo o directorio afectado.</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan resolverá la amenaza.</string>
+    <string name="threat_fix">Arreglar la amenaza</string>
+    <string name="threat_ignore">Ignorar la amenaza</string>
+    <string name="threat_get_free_estimate">Obtén un presupuesto gratuito</string>
+    <string name="suggestion_selection_needed">\"Por favor, teclea para filtrar la lista de sugerencias”.</string>
+    <string name="suggestion_problem">\"Hubo un problema al cargar sugerencias\".</string>
+    <string name="suggestion_user">usuario</string>
     <string name="backup_item_sqls">Base de datos del sitio (SQL)</string>
     <string name="backup_item_contents">Directorio wp-content (excluye themes, plugins y uploads)</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
@@ -15,7 +48,6 @@ Language: es_MX
     <string name="backup_item_roots">Raíz de WordPress (incluye wp-config.php y cualquier archivo que no sea de WordPress)</string>
     <string name="backup_download_details_action_button">Crear un archivo descargable</string>
     <string name="backup_download_details_choose_items_header">Elige los elementos que quieres incluir en la descarga:</string>
-    <string name="backup_download_details_description">%1$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="backup_download_details_header">Crear una copia de seguridad descargable</string>
     <string name="backup_download_details_page_title">Descargar copia de seguridad</string>
     <string name="backup_download">Descarga de la copia de seguridad</string>
@@ -23,8 +55,6 @@ Language: es_MX
     <string name="gutenberg_native_choose_file">Elegir archivo</string>
     <string name="activity_log_item_menu_download_backup_label">Descargar copia de seguridad</string>
     <string name="activity_log_item_menu_restore_label">Restaurar hasta este punto</string>
-    <string name="activity_log_activity_type_filter_label">Tipo de actividad</string>
-    <string name="activity_log_date_range_filter_label">Rango de fechas</string>
     <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividad</string>
     <string name="dialog_confirm_copy_local_copy_button">Copiar la versión de esta aplicación</string>
     <string name="dialog_confirm_copy_local_edit_button">Editar la entrada primero</string>
@@ -314,7 +344,6 @@ Language: es_MX
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor de la página</string>
     <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
@@ -350,7 +379,6 @@ Language: es_MX
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
@@ -360,8 +388,6 @@ Language: es_MX
     <string name="site_settings_static_homepage">Página de inicio estática</string>
     <string name="site_settings_posts_page">Página de entradas</string>
     <string name="site_settings_select_page">Seleccionar la página</string>
-    <string name="suggestion_invalid_user">\"%s no es un usuario válido\"</string>
-    <string name="suggestion_no_matching_users">\"No hay disponibles usuarios que coincidan.\"</string>
     <string name="pages_set_as_homepage">Establecer como página de inicio</string>
     <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
@@ -532,7 +558,6 @@ Language: es_MX
     <string name="stats_management_add_new_stats_card">Añadir nueva tarjeta de estadísticas</string>
     <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
@@ -600,7 +625,6 @@ Language: es_MX
     <string name="my_site_bottom_sheet_add_page">Página del sitio</string>
     <string name="enter_site_credentials_instead">Accede con las credenciales del sitio.</string>
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sC</string>
@@ -666,7 +690,6 @@ Language: es_MX
     <string name="gutenberg_native_content">Contenido…</string>
     <string name="gutenberg_native_choose_from_device">Elegir desde el dispositivo</string>
     <string name="gutenberg_native_annotations_sidebar">Barra lateral de notas</string>
-    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor inténtalo de nuevo.</string>
     <string name="gutenberg_native_alt_text">Texto alternativo</string>
     <string name="gutenberg_native_add_video">AÑADIR UN VIDEO</string>
     <string name="gutenberg_native_add_url">Añadir URL</string>
@@ -675,17 +698,18 @@ Language: es_MX
     <string name="gutenberg_native_add_block_here">AÑADIR EL BLOQUE AQUÍ</string>
     <string name="gutenberg_native_add_annotation">Añadir anotación</string>
     <string name="gutenberg_native_add_a_description">Añadir una descripción</string>
-    <string name="reader_empty_saved_posts_content_description">Toca el botón Añadir a las Entradas Guardadas para guardar una entrada en tu lista.</string>
-    <string name="reader_acessibility_list_loaded">«La lista se ha cargado con %1$d artículos.»</string>
+    <string name="gutenberg_native_an_unknown_error_occurred_please_try_again">Ha ocurrido un error desconocido. Por favor, inténtalo de nuevo.</string>
+    <string name="reader_empty_saved_posts_content_description">Toca el botón \"Añadir a las entradas guardadas\" para guardar una entrada en tu lista.</string>
+    <string name="reader_acessibility_list_loaded">\"La lista se ha cargado con %1$d elementos.\"</string>
     <string name="notifications_tab_dialog_switch_desc">Notificaciones</string>
-    <string name="notifications_tab_dialog_master_off_message">Al desactivar las Notificaciones para este sitio, se desactivarán las notificaciones que se muestran en la pestaña de notificaciones de este sitio. Puedes ajustar el tipo de notificación que ves después de activar las Notificaciones para este sitio.</string>
     <string name="master_switch_default_title_off">Desactivados</string>
     <string name="master_switch_default_title_on">Activados</string>
-    <string name="notifications_tab_dialog_master_off_title">Para ver las notificaciones en la pestaña de notificaciones de este sitio, activa los Notificaciones para este sitio.</string>
+    <string name="notifications_tab_dialog_master_off_message">Al desactivar las notificaciones para este sitio, se desactivarán las notificaciones que se muestran en la pestaña de notificaciones de este sitio. Puedes ajustar el tipo de notificación que ves después de activar las notificaciones para este sitio.</string>
     <string name="notifications_tab_dialog_master_hint_off">Activar los avisos mostrados en la pestaña de avisos de este sitio</string>
     <string name="notifications_tab_dialog_master_hint_on">Desactivar los avisos mostrados en la pestaña de avisos de este sitio</string>
     <string name="notifications_tab_dialog_master_status_off">Avisos para este sitio</string>
     <string name="notifications_tab_dialog_master_status_on">Avisos para este sitio</string>
+    <string name="notifications_tab_dialog_master_off_title">Para ver las notificaciones en la pestaña de notificaciones de este sitio, activa las notificaciones para este sitio.</string>
     <string name="pick_media">Añadir una imagen o un video</string>
     <string name="error_post_not_published_retrying_private">No hemos podido publicar esta entrada privada, pero lo intentaremos de nuevo más tarde.</string>
     <string name="error_post_not_scheduled_retrying">No hemos podido programar esta entrada, pero lo intentaremos de nuevo más tarde.</string>
@@ -704,10 +728,10 @@ Language: es_MX
     <string name="error_generic_error">No hemos podido completar esta acción.</string>
     <string name="error_preview_empty_draft">No se puede previsualizar un borrador vacío</string>
     <string name="error_preview_empty_page">No se puede previsualizar una página vacía</string>
-    <string name="preview_unavailable_self_hosted_sites">Vista Previa No Disponible</string>
-    <string name="post_preview_remote_auto_saving_post">Generando la Vista Previa…</string>
     <string name="error_preview_empty_post">No se puede previsualizar una entrada vacía</string>
     <string name="remote_preview_operation_error">Error al intentar guardar la entrada antes de previsualizarla</string>
+    <string name="preview_unavailable_self_hosted_sites">Vista previa no disponible</string>
+    <string name="post_preview_remote_auto_saving_post">Generando la vista previa…</string>
     <string name="post_preview_saving_draft">Guardando…</string>
     <string name="local_post_autosave_revision_available">Has hecho cambios no guardados en esta entrada</string>
     <string name="dialog_confirm_autosave_dont_restore_button">La versión desde esta aplicación</string>
@@ -728,15 +752,14 @@ Language: es_MX
     <string name="settings_username_changer_toast_content">Tu nuevo nombre de usuario es %1$s</string>
     <string name="settings_username_changer_progress_dialog">Guardando el nombre de usuario…</string>
     <string name="settings_username_changer_snackbar_cancel">Esta acción no puede ser cancelada. Es posible que el nombre de usuario ya haya sido actualizado.</string>
-    <string name="settings_username_changer_confirm_dialog_positive_action">Cambiar el Nombre de Usuario</string>
     <string name="settings_username_changer_confirm_dialog_content">Estás cambiando tu nombre de usuario a %1$s%2$s%3$s. Cambiar tu nombre de usuario también afectará a tu perfil de Gravatar y a las direcciones de perfil de Intense Debate. Para continuar, confirma tu nuevo nombre de usuario.</string>
     <string name="settings_username_changer_confirm_dialog_title">¡Cuidado!</string>
     <string name="settings_username_changer_header">Estás a punto de cambiar tu nombre de usuario, que actualmente es %1$s%2$s%3$s. No podrás volver a recuperar tu nombre de usuario.</string>
     <string name="site_settings_jetpack_performance_settings_hint">Ver y cambiar los ajustes de rendimiento de Jetpack</string>
-    <string name="site_settings_performance_and_speed">Rendimiento y Velocidad</string>
+    <string name="settings_username_changer_confirm_dialog_positive_action">Cambiar el nombre de usuario</string>
+    <string name="site_settings_performance_and_speed">Rendimiento y velocidad</string>
     <string name="site_settings_more">Más</string>
     <string name="site_settings_improved_search_summary">Reemplaza la búsqueda integrada en WordPress con una experiencia mejorada de búsqueda</string>
-    <string name="site_settings_improved_search">Búsqueda Mejorada</string>
     <string name="site_settings_jetpack_search">Búsqueda de Jetpack</string>
     <string name="site_settings_media">Medios</string>
     <string name="site_settings_site_accelerator_summary">Carga las páginas más rápido al permitir a Jetpack optimizar tus imágenes y archivos estáticos (como CSS y JavaScript).</string>
@@ -744,10 +767,11 @@ Language: es_MX
     <string name="site_settings_faster_images">Imágenes más rápidas</string>
     <string name="site_settings_site_accelerator_off">Desactivado</string>
     <string name="site_settings_ad_free_video_hosting">Alojamiento de Video Sin Anuncios</string>
+    <string name="site_settings_improved_search">Búsqueda mejorada</string>
     <string name="site_settings_site_accelerator_on">Activado</string>
-    <string name="site_settings_site_accelerator">Acelerador de Sitios</string>
     <string name="site_settings_lazy_load_images_summary">Mejora la velocidad de tu sitio al cargar solo las imágenes visibles en la pantalla.</string>
     <string name="site_settings_performance">Rendimiento</string>
+    <string name="site_settings_site_accelerator">Acelerador de sitios</string>
     <string name="stats_file_downloads_value_label">Descargas</string>
     <string name="stats_file_downloads_title_label">Archivo</string>
     <string name="stats_file_downloads">Descargas de archivos</string>
@@ -775,9 +799,9 @@ Language: es_MX
     <string name="post_notification_ten_minutes_before">10 minutos antes</string>
     <string name="post_notification_one_hour_before">1 hora antes</string>
     <string name="post_notification_off">Desactivado</string>
-    <string name="post_settings_add_to_calendar">Agregar al calendario</string>
     <string name="post_settings_notification">Notificación</string>
     <string name="post_settings_time_and_date">Fecha y hora</string>
+    <string name="post_settings_add_to_calendar">Añadir al calendario</string>
     <string name="login_need_help_finding_connected_email">¿Necesitas ayuda para encontrar el correo electrónico con el que te conectaste?</string>
     <string name="enter_wordpress_site">El sitio web en esa dirección no es un sitio WordPress. Para conectarnos a él, el sitio debe tener instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce una dirección completa de un sitio web, como example.com.</string>
@@ -785,7 +809,6 @@ Language: es_MX
     <string name="stats_post_views_label">Visitas</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_expand_content_description">Expandir</string>
-    <string name="stats_graph_updated">Gráfico actualizado.</string>
     <string name="stats_overview_content_description">%1$s %2$s del período: %3$s, cambio desde el período anterior - %4$s</string>
     <string name="stats_loading_card">Cargando los datos de la tarjeta seleccionada</string>
     <string name="site_settings_editor">Editor</string>
@@ -793,6 +816,7 @@ Language: es_MX
     <string name="stats_item_collapsed">Elemento contraído</string>
     <string name="stats_item_expanded">Elemento expandido</string>
     <string name="stats_collapse_content_description">Contraer</string>
+    <string name="stats_graph_updated">Se actualizó el gráfico.</string>
     <string name="description_expand">Expandir</string>
     <string name="my_site_verify_your_email_without_email">Verifica tu dirección de correo electrónico - las instrucciones se enviaron a tu correo electrónico</string>
     <string name="my_site_verify_your_email">Verifica tu dirección de correo electrónico - las instrucciones se enviaron a %s</string>
@@ -860,16 +884,16 @@ Language: es_MX
     <string name="domain_contact_information_description">Para tu comodidad, hemos precompletado tu información de contacto\n de WordPress.com. Por favor, comprueba que es la información correcta que quieres usar para este dominio.</string>
     <string name="domain_contact_information_title">Información de contacto del dominio</string>
     <string name="domain_privacy_option_off_title">Registrar públicamente</string>
-    <string name="domain_privacy_option_on_title">Registrar privadamente con Protección de Privacidad</string>
     <string name="domain_registration_privacy_protection_description">Los propietarios de dominios tienen que compartir información en una base de datos pública de todos los dominios.\n   Con la protección de privacidad publicamos nuestra propia información en vez de la tuya, y te redirigiremos de forma privada cualquier comunicación dirigida a ti. </string>
-    <string name="domain_registration_privacy_protection_title">Protección de Privacidad</string>
+    <string name="domain_privacy_option_on_title">Registrar privadamente con protección de privacidad</string>
     <string name="domain_registration_contact_form_input_error">Por favor, introduce un %s válido</string>
-    <string name="domains_suggestions_choose_domain">Elegir Dominio</string>
+    <string name="domain_registration_privacy_protection_title">Protección de privacidad</string>
     <string name="stats_management_new">Nuevo</string>
     <string name="stats_management_dismiss_insights_news_card">Descartar</string>
     <string name="stats_management_try_it_now">Pruébalo ahora</string>
-    <string name="stats_management_news_card_message">Elige qué estadísticas ver, y concéntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
-    <string name="stats_manage_your_stats">Gestiona Tus Estadísticas</string>
+    <string name="domains_suggestions_choose_domain">Elegir dominio</string>
+    <string name="stats_management_news_card_message">Elige qué estadísticas ver, y céntrate en los datos que más te preocupen. Toca en %1$s al fondo de las estadísticas para personalizarlas.</string>
+    <string name="stats_manage_your_stats">Gestiona tus estadísticas</string>
     <string name="history_fetching_revisions">Recuperando revisiones…</string>
     <string name="editor_failed_to_insert_media_tap_to_retry">Fallo al insertar los medios.\nPor favor, toca para volver a intentarlo.</string>
     <string name="editor_uploading_draft">Tu borrador se está subiendo</string>
@@ -877,15 +901,15 @@ Language: es_MX
     <string name="error_restoring_post">Ocurrió un error mientras se restauraba la entrada</string>
     <string name="post_list_tab_drafts">Borradores</string>
     <string name="backdated_for">Retroceder a: %s</string>
-    <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Agrega y organiza tu información abajo.</string>
     <string name="stats_insights_social">Social</string>
-    <string name="stats_insights_annual_site_stats">Estadísticas Anuales del Sitio</string>
-    <string name="stats_view_follower_totals">Seguidores Totales</string>
     <string name="domain_suggestions_fetch_error">No se pudieron cargar las sugerencias de dominios</string>
     <string name="domain_suggestions_search_hint">Teclea una palabra clave para más ideas</string>
     <string name="domains_suggestions_empty_list">No se han encontrado sugerencias</string>
-    <string name="register_domain">Registrar Dominio</string>
-    <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo tomará un minuto.</string>
+    <string name="stats_insights_management_title">Solo ves las estadísticas más relevantes. Añade y organiza tus detalles abajo.</string>
+    <string name="stats_insights_annual_site_stats">Estadísticas anuales del sitio</string>
+    <string name="stats_view_follower_totals">Seguidores totales</string>
+    <string name="register_domain">Registrar dominio</string>
+    <string name="jetpack_installed_message">Ahora que está instalado Jetpack, solo necesitamos que lo configures. Esto solo te llevará un minuto.</string>
     <string name="stats_menu_move_down">Mover abajo</string>
     <string name="stats_menu_move_up">Mover arriba</string>
     <string name="stats_item_settings">Ajustes de los parámetros de las estadísticas</string>
@@ -896,13 +920,13 @@ Language: es_MX
     <string name="post_trashing">La entrada se está enviando a la papelera</string>
     <string name="stats_menu_remove">Quitar de la información</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios sin guardar, ¿estás seguro de querer continuar?</string>
-    <string name="button_move_to_draft">Mover a Borradores</string>
     <string name="post_list_toggle_item_layout_list_view">Cambiar a la vista de lista</string>
     <string name="post_list_toggle_item_layout_cards_view">Cambiar a la vista de tarjetas</string>
     <string name="posts_trashed_empty">No tienes ninguna entrada en la papelera</string>
     <string name="posts_draft_empty">No tienes ninguna entrada en borrador</string>
     <string name="posts_scheduled_empty">No tienes ninguna entrada programada</string>
     <string name="posts_published_empty">Aún no has publicado ninguna entrada</string>
+    <string name="button_move_to_draft">Mover a borradores</string>
     <string name="notification_wpcom_username_needed">Por favor inicia sesión con tu nombre de usuario y contraseña.</string>
     <string name="error_user_username_instead_of_email">Por favor, inicia sesión usando tu nombre de usuario de WordPress.com en vez de tu dirección de correo electrónico.</string>
     <string name="stats_insights_total_words">Total de palabras</string>
@@ -1244,14 +1268,8 @@ Language: es_MX
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Registro de la aplicación</string>
     <string name="my_tickets">Mis tickets</string>
-    <string name="activity_log_rewind_dialog_message">¿Quieres rebobinar tu sitio al %1$s a las %2$s? Esto borrará todo el contenido y opciones creadas o cambiadas desde entonces.</string>
-    <string name="activity_log_rewind_site">Rebobinar sitio</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rebobinado en curso</string>
-    <string name="activity_log_currently_restoring_message">Rebobinando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Tu sitio ha sido restaurado satisfactoriamente\nRebobinado a %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Tu sitio está siendo restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
     <string name="plugin_auto_managed">Gestionado automáticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Guarda esta entrada y vuelve cuando quieras para leerla. Solo estará disponible en este dispositivo — las entradas guardadas no se sincronizan con otros dispositivos.</string>
@@ -1294,7 +1312,6 @@ Language: es_MX
     <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>
     <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
     <string name="activity_log_jetpack_icon">Icono de Jetpack</string>
-    <string name="rewind">Rebobinar</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icono de actividad</string>
     <string name="activity_log">Registro de actividad</string>

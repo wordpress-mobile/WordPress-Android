@@ -6,10 +6,13 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.backup_download_activity.*
+import kotlinx.android.synthetic.main.jetpack_backup_restore_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
@@ -35,7 +38,7 @@ class BackupDownloadActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.backup_download_activity)
+        setContentView(R.layout.jetpack_backup_restore_activity)
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -83,6 +86,12 @@ class BackupDownloadActivity : LocaleAwareActivity() {
             }
         })
 
+        viewModel.errorEvents.observe(this, {
+            it?.applyIfNotHandled {
+                viewModel.transitionToError(this)
+            }
+        })
+
         viewModel.wizardFinishedObservable.observe(this, {
             it.applyIfNotHandled {
                 val intent = Intent()
@@ -94,6 +103,19 @@ class BackupDownloadActivity : LocaleAwareActivity() {
                 intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, downloadId)
                 setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
                 finish()
+            }
+        })
+
+        viewModel.navigationEvents.observe(this, {
+            it.applyIfNotHandled {
+                when (this) {
+                    is ShareLink -> {
+                        ActivityLauncher.shareBackupDownloadFileLink(this@BackupDownloadActivity, url)
+                    }
+                    is DownloadFile -> {
+                        ActivityLauncher.downloadBackupDownloadFile(this@BackupDownloadActivity, url)
+                    }
+                }
             }
         })
 

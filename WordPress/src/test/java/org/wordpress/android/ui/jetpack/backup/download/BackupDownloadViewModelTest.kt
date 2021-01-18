@@ -19,6 +19,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -193,6 +194,16 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         viewModel.setToolbarState(ProgressToolbarState())
 
         assertThat(toolbarStates.last()).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given in complete error step, when setToolbarState is invoked, then toolbar state is updated`() {
+        val toolbarStates = initObservers().toolbarState
+        viewModel.start(null)
+
+        viewModel.setToolbarState(ErrorToolbarState())
+
+        assertThat(toolbarStates.last()).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test
