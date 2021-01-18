@@ -121,8 +121,9 @@ class StoriesEventListener @Inject constructor(
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, progress)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveCompleted(event: FrameSaveCompleted) {
+        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -155,16 +156,18 @@ class StoriesEventListener @Inject constructor(
         }
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameMediaIdChanged(event: StoryFrameMediaModelCreatedEvent) {
+        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
         storySaveMediaListener?.onMediaModelCreatedForFile(event.oldId, event.newId.toString(), event.oldUrl)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveFailed(event: FrameSaveFailed) {
+        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -176,8 +179,9 @@ class StoriesEventListener @Inject constructor(
         // storySaveMediaListener?.onMediaSaveFailed(localMediaId)
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
+    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
     fun onStorySaveProcessFinished(event: StorySaveResult) {
+        eventBusWrapper.removeStickyEvent(event)
         storiesSavingInProgress.remove(event.storyIndex)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return

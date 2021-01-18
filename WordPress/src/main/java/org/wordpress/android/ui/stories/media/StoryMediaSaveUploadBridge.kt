@@ -164,7 +164,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                                 // ids with the new MediaModel local ids are created so, broadcasting the event.
                                 if (isEditMode) {
                                     // finally send the event that this frameId has changed
-                                    EventBus.getDefault().post(
+                                    EventBus.getDefault().postSticky(
                                             StoryFrameMediaModelCreatedEvent(
                                                     oldTemporaryId,
                                                     it.id,
