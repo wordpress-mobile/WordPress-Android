@@ -84,10 +84,14 @@ class ThreatDetailsViewModel @Inject constructor(
                     updateNavigationEvent(ShowUpdatedScanState)
                 }
 
-                is IgnoreThreatState.Failure -> {
+                is IgnoreThreatState.Failure.NetworkUnavailable -> {
                     disableThreatActionButtons(false)
-                    val message = UiStringRes(R.string.threat_ignore_error_message)
-                    updateSnackbarMessageEvent(SnackbarMessageHolder(message))
+                    updateSnackbarMessageEvent(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+                }
+
+                is IgnoreThreatState.Failure.RemoteRequestFailure -> {
+                    disableThreatActionButtons(false)
+                    updateSnackbarMessageEvent(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message)))
                 }
             }
         }
