@@ -12,8 +12,8 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class ScanHistoryListViewModel @Inject constructor(
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    private val scanThreatItemBuilder: ThreatItemBuilder
+    private val scanThreatItemBuilder: ThreatItemBuilder,
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
