@@ -361,9 +361,9 @@ class SubFilterViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-    super.onCleared()
-    eventBusWrapper.unregister(this)
-}
+        super.onCleared()
+        eventBusWrapper.unregister(this)
+    }
 
     companion object {
         const val SUBFILTER_VM_BASE_KEY = "SUBFILTER_VIEW_MODEL_BASE_KEY"
