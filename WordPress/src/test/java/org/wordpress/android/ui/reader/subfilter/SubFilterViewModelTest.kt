@@ -20,7 +20,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagType.BOOKMARKED
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
