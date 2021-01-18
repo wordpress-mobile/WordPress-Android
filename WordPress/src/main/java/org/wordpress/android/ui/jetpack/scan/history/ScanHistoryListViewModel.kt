@@ -34,8 +34,5 @@ class ScanHistoryListViewModel @Inject constructor(
     }
 
     private fun onItemClicked(threatId: Long) {
-
     }
-
-
 }
