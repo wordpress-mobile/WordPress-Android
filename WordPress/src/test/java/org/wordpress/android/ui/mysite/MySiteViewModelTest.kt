@@ -221,7 +221,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
-        assertThat(getLastItems()).hasSize(2)
+        assertThat(getLastItems()).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
