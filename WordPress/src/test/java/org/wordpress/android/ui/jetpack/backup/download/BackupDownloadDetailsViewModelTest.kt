@@ -18,7 +18,6 @@ import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDe
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownloadUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -61,7 +60,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        assertThat(uiStates[0]).isInstanceOf(Content::class.java)
+        assertThat(uiStates[0]).isInstanceOf(UiState::class.java)
     }
 
     @Test
@@ -70,9 +69,9 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        (((uiStates.last() as Content).items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
+        ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
-        assertThat((((uiStates.last() as Content).items)
+        assertThat((((uiStates.last()).items)
             .first { it is CheckboxState } as CheckboxState).checked).isFalse
     }
 
@@ -82,10 +81,10 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        (((uiStates.last() as Content).items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
-        (((uiStates.last() as Content).items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
+        ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
+        ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
-        assertThat((((uiStates.last() as Content).items).first { it is CheckboxState } as CheckboxState).checked).isTrue
+        assertThat(((uiStates.last().items).first { it is CheckboxState } as CheckboxState).checked).isTrue
     }
 
     @Test
@@ -98,7 +97,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        (((uiStates.last() as Content).items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(msgs[0].peekContent().message).isEqualTo(UiStringRes(R.string.error_network_connection))
     }
@@ -113,7 +112,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        (((uiStates.last() as Content).items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(messages[0].peekContent().message).isEqualTo(UiStringRes(R.string.backup_download_generic_failure))
     }
@@ -128,7 +127,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
 
         viewModel.start(site, activityId, parentViewModel)
 
-        (((uiStates.last() as Content).items)
+        ((uiStates.last().items)
                 .first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(messages[0].peekContent().message)

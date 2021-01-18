@@ -19,8 +19,6 @@ Language: gl_ES
     <string name="gutenberg_native_choose_file">Elixir arquivo</string>
     <string name="activity_log_item_menu_download_backup_label">Descargar copia de seguridade</string>
     <string name="activity_log_item_menu_restore_label">Restaurar até este punto</string>
-    <string name="activity_log_activity_type_filter_label">Tipo de actividade</string>
-    <string name="activity_log_date_range_filter_label">Rango de datas</string>
     <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividade</string>
     <string name="dialog_confirm_copy_local_copy_button">Copiar a versión desta aplicación</string>
     <string name="dialog_confirm_copy_local_edit_button">Editar a entrada primeiro</string>
@@ -262,7 +260,6 @@ Language: gl_ES
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dúas veces para seleccionar a opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar gradiente</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor da páxina</string>
     <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">A miniatura do medio non se puido cargar</string>
@@ -296,7 +293,6 @@ Language: gl_ES
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Proba un deseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
@@ -304,8 +300,6 @@ Language: gl_ES
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="pages_set_as_posts_page">Establecer como páxina de entradas</string>
     <string name="pages_set_as_homepage">Establecer como páxina de inicio</string>
-    <string name="suggestion_no_matching_users">«Non hai usuarios que coincidan.»</string>
-    <string name="suggestion_invalid_user">«%s non é un usuario válido»</string>
     <string name="site_settings_select_page">Seleccionar a páxina</string>
     <string name="site_settings_posts_page">Páxina de entradas</string>
     <string name="site_settings_static_homepage">Páxina de inicio estática</string>
@@ -478,7 +472,6 @@ Language: gl_ES
     <string name="stats_management_add_new_stats_card">Engadir unha nova tarxeta de estatísticas</string>
     <string name="reader_self_hosted_select_filter">Usa o botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_bottom_sheet_content_description">Selecciona unha etiqueta ou un sitio, ventá emergente</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar o filtro actual</string>
     <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
@@ -555,7 +548,6 @@ Language: gl_ES
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sG</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Non podemos abrir as entradas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="site_cannot_be_loaded">Non puidemos cargar os datos para o teu sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
@@ -1190,14 +1182,8 @@ Language: gl_ES
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Rexistro da aplicación</string>
     <string name="my_tickets">Os meus tickets</string>
-    <string name="activity_log_rewind_dialog_message">Queres rebobinar o teu sitio ao %1$s ás %2$s? Isto borrará todo o contido e opcións creadas ou cambiadas desde entón.</string>
-    <string name="activity_log_rewind_site">Rebobinar sitio</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rebobinado en curso</string>
-    <string name="activity_log_currently_restoring_message">Rebobinando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">O teu sitio restaurouse satisfactoriamente</string>
-    <string name="activity_log_rewind_finished_snackbar_message">O teu sitio restaurouse con éxito\nRebobinado a %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">O teu sitio está a ser restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción do rexistro de actividade</string>
     <string name="plugin_auto_managed">Xestionado automaticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Garda esta entrada e volve cando queiras para lela. Só estará dispoñible neste dispositivo — as entradas gardadas non se sincronizan con outros dispositivos.</string>
@@ -1240,7 +1226,6 @@ Language: gl_ES
     <string name="reader_btn_notifications_on">Activar os avisos do sitio</string>
     <string name="reader_btn_notifications_off">Desactivar os avisos do sitio</string>
     <string name="activity_log_jetpack_icon">Icona de Jetpack</string>
-    <string name="rewind">Rebobinar</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icona de actividade</string>
     <string name="activity_log">Rexistro de actividade</string>

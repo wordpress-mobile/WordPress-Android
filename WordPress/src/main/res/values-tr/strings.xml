@@ -15,7 +15,6 @@ Language: tr
     <string name="backup_download_details_icon_content_description">İndirilebilir yedekleme oluştur simgesi</string>
     <string name="backup_download_details_action_button">İndirilebilir dosya oluştur</string>
     <string name="backup_download_details_choose_items_header">İndirmeye eklemek istediğiniz öğeleri seçin:</string>
-    <string name="backup_download_details_description">%1$s indirme yedeklemesi oluşturmak için seçtiğiniz saattir.</string>
     <string name="backup_download_details_header">İndirilebilir yedekleme oluştur</string>
     <string name="backup_download_details_page_title">Yedeklemeyi İndir</string>
     <string name="backup_download">İndirilebilir Yedekleme</string>
@@ -23,8 +22,6 @@ Language: tr
     <string name="gutenberg_native_choose_file">Dosya seçin</string>
     <string name="activity_log_item_menu_download_backup_label">Yedeklemeyi indir</string>
     <string name="activity_log_item_menu_restore_label">Bu noktaya kadar geri yükle</string>
-    <string name="activity_log_activity_type_filter_label">Etkinlik türü</string>
-    <string name="activity_log_date_range_filter_label">Tarih aralığı</string>
     <string name="activity_log_activity_type_filter_header">Etkinlik Türüne göre filtrele</string>
     <string name="dialog_confirm_copy_local_copy_button">Sürümü bu uygulamadan kopyala</string>
     <string name="dialog_confirm_copy_local_edit_button">Önce gönderiyi düzenle</string>
@@ -309,7 +306,6 @@ Language: tr
     <string name="reader_title_tag_preview">Konu</string>
     <string name="my_site_title_changer_dialog_hint">Site Başlığı, web tarayıcısının başlık çubuğunda görüntülenir ve çoğu temada üst bilgide gösterilir.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Bağlantıyı tarayıcıda aç</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Bir seçenek belirlemek için çift dokunun</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Gradyanı özelleştirme bölümüne gider</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker">Özel renk seçiciye gider</string>
@@ -350,7 +346,6 @@ Language: tr
     <string name="update_now">Şimdi güncelle</string>
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Başlangıç düzenini deneyin</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
@@ -360,8 +355,6 @@ Language: tr
     <string name="pages_cannot_be_started">Şu anda sayfaları açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="pages_set_as_posts_page">Yazılar Sayfası Yap</string>
     <string name="pages_set_as_homepage">Ana Sayfa olarak ayarla</string>
-    <string name="suggestion_no_matching_users">“Eşleşen kullanıcı yok.”</string>
-    <string name="suggestion_invalid_user">“%s geçerli bir kullanıcı değil”</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
     <string name="site_settings_classic_blog">Klasik blog</string>
     <string name="site_settings_static_homepage">Sabit ana sayfa</string>
@@ -532,7 +525,6 @@ Language: tr
     <string name="stats_management_add_new_stats_card">Yeni istatistik kartı ekle</string>
     <string name="reader_self_hosted_select_filter">Belirli konular hakkında yazılar bulmak için filtre düğmesini kullanın</string>
     <string name="reader_bottom_sheet_content_description">Etiket veya Site Seçin, Açılır Pencere</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seçilen</string>
     <string name="reader_btn_select_filter_content_description">Yazıları filtrelemek için bir Site veya Etiket seçin</string>
     <string name="reader_btn_remove_filter_content_description">Geçerli filtreyi kaldır</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">WordPress.com\'da oturum aç</string>
@@ -600,7 +592,6 @@ Language: tr
     <string name="my_site_bottom_sheet_add_page">Site sayfası</string>
     <string name="enter_site_credentials_instead">Site kimlik bilgileriyle giriş yapın.</string>
     <string name="posts_cannot_be_started">Şu anda gönderileri açamıyoruz. Lütfen daha sonra tekrar deneyin</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -1243,16 +1234,10 @@ Language: tr
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e-postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
-    <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="my_tickets">Taleplerim</string>
-    <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
-    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
     <string name="activity_log_button">Etkinlik kaydı eylem düğmesi</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Siteniz başarıyla geri alındı</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
-    <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yüklendi\n%1$s %2$s durumuna geri alınıyor</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Siteniz başarıyla geri alındı\n%1$s %2$s durumuna geri alındı</string>
     <string name="plugin_auto_managed">Otomatik yönetilen</string>
     <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez.</string>
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>
@@ -1307,7 +1292,6 @@ Language: tr
     <string name="privacy_policy_learn_more_header">Gizlilik politikası</string>
     <string name="third_party_policy_learn_more_header">Üçüncü taraf politikası</string>
     <string name="activity_log">Etkinlik günlüğü</string>
-    <string name="rewind">Geri yükle</string>
     <string name="post_submitted">Yazı gönderildi</string>
     <string name="login_email_button_signup">Hesabınız yok mu? %1$sKaydolun%2$s</string>
     <string name="plugin_install_site_ineligible_site_graylisted">Eklenti özelliği sitenin olumlu itibara sahip olmasını gerektirir.</string>

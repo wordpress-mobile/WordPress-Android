@@ -1,11 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-31 00:46:23+0000
+Translation-Revision-Date: 2021-01-12 10:50:51+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="label_control_upload">업로드하기</string>
+    <string name="jetpack_icon_content_description">아이콘</string>
+    <string name="backup_download_complete_info">파일에 연결하는 링크도 이메일했습니다.</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">링크 버튼 공유하기</string>
+    <string name="backup_download_complete_download_action_button_content_description">다운로드하기 버튼</string>
+    <string name="backup_download_complete_icon_content_description">다운로드할 수 있는 백업 준비 아이콘</string>
+    <string name="backup_download_complete_download_share_action_button">링크 공유하기</string>
+    <string name="backup_download_complete_download_action_button">다운로드하기</string>
+    <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s에서 사이트의 백업을 성공적으로 만들었습니다.</string>
+    <string name="backup_download_complete_header">이제 백업을 다운로드할 수 있습니다</string>
+    <string name="backup_download_complete_page_title">백업</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_additional_info">기다릴 필요가 없습니다. 백업을 준비했을 때 알릴 것입니다</string>
+    <string name="backup_download_progress_action_button_content_description">좋아요, 알려주세요 버튼</string>
+    <string name="backup_download_progress_icon_content_description">다운로드할 수 있는 백업 만들기 아이콘</string>
+    <string name="backup_download_progress_action_button">좋아요, 알려주세요!</string>
+    <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s에서 다운로드할 수 있는 사이트의 백업을 만들고 있습니다.</string>
+    <string name="backup_download_progress_header">현재 다운로드할 수 있는 사이트의 백업을 만드는 중입니다</string>
+    <string name="backup_download_progress_page_title">백업 다운로드하기</string>
+    <string name="backup_download_another_download_running">다른 다운로드를 실행하고 있습니다.</string>
+    <string name="backup_download_generic_failure">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하기 바랍니다.</string>
+    <string name="backup_download_details_action_button_content_description">다운로드할 수 있는 백업 만들기 버튼</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s은(는) 다운로드할 수 있는 백업을 만들기 위해 선택한 지점입니다.</string>
+    <string name="gutenberg_native_image_link_url">이미지 링크 URL</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">교차글</string>
+    <string name="suggestion_user">사용자</string>
+    <string name="suggestion_no_matching">“일치하는 %s이(가) 없습니다.”</string>
+    <string name="suggestion_problem">“권장을 로드하는 중에 문제가 있었습니다.”</string>
+    <string name="suggestion_none">“사용할 수 있는 %s 권장이 없습니다.”</string>
+    <string name="suggestion_selection_needed">“필터할 권장 목록을 입력하기 바랍니다.”</string>
+    <string name="threat_get_free_estimate">무료 견적 얻기</string>
+    <string name="threat_ignore">위협 무시하기</string>
+    <string name="threat_fix">위협 고치기</string>
+    <string name="threat_fix_fixable_default">젯팩 검사하기가 그 위협을 해결할 것입니다.</string>
+    <string name="threat_fix_fixable_edit">젯팩 검사하기가 영향이 있는 파일이나 디렉터리를 편집할 것입니다.</string>
+    <string name="threat_fix_fixable_update">젯팩 검사하기를 새 버전(%s)으로 업데이트할 것입니다.</string>
+    <string name="threat_fix_fixable_delete">젯팩 검사하기가 영향이 있는 파일이나 디렉터리를 지울 것입니다.</string>
+    <string name="threat_fix_fixable_replace">젯팩 검사하기는 영향이 있는 파일이나 디렉터리를 교체할 것입니다.</string>
+    <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b>코더블&lt;/b>을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70–120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
+    <string name="threat_fix_current_not_fixable_header">위협 해결하는 중</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
+    <string name="threat_fix_fixed_header">젯팩을 어떻게 고쳤을까요?</string>
+    <string name="threat_fix_default_header">어떻게 고칠까요?</string>
+    <string name="threat_file_description">파일에서 발견한  위협:</string>
+    <string name="threat_technical_details_header">기술 세부정보</string>
+    <string name="threat_problem_header">문제가 무엇이었나요?</string>
+    <string name="threat_details_icon">위협 세부사항 아이콘</string>
+    <string name="threat_details">위협 세부정보</string>
+    <string name="threat_item_sub_header_vulnerable_theme">테마에서 취약점을 찾았습니다</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">플러그인에서 취약점을 찾았습니다</string>
+    <string name="threat_item_sub_header_file_signature">위협을 찾았습니다 %s</string>
+    <string name="threat_item_sub_header_core_file">워드프레스에서 취약점을 찾았습니다</string>
+    <string name="threat_item_sub_header_misc_vulnerability">기타 취약점</string>
+    <string name="threat_item_header_vulnerable_theme">취약한 테마: %s (버전 %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">취약한 플러그인: %s (버전 %s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: 의심스러운 코드 유형</string>
+    <string name="threat_item_header_database_threat">대이터배이스 %s 위협</string>
+    <string name="threat_item_header_infected_core_file">%s: 감염 코어 파일</string>
+    <string name="threat_item_header_threat_found">위협을 찾았습니다</string>
+    <string name="threats_found">위협을 찾았습니다</string>
+    <string name="threats_fix_all">모두 고치기</string>
+    <string name="scan_in_few_seconds">몇 초 안에</string>
+    <string name="scan_in_minutes_ago">%s분 전</string>
+    <string name="scan_in_hours_ago">%s시간 전</string>
+    <string name="scan_this_site">이 사이트</string>
+    <string name="scan_idle_threats_found_description">검사하기가 %s개의 잠재적 위협 %s을(를) 발견했습니다. 아래에서 리뷰하거나 동작을 취하기 바랍니다. 도움이 필요하면 도울 수 있습니다.</string>
+    <string name="scan_idle_last_scan_description">최근 젯팩 검사하기가 %s을(를) 실행했고 모든 것이 무척 좋아보입니다. %s.</string>
+    <string name="scan_idle_manual_scan_description">지금 직접 검사를 실행하거나 오늘 젯팩이 사이트를 검사하기를 기다리세요.</string>
+    <string name="scan_scanning_description">젯팩 검사하기에 오신 것을 환영합니다. 먼저 사이트를 살펴보는 중이고 곧 결과를 보일 것입니다\n\n        \n 검사를 완료하면 알림을 보낼 것입니다. 그 사이에 사이트를 평소와 같이 편하게 이용하세요. 언제든 진행을 확인할 수 있습니다.</string>
+    <string name="scan_idle_threats_found_title">사이트가 위험할 수 있습니다</string>
+    <string name="scan_idle_no_threats_found_title">걱정하지 마세요</string>
+    <string name="scan_scanning_title">검사할 준비하는 중</string>
+    <string name="scan_again">다시 검사하기</string>
+    <string name="scan_now">지금 검사하기</string>
+    <string name="scan_state_icon">상태 검사하기 아이콘</string>
+    <string name="backup">백업하기</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">활동 유형 필터 (%s유형을 선택했습니다)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s 항목을 보이는 중)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">활동 유형 필터</string>
+    <string name="activity_log_activity_type_empty_subtitle">선택한 날짜 범위에 활동 기록이 없습니다.</string>
+    <string name="activity_log_activity_type_empty_title">사용할 수 있는 활동이 없습니다</string>
+    <string name="activity_log_activity_type_error_subtitle">인터넷 연결을 확인하고 다시 시도하기 바랍니다.</string>
+    <string name="activity_log_activity_type_error_title">연결이 없습니다</string>
+    <string name="activity_log_activity_type_filter_active_label">활동 유형 (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">날짜 범위 필터</string>
+    <string name="activity_log_active_filter_empty_subtitle">날짜 범위나 활동 유형 필터 조정하기</string>
+    <string name="activity_log_active_filter_empty_title">일치하는 이벤트가 없습니다</string>
+    <string name="rewind">복원하기</string>
     <string name="backup_item_sqls">사이트 데이터베이스 (SQL)</string>
     <string name="backup_item_contents">WP-content 디렉토리 (테마, 플러그인, 그리고 업로드 제외)</string>
     <string name="backup_item_roots">워드프레스 루트(wp-config.php와 워드프레스 파일이 아닌 모든 것 포함)</string>
@@ -15,7 +106,6 @@ Language: ko_KR
     <string name="backup_download_details_icon_content_description">다운로드할 수 있는 백업 만들기</string>
     <string name="backup_download_details_action_button">다운로드할 수 있는 파일 만들기</string>
     <string name="backup_download_details_choose_items_header">다운로드에 포함할 항목을 선택하세요:</string>
-    <string name="backup_download_details_description">%1$s은(는) 다운로드할 수 있는 백업을 만들기 위해 선택한 지점입니다.</string>
     <string name="backup_download_details_header">다운로드 할 수 있는 백업 만들기</string>
     <string name="backup_download_details_page_title">백업 다운로드하기</string>
     <string name="backup_download">백업 다운로드</string>
@@ -314,7 +404,6 @@ Language: ko_KR
     <string name="gutenberg_native_gradient_type">그라디언트 유형</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">옵션을 선택하려면 두 번 탭하기</string>
     <string name="gutenberg_native_customize_gradient">그라디언트 사용자 정의하기</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">페이지 작성자</string>
     <string name="photo_picker_use_gif">이 GIF 사용하기</string>
     <string name="error_media_thumbnail_not_loaded">미디어 썸네일을 불러 올 수 없습니다</string>
@@ -350,7 +439,6 @@ Language: ko_KR
     <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
@@ -358,8 +446,7 @@ Language: ko_KR
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
     <string name="pages_set_as_posts_page">글 페이지로 설정</string>
     <string name="pages_set_as_homepage">홈페이지로 설정</string>
-    <string name="suggestion_no_matching_users">일치하는 사용자가 없습니다.</string>
-    <string name="suggestion_invalid_user">“%s(은)는 유효한 사용자가 아닙니다”</string>
+    <string name="suggestion_invalid">“%s(은)는 유효한 %s이(가) 아닙니다”</string>
     <string name="site_settings_select_page">페이지 선택</string>
     <string name="site_settings_posts_page">글 페이지</string>
     <string name="site_settings_static_homepage">정적 홈페이지</string>
@@ -492,6 +579,7 @@ Language: ko_KR
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
     <string name="gutenberg_native_link_to">링크</string>
+    <string name="gutenberg_native_link_settings">링크 설정</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">함께 만들어 보세요!</string>
     <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요!</string>
@@ -532,7 +620,6 @@ Language: ko_KR
     <string name="stats_management_add_new_stats_card">새 스탯 카드 추가</string>
     <string name="reader_self_hosted_select_filter">필터 버튼을 사용하여 특정 주제에 대한 글을 찾습니다.</string>
     <string name="reader_bottom_sheet_content_description">태그 또는 사이트, 팝업 창을 선택합니다.</string>
-    <string name="reader_btn_selected_filter_tick_content_description">선택되었습니다.</string>
     <string name="reader_btn_select_filter_content_description">사이트 또는 태그를 선택하여 글을 필터링합니다.</string>
     <string name="reader_btn_remove_filter_content_description">현재 필터 제거</string>
     <string name="reader_title_subs">토픽과 사이트 관리하기</string>
@@ -1244,13 +1331,13 @@ Language: ko_KR
     <string name="support_contact_email">연락처 이메일</string>
     <string name="application_log_button">애플리케이션 로그</string>
     <string name="my_tickets">내 티켓</string>
-    <string name="activity_log_rewind_dialog_message">사이트를 %s(%s)(으)로 되돌리시겠습니까? 이렇게 하면 이 날짜 이후로 만들거나 변경한 콘텐츠와 옵션이 모두 제거됩니다.</string>
+    <string name="activity_log_rewind_dialog_message">사이트를 %2$s의 %1$s(으)로 복원하기 원하는게 확실한가요? 이는 만들 때부터 만든 모든 콘텐츠와 옵션을 제거할 것입니다.</string>
     <string name="activity_log_rewind_site">사이트 되돌리기</string>
     <string name="activity_log_currently_restoring_message_no_dates">되돌리기 진행 중</string>
-    <string name="activity_log_currently_restoring_message">%s %s(으)로 되돌리는 중</string>
+    <string name="activity_log_currently_restoring_message">%1$s %2$s(으)로 되돌리는 중</string>
     <string name="activity_log_currently_restoring_title">현재 사이트 복원 중</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">사이트가 성공적으로 복원되었습니다.</string>
-    <string name="activity_log_rewind_finished_snackbar_message">사이트가 성공적으로 복원되었습니다.\n%s %s(으)로 되돌림</string>
+    <string name="activity_log_rewind_finished_snackbar_message">사이트를 성공적으로 복원했습니다.\n%1$s %2$s(으)로 되돌렸습니다</string>
     <string name="activity_log_rewind_started_snackbar_message">사이트 복원 중\n%s %s(으)로 되돌리는 중</string>
     <string name="activity_log_button">활동 로그 작업 버튼</string>
     <string name="plugin_auto_managed">자동 관리</string>
@@ -1294,7 +1381,6 @@ Language: ko_KR
     <string name="reader_btn_notifications_on">사이트 알림 켜기</string>
     <string name="reader_btn_notifications_off">사이트 알림 끄기</string>
     <string name="activity_log_jetpack_icon">젯팩 아이콘</string>
-    <string name="rewind">되돌리기</string>
     <string name="activity_log_event">이벤트</string>
     <string name="activity_log_icon">활동 아이콘</string>
     <string name="activity_log">활동 로그</string>
