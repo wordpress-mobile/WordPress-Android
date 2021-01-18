@@ -123,8 +123,13 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                val widthScript = getString(R.string.web_preview_width_script, viewModel.getPreviewMode().previewWidth)
-                view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
+                val widthScript = context?.getString(
+                        R.string.web_preview_width_script,
+                        viewModel.getPreviewMode().previewWidth
+                )
+                if (widthScript != null) {
+                    view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
+                }
             }
 
             override fun onReceivedError(view: WebView?, request: WebResourceRequest?, error: WebResourceError?) {
