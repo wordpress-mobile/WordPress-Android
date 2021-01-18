@@ -148,7 +148,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         onFixAllButtonClicked: () -> Unit,
         fixableThreatsCount: Int
     ): ActionButtonState {
-        val title = UiStringResWithParams(R.string.threats_fix_all, listOf(UiStringText("$fixableThreatsCount")))
+        val title = UiStringResWithParams(
+            R.string.threats_fix_num_of_threats,
+            listOf(UiStringText("$fixableThreatsCount"))
+        )
         return ActionButtonState(
             text = title,
             onClick = onFixAllButtonClicked,

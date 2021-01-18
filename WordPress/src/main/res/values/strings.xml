@@ -1077,7 +1077,7 @@
     <string name="scan_in_few_seconds">in a few seconds</string>
 
     <!-- threats -->
-    <string name="threats_fix_all">Fix %s threats</string>
+    <string name="threats_fix_num_of_threats">Fix %s threats</string>
     <string name="threats_found">Threats found</string>
 
     <!-- threat item header -->
