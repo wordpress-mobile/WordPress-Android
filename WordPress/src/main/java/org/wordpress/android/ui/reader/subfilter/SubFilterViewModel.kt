@@ -79,19 +79,19 @@ class SubFilterViewModel @Inject constructor(
 
     private var isStarted = false
     private var isFirstLoad = true
-    private var mainStreamTag: ReaderTag? = null
+    private var mTagFragmentStartedWith: ReaderTag? = null
 
     /**
      * Tag may be null for Blog previews for instance.
      */
-    fun start(mainStreamTag: ReaderTag?, tag: ReaderTag?, savedInstanceState: Bundle?) {
+    fun start(mTagFragmentStartedWith: ReaderTag?, tag: ReaderTag?, savedInstanceState: Bundle?) {
         if (isStarted) {
             return
         }
 
         isStarted = true
 
-        this.mainStreamTag = mainStreamTag
+        this.mTagFragmentStartedWith = mTagFragmentStartedWith
 
         var subfilterJson: String? = null
 
@@ -122,7 +122,7 @@ class SubFilterViewModel @Inject constructor(
             val filterList = ArrayList<SubfilterListItem>()
 
             if (accountStore.hasAccessToken()) {
-                val organization = mainStreamTag?.organization
+                val organization = mTagFragmentStartedWith?.organization
 
                 val followedBlogs = ReaderBlogTable.getFollowedBlogs().let { blogList ->
                     // Filtering out all blogs not belonging to this VM organization if valid
@@ -214,8 +214,8 @@ class SubFilterViewModel @Inject constructor(
                 UpdateTask.FOLLOWED_BLOGS
         ))
         _bottomSheetUiState.value = Event(BottomSheetVisible(
-                mainStreamTag?.let { UiStringText(it.label) } ?: UiStringRes(R.string.reader_filter_main_title),
-                if (mainStreamTag?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
+                mTagFragmentStartedWith?.let { UiStringText(it.label) } ?: UiStringRes(R.string.reader_filter_main_title),
+                if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
         ))
     }
 
@@ -276,11 +276,11 @@ class SubFilterViewModel @Inject constructor(
     }
 
     fun onSubfilterSelected(subfilterListItem: SubfilterListItem) {
-        changeSubfilter(subfilterListItem, true, mainStreamTag)
+        changeSubfilter(subfilterListItem, true, mTagFragmentStartedWith)
     }
 
     fun onSubfilterReselected() {
-        changeSubfilter(getCurrentSubfilterValue(), false, mainStreamTag)
+        changeSubfilter(getCurrentSubfilterValue(), false, mTagFragmentStartedWith)
     }
 
     fun onSubfilterPageUpdated(category: SubfilterCategory, count: Int) {
