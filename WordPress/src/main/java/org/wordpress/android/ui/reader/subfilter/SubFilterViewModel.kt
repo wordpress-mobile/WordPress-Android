@@ -214,7 +214,9 @@ class SubFilterViewModel @Inject constructor(
                 UpdateTask.FOLLOWED_BLOGS
         ))
         _bottomSheetUiState.value = Event(BottomSheetVisible(
-                mTagFragmentStartedWith?.let { UiStringText(it.label) } ?: UiStringRes(R.string.reader_filter_main_title),
+                mTagFragmentStartedWith?.let {
+                    UiStringText(it.label)
+                } ?: UiStringRes(R.string.reader_filter_main_title),
                 if (mTagFragmentStartedWith?.organization == NO_ORGANIZATION) listOf(SITES, TAGS) else listOf(SITES)
         ))
     }
