@@ -16,7 +16,7 @@ class ReaderPostTableWrapper @Inject constructor() {
 
     fun isPostSeen(post: ReaderPost): Boolean = ReaderPostTable.isPostSeen(post)
 
-    fun makPostAsSeenLocally(post: ReaderPost, isSeen: Boolean) = ReaderPostTable.setPostSeenStatus(post, isSeen)
+    fun togglePostSeenStatusLocally(post: ReaderPost, isSeen: Boolean) = ReaderPostTable.setPostSeenStatus(post, isSeen)
 
     fun getPostsWithTag(
         readerTag: ReaderTag,
