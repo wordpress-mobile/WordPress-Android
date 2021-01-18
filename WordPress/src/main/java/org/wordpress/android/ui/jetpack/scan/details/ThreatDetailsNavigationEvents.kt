@@ -5,7 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
 sealed class ThreatDetailsNavigationEvents {
-    class OpenThreatActionDialog(
+    class OpenIgnoreThreatActionDialog(
         val title: UiString,
         val message: UiString,
         val okButtonAction: () -> Unit

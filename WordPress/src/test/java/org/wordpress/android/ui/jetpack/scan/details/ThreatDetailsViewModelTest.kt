@@ -16,7 +16,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -84,7 +84,18 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ignore threat button is clicked, then action to open ignore action confirmation dialog is triggered`() =
+    fun `when ignore threat button is clicked, then open ignore threat action dialog action is triggered`() =
+        test {
+            val observers = init()
+
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
+
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenIgnoreThreatActionDialog::class.java)
+        }
+
+    @Test
+    fun `when open ignore threat action dialog action is triggered, then ignore threat confirmation dialog is shown`() =
         test {
             val expectedDialogTitle = UiStringRes(R.string.threat_ignore)
             val expectedDialogMessage = UiStringText(
@@ -101,8 +112,8 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
                 .first().onClick.invoke()
 
-            val confirmationDialogAction = observers.navigation.last().peekContent() as OpenThreatActionDialog
-            with(confirmationDialogAction) {
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog
+            with(confirmationDialog) {
                 assertThat(title).isEqualTo(expectedDialogTitle)
                 assertThat(message).isEqualTo(expectedDialogMessage)
                 assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
@@ -182,7 +193,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-        (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
+        (observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog).okButtonAction.invoke()
     }
 
     private fun createDummyThreatDetailsListItems(
