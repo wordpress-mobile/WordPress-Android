@@ -38,7 +38,19 @@ class QuickStartFocusPoint : FrameLayout {
 
     private fun initView() {
         View.inflate(context, R.layout.quick_start_focus_circle, this)
+        startAnimation()
+    }
 
+    fun setVisibleOrGone(visible: Boolean) {
+        if (visible) {
+            this.visibility = View.VISIBLE
+            startAnimation()
+        } else {
+            this.visibility = View.GONE
+        }
+    }
+
+    private fun startAnimation() {
         val outerCircle = findViewById<View>(R.id.quick_start_focus_outer_circle)
         val innerCircle = findViewById<View>(R.id.quick_start_focus_inner_circle)
 

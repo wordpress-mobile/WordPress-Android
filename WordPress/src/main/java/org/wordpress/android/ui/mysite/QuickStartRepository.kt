@@ -8,6 +8,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.merge
@@ -23,11 +24,13 @@ class QuickStartRepository
             .associateBy { it.task }
     private val customizeTasks = MutableLiveData<QuickStartCategory>()
     private val growTasks = MutableLiveData<QuickStartCategory>()
-    val quickStartModel: LiveData<List<QuickStartCategory>> = merge(
+    private val activeTask = MutableLiveData<QuickStartTask>()
+    val quickStartModel: LiveData<QuickStartModel> = merge(
             customizeTasks,
-            growTasks
-    ) { customizeCategory, growCategory ->
-        listOfNotNull(customizeCategory, growCategory)
+            growTasks,
+            activeTask
+    ) { customizeCategory, growCategory, activeTask ->
+        QuickStartModel(activeTask, listOfNotNull(customizeCategory, growCategory))
     }
 
     fun startQuickStart() {
@@ -39,8 +42,13 @@ class QuickStartRepository
     }
 
     fun refreshIfNecessary() {
-        if (quickStartModel.value == null && quickStartUtils.isQuickStartInProgress()) {
+        if (!quickStartUtils.isQuickStartInProgress()) {
+            return
+        }
+        if (customizeTasks.value == null) {
             refreshCustomizeTasks()
+        }
+        if (growTasks.value == null) {
             refreshGrowTasks()
         }
     }
@@ -71,9 +79,18 @@ class QuickStartRepository
         }
     }
 
-    data class QuickStartCategory(
-        val taskType: QuickStartTaskType,
-        val uncompletedTasks: List<QuickStartTaskDetails>,
-        val completedTasks: List<QuickStartTaskDetails>
-    )
+    fun setActiveTask(task: QuickStartTask) {
+        activeTask.postValue(task)
+    }
+
+    data class QuickStartModel(
+        val activeTask: QuickStartTask? = null,
+        val categories: List<QuickStartCategory> = listOf()
+    ) {
+        data class QuickStartCategory(
+            val taskType: QuickStartTaskType,
+            val uncompletedTasks: List<QuickStartTaskDetails>,
+            val completedTasks: List<QuickStartTaskDetails>
+        )
+    }
 }

@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
@@ -28,7 +28,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
-    private lateinit var models: MutableList<List<QuickStartCategory>>
+    private lateinit var models: MutableList<QuickStartModel>
     private val siteId = 1
 
     @Before
@@ -42,7 +42,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `model is empty when not started`() {
-        assertThat(models).isEmpty()
+        assertEmptyModel()
     }
 
     @Test
@@ -77,7 +77,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.refreshIfNecessary()
 
-        assertThat(models).isEmpty()
+        assertEmptyModel()
     }
 
     @Test
@@ -108,8 +108,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun assertModel() {
-        assertThat(models).hasSize(2)
-        models.last().let { categories ->
+        assertThat(models).hasSize(3)
+        models.last().categories.let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
             assertThat(categories[0].uncompletedTasks).containsExactly(CREATE_SITE_TUTORIAL)
@@ -117,6 +117,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             assertThat(categories[1].taskType).isEqualTo(GROW)
             assertThat(categories[1].uncompletedTasks).containsExactly(SHARE_SITE_TUTORIAL)
             assertThat(categories[1].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
+        }
+    }
+
+    private fun assertEmptyModel() {
+        models.last().let { quickStartModel ->
+            assertThat(quickStartModel.activeTask).isNull()
+            assertThat(quickStartModel.categories).isEmpty()
         }
     }
 }

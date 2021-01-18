@@ -2,13 +2,14 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskItem
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -19,11 +20,22 @@ class QuickStartItemBuilder
 @Inject constructor() {
     fun build(
         quickStartCategory: QuickStartCategory,
-        onQuickStartCardMoreClick: (String) -> Unit
+        onQuickStartCardMoreClick: (String) -> Unit,
+        onQuickStartItemClick: (QuickStartTask) -> Unit
     ): QuickStartCard {
         val tasks = mutableListOf<QuickStartTaskItem>()
-        tasks.addAll(quickStartCategory.uncompletedTasks.map { it.toUiItem(false) })
-        val completedTasks = quickStartCategory.completedTasks.map { it.toUiItem(true) }
+        tasks.addAll(quickStartCategory.uncompletedTasks.map {
+            it.toUiItem(
+                    done = false,
+                    onItemClick = onQuickStartItemClick
+            )
+        })
+        val completedTasks = quickStartCategory.completedTasks.map {
+            it.toUiItem(
+                    done = true,
+                    onItemClick = onQuickStartItemClick
+            )
+        }
         tasks.addAll(completedTasks)
         val id = quickStartCategory.taskType.toString()
         return QuickStartCard(
@@ -57,7 +69,16 @@ class QuickStartItemBuilder
         }
     }
 
-    private fun QuickStartTaskDetails.toUiItem(done: Boolean): QuickStartTaskItem {
-        return QuickStartTaskItem(this.task, UiStringRes(this.titleResId), UiStringRes(this.subtitleResId), done)
+    private fun QuickStartTaskDetails.toUiItem(
+        done: Boolean,
+        onItemClick: (QuickStartTask) -> Unit
+    ): QuickStartTaskItem {
+        return QuickStartTaskItem(
+                this.task,
+                UiStringRes(this.titleResId),
+                UiStringRes(this.subtitleResId),
+                done,
+                ListItemInteraction.create(this.task, onItemClick)
+        )
     }
 }

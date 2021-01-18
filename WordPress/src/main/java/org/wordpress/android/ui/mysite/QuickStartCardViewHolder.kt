@@ -129,6 +129,7 @@ class QuickStartTaskAdapter(private val uiHelpers: UiHelpers) : Adapter<QuickSta
 
     inner class QuickStartTaskViewHolder(itemView: View) : ViewHolder(itemView) {
         fun bind(task: QuickStartTaskItem) = itemView.apply {
+            this.setOnClickListener { task.onItemClick.click() }
             uiHelpers.setTextOrHide(dummy_task_title, task.title)
             uiHelpers.setTextOrHide(dummy_task_description, task.description)
 

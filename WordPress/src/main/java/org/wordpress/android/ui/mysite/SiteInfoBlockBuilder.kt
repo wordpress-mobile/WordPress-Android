@@ -2,6 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -17,7 +19,8 @@ class SiteInfoBlockBuilder
         titleClick: (SiteModel) -> Unit,
         iconClick: (SiteModel) -> Unit,
         urlClick: (SiteModel) -> Unit,
-        switchSiteClick: (SiteModel) -> Unit
+        switchSiteClick: (SiteModel) -> Unit,
+        activeTask: QuickStartTask?
     ): SiteInfoBlock {
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
@@ -35,6 +38,7 @@ class SiteInfoBlockBuilder
                 blogTitle,
                 homeUrl,
                 siteIcon,
+                activeTask == UPDATE_SITE_TITLE,
                 buildTitleClick(site, titleClick),
                 ListItemInteraction.create(site, iconClick),
                 ListItemInteraction.create(site, urlClick),

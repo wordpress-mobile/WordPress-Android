@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -27,6 +28,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -128,6 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData<Boolean>()
+    private val quickStartModel = MutableLiveData<QuickStartModel>()
 
     @InternalCoroutinesApi
     @Before
@@ -138,6 +142,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
+        whenever(quickStartRepository.quickStartModel).thenReturn(quickStartModel)
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -199,12 +204,21 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteName,
                 siteUrl,
                 IconState.Visible(siteIcon),
+                false,
                 null,
                 mock(),
                 mock(),
                 mock()
         )
-        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())).thenReturn(
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                eq(site),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                anyOrNull()
+        )).thenReturn(
                 siteInfoBlock
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -225,7 +239,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
-        assertThat(getLastItems()).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
+        assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
@@ -389,6 +403,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
+    }
+
+    @Test
+    fun `passes active quick start task into site info block builder`() {
+        onSiteChange.postValue(site)
+
+        val activeTask = UPDATE_SITE_TITLE
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                eq(site),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                eq(activeTask)
+        )).thenReturn(
+                siteInfoBlock.copy(showTitleFocusPoint = true)
+        )
+
+        quickStartModel.value = QuickStartModel(activeTask, listOf())
+
+        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
     }
 
     @Test
@@ -827,6 +863,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
+    private fun findSiteInfoBlock() =
+            getLastItems().find { it is SiteInfoBlock } as SiteInfoBlock?
+
     private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
@@ -840,7 +879,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(argument)
             siteInfoBlock
-        }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())
+        }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(
+                eq(site),
+                any(),
+                any(),
+                any(),
+                any(),
+                any(),
+                anyOrNull()
+        )
 
         onSiteChange.postValue(site)
 

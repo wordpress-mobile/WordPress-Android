@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -52,11 +53,11 @@ import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
-import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.QuickStartModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ScanAvailable
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ShowSiteIconProgressBar
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -164,7 +165,7 @@ class MySiteViewModel
                     .mapNullable { ShowSiteIconProgressBar(it == true) },
             domainRegistrationHandler.isDomainCreditAvailable.distinct()
                     .mapNullable { DomainCreditAvailable(it == true) },
-            quickStartRepository.quickStartModel.mapNullable { QuickStartModel(it ?: listOf()) }
+            quickStartRepository.quickStartModel.mapNullable { model -> model?.let { QuickStartUpdate(it) } }
     ) { currentState, partialState ->
         currentState.update(partialState)
     }.map { (
@@ -173,7 +174,7 @@ class MySiteViewModel
             showSiteIconProgressBar,
             isDomainCreditAvailable,
             scanAvailable,
-            quickStartCategories
+            quickStartModel
     ) ->
         site?.takeIf { site.id != currentSiteId }?.let {
             _partialState.value = ScanAvailable(false)
@@ -186,11 +187,12 @@ class MySiteViewModel
             siteItems.add(
                     siteInfoBlockBuilder.buildSiteInfoBlock(
                             site,
-                            showSiteIconProgressBar ?: false,
+                            showSiteIconProgressBar,
                             this::titleClick,
                             this::iconClick,
                             this::urlClick,
-                            this::switchSiteClick
+                            this::switchSiteClick,
+                            quickStartModel?.activeTask
                     )
             )
             siteItems.add(
@@ -207,12 +209,13 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
 
-            siteItems.addAll(quickStartCategories.map {
+            siteItems.addAll(quickStartModel?.categories?.map {
                 quickStartItemBuilder.build(
                         it,
-                        this::onQuickStartCardMoreClick
+                        this::onQuickStartCardMoreClick,
+                        this::onQuickStartItemClick
                 )
-            })
+            } ?: listOf())
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
@@ -267,6 +270,10 @@ class MySiteViewModel
 
     private fun onQuickStartCardMoreClick(id: String) {
         _onQuickStartMenuShown.postValue(Event(id))
+    }
+
+    private fun onQuickStartItemClick(task: QuickStartTask) {
+        quickStartRepository.setActiveTask(task)
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -506,7 +513,7 @@ class MySiteViewModel
         val showSiteIconProgressBar: Boolean = false,
         val isDomainCreditAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
-        val quickStartCategories: List<QuickStartCategory> = listOf()
+        val quickStartModel: QuickStartModel? = null
     ) {
         sealed class PartialState {
             data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -514,7 +521,7 @@ class MySiteViewModel
             data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
             data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
             data class ScanAvailable(val scanAvailable: Boolean) : PartialState()
-            data class QuickStartModel(val quickStartCategories: List<QuickStartCategory>) : PartialState()
+            data class QuickStartUpdate(val quickStartModel: QuickStartModel) : PartialState()
         }
 
         fun update(partialState: PartialState): UiState {
@@ -524,7 +531,7 @@ class MySiteViewModel
                 is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
                 is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
                 is ScanAvailable -> this.copy(scanAvailable = partialState.scanAvailable)
-                is QuickStartModel -> this.copy(quickStartCategories = partialState.quickStartCategories)
+                is QuickStartUpdate -> this.copy(quickStartModel = partialState.quickStartModel)
             }
         }
     }
