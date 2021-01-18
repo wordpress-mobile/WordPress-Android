@@ -12,9 +12,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.common.ViewType.RESTORE_PROGRESS
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.ViewType.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes
-import org.wordpress.android.ui.jetpack.restore.RestoreListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
@@ -101,7 +101,7 @@ class RestoreProgressViewModel @Inject constructor(
             is Progress -> {
                 _uiState.value?.let { uiState ->
                     val updatedList = uiState.items.map { contentState ->
-                        if (contentState.type == RESTORE_PROGRESS) {
+                        if (contentState.type == PROGRESS) {
                             contentState as ProgressState
                             contentState.copy(
                                     progress = state.progress ?: 0,

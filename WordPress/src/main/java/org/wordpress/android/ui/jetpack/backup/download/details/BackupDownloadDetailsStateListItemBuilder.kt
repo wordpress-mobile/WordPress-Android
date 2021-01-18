@@ -2,7 +2,7 @@ package org.wordpress.android.ui.jetpack.backup.download.details
 
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.SubHeaderState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
