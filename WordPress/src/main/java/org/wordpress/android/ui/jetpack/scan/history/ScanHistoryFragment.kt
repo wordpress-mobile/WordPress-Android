@@ -10,7 +10,6 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.scan_history_fragment.*
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ScrollableViewInitializedListener
@@ -58,7 +57,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     private fun initToolbar() {
         setHasOptionsMenu(true)
         val activity = (requireActivity() as AppCompatActivity)
-        toolbar_main.title = getString(string.scan_history)
+        toolbar_main.title = getString(R.string.scan_history)
         activity.setSupportActionBar(toolbar_main)
         activity.supportActionBar?.let {
             it.setHomeButtonEnabled(true)
