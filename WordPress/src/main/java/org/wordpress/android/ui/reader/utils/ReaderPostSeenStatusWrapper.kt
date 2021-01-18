@@ -26,7 +26,7 @@ class ReaderPostSeenStatusWrapper @Inject constructor(
 ) : CoroutineScope {
     override val coroutineContext = bgDispatcher + Job()
 
-    fun markPostAsSeenSilently(post: ReaderPost){
+    fun markPostAsSeenSilently(post: ReaderPost) {
         launch(bgDispatcher) {
             seenStatusToggleUseCase.markPostAsSeenIfNecessary(post).flowOn(bgDispatcher).collect {
                 // do things silently

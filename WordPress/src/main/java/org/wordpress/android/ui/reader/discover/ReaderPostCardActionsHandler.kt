@@ -59,6 +59,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -134,7 +135,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 REBLOG -> handleReblogClicked(post)
                 COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
                 REPORT_POST -> handleReportPostClicked(post)
-                TOGGLE_SEEN_STATUS -> handleFollowCommentsClicked(post)
+                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post)
             }
         }
     }
@@ -173,19 +174,28 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    suspend fun handleFollowCommentsClicked(post: ReaderPost) {
+    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost) {
         seenStatusToggleUseCase.toggleSeenStatus(post).flowOn(bgDispatcher).collect { state ->
             when (state) {
                 is PostSeenState.Failure -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((state.error)))
-                    )
+                    state.error?.let {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(it))
+                        )
+                    }
                 }
                 is PostSeenStateChanged -> {
-                    _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder((state.userMessage!!)))
+                    state.userMessage?.let {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(it))
+                        )
+                    }
+                }
+                is UserNotAuthenticated -> { // should not happen with current implementation
+                    AppLog.e(
+                            T.READER,
+                            "User was not authenticated when attempting to toggle Seen/Unseen status of the post"
                     )
-                    AppLog.v(T.READER, "Seen state changed + " )
                 }
             }
         }

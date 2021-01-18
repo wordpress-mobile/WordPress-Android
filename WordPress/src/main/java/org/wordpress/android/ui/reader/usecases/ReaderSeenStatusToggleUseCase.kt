@@ -118,7 +118,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         ) : PostSeenState()
 
         data class Failure(
-            val error: UiString
+            val error: UiString? = null
         ) : PostSeenState()
 
         object UserNotAuthenticated : PostSeenState()
