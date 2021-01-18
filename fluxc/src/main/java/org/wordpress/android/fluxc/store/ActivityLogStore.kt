@@ -28,7 +28,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val ACTIVITY_LOG_PAGE_SIZE = 10
+private const val ACTIVITY_LOG_PAGE_SIZE = 20
 
 @Singleton
 class ActivityLogStore
@@ -76,9 +76,17 @@ class ActivityLogStore
     }
 
     @SuppressLint("WrongConstant")
-    fun getActivityLogForSite(site: SiteModel, ascending: Boolean = true): List<ActivityLogModel> {
+    fun getActivityLogForSite(
+        site: SiteModel,
+        ascending: Boolean = true,
+        rewindableOnly: Boolean = false
+    ): List<ActivityLogModel> {
         val order = if (ascending) SelectQuery.ORDER_ASCENDING else SelectQuery.ORDER_DESCENDING
-        return activityLogSqlUtils.getActivitiesForSite(site, order)
+        return if (rewindableOnly) {
+            activityLogSqlUtils.getRewindableActivitiesForSite(site, order)
+        } else {
+            activityLogSqlUtils.getActivitiesForSite(site, order)
+        }
     }
 
     fun getActivityLogItemByRewindId(rewindId: String): ActivityLogModel? {
