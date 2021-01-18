@@ -41,19 +41,9 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     suspend fun toggleSeenStatus(post: ReaderPost) = flow {
         val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
         val status = if (isAskingToMarkAsSeen) {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(
-                    AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
-                    post,
-                    mapOf(ACTION_SOURCE_PARAM_NAME to READER_POST_CARD.toString())
-            )
-            markPostAsSeen(post)
+            markPostAsSeen(post, READER_POST_CARD)
         } else {
-            analyticsUtilsWrapper.trackWithReaderPostDetails(
-                    AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
-                    post,
-                    mapOf(ACTION_SOURCE_PARAM_NAME to READER_POST_CARD.toString())
-            )
-            markPostAsUnseen(post)
+            markPostAsUnseen(post, READER_POST_CARD)
         }
 
         emit(status)
@@ -61,17 +51,12 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
 
     suspend fun markPostAsSeenIfNecessary(post: ReaderPost) = flow {
         if (!readerPostTableWrapper.isPostSeen(post)) {
-            val status = markPostAsSeen(post)
+            val status = markPostAsSeen(post, READER_POST_DETAILS)
             emit(status)
-            analyticsUtilsWrapper.trackWithReaderPostDetails(
-                    AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
-                    post,
-                    mapOf(ACTION_SOURCE_PARAM_NAME to READER_POST_DETAILS.toString())
-            )
         }
     }
 
-    private suspend fun markPostAsSeen(post: ReaderPost): PostSeenState {
+    private suspend fun markPostAsSeen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState {
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
         } else {
@@ -81,6 +66,11 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
                         readerPostTableWrapper.togglePostSeenStatusLocally(post, true)
+                        analyticsUtilsWrapper.trackWithReaderPostDetails(
+                                AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
+                                post,
+                                mutableMapOf(ACTION_SOURCE_PARAM_NAME to actionSource.toString())
+                        )
                         PostSeenStateChanged(true, UiStringRes(string.reader_marked_post_as_seen))
                     }
                     is SeenStatusToggleCallResult.Failure -> {
@@ -91,7 +81,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         }
     }
 
-    private suspend fun markPostAsUnseen(post: ReaderPost): PostSeenState {
+    private suspend fun markPostAsUnseen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState {
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
         } else {
@@ -101,6 +91,11 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
                         readerPostTableWrapper.togglePostSeenStatusLocally(post, false)
+                        analyticsUtilsWrapper.trackWithReaderPostDetails(
+                                AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
+                                post,
+                                mutableMapOf(ACTION_SOURCE_PARAM_NAME to actionSource.toString())
+                        )
                         PostSeenStateChanged(false, UiStringRes(string.reader_marked_post_as_unseen))
                     }
                     is SeenStatusToggleCallResult.Failure -> {
