@@ -16,7 +16,6 @@ import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.StringRes;
 import androidx.appcompat.app.AlertDialog;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
@@ -242,15 +241,9 @@ public class WPMediaUtils {
                 RequestCodes.MEDIA_LIBRARY);
     }
 
-    public static void launchFileLibrary(Activity activity, boolean multiSelect, int requestCode) {
-        switch (requestCode) {
-            case RequestCodes.FILE_LIBRARY:
-                activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect), requestCode);
-                break;
-            case RequestCodes.AUDIO_LIBRARY:
-                activity.startActivityForResult(prepareAudioLibraryIntent(activity, multiSelect), requestCode);
-                break;
-        }
+    public static void launchFileLibrary(Activity activity, boolean multiSelect) {
+        activity.startActivityForResult(prepareFileLibraryIntent(activity, multiSelect),
+                RequestCodes.FILE_LIBRARY);
     }
 
     public static void launchChooserWithContext(
@@ -263,40 +256,34 @@ public class WPMediaUtils {
                 requestCode);
     }
 
-    private static Intent preparePictureLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "image/*",
-                new MimeTypes().getImageTypesOnly(), R.string.pick_photo);
-    }
-
     private static Intent prepareVideoLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "video/*",
-                new MimeTypes().getVideoTypesOnly(), R.string.pick_video);
-    }
-
-    private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
-                new MimeTypes().getVideoAndImageTypesOnly(), R.string.pick_media);
-    }
-
-    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_OPEN_DOCUMENT, "*/*",
-                new MimeTypes().getAllTypes(), R.string.pick_file);
-    }
-
-    private static Intent prepareAudioLibraryIntent(Context context, boolean multiSelect) {
-        return prepareIntent(context, multiSelect, Intent.ACTION_GET_CONTENT, "*/*",
-                new MimeTypes().getAudioTypesOnly(), R.string.pick_audio);
-    }
-
-    private static Intent prepareIntent(Context context, boolean multiSelect, String action, String intentType,
-                                        String[] mimeTypes, @StringRes int title) {
-        Intent intent = new Intent(action);
-        intent.setType(intentType);
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimeTypes);
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("video/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoTypesOnly());
         if (multiSelect) {
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         }
-        return Intent.createChooser(intent, context.getString(title));
+        return Intent.createChooser(intent, context.getString(R.string.pick_video));
+    }
+
+    private static Intent prepareMediaLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getVideoAndImageTypesOnly());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_media));
+    }
+
+    private static Intent prepareFileLibraryIntent(Context context, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.setType("*/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getAllTypes());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, context.getString(R.string.pick_file));
     }
 
     private static Intent prepareChooserIntent(
@@ -324,10 +311,19 @@ public class WPMediaUtils {
 
     public static void launchPictureLibrary(Activity activity, boolean multiSelect) {
         activity.startActivityForResult(
-                preparePictureLibraryIntent(activity, multiSelect),
+                preparePictureLibraryIntent(activity.getString(R.string.pick_photo), multiSelect),
                 RequestCodes.PICTURE_LIBRARY);
     }
 
+    private static Intent preparePictureLibraryIntent(String title, boolean multiSelect) {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, new MimeTypes().getImageTypesOnly());
+        if (multiSelect) {
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        }
+        return Intent.createChooser(intent, title);
+    }
 
     private static Intent prepareGalleryIntent(String title) {
         Intent intent = new Intent(Intent.ACTION_PICK);
