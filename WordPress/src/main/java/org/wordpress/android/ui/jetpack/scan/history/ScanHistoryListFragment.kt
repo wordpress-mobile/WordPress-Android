@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpack.scan.history
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelStoreOwner
 import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -44,9 +45,11 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
 
     private fun initViewModel(site: SiteModel) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
-        parentViewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryViewModel::class.java)
-        setupObservers()
+        parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
+                ScanHistoryViewModel::class.java
+        )
         viewModel.start(site, parentViewModel)
+        setupObservers()
     }
 
     private fun setupObservers() {
