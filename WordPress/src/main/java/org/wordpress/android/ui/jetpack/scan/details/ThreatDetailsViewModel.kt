@@ -75,7 +75,7 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun ignoreThreat() {
         viewModelScope.launch {
-            disableThreatActionButtons(true)
+            updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
                 is IgnoreThreatState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
@@ -85,12 +85,12 @@ class ThreatDetailsViewModel @Inject constructor(
                 }
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
-                    disableThreatActionButtons(false)
+                    updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
 
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
-                    disableThreatActionButtons(false)
+                    updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
                 }
             }
@@ -119,11 +119,11 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
     }
 
-    private fun disableThreatActionButtons(disable: Boolean) {
+    private fun updateThreatActionButtons(isEnabled: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
-                    contentItem.copy(isEnabled = !disable)
+                    contentItem.copy(isEnabled = isEnabled)
                 } else {
                     contentItem
                 }
