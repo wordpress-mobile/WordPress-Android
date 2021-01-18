@@ -12,6 +12,7 @@ sealed class SiteNavigationAction {
     data class OpenMediaPicker(val site: SiteModel) : SiteNavigationAction()
     data class OpenCropActivity(val imageUri: UriWrapper) : SiteNavigationAction()
     data class OpenActivityLog(val site: SiteModel) : SiteNavigationAction()
+    data class OpenBackup(val site: SiteModel) : SiteNavigationAction()
     data class OpenScan(val site: SiteModel) : SiteNavigationAction()
     data class OpenPlan(val site: SiteModel) : SiteNavigationAction()
     data class OpenPosts(val site: SiteModel) : SiteNavigationAction()
@@ -46,4 +47,5 @@ sealed class SiteNavigationAction {
         val mediaUris: List<String>
     ) : SiteNavigationAction()
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
+    data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
 }

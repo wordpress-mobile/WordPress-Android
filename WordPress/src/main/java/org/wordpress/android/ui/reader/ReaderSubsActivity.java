@@ -418,7 +418,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     // update tags if the site we added belongs to a tag we don't yet have
-                    performUpdate(EnumSet.of(UpdateTask.TAGS));
+                    // also update followed blogs so lists are ready in case we need to present them
+                    // in bottom sheet reader filtering
+                    performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }

@@ -48,7 +48,10 @@ import org.wordpress.android.ui.history.HistoryDetailActivity;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.history.HistoryListItem.Revision;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
+import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
+import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsActivity;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryActivity;
 import org.wordpress.android.ui.main.MeActivity;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.SitePickerAdapter.SitePickerMode;
@@ -75,7 +78,6 @@ import org.wordpress.android.ui.prefs.BlogPreferencesActivity;
 import org.wordpress.android.ui.prefs.MyProfileActivity;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsActivity;
 import org.wordpress.android.ui.publicize.PublicizeListActivity;
-import org.wordpress.android.ui.jetpack.scan.ScanActivity;
 import org.wordpress.android.ui.sitecreation.SiteCreationActivity;
 import org.wordpress.android.ui.stats.StatsConnectJetpackActivity;
 import org.wordpress.android.ui.stats.StatsConstants;
@@ -116,6 +118,7 @@ import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.ARG
 import static org.wordpress.android.login.LoginMode.WPCOM_LOGIN_ONLY;
 import static org.wordpress.android.ui.WPWebViewActivity.ENCODING_UTF8;
 import static org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModelKt.KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY;
+import static org.wordpress.android.ui.jetpack.restore.RestoreViewModelKt.KEY_RESTORE_ACTIVITY_ID_KEY;
 import static org.wordpress.android.ui.jetpack.scan.ScanFragment.ARG_THREAT_ID;
 import static org.wordpress.android.ui.media.MediaBrowserActivity.ARG_BROWSER_TYPE;
 import static org.wordpress.android.ui.pages.PagesActivityKt.EXTRA_PAGE_REMOTE_ID_KEY;
@@ -123,6 +126,7 @@ import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_ALL_UNF
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_LAUNCHED_FROM_GUTENBERG;
 import static org.wordpress.android.ui.stories.StoryComposerActivity.KEY_POST_LOCAL_ID;
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModelKt.ACTIVITY_LOG_ID_KEY;
+import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
 public class ActivityLauncher {
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
@@ -604,6 +608,18 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
+    public static void viewBackupList(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
+        Intent intent = new Intent(activity, ActivityLogListActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, true);
+        activity.startActivity(intent);
+    }
+
     public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
@@ -621,6 +637,16 @@ public class ActivityLauncher {
             return;
         }
         Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        activity.startActivity(intent);
+    }
+
+    public static void viewScanHistory(Activity activity, SiteModel site) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanHistoryActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
     }
@@ -1350,6 +1376,27 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
+        activity.startActivityForResult(intent, resultCode);
+    }
+
+    public static void shareBackupDownloadFileLink(Context context, String url) {
+        Intent intent = new Intent(Intent.ACTION_SEND);
+        intent.setType("text/plain");
+        intent.putExtra(Intent.EXTRA_TEXT, url);
+
+        context.startActivity(Intent.createChooser(intent, context.getString(R.string.share_link)));
+    }
+
+    public static void downloadBackupDownloadFile(Context context, String url) {
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+        context.startActivity(intent);
+    }
+
+    public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
+                                                   int resultCode) {
+        Intent intent = new Intent(activity, RestoreActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(KEY_RESTORE_ACTIVITY_ID_KEY, activityId);
         activity.startActivityForResult(intent, resultCode);
     }
 }

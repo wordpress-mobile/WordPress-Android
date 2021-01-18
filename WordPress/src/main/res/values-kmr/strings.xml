@@ -257,7 +257,6 @@ Language: ku_TR
     <string name="gutenberg_native_gradient_type">Cûreya Gradyanê</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Ji bo vebijarkekê hilbijêrî, ducar bitikîne</string>
     <string name="gutenberg_native_customize_gradient">Gradyanê taybet bike</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Nivîskarê rûpelê</string>
     <string name="photo_picker_use_gif">Vê GIF\'ê bi kar bîne</string>
     <string name="error_media_thumbnail_not_loaded">Wêneyê biçûk ê medyayê nehat barkirin</string>
@@ -293,7 +292,6 @@ Language: ku_TR
     <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Raxistina destpêkê biceribîne</string>
     <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
@@ -301,8 +299,6 @@ Language: ku_TR
     <string name="pages_cannot_be_started">Em aniha nikarin rûpelan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
     <string name="pages_set_as_posts_page">Bike Rûpela Şandiyan</string>
     <string name="pages_set_as_homepage">Wekî Serrûpel saz bike</string>
-    <string name="suggestion_no_matching_users">\"Bikarhênerên wiha tune ne.\"</string>
-    <string name="suggestion_invalid_user">\"%s ne bikarhênerekî derbasdar e\"</string>
     <string name="site_settings_select_page">Rûpelê hilbijêre</string>
     <string name="site_settings_posts_page">Rûpela Şandiyan</string>
     <string name="site_settings_static_homepage">Serrûpela Sabît</string>
@@ -475,7 +471,6 @@ Language: ku_TR
     <string name="stats_management_add_new_stats_card">Karta amarên nû tevlî bike</string>
     <string name="reader_self_hosted_select_filter">Ji bo şandiyên ji mijarên spesifîk bibînî bişkoka fîtreyê bi kar bîne</string>
     <string name="reader_bottom_sheet_content_description">Malper an jî Etîketê Hilbijêre, Pencereya Pop Up</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Hilbijartî</string>
     <string name="reader_btn_select_filter_content_description">Ji bo şandiyan fîltre bikî Malperekê an Etîketekê bibijêre</string>
     <string name="reader_btn_remove_filter_content_description">Fîltreya heyî rake</string>
     <string name="reader_title_subs">Etîket û Malperan bi rê ve bibe</string>
@@ -552,7 +547,6 @@ Language: ku_TR
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Em aniha nikarin şandiyan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
     <string name="site_cannot_be_loaded">Em aniha nikarin daneyan ji bo malpera te bar bikin. Piştre dîsa biceribîne</string>
     <string name="gutenberg_native_wordpress_media_library">Medyageha WordPress\'ê</string>
@@ -1187,14 +1181,8 @@ Language: ku_TR
     <string name="support_contact_email">Emaila têkiliyê</string>
     <string name="application_log_button">Tomargeha sepanê</string>
     <string name="my_tickets">Bilêtên Min</string>
-    <string name="activity_log_rewind_dialog_message">Tu bi rastî jî dixwazî malpera xwe vegerînî rewşa %1$s %2$s\'ê? Ev, ew ê hemû naverok û vebijarkên ji wê demê û vir ve hatine afirandin an jî guhertin, ji holê rake.</string>
-    <string name="activity_log_rewind_site">Malperê Vegerîne</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Vegerandin didome</string>
-    <string name="activity_log_currently_restoring_message">Vedigere rewşa %1$s %2$s\'ê</string>
     <string name="activity_log_currently_restoring_title">Malpera te niha tê vegerandin</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Malpera te bi serkeftî hat vegerandin\nVegeriya rewşa %1$s %2$s\'ê</string>
-    <string name="activity_log_rewind_started_snackbar_message">Malpera te bi serkeftî hat vegerandin\nVedigere rewşa %1$s %2$s\'ê</string>
     <string name="activity_log_button">Bişkoka Tomargeha Çalakiyan</string>
     <string name="plugin_auto_managed">Bixweber tên birevêbirin</string>
     <string name="reader_save_posts_locally_dialog_message">Vê şandiyê tomar bike û kengî tu bixwazî wê bixwînî lê vegere. Ew ê tenê li ser vê cîhazê berdest be, şandiyên qeydkirî bi cîhazên te yên din re senkronîze nabin.</string>
@@ -1237,7 +1225,6 @@ Language: ku_TR
     <string name="reader_btn_notifications_on">Danezanên malperê veke</string>
     <string name="reader_btn_notifications_off">Danezanên malperê bigire</string>
     <string name="activity_log_jetpack_icon">Îkona Jetpackê</string>
-    <string name="rewind">Vegerîne</string>
     <string name="activity_log_event">Çalakî</string>
     <string name="activity_log_icon">Îkona çalakiyê</string>
     <string name="activity_log">Tomargeha Çalakiyan</string>
