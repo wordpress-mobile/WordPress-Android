@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-24 08:39:09+0000
+Translation-Revision-Date: 2021-01-11 07:13:31+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: pl
@@ -15,8 +15,6 @@ Language: pl
     <string name="backup_download_details_icon_content_description">Utwórz ikonę dla kopii zapasowej, którą można pobrać</string>
     <string name="gutenberg_native_error">Błąd</string>
     <string name="gutenberg_native_choose_file">Wybierz plik</string>
-    <string name="activity_log_activity_type_filter_label">Typ aktywności</string>
-    <string name="activity_log_date_range_filter_label">Zakres dat</string>
     <string name="backup_download_details_action_button">Utwórz plik do pobrania</string>
     <string name="backup_download_details_choose_items_header">Wybierz elementy które powinny być umieszczone w pliku do pobrania:</string>
     <string name="backup_download_details_header">Utwórz kopię zapasową, która można pobrać</string>
@@ -24,7 +22,6 @@ Language: pl
     <string name="backup_download">Pobranie kopii zapasowej</string>
     <string name="activity_log_item_menu_download_backup_label">Pobierz kopię zapasową</string>
     <string name="activity_log_item_menu_restore_label">Odzyskaj do tego punktu przywracania</string>
-    <string name="backup_download_details_description">%1$s to wybrany punkt odzyskiwania do utworzenia kopii zapasowej do pobrania.</string>
     <string name="activity_log_activity_type_filter_header">Filtruj po typie aktywności</string>
     <string name="dialog_confirm_copy_local_copy_button">Skopiuj wersję z tej aplikacji</string>
     <string name="dialog_confirm_copy_local_edit_button">Najpierw edytuj wpis</string>
@@ -57,7 +54,7 @@ Language: pl
     <string name="dialog_edit_story_unrecoverable_message">Nie można było odnaleźć w witrynie mediów dla tej relacji</string>
     <string name="dialog_edit_story_unavailable_message">Nie można było wczytać mediów dla tej Relacji. Sprawdź swoje połączenie internetowe i spróbuj ponownie za chwilę.</string>
     <string name="dialog_edit_story_limited_title">Ograniczone edytowanie Relacji</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media zostały usunięte. Spróbuj edytować Relację.</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media zostały usunięte. Proszę spróbować odtworzyć relację.</string>
     <string name="color_picker_label_background">Tło</string>
     <string name="color_picker_label_text">Tekst</string>
     <string name="dialog_discard_story_ok_button_edit">Odrzuć</string>
@@ -110,6 +107,7 @@ Language: pl
     <string name="login_prologue_title_first">Witaj na najbardziej popularnej platformie do tworzenia witryny internetowej</string>
     <string name="login_prologue_title_fourth">Obserwuj jak rośnie twoja publiczność dzięki zaawansowanej analityce.</string>
     <string name="login_prologue_title_third">Sprawdzaj komentarze i otrzymuj powiadomienia w czasie rzeczywistym.</string>
+    <string name="login_prologue_second_subtitle_one">Czerpanie inspiracji</string>
     <string name="media_loading_failed">Nie udało się wczytać plików mediów</string>
     <string name="reader_discover_recommended_blogs_header">Witryny do obserwacji</string>
     <string name="gutenberg_native_s_is_not_fully_supported">\'%s\' nie jest w pełni wspierana</string>
@@ -306,7 +304,6 @@ Language: pl
     <string name="gutenberg_native_gradient_type">Typ gradientu</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Stuknij dwukrotnie aby wybrać opcję</string>
     <string name="gutenberg_native_customize_gradient">Personalizuj gradient</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor strony</string>
     <string name="photo_picker_use_gif">Użyj tego GIFa</string>
     <string name="error_media_thumbnail_not_loaded">Nie można było wczytać miniatury tego pliku mediów</string>
@@ -342,15 +339,12 @@ Language: pl
     <string name="ccpa_privacy_notice_header">Notka dotycząca prywatności dla użytkowników Kaliforni</string>
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
     <string name="gutenberg_native_try_a_starter_layout">Wypróbuj układ startowy</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
     <string name="pages_set_as_homepage">Ustaw jako stronę domową</string>
-    <string name="suggestion_no_matching_users">\"Brak pasujących użytkowników\"</string>
-    <string name="suggestion_invalid_user">\"%s nie jest prawidłową nazwą użytkownika\"</string>
     <string name="site_settings_select_page">Wybierz Stronę</string>
     <string name="site_settings_posts_page">Strona z wpisami</string>
     <string name="site_settings_static_homepage">Statyczna strona główna</string>
@@ -524,7 +518,6 @@ Language: pl
     <string name="stats_management_add_new_stats_card">Dodaj kartę nowych statystyk</string>
     <string name="reader_self_hosted_select_filter">Użyj przycisku filtra aby odnaleźć wpisy dotyczące określonych tematów</string>
     <string name="reader_bottom_sheet_content_description">Wybierz znacznik lub witrynę, wyskakujące okienko</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Wybrano</string>
     <string name="reader_btn_select_filter_content_description">Wybierz witrynę lub znacznik aby odfiltrować wpisy</string>
     <string name="reader_btn_remove_filter_content_description">Usuń bieżący filtr</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Zaloguj się do WordPress.com</string>
@@ -591,7 +584,6 @@ Language: pl
     <string name="login_site_credentials_magic_link_label">Prawie zakończone! Musimy tylko sprawdzić twój adres email &lt;b>%1$s&lt;/b> podłączony do Jetpacka</string>
     <string name="my_site_bottom_sheet_add_page">Strona witryny</string>
     <string name="enter_site_credentials_instead">Zaloguj się za pomocą danych uwierzytelniających tej witryny.</string>
-    <string name="suffix_1_000">%s tys.</string>
     <string name="suffix_1_000_000_000">%s mld</string>
     <string name="suffix_1_000_000">%s mln</string>
     <string name="suffix_1_000_000_000_000_000">%s bld</string>
@@ -1235,16 +1227,10 @@ Language: pl
     <string name="support_contact_email">Email kontaktowy</string>
     <string name="application_log_button">Log/dziennik aplikacji</string>
     <string name="my_tickets">Moje bilety</string>
-    <string name="activity_log_rewind_site">Przywróć wcześniejszy stan witryny</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Przywracanie witryny w toku</string>
     <string name="notification_channel_transient_title">Krótkotrwały</string>
-    <string name="activity_log_rewind_dialog_message">Czy na pewno chcesz przywrócić swoją witrynę do %1$s na %2$s? Spowoduje to usunięcie całej zawartości i opcji ustawionych lub zmienionych po tym terminie.</string>
-    <string name="activity_log_currently_restoring_message">Przywracanie stanu do %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Twoja witryna została z powodzeniem przywrócona</string>
     <string name="activity_log_button">Przycisk aktywności logu/dziennika aktywności</string>
     <string name="activity_log_currently_restoring_title">Trwa przywracanie twojej witryny</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Twoja witryna została z powodzeniem przywrócona.\nOdtworzono stan z %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Twoja witryna jest w trakcie przywracania\nPrzywracanie do stanu z %1$s %2$s</string>
     <string name="plugin_auto_managed">Zarządzane automatycznie</string>
     <string name="reader_save_posts_locally_dialog_message">Zapisz ten wpis i wróć do niego w późniejszym czasie. Będzie dostępny jedynie na tym urządzeniu - zapisane wpisy nie synchronizują się na innych twoich urządzeniach.</string>
     <string name="reader_save_posts_locally_dialog_title">Zapisz wpis na później</string>
@@ -1286,7 +1272,6 @@ Language: pl
     <string name="reader_btn_notifications_on">Włącz powiadomienia dla witryny</string>
     <string name="reader_btn_notifications_off">Wyłącz powiadomienia dla witryny</string>
     <string name="activity_log_jetpack_icon">Ikona Jetpacka</string>
-    <string name="rewind">Przewiń</string>
     <string name="activity_log_event">Wydarzenie</string>
     <string name="activity_log_icon">Ikona aktywności</string>
     <string name="activity_log">Dziennik aktywności</string>

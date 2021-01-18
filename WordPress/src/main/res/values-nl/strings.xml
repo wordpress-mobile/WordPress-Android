@@ -1,11 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-19 08:30:20+0000
+Translation-Revision-Date: 2021-01-12 10:54:17+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="backup_download_complete_download_share_action_button_content_description">Deel link knop</string>
+    <string name="jetpack_icon_content_description">pictogram</string>
+    <string name="label_control_upload">Upload</string>
+    <string name="backup_download_complete_info">We hebben je ook een link naar je bestand gemaild.</string>
+    <string name="backup_download_complete_header">Je back-up is nu beschikbaar om te downloaden</string>
+    <string name="backup_download_complete_download_action_button">Download</string>
+    <string name="backup_download_complete_download_share_action_button">Deel link</string>
+    <string name="backup_download_complete_download_action_button_content_description">Downloadknop</string>
+    <string name="backup_download_complete_description_with_two_parameters">We hebben met succes een back-up gemaakt van je site van%1$s %2$s.</string>
+    <string name="backup_download_complete_icon_content_description">Downloadbaar back-up gereed pictogram</string>
+    <string name="backup_download_progress_header">Bezig met het maken van een te downloaden back-up van je site</string>
+    <string name="backup_download_progress_description_with_two_parameters">We zijn een downloadbare back-up van je site aan het maken van %1$s %2$s.</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_complete_page_title">Je back-up</string>
+    <string name="backup_download_progress_action_button">OK, waarschuw mij!</string>
+    <string name="backup_download_progress_icon_content_description">Aanmaken van een downloadbaar back-up pictogram</string>
+    <string name="backup_download_progress_action_button_content_description">OK, waarschuw mij knop</string>
+    <string name="backup_download_progress_additional_info">Je hoeft niet te wachten. We laten het je weten als je back-up klaar is</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is het geselecteerde punt om een te downloaden back-up te maken.</string>
+    <string name="backup_download_details_action_button_content_description">Maak een downloadbare back-up knop</string>
+    <string name="backup_download_generic_failure">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
+    <string name="backup_download_another_download_running">Er loopt een andere download.</string>
+    <string name="backup_download_progress_page_title">Back-up downloaden</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="gutenberg_native_image_link_url">Afbeelding link URL</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="threat_fix">Los bedreiging op</string>
+    <string name="threat_ignore">Bedreiging negeren</string>
+    <string name="threat_get_free_estimate">Ontvang gratis een voorstel</string>
+    <string name="suggestion_user">gebruiker</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan verwijdert het betreffende bestand of de folder.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan zal updaten naar een nieuwere versie (%s).</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan bewerkt het betreffende bestand of folder.</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan zal de bedreiging oplossen.</string>
+    <string name="suggestion_selection_needed">\"Typ om de lijst met suggesties te filteren.\"</string>
+    <string name="suggestion_none">\"Geen %s suggesties beschikbaar.\"</string>
+    <string name="suggestion_problem">\"Er was een probleem met het laden van suggesties.\"</string>
+    <string name="suggestion_no_matching">\"Geen overeenkomende %s.\"</string>
+    <string name="suggestion_xpost">kruisbericht</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan vervangt het betreffende bestand of de folder.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan deze bedreiging niet automatisch herstellen\n        We raden aan om de bedreiging handmatig op te lossen: zorg ervoor dat WordPress, je thema en alle je plugins up-to-date zijn, en verwijder de aanstootgevende code, het thema of de plugin van je site.\n \n\n        Als je meer hulp nodig hebt om deze bedreiging op te lossen, raden we&lt;b>Codeable&lt;/b>, een vertrouwde freelancer marktplaats van zeer goed gescreende WordPress experts aan.\n        Ze hebben een selecte groep beveiligingsexperts aangewezen om bij deze projecten te helpen. De prijzen variëren van $70–120/uur, en je kan een gratis schatting krijgen zonder verplichting om in te huren.\n    </string>
+    <string name="threat_details_icon">Details bedreigingspictogram</string>
+    <string name="threat_problem_header">Wat was het probleem?</string>
+    <string name="threat_technical_details_header">De technische details</string>
+    <string name="threat_file_description">Bedreiging gevonden in bestand:</string>
+    <string name="threat_fix_default_header">Hoe lossen we het op?</string>
+    <string name="threat_fix_fixed_header">Hoe heeft Jetpack het opgelost?</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
+    <string name="threat_fix_current_not_fixable_header">Bedreiging aan het oplossen</string>
+    <string name="threat_item_header_database_threat">Database %s bedreigingen</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: kwaadaardig codepatroon</string>
+    <string name="threat_item_header_vulnerable_plugin">Kwetsbare plugin: %s (versie %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Kwetsbaar thema: %s (versie %s)</string>
+    <string name="threat_item_sub_header_core_file">Kwetsbaarheid gevonden in WordPress</string>
+    <string name="threat_item_sub_header_file_signature">Bedreiging gevonden %s</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Kwetsbaarheid gevonden in een plugin</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Kwetsbaarheid gevonden in een thema</string>
+    <string name="threat_details">Details bedreiging</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Verschillende kwetsbaarheden</string>
+    <string name="scan_this_site">deze site</string>
+    <string name="scan_in_hours_ago">%s uur geleden</string>
+    <string name="scan_in_minutes_ago">%s minuten geleden</string>
+    <string name="scan_in_few_seconds">in een paar seconden</string>
+    <string name="threats_fix_all">Los alles op</string>
+    <string name="threats_found">Bedreigingen gevonden</string>
+    <string name="threat_item_header_threat_found">Bedreiging gevonden</string>
+    <string name="threat_item_header_infected_core_file">%s: geinfecteerd core bestand</string>
+    <string name="scan_scanning_description">Welkom bij Jetpack Scan, we kijken nu voor het eerst naar je site en het resultaat komt binnenkort bij je.\n\n        \n We sturen je een bericht zodra de scan is afgerond. Voel je in de tussentijd vrij om je site gewoon te blijven gebruiken. Je kunt de voortgang op elk moment bekijken.</string>
+    <string name="scan_idle_manual_scan_description">Voer nu een handmatige scan uit of wacht tot Jetpack later op de dag je site scant.</string>
+    <string name="scan_idle_last_scan_description">De laatste Jetpack scan liep op %s en alles zag er fantastisch uit. %s</string>
+    <string name="scan_idle_threats_found_description">De scan vond %s potentiële bedreigingen op %s. Bekijk ze hieronder en onderneem actie. We zijn hier om te helpen als je ons nodig hebt.</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activiteittype filter (%s types geselecteerd)</string>
+    <string name="backup">Back-up</string>
+    <string name="scan_state_icon">Scanstatus pictogram</string>
+    <string name="scan_now">Nu scannen</string>
+    <string name="scan_again">Scan opnieuw</string>
+    <string name="scan_scanning_title">Voorbereiden op scannen</string>
+    <string name="scan_idle_no_threats_found_title">Maak je nergens zorgen over</string>
+    <string name="scan_idle_threats_found_title">Je site loopt mogelijk een risico</string>
+    <string name="activity_log_activity_type_error_subtitle">Controleer je internet verbinding en probeer het opnieuw.</string>
+    <string name="activity_log_activity_type_empty_title">Geen activiteiten beschikbaar</string>
+    <string name="activity_log_activity_type_empty_subtitle">Geen activiteiten waargenomen in het geselecteerde datumbereik.</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activiteittype filter</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (weergeven %s items)</string>
+    <string name="activity_log_date_range_filter_label_content_description">Datumbereik filter</string>
+    <string name="activity_log_activity_type_filter_active_label">Activiteittype (%s)</string>
+    <string name="activity_log_activity_type_error_title">Geen verbinding</string>
+    <string name="activity_log_active_filter_empty_title">Geen overeenkomende gebeurtenissen gevonden</string>
+    <string name="activity_log_active_filter_empty_subtitle">Pas je filters voor datumbereik of activiteitstype aan</string>
+    <string name="rewind">Terugzetten</string>
     <string name="backup_item_themes">WordPress thema\'s</string>
     <string name="backup_item_plugins">WordPress plugins</string>
     <string name="backup_item_media_uploads">Media uploads</string>
@@ -13,7 +104,6 @@ Language: nl
     <string name="backup_item_contents">WP-content folder (zonder thema\'s, plugins en uploads)</string>
     <string name="backup_download_details_icon_content_description">Maak een downloadbaar back-up pictogram</string>
     <string name="backup_item_roots">WordPress root (bevat wp-config.php en andere niet WordPress bestanden)</string>
-    <string name="activity_log_date_range_filter_label">Datum bereik</string>
     <string name="activity_log_activity_type_filter_label">Activiteitstype</string>
     <string name="activity_log_item_menu_restore_label">Herstellen naar dit punt</string>
     <string name="activity_log_item_menu_download_backup_label">Back-up downloaden</string>
@@ -24,7 +114,7 @@ Language: nl
     <string name="backup_download_details_header">Te downloaden back-up maken</string>
     <string name="backup_download_details_choose_items_header">Kies de items die je aan de download wilt toevoegen:</string>
     <string name="backup_download_details_action_button">Te downloaden bestand maken</string>
-    <string name="backup_download_details_description">%1$s is het geselecteerde punt om een te downloaden back-up te maken.</string>
+    <string name="activity_log_date_range_filter_label">Datumbereik</string>
     <string name="button_copy">Dupliceer</string>
     <string name="dialog_confirm_copy_local_title">Synchronisatie conflict bericht</string>
     <string name="dialog_confirm_copy_local_edit_button">Bewerk het bericht eerst</string>
@@ -60,8 +150,8 @@ Language: nl
     <string name="dialog_edit_story_unrecoverable_title">Kan verhaal niet bewerken</string>
     <string name="dialog_edit_story_unrecoverable_message">We konden geen media vinden voor dit verhaal op de site.</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF bestanden worden niet ondersteund</string>
-    <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal te bewerken.</string>
     <string name="dialog_edit_story_limited_title">Beperkte verhaal bewerking</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media is verwijderd. Probeer je verhaal opnieuw te maken.</string>
     <string name="hpp_error_title">Lay-outs zijn niet beschikbaar indien offline</string>
     <string name="hpp_retry_error">Controleer je internet verbinding en probeer het opnieuw.</string>
     <string name="hpp_choose_error">Er was een fout bij het selecteren van het ontwerp.</string>
@@ -309,7 +399,6 @@ Language: nl
     <string name="reader_title_tag_preview">Onderwerp</string>
     <string name="my_site_title_changer_dialog_hint">De site titel wordt getoont in de titelbalk van een webbrowser en wordt getoont in de header van de meeste thema\'s.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Open link in een browser</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tik tweemaal om de optie te selecteren</string>
     <string name="gutenberg_native_gradient_type">Verloop type</string>
     <string name="gutenberg_native_customize_gradient">Pas de verloop aan</string>
@@ -350,7 +439,6 @@ Language: nl
     <string name="update_now">Update nu</string>
     <string name="status_and_visibility">Status &amp; zichtbaarheid</string>
     <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Probeer een starter lay-out</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
@@ -358,13 +446,12 @@ Language: nl
     <string name="pages_cannot_be_started">We kunnen momenteel geen pagina\'s openen. Probeer het later opnieuw</string>
     <string name="pages_set_as_posts_page">Instellen als berichtpagina</string>
     <string name="pages_set_as_homepage">Instellen als homepage</string>
-    <string name="suggestion_no_matching_users">\'Geen overeenkomende gebruikers beschikbaar.\'</string>
-    <string name="suggestion_invalid_user">\'%s is geen geldige gebruiker.\'</string>
     <string name="site_settings_select_page">Selecteer pagina</string>
     <string name="site_settings_posts_page">Berichtenpagina</string>
     <string name="site_settings_static_homepage">Statische homepage</string>
     <string name="site_settings_classic_blog">Klassiek blog</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Geselecteerde homepage en pagina voor berichten kunnen niet hetzelfde zijn.</string>
+    <string name="suggestion_invalid">\"%s is geen geldige %s\"</string>
     <string name="site_settings_homepage_settings">Instellingen Homepage</string>
     <string name="site_settings_accept_homepage">Accepteren</string>
     <string name="site_settings_failed_to_save_homepage_settings">Kan homepagina instellingen niet opslaan</string>
@@ -493,6 +580,7 @@ Language: nl
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">In mijn portfolio worden verschillende projecten weergegeven waar ik tijdens mijn carrière aan heb gewerkt. Bekijk hieronder mijn contactgegevens en neem contact met me op.</string>
     <string name="gutenberg_native_link_to">Link naar</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Laten we dit bespreken &amp;amp;amp;#128075; aarzel niet om contact met ons op te nemen via de onderstaande contactgegevens, of een bericht te sturen via het formulier.</string>
+    <string name="gutenberg_native_link_settings">Link instellingen</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Laten we samen wat bouwen!</string>
     <string name="gutenberg_native_let_s_build_something_together">Laten we samen wat bouwen!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -532,7 +620,6 @@ Language: nl
     <string name="stats_management_add_new_stats_card">Nieuwe statistiekenkaart toevoegen</string>
     <string name="reader_self_hosted_select_filter">Gebruik de filterknop om berichten over specifieke onderwerpen te vinden</string>
     <string name="reader_bottom_sheet_content_description">Selecteer een tag of site, pop-upvenster</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Geselecteerd</string>
     <string name="reader_btn_select_filter_content_description">Selecteer een site of tag om berichten te filteren</string>
     <string name="reader_btn_remove_filter_content_description">Verwijder het huidige filter</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Inloggen op WordPress.com</string>
@@ -600,7 +687,6 @@ Language: nl
     <string name="enter_site_credentials_instead">Inloggen met site-referenties.</string>
     <string name="enter_credentials_for_site">Inloggen met je site-referenties voor %1$s.</string>
     <string name="posts_cannot_be_started">We kunnen de berichten momenteel niet openen. Probeer het later opnieuw</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000_000">%s mld.</string>
     <string name="suffix_1_000_000">%s mln.</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
@@ -612,6 +698,7 @@ Language: nl
     <string name="reader_my_likes_display_name">Waarderingen</string>
     <string name="site_cannot_be_loaded">We kunnen op dit moment geen gegevens voor je site laden. Probeer het later opnieuw</string>
     <string name="reader_filter_tags_title">Onderwerpen</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress-mediabibliotheek</string>
     <string name="gutenberg_native_translate">Vertalen</string>
     <string name="gutenberg_native_title">Titel:</string>
@@ -1244,15 +1331,15 @@ Language: nl
     <string name="support_contact_email">E-mail voor contact</string>
     <string name="application_log_button">Toepassingslog</string>
     <string name="my_tickets">Mijn tickets</string>
-    <string name="activity_log_rewind_site">Site terugbrengen</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Bezig met terugzetten</string>
-    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugbrengen naar %1$s op %2$s? Hierdoor wordt alle inhoud en worden alle opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
     <string name="activity_log_currently_restoring_message">Terugzetten naar %1$s %2$s</string>
+    <string name="activity_log_rewind_site">Site terugzetten</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Terugzetten in bewerking</string>
+    <string name="activity_log_rewind_dialog_message">Weet je zeker dat je je site wilt terugzetten naar %1$s op %2$s? Hierdoor wordt alle inhoud opties verwijderd die sindsdien zijn aangemaakt of gewijzigd.</string>
     <string name="activity_log_currently_restoring_title">Je site wordt momenteel hersteld</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Het herstellen van je site is geslaagd</string>
     <string name="activity_log_button">Actieknop Activiteitenlog</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Het herstellen van je site is geslaagd\nTeruggezet naar %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Je site wordt hersteld\nTerugzetten naar %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Je site is met succes teruggezet.\nTeruggezet naar %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Je site wordt teruggezet\nTerugzetten naar %1$s %2$s</string>
     <string name="plugin_auto_managed">Automatisch beheerd</string>
     <string name="reader_save_posts_locally_dialog_message">Sla dit bericht op en keer op elk gewenst moment terug om het te lezen. Het bericht is alleen op dit apparaat beschikbaar; opgeslagen berichten worden niet gesynchroniseerd met andere apparaten.</string>
     <string name="reader_save_posts_locally_dialog_title">Berichten opslaan voor later</string>
@@ -1294,7 +1381,6 @@ Language: nl
     <string name="reader_btn_notifications_on">Sitemeldingen inschakelen</string>
     <string name="reader_btn_notifications_off">Sitemeldingen uitschakelen</string>
     <string name="activity_log_jetpack_icon">Jetpack-pictogram</string>
-    <string name="rewind">Terugzetten</string>
     <string name="activity_log_event">Gebeurtenis</string>
     <string name="activity_log_icon">Activiteitenpictogram</string>
     <string name="activity_log">Activiteitenlog</string>

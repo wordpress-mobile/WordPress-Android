@@ -14,7 +14,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
-import org.wordpress.android.ui.jetpack.usecases.GetThreatModelUseCase
+import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 
 @InternalCoroutinesApi
 class ThreatDetailsViewModelTest : BaseUnitTest() {
@@ -53,7 +53,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             uiStates.add(it)
         }
         whenever(getThreatModelUseCase.get(anyLong())).thenReturn(mock())
-        whenever(builder.buildThreatDetailsListItems(any())).thenReturn(mock())
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenReturn(mock())
         return Observers(uiStates)
     }
 
