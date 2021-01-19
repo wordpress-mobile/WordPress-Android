@@ -63,9 +63,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
         onConfirmRestoreClick: () -> Unit
     ): List<JetpackListItemState> = listOf(
             buildIconState(
-                    R.drawable.ic_trophy_white_24dp,
+                    R.drawable.ic_notice_white_24dp,
                     R.string.restore_warning_icon_content_description,
-                    R.color.success_50),
+                    R.color.error_50),
             buildHeaderState(R.string.restore_warning_header),
             buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
             buildActionButtonState(
@@ -120,7 +120,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
 
     fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
             buildIconState(
-                    R.drawable.ic_get_app_24dp,
+                    R.drawable.ic_notice_white_24dp,
                     R.string.restore_complete_failed_icon_content_description,
                     R.color.error_50),
             buildDescriptionState(R.string.restore_complete_failed_description),
