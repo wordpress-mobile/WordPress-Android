@@ -53,12 +53,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(
-                viewLifecycleOwner,
-                { listItems ->
-                    refreshContentScreen(listItems)
-                }
-        )
+        viewModel.uiState.observe(viewLifecycleOwner, { listItems -> refreshContentScreen(listItems) })
     }
 
     private fun refreshContentScreen(items: List<ScanListItemState>) {
