@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
@@ -12,11 +13,14 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
@@ -38,6 +42,7 @@ class ScanViewModel @Inject constructor(
     private val fetchScanStateUseCase: FetchScanStateUseCase,
     private val startScanUseCase: StartScanUseCase,
     private val fixThreatsUseCase: FixThreatsUseCase,
+    private val fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -98,7 +103,7 @@ class ScanViewModel @Inject constructor(
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
-                    // TODO ashiagr check for fix status
+                    fetchFixThreatsStatus()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
                     updateActionButtons(isEnabled = true)
@@ -108,6 +113,41 @@ class ScanViewModel @Inject constructor(
                     updateActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
                 }
+            }
+        }
+    }
+
+    private fun fetchFixThreatsStatus() {
+        launch {
+            @StringRes var messageRes: Int? = null
+            var isFixing: Boolean
+            fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
+                remoteSiteId = site.siteId,
+                fixableThreatIds = fixableThreatIds
+            ).collect { status ->
+                when (status) {
+                    is FetchFixThreatsState.InProgress -> isFixing = true
+                    is FetchFixThreatsState.Complete -> {
+                        isFixing = false
+                        messageRes = R.string.threat_fix_all_status_success_message
+                        fetchScanState()
+                    }
+                    is FetchFixThreatsState.Failure.NetworkUnavailable -> {
+                        isFixing = false
+                        messageRes = R.string.error_generic_network
+                    }
+                    is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
+                        isFixing = false
+                        messageRes = R.string.threat_fix_all_status_error_message
+                    }
+                    is FetchFixThreatsState.Failure.FixFailure -> {
+                        isFixing = false
+                        messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
+                    }
+                }
+                updateActionButtons(isEnabled = !isFixing)
+                updateFixThreatsStatusProgressBar(isVisible = isFixing)
+                messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
         }
     }
@@ -142,6 +182,19 @@ class ScanViewModel @Inject constructor(
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
                     contentItem.copy(isEnabled = isEnabled)
+                } else {
+                    contentItem
+                }
+            }
+            updateUiState(content.copy(items = updatesContentItems))
+        }
+    }
+
+    private fun updateFixThreatsStatusProgressBar(isVisible: Boolean) {
+        (_uiState.value as? Content)?.let { content ->
+            val updatesContentItems = content.items.map { contentItem ->
+                if (contentItem is ProgressState && contentItem.isIndeterminate) {
+                    contentItem.copy(isVisible = isVisible)
                 } else {
                     contentItem
                 }
