@@ -1,11 +1,98 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-18 16:02:02+0000
+Translation-Revision-Date: 2021-01-14 17:41:44+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="label_control_upload">Ngarkoje</string>
+    <string name="jetpack_icon_content_description">ikonë</string>
+    <string name="backup_download_complete_info">Ju dërguam gjithashtu me email një lidhje për te kartela juaj.</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Buton “Ndajeni lidhjen me të tjerët”</string>
+    <string name="backup_download_complete_download_action_button_content_description">Buton shkarkimi</string>
+    <string name="backup_download_complete_icon_content_description">Ikonë “Kopjeruajtje gati për shkarkim”</string>
+    <string name="backup_download_complete_download_share_action_button">Ndajeni lidhjen me të tjerët</string>
+    <string name="backup_download_complete_download_action_button">Shkarkoje</string>
+    <string name="backup_download_complete_description_with_two_parameters">Krijuam me sukses një kopjeruajtje të sajtit tuaj prej %1$s %2$s.</string>
+    <string name="backup_download_complete_header">Kopjeruajtja juaj tani është gati për shkarkim</string>
+    <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_additional_info">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati</string>
+    <string name="backup_download_progress_action_button_content_description">Buton “OK, njoftomëni”</string>
+    <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
+    <string name="backup_download_progress_action_button">OK, njoftomëni!</string>
+    <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
+    <string name="backup_download_progress_header">Aktualisht duke krijuar një kopjeruajtje të shkarkueshme të sajtit tuaj</string>
+    <string name="backup_download_progress_page_title">Shkarkoje Kopjeruajtjen</string>
+    <string name="backup_download_another_download_running">Po kryhet një shkarkim tjetër.</string>
+    <string name="backup_download_generic_failure">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
+    <string name="backup_download_details_action_button_content_description">Buton “Krijoni kopjeruajtje të shkarkueshme”</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s është pika e përzgjedhur për të krijuar një kopjeruajtje të shkarkueshme.</string>
+    <string name="gutenberg_native_image_link_url">URL Lidhjeje Figure</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_user">përdorues</string>
+    <string name="suggestion_no_matching">\"S’u gjet %s me përputhje.\"</string>
+    <string name="suggestion_problem">\"Pati një problem me ngarkimin e sugjerimeve.\"</string>
+    <string name="suggestion_none">\"S’ka sugjerime %s.\"</string>
+    <string name="suggestion_selection_needed">\"Ju lutemi, shtypni që të filtrohet lista e sugjerimeve.\"</string>
+    <string name="threat_get_free_estimate">Merrni një parashikim falas</string>
+    <string name="threat_ignore">Shpërfille kërcënimin</string>
+    <string name="threat_fix">Zgjidhe kërcënimin</string>
+    <string name="threat_fix_fixable_default">Kontrolli Jetpack do ta zgjidhë kërcënimin.</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan-i do ta përpunojë kartelën ose drejtorinë e prekur.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan do të përditësohet me një version më të ri (%s).</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan-i do të fshijë kartelën ose drejtorinë e prekur.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan-i do ta zëvendësojë kartelën ose drejtorinë e prekur.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan s’mund ta zgjidhë vetvetiu këtë kërcënim.\n        Sugjerojmë ta zgjidhni kërcënimin dorazi: sigurohuni se WordPress-i, tema juaj, dhe krejt shtojcat tuaja janë të përditësuara, dhe hiqni nga sajti juaj kodin, temën, ose shtojcën që nuk e plotëson këtë. \n \n\n        Nëse ju duhet më tepër ndihmë në zgjidhjen e këtij kërcënimi, rekomandojmë &lt;b>Codeable&lt;/b>, një treg të besueshëm ustallarësh &lt;em>freelancer&lt;/em> ekspertë WordPress-i shumë të vlerësuar.\n        Ata kanë identifikuar një grup të përzgjedhur ekspertësh sigurie për të ndihmuar me këto projekte. Çmimet shkojnë nga 70–120 dollarë/orë, dhe mund të merrni falas një çmim të përafërt, pa detyrim për ta punësuar.\n    </string>
+    <string name="threat_fix_current_not_fixable_header">Po zgjidhet kërcënimi</string>
+    <string name="threat_fix_fixed_header">Si e ndreqi Jetpack-u?</string>
+    <string name="threat_fix_default_header">Si do ta ndreqim?</string>
+    <string name="threat_file_description">U gjet kërcënim te kartela:</string>
+    <string name="threat_technical_details_header">Hollësitë teknike</string>
+    <string name="threat_problem_header">Cili qe problemi?</string>
+    <string name="threat_details_icon">Ikonë “Hollësi Kërcënimi”</string>
+    <string name="threat_details">Hollësi Kërcënimi</string>
+    <string name="threat_item_sub_header_vulnerable_theme">U gjet cenueshmëri në temë grafike</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">U gjet cenueshmëri në shtojcë</string>
+    <string name="threat_item_sub_header_core_file">U gjet cenueshmëri në WordPress</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Cenueshmëri të ndryshme</string>
+    <string name="threat_item_header_vulnerable_theme">Temë e Cenueshme: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Shtojcë e Cenueshme: %s (version %s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: rregullsi kodi dashakeq</string>
+    <string name="threat_item_header_infected_core_file">%s: kartelë bazë e infektuar</string>
+    <string name="threat_item_header_threat_found">U gjet kërcënim</string>
+    <string name="threats_found">U gjetën kërcënime</string>
+    <string name="threats_fix_all">Ndreqi krejt</string>
+    <string name="scan_in_few_seconds">pak sekonda</string>
+    <string name="scan_in_minutes_ago">%s minuta më parë</string>
+    <string name="scan_in_hours_ago">%s orë më parë</string>
+    <string name="scan_this_site">këtë sajt</string>
+    <string name="scan_idle_threats_found_description">Kontrolli gjeti %s kërcënime potenciale në %s. Ju lutemi, shqyrtojini më poshtë dhe veproni. Këtu jemi, nëse ju duhet ndihmë.</string>
+    <string name="scan_idle_last_scan_description">Kontrolli i fundit nga Jetpack-u u krye më %s dhe gjithçka dukej paq. %s</string>
+    <string name="scan_idle_manual_scan_description">Bëni një skanim dorazi tani, ose pritni që Jetpack-u të skanojë sajtin tuaj sot më vonë.</string>
+    <string name="scan_scanning_description">Mirë se vini te Jetpack Scan, po i hedhim një sy sajtit tuaj tani dhe përfundimin do të keni së shpejti.\n\n        \nDo t’ju dërgojmë një njoftim, sapo kontrolli të jetë i plotë. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht. Ecurinë mund ta kontrolloni kur të doni.</string>
+    <string name="scan_idle_threats_found_title">Sajti juaj mund të jetë i rrezikuar</string>
+    <string name="scan_idle_no_threats_found_title">Mos vrisni mendjen</string>
+    <string name="scan_scanning_title">Po përgatitet të skanojë</string>
+    <string name="scan_again">Riskanoje</string>
+    <string name="scan_now">Skanoje tani</string>
+    <string name="scan_state_icon">Ikonë gjendjeje skanimi</string>
+    <string name="backup">Kopjeruaje</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">FIltër Llojesh Veprimtarie (%s lloje të përzgjedhur)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (po shfaqen %s objekte)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtër Lloj Veprimtarish</string>
+    <string name="activity_log_activity_type_empty_subtitle">S’ka veprimtari të regjistruara në intervalin e përzgjedhur të datave.</string>
+    <string name="activity_log_activity_type_empty_title">S’ka veprimtari të gatshme</string>
+    <string name="activity_log_activity_type_error_subtitle">Ju lutemi, kontrolloni lidhjen tuaj dhe riprovoni.</string>
+    <string name="activity_log_activity_type_error_title">S’ka lidhje</string>
+    <string name="activity_log_activity_type_filter_active_label">Lloj Veprimtarie (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">Filtër Interval Datash</string>
+    <string name="activity_log_active_filter_empty_subtitle">Provoni të ndryshoni filtrat për intervalin tuaj të datave ose për lloj veprimtarie</string>
+    <string name="activity_log_active_filter_empty_title">S’u gjetën veprimtari me përputhje</string>
+    <string name="rewind">Riktheje</string>
     <string name="backup_item_sqls">Bazë të dhënash (SQL) sajti</string>
     <string name="backup_item_contents">Drejtori WP-content (përjashton tema, shtojca, dhe ngarkime)</string>
     <string name="backup_item_roots">Rrënjë WordPress-i (përfshin wp-config.php dhe çfarëdo kartelash jo WordPress)</string>
@@ -22,6 +109,8 @@ Language: sq_AL
     <string name="gutenberg_native_choose_file">Zgjidhni kartelë</string>
     <string name="activity_log_item_menu_download_backup_label">Shkarko kopjeruajtje</string>
     <string name="activity_log_item_menu_restore_label">Riktheje në këtë pikë</string>
+    <string name="activity_log_activity_type_filter_label">Lloj Veprimtarie</string>
+    <string name="activity_log_date_range_filter_label">Interval Datash</string>
     <string name="activity_log_activity_type_filter_header">Filtroji sipas Llojesh Veprimtarie</string>
     <string name="dialog_confirm_copy_local_copy_button">Zgjidhni versionin prej këtij aplikacioni</string>
     <string name="dialog_confirm_copy_local_edit_button">Përpunoni postimin së pari</string>
@@ -58,6 +147,7 @@ Language: sq_AL
     <string name="dialog_edit_story_unavailable_title">S’përpunohet dot Artikulli</string>
     <string name="dialog_edit_story_limited_message">Ky artikull u përpunua në një pajisje tjetër dhe aftësia për të përpunuar disa elemente të dhënë mund të jetë e kufizuar.</string>
     <string name="dialog_edit_story_limited_title">Përpunim Artikulli i Kufizuar</string>
+    <string name="cannot_retry_deleted_media_item_fatal">Media është hequr. Provoni të rikrijoni Artikullin tuaj.</string>
     <string name="color_picker_label_background">Sfond</string>
     <string name="color_picker_label_text">Tekst</string>
     <string name="dialog_discard_story_ok_button_edit">Hidhe tej</string>
@@ -351,6 +441,7 @@ Language: sq_AL
     <string name="pages_cannot_be_started">S’hapim dot faqe tani. Ju lutemi, riprovoni më vonë</string>
     <string name="pages_set_as_posts_page">Caktojeni Faqe Postimesh</string>
     <string name="pages_set_as_homepage">Caktojeni si Faqen hyrëse</string>
+    <string name="suggestion_invalid">\"%s s’është %s i vlefshëm\"</string>
     <string name="site_settings_select_page">Përzgjidhe Faqen</string>
     <string name="site_settings_posts_page">Faqe Postimesh</string>
     <string name="site_settings_static_homepage">Faqe Hyrëse Statike</string>
@@ -483,6 +574,7 @@ Language: sq_AL
     <string name="gutenberg_native_only_show_excerpt">Shfaq vetëm copëz</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portofoli im paraqet projekte të ndryshme të krijuar përgjatë karrierës time. Shihni të dhëna kontakti më poshtë dhe lidhuni me mua.</string>
     <string name="gutenberg_native_link_to">Lidhje Te</string>
+    <string name="gutenberg_native_link_settings">Rregullime Lidhjesh</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Ta bisedojmë 👋 Mos ngurroni të lidheni me ne përmes të dhënave të kontaktit më poshtë, ose dërgoni një mesazh duke përdorur formularin.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Le të ngremë diçka bashkë!</string>
     <string name="gutenberg_native_let_s_build_something_together">Le të ngremë diçka bashkë!</string>
@@ -599,6 +691,7 @@ Language: sq_AL
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">S’i hapim dot postimet tani. Ju lutemi, riprovoni më vonë</string>
     <string name="site_cannot_be_loaded">S’ngarkojmë dot të dhënat për sajtin tuaj tani. Ju lutemi, riprovoni më vonë</string>
     <string name="gutenberg_native_wordpress_media_library">Mediatekë WordPress</string>
@@ -1233,8 +1326,14 @@ Language: sq_AL
     <string name="support_contact_email">Email kontaktesh</string>
     <string name="application_log_button">Regjistër aplikacioni</string>
     <string name="my_tickets">Çështjet e Mia</string>
+    <string name="activity_log_rewind_dialog_message">Jeni i sigurt se doni të rikthehet sajti juaj në %1$s më %2$s? Kjo të sjellë heqjen e krejt lëndës së krijuar apo ndryshuar dhe mundësive të ndryshuara që nga ajo datë.</string>
+    <string name="activity_log_rewind_site">Riktheni Sajtin</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rikthim në ecuri e sipër</string>
+    <string name="activity_log_currently_restoring_message">Po rikthehet te %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Sajti juaj po rikthehet</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Sajti juaj u rikthye me sukses</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Sajti juaj u rikthye me sukses\nU rikthye te %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Sajti juaj po rikthehet\nRikthim te %1$s %2$s</string>
     <string name="activity_log_button">Buton veprimesh Regjistri Veprimtarie</string>
     <string name="plugin_auto_managed">E vetëadministruar</string>
     <string name="reader_save_posts_locally_dialog_message">Ruajeni këtë postim, dhe rikthejuni leximit kur të doni. Do ta keni vetëm në këtë pajisje — postimet e ruajtur nuk njëkohësohen në pajisje të tjera.</string>

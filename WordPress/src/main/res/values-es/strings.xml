@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 08:52:06+0000
+Translation-Revision-Date: 2021-01-14 12:50:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="label_control_upload">Subir</string>
+    <string name="jetpack_icon_content_description">Icono</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Botón de compartir enlace</string>
+    <string name="backup_download_complete_download_share_action_button">Compartir enlace</string>
+    <string name="backup_download_complete_download_action_button">Descargar</string>
+    <string name="backup_download_complete_download_action_button_content_description">Botón de descarga</string>
+    <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_action_button">¡Vale, avísame!</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">entrada cruzada</string>
+    <string name="suggestion_user">usuario</string>
+    <string name="threat_ignore">Ignorar amenaza</string>
+    <string name="threat_fix">Corregir amenaza</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan solucionará la amenaza.</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan editará el archivo o el directorio afectados.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan se actualizará a una versión más reciente (%s).</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan borrará el archivo o el directorio afectados.</string>
+    <string name="threat_get_free_estimate">Consigue un presupuesto gratuito</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan reemplazará el archivo o el directorio afectados.</string>
+    <string name="threat_fix_current_not_fixable_header">Solucionando la amenaza</string>
+    <string name="threat_problem_header">¿Cuál fue el problema?</string>
+    <string name="threat_technical_details_header">Información técnica</string>
+    <string name="threat_details">Detalles de la amenaza</string>
+    <string name="threat_item_sub_header_file_signature">Amenaza encontrada %s</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Se ha encontrado una vulnerabilidad en un tema</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Se ha encontrado una vulnerabilidad en un plugin</string>
+    <string name="threat_item_sub_header_core_file">Se ha encontrado una vulnerabilidad en WordPress</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Varias vulnerabilidades</string>
+    <string name="backup">Copias de seguridad</string>
+    <string name="rewind">Restaurar</string>
     <string name="backup_item_sqls">Base de datos del sitio (SQL)</string>
     <string name="backup_item_contents">Directorio wp-content (excluye themes, plugins y uploads)</string>
     <string name="backup_item_roots">Raíz de WordPress (incluye wp-config php y cualquier archivo que no sea de WordPress)</string>
