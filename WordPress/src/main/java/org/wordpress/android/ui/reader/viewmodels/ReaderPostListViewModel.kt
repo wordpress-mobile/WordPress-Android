@@ -178,7 +178,7 @@ class ReaderPostListViewModel @Inject constructor(
     fun onFragmentResume(
         isTopLevelFragment: Boolean,
         isSearch: Boolean,
-        isFollowing: Boolean,
+        isFilterable: Boolean,
         subfilterListItem: SubfilterListItem?
     ) {
         AppLog.d(
@@ -191,13 +191,13 @@ class ReaderPostListViewModel @Inject constructor(
         }
         // TODO check if the subfilter is set to a value and uncomment this code
 
-        if (isFollowing && subfilterListItem?.isTrackedItem == true) {
+        if (isFilterable && subfilterListItem?.isTrackedItem == true) {
             AppLog.d(T.READER, "TRACK READER ReaderPostListFragment > START Count SUBFILTERED_LIST")
             readerTracker.start(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }
 
-    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFollowing: Boolean) {
+    fun onFragmentPause(isTopLevelFragment: Boolean, isSearch: Boolean, isFilterable: Boolean) {
         AppLog.d(
                 T.READER,
                 "TRACK READER ReaderPostListFragment > STOP Count [mIsTopLevel = $isTopLevelFragment]"
@@ -207,7 +207,7 @@ class ReaderPostListViewModel @Inject constructor(
             readerTracker.stop(ReaderTrackerType.FILTERED_LIST)
         }
 
-        if (isFollowing) {
+        if (isFilterable) {
             readerTracker.stop(ReaderTrackerType.SUBFILTERED_LIST)
         }
     }
