@@ -74,8 +74,9 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanDescription)
         items.add(scanButton)
 
-        val fixableThreatsFound = threats.any { it.baseThreatModel.fixable != null }
-        buildFixAllButtonAction(onFixAllButtonClicked).takeIf { fixableThreatsFound }?.let { items.add(it) }
+        val fixableThreats = threats.map { it.baseThreatModel.fixable != null }
+        buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
+            ?.let { items.add(it) }
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
@@ -143,11 +144,20 @@ class ScanStateListItemsBuilder @Inject constructor(
         isSecondary = true
     )
 
-    private fun buildFixAllButtonAction(onFixAllButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threats_fix_all),
-        onClick = onFixAllButtonClicked,
-        contentDescription = UiStringRes(R.string.threats_fix_all)
-    )
+    private fun buildFixAllButtonAction(
+        onFixAllButtonClicked: () -> Unit,
+        fixableThreatsCount: Int
+    ): ActionButtonState {
+        val title = UiStringResWithParams(
+            R.string.threats_fix_num_of_threats,
+            listOf(UiStringText("$fixableThreatsCount"))
+        )
+        return ActionButtonState(
+            text = title,
+            onClick = onFixAllButtonClicked,
+            contentDescription = title
+        )
+    }
 
     private fun buildLastScanDescription(timeInMs: Long): DescriptionState {
         val durationInMs = dateProvider.getCurrentDate().time - timeInMs

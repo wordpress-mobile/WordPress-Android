@@ -4,6 +4,7 @@
 * [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
 * [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
 
+ 
 16.5
 -----
 * [**] Page List - Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]

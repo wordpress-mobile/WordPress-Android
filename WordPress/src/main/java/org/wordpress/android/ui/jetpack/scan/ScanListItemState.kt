@@ -13,6 +13,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
 
     data class ThreatItemState(
         val threatId: Long,
+        val isFixable: Boolean = true,
         val header: UiString,
         val subHeader: UiString,
         val onClick: () -> Unit
