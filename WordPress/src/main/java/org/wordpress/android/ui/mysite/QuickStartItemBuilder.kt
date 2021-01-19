@@ -101,15 +101,15 @@ class QuickStartItemBuilder
             UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
             UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
             VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
+            // Replace with an actual drawable or change the tasks
+            CHOOSE_THEME -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
+            ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_review_site_pages
             CREATE_SITE,
-            CHOOSE_THEME,
             CUSTOMIZE_SITE,
             CREATE_NEW_PAGE,
-            ENABLE_POST_SHARING,
             PUBLISH_POST,
             FOLLOW_SITE,
             CHECK_STATS,
-                // Replace with an actual drawable or change the tasks
             EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_visit_your_site
         }
     }
