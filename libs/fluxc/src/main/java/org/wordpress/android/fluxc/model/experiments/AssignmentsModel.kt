@@ -38,9 +38,8 @@ sealed class Variation {
 
     companion object {
         fun fromName(name: String?) = when (name) {
-            "control" -> Control
+            null -> Control
             "treatment" -> Treatment
-            null -> Unknown
             else -> Other(name)
         }
     }
