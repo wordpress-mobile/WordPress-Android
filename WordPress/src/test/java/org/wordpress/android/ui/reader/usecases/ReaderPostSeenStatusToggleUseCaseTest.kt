@@ -145,7 +145,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         )
 
         // local DB status toggle check
-        verify(readerPostTableWrapper, times(1)).setLocalPostSeenStatus(unseenPost, true)
+        verify(readerPostTableWrapper, times(1)).setPostSeenStatusInDb(unseenPost, true)
         verify(readerBlogTableWrapper, times(1)).decrementUnseenCount(unseenPost.blogId)
 
         // analytics check
@@ -165,7 +165,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         )
 
         // local DB status toggle check
-        verify(readerPostTableWrapper, times(1)).setLocalPostSeenStatus(seenPost, false)
+        verify(readerPostTableWrapper, times(1)).setPostSeenStatusInDb(seenPost, false)
         verify(readerBlogTableWrapper, times(1)).incrementUnseenCount(unseenPost.blogId)
 
         // analytics check

@@ -66,7 +66,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
             } else {
                 when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
-                        readerPostTableWrapper.setLocalPostSeenStatus(post, true)
+                        readerPostTableWrapper.setPostSeenStatusInDb(post, true)
                         readerBlogTableWrapper.decrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
@@ -94,7 +94,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
             } else {
                 when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
-                        readerPostTableWrapper.setLocalPostSeenStatus(post, false)
+                        readerPostTableWrapper.setPostSeenStatusInDb(post, false)
                         readerBlogTableWrapper.incrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
