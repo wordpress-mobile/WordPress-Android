@@ -9,6 +9,9 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
@@ -23,6 +26,28 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         builder = ThreatItemBuilder()
+    }
+
+    @Test
+    fun `builds threat sub header correctly for fixed threat`() {
+        // Arrange
+        val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_status_fixed)
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = FIXED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
+    }
+
+    @Test
+    fun `builds threat sub header correctly for ignored threat`() {
+        // Arrange
+        val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_status_ignored)
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = IGNORED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
 
     @Test
