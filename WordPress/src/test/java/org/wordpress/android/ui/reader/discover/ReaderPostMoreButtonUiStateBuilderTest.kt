@@ -298,7 +298,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         isNotificationsEnabled: Boolean = false,
         isFeed: Boolean = false,
         hasFeedItemId: Boolean = true,
-        isSeen: Boolean = false,
+        isSeen: Boolean = false
     ): ReaderPost {
         whenever(readerPostTableWrapper.isPostFollowed(anyOrNull())).thenReturn(isFollowed)
         whenever(readerPostTableWrapper.isPostSeen(anyOrNull())).thenReturn(isSeen)
