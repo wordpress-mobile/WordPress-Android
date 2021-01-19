@@ -61,7 +61,8 @@ class ScanStoreTest {
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
     @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
-    private val threat: ThreatModel = GenericThreatModel(
+
+    private val threatInCurrentState: ThreatModel = GenericThreatModel(
             BaseThreatModel(
                     1L,
                     "",
@@ -72,6 +73,11 @@ class ScanStoreTest {
                     mock()
             )
     )
+    private val threatInFixedState: ThreatModel = GenericThreatModel(
+            threatInCurrentState.baseThreatModel.copy(status = FIXED)
+
+    )
+
     private lateinit var scanStore: ScanStore
     private val siteId = 11L
     private val threatId = 1L
@@ -120,14 +126,14 @@ class ScanStoreTest {
         val scanStateModel = mock<ScanStateModel>()
         val payload = FetchedScanStatePayload(scanStateModel, siteModel)
         whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(payload)
-        whenever(scanStateModel.threats).thenReturn(listOf(threat))
+        whenever(scanStateModel.threats).thenReturn(listOf(threatInCurrentState))
 
         val fetchAction = ScanActionBuilder.newFetchScanStateAction(FetchScanStatePayload(siteModel))
         scanStore.onAction(fetchAction)
 
         verify(scanSqlUtils).replaceScanState(siteModel, scanStateModel)
         verify(threatSqlUtils).removeThreatsWithStatus(siteModel, listOf(CURRENT))
-        verify(threatSqlUtils).insertThreats(siteModel, listOf(threat))
+        verify(threatSqlUtils).insertThreats(siteModel, listOf(threatInCurrentState))
         val expectedChangeEvent = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
@@ -136,8 +142,8 @@ class ScanStoreTest {
     fun `fetch scan state filters out threats which do not have CURRENT status`() = test {
         whenever(buildConfigWrapper.isDebug()).thenReturn(false)
         val threatsInResponse = listOf(
-                threat,
-                GenericThreatModel(threat.baseThreatModel.copy(status = IGNORED))
+                threatInCurrentState,
+                threatInFixedState
         )
         val expectedThreatsInDb = listOf(threatsInResponse[0])
         val scanStateModel = mock<ScanStateModel>()
@@ -153,9 +159,9 @@ class ScanStoreTest {
 
     @Test
     fun `get scan state returns state and threats from the db`() {
-        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threat))
+        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threatInCurrentState))
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
-        whenever(threatSqlUtils.getThreats(siteModel, listOf(CURRENT))).thenReturn(listOf(threat))
+        whenever(threatSqlUtils.getThreats(siteModel, listOf(CURRENT))).thenReturn(listOf(threatInCurrentState))
 
         val scanStateFromDb = scanStore.getScanStateForSite(siteModel)
 
