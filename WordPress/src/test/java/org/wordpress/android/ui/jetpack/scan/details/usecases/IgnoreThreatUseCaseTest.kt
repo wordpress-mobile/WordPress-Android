@@ -35,16 +35,17 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network, when ignore threat is triggered, then NetworkUnavailable is returned`() = test {
-        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+    fun `given no network, when ignore threat is triggered, then the call fails due to network unavailability`() =
+        test {
+            whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
+            val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
 
-        assertThat(result).isEqualTo(Failure.NetworkUnavailable)
-    }
+            assertThat(result).isEqualTo(Failure.NetworkUnavailable)
+        }
 
     @Test
-    fun `given invalid response, when ignore threat is triggered, then RemoteRequestFailure is returned`() = test {
+    fun `given invalid response, when ignore threat is triggered, then the call fails`() = test {
         whenever(scanStore.ignoreThreat(any())).thenReturn(
             OnIgnoreThreatStarted(IgnoreThreatError(INVALID_RESPONSE), IGNORE_THREAT)
         )
@@ -55,7 +56,7 @@ class IgnoreThreatUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ignore threat is triggered, then Success is returned on success`() = test {
+    fun `given valid response, when ignore threat is triggered, then the call succeeds`() = test {
         whenever(scanStore.ignoreThreat(any())).thenReturn(OnIgnoreThreatStarted(IGNORE_THREAT))
 
         val result = useCase.ignoreThreat(fakeSiteId, fakeThreatId)
