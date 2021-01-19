@@ -8,10 +8,7 @@
         android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/margin_extra_large"
-        android:layout_marginEnd="@dimen/margin_extra_large"
-        android:layout_marginTop="@dimen/margin_extra_large"
-        android:layout_marginBottom="@dimen/margin_extra_large"
+        android:layout_margin="@dimen/margin_extra_large"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
