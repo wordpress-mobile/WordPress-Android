@@ -20,6 +20,7 @@ class ThreatItemBuilder @Inject constructor() {
     fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatId: Long) -> Unit) =
         ThreatItemState(
             threatId = threatModel.baseThreatModel.id,
+            isFixable = threatModel.baseThreatModel.fixable != null,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
             onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }

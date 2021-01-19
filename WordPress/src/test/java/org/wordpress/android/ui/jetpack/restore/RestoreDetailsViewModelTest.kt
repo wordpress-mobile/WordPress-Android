@@ -14,7 +14,7 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
-import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsStateListItemBuilder
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsViewModel
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
@@ -24,7 +24,7 @@ import java.util.Date
 class RestoreDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreDetailsViewModel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
-    private lateinit var stateListItemBuilder: RestoreDetailsStateListItemBuilder
+    private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var parentViewModel: RestoreViewModel
     @Mock private lateinit var site: SiteModel
@@ -34,7 +34,7 @@ class RestoreDetailsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreDetailsStateListItemBuilder()
+        stateListItemBuilder = RestoreStateListItemBuilder()
         viewModel = RestoreDetailsViewModel(
                 availableItemsProvider,
                 getActivityLogItemUseCase,

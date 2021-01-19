@@ -1,18 +1,18 @@
-package org.wordpress.android.ui.jetpack.scan
+package org.wordpress.android.ui.jetpack.scan.details
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
-sealed class ScanNavigationEvents {
-    data class ShowThreatDetails(val threatId: Long) : ScanNavigationEvents()
-
-    class OpenFixThreatsConfirmationDialog(
+sealed class ThreatDetailsNavigationEvents {
+    class OpenIgnoreThreatActionDialog(
         val title: UiString,
         val message: UiString,
         val okButtonAction: () -> Unit
-    ) : ScanNavigationEvents() {
+    ) : ThreatDetailsNavigationEvents() {
         @StringRes val positiveButtonLabel: Int = R.string.dialog_button_ok
         @StringRes val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }
+
+    object ShowUpdatedScanState : ThreatDetailsNavigationEvents()
 }

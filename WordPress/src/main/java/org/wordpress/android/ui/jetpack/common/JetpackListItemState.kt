@@ -25,6 +25,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val text: UiString,
         val contentDescription: UiString,
         val isSecondary: Boolean = false,
+        val isEnabled: Boolean = true,
         val onClick: () -> Unit
     ) : JetpackListItemState(ViewType.ACTION_BUTTON)
 

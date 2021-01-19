@@ -131,6 +131,13 @@ class PostUtilsUnitTest {
     }
 
     @Test
+    fun `isMediaInGutenberg returns true when an Audio Block is found in the post content`() {
+        val mediaId = "999"
+        val postContent = "<!-- wp:audio {\"id\":$mediaId} --> ...... <!-- /wp:audio -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, mediaId)).isTrue()
+    }
+
+    @Test
     fun `isMediaInGutenberg returns false when an imageBlock with provided id is NOT found in the post content`() {
         val imgId = "123"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
@@ -159,6 +166,13 @@ class PostUtilsUnitTest {
     }
 
     @Test
+    fun `isMediaInGutenberg returns false when an Audio Block with provided id is NOT found in the post content`() {
+        val mediaId = "123"
+        val postContent = "<!-- wp:audio {\"id\":$mediaId} --> ...... <!-- /wp:audio -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "999")).isFalse()
+    }
+
+    @Test
     fun `isMediaInGutenberg returns false for an imageBlock when only part of the id matches`() {
         val imgId = "12345"
         val postContent = "<!-- wp:image {\"id\":$imgId} --> ...... <!-- /wp:image -->"
@@ -183,6 +197,13 @@ class PostUtilsUnitTest {
     fun `isMediaInGutenberg returns false for a File Block when only part of the id matches`() {
         val mediaId = "12345"
         val postContent = "<!-- wp:file {\"id\":$mediaId} --> ...... <!-- /wp:file -->"
+        assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
+    }
+
+    @Test
+    fun `isMediaInGutenberg returns false for an Audio Block when only part of the id matches`() {
+        val mediaId = "12345"
+        val postContent = "<!-- wp:audio {\"id\":$mediaId} --> ...... <!-- /wp:audio -->"
         assertThat(PostUtils.isMediaInGutenbergPostBody(postContent, "123")).isFalse()
     }
 

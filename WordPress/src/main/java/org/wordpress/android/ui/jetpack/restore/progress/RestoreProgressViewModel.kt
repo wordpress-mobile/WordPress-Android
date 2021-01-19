@@ -23,6 +23,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.ui.jetpack.restore.RestoreState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.ProgressToolbarState
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -34,7 +35,7 @@ import javax.inject.Named
 
 class RestoreProgressViewModel @Inject constructor(
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
-    private val stateListItemBuilder: RestoreProgressStateListItemBuilder,
+    private val stateListItemBuilder: RestoreStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
