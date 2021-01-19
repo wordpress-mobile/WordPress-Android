@@ -14,7 +14,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.util.mergeAsyncNotNull
 import javax.inject.Inject
 import javax.inject.Named
@@ -35,15 +37,19 @@ class QuickStartRepository
             .associateBy { it.task }
     private val refresh = MutableLiveData<Boolean>()
     private val activeTask = MutableLiveData<QuickStartTask>()
-    val quickStartModel: LiveData<QuickStartModel> = mergeAsyncNotNull(
+    private val quickStartCategories: LiveData<List<QuickStartCategory>> = mergeAsyncNotNull(
             this,
             refresh,
-            activeTask,
             selectedSiteRepository.selectedSiteChange
-    ) { _, activeTask, site ->
+    ) { _, site ->
         val customizeCategory = buildQuickStartCategory(site, CUSTOMIZE)
         val growCategory = buildQuickStartCategory(site, GROW)
-        QuickStartModel(activeTask, listOfNotNull(customizeCategory, growCategory))
+        listOfNotNull(customizeCategory, growCategory)
+    }
+    val quickStartModel: LiveData<QuickStartModel> = merge(quickStartCategories, activeTask) { categories, activeTask ->
+        categories?.let {
+            QuickStartModel(activeTask, categories)
+        }
     }
 
     private fun buildQuickStartCategory(site: SiteModel, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
@@ -66,11 +72,9 @@ class QuickStartRepository
         }
     }
 
-    data class QuickStartCategory(
-        val taskType: QuickStartTaskType,
-        val uncompletedTasks: List<QuickStartTaskDetails>,
-        val completedTasks: List<QuickStartTaskDetails>
-    )
+    fun setActiveTask(task: QuickStartTask) {
+        activeTask.postValue(task)
+    }
 
     fun clear() {
         job.cancel()

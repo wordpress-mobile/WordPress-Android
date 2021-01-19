@@ -132,9 +132,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun assertEmptyModel() {
-        models.last().let { quickStartModel ->
-            assertThat(quickStartModel.activeTask).isNull()
-            assertThat(quickStartModel.categories).isEmpty()
-        }
+        models.isEmpty()
     }
 }
