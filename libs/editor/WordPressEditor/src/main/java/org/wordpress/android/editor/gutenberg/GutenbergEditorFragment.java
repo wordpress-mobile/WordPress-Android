@@ -1187,6 +1187,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override
     public void onMediaUploadFailed(final String localMediaId, final String errorMessage) {
+        // When a site isn't free the FILE_TYPE_NOT_PERMITTED_ERROR string is a generic error that's returned by the API
+        // and it denotes that a BAD request has occurred as a result of the site's plan not being able to accept
+        // file uploads of the specified type.
         if (errorMessage.equals(FILE_TYPE_NOT_PERMITTED_ERROR) && getArguments() != null) {
             if (getArguments().getBoolean(ARG_HAS_FREE_PLAN)) {
                 getGutenbergContainerFragment().mediaFileUploadFailed(Integer.valueOf(localMediaId),
