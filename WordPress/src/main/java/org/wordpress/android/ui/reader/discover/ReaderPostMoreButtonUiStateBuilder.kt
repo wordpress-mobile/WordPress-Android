@@ -98,30 +98,33 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             )
         }
 
-        if (readerPostTableWrapper.isPostSeen(post)) {
-            menuItems.add(
-                    SecondaryAction(
-                            type = TOGGLE_SEEN_STATUS,
-                            label = UiStringRes(R.string.reader_menu_mark_as_unseen),
-                            labelColor = R.attr.colorOnSurface,
-                            iconRes = R.drawable.ic_not_visible_white_24dp,
-                            iconColor = R.attr.wpColorOnSurfaceMedium,
-                            isSelected = false,
-                            onClicked = onButtonClicked
-                    )
-            )
-        } else {
-            menuItems.add(
-                    SecondaryAction(
-                            type = TOGGLE_SEEN_STATUS,
-                            label = UiStringRes(R.string.reader_menu_mark_as_seen),
-                            labelColor = R.attr.colorOnSurface,
-                            iconRes = R.drawable.ic_visible_white_24dp,
-                            iconColor = R.attr.wpColorOnSurfaceMedium,
-                            isSelected = false,
-                            onClicked = onButtonClicked
-                    )
-            )
+        // only show toggle button for posts with a feedItemId
+        if (post.feedItemId > 0) {
+            if (readerPostTableWrapper.isPostSeen(post)) {
+                menuItems.add(
+                        SecondaryAction(
+                                type = TOGGLE_SEEN_STATUS,
+                                label = UiStringRes(R.string.reader_menu_mark_as_unseen),
+                                labelColor = R.attr.colorOnSurface,
+                                iconRes = R.drawable.ic_not_visible_white_24dp,
+                                iconColor = R.attr.wpColorOnSurfaceMedium,
+                                isSelected = false,
+                                onClicked = onButtonClicked
+                        )
+                )
+            } else {
+                menuItems.add(
+                        SecondaryAction(
+                                type = TOGGLE_SEEN_STATUS,
+                                label = UiStringRes(R.string.reader_menu_mark_as_seen),
+                                labelColor = R.attr.colorOnSurface,
+                                iconRes = R.drawable.ic_visible_white_24dp,
+                                iconColor = R.attr.wpColorOnSurfaceMedium,
+                                isSelected = false,
+                                onClicked = onButtonClicked
+                        )
+                )
+            }
         }
 
         menuItems.add(

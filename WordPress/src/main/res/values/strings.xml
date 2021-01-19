@@ -1445,6 +1445,7 @@
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
     <string name="reader_marked_post_as_seen">Marked post as seen</string>
     <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>

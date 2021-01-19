@@ -72,7 +72,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     }
 
     @Test
-    fun `setMySubscriptionToPost emits expected state when no network`() = test {
+    fun `toggleSeenStatus emits expected state when no network`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val dummyPost = createDummyReaderPost()
@@ -80,6 +80,16 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(Failure(UiStringRes(R.string.error_network_connection)))
+        )
+    }
+
+    @Test
+    fun `toggleSeenStatus emits expected state when trying to change status of unsupported post`() = test {
+        val dummyPost = createDummyReaderPost(isSeen = true, feedItemId = 0)
+        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost)
+
+        assertThat(flow.toList()).isEqualTo(
+                listOf(Failure(UiStringRes(R.string.reader_error_changing_seen_status_of_unsupported_post)))
         )
     }
 
@@ -166,11 +176,11 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         )
     }
 
-    private fun createDummyReaderPost(isSeen: Boolean = false): ReaderPost = ReaderPost().apply {
+    private fun createDummyReaderPost(isSeen: Boolean = false, feedItemId: Long = 4): ReaderPost = ReaderPost().apply {
         this.postId = 1
         this.blogId = 2
         this.feedId = 3
-        this.feedItemId = 4
+        this.feedItemId = feedItemId
         this.isSeen = isSeen
     }
 }

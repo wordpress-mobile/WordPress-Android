@@ -58,6 +58,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     private suspend fun markPostAsSeen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState {
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
+        } else if (post.feedItemId <= 0) {
+            return Failure(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
             return if (!networkUtilsWrapper.isNetworkAvailable()) {
                 Failure(UiStringRes(string.error_network_connection))
@@ -84,6 +86,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     private suspend fun markPostAsUnseen(post: ReaderPost, actionSource: ReaderPostSeenToggleSource): PostSeenState {
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
+        } else if (post.feedItemId <= 0) {
+            return Failure(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
             return if (!networkUtilsWrapper.isNetworkAvailable()) {
                 Failure(UiStringRes(string.error_network_connection))
