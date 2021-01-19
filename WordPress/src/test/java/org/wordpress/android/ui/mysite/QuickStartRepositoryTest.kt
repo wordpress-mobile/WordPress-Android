@@ -1,6 +1,9 @@
 package org.wordpress.android.ui.mysite
 
+import android.text.SpannableString
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -19,20 +22,26 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartStore: QuickStartStore
     @Mock lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var resourceProvider: ResourceProvider
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var selectedSite: MutableLiveData<SiteModel>
     private lateinit var models: MutableList<QuickStartModel>
+    private lateinit var snackbars: MutableList<SnackbarMessageHolder>
     private val siteId = 1
 
     @InternalCoroutinesApi
@@ -44,10 +53,16 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 TEST_DISPATCHER,
                 quickStartStore,
                 quickStartUtils,
-                selectedSiteRepository
+                selectedSiteRepository,
+                resourceProvider
         )
         models = mutableListOf()
         quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
+        snackbars = mutableListOf()
+        quickStartRepository.onSnackbar.observeForever { event ->
+            event?.getContentIfNotHandled()
+                    ?.let { snackbars.add(it) }
+        }
         site = SiteModel()
         site.id = siteId
     }
@@ -59,20 +74,14 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `refresh loads model when quick start in progress and model not yet refreshed`() {
-        whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
-        initStore()
-
-        quickStartRepository.refreshIfNecessary()
+        initQuickStartInProgress()
 
         assertModel()
     }
 
     @Test
     fun `refresh doesn't reload model when already initialized`() {
-        whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
-        initStore()
-
-        quickStartRepository.refreshIfNecessary()
+        initQuickStartInProgress()
 
         assertModel()
 
@@ -91,7 +100,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `start marsk CREATE_SITE as done and loads model`() {
+    fun `start marks CREATE_SITE as done and loads model`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
@@ -99,6 +108,27 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
         assertModel()
+    }
+
+    @Test
+    fun `sets active task and shows sylized snackbar when not UPDATE_SITE_TITLE`() {
+        initQuickStartInProgress()
+        val spannableString = mock<SpannableString>()
+        whenever(quickStartUtils.stylizeQuickStartPrompt(
+                eq(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL.shortMessagePrompt),
+                eq(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL.iconId)
+        )).thenReturn(spannableString)
+
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
+        assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
+    }
+
+    private fun initQuickStartInProgress() {
+        whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
+        initStore()
+        quickStartRepository.refreshIfNecessary()
     }
 
     private fun initStore() {

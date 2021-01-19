@@ -57,6 +57,7 @@ import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -98,6 +99,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
@@ -583,8 +585,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
                         -marginOffset
                 )
 
-                val title = QuickStartUtils.stylizeQuickStartPrompt(
-                        requireActivity(),
+                val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
                         R.string.quick_start_dialog_create_new_page_message_short_pages,
                         R.drawable.ic_create_white_24dp
                 )
