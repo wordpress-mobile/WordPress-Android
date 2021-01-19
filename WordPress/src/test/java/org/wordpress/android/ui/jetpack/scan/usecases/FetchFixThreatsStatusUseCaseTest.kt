@@ -106,7 +106,7 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when threats fix status is fetched, then FixFailure is returned if result model contains error`() = test {
+    fun `given result model contains error, when threats fix status is fetched, then FixFailure is returned`() = test {
         val storeResultWithErrorFixStatusModel = OnFixThreatsStatusFetched(
             fakeSiteId,
             listOf(fakeFixThreatsStatusModel.copy(status = FixStatus.UNKNOWN, error = "not_found")),
