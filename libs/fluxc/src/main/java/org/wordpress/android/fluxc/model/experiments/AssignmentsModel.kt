@@ -32,14 +32,12 @@ data class Assignments(
 
 sealed class Variation {
     object Control : Variation()
-    object Treatment : Variation()
-    data class Other(val name: String) : Variation()
+    data class Treatment(val name: String) : Variation()
 
     companion object {
         fun fromName(name: String?) = when (name) {
             null -> Control
-            "treatment" -> Treatment
-            else -> Other(name)
+            else -> Treatment(name)
         }
     }
 }
