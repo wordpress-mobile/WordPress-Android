@@ -324,7 +324,9 @@ class ActivityLogRestClient(
                     restoreId = restoreId,
                     status = restoreStatus,
                     progress = it.progress,
-                    reason = it.reason
+                    reason = it.reason,
+                    message = it.message,
+                    currentEntry = it.currentEntry
             )
         }
 
@@ -419,7 +421,9 @@ class ActivityLogRestClient(
         val last_updated: Date,
         val can_autoconfigure: Boolean?,
         val credentials: List<Credentials>?,
-        val rewind: Rewind?
+        val rewind: Rewind?,
+        val message: String?,
+        val currentEntry: String?
     ) {
         data class Credentials(
             val type: String,
@@ -435,7 +439,9 @@ class ActivityLogRestClient(
             val restore_id: Long?,
             val rewind_id: String?,
             val progress: Int?,
-            val reason: String?
+            val reason: String?,
+            val message: String?,
+            val currentEntry: String?
         )
     }
 
