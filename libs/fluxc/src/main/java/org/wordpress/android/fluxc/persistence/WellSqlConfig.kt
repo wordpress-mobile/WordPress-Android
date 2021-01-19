@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 131
+        return 132
     }
 
     override fun getDbName(): String {
@@ -1439,6 +1439,16 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "DOWNLOAD_COUNT INTEGER," +
                                     "VALID_UNTIL INTEGER," +
                                     "URL TEXT)"
+                    )
+                }
+                131 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS RewindStatus")
+                    db.execSQL(
+                            "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER,REMOTE_SITE_ID INTEGER,STATE TEXT NOT NULL," +
+                                    "LAST_UPDATED INTEGER,REASON TEXT,CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT," +
+                                    "RESTORE_ID INTEGER,REWIND_STATUS TEXT,REWIND_PROGRESS INTEGER," +
+                                    "REWIND_REASON TEXT,MESSAGE TEXT,CURRENT_ENTRY TEXT)"
                     )
                 }
             }

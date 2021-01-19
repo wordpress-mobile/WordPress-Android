@@ -38,10 +38,12 @@ data class RewindStatusModel(
         val restoreId: Long,
         val status: Status,
         val progress: Int?,
-        val reason: String?
+        val reason: String?,
+        val message: String?,
+        val currentEntry: String?
     ) {
         enum class Status(val value: String) {
-            RUNNING("running"), FINISHED("finished"), FAILED("failed");
+            RUNNING("running"), FINISHED("finished"), FAILED("failed"), QUEUED("queued");
 
             companion object {
                 fun fromValue(value: String?): Status? {
@@ -56,11 +58,13 @@ data class RewindStatusModel(
                 restoreId: Long?,
                 stringStatus: String?,
                 progress: Int?,
-                reason: String?
+                reason: String?,
+                message: String?,
+                currentEntry: String?
             ): Rewind? {
                 val status = stringStatus?.let { Status.fromValue(it) }
                 if (status != null && restoreId != null) {
-                    return Rewind(rewindId, restoreId, status, progress, reason)
+                    return Rewind(rewindId, restoreId, status, progress, reason, message, currentEntry)
                 }
                 return null
             }
