@@ -76,11 +76,11 @@ android {
         buildConfigField "boolean", "ANY_FILE_UPLOAD", "true"
         buildConfigField "boolean", "CONSOLIDATED_MEDIA_PICKER", "false"
         buildConfigField "boolean", "ACTIVITY_LOG_FILTERS", "false"
-        buildConfigField "boolean", "BACKUPS_AVAILABLE", "false"
-        buildConfigField "boolean", "SCAN_AVAILABLE", "false"
+        buildConfigField "boolean", "BACKUP_SCREEN_AVAILABLE", "false"
+        buildConfigField "boolean", "SCAN_SCREEN_AVAILABLE", "false"
         buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "true"
         buildConfigField "boolean", "MY_SITE_IMPROVEMENTS", "false"
-        buildConfigField "boolean", "BACKUP_AVAILABLE", "false"
+        buildConfigField "boolean", "BACKUP_DOWNLOAD_AVAILABLE", "false"
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "UNREAD_POSTS_COUNT", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
@@ -417,7 +417,7 @@ android.buildTypes.all { buildType ->
 }
 
 task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.gradle.ViolationCommentsToGitHubTask) {
-    repositoryOwner = "wordpress-mobile";
+    repositoryOwner = "wordpress-mobile"
     repositoryName = "WordPress-Android"
     pullRequestId = System.properties['GITHUB_PULLREQUESTID']
     username = System.properties['GITHUB_USERNAME']

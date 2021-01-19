@@ -24,6 +24,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Success
 import org.wordpress.android.ui.jetpack.restore.RestoreState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.WarningToolbarState
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -33,7 +34,7 @@ import javax.inject.Named
 
 class RestoreWarningViewModel @Inject constructor(
     private val postRestoreUseCase: PostRestoreUseCase,
-    private val stateListItemBuilder: RestoreWarningStateListItemBuilder,
+    private val stateListItemBuilder: RestoreStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel

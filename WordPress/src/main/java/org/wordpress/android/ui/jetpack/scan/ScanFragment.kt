@@ -128,7 +128,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         if (requestCode == RequestCodes.SHOW_THREAT_DETAILS &&
             data?.getBooleanExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, false) == true
         ) {
-            viewModel.fetchScanState()
+            viewModel.onScanStateRequested()
         }
     }
 

@@ -6,7 +6,7 @@ import android.view.MenuItem
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.restore_activity.*
+import kotlinx.android.synthetic.main.jetpack_backup_restore_activity.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
@@ -39,7 +39,7 @@ class RestoreActivity : LocaleAwareActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (application as WordPress).component().inject(this)
-        setContentView(R.layout.restore_activity)
+        setContentView(R.layout.jetpack_backup_restore_activity)
 
         setSupportActionBar(toolbar_main)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)

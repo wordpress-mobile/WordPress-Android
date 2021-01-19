@@ -67,7 +67,7 @@ class ScanViewModel @Inject constructor(
         fetchScanState()
     }
 
-    fun fetchScanState() {
+    private fun fetchScanState() {
         launch {
             fetchScanStateUseCase.fetchScanState(site = site)
                 .collect { state ->
@@ -131,6 +131,10 @@ class ScanViewModel @Inject constructor(
 
     private fun onThreatItemClicked(threatId: Long) {
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
+    }
+
+    fun onScanStateRequested() {
+        fetchScanState()
     }
 
     private fun updateActionButtons(isEnabled: Boolean) {
