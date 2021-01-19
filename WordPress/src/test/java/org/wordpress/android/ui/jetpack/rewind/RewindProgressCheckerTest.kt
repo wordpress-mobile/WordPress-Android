@@ -39,7 +39,7 @@ class RewindProgressCheckerTest {
         )
     }
 
-    private val finishedRewind = Rewind("rewindId", restoreId, FINISHED, 100, "finished")
+    private val finishedRewind = Rewind("rewindId", restoreId, FINISHED, 100, "finished", null, null)
 
     private val rewindStatusModel = RewindStatusModel(ACTIVE, "reason", Date(), true, null, null)
     private val finishedRewindStatus = rewindStatusModel.copy(rewind = finishedRewind)
