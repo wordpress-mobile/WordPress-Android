@@ -12,6 +12,7 @@ import javax.inject.Named
 const val UI_SCOPE = "UI_SCOPE"
 @Deprecated(message = "Implement CoroutineScope interface and cancel all child coroutines in onCleared/onDestroy/..")
 const val DEFAULT_SCOPE = "DEFAULT_SCOPE"
+const val APPLICATION_SCOPE = "APPLICATION_SCOPE"
 const val UI_THREAD = "UI_THREAD"
 const val BG_THREAD = "BG_THREAD"
 const val IO_THREAD = "IO_THREAD"
@@ -37,6 +38,12 @@ class ThreadModule {
             replaceWith = ReplaceWith("Inject dispatcher and implement CoroutineScope interface")
     )
     fun provideBackgroundScope(): CoroutineScope {
+        return CoroutineScope(Dispatchers.Default)
+    }
+
+    @Provides
+    @Named(APPLICATION_SCOPE)
+    fun provideApplicationScope(): CoroutineScope {
         return CoroutineScope(Dispatchers.Default)
     }
 
