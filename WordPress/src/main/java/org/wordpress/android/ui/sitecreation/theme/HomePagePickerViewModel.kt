@@ -42,7 +42,7 @@ class HomePagePickerViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), CoroutineScope, PreviewModeHandler {
     private val fetchHomePageLayoutsJob = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
@@ -64,11 +64,14 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    private val _onThumbnailModeButtonPressed = SingleLiveEvent<PreviewMode>()
-    val onThumbnailModeButtonPressed: LiveData<PreviewMode> = _onThumbnailModeButtonPressed
+    private val _previewMode = SingleLiveEvent<PreviewMode>()
+    val previewMode: LiveData<PreviewMode> = _previewMode
 
-    private val _thumbnailMode = SingleLiveEvent<PreviewMode>()
-    val thumbnailMode: LiveData<PreviewMode> = _thumbnailMode
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
+    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
+    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
 
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
@@ -84,6 +87,10 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 
+    override fun getPreviewMode() = previewMode.value ?: MOBILE
+
+    override fun setPreviewMode(mode: PreviewMode) = onThumbnailModeChanged(mode)
+
     override fun onCleared() {
         super.onCleared()
         fetchHomePageLayoutsJob.cancel()
@@ -91,8 +98,8 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun start(isTablet: Boolean = false) {
-        if (_thumbnailMode.value == null) {
-            _thumbnailMode.value = if (isTablet) TABLET else MOBILE
+        if (_previewMode.value == null) {
+            _previewMode.value = if (isTablet) TABLET else MOBILE
         }
         if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
@@ -123,7 +130,7 @@ class HomePagePickerViewModel @Inject constructor(
                 LayoutGridItemUiState(
                         slug = it.slug!!,
                         title = it.title ?: "",
-                        preview = when (_thumbnailMode.value) {
+                        preview = when (_previewMode.value) {
                             MOBILE -> it.mobileScreenshot!!
                             TABLET -> it.tabletScreenshot!!
                             else -> it.screenshot!!
@@ -215,7 +222,11 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onThumbnailModePressed() {
-        _onThumbnailModeButtonPressed.value = _thumbnailMode.value
+        _onThumbnailModeButtonPressed.call()
+    }
+
+    fun onPreviewModePressed() {
+        _onPreviewModeButtonPressed.call()
     }
 
     fun onRetryClicked() {
@@ -239,7 +250,7 @@ class HomePagePickerViewModel @Inject constructor(
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
-        _thumbnailMode.value = valueOf(previewMode)
+        _previewMode.value = valueOf(previewMode)
         loadLayouts()
     }
 
@@ -247,7 +258,7 @@ class HomePagePickerViewModel @Inject constructor(
         (uiState.value as? UiState.Content)?.let {
             outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
-            outState.putString(PREVIEW_MODE, _thumbnailMode.value?.name ?: MOBILE.name)
+            outState.putString(PREVIEW_MODE, _previewMode.value?.name ?: MOBILE.name)
         }
     }
 
@@ -272,8 +283,8 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onThumbnailModeChanged(mode: PreviewMode) {
-        if (_thumbnailMode.value !== mode) {
-            _thumbnailMode.value = mode
+        if (_previewMode.value !== mode) {
+            _previewMode.value = mode
             loadLayouts()
         }
     }

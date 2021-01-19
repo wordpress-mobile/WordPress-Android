@@ -1,19 +1,15 @@
 package org.wordpress.android.ui.sitecreation.theme
 
 import android.content.Context
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.Gravity
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.ListPopupWindow
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
-import com.google.android.material.elevation.ElevationOverlayProvider
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.chooseButton
 import kotlinx.android.synthetic.main.home_page_picker_fragment.*
@@ -23,7 +19,6 @@ import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
@@ -46,8 +41,7 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
-    private lateinit var previewModeSelector: ListPopupWindow
-    private lateinit var elevationOverlayProvider: ElevationOverlayProvider
+    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -61,7 +55,6 @@ class HomePagePickerFragment : Fragment() {
         (skeletonCardView.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
             it.marginStart = thumbDimensionProvider.calculatedStartMargin
         }
-        elevationOverlayProvider = ElevationOverlayProvider(requireActivity())
         return view
     }
 
@@ -76,6 +69,7 @@ class HomePagePickerFragment : Fragment() {
         setupUi()
         setupViewModel()
         setupActionListeners()
+        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
     }
 
     override fun onAttach(context: Context) {
@@ -120,7 +114,9 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer { mode -> showModeSelector(mode) })
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+            previewModeSelectorPopup.show(viewModel)
+        })
 
         viewModel.start(displayUtils.isTablet())
     }
@@ -162,32 +158,4 @@ class HomePagePickerFragment : Fragment() {
     }
 
     private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
-
-    private fun showModeSelector(selected: PreviewMode) {
-        previewTypeSelectorButton.post(Runnable {
-            val popupWidth = resources.getDimensionPixelSize(dimen.web_preview_mode_popup_width)
-            val popupOffset = resources.getDimensionPixelSize(dimen.margin_extra_large)
-            previewModeSelector = ListPopupWindow(requireActivity())
-            previewModeSelector.width = popupWidth
-            previewModeSelector.setAdapter(PreviewModeMenuAdapter(requireActivity(), selected))
-            previewModeSelector.setDropDownGravity(Gravity.END)
-            previewModeSelector.anchorView = previewTypeSelectorButton
-            previewModeSelector.horizontalOffset = -popupOffset
-            previewModeSelector.verticalOffset = popupOffset
-            previewModeSelector.isModal = true
-            val elevatedPopupBackgroundColor = elevationOverlayProvider.compositeOverlayWithThemeSurfaceColorIfNeeded(
-                    resources.getDimension(dimen.popup_over_toolbar_elevation)
-            )
-            previewModeSelector.setBackgroundDrawable(ColorDrawable(elevatedPopupBackgroundColor))
-            previewModeSelector.setOnItemClickListener { parent, _, position, _ ->
-                previewModeSelector.dismiss()
-                val adapter = parent.adapter as PreviewModeMenuAdapter
-                val selectedMode = adapter.getItem(position)
-                if (selectedMode !== viewModel.thumbnailMode.value) {
-                    viewModel.onThumbnailModeChanged(selectedMode)
-                }
-            }
-            previewModeSelector.show()
-        })
-    }
 }
