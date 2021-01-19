@@ -16,7 +16,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -84,67 +84,74 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ignore threat button is clicked, then action to open ignore action confirmation dialog is triggered`() =
+    fun `when ignore threat button is clicked, then open ignore threat action dialog action is triggered`() =
         test {
-            val expectedDialogTitle = UiStringRes(R.string.threat_ignore)
-            val expectedDialogMessage = UiStringText(
-                htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(
-                        R.string.threat_ignore_warning,
-                        "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
-                    )
-            )
-            val expectedPositiveButtonLabel = R.string.dialog_button_ok
-            val expectedNegativeButtonLabel = R.string.dialog_button_cancel
             val observers = init()
 
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
                 .first().onClick.invoke()
 
-            val confirmationDialogAction = observers.navigation.last().peekContent() as OpenThreatActionDialog
-            with(confirmationDialogAction) {
-                assertThat(title).isEqualTo(expectedDialogTitle)
-                assertThat(message).isEqualTo(expectedDialogMessage)
-                assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
-                assertThat(negativeButtonLabel).isEqualTo(expectedNegativeButtonLabel)
+            assertThat(observers.navigation.last().peekContent())
+                .isInstanceOf(OpenIgnoreThreatActionDialog::class.java)
+        }
+
+    @Test
+    fun `when open ignore threat action dialog action is triggered, then ignore threat confirmation dialog is shown`() =
+        test {
+            val observers = init()
+
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
+
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog
+            with(confirmationDialog) {
+                assertThat(title).isEqualTo(UiStringRes(R.string.threat_ignore))
+                assertThat(message).isEqualTo(
+                    UiStringText(
+                        htmlMessageUtils
+                            .getHtmlMessageFromStringFormatResId(
+                                R.string.threat_ignore_warning,
+                                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
+                            )
+                    )
+                )
+                assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
+                assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
             }
         }
 
     @Test
     fun `when ignore threat is successful, then success message is shown`() = test {
-        val expectedSuccessSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message))
         whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
         val observers = init()
 
         triggerIgnoreThreatAction(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
     }
 
     @Test
     fun `given server unavailable, when ignore threat action is triggered, then ignore threat error msg is shown`() =
         test {
-            val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message))
             whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
             val observers = init()
 
             triggerIgnoreThreatAction(observers)
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-            assertThat(snackBarMsg).isEqualTo(expectedErrorSnackBarMsg)
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_error_message)))
         }
 
     @Test
     fun `given no network, when ignore threat action is triggered, then network error msg is shown`() = test {
-        val expectedErrorSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
         whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.NetworkUnavailable)
         val observers = init()
 
         triggerIgnoreThreatAction(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedErrorSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
     }
 
     @Test
@@ -182,7 +189,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-        (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
+        (observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog).okButtonAction.invoke()
     }
 
     private fun createDummyThreatDetailsListItems(

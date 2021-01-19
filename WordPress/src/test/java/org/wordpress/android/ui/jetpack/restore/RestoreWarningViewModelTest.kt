@@ -18,8 +18,8 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.ROOTS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
-import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningViewModel
 import org.wordpress.android.ui.jetpack.restore.warning.RestoreWarningViewModel.UiState
 import java.util.Date
@@ -27,7 +27,7 @@ import java.util.Date
 @InternalCoroutinesApi
 class RestoreWarningViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreWarningViewModel
-    private lateinit var stateListItemBuilder: RestoreWarningStateListItemBuilder
+    private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var parentViewModel: RestoreViewModel
     @Mock private lateinit var site: SiteModel
@@ -49,7 +49,7 @@ class RestoreWarningViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        stateListItemBuilder = RestoreWarningStateListItemBuilder()
+        stateListItemBuilder = RestoreStateListItemBuilder()
         viewModel = RestoreWarningViewModel(
                 postRestoreUseCase,
                 stateListItemBuilder,

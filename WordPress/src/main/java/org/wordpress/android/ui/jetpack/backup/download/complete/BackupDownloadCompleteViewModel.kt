@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ErrorToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.viewmodel.Event
@@ -22,7 +23,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 class BackupDownloadCompleteViewModel @Inject constructor(
-    private val stateListItemBuilder: BackupDownloadCompleteStateListItemBuilder,
+    private val stateListItemBuilder: BackupDownloadStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel

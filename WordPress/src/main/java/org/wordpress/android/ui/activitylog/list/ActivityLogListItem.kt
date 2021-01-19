@@ -44,7 +44,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
         constructor(
             model: ActivityLogModel,
             rewindDisabled: Boolean = false,
-            backupFeatureEnabled: Boolean,
+            backupDownloadFeatureEnabled: Boolean,
             restoreFeatureEnabled: Boolean
         ) : this(
                 model.activityID,
@@ -56,8 +56,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
                 model.rewindID,
                 model.published,
                 isButtonVisible = !rewindDisabled && model.rewindable ?: false,
-                buttonIcon = if (backupFeatureEnabled) MORE else HISTORY,
-                showMoreMenu = backupFeatureEnabled,
+                buttonIcon = if (backupDownloadFeatureEnabled) MORE else HISTORY,
+                showMoreMenu = backupDownloadFeatureEnabled,
                 launchRestoreWizard = restoreFeatureEnabled
         )
 

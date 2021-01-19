@@ -146,29 +146,26 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `when fix threats confirmation dialog action is triggered, then fix threats confirmation dialog is shown`() =
         test {
-            val expectedDialogTitle = UiStringRes(R.string.threat_fix_all_warning_title)
-            val expectedDialogMessage = UiStringResWithParams(
-                R.string.threat_fix_all_warning_message,
-                listOf(UiStringText("1"))
-            )
-            val expectedPositiveButtonLabel = R.string.dialog_button_ok
-            val expectedNegativeButtonLabel = R.string.dialog_button_cancel
             val observers = init()
 
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
 
             val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
             with(confirmationDialog) {
-                assertThat(title).isEqualTo(expectedDialogTitle)
-                assertThat(message).isEqualTo(expectedDialogMessage)
-                assertThat(positiveButtonLabel).isEqualTo(expectedPositiveButtonLabel)
-                assertThat(negativeButtonLabel).isEqualTo(expectedNegativeButtonLabel)
+                assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
+                assertThat(message).isEqualTo(
+                    UiStringResWithParams(
+                        R.string.threat_fix_all_warning_message,
+                        listOf(UiStringText("1"))
+                    )
+                )
+                assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
+                assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
             }
         }
 
     @Test
     fun `given no network, when fix threats is triggered, then network error message is shown`() = test {
-        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
         whenever(fixThreatsUseCase.fixThreats(any(), any()))
             .thenReturn(FixThreatsState.Failure.NetworkUnavailable)
         val observers = init()
@@ -176,31 +173,29 @@ class ScanViewModelTest : BaseUnitTest() {
         triggerFixThreatsAction(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
     }
 
     @Test
     fun `when request to fix threats succeeds, then fix started message is shown`() = test {
-        val expectedSuccessSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_started_message))
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
         val observers = init()
 
         triggerFixThreatsAction(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_started_message)))
     }
 
     @Test
     fun `when request to fix threats fails, then fix threats error message is shown`() = test {
-        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message))
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
         val observers = init()
 
         triggerFixThreatsAction(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
     }
 
     @Test

@@ -97,12 +97,12 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
@@ -133,10 +133,10 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    private val backupsFeatureConfig: BackupsFeatureConfig,
+    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val scanFeatureConfig: ScanFeatureConfig
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _partialState = MediatorLiveData<PartialState>()
@@ -224,7 +224,7 @@ class MySiteViewModel
                     siteItemsBuilder.buildSiteItems(
                             site,
                             this::onItemClick,
-                            backupsFeatureConfig.isEnabled(),
+                            backupScreenFeatureConfig.isEnabled(),
                             scanAvailable
                     )
             )
@@ -238,7 +238,7 @@ class MySiteViewModel
     }
 
     private fun updateScanItemState(site: SiteModel) {
-        if (scanFeatureConfig.isEnabled()) {
+        if (scanScreenFeatureConfig.isEnabled()) {
             launch {
                 val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
                 _partialState.value = ScanAvailable(capabilities.find { it == JetpackCapability.SCAN } != null)

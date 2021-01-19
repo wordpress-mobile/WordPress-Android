@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
@@ -75,9 +75,10 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun ignoreThreat() {
         viewModelScope.launch {
-            disableThreatActionButtons(true)
+            updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
                 is IgnoreThreatState.Success -> {
+                    // TODO ashiagr consider showing success message in the scan state screen
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
 
                     withContext(bgDispatcher) { delay(DELAY_MILLIS) }
@@ -85,12 +86,12 @@ class ThreatDetailsViewModel @Inject constructor(
                 }
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
-                    disableThreatActionButtons(false)
+                    updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
 
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
-                    disableThreatActionButtons(false)
+                    updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
                 }
             }
@@ -102,7 +103,7 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun onIgnoreThreatButtonClicked() {
         updateNavigationEvent(
-            OpenThreatActionDialog(
+            OpenIgnoreThreatActionDialog(
                 title = UiStringRes(R.string.threat_ignore),
                 message = UiStringText(
                     htmlMessageUtils
@@ -119,11 +120,11 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
     }
 
-    private fun disableThreatActionButtons(disable: Boolean) {
+    private fun updateThreatActionButtons(isEnabled: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
-                    contentItem.copy(isEnabled = !disable)
+                    contentItem.copy(isEnabled = isEnabled)
                 } else {
                     contentItem
                 }
