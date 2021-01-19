@@ -4,6 +4,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
+import org.wordpress.android.fluxc.action.ScanAction.START_SCAN
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.SCANNING
@@ -43,7 +44,7 @@ class StartScanUseCase @Inject constructor(
 
     private suspend fun FlowCollector<StartScanState>.updateScanScanningStateInDb(site: SiteModel) {
         val model = scanStore.getScanStateForSite(site)?.copy(state = SCANNING) ?: ScanStateModel(state = SCANNING)
-        scanStore.addOrUpdateScanStateModelForSite(site, model)
+        scanStore.addOrUpdateScanStateModelForSite(START_SCAN, site, model)
         emit(ScanningStateUpdatedInDb(model))
     }
 

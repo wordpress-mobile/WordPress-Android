@@ -8,7 +8,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteStateListItemBuilder
+import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel
 import java.util.Date
 
@@ -17,7 +17,7 @@ class BackupDownloadCompleteViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadCompleteViewModel
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
-    private lateinit var stateListItemBuilder: BackupDownloadCompleteStateListItemBuilder
+    private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
 
     private val backupDownloadState = BackupDownloadState(
             activityId = "activityId",
@@ -30,7 +30,7 @@ class BackupDownloadCompleteViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        stateListItemBuilder = BackupDownloadCompleteStateListItemBuilder()
+        stateListItemBuilder = BackupDownloadStateListItemBuilder()
         viewModel = BackupDownloadCompleteViewModel(
                 stateListItemBuilder,
                 TEST_DISPATCHER
