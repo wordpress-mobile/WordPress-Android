@@ -33,7 +33,6 @@ data class Assignments(
 sealed class Variation {
     object Control : Variation()
     object Treatment : Variation()
-    object Unknown : Variation()
     data class Other(val name: String) : Variation()
 
     companion object {
