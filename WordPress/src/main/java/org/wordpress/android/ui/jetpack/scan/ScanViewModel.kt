@@ -97,6 +97,10 @@ class ScanViewModel @Inject constructor(
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
     }
 
+    fun onScanStateRequested() {
+        fetchScanState()
+    }
+
     private fun updateUiState(contentState: Content) {
         _uiState.value = contentState
     }

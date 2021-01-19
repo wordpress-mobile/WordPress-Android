@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -9,8 +10,10 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -62,7 +65,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             {
                 it.applyIfNotHandled {
                     if (this is ScanNavigationEvents.ShowThreatDetails) {
-                        ActivityLauncher.viewThreatDetails(requireActivity(), threatId)
+                        ActivityLauncher.viewThreatDetailsForResult(this@ScanFragment, threatId)
                     }
                 }
             }
@@ -78,6 +81,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             requireActivity().intent.getSerializableExtra(WordPress.SITE) as SiteModel
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == RequestCodes.SHOW_THREAT_DETAILS &&
+            data?.getBooleanExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, false) == true
+        ) {
+            viewModel.onScanStateRequested()
         }
     }
 
