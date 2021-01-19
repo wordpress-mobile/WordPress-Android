@@ -14,7 +14,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsStateListItemBuilder
+import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel
 import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel.UiState
@@ -31,7 +31,7 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: BackupDownloadDetailsViewModel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
-    private lateinit var backupDownloadDetailsStateListItemBuilder: BackupDownloadDetailsStateListItemBuilder
+    private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
@@ -41,11 +41,11 @@ class BackupDownloadDetailsViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() = test {
         availableItemsProvider = JetpackAvailableItemsProvider()
-        backupDownloadDetailsStateListItemBuilder = BackupDownloadDetailsStateListItemBuilder()
+        stateListItemBuilder = BackupDownloadStateListItemBuilder()
         viewModel = BackupDownloadDetailsViewModel(
                 availableItemsProvider,
                 getActivityLogItemUseCase,
-                backupDownloadDetailsStateListItemBuilder,
+                stateListItemBuilder,
                 postBackupDownloadUseCase,
                 TEST_DISPATCHER
         )
