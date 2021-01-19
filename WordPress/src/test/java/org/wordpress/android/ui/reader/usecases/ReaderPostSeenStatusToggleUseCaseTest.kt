@@ -16,6 +16,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
@@ -41,6 +42,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     @Mock private lateinit var accountStore: AccountStore
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
+    @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
@@ -55,7 +57,8 @@ class ReaderPostSeenStatusToggleUseCaseTest {
                 postSeenStatusApiCallsProvider,
                 accountStore,
                 analyticsUtilsWrapper,
-                readerPostTableWrapper
+                readerPostTableWrapper,
+                readerBlogTableWrapper
         )
     }
 
@@ -133,6 +136,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         // local DB status toggle check
         verify(readerPostTableWrapper, times(1)).togglePostSeenStatusLocally(unseenPost, true)
+        verify(readerBlogTableWrapper, times(1)).decrementUnseenCount(unseenPost.blogId)
 
         // analytics check
         verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
@@ -152,6 +156,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         // local DB status toggle check
         verify(readerPostTableWrapper, times(1)).togglePostSeenStatusLocally(seenPost, false)
+        verify(readerBlogTableWrapper, times(1)).incrementUnseenCount(unseenPost.blogId)
 
         // analytics check
         verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(

@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.usecases
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
@@ -29,7 +30,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     private val apiCallsProvider: PostSeenStatusApiCallsProvider,
     private val accountStore: AccountStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
-    private val readerPostTableWrapper: ReaderPostTableWrapper
+    private val readerPostTableWrapper: ReaderPostTableWrapper,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper
 ) {
     companion object {
         const val ACTION_SOURCE_PARAM_NAME = "source"
@@ -66,6 +68,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
                         readerPostTableWrapper.togglePostSeenStatusLocally(post, true)
+                        readerBlogTableWrapper.decrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
                                 post,
@@ -91,6 +94,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                 when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
                         readerPostTableWrapper.togglePostSeenStatusLocally(post, false)
+                        readerBlogTableWrapper.incrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,
                                 post,
