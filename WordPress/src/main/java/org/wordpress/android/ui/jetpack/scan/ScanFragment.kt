@@ -93,7 +93,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun SnackbarMessageHolder.showSnackbar() {
         val snackbar = WPSnackbar.make(
             scan_state_layout,
-            uiHelpers.getTextOfUiString(requireContext(), this.message),
+            uiHelpers.getTextOfUiString(requireContext(), message),
             Snackbar.LENGTH_LONG
         )
         snackbar.show()
