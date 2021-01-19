@@ -494,6 +494,7 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
+        quickStartRepository.clear()
         super.onCleared()
     }
 

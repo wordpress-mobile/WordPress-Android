@@ -55,7 +55,7 @@ class QuickStartTaskCardAdapter(private val uiHelpers: UiHelpers) : Adapter<Quic
         override fun getNewListSize() = newItems.size
 
         override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
-                oldItems[oldItemPosition].id == newItems[newItemPosition].id
+                oldItems[oldItemPosition].quickStartTask == newItems[newItemPosition].quickStartTask
 
         override fun areContentsTheSame(oldItemPosition: Int, newItemPosition: Int) =
                 oldItems[oldItemPosition] == newItems[newItemPosition]

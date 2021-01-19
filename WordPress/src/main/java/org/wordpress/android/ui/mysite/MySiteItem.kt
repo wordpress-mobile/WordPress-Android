@@ -11,7 +11,6 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class MySiteItem(val type: Type) {
     enum class Type {
@@ -58,7 +57,7 @@ sealed class MySiteItem(val type: Type) {
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
         data class QuickStartTaskCard(
-            val id: QuickStartTask,
+            val quickStartTask: QuickStartTask,
             val title: UiString,
             val description: UiString,
             @DrawableRes val illustration: Int,

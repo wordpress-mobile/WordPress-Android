@@ -1,12 +1,15 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
@@ -28,14 +31,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
+    private lateinit var selectedSite: MutableLiveData<SiteModel>
     private lateinit var models: MutableList<QuickStartModel>
     private val siteId = 1
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        quickStartRepository = QuickStartRepository(quickStartStore, quickStartUtils, selectedSiteRepository)
+        selectedSite = MutableLiveData()
+        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(selectedSite)
+        quickStartRepository = QuickStartRepository(
+                TEST_DISPATCHER,
+                quickStartStore,
+                quickStartUtils,
+                selectedSiteRepository
+        )
         models = mutableListOf()
-        quickStartRepository.quickStartModel.observeForever { models.add(it) }
+        quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
         site = SiteModel()
         site.id = siteId
     }
@@ -48,7 +60,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `refresh loads model when quick start in progress and model not yet refreshed`() {
         whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
         quickStartRepository.refreshIfNecessary()
@@ -59,7 +70,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `refresh doesn't reload model when already initialized`() {
         whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
         quickStartRepository.refreshIfNecessary()
@@ -92,6 +102,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun initStore() {
+        selectedSite.value = site
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
@@ -108,7 +119,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun assertModel() {
-        assertThat(models).hasSize(3)
+        assertThat(models).hasSize(1)
         models.last().categories.let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
