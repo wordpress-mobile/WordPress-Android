@@ -7,9 +7,12 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModific
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -63,27 +66,39 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
-    fun buildThreatItemSubHeader(threatModel: ThreatModel) = when (threatModel) {
-        is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
+    fun buildThreatItemSubHeader(threatModel: ThreatModel): UiString {
+        return when (threatModel.baseThreatModel.status) {
+            FIXED -> {
+                UiStringRes(R.string.threat_item_sub_header_status_fixed)
+            }
+            IGNORED -> {
+                UiStringRes(R.string.threat_item_sub_header_status_ignored)
+            }
+            else -> {
+                when (threatModel) {
+                    is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
-        is DatabaseThreatModel -> UiStringText("")
+                    is DatabaseThreatModel -> UiStringText("")
 
-        is FileThreatModel -> UiStringResWithParams(
-            R.string.threat_item_sub_header_file_signature,
-            listOf(UiStringText(threatModel.baseThreatModel.signature))
-        )
+                    is FileThreatModel -> UiStringResWithParams(
+                            R.string.threat_item_sub_header_file_signature,
+                            listOf(UiStringText(threatModel.baseThreatModel.signature))
+                    )
 
-        is VulnerableExtensionThreatModel -> {
-            when (threatModel.extension.type) {
-                ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
-                ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
-                ExtensionType.UNKNOWN -> throw IllegalArgumentException(
-                    "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
-                )
+                    is VulnerableExtensionThreatModel -> {
+                        when (threatModel.extension.type) {
+                            ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
+                            ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
+                            ExtensionType.UNKNOWN -> throw IllegalArgumentException(
+                                    "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
+                            )
+                        }
+                    }
+
+                    is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
+                }
             }
         }
-
-        is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
     }
 
     /**
