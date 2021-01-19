@@ -57,7 +57,8 @@ sealed class MySiteItem(val type: Type) {
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
         data class QuickStartTaskCard(
-            val id: QuickStartTask,
+            val quickStartTask
+            : QuickStartTask,
             val title: UiString,
             val description: UiString,
             @DrawableRes val illustration: Int,
