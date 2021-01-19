@@ -9,6 +9,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Failure
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Success
+import org.wordpress.android.util.StringUtils
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 import kotlin.coroutines.resume
@@ -30,7 +31,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
             cont.resume(result)
         }
         val errorListener = ErrorListener { volleyError ->
-            cont.resume(Failure("error"))
+            cont.resume(Failure(StringUtils.notNullStr(volleyError.message)))
         }
         WordPress.getRestClientUtilsV2().post("/seen-posts/seen/new", requestJson, null, listener, errorListener)
     }
@@ -45,7 +46,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
             cont.resume(result)
         }
         val errorListener = ErrorListener { volleyError ->
-            cont.resume(Failure("error"))
+            cont.resume(Failure(StringUtils.notNullStr(volleyError.message)))
         }
         WordPress.getRestClientUtilsV2().post("/seen-posts/seen/delete", requestJson, null, listener, errorListener)
     }

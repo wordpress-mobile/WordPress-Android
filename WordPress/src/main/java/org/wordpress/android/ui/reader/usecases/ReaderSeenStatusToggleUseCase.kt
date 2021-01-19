@@ -22,9 +22,6 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import javax.inject.Inject
 
-/**
- * This class handles reader blog follow click events.
- */
 class ReaderSeenStatusToggleUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val apiCallsProvider: PostSeenStatusApiCallsProvider,
@@ -67,7 +64,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
             } else {
                 when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
-                        readerPostTableWrapper.togglePostSeenStatusLocally(post, true)
+                        readerPostTableWrapper.setLocalPostSeenStatus(post, true)
                         readerBlogTableWrapper.decrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN,
@@ -93,7 +90,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
             } else {
                 when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
-                        readerPostTableWrapper.togglePostSeenStatusLocally(post, false)
+                        readerPostTableWrapper.setLocalPostSeenStatus(post, false)
                         readerBlogTableWrapper.incrementUnseenCount(post.blogId)
                         analyticsUtilsWrapper.trackWithReaderPostDetails(
                                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_UNSEEN,

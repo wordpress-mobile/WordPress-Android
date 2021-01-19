@@ -555,7 +555,6 @@ public class ReaderPostTable {
                          + " WHERE feed_id=? AND feed_item_id=?";
             db.execSQL(sql, new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)});
 
-
             db.setTransactionSuccessful();
             EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
         } finally {
