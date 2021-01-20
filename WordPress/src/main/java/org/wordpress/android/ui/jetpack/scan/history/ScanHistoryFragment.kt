@@ -95,7 +95,8 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private class ScanHistoryTabAdapter(
-        private val items: List<TabUiState>, parent: Fragment
+        private val items: List<TabUiState>,
+        parent: Fragment
     ) : FragmentStateAdapter(parent) {
         override fun getItemCount(): Int = items.count()
 

@@ -51,7 +51,7 @@ class ScanHistoryListViewModelTest {
                                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
                                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.IGNORED)),
                                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)),
+                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
                         )
                 )
         )

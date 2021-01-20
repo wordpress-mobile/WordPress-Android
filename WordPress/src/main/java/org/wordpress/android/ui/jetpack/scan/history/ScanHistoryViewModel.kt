@@ -60,7 +60,7 @@ class ScanHistoryViewModel @Inject constructor(
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
     @Parcelize
-    enum class ScanHistoryTabType: Parcelable {
+    enum class ScanHistoryTabType : Parcelable {
         ALL, FIXED, IGNORED
     }
 }
