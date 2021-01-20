@@ -53,6 +53,9 @@ class ScanViewModelTest : BaseUnitTest() {
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
     private val fakeUiStringText = UiStringText("")
     private val fakeThreatId = 1L
+    private val fakeIconId = 1
+    private val fakeIconBackgroundId = 1
+
 
     @Before
     fun setUp() = test {
@@ -243,7 +246,9 @@ class ScanViewModelTest : BaseUnitTest() {
             threatId = fakeThreatId,
             isFixable = true,
             header = fakeUiStringText,
-            subHeader = fakeUiStringText
+            subHeader = fakeUiStringText,
+            icon = fakeIconId,
+            iconBackground = fakeIconBackgroundId
         ) { onThreatItemClicked(fakeThreatId) }
     )
 
