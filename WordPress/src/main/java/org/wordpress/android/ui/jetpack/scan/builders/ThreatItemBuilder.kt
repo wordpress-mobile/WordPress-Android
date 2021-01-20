@@ -118,7 +118,6 @@ class ThreatItemBuilder @Inject constructor() {
                 UNKNOWN, CURRENT -> R.drawable.bg_oval_error_50
             }
 
-
     /**
      * Uses regex to remove the whole path except of the file name
      * e.g. "/var/www/html/jp-scan-daily/wp-admin/index.php" returns "index.php".

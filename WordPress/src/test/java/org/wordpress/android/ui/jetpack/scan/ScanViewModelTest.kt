@@ -56,7 +56,6 @@ class ScanViewModelTest : BaseUnitTest() {
     private val fakeIconId = 1
     private val fakeIconBackgroundId = 1
 
-
     @Before
     fun setUp() = test {
         viewModel = ScanViewModel(
