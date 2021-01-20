@@ -28,7 +28,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initRecyclerView()
-        initViewModel(getSite(savedInstanceState))
+        initViewModel(getSite(savedInstanceState), getTabType())
     }
 
     private fun initDagger() {
@@ -44,12 +44,12 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         recycler_view.itemAnimator = null
     }
 
-    private fun initViewModel(site: SiteModel) {
+    private fun initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
         parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
                 ScanHistoryViewModel::class.java
         )
-        viewModel.start(site, parentViewModel)
+        viewModel.start(tabType, site, parentViewModel)
         setupObservers()
     }
 
@@ -68,6 +68,9 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
     }
+
+    private fun getTabType(): ScanHistoryTabType =
+            requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
 
     override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
 
