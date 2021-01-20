@@ -321,6 +321,42 @@ class ScanViewModelTest : BaseUnitTest() {
             assertThat(indeterminateProgressBars.isEmpty()).isTrue
         }
 
+    @Test
+    fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
+        test {
+            whenever(site.siteId).thenReturn(1L)
+            viewModel.start(site)
+
+            viewModel.onFixStateRequested(threatId = 11L)
+
+            verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(
+                remoteSiteId = 1L,
+                fixableThreatIds = listOf(11L)
+            )
+        }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then snackbar msg is shown`() =
+        test {
+            val observers = init()
+
+            viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg)
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
+        }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then scan state is fetched`() =
+        test {
+            viewModel.start(site)
+
+            viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+            verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+        }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
