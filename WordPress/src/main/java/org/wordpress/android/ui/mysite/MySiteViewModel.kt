@@ -193,7 +193,7 @@ class MySiteViewModel
                             this::iconClick,
                             this::urlClick,
                             this::switchSiteClick,
-                            quickStartModel?.activeTask
+                            quickStartModel?.activeTask == UPDATE_SITE_TITLE
                     )
             )
             siteItems.add(

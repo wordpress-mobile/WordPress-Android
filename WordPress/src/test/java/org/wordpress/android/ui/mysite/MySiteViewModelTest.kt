@@ -2,7 +2,6 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
-import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -217,7 +216,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 any(),
                 any(),
                 any(),
-                anyOrNull()
+                any()
         )).thenReturn(
                 siteInfoBlock
         )
@@ -409,7 +408,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `passes active quick start task into site info block builder`() {
         onSiteChange.postValue(site)
 
-        val activeTask = UPDATE_SITE_TITLE
         whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
                 eq(site),
                 any(),
@@ -417,12 +415,12 @@ class MySiteViewModelTest : BaseUnitTest() {
                 any(),
                 any(),
                 any(),
-                eq(activeTask)
+                eq(true)
         )).thenReturn(
                 siteInfoBlock.copy(showTitleFocusPoint = true)
         )
 
-        quickStartModel.value = QuickStartModel(activeTask, listOf())
+        quickStartModel.value = QuickStartModel(UPDATE_SITE_TITLE, listOf())
 
         assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
     }
@@ -886,7 +884,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 any(),
                 any(),
                 any(),
-                anyOrNull()
+                any()
         )
 
         onSiteChange.postValue(site)
