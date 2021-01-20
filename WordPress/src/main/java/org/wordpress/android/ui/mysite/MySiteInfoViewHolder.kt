@@ -11,6 +11,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.BLAVATAR
 import org.wordpress.android.widgets.MySiteTitleAndSubtitleLabelView
+import org.wordpress.android.widgets.QuickStartFocusPoint
 
 class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageManager) : MySiteItemViewHolder(
         parent,
@@ -20,6 +21,7 @@ class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageMan
     private val mySiteIconProgress = itemView.findViewById<ProgressBar>(R.id.my_site_icon_progress)
     private val siteInfoContainer = itemView.findViewById<MySiteTitleAndSubtitleLabelView>(R.id.site_info_container)
     private val switchSite = itemView.findViewById<ImageButton>(R.id.switch_site)
+    private val quickStartFocusPoint = itemView.findViewById<QuickStartFocusPoint>(R.id.quick_start_focus_point)
     fun bind(item: SiteInfoBlock) {
         if (item.iconState is IconState.Visible) {
             mySiteBlavatar.visibility = View.VISIBLE
@@ -37,6 +39,7 @@ class MySiteInfoViewHolder(parent: ViewGroup, private val imageManager: ImageMan
             siteInfoContainer.title.setOnClickListener(null)
         }
         siteInfoContainer.title.text = item.title
+        quickStartFocusPoint.setVisibleOrGone(item.showTitleFocusPoint)
         siteInfoContainer.subtitle.text = item.url
         siteInfoContainer.subtitle.setOnClickListener { item.onUrlClick.click() }
         switchSite.setOnClickListener { item.onSwitchSiteClick.click() }
