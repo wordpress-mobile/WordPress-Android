@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -73,5 +74,16 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        private const val ARG_TAB_TYPE = "arg_tab_type"
+
+        fun newInstance(tabType: ScanHistoryTabType): ScanHistoryListFragment {
+            val newBundle = Bundle().apply {
+                putParcelable(ARG_TAB_TYPE, tabType)
+            }
+            return ScanHistoryListFragment().apply { arguments = newBundle }
+        }
     }
 }

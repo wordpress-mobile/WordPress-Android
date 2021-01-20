@@ -99,7 +99,7 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     ) : FragmentStateAdapter(parent) {
         override fun getItemCount(): Int = items.count()
 
-        override fun createFragment(position: Int): Fragment = ScanHistoryListFragment()
+        override fun createFragment(position: Int): Fragment = ScanHistoryListFragment.newInstance(items[position].type)
     }
 
     override fun onScrollableViewInitialized(viewId: Int) {
