@@ -184,7 +184,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildFixDescription(fixable: Fixable?) = fixable?.let { buildFixableThreatDescription(it) }
         ?: buildNotFixableThreatDescription()
 
-    private fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
+    fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
         when (fixable.fixer) {
             FixType.REPLACE -> UiStringRes(R.string.threat_fix_fixable_replace)
 

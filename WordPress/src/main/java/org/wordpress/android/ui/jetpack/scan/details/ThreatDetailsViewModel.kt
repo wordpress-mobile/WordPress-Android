@@ -72,6 +72,9 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
+    private fun fixThreat() { // TODO ashiagr to be implemented
+    }
+
     private fun ignoreThreat() {
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
@@ -97,7 +100,15 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onFixThreatButtonClicked() { // TODO ashiagr to be implemented
+    private fun onFixThreatButtonClicked() {
+        val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
+        updateNavigationEvent(
+            OpenThreatActionDialog(
+                title = UiStringRes(R.string.threat_fix),
+                message = builder.buildFixableThreatDescription(fixable).text,
+                okButtonAction = this@ThreatDetailsViewModel::fixThreat
+            )
+        )
     }
 
     private fun onIgnoreThreatButtonClicked() {
