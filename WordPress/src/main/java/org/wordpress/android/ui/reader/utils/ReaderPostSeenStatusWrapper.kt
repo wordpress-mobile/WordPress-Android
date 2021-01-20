@@ -4,8 +4,6 @@ import dagger.Reusable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
@@ -16,7 +14,7 @@ import kotlinx.coroutines.launch
 /**
  * Injectable wrapper around ReaderSeenStatusToggleUseCase.
  *
- * ReaderSeenStatusToggleUseCase uses flow, which makes calling if from Java clunky.
+ * ReaderSeenStatusToggleUseCase uses suspended functions and flows, which makes calling if from Java clunky.
  *
  */
 @Reusable
@@ -28,9 +26,7 @@ class ReaderPostSeenStatusWrapper @Inject constructor(
 
     fun markPostAsSeenSilently(post: ReaderPost) {
         launch(bgDispatcher) {
-            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post).flowOn(bgDispatcher).collect {
-                // do things silently
-            }
+            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post)
         }
     }
 }

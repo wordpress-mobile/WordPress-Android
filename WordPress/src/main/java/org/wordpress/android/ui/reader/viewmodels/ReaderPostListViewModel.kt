@@ -3,8 +3,6 @@ package org.wordpress.android.ui.reader.viewmodels
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.datasets.ReaderPostTable
@@ -165,9 +163,7 @@ class ReaderPostListViewModel @Inject constructor(
 
     fun onExternalPostOpened(post: ReaderPost) {
         launch(bgDispatcher) {
-            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post).flowOn(bgDispatcher).collect {
-                // do things silently
-            }
+            seenStatusToggleUseCase.markPostAsSeenIfNecessary(post)
         }
     }
 

@@ -7,12 +7,12 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.models.ReaderPost
-import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Failure
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_DETAILS
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider
-import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult
+import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Failure
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Success
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -47,10 +47,9 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         emit(status)
     }
 
-    suspend fun markPostAsSeenIfNecessary(post: ReaderPost) = flow {
+    suspend fun markPostAsSeenIfNecessary(post: ReaderPost) {
         if (!readerPostTableWrapper.isPostSeen(post)) {
-            val status = markPostAsSeen(post, READER_POST_DETAILS)
-            emit(status)
+            markPostAsSeen(post, READER_POST_DETAILS)
         }
     }
 
@@ -58,10 +57,10 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
         } else if (post.feedItemId <= 0) {
-            return Failure(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
+            return Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
             return if (!networkUtilsWrapper.isNetworkAvailable()) {
-                Failure(UiStringRes(string.error_network_connection))
+                Error(UiStringRes(string.error_network_connection))
             } else {
                 when (val status = apiCallsProvider.markPostAsSeen(post)) {
                     is Success -> {
@@ -74,8 +73,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                         )
                         PostSeenStateChanged(true, UiStringRes(string.reader_marked_post_as_seen))
                     }
-                    is SeenStatusToggleCallResult.Failure -> {
-                        Failure(UiStringText(status.error))
+                    is Failure -> {
+                        Error(UiStringText(status.error))
                     }
                 }
             }
@@ -86,10 +85,10 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
         if (!accountStore.hasAccessToken()) {
             return UserNotAuthenticated
         } else if (post.feedItemId <= 0) {
-            return Failure(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
+            return Error(UiStringRes(string.reader_error_changing_seen_status_of_unsupported_post))
         } else {
             return if (!networkUtilsWrapper.isNetworkAvailable()) {
-                Failure(UiStringRes(string.error_network_connection))
+                Error(UiStringRes(string.error_network_connection))
             } else {
                 when (val status = apiCallsProvider.markPostAsUnseen(post)) {
                     is Success -> {
@@ -102,8 +101,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
                         )
                         PostSeenStateChanged(false, UiStringRes(string.reader_marked_post_as_unseen))
                     }
-                    is SeenStatusToggleCallResult.Failure -> {
-                        Failure(UiStringText(status.error))
+                    is Failure -> {
+                        Error(UiStringText(status.error))
                     }
                 }
             }
@@ -116,8 +115,8 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
             val userMessage: UiString? = null
         ) : PostSeenState()
 
-        data class Failure(
-            val error: UiString? = null
+        data class Error(
+            val message: UiString? = null
         ) : PostSeenState()
 
         object UserNotAuthenticated : PostSeenState()

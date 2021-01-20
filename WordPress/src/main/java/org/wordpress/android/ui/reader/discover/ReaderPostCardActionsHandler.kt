@@ -57,7 +57,7 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
-import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_CARD
@@ -184,8 +184,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
         seenStatusToggleUseCase.toggleSeenStatus(post, actionSource).flowOn(bgDispatcher).collect { state ->
             when (state) {
-                is PostSeenState.Failure -> {
-                    state.error?.let {
+                is Error -> {
+                    state.message?.let {
                         _snackbarEvents.postValue(
                                 Event(SnackbarMessageHolder(it))
                         )
