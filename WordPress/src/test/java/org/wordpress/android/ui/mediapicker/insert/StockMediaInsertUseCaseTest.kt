@@ -30,13 +30,15 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
     private val title = "title"
     private val name = "name"
     private val thumbnail = "image.jpg"
+    private val caption = "caption"
     private val stockMediaItem = StockMediaItem(
             "id",
             name,
             title,
             url,
             "123",
-            thumbnail
+            thumbnail,
+            caption
     )
 
     @Before
@@ -46,7 +48,7 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `uploads media on insert`() = test {
-        val itemToInsert = Identifier.StockMediaIdentifier(url, name, title)
+        val itemToInsert = Identifier.StockMediaIdentifier(url, name, title, caption)
         val insertedMediaModel = MediaModel()
         val mediaId: Long = 10
         insertedMediaModel.mediaId = mediaId
@@ -60,6 +62,6 @@ class StockMediaInsertUseCaseTest : BaseUnitTest() {
         (result[1] as InsertModel.Success).apply {
             assertThat(this.identifiers).containsExactly(RemoteId(mediaId))
         }
-        verify(stockMediaStore).performUploadStockMedia(site, listOf(StockMediaUploadItem(name, title, url)))
+        verify(stockMediaStore).performUploadStockMedia(site, listOf(StockMediaUploadItem(name, title, url, caption)))
     }
 }
