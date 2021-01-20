@@ -16,6 +16,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
@@ -24,6 +25,7 @@ import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseC
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Failure
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Success
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
+private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 1
 private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val TEST_SITE_NAME = "test site name"
 
@@ -40,6 +43,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var getThreatModelUseCase: GetThreatModelUseCase
     @Mock private lateinit var ignoreThreatUseCase: IgnoreThreatUseCase
+    @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
     @Mock private lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock private lateinit var builder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
@@ -47,12 +51,16 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
     private val fakeUiStringText = UiStringText("")
+    private val fakeThreatModel = ThreatTestData.fixableThreatInCurrentStatus.copy(
+        baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(id = threatId)
+    )
 
     @Before
     fun setUp() = test {
         viewModel = ThreatDetailsViewModel(
             getThreatModelUseCase,
             ignoreThreatUseCase,
+            fixThreatsUseCase,
             selectedSiteRepository,
             builder,
             htmlMessageUtils,
@@ -62,9 +70,12 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any(), any())).thenReturn(mock())
-        whenever(getThreatModelUseCase.get(anyLong())).thenReturn(mock())
+        whenever(getThreatModelUseCase.get(anyLong())).thenReturn(fakeThreatModel)
         whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenAnswer {
-            createDummyThreatDetailsListItems(it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION))
+            createDummyThreatDetailsListItems(
+                it.getArgument(ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION),
+                it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION)
+            )
         }
     }
 
@@ -89,10 +100,9 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             val observers = init()
 
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                .first().onClick.invoke()
+                .last().onClick.invoke()
 
-            assertThat(observers.navigation.last().peekContent())
-                .isInstanceOf(OpenThreatActionDialog::class.java)
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
         }
 
     @Test
@@ -101,7 +111,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             val observers = init()
 
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
-                .first().onClick.invoke()
+                .last().onClick.invoke()
 
             val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
             with(confirmationDialog) {
@@ -188,17 +198,24 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
-        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
     }
 
     private fun createDummyThreatDetailsListItems(
+        onFixThreatItemClicked: () -> Unit,
         onIgnoreThreatItemClicked: () -> Unit
     ) = listOf(
         ActionButtonState(
             text = fakeUiStringText,
             contentDescription = fakeUiStringText,
             isSecondary = false,
+            onClick = onFixThreatItemClicked
+        ),
+        ActionButtonState(
+            text = fakeUiStringText,
+            contentDescription = fakeUiStringText,
+            isSecondary = true,
             onClick = onIgnoreThreatItemClicked
         )
     )
