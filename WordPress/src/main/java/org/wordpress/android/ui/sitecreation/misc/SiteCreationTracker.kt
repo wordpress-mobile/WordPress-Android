@@ -13,6 +13,16 @@ enum class SiteCreationErrorType {
 
 @Singleton
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) {
+    private enum class PROPERTY(val key: String) {
+        TEMPLATE("template"),
+        SEGMENT_NAME("segment_name"),
+        SEGMENT_ID("segment_id"),
+        CHOSEN_DOMAIN("chosen_domain"),
+        SEARCH_TERM("search_term"),
+        THUMBNAIL_MODE("thumbnail_mode"),
+        PREVIEW_MODE("preview_mode")
+    }
+
     private var designSelectionSkipped: Boolean = false
 
     fun trackSiteCreationAccessed() {
