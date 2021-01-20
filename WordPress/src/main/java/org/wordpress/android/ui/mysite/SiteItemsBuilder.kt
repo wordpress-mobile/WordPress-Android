@@ -16,7 +16,7 @@ class SiteItemsBuilder
     fun buildSiteItems(
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,
-        isBackupsAvailable: Boolean = false,
+        isBackupAvailable: Boolean = false,
         isScanAvailable: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
@@ -28,7 +28,7 @@ class SiteItemsBuilder
                         onClick = ListItemInteraction.create(ListItemAction.STATS, onClick)
                 ),
                 siteListItemBuilder.buildActivityLogItemIfAvailable(site, onClick),
-                siteListItemBuilder.buildBackupItemIfAvailable(onClick, isBackupsAvailable),
+                siteListItemBuilder.buildBackupItemIfAvailable(onClick, isBackupAvailable),
                 siteListItemBuilder.buildScanItemIfAvailable(onClick, isScanAvailable),
                 siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_publish)),

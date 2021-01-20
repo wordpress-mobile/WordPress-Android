@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -49,8 +50,14 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.QuickStartModel
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ScanAvailable
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.SelectedSite
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ShowSiteIconProgressBar
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -87,19 +94,23 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.distinct
 import org.wordpress.android.util.getEmailValidationMessage
+import org.wordpress.android.util.map
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
+import org.wordpress.android.util.scan
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -124,14 +135,15 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    private val backupsFeatureConfig: BackupsFeatureConfig,
+    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val scanFeatureConfig: ScanFeatureConfig
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
+    private val quickStartRepository: QuickStartRepository,
+    private val quickStartItemBuilder: QuickStartItemBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
-    private val _scanAvailable = MediatorLiveData<Boolean>()
-    private val _currentAccountAvatarUrl = MutableLiveData<String>()
+    private val _partialState = MediatorLiveData<PartialState>()
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
     private val _onBasicDialogShown = MutableLiveData<Event<SiteDialogModel>>()
@@ -146,15 +158,27 @@ class MySiteViewModel
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val uiModel: LiveData<UiModel> = merge(
-            _currentAccountAvatarUrl,
-            selectedSiteRepository.selectedSiteChange,
-            selectedSiteRepository.showSiteIconProgressBar.distinct(),
-            domainRegistrationHandler.isDomainCreditAvailable.distinct(),
-            _scanAvailable
-    ) { currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable ->
+    val uiModel: LiveData<UiModel> = scan<PartialState, UiState>(
+            UiState(),
+            _partialState,
+            selectedSiteRepository.selectedSiteChange.mapNullable { SelectedSite(it) },
+            selectedSiteRepository.showSiteIconProgressBar.distinct()
+                    .mapNullable { ShowSiteIconProgressBar(it == true) },
+            domainRegistrationHandler.isDomainCreditAvailable.distinct()
+                    .mapNullable { DomainCreditAvailable(it == true) },
+            quickStartRepository.quickStartModel.mapNullable { QuickStartModel(it ?: listOf()) }
+    ) { currentState, partialState ->
+        currentState.update(partialState)
+    }.map { (
+            currentAvatarUrl,
+            site,
+            showSiteIconProgressBar,
+            isDomainCreditAvailable,
+            scanAvailable,
+            quickStartCategories
+    ) ->
         site?.takeIf { site.id != currentSiteId }?.let {
-            _scanAvailable.value = false
+            _partialState.value = ScanAvailable(false)
             updateScanItemState(site)
             currentSiteId = site.id
         }
@@ -180,40 +204,25 @@ class MySiteViewModel
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
-            if (isDomainCreditAvailable == true) {
+            if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
 
-            // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val dummyTasks = (1..5).map { DummyTask("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
-            val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
-                    .sortedWith(compareBy(DummyTask::done).thenBy(DummyTask::id))
-            siteItems.add(
-                    QuickStartCard(
-                            "customize_your_site",
-                            "Customize your Site",
-                            dummyTasks,
-                            R.color.green_20,
-                            ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
-                    )
-            )
-            siteItems.add(
-                    QuickStartCard(
-                            "grow_your_audience",
-                            "Grow your Audience",
-                            dummyTasksCompleted,
-                            R.color.orange_40,
-                            ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
-                    )
-            )
+            siteItems.addAll(quickStartCategories.map {
+                quickStartItemBuilder.build(
+                        it,
+                        this::onQuickStartCardMoreClick,
+                        this::onQuickStartTaskCardClick
+                )
+            })
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
                             site,
                             this::onItemClick,
-                            backupsFeatureConfig.isEnabled(),
-                            scanAvailable ?: false
+                            backupScreenFeatureConfig.isEnabled(),
+                            scanAvailable
                     )
             )
             State.SiteSelected(siteItems)
@@ -226,10 +235,10 @@ class MySiteViewModel
     }
 
     private fun updateScanItemState(site: SiteModel) {
-        if (scanFeatureConfig.isEnabled()) {
+        if (scanScreenFeatureConfig.isEnabled()) {
             launch {
                 val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
-                _scanAvailable.value = capabilities.find { it == JetpackCapability.SCAN } != null
+                _partialState.value = ScanAvailable(capabilities.find { it == JetpackCapability.SCAN } != null)
             }
         }
     }
@@ -261,6 +270,10 @@ class MySiteViewModel
 
     private fun onQuickStartCardMoreClick(id: String) {
         _onQuickStartMenuShown.postValue(Event(id))
+    }
+
+    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(task.toString())))
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -344,7 +357,8 @@ class MySiteViewModel
 
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
-        _currentAccountAvatarUrl.value = accountStore.account?.avatarUrl.orEmpty()
+        quickStartRepository.refreshIfNecessary()
+        _partialState.value = CurrentAvatarUrl(accountStore.account?.avatarUrl.orEmpty())
     }
 
     fun onSiteNameChosen(input: String) {
@@ -480,12 +494,46 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
+        quickStartRepository.clear()
         super.onCleared()
     }
 
     fun handleStoriesPhotoPickerResult(data: Intent) {
         selectedSiteRepository.getSelectedSite()?.let {
             siteStoriesHandler.handleStoriesResult(it, data, STORY_FROM_MY_SITE)
+        }
+    }
+
+    fun startQuickStart() {
+        quickStartRepository.startQuickStart()
+    }
+
+    data class UiState(
+        val currentAvatarUrl: String? = null,
+        val site: SiteModel? = null,
+        val showSiteIconProgressBar: Boolean = false,
+        val isDomainCreditAvailable: Boolean = false,
+        val scanAvailable: Boolean = false,
+        val quickStartCategories: List<QuickStartCategory> = listOf()
+    ) {
+        sealed class PartialState {
+            data class CurrentAvatarUrl(val url: String) : PartialState()
+            data class SelectedSite(val site: SiteModel?) : PartialState()
+            data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
+            data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
+            data class ScanAvailable(val scanAvailable: Boolean) : PartialState()
+            data class QuickStartModel(val quickStartCategories: List<QuickStartCategory>) : PartialState()
+        }
+
+        fun update(partialState: PartialState): UiState {
+            return when (partialState) {
+                is CurrentAvatarUrl -> this.copy(currentAvatarUrl = partialState.url)
+                is SelectedSite -> this.copy(site = partialState.site)
+                is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
+                is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
+                is ScanAvailable -> this.copy(scanAvailable = partialState.scanAvailable)
+                is QuickStartModel -> this.copy(quickStartCategories = partialState.quickStartCategories)
+            }
         }
     }
 
@@ -511,7 +559,6 @@ class MySiteViewModel
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
     }
 }
