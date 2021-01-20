@@ -103,7 +103,7 @@ class ScanViewModel @Inject constructor(
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
-                    fetchFixThreatsStatus()
+                    fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
                     updateActionButtons(isEnabled = true)
@@ -117,7 +117,7 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFixThreatsStatus() {
+    private fun fetchFixThreatsStatus(fixableThreatIds: List<Long>) {
         launch {
             @StringRes var messageRes: Int? = null
             var isFixing: Boolean
@@ -175,6 +175,10 @@ class ScanViewModel @Inject constructor(
 
     fun onScanStateRequested() {
         fetchScanState()
+    }
+
+    fun onFixStateRequested(threatId: Long) {
+        fetchFixThreatsStatus(listOf(threatId))
     }
 
     private fun updateActionButtons(isEnabled: Boolean) {

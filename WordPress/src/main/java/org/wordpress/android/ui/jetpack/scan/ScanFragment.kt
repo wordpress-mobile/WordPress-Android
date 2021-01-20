@@ -125,10 +125,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.SHOW_THREAT_DETAILS &&
-            data?.getBooleanExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, false) == true
-        ) {
-            viewModel.onScanStateRequested()
+        if (requestCode == RequestCodes.SHOW_THREAT_DETAILS) {
+            data?.let {
+                val threatId = it.getLongExtra(ThreatDetailsFragment.REQUEST_FIX_STATE, 0L)
+                if (threatId > 0L) {
+                    viewModel.onFixStateRequested(threatId)
+                } else if (it.getBooleanExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, false)) {
+                    viewModel.onScanStateRequested()
+                }
+            }
         }
     }
 
