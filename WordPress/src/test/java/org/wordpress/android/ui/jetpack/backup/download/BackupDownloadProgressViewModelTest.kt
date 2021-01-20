@@ -12,11 +12,11 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadListItemState.ProgressState
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressStateListItemBuilder
+import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel
 import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel.UiState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import java.util.Date
 
 @InternalCoroutinesApi
@@ -25,7 +25,7 @@ class BackupDownloadProgressViewModelTest : BaseUnitTest() {
     @Mock private lateinit var parentViewModel: BackupDownloadViewModel
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
-    private lateinit var stateListItemBuilder: BackupDownloadProgressStateListItemBuilder
+    private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
 
     private val backupDownloadState = BackupDownloadState(
             activityId = "activityId",
@@ -38,7 +38,7 @@ class BackupDownloadProgressViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        stateListItemBuilder = BackupDownloadProgressStateListItemBuilder()
+        stateListItemBuilder = BackupDownloadStateListItemBuilder()
         viewModel = BackupDownloadProgressViewModel(
                 backupDownloadStatusUseCase,
                 stateListItemBuilder,

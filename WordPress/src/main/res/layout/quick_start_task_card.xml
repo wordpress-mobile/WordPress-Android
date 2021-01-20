@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/task_card_view"
-    android:layout_width="@dimen/quick_start_task_card_width"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:checkable="true"
     android:clickable="true"
@@ -11,13 +11,13 @@
     app:cardCornerRadius="@dimen/quick_start_task_card_corner_radius"
     app:cardElevation="@dimen/quick_start_task_card_elevation"
     app:cardForegroundColor="@color/quick_start_task_card_foreground_selector"
+    app:contentPadding="@dimen/margin_medium"
     app:rippleColor="@color/quick_start_task_card_ripple_selector">
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="@dimen/quick_start_task_card_width"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="@dimen/margin_medium">
+        android:orientation="vertical">
 
         <com.google.android.material.imageview.ShapeableImageView
             android:id="@+id/task_card_illustration"

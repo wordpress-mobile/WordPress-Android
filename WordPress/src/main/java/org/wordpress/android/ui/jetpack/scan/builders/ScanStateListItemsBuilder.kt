@@ -68,14 +68,17 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
+        val scanProgress = buildProgressState(isIndeterminate = true, isVisible = false)
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
+        items.add(scanProgress)
         items.add(scanButton)
 
-        val fixableThreatsFound = threats.any { it.baseThreatModel.fixable != null }
-        buildFixAllButtonAction(onFixAllButtonClicked).takeIf { fixableThreatsFound }?.let { items.add(it) }
+        val fixableThreats = threats.map { it.baseThreatModel.fixable != null }
+        buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
+            ?.let { items.add(it) }
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
@@ -128,13 +131,16 @@ class ScanStateListItemsBuilder @Inject constructor(
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 
-    private fun buildProgressState(progress: Int) = ProgressState(
-        progress = progress,
-        label = UiStringResWithParams(
-            R.string.backup_download_progress_label, // TODO ashiagr replace label
-            listOf(UiStringText(progress.toString()))
+    private fun buildProgressState(progress: Int = 0, isIndeterminate: Boolean = false, isVisible: Boolean = true) =
+        ProgressState(
+            progress = progress,
+            label = UiStringResWithParams(
+                R.string.backup_download_progress_label, // TODO ashiagr replace label
+                listOf(UiStringText(progress.toString()))
+            ),
+            isIndeterminate = isIndeterminate,
+            isVisible = isVisible
         )
-    )
 
     private fun buildScanButtonAction(@StringRes titleRes: Int, onClick: () -> Unit) = ActionButtonState(
         text = UiStringRes(titleRes),
@@ -143,11 +149,20 @@ class ScanStateListItemsBuilder @Inject constructor(
         isSecondary = true
     )
 
-    private fun buildFixAllButtonAction(onFixAllButtonClicked: () -> Unit) = ActionButtonState(
-        text = UiStringRes(R.string.threats_fix_all),
-        onClick = onFixAllButtonClicked,
-        contentDescription = UiStringRes(R.string.threats_fix_all)
-    )
+    private fun buildFixAllButtonAction(
+        onFixAllButtonClicked: () -> Unit,
+        fixableThreatsCount: Int
+    ): ActionButtonState {
+        val title = UiStringResWithParams(
+            R.string.threats_fix_num_of_threats,
+            listOf(UiStringText("$fixableThreatsCount"))
+        )
+        return ActionButtonState(
+            text = title,
+            onClick = onFixAllButtonClicked,
+            contentDescription = title
+        )
+    }
 
     private fun buildLastScanDescription(timeInMs: Long): DescriptionState {
         val durationInMs = dateProvider.getCurrentDate().time - timeInMs

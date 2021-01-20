@@ -1,5 +1,9 @@
 16.6
 -----
+* [**] Reader: adds site filter capability to Followed P2s tab page. Now the sites listed in the filters are only those relevant to the page (Following/Followed P2s) [https://github.com/wordpress-mobile/WordPress-Android/pull/13766]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
+
  
 16.5
 -----
@@ -11,7 +15,7 @@
 * [**] Block Editor: Added move to top/bottom when long pressing on respective block movers (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2872)
 * [***] Activity Log: Adds support for Date Range and Activity Type filters. [https://github.com/wordpress-mobile/WordPress-Android/issues/13268]
 * [**] Page List: Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
-
+* [**] Block Editor: Fix crash in text-based blocks with custom font size [https://github.com/WordPress/gutenberg/pull/28121]
  
 16.4
 -----

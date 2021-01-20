@@ -63,7 +63,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
             val result = useCase.startScan(site).toList(mutableListOf())
 
-            verify(scanStore).addOrUpdateScanStateModelForSite(site, expectedScanStateModel)
+            verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
             assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
         }
 
