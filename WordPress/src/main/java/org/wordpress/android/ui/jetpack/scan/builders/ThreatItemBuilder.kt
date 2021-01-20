@@ -7,8 +7,10 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModific
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
@@ -103,9 +105,18 @@ class ThreatItemBuilder @Inject constructor() {
         }
     }
 
-    private fun buildThreatItemIcon(threatModel: ThreatModel): Int = R.drawable.ic_notice_outline_white_24dp
+    private fun buildThreatItemIcon(threatModel: ThreatModel): Int =
+            when (threatModel.baseThreatModel.status) {
+                FIXED -> R.drawable.ic_shield_white
+                IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
+            }
 
-    private fun buildThreatItemIconBackground(threatModel: ThreatModel): Int = R.drawable.bg_oval_error_50
+    private fun buildThreatItemIconBackground(threatModel: ThreatModel): Int =
+            when (threatModel.baseThreatModel.status) {
+                FIXED -> R.drawable.bg_oval_success_50
+                IGNORED -> R.drawable.bg_oval_neutral_30
+                IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
+            }
 
 
     /**
