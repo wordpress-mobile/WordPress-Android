@@ -35,7 +35,7 @@ class PreviewModeSelectorPopup(val context: Context, val button: View) : ListPop
                 val adapter = parent.adapter as PreviewModeMenuAdapter
                 val selected = adapter.getItem(position)
                 if (selected !== handler.getPreviewMode()) {
-                    handler.setPreviewMode(selected)
+                    handler.onPreviewModeChanged(selected)
                 }
             }
             show()

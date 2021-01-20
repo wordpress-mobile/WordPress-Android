@@ -89,8 +89,6 @@ class HomePagePickerViewModel @Inject constructor(
 
     override fun getPreviewMode() = previewMode.value ?: MOBILE
 
-    override fun setPreviewMode(mode: PreviewMode) = onThumbnailModeChanged(mode)
-
     override fun onCleared() {
         super.onCleared()
         fetchHomePageLayoutsJob.cancel()
@@ -284,7 +282,7 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
-    fun onThumbnailModeChanged(mode: PreviewMode) {
+    override fun onPreviewModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
             analyticsTracker.trackSiteDesignPreviewModeChanged(getPreviewMode().key)
             _previewMode.value = mode
