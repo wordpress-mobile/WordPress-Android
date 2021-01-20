@@ -6,9 +6,9 @@ import android.os.Parcelable
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
@@ -27,6 +27,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.ERROR
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState.ContentState.CompleteState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState.ContentState.DetailsState
@@ -64,7 +65,6 @@ import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
-import org.wordpress.android.viewmodel.SingleEventObservable
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
@@ -103,23 +103,11 @@ class BackupDownloadViewModel @Inject constructor(
 
     private lateinit var backupDownloadState: BackupDownloadState
 
-    val navigationTargetObservable: SingleEventObservable<NavigationTarget> by lazy {
-        SingleEventObservable(
-                Transformations.map(wizardManager.navigatorLiveData) {
-                    clearOldBackupDownloadState(it)
-                    WizardNavigationTarget(it, backupDownloadState)
-                }
-        )
-    }
-
     private val _wizardFinishedObservable = MutableLiveData<Event<BackupDownloadWizardState>>()
     val wizardFinishedObservable: LiveData<Event<BackupDownloadWizardState>> = _wizardFinishedObservable
 
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
-
-    private val _errorEvents = MediatorLiveData<Event<BackupDownloadErrorTypes>>()
-    val errorEvents: LiveData<Event<BackupDownloadErrorTypes>> = _errorEvents
 
     private val _navigationEvents = MediatorLiveData<Event<BackupDownloadNavigationEvents>>()
     val navigationEvents: LiveData<Event<BackupDownloadNavigationEvents>> = _navigationEvents
@@ -127,12 +115,21 @@ class BackupDownloadViewModel @Inject constructor(
     private val _uiState = MutableLiveData<BackupDownloadUiState>()
     val uiState: LiveData<BackupDownloadUiState> = _uiState
 
+    private val wizardObserver = Observer { data: BackupDownloadStep? ->
+        data?.let {
+            clearOldBackupDownloadState(it)
+            showStep(NavigationTarget(it, backupDownloadState))
+        }
+    }
+
     fun start(site: SiteModel, activityId: String, savedInstanceState: Bundle?) {
         if (isStarted) return
         isStarted = true
 
         this.site = site
         this.activityId = activityId
+
+        wizardManager.navigatorLiveData.observeForever(wizardObserver)
 
         if (savedInstanceState == null) {
             backupDownloadState = BackupDownloadState()
@@ -143,60 +140,6 @@ class BackupDownloadViewModel @Inject constructor(
             val currentStepIndex = savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP)
             wizardManager.setCurrentStepIndex(currentStepIndex)
         }
-    }
-
-    fun buildDetails() {
-        launch {
-            val availableItems = availableItemsProvider.getAvailableItems()
-            val activityLogModel = getActivityLogItemUseCase.get(activityId)
-            if (activityLogModel != null) {
-                _uiState.value = DetailsState(
-                        activityLogModel = activityLogModel,
-                        toolbarState = DetailsToolbarState(),
-                        items = stateListItemBuilder.buildDetailsListStateItems(
-                                availableItems = availableItems,
-                                published = activityLogModel.published,
-                                onCreateDownloadClick = this@BackupDownloadViewModel::onCreateDownloadClick,
-                                onCheckboxItemClicked = this@BackupDownloadViewModel::onCheckboxItemClicked
-                        ),
-                        type = StateType.DETAILS
-                )
-            } else {
-                _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
-            }
-        }
-    }
-
-    fun buildProgress() {
-        _uiState.value = ProgressState(
-                toolbarState = ProgressToolbarState(),
-                items = stateListItemBuilder.buildProgressListStateItems(
-                        progress = 0,
-                        published = backupDownloadState.published as Date,
-                        onNotifyMeClick = this@BackupDownloadViewModel::onNotifyMeClick
-                ),
-                type = StateType.PROGRESS
-        )
-        queryStatus()
-    }
-
-    fun buildComplete() {
-        _uiState.value = CompleteState(
-                toolbarState = CompleteToolbarState(),
-                items = stateListItemBuilder.buildCompleteListStateItems(
-                        published = backupDownloadState.published as Date,
-                        onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
-                        onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
-                ), type = StateType.COMPLETE)
-    }
-
-    fun buildError(errorType: BackupDownloadErrorTypes) {
-        _uiState.value = ErrorState(
-                toolbarState = ErrorToolbarState(),
-                errorType = errorType,
-                items = stateListItemBuilder.buildCompleteListStateErrorItems(
-                        onDoneClick = this@BackupDownloadViewModel::onDoneClick
-                ))
     }
 
     fun onBackPressed() {
@@ -217,15 +160,82 @@ class BackupDownloadViewModel @Inject constructor(
         }
     }
 
-    fun transitionToError(errorType: BackupDownloadErrorTypes) {
-        backupDownloadState = backupDownloadState.copy(errorType = errorType.id)
-        wizardManager.setCurrentStepIndex(BackupDownloadStep.indexForErrorTransition())
-        wizardManager.showNextStep()
-    }
-
     fun writeToBundle(outState: Bundle) {
         outState.putInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP, wizardManager.currentStep)
         outState.putParcelable(KEY_BACKUP_DOWNLOAD_STATE, backupDownloadState)
+    }
+
+    private fun buildDetails() {
+        launch {
+            val availableItems = availableItemsProvider.getAvailableItems()
+            val activityLogModel = getActivityLogItemUseCase.get(activityId)
+            if (activityLogModel != null) {
+                _uiState.value = DetailsState(
+                        activityLogModel = activityLogModel,
+                        toolbarState = DetailsToolbarState(),
+                        items = stateListItemBuilder.buildDetailsListStateItems(
+                                availableItems = availableItems,
+                                published = activityLogModel.published,
+                                onCreateDownloadClick = this@BackupDownloadViewModel::onCreateDownloadClick,
+                                onCheckboxItemClicked = this@BackupDownloadViewModel::onCheckboxItemClicked
+                        ),
+                        type = StateType.DETAILS
+                )
+            } else {
+                transitionToError(BackupDownloadErrorTypes.GenericFailure)
+            }
+        }
+    }
+
+    private fun buildProgress() {
+        _uiState.value = ProgressState(
+                toolbarState = ProgressToolbarState(),
+                items = stateListItemBuilder.buildProgressListStateItems(
+                        progress = 0,
+                        published = backupDownloadState.published as Date,
+                        onNotifyMeClick = this@BackupDownloadViewModel::onNotifyMeClick
+                ),
+                type = StateType.PROGRESS
+        )
+        queryStatus()
+    }
+
+    private fun buildComplete() {
+        _uiState.value = CompleteState(
+                toolbarState = CompleteToolbarState(),
+                items = stateListItemBuilder.buildCompleteListStateItems(
+                        published = backupDownloadState.published as Date,
+                        onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
+                        onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
+                ), type = StateType.COMPLETE)
+    }
+
+    private fun buildError(errorType: BackupDownloadErrorTypes) {
+        _uiState.value = ErrorState(
+                toolbarState = ErrorToolbarState(),
+                errorType = errorType,
+                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                        onDoneClick = this@BackupDownloadViewModel::onDoneClick
+                ))
+    }
+
+    private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
+        when (target.wizardStep) {
+            DETAILS -> buildDetails()
+            PROGRESS -> buildProgress()
+            COMPLETE -> buildComplete()
+            ERROR -> buildError(
+                    BackupDownloadErrorTypes.fromInt(
+                            target.wizardState.errorType ?: BackupDownloadErrorTypes.GenericFailure.id
+                    )
+            )
+        }
+    }
+
+    private fun transitionToError(errorType: BackupDownloadErrorTypes) {
+        backupDownloadState = backupDownloadState.copy(errorType = errorType.id)
+        wizardManager.setCurrentStepIndex(BackupDownloadStep.indexForErrorTransition())
+        wizardManager.showNextStep()
     }
 
     private fun getParams(): Pair<String?, BackupDownloadRequestTypes> {
@@ -290,10 +300,10 @@ class BackupDownloadViewModel @Inject constructor(
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
             is NetworkUnavailable -> {
-                _errorEvents.postValue(Event(BackupDownloadErrorTypes.NetworkUnavailable))
+                transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
             }
             is RemoteRequestFailure -> {
-                _errorEvents.postValue(Event(BackupDownloadErrorTypes.RemoteRequestFailure))
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             is Progress -> {
                 (_uiState.value as? ProgressState)?.let { content ->
@@ -355,7 +365,7 @@ class BackupDownloadViewModel @Inject constructor(
     private fun onCreateDownloadClick() {
         val (rewindId, types) = getParams()
         if (rewindId == null) {
-            _errorEvents.value = Event(BackupDownloadErrorTypes.GenericFailure)
+            transitionToError(BackupDownloadErrorTypes.GenericFailure)
         } else {
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(
@@ -382,6 +392,11 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun onDoneClick() {
         _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        wizardManager.navigatorLiveData.removeObserver(wizardObserver)
     }
 
     companion object {

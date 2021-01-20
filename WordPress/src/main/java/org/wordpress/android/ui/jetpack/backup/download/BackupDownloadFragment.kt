@@ -5,7 +5,6 @@ import android.app.Activity.RESULT_OK
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -20,10 +19,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.ERROR
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.PROGRESS
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
@@ -31,7 +26,6 @@ import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdap
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -43,13 +37,8 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     @Inject lateinit var imageManager: ImageManager
     private lateinit var viewModel: BackupDownloadViewModel
 
-    private var viewGroup: ViewGroup? = null
-    private var shortAnimationDuration: Int = 0
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        viewGroup = view.findViewById(R.id.main_layout)
-        shortAnimationDuration = resources.getInteger(android.R.integer.config_shortAnimTime)
 
         initDagger()
         initBackPressHandler()
@@ -119,12 +108,6 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
             }
         })
 
-        viewModel.errorEvents.observe(viewLifecycleOwner, {
-            it?.applyIfNotHandled {
-                viewModel.transitionToError(this)
-            }
-        })
-
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 when (this) {
@@ -135,12 +118,6 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
                         ActivityLauncher.downloadBackupDownloadFile(requireContext(), url)
                     }
                 }
-            }
-        })
-
-        viewModel.navigationTargetObservable.observe(viewLifecycleOwner, { target ->
-            target?.let {
-                showStep(target)
             }
         })
 
@@ -163,7 +140,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     }
 
     private fun showView(state: BackupDownloadUiState) {
-            ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(state.items)
+        ((recycler_view.adapter) as JetpackBackupRestoreAdapter).update(state.items)
     }
 
     private fun updateToolbar(toolbarState: ToolbarState) {
@@ -171,19 +148,6 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         activity?.supportActionBar?.let {
             it.title = getString(toolbarState.title)
             it.setHomeAsUpIndicator(toolbarState.icon)
-        }
-    }
-
-    private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
-        when (target.wizardStep) {
-            DETAILS -> viewModel.buildDetails()
-            PROGRESS -> viewModel.buildProgress()
-            COMPLETE -> viewModel.buildComplete()
-            ERROR -> viewModel.buildError(
-                    BackupDownloadErrorTypes.fromInt(
-                            target.wizardState.errorType ?: BackupDownloadErrorTypes.GenericFailure.id
-                    )
-            )
         }
     }
 
