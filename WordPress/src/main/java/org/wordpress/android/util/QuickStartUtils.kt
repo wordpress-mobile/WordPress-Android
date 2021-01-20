@@ -203,8 +203,13 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isQuickStartInProgress(quickStartStore: QuickStartStore): Boolean {
-            return !quickStartStore.getQuickStartCompleted(AppPrefs.getSelectedSite().toLong()) &&
-                    quickStartStore.hasDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE)
+            return isQuickStartInProgress(quickStartStore, AppPrefs.getSelectedSite())
+        }
+
+        @JvmStatic
+        fun isQuickStartInProgress(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
+            return !quickStartStore.getQuickStartCompleted(selectedSiteId.toLong()) &&
+                    quickStartStore.hasDoneTask(selectedSiteId.toLong(), CREATE_SITE)
         }
 
         @JvmStatic

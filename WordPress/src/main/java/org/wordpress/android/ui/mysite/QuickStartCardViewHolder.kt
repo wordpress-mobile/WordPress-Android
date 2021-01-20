@@ -20,8 +20,8 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ColorUtils
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.widgets.RecyclerItemDecoration
 

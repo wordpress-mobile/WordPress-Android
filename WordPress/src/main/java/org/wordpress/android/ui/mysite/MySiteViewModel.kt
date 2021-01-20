@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -49,14 +50,14 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.QuickStartModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ScanAvailable
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.ShowSiteIconProgressBar
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -137,7 +138,9 @@ class MySiteViewModel
     private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val scanScreenFeatureConfig: ScanScreenFeatureConfig
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
+    private val quickStartRepository: QuickStartRepository,
+    private val quickStartItemBuilder: QuickStartItemBuilder
 ) : ScopedViewModel(mainDispatcher) {
     private var currentSiteId: Int = 0
     private val _partialState = MediatorLiveData<PartialState>()
@@ -162,10 +165,18 @@ class MySiteViewModel
             selectedSiteRepository.showSiteIconProgressBar.distinct()
                     .mapNullable { ShowSiteIconProgressBar(it == true) },
             domainRegistrationHandler.isDomainCreditAvailable.distinct()
-                    .mapNullable { DomainCreditAvailable(it == true) }
+                    .mapNullable { DomainCreditAvailable(it == true) },
+            quickStartRepository.quickStartModel.mapNullable { QuickStartModel(it ?: listOf()) }
     ) { currentState, partialState ->
         currentState.update(partialState)
-    }.map { (currentAvatarUrl, site, showSiteIconProgressBar, isDomainCreditAvailable, scanAvailable) ->
+    }.map { (
+            currentAvatarUrl,
+            site,
+            showSiteIconProgressBar,
+            isDomainCreditAvailable,
+            scanAvailable,
+            quickStartCategories
+    ) ->
         site?.takeIf { site.id != currentSiteId }?.let {
             _partialState.value = ScanAvailable(false)
             updateScanItemState(site)
@@ -198,94 +209,13 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
             }
 
-            // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val customizeYourSiteSampleTaskCards = listOf(
-                    QuickStartTaskCard(
-                            id = "set_site_title",
-                            title = UiStringRes(R.string.quick_start_list_update_site_title_title),
-                            description = UiStringRes(R.string.quick_start_list_update_site_title_subtitle),
-                            illustration = R.drawable.img_illustration_quick_start_task_set_site_title,
-                            accentColor = R.color.green_20,
-                            done = false,
-                            onClick = ListItemInteraction.create("set_site_title", this::onQuickStartTaskCardClick)
-                    ),
-                    QuickStartTaskCard(
-                            id = "edit_site_icon",
-                            title = UiStringRes(R.string.quick_start_list_upload_icon_title),
-                            description = UiStringRes(R.string.quick_start_list_upload_icon_subtitle),
-                            illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
-                            accentColor = R.color.green_20,
-                            done = false,
-                            onClick = ListItemInteraction.create("edit_site_icon", this::onQuickStartTaskCardClick)
-                    ),
-                    QuickStartTaskCard(
-                            id = "edit_your_homepage",
-                            title = UiStringText("Edit your homepage"),
-                            description = UiStringText("Change, add, or remove content from your site's homepage."),
-                            illustration = R.drawable.img_illustration_quick_start_task_edit_your_homepage,
-                            accentColor = R.color.green_20,
-                            done = false,
-                            onClick = ListItemInteraction.create("edit_your_homepage", this::onQuickStartTaskCardClick)
-                    ),
-                    QuickStartTaskCard(
-                            id = "review_site_pages",
-                            title = UiStringText("Review site pages"),
-                            description = UiStringText("Change, add, or remove your site's pages."),
-                            illustration = R.drawable.img_illustration_quick_start_task_review_site_pages,
-                            accentColor = R.color.green_20,
-                            done = false,
-                            onClick = ListItemInteraction.create("review_site_pages", this::onQuickStartTaskCardClick)
-                    ),
-                    QuickStartTaskCard(
-                            id = "visit_your_site",
-                            title = UiStringRes(R.string.quick_start_list_view_site_title),
-                            description = UiStringRes(R.string.quick_start_list_view_site_subtitle),
-                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
-                            accentColor = R.color.green_20,
-                            done = false,
-                            onClick = ListItemInteraction.create("visit_your_site", this::onQuickStartTaskCardClick)
-                    ),
-                    QuickStartTaskCard(
-                            id = "sample_done_task",
-                            title = UiStringText("Sample done task"),
-                            description = UiStringText("This is a sample task that has been completed."),
-                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
-                            accentColor = R.color.green_20,
-                            done = true,
-                            onClick = ListItemInteraction.create("sample_done_task", this::onQuickStartTaskCardClick)
-                    )
-            )
-            val dummyTaskCards = (1..5).map {
-                QuickStartTaskCard(
-                        id = "dummy_task_$it",
-                        title = UiStringText("Dummy Task $it"),
-                        description = UiStringText(
-                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat."
-                        ),
-                        illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
-                        accentColor = R.color.orange_40,
-                        done = it % 2 == 0,
-                        onClick = ListItemInteraction.create("dummy_task_$it", this::onQuickStartTaskCardClick)
+            siteItems.addAll(quickStartCategories.map {
+                quickStartItemBuilder.build(
+                        it,
+                        this::onQuickStartCardMoreClick,
+                        this::onQuickStartTaskCardClick
                 )
-            }.sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id)).toList()
-            siteItems.add(
-                    QuickStartCard(
-                            "customize_your_site",
-                            UiStringText("Customize your Site"),
-                            customizeYourSiteSampleTaskCards,
-                            R.color.green_20,
-                            ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
-                    )
-            )
-            siteItems.add(
-                    QuickStartCard(
-                            "grow_your_audience",
-                            UiStringText("Grow your Audience"),
-                            dummyTaskCards,
-                            R.color.orange_40,
-                            ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
-                    )
-            )
+            })
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
@@ -342,8 +272,8 @@ class MySiteViewModel
         _onQuickStartMenuShown.postValue(Event(id))
     }
 
-    private fun onQuickStartTaskCardClick(id: String) {
-        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(id)))
+    private fun onQuickStartTaskCardClick(task: QuickStartTask) {
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(task.toString())))
     }
 
     private fun titleClick(selectedSite: SiteModel) {
@@ -427,6 +357,7 @@ class MySiteViewModel
 
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
+        quickStartRepository.refreshIfNecessary()
         _partialState.value = CurrentAvatarUrl(accountStore.account?.avatarUrl.orEmpty())
     }
 
@@ -563,6 +494,7 @@ class MySiteViewModel
         siteIconUploadHandler.clear()
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
+        quickStartRepository.clear()
         super.onCleared()
     }
 
@@ -572,12 +504,17 @@ class MySiteViewModel
         }
     }
 
+    fun startQuickStart() {
+        quickStartRepository.startQuickStart()
+    }
+
     data class UiState(
         val currentAvatarUrl: String? = null,
         val site: SiteModel? = null,
         val showSiteIconProgressBar: Boolean = false,
         val isDomainCreditAvailable: Boolean = false,
-        val scanAvailable: Boolean = false
+        val scanAvailable: Boolean = false,
+        val quickStartCategories: List<QuickStartCategory> = listOf()
     ) {
         sealed class PartialState {
             data class CurrentAvatarUrl(val url: String) : PartialState()
@@ -585,6 +522,7 @@ class MySiteViewModel
             data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
             data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
             data class ScanAvailable(val scanAvailable: Boolean) : PartialState()
+            data class QuickStartModel(val quickStartCategories: List<QuickStartCategory>) : PartialState()
         }
 
         fun update(partialState: PartialState): UiState {
@@ -594,6 +532,7 @@ class MySiteViewModel
                 is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
                 is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
                 is ScanAvailable -> this.copy(scanAvailable = partialState.scanAvailable)
+                is QuickStartModel -> this.copy(quickStartCategories = partialState.quickStartCategories)
             }
         }
     }
@@ -620,7 +559,6 @@ class MySiteViewModel
     companion object {
         const val TAG_ADD_SITE_ICON_DIALOG = "TAG_ADD_SITE_ICON_DIALOG"
         const val TAG_CHANGE_SITE_ICON_DIALOG = "TAG_CHANGE_SITE_ICON_DIALOG"
-        const val TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG = "TAG_EDIT_SITE_ICON_NOT_ALLOWED_DIALOG"
         const val SITE_NAME_CHANGE_CALLBACK_ID = 1
     }
 }
