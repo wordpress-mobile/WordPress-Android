@@ -81,7 +81,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
         val expectedIconItem = IconState(
-            icon = R.drawable.ic_scan_idle_threats_found,
+            icon = R.drawable.ic_shield_warning_white,
+            colorResId = R.color.error,
             contentDescription = UiStringRes(R.string.threat_details_icon)
         )
         val expectedThreatItemHeader = HeaderState(
