@@ -80,7 +80,7 @@ class StockMediaDataSource
                 .mapNotNull {
                     it.url?.let { url ->
                         MediaItem(
-                                StockMediaIdentifier(it.url, it.name, it.title),
+                                StockMediaIdentifier(it.url, it.name, it.title, it.caption),
                                 url,
                                 it.name,
                                 IMAGE,

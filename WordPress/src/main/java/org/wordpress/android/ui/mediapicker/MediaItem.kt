@@ -37,7 +37,8 @@ data class MediaItem(
         data class StockMediaIdentifier(
             val url: String?,
             val name: String?,
-            val title: String?
+            val title: String?,
+            val caption: String?
         ) : Identifier(STOCK_MEDIA_IDENTIFIER)
 
         data class GifMediaIdentifier(
@@ -62,6 +63,7 @@ data class MediaItem(
                     parcel.writeString(this.url)
                     parcel.writeString(this.name)
                     parcel.writeString(this.title)
+                    parcel.writeString(this.caption)
                 }
                 is GifMediaIdentifier -> {
                     parcel.writeParcelable(this.largeImageUri.uri, flags)
@@ -93,7 +95,7 @@ data class MediaItem(
                             LocalId(parcel.readInt())
                         }
                         STOCK_MEDIA_IDENTIFIER -> {
-                            StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString())
+                            StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString(), parcel.readString())
                         }
                         GIF_MEDIA_IDENTIFIER -> {
                             GifMediaIdentifier(
