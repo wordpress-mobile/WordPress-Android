@@ -95,7 +95,12 @@ data class MediaItem(
                             LocalId(parcel.readInt())
                         }
                         STOCK_MEDIA_IDENTIFIER -> {
-                            StockMediaIdentifier(parcel.readString(), parcel.readString(), parcel.readString(), parcel.readString())
+                            StockMediaIdentifier(
+                                    parcel.readString(),
+                                    parcel.readString(),
+                                    parcel.readString(),
+                                    parcel.readString()
+                            )
                         }
                         GIF_MEDIA_IDENTIFIER -> {
                             GifMediaIdentifier(
