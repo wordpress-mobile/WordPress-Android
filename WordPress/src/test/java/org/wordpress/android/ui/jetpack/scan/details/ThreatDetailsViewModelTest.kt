@@ -20,7 +20,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
@@ -225,17 +225,6 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given success response, when ignore threat is triggered, then success message is shown`() = test {
-        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
-        val observers = init()
-
-        triggerIgnoreThreatAction(observers)
-
-        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
-    }
-
-    @Test
     fun `given server unavailable, when ignore threat action is triggered, then ignore threat error msg is shown`() =
         test {
             whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
@@ -289,7 +278,8 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
             triggerIgnoreThreatAction(observers)
 
-            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedScanState)
+            assertThat(observers.navigation.last().peekContent())
+                .isEqualTo(ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message))
         }
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
