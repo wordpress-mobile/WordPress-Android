@@ -87,19 +87,17 @@ class ExperimentStoreTest {
         val defaultPlatform = CALYPSO
 
         private val successfulVariations = mapOf(
-                "experiment_one" to "control",
+                "experiment_one" to null,
                 "experiment_two" to "treatment",
-                "experiment_three" to null,
-                "experiment_four" to "other"
+                "experiment_three" to "other"
         )
 
         private val successfulModel = AssignmentsModel(successfulVariations, 3600, 1604964458273)
 
         const val successfulModelJson = "{\"variations\":{" +
-                "\"experiment_one\":\"control\"," +
+                "\"experiment_one\":null," +
                 "\"experiment_two\":\"treatment\"," +
-                "\"experiment_three\":null," +
-                "\"experiment_four\":\"other\"}," +
+                "\"experiment_three\":\"other\"}," +
                 "\"ttl\":3600," +
                 "\"fetchedAt\":1604964458273}"
 

@@ -1,6 +1,6 @@
 package org.wordpress.android.fluxc.model.experiments
 
-import org.wordpress.android.fluxc.model.experiments.Variation.Unknown
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
 import java.lang.System.currentTimeMillis
 import java.util.Date
 
@@ -19,7 +19,7 @@ data class Assignments(
 
     fun isStale(now: Date = Date()) = !now.before(expiresAt)
 
-    fun getVariationForExperiment(experiment: String) = variations[experiment] ?: Unknown
+    fun getVariationForExperiment(experiment: String) = variations[experiment] ?: Control
 
     companion object {
         fun fromModel(model: AssignmentsModel) = Assignments(
@@ -32,16 +32,12 @@ data class Assignments(
 
 sealed class Variation {
     object Control : Variation()
-    object Treatment : Variation()
-    object Unknown : Variation()
-    data class Other(val name: String) : Variation()
+    data class Treatment(val name: String) : Variation()
 
     companion object {
         fun fromName(name: String?) = when (name) {
-            "control" -> Control
-            "treatment" -> Treatment
-            null -> Unknown
-            else -> Other(name)
+            null -> Control
+            else -> Treatment(name)
         }
     }
 }
