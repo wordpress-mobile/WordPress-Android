@@ -20,7 +20,7 @@ class SiteInfoBlockBuilder
         iconClick: (SiteModel) -> Unit,
         urlClick: (SiteModel) -> Unit,
         switchSiteClick: (SiteModel) -> Unit,
-        activeTask: QuickStartTask?
+        showUpdateSiteTitleFocusPoint: Boolean
     ): SiteInfoBlock {
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
@@ -38,7 +38,7 @@ class SiteInfoBlockBuilder
                 blogTitle,
                 homeUrl,
                 siteIcon,
-                activeTask == UPDATE_SITE_TITLE,
+                showUpdateSiteTitleFocusPoint,
                 buildTitleClick(site, titleClick),
                 ListItemInteraction.create(site, iconClick),
                 ListItemInteraction.create(site, urlClick),

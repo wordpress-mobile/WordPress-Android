@@ -23,36 +23,25 @@ class SiteInfoBlockBuilderTest {
     }
 
     @Test
-    fun `shows quick start focus point when active task is update site`() {
-        val activeTask = UPDATE_SITE_TITLE
-
-        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(site, false, {}, {}, {}, {}, activeTask)
+    fun `shows quick start focus point when showUpdateSiteTitleFocusPoint is true`() {
+        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(site, false, {}, {}, {}, {},
+                showUpdateSiteTitleFocusPoint = true
+        )
 
         assertThat(buildSiteInfoBlock.showTitleFocusPoint).isTrue()
     }
 
     @Test
-    fun `hides quick start focus point when active task is different`() {
-        for (activeTask in QuickStartTask.values()) {
-            if (activeTask != UPDATE_SITE_TITLE) {
-                val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
-                        site,
-                        false,
-                        {},
-                        {},
-                        {},
-                        {},
-                        activeTask
-                )
-
-                assertThat(buildSiteInfoBlock.showTitleFocusPoint).isFalse()
-            }
-        }
-    }
-
-    @Test
-    fun `hides quick start focus point when active task is null`() {
-        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(site, false, {}, {}, {}, {}, null)
+    fun `hides quick start focus point when showUpdateSiteTitleFocusPoint is false`() {
+        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
+                site,
+                false,
+                {},
+                {},
+                {},
+                {},
+                showUpdateSiteTitleFocusPoint = false
+        )
 
         assertThat(buildSiteInfoBlock.showTitleFocusPoint).isFalse()
     }

@@ -27,6 +27,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -192,7 +193,7 @@ class MySiteViewModel
                             this::iconClick,
                             this::urlClick,
                             this::switchSiteClick,
-                            quickStartModel?.activeTask
+                            quickStartModel?.activeTask == UPDATE_SITE_TITLE
                     )
             )
             siteItems.add(
