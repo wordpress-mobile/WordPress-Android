@@ -26,6 +26,8 @@ class ThreatItemBuilder @Inject constructor() {
             isFixable = threatModel.baseThreatModel.fixable != null,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
+            icon = buildThreatItemIcon(threatModel),
+            iconBackground = buildThreatItemIconBackground(threatModel),
             onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
         )
 
@@ -100,6 +102,11 @@ class ThreatItemBuilder @Inject constructor() {
             }
         }
     }
+
+    private fun buildThreatItemIcon(threatModel: ThreatModel): Int = R.drawable.ic_notice_outline_white_24dp
+
+    private fun buildThreatItemIconBackground(threatModel: ThreatModel): Int = R.drawable.bg_oval_error_50
+
 
     /**
      * Uses regex to remove the whole path except of the file name

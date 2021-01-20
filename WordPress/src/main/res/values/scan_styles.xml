@@ -27,8 +27,6 @@
         <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
         <item name="android:importantForAccessibility">no</item>
         <item name="android:padding">@dimen/margin_medium</item>
-        <item name="android:background">@drawable/bg_oval_error_50</item>
-        <item name="android:src">@drawable/ic_notice_outline_white_24dp</item>
     </style>
 
     <style name="Scan.Threat.Header" parent="Scan.TextView">
