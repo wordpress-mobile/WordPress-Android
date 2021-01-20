@@ -1,6 +1,13 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.CHOSEN_DOMAIN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
 import javax.inject.Inject
@@ -37,8 +44,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SEGMENTS_SELECTED,
                 mapOf(
-                        "segment_name" to segmentName,
-                        "segment_id" to segmentId
+                        SEGMENT_NAME.key to segmentName,
+                        SEGMENT_ID.key to segmentId
                 )
         )
     }
@@ -51,8 +58,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_DOMAINS_SELECTED,
                 mapOf(
-                        "chosen_domain" to chosenDomain,
-                        "search_term" to searchTerm
+                        CHOSEN_DOMAIN.key to chosenDomain,
+                        SEARCH_TERM.key to searchTerm
                 )
         )
     }
@@ -63,7 +70,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         } else {
             tracker.track(
                     AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING,
-                    mapOf("template" to template)
+                    mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -74,7 +81,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         } else {
             tracker.track(
                     AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED,
-                    mapOf("template" to template)
+                    mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -85,7 +92,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         } else {
             tracker.track(
                     AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED,
-                    mapOf("template" to template)
+                    mapOf(TEMPLATE.key to template)
             )
         }
     }
@@ -102,7 +109,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
         } else {
-            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf("template" to template))
+            tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf(TEMPLATE.key to template))
         }
     }
 
@@ -127,8 +134,18 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_BACKGROUND_SERVICE_UPDATED, props)
     }
 
-    fun trackSiteDesignViewed() {
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED)
+    fun trackSiteDesignViewed(previewMode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED,
+                mapOf(THUMBNAIL_MODE.key to previewMode)
+        )
+    }
+
+    fun trackSiteDesignThumbnailModeTapped(previewMode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED,
+                mapOf(PREVIEW_MODE.key to previewMode)
+        )
     }
 
     fun trackSiteDesignSkipped() {
@@ -138,27 +155,44 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     fun trackSiteDesignSelected(template: String) {
         designSelectionSkipped = false
-        tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED, mapOf("template" to template))
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED,
+                mapOf(TEMPLATE.key to template)
+        )
     }
 
-    fun trackSiteDesignPreviewViewed(template: String) {
+    fun trackSiteDesignPreviewViewed(template: String, previewMode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED,
-                mapOf("template" to template)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
         )
     }
 
-    fun trackSiteDesignPreviewLoading(template: String) {
+    fun trackSiteDesignPreviewLoading(template: String, previewMode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING,
-                mapOf("template" to template)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
         )
     }
 
-    fun trackSiteDesignPreviewLoaded(template: String) {
+    fun trackSiteDesignPreviewLoaded(template: String, previewMode: String) {
         tracker.track(
                 AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED,
-                mapOf("template" to template)
+                mapOf(TEMPLATE.key to template, PREVIEW_MODE.key to previewMode)
+        )
+    }
+
+    fun trackSiteDesignPreviewModeTapped(previewMode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED,
+                mapOf(PREVIEW_MODE.key to previewMode)
+        )
+    }
+
+    fun trackSiteDesignPreviewModeChanged(previewMode: String) {
+        tracker.track(
+                AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED,
+                mapOf(PREVIEW_MODE.key to previewMode)
         )
     }
 }
