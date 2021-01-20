@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -119,11 +120,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `sets active task and shows sylized snackbar when not UPDATE_SITE_TITLE`() {
         initQuickStartInProgress()
-        val spannableString = mock<SpannableString>()
-        whenever(quickStartUtils.stylizeQuickStartPrompt(
-                eq(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL.shortMessagePrompt),
-                eq(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL.iconId)
-        )).thenReturn(spannableString)
+
+        val spannableString = initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
@@ -131,18 +129,44 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
     }
 
+    private fun initActiveTask(quickStartMySitePrompts: QuickStartMySitePrompts): SpannableString {
+        val spannableString = mock<SpannableString>()
+        whenever(
+                quickStartUtils.stylizeQuickStartPrompt(
+                        eq(quickStartMySitePrompts.shortMessagePrompt),
+                        eq(quickStartMySitePrompts.iconId)
+                )
+        ).thenReturn(spannableString)
+        return spannableString
+    }
+
     @Test
-    fun `completeTask marks task as done and refreshes model`() {
+    fun `completeTask marks current active task as done and refreshes model`() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        val task = UPDATE_SITE_TITLE
+        val task = PUBLISH_POST
         assertThat(models).isEmpty()
+        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
+        quickStartRepository.setActiveTask(task)
 
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
         assertThat(models.last().activeTask).isNull()
         assertThat(models.last().categories).isNotEmpty()
+    }
+
+    @Test
+    fun `completeTask does not marks active task as done if it is different`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        assertThat(models).isEmpty()
+        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+
+        verifyZeroInteractions(quickStartStore)
     }
 
     private fun initQuickStartInProgress() {

@@ -113,7 +113,6 @@ class QuickStartRepository
     }
 
     fun completeTask(task: QuickStartTask) {
-        // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
             // Uncomment this code to mark a task as not completed for testing purposes
@@ -121,8 +120,11 @@ class QuickStartRepository
 //                quickStartStore.setDoneTask(site.id.toLong(), task, false)
 //                return
 //            }
-            quickStartStore.setDoneTask(site.id.toLong(), task, true)
+            if (task != activeTask.value) return
             activeTask.value = null
+            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
+            // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
+            quickStartStore.setDoneTask(site.id.toLong(), task, true)
             refresh.value = false
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
