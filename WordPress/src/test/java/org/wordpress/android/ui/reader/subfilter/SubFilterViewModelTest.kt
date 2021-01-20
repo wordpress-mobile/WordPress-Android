@@ -351,7 +351,7 @@ class SubFilterViewModelTest {
     }
 
     @Test
-    fun `onSubfilterSelected requests newer posts`() {
+    fun `onSubfilterSelected requests newer posts when new filter is selected`() {
         val filter: SubfilterListItem = mock()
         var readerModeInfo: ReaderModeInfo? = null
 
@@ -366,7 +366,7 @@ class SubFilterViewModelTest {
     }
 
     @Test
-    fun `onSubfilterReselected does not request newer posts`() {
+    fun `onSubfilterReselected does not request newer posts when already selected filter is re-selected`() {
         var readerModeInfo: ReaderModeInfo? = null
 
         viewModel.readerModeInfo.observeForever { readerModeInfo = it }
