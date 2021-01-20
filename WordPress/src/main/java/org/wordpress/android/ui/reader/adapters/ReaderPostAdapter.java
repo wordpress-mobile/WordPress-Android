@@ -322,6 +322,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                             new HashMap<String, String>() {
                                 {
                                     put("tag", slugForTracking);
+                                    put("source", "unknown");
                                 }
                             });
                 } else {

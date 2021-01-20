@@ -349,6 +349,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                             new HashMap<String, String>() {
                                 {
                                     put("tag", mLastAddedTagName);
+                                    put("source", "unknown");
                                 }
                             });
                 } else {

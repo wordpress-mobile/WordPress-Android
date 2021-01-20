@@ -199,7 +199,8 @@ class ReaderInterestsViewModel @Inject constructor(
             trackerWrapper.track(
                     READER_TAG_FOLLOWED,
                     mapOf(
-                            "tag" to it.tagSlug
+                            "tag" to it.tagSlug,
+                            "source" to "discover"
                     )
             )
         }
