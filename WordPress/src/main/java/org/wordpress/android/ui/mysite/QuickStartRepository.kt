@@ -7,6 +7,9 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -15,6 +18,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
+import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -23,6 +28,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.merge
 import org.wordpress.android.util.mergeAsyncNotNull
 import org.wordpress.android.viewmodel.Event
@@ -37,7 +43,9 @@ class QuickStartRepository
     private val quickStartStore: QuickStartStore,
     private val quickStartUtils: QuickStartUtilsWrapper,
     private val selectedSiteRepository: SelectedSiteRepository,
-    private val resourceProvider: ResourceProvider
+    private val resourceProvider: ResourceProvider,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    private val dispatcher: Dispatcher
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -102,6 +110,26 @@ class QuickStartRepository
                     )
                 }
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+    }
+
+    fun completeTask(task: QuickStartTask) {
+        // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
+        selectedSiteRepository.getSelectedSite()?.let { site ->
+            // TODO Remove this before the feature is done
+            // Uncomment this code to mark a task as not completed for testing purposes
+//            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) {
+//                quickStartStore.setDoneTask(site.id.toLong(), task, false)
+//                return
+//            }
+            quickStartStore.setDoneTask(site.id.toLong(), task, true)
+            activeTask.value = null
+            refresh.value = false
+            if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
+                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
+                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
+            }
+        }
     }
 
     fun clear() {

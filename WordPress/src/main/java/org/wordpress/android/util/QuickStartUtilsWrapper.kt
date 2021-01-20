@@ -1,8 +1,10 @@
 package org.wordpress.android.util
 
 import android.text.Spannable
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -23,5 +25,9 @@ class QuickStartUtilsWrapper
         iconId: Int = QuickStartUtils.ICON_NOT_SET
     ): Spannable {
         return QuickStartUtils.stylizeQuickStartPrompt(resourceProvider, messageId, iconId)
+    }
+
+    fun isEveryQuickStartTaskDone(siteId: Int): Boolean {
+        return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteId)
     }
 }

@@ -13,6 +13,7 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
@@ -30,6 +31,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TU
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.QuickStartUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 class QuickStartRepositoryTest : BaseUnitTest() {
@@ -37,6 +39,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var quickStartUtils: QuickStartUtilsWrapper
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
     @Mock lateinit var resourceProvider: ResourceProvider
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
+    @Mock lateinit var dispatcher: Dispatcher
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var selectedSite: MutableLiveData<SiteModel>
@@ -54,7 +58,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 quickStartStore,
                 quickStartUtils,
                 selectedSiteRepository,
-                resourceProvider
+                resourceProvider,
+                analyticsTrackerWrapper,
+                dispatcher
         )
         models = mutableListOf()
         quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
@@ -123,6 +129,20 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
+    }
+
+    @Test
+    fun `completeTask marks task as done and refreshes model`() {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        val task = UPDATE_SITE_TITLE
+        assertThat(models).isEmpty()
+
+        quickStartRepository.completeTask(task)
+
+        verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
+        assertThat(models.last().activeTask).isNull()
+        assertThat(models.last().categories).isNotEmpty()
     }
 
     private fun initQuickStartInProgress() {
