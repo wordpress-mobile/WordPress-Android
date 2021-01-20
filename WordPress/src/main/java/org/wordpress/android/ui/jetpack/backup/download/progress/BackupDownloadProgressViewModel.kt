@@ -20,6 +20,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.ToolbarState.ProgressToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
@@ -34,7 +35,7 @@ import javax.inject.Named
 
 class BackupDownloadProgressViewModel @Inject constructor(
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
-    private val stateListItemBuilder: BackupDownloadProgressStateListItemBuilder,
+    private val stateListItemBuilder: BackupDownloadStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {

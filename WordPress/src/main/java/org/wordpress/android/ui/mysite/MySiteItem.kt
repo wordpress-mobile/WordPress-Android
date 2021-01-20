@@ -49,19 +49,22 @@ sealed class MySiteItem(val type: Type) {
 
     data class QuickStartCard(
         val id: String,
-        val title: String,
-        val tasks: List<DummyTask>,
+        val title: UiString,
+        val taskCards: List<QuickStartTaskCard>,
         @ColorRes val accentColor: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
-        val doneTasks = tasks.filter { it.done }
-        val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
+        val doneTaskCards = taskCards.filter { it.done }
+        val progress = if (taskCards.isNotEmpty()) (doneTaskCards.size * 100f / taskCards.size).roundToInt() else 0
 
-        data class DummyTask(
+        data class QuickStartTaskCard(
             val id: String,
-            val title: String,
-            val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
-            val done: Boolean = false
+            val title: UiString,
+            val description: UiString,
+            @DrawableRes val illustration: Int,
+            @ColorRes val accentColor: Int,
+            val done: Boolean = false,
+            val onClick: ListItemInteraction
         )
     }
 

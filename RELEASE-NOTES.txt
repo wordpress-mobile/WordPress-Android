@@ -2,6 +2,9 @@
 -----
 * [**] Reader: adds site filter capability to Followed P2s tab page. Now the sites listed in the filters are only those relevant to the page (Following/Followed P2s) [https://github.com/wordpress-mobile/WordPress-Android/pull/13766]
 * [**] Reader: adds a capability to mark individual posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13811]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
+
 
 16.5
 -----
