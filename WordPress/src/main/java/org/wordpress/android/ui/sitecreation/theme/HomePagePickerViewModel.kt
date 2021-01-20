@@ -286,7 +286,9 @@ class HomePagePickerViewModel @Inject constructor(
     fun onThumbnailModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
             _previewMode.value = mode
-            loadLayouts()
+            if (uiState.value is UiState.Content) {
+                loadLayouts()
+            }
         }
     }
 
