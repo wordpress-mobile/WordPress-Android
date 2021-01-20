@@ -37,12 +37,12 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     /**
      * Convenience method for toggling seen status based on the current state in local DB
      */
-    suspend fun toggleSeenStatus(post: ReaderPost) = flow {
+    suspend fun toggleSeenStatus(post: ReaderPost, actionSource: ReaderPostSeenToggleSource) = flow {
         val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
         val status = if (isAskingToMarkAsSeen) {
-            markPostAsSeen(post, READER_POST_CARD)
+            markPostAsSeen(post, actionSource)
         } else {
-            markPostAsUnseen(post, READER_POST_CARD)
+            markPostAsUnseen(post, actionSource)
         }
 
         emit(status)

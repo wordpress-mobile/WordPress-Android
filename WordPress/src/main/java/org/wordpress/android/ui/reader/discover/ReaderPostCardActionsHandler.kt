@@ -60,6 +60,8 @@ import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_CARD
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_DETAILS
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -135,7 +137,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 REBLOG -> handleReblogClicked(post)
                 COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
                 REPORT_POST -> handleReportPostClicked(post)
-                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post)
+                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
             }
         }
     }
@@ -174,8 +176,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost) {
-        seenStatusToggleUseCase.toggleSeenStatus(post).flowOn(bgDispatcher).collect { state ->
+    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, fromPostDetails: Boolean) {
+        val actionSource = if (fromPostDetails) {
+            READER_POST_DETAILS
+        } else {
+            READER_POST_CARD
+        }
+        seenStatusToggleUseCase.toggleSeenStatus(post, actionSource).flowOn(bgDispatcher).collect { state ->
             when (state) {
                 is PostSeenState.Failure -> {
                     state.error?.let {

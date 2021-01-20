@@ -25,6 +25,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.Po
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_CARD
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_DETAILS
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider
 import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.SeenStatusToggleCallResult.Success
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -66,7 +67,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     fun `toggleSeenStatus emits expected state when user not logged in`() = test {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
         val dummyPost = createDummyReaderPost()
-        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost)
+        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
         assertThat(flow.toList()).isEqualTo(listOf(UserNotAuthenticated))
     }
@@ -76,7 +77,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val dummyPost = createDummyReaderPost()
-        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost)
+        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(Failure(UiStringRes(R.string.error_network_connection)))
@@ -86,7 +87,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     @Test
     fun `toggleSeenStatus emits expected state when trying to change status of unsupported post`() = test {
         val dummyPost = createDummyReaderPost(isSeen = true, feedItemId = 0)
-        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost)
+        val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(Failure(UiStringRes(R.string.reader_error_changing_seen_status_of_unsupported_post)))
@@ -132,8 +133,8 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
         whenever(readerPostTableWrapper.isPostSeen(unseenPost)).thenReturn(false)
 
-        val markAsSeenFlow = seenStatusToggleUseCase.toggleSeenStatus(unseenPost)
-        val markAsUnseenFlow = seenStatusToggleUseCase.toggleSeenStatus(seenPost)
+        val markAsSeenFlow = seenStatusToggleUseCase.toggleSeenStatus(unseenPost, READER_POST_DETAILS)
+        val markAsUnseenFlow = seenStatusToggleUseCase.toggleSeenStatus(seenPost, READER_POST_CARD)
 
         assertThat(markAsSeenFlow.toList()).isEqualTo(
                 listOf(
@@ -151,7 +152,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         // analytics check
         verify(analyticsUtilsWrapper, times(1)).trackWithReaderPostDetails(
                 AnalyticsTracker.Stat.READER_POST_MARKED_AS_SEEN, unseenPost, mapOf(
-                ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_CARD.toString()
+                ReaderSeenStatusToggleUseCase.ACTION_SOURCE_PARAM_NAME to READER_POST_DETAILS.toString()
         )
         )
 
