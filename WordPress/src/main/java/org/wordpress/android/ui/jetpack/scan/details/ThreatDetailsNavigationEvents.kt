@@ -15,4 +15,6 @@ sealed class ThreatDetailsNavigationEvents {
     }
 
     object ShowUpdatedScanState : ThreatDetailsNavigationEvents()
+
+    data class ShowUpdatedFixState(val threatId: Long) : ThreatDetailsNavigationEvents()
 }

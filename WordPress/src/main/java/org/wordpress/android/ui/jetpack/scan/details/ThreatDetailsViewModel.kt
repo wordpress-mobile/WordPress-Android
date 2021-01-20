@@ -16,11 +16,14 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -37,6 +40,7 @@ private const val DELAY_MILLIS = 2000L
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
     private val ignoreThreatUseCase: IgnoreThreatUseCase,
+    private val fixThreatsUseCase: FixThreatsUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
@@ -72,7 +76,24 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun fixThreat() { // TODO ashiagr to be implemented
+    private fun fixThreat() {
+        viewModelScope.launch {
+            val threatId = threatModel.baseThreatModel.id
+            updateThreatActionButtons(isEnabled = false)
+            when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = listOf(threatId))) {
+                is FixThreatsState.Success -> {
+                    updateNavigationEvent(ShowUpdatedFixState(threatId))
+                }
+                is FixThreatsState.Failure.NetworkUnavailable -> {
+                    updateThreatActionButtons(isEnabled = true)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                }
+                is FixThreatsState.Failure.RemoteRequestFailure -> {
+                    updateThreatActionButtons(isEnabled = true)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_error_message))
+                }
+            }
+        }
     }
 
     private fun ignoreThreat() {
