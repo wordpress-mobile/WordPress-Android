@@ -15,7 +15,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
@@ -102,7 +102,7 @@ class ThreatDetailsViewModel @Inject constructor(
 
     private fun onIgnoreThreatButtonClicked() {
         updateNavigationEvent(
-            OpenIgnoreThreatActionDialog(
+            OpenThreatActionDialog(
                 title = UiStringRes(R.string.threat_ignore),
                 message = UiStringText(
                     htmlMessageUtils

@@ -13,7 +13,7 @@ import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
@@ -69,7 +69,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
             {
                 it.applyIfNotHandled {
                     when (this) {
-                        is OpenIgnoreThreatActionDialog -> showThreatActionDialog(this)
+                        is OpenThreatActionDialog -> showThreatActionDialog(this)
 
                         is ShowUpdatedScanState -> {
                             val intent = Intent().putExtra(REQUEST_SCAN_STATE, true)
@@ -95,7 +95,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         snackbar.show()
     }
 
-    private fun showThreatActionDialog(holder: OpenIgnoreThreatActionDialog) {
+    private fun showThreatActionDialog(holder: OpenThreatActionDialog) {
         threatActionDialog = MaterialAlertDialogBuilder(requireActivity())
             .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
             .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))

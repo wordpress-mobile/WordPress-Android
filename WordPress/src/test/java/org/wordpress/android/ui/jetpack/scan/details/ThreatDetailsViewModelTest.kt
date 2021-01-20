@@ -16,7 +16,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -92,7 +92,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
                 .first().onClick.invoke()
 
             assertThat(observers.navigation.last().peekContent())
-                .isInstanceOf(OpenIgnoreThreatActionDialog::class.java)
+                .isInstanceOf(OpenThreatActionDialog::class.java)
         }
 
     @Test
@@ -103,7 +103,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
                 .first().onClick.invoke()
 
-            val confirmationDialog = observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
             with(confirmationDialog) {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_ignore))
                 assertThat(message).isEqualTo(
@@ -189,7 +189,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
-        (observers.navigation.last().peekContent() as OpenIgnoreThreatActionDialog).okButtonAction.invoke()
+        (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
     }
 
     private fun createDummyThreatDetailsListItems(
