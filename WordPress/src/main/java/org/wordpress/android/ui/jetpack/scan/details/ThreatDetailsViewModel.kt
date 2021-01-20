@@ -6,9 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -17,7 +15,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
@@ -100,13 +98,9 @@ class ThreatDetailsViewModel @Inject constructor(
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
-                is IgnoreThreatState.Success -> {
-                    // TODO ashiagr consider showing success message in the scan state screen
-                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
-
-                    withContext(bgDispatcher) { delay(DELAY_MILLIS) }
-                    updateNavigationEvent(ShowUpdatedScanState)
-                }
+                is IgnoreThreatState.Success -> updateNavigationEvent(
+                    ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
+                )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
                     updateThreatActionButtons(isEnabled = true)

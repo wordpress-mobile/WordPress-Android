@@ -15,7 +15,7 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -72,8 +72,8 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                     when (this) {
                         is OpenThreatActionDialog -> showThreatActionDialog(this)
 
-                        is ShowUpdatedScanState -> {
-                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, true)
+                        is ShowUpdatedScanStateWithMessage -> {
+                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, this.messageRes)
                             activity?.setResult(Activity.RESULT_OK, intent)
                             activity?.finish()
                         }

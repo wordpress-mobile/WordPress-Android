@@ -173,7 +173,8 @@ class ScanViewModel @Inject constructor(
         _navigationEvents.value = Event(ShowThreatDetails(threatId))
     }
 
-    fun onScanStateRequested() {
+    fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
+        updateSnackbarMessageEvent(UiStringRes(messageRes))
         fetchScanState()
     }
 

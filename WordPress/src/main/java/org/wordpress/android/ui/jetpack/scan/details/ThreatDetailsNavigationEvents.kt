@@ -14,7 +14,7 @@ sealed class ThreatDetailsNavigationEvents {
         @StringRes val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }
 
-    object ShowUpdatedScanState : ThreatDetailsNavigationEvents()
+    data class ShowUpdatedScanStateWithMessage(@StringRes val messageRes: Int) : ThreatDetailsNavigationEvents()
 
     data class ShowUpdatedFixState(val threatId: Long) : ThreatDetailsNavigationEvents()
 }
