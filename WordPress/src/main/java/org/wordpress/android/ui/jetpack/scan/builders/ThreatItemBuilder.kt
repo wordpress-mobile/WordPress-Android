@@ -115,7 +115,7 @@ class ThreatItemBuilder @Inject constructor() {
             when (threatModel.baseThreatModel.status) {
                 FIXED -> R.drawable.bg_oval_success_50
                 IGNORED -> R.drawable.bg_oval_neutral_30
-                IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
+                UNKNOWN, CURRENT -> R.drawable.bg_oval_error_50
             }
 
 
