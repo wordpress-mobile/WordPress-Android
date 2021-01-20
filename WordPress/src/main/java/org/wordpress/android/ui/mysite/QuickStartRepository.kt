@@ -58,7 +58,8 @@ class QuickStartRepository
     private val quickStartCategories: LiveData<List<QuickStartCategory>> = mergeAsyncNotNull(
             this,
             refresh,
-            selectedSiteRepository.selectedSiteChange
+            selectedSiteRepository.selectedSiteChange,
+            distinct = false
     ) { _, site ->
         val customizeCategory = buildQuickStartCategory(site, CUSTOMIZE)
         val growCategory = buildQuickStartCategory(site, GROW)
@@ -118,6 +119,7 @@ class QuickStartRepository
             // Uncomment this code to mark a task as not completed for testing purposes
 //            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) {
 //                quickStartStore.setDoneTask(site.id.toLong(), task, false)
+//                refresh.value = false
 //                return
 //            }
             if (task != activeTask.value) return

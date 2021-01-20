@@ -67,16 +67,17 @@ fun <T, U, V> mergeAsyncNotNull(
     scope: CoroutineScope,
     sourceA: LiveData<T>,
     sourceB: LiveData<U>,
+    distinct: Boolean = true,
     merger: suspend (T, U) -> V
 ): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
-        if (mediator.value?.first != it) {
+        if (!distinct || mediator.value?.first != it) {
             mediator.value = it to mediator.value?.second
         }
     }
     mediator.addSource(sourceB) {
-        if (mediator.value?.second != it) {
+        if (!distinct || mediator.value?.second != it) {
             mediator.value = mediator.value?.first to it
         }
     }
