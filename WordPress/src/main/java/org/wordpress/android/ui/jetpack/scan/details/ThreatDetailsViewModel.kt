@@ -44,8 +44,8 @@ class ThreatDetailsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private lateinit var site: SiteModel
+    private lateinit var threatModel: ThreatModel
     private var isStarted = false
-    private var threatId: Long = 0
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -61,22 +61,21 @@ class ThreatDetailsViewModel @Inject constructor(
             return
         }
         isStarted = true
-        this.threatId = threatId
         site = requireNotNull(selectedSiteRepository.getSelectedSite())
-        getData()
+        getData(threatId)
     }
 
-    private fun getData() {
+    private fun getData(threatId: Long) {
         viewModelScope.launch {
-            val model = getThreatModelUseCase.get(threatId)
-            model?.let { updateUiState(buildContentUiState(it)) }
+            threatModel = requireNotNull(getThreatModelUseCase.get(threatId))
+            updateUiState(buildContentUiState(threatModel))
         }
     }
 
     private fun ignoreThreat() {
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
-            when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
+            when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
                 is IgnoreThreatState.Success -> {
                     // TODO ashiagr consider showing success message in the scan state screen
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
