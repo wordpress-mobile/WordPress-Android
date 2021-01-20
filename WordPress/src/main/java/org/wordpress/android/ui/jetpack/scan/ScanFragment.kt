@@ -131,7 +131,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 val messageRes = it.getIntExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, 0)
                 if (threatId > 0L) {
                     viewModel.onFixStateRequested(threatId)
-                } else {
+                } else if (messageRes > 0) {
                     viewModel.onScanStateRequestedWithMessage(messageRes)
                 }
             }
