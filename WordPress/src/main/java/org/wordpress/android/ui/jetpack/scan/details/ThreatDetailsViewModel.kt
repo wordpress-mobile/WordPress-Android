@@ -6,21 +6,22 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.usecases.GetThreatModelUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -37,6 +38,7 @@ private const val DELAY_MILLIS = 2000L
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
     private val ignoreThreatUseCase: IgnoreThreatUseCase,
+    private val fixThreatsUseCase: FixThreatsUseCase,
     private val selectedSiteRepository: SelectedSiteRepository,
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
@@ -44,8 +46,8 @@ class ThreatDetailsViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private lateinit var site: SiteModel
+    private lateinit var threatModel: ThreatModel
     private var isStarted = false
-    private var threatId: Long = 0
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -61,29 +63,44 @@ class ThreatDetailsViewModel @Inject constructor(
             return
         }
         isStarted = true
-        this.threatId = threatId
         site = requireNotNull(selectedSiteRepository.getSelectedSite())
-        getData()
+        getData(threatId)
     }
 
-    private fun getData() {
+    private fun getData(threatId: Long) {
         viewModelScope.launch {
-            val model = getThreatModelUseCase.get(threatId)
-            model?.let { updateUiState(buildContentUiState(it)) }
+            threatModel = requireNotNull(getThreatModelUseCase.get(threatId))
+            updateUiState(buildContentUiState(threatModel))
+        }
+    }
+
+    private fun fixThreat() {
+        viewModelScope.launch {
+            val threatId = threatModel.baseThreatModel.id
+            updateThreatActionButtons(isEnabled = false)
+            when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = listOf(threatId))) {
+                is FixThreatsState.Success -> {
+                    updateNavigationEvent(ShowUpdatedFixState(threatId))
+                }
+                is FixThreatsState.Failure.NetworkUnavailable -> {
+                    updateThreatActionButtons(isEnabled = true)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+                }
+                is FixThreatsState.Failure.RemoteRequestFailure -> {
+                    updateThreatActionButtons(isEnabled = true)
+                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_error_message))
+                }
+            }
         }
     }
 
     private fun ignoreThreat() {
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
-            when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatId)) {
-                is IgnoreThreatState.Success -> {
-                    // TODO ashiagr consider showing success message in the scan state screen
-                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_success_message))
-
-                    withContext(bgDispatcher) { delay(DELAY_MILLIS) }
-                    updateNavigationEvent(ShowUpdatedScanState)
-                }
+            when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
+                is IgnoreThreatState.Success -> updateNavigationEvent(
+                    ShowUpdatedScanStateWithMessage(R.string.threat_ignore_success_message)
+                )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
                     updateThreatActionButtons(isEnabled = true)
@@ -98,12 +115,20 @@ class ThreatDetailsViewModel @Inject constructor(
         }
     }
 
-    private fun onFixThreatButtonClicked() { // TODO ashiagr to be implemented
+    private fun onFixThreatButtonClicked() {
+        val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
+        updateNavigationEvent(
+            OpenThreatActionDialog(
+                title = UiStringRes(R.string.threat_fix),
+                message = builder.buildFixableThreatDescription(fixable).text,
+                okButtonAction = this@ThreatDetailsViewModel::fixThreat
+            )
+        )
     }
 
     private fun onIgnoreThreatButtonClicked() {
         updateNavigationEvent(
-            OpenIgnoreThreatActionDialog(
+            OpenThreatActionDialog(
                 title = UiStringRes(R.string.threat_ignore),
                 message = UiStringText(
                     htmlMessageUtils

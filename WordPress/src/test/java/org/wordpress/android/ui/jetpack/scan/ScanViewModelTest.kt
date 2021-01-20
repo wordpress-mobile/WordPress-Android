@@ -177,7 +177,7 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when request to fix threats succeeds, then fix started message is shown`() = test {
+    fun `given success response, when fix threats is triggered, then fix started message is shown`() = test {
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
         val observers = init()
 
@@ -188,15 +188,17 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when request to fix threats fails, then fix threats error message is shown`() = test {
-        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
-        val observers = init()
+    fun `given invalid response, when fix threats action is triggered, then fix threats error message is shown`() =
+        test {
+            whenever(fixThreatsUseCase.fixThreats(any(), any()))
+                .thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+            val observers = init()
 
-        triggerFixThreatsAction(observers)
+            triggerFixThreatsAction(observers)
 
-        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
-    }
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_error_message)))
+        }
 
     @Test
     fun `when ok button on fix threats action confirmation dialog is clicked, then action buttons are disabled`() =
@@ -211,7 +213,7 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when request to fix threats fails, then action buttons are enabled`() = test {
+    fun `given invalid response, when fix threats action is triggered, then action buttons are enabled`() = test {
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
         val observers = init()
 
@@ -223,11 +225,8 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threats are fixed successfully, when threats fix status is checked, then success message is shown`() =
+    fun `given threats are fixed, when threats fix status is checked, then success message is shown`() =
         test {
-            val expectedSuccessSnackBarMsg = SnackbarMessageHolder(
-                UiStringRes(R.string.threat_fix_all_status_success_message)
-            )
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
@@ -236,12 +235,13 @@ class ScanViewModelTest : BaseUnitTest() {
             fetchFixThreatsStatus(observers)
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-            assertThat(snackBarMsg).isEqualTo(expectedSuccessSnackBarMsg)
+            assertThat(snackBarMsg).isEqualTo(
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message))
+            )
         }
 
     @Test
     fun `given no network, when threats fix status is checked, then network error message is shown`() = test {
-        val expectedFailureSnackBarMsg = SnackbarMessageHolder(UiStringRes(R.string.error_generic_network))
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.NetworkUnavailable)
         )
@@ -250,14 +250,11 @@ class ScanViewModelTest : BaseUnitTest() {
         fetchFixThreatsStatus(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
     }
 
     @Test
     fun `given server is unavailable, when threats fix status is checked, then error message is shown`() = test {
-        val expectedFailureSnackBarMsg = SnackbarMessageHolder(
-            UiStringRes(R.string.threat_fix_all_status_error_message)
-        )
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.RemoteRequestFailure)
         )
@@ -266,15 +263,14 @@ class ScanViewModelTest : BaseUnitTest() {
         fetchFixThreatsStatus(observers)
 
         val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-        assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+        assertThat(snackBarMsg).isEqualTo(
+            SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_error_message))
+        )
     }
 
     @Test
     fun `given a threat not fixed, when threats fix status checked, then some threats not fixed error message shown`() =
         test {
-            val expectedFailureSnackBarMsg = SnackbarMessageHolder(
-                UiStringRes(R.string.threat_fix_all_status_some_threats_not_fixed_error_message)
-            )
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Failure.FixFailure)
@@ -284,7 +280,9 @@ class ScanViewModelTest : BaseUnitTest() {
             triggerFixThreatsAction(observers)
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
-            assertThat(snackBarMsg).isEqualTo(expectedFailureSnackBarMsg)
+            assertThat(snackBarMsg).isEqualTo(
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_some_threats_not_fixed_error_message))
+            )
         }
 
     @Test
@@ -319,6 +317,42 @@ class ScanViewModelTest : BaseUnitTest() {
                 .filter { it.isIndeterminate && it.isVisible }
 
             assertThat(indeterminateProgressBars.isEmpty()).isTrue
+        }
+
+    @Test
+    fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
+        test {
+            whenever(site.siteId).thenReturn(1L)
+            viewModel.start(site)
+
+            viewModel.onFixStateRequested(threatId = 11L)
+
+            verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(
+                remoteSiteId = 1L,
+                fixableThreatIds = listOf(11L)
+            )
+        }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then snackbar msg is shown`() =
+        test {
+            val observers = init()
+
+            viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg)
+                .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_ignore_success_message)))
+        }
+
+    @Test
+    fun `given activity result request scan state data, when scan state is requested, then scan state is fetched`() =
+        test {
+            viewModel.start(site)
+
+            viewModel.onScanStateRequestedWithMessage(R.string.threat_ignore_success_message)
+
+            verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
         }
 
     private fun triggerFixThreatsAction(observers: Observers) {
