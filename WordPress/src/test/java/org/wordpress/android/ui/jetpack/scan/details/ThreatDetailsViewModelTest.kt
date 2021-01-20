@@ -16,8 +16,10 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
@@ -26,6 +28,7 @@ import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCas
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Failure
 import org.wordpress.android.ui.jetpack.scan.details.usecases.IgnoreThreatUseCase.IgnoreThreatState.Success
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
@@ -77,6 +80,9 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
                 it.getArgument(ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION)
             )
         }
+        whenever(builder.buildFixableThreatDescription(any())).thenAnswer {
+            DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
+        }
     }
 
     @Test
@@ -95,7 +101,95 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when ignore threat button is clicked, then open ignore threat action dialog action is triggered`() =
+    fun `when fix threat button is clicked, then open threat action dialog action is triggered for fix threat`() =
+        test {
+            val observers = init()
+
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
+
+            assertThat(observers.navigation.last().peekContent()).isInstanceOf(OpenThreatActionDialog::class.java)
+        }
+
+    @Test
+    fun `when open threat action dialog is triggered for fix threat, then fix threat confirmation dialog is shown`() =
+        test {
+            val observers = init()
+
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
+
+            val confirmationDialog = observers.navigation.last().peekContent() as OpenThreatActionDialog
+            with(confirmationDialog) {
+                assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix))
+                assertThat(message).isEqualTo(
+                    builder.buildFixableThreatDescription(requireNotNull(fakeThreatModel.baseThreatModel.fixable)).text
+                )
+                assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
+                assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
+            }
+        }
+
+    @Test
+    fun `given server unavailable, when fix threat action is triggered, then fix threat error msg is shown`() =
+        test {
+            whenever(fixThreatsUseCase.fixThreats(any(), any()))
+                .thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+            val observers = init()
+
+            triggerFixThreatAction(observers)
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_error_message)))
+        }
+
+    @Test
+    fun `given no network, when fix threat action is triggered, then network error msg is shown`() = test {
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.NetworkUnavailable)
+        val observers = init()
+
+        triggerFixThreatAction(observers)
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+    }
+
+    @Test
+    fun `when ok button on fix action confirmation dialog is clicked, then action buttons are disabled`() = test {
+        val observers = init()
+
+        triggerFixThreatAction(observers)
+
+        val contentItems = (observers.uiStates.last() as Content).items
+        val ignoreThreatButton = contentItems.filterIsInstance<ActionButtonState>().first()
+        assertThat(ignoreThreatButton.isEnabled).isEqualTo(false)
+    }
+
+    @Test
+    fun `given failure response, when fix threat action is triggered, then action buttons are enabled`() = test {
+        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
+        val observers = init()
+
+        triggerFixThreatAction(observers)
+
+        val contentItems = (observers.uiStates.last() as Content).items
+        val ignoreThreatButton = contentItems.filterIsInstance<ActionButtonState>().first()
+        assertThat(ignoreThreatButton.isEnabled).isEqualTo(true)
+    }
+
+    @Test
+    fun `given success response, when fix threat action is triggered, then update fix state action is triggered`() =
+        test {
+            whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+            val observers = init()
+
+            triggerFixThreatAction(observers)
+
+            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedFixState(threatId))
+        }
+
+    @Test
+    fun `when ignore threat button is clicked, then open threat action dialog action is triggered for ignore threat`() =
         test {
             val observers = init()
 
@@ -106,7 +200,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when open ignore threat action dialog action is triggered, then ignore threat confirmation dialog is shown`() =
+    fun `when open threat action dialog triggered for ignore threat, then ignore threat confirmation dialog shown`() =
         test {
             val observers = init()
 
@@ -131,7 +225,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when ignore threat is successful, then success message is shown`() = test {
+    fun `given success response, when ignore threat is triggered, then success message is shown`() = test {
         whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
         val observers = init()
 
@@ -176,7 +270,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when threat action fails, then action buttons are enabled`() = test {
+    fun `given failure response, when threat action fails, then action buttons are enabled`() = test {
         whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Failure.RemoteRequestFailure)
         val observers = init()
 
@@ -188,17 +282,23 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when threat action is successful, then action to update scan state is triggered`() = test {
-        whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
-        val observers = init()
+    fun `given success response, when ignore threat action is triggered, then update scan state action is triggered`() =
+        test {
+            whenever(ignoreThreatUseCase.ignoreThreat(any(), any())).thenReturn(Success)
+            val observers = init()
 
-        triggerIgnoreThreatAction(observers)
+            triggerIgnoreThreatAction(observers)
 
-        assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedScanState)
-    }
+            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowUpdatedScanState)
+        }
 
     private fun triggerIgnoreThreatAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+        (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
+    }
+
+    private fun triggerFixThreatAction(observers: Observers) {
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenThreatActionDialog).okButtonAction.invoke()
     }
 
