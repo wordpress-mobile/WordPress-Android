@@ -50,7 +50,7 @@ import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.DummyTask
+import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiState.PartialState.DomainCreditAvailable
@@ -93,6 +93,7 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Neg
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
@@ -198,14 +199,80 @@ class MySiteViewModel
             }
 
             // TODO We should extract the code block below to a proper builder class once we implement the actual logic
-            val dummyTasks = (1..5).map { DummyTask("dummy_task_$it", "Dummy Task $it", done = it > 4) }.toList()
-            val dummyTasksCompleted = dummyTasks.mapIndexed { i, task -> task.copy(done = i % 2 == 0) }
-                    .sortedWith(compareBy(DummyTask::done).thenBy(DummyTask::id))
+            val customizeYourSiteSampleTaskCards = listOf(
+                    QuickStartTaskCard(
+                            id = "set_site_title",
+                            title = UiStringRes(R.string.quick_start_list_update_site_title_title),
+                            description = UiStringRes(R.string.quick_start_list_update_site_title_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_set_site_title,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("set_site_title", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "edit_site_icon",
+                            title = UiStringRes(R.string.quick_start_list_upload_icon_title),
+                            description = UiStringRes(R.string.quick_start_list_upload_icon_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("edit_site_icon", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "edit_your_homepage",
+                            title = UiStringText("Edit your homepage"),
+                            description = UiStringText("Change, add, or remove content from your site's homepage."),
+                            illustration = R.drawable.img_illustration_quick_start_task_edit_your_homepage,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("edit_your_homepage", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "review_site_pages",
+                            title = UiStringText("Review site pages"),
+                            description = UiStringText("Change, add, or remove your site's pages."),
+                            illustration = R.drawable.img_illustration_quick_start_task_review_site_pages,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("review_site_pages", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "visit_your_site",
+                            title = UiStringRes(R.string.quick_start_list_view_site_title),
+                            description = UiStringRes(R.string.quick_start_list_view_site_subtitle),
+                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
+                            accentColor = R.color.green_20,
+                            done = false,
+                            onClick = ListItemInteraction.create("visit_your_site", this::onQuickStartTaskCardClick)
+                    ),
+                    QuickStartTaskCard(
+                            id = "sample_done_task",
+                            title = UiStringText("Sample done task"),
+                            description = UiStringText("This is a sample task that has been completed."),
+                            illustration = R.drawable.img_illustration_quick_start_task_visit_your_site,
+                            accentColor = R.color.green_20,
+                            done = true,
+                            onClick = ListItemInteraction.create("sample_done_task", this::onQuickStartTaskCardClick)
+                    )
+            )
+            val dummyTaskCards = (1..5).map {
+                QuickStartTaskCard(
+                        id = "dummy_task_$it",
+                        title = UiStringText("Dummy Task $it"),
+                        description = UiStringText(
+                                "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat."
+                        ),
+                        illustration = R.drawable.img_illustration_quick_start_task_edit_site_icon,
+                        accentColor = R.color.orange_40,
+                        done = it % 2 == 0,
+                        onClick = ListItemInteraction.create("dummy_task_$it", this::onQuickStartTaskCardClick)
+                )
+            }.sortedWith(compareBy(QuickStartTaskCard::done).thenBy(QuickStartTaskCard::id)).toList()
             siteItems.add(
                     QuickStartCard(
                             "customize_your_site",
-                            "Customize your Site",
-                            dummyTasks,
+                            UiStringText("Customize your Site"),
+                            customizeYourSiteSampleTaskCards,
                             R.color.green_20,
                             ListItemInteraction.create("customize_your_site", this::onQuickStartCardMoreClick)
                     )
@@ -213,8 +280,8 @@ class MySiteViewModel
             siteItems.add(
                     QuickStartCard(
                             "grow_your_audience",
-                            "Grow your Audience",
-                            dummyTasksCompleted,
+                            UiStringText("Grow your Audience"),
+                            dummyTaskCards,
                             R.color.orange_40,
                             ListItemInteraction.create("grow_your_audience", this::onQuickStartCardMoreClick)
                     )
@@ -273,6 +340,10 @@ class MySiteViewModel
 
     private fun onQuickStartCardMoreClick(id: String) {
         _onQuickStartMenuShown.postValue(Event(id))
+    }
+
+    private fun onQuickStartTaskCardClick(id: String) {
+        _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringText(id)))
     }
 
     private fun titleClick(selectedSite: SiteModel) {

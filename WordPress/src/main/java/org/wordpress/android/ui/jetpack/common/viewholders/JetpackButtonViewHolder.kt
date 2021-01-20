@@ -14,6 +14,7 @@ class JetpackButtonViewHolder(
     override fun onBind(itemUiState: JetpackListItemState) {
         val buttonState = itemUiState as ActionButtonState
         uiHelpers.setTextOrHide(button, buttonState.text)
+        button.isEnabled = buttonState.isEnabled
         button.setOnClickListener { buttonState.onClick.invoke() }
     }
 }
