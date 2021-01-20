@@ -1076,6 +1076,11 @@
     <string name="scan_in_minutes_ago">%s minutes ago</string>
     <string name="scan_in_few_seconds">in a few seconds</string>
 
+    <!-- scan history -->
+    <string name="scan_history_all_threats_tab">All</string>
+    <string name="scan_history_fixed_threats_tab">Fixed</string>
+    <string name="scan_history_ignored_threats_tab">Ignored</string>
+
     <!-- threats -->
     <string name="threats_fix_num_of_threats">Fix %s threats</string>
     <string name="threats_found">Threats found</string>
