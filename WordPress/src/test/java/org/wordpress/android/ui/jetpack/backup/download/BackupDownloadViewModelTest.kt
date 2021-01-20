@@ -19,7 +19,6 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes.GenericFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState.ContentState.CompleteState
@@ -45,6 +44,7 @@ import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
+import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
@@ -109,91 +109,13 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given buildDetails is invoked, then uiStates is DetailsState `() = test {
+    fun `given view model, when started, then state reflect details`() = test {
         val uiStates = initObservers().uiStates
 
         startViewModel()
-
-        viewModel.buildDetails()
 
         assertThat(uiStates.last()).isInstanceOf(DetailsState::class.java)
-    }
-
-    @Test
-    fun `given buildDetails is invoked, then toolbar is DetailsToolbarState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModel()
-
-        viewModel.buildDetails()
-
         assertThat(uiStates.last().toolbarState).isInstanceOf(DetailsToolbarState::class.java)
-    }
-
-    @Test
-    fun `given buildProgress is invoked, then uiStates is ProgressState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForProgress()
-
-        viewModel.buildProgress()
-
-        assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
-    }
-
-    @Test
-    fun `given buildProgress is invoked, then toolbar is ProgressToolbarState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForProgress()
-
-        viewModel.buildProgress()
-
-        assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
-    }
-
-    @Test
-    fun `given buildComplete is invoked, then uiStates is CompleteState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForComplete()
-
-        viewModel.buildComplete()
-
-        assertThat(uiStates.last()).isInstanceOf(CompleteState::class.java)
-    }
-
-    @Test
-    fun `given buildComplete is invoked, then toolbar is CompleteToolbarState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForComplete()
-
-        viewModel.buildComplete()
-
-        assertThat(uiStates.last().toolbarState).isInstanceOf(CompleteToolbarState::class.java)
-    }
-
-    @Test
-    fun `given buildError is invoked, then uiStates is ErrorState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForError()
-
-        viewModel.buildError(GenericFailure)
-
-        assertThat(uiStates.last()).isInstanceOf(ErrorState::class.java)
-    }
-
-    @Test
-    fun `given buildError is invoked, then toolbar is ErrorToolbarState `() = test {
-        val uiStates = initObservers().uiStates
-
-        startViewModelForError()
-
-        viewModel.buildError(GenericFailure)
-
-        assertThat(uiStates.last().toolbarState).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test
@@ -203,12 +125,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         startViewModel()
 
         clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
 
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
@@ -223,17 +139,31 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         startViewModel()
 
         clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
 
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
         ((uiStates.last().items).first { it is CheckboxState } as CheckboxState).onClick.invoke()
 
         assertThat(((uiStates.last().items).first { it is CheckboxState } as CheckboxState).checked).isTrue
+    }
+
+    @Test
+    fun `given details step, when request create download success, then state reflects progress`() = test {
+        whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(postBackupDownloadSuccess)
+
+        val uiStates = initObservers().uiStates
+
+        startViewModel()
+        clearInvocations(wizardManager)
+        whenever(wizardManager.showNextStep()).then {
+            wizardManagerNavigatorLiveData.value = BackupDownloadStep.PROGRESS
+            Unit
+        }
+
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
+
+        assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
+        assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
     }
 
     @Test
@@ -245,13 +175,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val msgs = initObservers().snackbarMessages
 
         startViewModel()
-        clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
@@ -267,13 +190,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val msgs = initObservers().snackbarMessages
 
         startViewModel()
-        clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
@@ -289,35 +205,10 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val msgs = initObservers().snackbarMessages
 
         startViewModel()
-        clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.backup_download_another_download_running))
-    }
-
-    @Test
-    fun `given details step, when activityLogModel is null, then error is posted `() = test {
-        whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(null)
-
-        val errorEvents = initObservers().errorEvents
-
-        startViewModel()
-        clearInvocations(wizardManager)
-        whenever(wizardManager.showNextStep()).then {
-            wizardManagerNavigatorLiveData.value = BackupDownloadStep.DETAILS
-            Unit
-        }
-
-        viewModel.buildDetails()
-
-        assertThat(errorEvents.last()).isInstanceOf(BackupDownloadErrorTypes::class.java)
     }
 
     @Test
@@ -348,7 +239,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Test
     fun `given in complete step, when onBackPressed, then invokes wizard finished with BackupDownloadCompleted`() {
         val wizardFinishedObserver = initObservers().wizardFinishedObserver
-        startViewModelForComplete()
+        startViewModelForComplete(backupDownloadState = backupDownloadState.copy(url = "www.wordpress.com"))
         clearInvocations(wizardManager)
 
         whenever(wizardManager.currentStep).thenReturn(BackupDownloadStep.COMPLETE.id)
@@ -377,16 +268,70 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given progress step, when started, then the progress is set to zero `() = test {
+    fun `given progress step, when started, then the progress is set to zero`() = test {
+        whenever(postBackupDownloadUseCase.postBackupDownloadRequest(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(postBackupDownloadSuccess)
+
         val uiStates = initObservers().uiStates
 
-        startViewModelForProgress()
+        startViewModel()
+        clearInvocations(wizardManager)
+        whenever(wizardManager.showNextStep()).then {
+            wizardManagerNavigatorLiveData.value = BackupDownloadStep.PROGRESS
+            Unit
+        }
 
-        viewModel.buildProgress()
+        ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
         assertThat(((uiStates.last().items)
                 .first { it is JetpackListItemState.ProgressState } as JetpackListItemState.ProgressState).progress)
                 .isEqualTo(0)
+    }
+
+    @Test
+    fun `given showStep for details is invoked, then state reflects details`() = test {
+        val uiStates = initObservers().uiStates
+
+        startViewModel()
+        clearInvocations(wizardManager)
+
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.DETAILS, backupDownloadState))
+
+        assertThat(uiStates.last()).isInstanceOf(DetailsState::class.java)
+        assertThat(uiStates.last().toolbarState).isInstanceOf(DetailsToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for progress is invoked, then state reflects progress`() = test {
+        val uiStates = initObservers().uiStates
+
+        startViewModelForProgress()
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.PROGRESS, backupDownloadState))
+
+        assertThat(uiStates.last()).isInstanceOf(ProgressState::class.java)
+        assertThat(uiStates.last().toolbarState).isInstanceOf(ProgressToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for complete is invoked, then state reflects complete`() = test {
+        val uiStates = initObservers().uiStates
+
+        startViewModelForComplete(backupDownloadState = backupDownloadState.copy(url = "www.wordpress.com"))
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.COMPLETE, backupDownloadState))
+
+        assertThat(uiStates.last()).isInstanceOf(CompleteState::class.java)
+        assertThat(uiStates.last().toolbarState).isInstanceOf(CompleteToolbarState::class.java)
+    }
+
+    @Test
+    fun `given showStep for error is invoked, then state reflects error`() = test {
+        val uiStates = initObservers().uiStates
+
+        startViewModelForError()
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.ERROR, backupDownloadState))
+
+        assertThat(uiStates.last()).isInstanceOf(ErrorState::class.java)
+        assertThat(uiStates.last().toolbarState).isInstanceOf(ErrorToolbarState::class.java)
     }
 
     @Test
@@ -396,9 +341,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val url = "www.google.com"
 
         startViewModelForComplete(backupDownloadState = backupDownloadState.copy(url = url))
-        whenever(site.url).thenReturn(url)
-
-        viewModel.buildComplete()
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.COMPLETE, backupDownloadState))
 
         (uiStates.last().items)
                 .filterIsInstance<ActionButtonState>()
@@ -415,10 +358,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val url = "www.google.com"
 
         startViewModelForComplete(backupDownloadState = backupDownloadState.copy(url = url))
-
-        startViewModelForComplete()
-
-        viewModel.buildComplete()
+        viewModel.showStep(WizardNavigationTarget(BackupDownloadStep.COMPLETE, backupDownloadState))
 
         (uiStates.last().items)
                 .filterIsInstance<ActionButtonState>()
@@ -444,7 +384,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         whenever(savedInstanceState.getInt(KEY_BACKUP_DOWNLOAD_CURRENT_STEP))
                 .thenReturn(BackupDownloadStep.COMPLETE.id)
         whenever(savedInstanceState.getParcelable<BackupDownloadState>(KEY_BACKUP_DOWNLOAD_STATE))
-                .thenReturn(backupDownloadState ?: this.backupDownloadState)
+                .thenReturn(backupDownloadState)
         startViewModel(savedInstanceState)
     }
 
@@ -463,9 +403,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         val snackbarMsgs = mutableListOf<SnackbarMessageHolder>()
         viewModel.snackbarEvents.observeForever { snackbarMsgs.add(it.peekContent()) }
 
-        val errorEvents = mutableListOf<BackupDownloadErrorTypes>()
-        viewModel.errorEvents.observeForever { errorEvents.add(it.peekContent()) }
-
         val navigationEvents = mutableListOf<BackupDownloadNavigationEvents>()
         viewModel.navigationEvents.observeForever { navigationEvents.add(it.peekContent()) }
 
@@ -475,7 +412,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
         return Observers(
                 wizardFinishedObserver,
                 snackbarMsgs,
-                errorEvents,
                 navigationEvents,
                 uiStates
         )
@@ -484,7 +420,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     private data class Observers(
         val wizardFinishedObserver: List<BackupDownloadWizardState>,
         val snackbarMessages: List<SnackbarMessageHolder>,
-        val errorEvents: List<BackupDownloadErrorTypes>,
         val navigationEvents: List<BackupDownloadNavigationEvents>,
         val uiStates: List<BackupDownloadUiState>
     )
