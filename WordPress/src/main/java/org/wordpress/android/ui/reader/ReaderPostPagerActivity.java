@@ -59,6 +59,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
+import org.wordpress.android.ui.reader.utils.ReaderPostSeenStatusWrapper;
 
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
@@ -130,6 +131,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject Dispatcher mDispatcher;
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
+    @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -597,6 +599,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     private void trackPost(long blogId, long postId) {
         // bump the page view
         ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
+
+        ReaderPost currentPost = ReaderPostTable.getBlogPost(blogId, postId, true);
+        if (currentPost != null) {
+            mPostSeenStatusWrapper.markPostAsSeenSilently(currentPost);
+        }
 
         // analytics tracking
         AnalyticsUtils.trackWithReaderPostDetails(

@@ -135,5 +135,6 @@ enum class ReaderPostCardActionType {
     BOOKMARK,
     REBLOG,
     COMMENTS,
-    REPORT_POST
+    REPORT_POST,
+    TOGGLE_SEEN_STATUS
 }
