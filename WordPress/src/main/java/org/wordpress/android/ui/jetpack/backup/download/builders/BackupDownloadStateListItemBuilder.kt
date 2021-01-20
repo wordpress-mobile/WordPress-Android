@@ -34,7 +34,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
     ): List<JetpackListItemState> {
         val items = mutableListOf(
                 buildIconState(
-                        R.drawable.ic_get_app_24dp,
+                        R.drawable.ic_get_app_white_24dp,
                         R.string.backup_download_details_icon_content_description,
                         R.color.success_50),
                 buildHeaderState(R.string.backup_download_details_header),
@@ -65,7 +65,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
     ): List<JetpackListItemState> {
         return mutableListOf(
                 buildIconState(
-                        R.drawable.ic_get_app_24dp,
+                        R.drawable.ic_get_app_white_24dp,
                         R.string.backup_download_progress_icon_content_description,
                         R.color.success_50),
                 buildHeaderState(R.string.backup_download_progress_header),
@@ -86,7 +86,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
     ): List<JetpackListItemState> {
         return listOf(
                 buildIconState(
-                        R.drawable.ic_get_app_24dp,
+                        R.drawable.ic_cloud_done_white_24dp,
                         R.string.backup_download_complete_icon_content_description,
                         R.color.success_50),
                 buildHeaderState(R.string.backup_download_complete_header),
@@ -105,7 +105,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
 
     fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
             buildIconState(
-                    R.drawable.ic_get_app_24dp,
+                    R.drawable.ic_notice_white_24dp,
                     R.string.backup_download_complete_failed_icon_content_description,
                     R.color.error_50),
             buildDescriptionState(R.string.backup_download_complete_failed_description),
