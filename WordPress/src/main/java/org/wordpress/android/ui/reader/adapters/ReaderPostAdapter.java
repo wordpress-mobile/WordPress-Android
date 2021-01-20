@@ -319,7 +319,11 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 if (isAskingToFollow) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                            new HashMap<String, String>() {
+                                {
+                                    put("tag", slugForTracking);
+                                }
+                            });
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
                         new HashMap<String, String>() { { put("tag", slugForTracking); }});

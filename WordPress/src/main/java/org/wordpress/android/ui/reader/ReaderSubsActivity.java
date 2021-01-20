@@ -346,7 +346,11 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            new HashMap<String, String>() { { put("tag", mLastAddedTagName); }});
+                            new HashMap<String, String>() {
+                                {
+                                    put("tag", mLastAddedTagName);
+                                }
+                            });
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
