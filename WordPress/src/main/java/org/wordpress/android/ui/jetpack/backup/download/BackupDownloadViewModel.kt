@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpack.backup.download
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
+import androidx.annotation.VisibleForTesting
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
@@ -219,7 +220,8 @@ class BackupDownloadViewModel @Inject constructor(
                 ))
     }
 
-    private fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    fun showStep(target: WizardNavigationTarget<BackupDownloadStep, BackupDownloadState>) {
         when (target.wizardStep) {
             DETAILS -> buildDetails()
             PROGRESS -> buildProgress()
