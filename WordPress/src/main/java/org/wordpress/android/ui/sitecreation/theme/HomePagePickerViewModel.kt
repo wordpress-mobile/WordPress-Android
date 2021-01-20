@@ -108,6 +108,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     private fun fetchLayouts() {
+        if (_uiState.value === UiState.Loading) return
         updateUiState(UiState.Loading)
         launch {
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
