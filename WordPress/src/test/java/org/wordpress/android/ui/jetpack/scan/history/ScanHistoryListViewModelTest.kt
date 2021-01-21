@@ -43,18 +43,15 @@ class ScanHistoryListViewModelTest {
     @Before
     fun setUp() = test {
         viewModel = ScanHistoryListViewModel(scanThreatItemBuilder, TEST_DISPATCHER)
-        whenever(scanHistoryViewModel.threats).thenReturn(
-                MutableLiveData(
-                        listOf(
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.IGNORED)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
-                                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
-                        )
-                )
+        val threats = listOf(
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.IGNORED)),
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
+                GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
         )
+        whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
     }
 
     @Test
