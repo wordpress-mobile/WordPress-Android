@@ -254,7 +254,7 @@ class SubFilterViewModel @Inject constructor(
 
                 _readerModeInfo.value = (ReaderModeInfo(
                         null,
-                        ReaderPostListType.BLOG_PREVIEW,
+                        ReaderPostListType.TAG_FOLLOWED,
                         currentBlogId,
                         currentFeedId,
                         requestNewerPosts,
