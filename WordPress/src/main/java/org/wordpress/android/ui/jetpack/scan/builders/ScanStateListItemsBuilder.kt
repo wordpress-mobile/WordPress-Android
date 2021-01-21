@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
@@ -64,7 +65,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_scan_idle_threats_found)
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
@@ -94,7 +95,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_scan_idle_threats_not_found)
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_40)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
         val scanDescription = scanStateModel.mostRecentStatus?.startDate?.time?.let {
             buildLastScanDescription(it)
@@ -112,7 +113,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildScanningStateItems(progress: Int): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_scan_scanning)
+        val scanIcon = buildScanIcon(R.drawable.ic_scan_scanning, null)
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
@@ -126,8 +127,9 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
-    private fun buildScanIcon(@DrawableRes icon: Int) = IconState(
+    private fun buildScanIcon(@DrawableRes icon: Int, @ColorRes color: Int?) = IconState(
         icon = icon,
+        colorResId = color,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 

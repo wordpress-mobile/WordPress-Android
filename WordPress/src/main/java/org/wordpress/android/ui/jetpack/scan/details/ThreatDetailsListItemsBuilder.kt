@@ -121,7 +121,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     }
 
     private fun buildThreatDetailsIcon() = IconState(
-        icon = R.drawable.ic_scan_idle_threats_found,
+        icon = R.drawable.ic_shield_warning_white,
+        colorResId = R.color.error,
         contentDescription = UiStringRes(R.string.threat_details_icon)
     )
 
