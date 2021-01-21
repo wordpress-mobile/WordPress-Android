@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
@@ -23,6 +24,8 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val SKELETON_LOADING_ITEM_COUNT = 10
 
 class ScanHistoryListViewModel @Inject constructor(
     private val scanThreatItemBuilder: ThreatItemBuilder,
@@ -39,6 +42,7 @@ class ScanHistoryListViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
         this.site = site
+        showLoadingState()
         _uiState.addSource(transformThreatsToUiState(parentViewModel, tabType)) { _uiState.value = it }
     }
 
@@ -61,6 +65,10 @@ class ScanHistoryListViewModel @Inject constructor(
 
     private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
             threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
+
+    private fun showLoadingState() {
+        _uiState.value = ContentUiState((1..SKELETON_LOADING_ITEM_COUNT).map { ThreatItemLoadingSkeletonState })
+    }
 
     private fun onItemClicked(threatId: Long) {
     }
