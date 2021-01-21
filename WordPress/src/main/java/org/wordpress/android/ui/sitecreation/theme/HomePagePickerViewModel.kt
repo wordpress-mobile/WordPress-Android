@@ -284,7 +284,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     override fun onPreviewModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
-            analyticsTracker.trackSiteDesignPreviewModeChanged(getPreviewMode().key)
+            analyticsTracker.trackSiteDesignPreviewModeChanged(mode.key)
             _previewMode.value = mode
             loadLayouts()
         }
