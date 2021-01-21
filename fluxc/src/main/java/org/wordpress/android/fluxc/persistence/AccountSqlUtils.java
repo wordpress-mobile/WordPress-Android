@@ -142,7 +142,7 @@ public class AccountSqlUtils {
      *
      * @param subscriptions     {@link List} of {@link SubscriptionModel} to insert into database
      */
-    public static void updateSubscriptions(@NonNull List<SubscriptionModel> subscriptions) {
+    public static synchronized void updateSubscriptions(@NonNull List<SubscriptionModel> subscriptions) {
         WellSql.delete(SubscriptionModel.class).execute();
         WellSql.insert(subscriptions).execute();
     }
