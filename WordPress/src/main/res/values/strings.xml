@@ -12,6 +12,7 @@
         this problem.</string>
     <string name="no_network_title">No network available</string>
     <string name="no_network_message">There is no network available</string>
+    <string name="request_failed_message">There was a problem handling the request. Please try again later.</string>
     <string name="sign_out_wpcom_confirm_with_changes">You have changes to posts that haven’t been uploaded to your site. Logging out now will delete those changes from your device. Log out anyway?</string>
     <string name="sign_out_wpcom_confirm_with_no_changes">Log out of WordPress?</string>
 
@@ -1079,7 +1080,10 @@
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
     <string name="scan_history_fixed_threats_tab">Fixed</string>
+    <string name="scan_history_no_threats_found">No items found</string>
     <string name="scan_history_ignored_threats_tab">Ignored</string>
+    <string name="scan_history_no_connection">@string/no_network_message</string>
+    <string name="scan_history_request_failed">@string/request_failed_message</string>
 
     <!-- threats -->
     <string name="threats_fix_num_of_threats">Fix %s threats</string>
