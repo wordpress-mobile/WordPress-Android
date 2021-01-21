@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import kotlinx.android.synthetic.main.actionable_empty_view.*
 import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
@@ -11,6 +12,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -54,7 +57,16 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { listItems -> refreshContentScreen(listItems) })
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            uiHelpers.updateVisibility(actionable_empty_view, it.emptyVisibility)
+            uiHelpers.updateVisibility(recycler_view, it.contentVisibility)
+            uiHelpers.updateVisibility(button, false)
+            when (it) {
+                EmptyHistory -> { // no-op
+                }
+                is ContentUiState -> refreshContentScreen(it.items)
+            }
+        })
     }
 
     private fun refreshContentScreen(items: List<ScanListItemState>) {
