@@ -46,6 +46,10 @@ class ScanHistoryListViewModel @Inject constructor(
         _uiState.addSource(transformThreatsToUiState(parentViewModel, tabType)) { _uiState.value = it }
     }
 
+    private fun showLoadingState() {
+        _uiState.value = ContentUiState((1..SKELETON_LOADING_ITEM_COUNT).map { ThreatItemLoadingSkeletonState })
+    }
+
     private fun transformThreatsToUiState(
         parentViewModel: ScanHistoryViewModel,
         tabType: ScanHistoryTabType
@@ -65,10 +69,6 @@ class ScanHistoryListViewModel @Inject constructor(
 
     private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
             threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
-
-    private fun showLoadingState() {
-        _uiState.value = ContentUiState((1..SKELETON_LOADING_ITEM_COUNT).map { ThreatItemLoadingSkeletonState })
-    }
 
     private fun onItemClicked(threatId: Long) {
     }
