@@ -46,17 +46,15 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     }
 
     private fun setupObservers() {
-        viewModel.tabs.observe(viewLifecycleOwner, {
-            updateTabs(it)
-        })
-        viewModel.uiState.observe(viewLifecycleOwner, {
-            uiHelpers.updateVisibility(tab_layout, it.contentVisible)
-            uiHelpers.updateVisibility(view_pager, it.contentVisible)
-            uiHelpers.updateVisibility(error_layout, it.errorVisible)
-            when (it) {
-                ContentUiState -> { // no-op
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
+            uiHelpers.updateVisibility(tab_layout, uiState.contentVisible)
+            uiHelpers.updateVisibility(view_pager, uiState.contentVisible)
+            uiHelpers.updateVisibility(error_layout, uiState.errorVisible)
+            when (uiState) {
+                is ContentUiState -> {
+                    updateTabs(uiState.tabs)
                 }
-                is ErrorUiState -> updateErrorLayout(it)
+                is ErrorUiState -> updateErrorLayout(uiState)
             }
         })
     }

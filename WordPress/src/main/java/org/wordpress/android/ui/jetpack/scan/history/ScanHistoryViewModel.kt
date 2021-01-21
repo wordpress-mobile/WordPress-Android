@@ -38,14 +38,6 @@ class ScanHistoryViewModel @Inject constructor(
     private val _threats = MutableLiveData<List<ThreatModel>>()
     val threats: LiveData<List<ThreatModel>> = _threats
 
-    val tabs: LiveData<List<TabUiState>> = MutableLiveData(
-            listOf(
-                    TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
-                    TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
-                    TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
-            )
-    )
-
     private val _uiState = MutableLiveData<UiState>()
     val uiState: LiveData<UiState> = _uiState
 
@@ -84,7 +76,14 @@ class ScanHistoryViewModel @Inject constructor(
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
 
     sealed class UiState(val contentVisible: Boolean = false, val errorVisible: Boolean = false) {
-        object ContentUiState : UiState(contentVisible = true)
+        object ContentUiState : UiState(contentVisible = true) {
+            val tabs = listOf(
+                    TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
+                    TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
+                    TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
+            )
+        }
+
         sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val title: UiString
             abstract val img: Int
