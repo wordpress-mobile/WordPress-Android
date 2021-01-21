@@ -2,10 +2,12 @@ package org.wordpress.android.ui.jetpack.scan.history
 
 import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
@@ -28,7 +30,8 @@ class ScanHistoryListViewModel @Inject constructor(
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
-    lateinit var uiState: LiveData<List<ScanListItemState>>
+    private val _uiState = MediatorLiveData<ScanHistoryUiState>()
+    val uiState: LiveData<ScanHistoryUiState> = _uiState
 
     lateinit var site: SiteModel
 
@@ -36,7 +39,7 @@ class ScanHistoryListViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
         this.site = site
-        uiState.map {transformThreatsToUiState(parentViewModel, tabType) }
+        _uiState.addSource(transformThreatsToUiState(parentViewModel, tabType)) { _uiState.value = it }
     }
 
     private fun transformThreatsToUiState(
@@ -45,6 +48,13 @@ class ScanHistoryListViewModel @Inject constructor(
     ) = parentViewModel.threats
             .map { threatList -> filterByTabType(threatList, tabType) }
             .map { threatList -> mapToThreatUiStateList(threatList) }
+            .map { threatUiStateList ->
+                if (threatUiStateList.isEmpty()) {
+                    EmptyHistory
+                } else {
+                    ContentUiState(threatUiStateList)
+                }
+            }
 
     private fun filterByTabType(threatList: List<ThreatModel>, tabType: ScanHistoryTabType) =
             threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
