@@ -22,6 +22,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.usecases.GetActivityLogItemUseCase
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.viewmodel.Event
@@ -33,7 +34,7 @@ import javax.inject.Named
 class RestoreDetailsViewModel @Inject constructor(
     private val availableItemsProvider: JetpackAvailableItemsProvider,
     private val getActivityLogItemUseCase: GetActivityLogItemUseCase,
-    private val stateListItemBuilder: RestoreDetailsStateListItemBuilder,
+    private val stateListItemBuilder: RestoreStateListItemBuilder,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private lateinit var site: SiteModel

@@ -497,7 +497,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        WPSnackbar snackbar = WPSnackbar.make(
+        Snackbar snackbar = WPSnackbar.make(
                 getSnackbarParent(),
                 mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
@@ -2432,6 +2432,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             discoverData.getPostId());
                     return;
                 } else if (discoverData.hasPermalink()) {
+                    mViewModel.onExternalPostOpened(post);
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
@@ -2547,6 +2548,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 break;
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
+            case TOGGLE_SEEN_STATUS:
+                mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
                 break;
         }
     }

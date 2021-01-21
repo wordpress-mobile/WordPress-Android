@@ -43,7 +43,7 @@ object ThreatTestData {
         id = 1L,
         signature = TEST_SIGNATURE,
         description = TEST_DESCRIPTION,
-        status = ThreatStatus.FIXED,
+        status = ThreatStatus.CURRENT,
         firstDetected = Date(0)
     )
     val genericThreatModel = GenericThreatModel(

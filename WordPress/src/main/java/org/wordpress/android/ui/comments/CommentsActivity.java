@@ -239,25 +239,28 @@ public class CommentsActivity extends LocaleAwareActivity
                 getListFragment().loadComments();
             };
 
-            WPSnackbar snackbar = WPSnackbar.make(getListFragment().getView(), message, Snackbar.LENGTH_LONG)
-                                            .setAction(R.string.undo, undoListener);
+            View view = getListFragment().getView();
+            if (view != null) {
+                Snackbar snackbar = WPSnackbar.make(view, message, Snackbar.LENGTH_LONG)
+                                              .setAction(R.string.undo, undoListener);
 
-            // do the actual moderation once the undo bar has been hidden
-            snackbar.setCallback(new Snackbar.Callback() {
-                @Override
-                public void onDismissed(Snackbar snackbar, int event) {
-                    super.onDismissed(snackbar, event);
+                // do the actual moderation once the undo bar has been hidden
+                snackbar.addCallback(new Snackbar.Callback() {
+                    @Override
+                    public void onDismissed(Snackbar snackbar, int event) {
+                        super.onDismissed(snackbar, event);
 
-                    // comment will no longer exist in moderating list if action was undone
-                    if (!mTrashedComments.contains(comment)) {
-                        return;
+                        // comment will no longer exist in moderating list if action was undone
+                        if (!mTrashedComments.contains(comment)) {
+                            return;
+                        }
+                        mTrashedComments.remove(comment);
+                        moderateComment(comment, newStatus);
                     }
-                    mTrashedComments.remove(comment);
-                    moderateComment(comment, newStatus);
-                }
-            });
+                });
 
-            snackbar.show();
+                snackbar.show();
+            }
         }
     }
 

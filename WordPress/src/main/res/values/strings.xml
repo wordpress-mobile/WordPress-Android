@@ -1076,8 +1076,13 @@
     <string name="scan_in_minutes_ago">%s minutes ago</string>
     <string name="scan_in_few_seconds">in a few seconds</string>
 
+    <!-- scan history -->
+    <string name="scan_history_all_threats_tab">All</string>
+    <string name="scan_history_fixed_threats_tab">Fixed</string>
+    <string name="scan_history_ignored_threats_tab">Ignored</string>
+
     <!-- threats -->
-    <string name="threats_fix_all">Fix all</string>
+    <string name="threats_fix_num_of_threats">Fix %s threats</string>
     <string name="threats_found">Threats found</string>
 
     <!-- threat item header -->
@@ -1094,6 +1099,8 @@
     <string name="threat_item_sub_header_file_signature">Threat found %s</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
+    <string name="threat_item_sub_header_status_fixed">Threat fixed</string>
+    <string name="threat_item_sub_header_status_ignored">Threat ignored</string>
 
     <!-- threat details -->
     <string name="threat_details">Threat Details</string>
@@ -1121,6 +1128,18 @@
     <string name="threat_fix">Fix threat</string>
     <string name="threat_ignore">Ignore threat</string>
     <string name="threat_get_free_estimate">Get a free estimate</string>
+    <!-- threat alert messages -->
+    <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
+    <string name="threat_ignore_warning">You shouldn\’t ignore a security unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="threat_ignore_success_message">Threat ignored.</string>
+    <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
+    <string name="threat_fix_all_warning_title">Fix all threats</string>
+    <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
+    <string name="threat_fix_all_started_message">We\'re hard at work fixing these threats in the background. Please check back shortly.</string>
+    <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
+    <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Not all threats could be fixed. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -1443,6 +1462,9 @@
     <string name="reader_follow_comments_get_status_error">Error fetching subscription status for post</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Could not subscribe to comments for this post</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Could not unsubscribe from comments for this post</string>
+    <string name="reader_marked_post_as_seen">Marked post as seen</string>
+    <string name="reader_marked_post_as_unseen">Marked post as unseen</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Can\'t toggle seen status of this post</string>
 
     <!-- editor -->
     <string name="editor_post_saved_online">Post saved online</string>
@@ -1722,6 +1744,8 @@
     <string name="error_media_canceled">Uploading media were canceled</string>
     <string name="error_media_quota_exceeded">Storage quota exceeded</string>
     <string name="error_media_quota_exceeded_toast">Cannot upload file.\nStorage quota was exceeded.</string>
+    <string name="error_media_not_enough_storage">Not enough available site storage</string>
+    <string name="error_media_upload_failed_for_reason">Media upload failed.\n%1$s</string>
     <string name="error_media_xmlrpc_not_allowed">Your action is not allowed</string>
     <string name="error_media_xmlrcp_server_error">Internal server error occurred</string>
     <string name="error_post_does_not_exist">This post no longer exists</string>
@@ -1822,6 +1846,8 @@
     <string name="reader_menu_tags">Edit topics and sites</string>
     <string name="reader_menu_block_blog">Block this site</string>
     <string name="reader_menu_report_post">Report this post</string>
+    <string name="reader_menu_mark_as_seen">Mark as seen</string>
+    <string name="reader_menu_mark_as_unseen">Mark as unseen</string>
 
     <!-- button text -->
     <string name="reader_btn_share">Share</string>
@@ -2932,7 +2958,10 @@
 
     <!-- Web Preview -->
     <string name="web_preview_default">Default</string>
+    <string name="web_preview_mobile">Mobile</string>
+    <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_desktop">Desktop</string>
+    <string name="web_preview_width_script" translatable="false">let parent = document.querySelector(\'meta[name=viewport]\'); parent.setAttribute(\'content\',\'width=%1$d, initial-scale=1\');</string>
 
     <string name="create_post_page_fab_tooltip">Create a post or page</string>
     <string name="create_post_page_fab_tooltip_contributors">Create a post</string>

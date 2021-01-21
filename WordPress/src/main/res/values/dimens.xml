@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <dimen name="min_touch_target_sz">48dp</dimen>
 
@@ -414,7 +414,9 @@
 
     <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
     <dimen name="quick_start_task_card_width">168dp</dimen>
-    <dimen name="quick_start_task_card_illustration_height">94dp</dimen>
+    <dimen name="quick_start_task_card_elevation">0dp</dimen>
+    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
+    <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
 
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
@@ -601,4 +603,9 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
+
+    <!-- Hack to make snackbar padding smaller -->
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+        @dimen/design_snackbar_padding_vertical
+    </dimen>
 </resources>

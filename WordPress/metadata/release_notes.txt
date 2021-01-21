@@ -1,4 +1,4 @@
-Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons.
+Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons. We also addressed an issue in text-based blocks with custom font size.
 
 Activity Log: Track your site activity with filters that sort by date or type.
 

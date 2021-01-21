@@ -12,7 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
-import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteStateListItemBuilder
+import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteViewModel
 import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteViewModel.UiState
 import java.util.Date
@@ -22,7 +22,7 @@ class RestoreCompleteViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreCompleteViewModel
     @Mock private lateinit var parentViewModel: RestoreViewModel
     @Mock private lateinit var site: SiteModel
-    private lateinit var stateListItemBuilder: RestoreCompleteStateListItemBuilder
+    private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
     private val restoreState = RestoreState(
             activityId = "activityId",
@@ -34,7 +34,7 @@ class RestoreCompleteViewModelTest : BaseUnitTest() {
 
     @Before
     fun setUp() = test {
-        stateListItemBuilder = RestoreCompleteStateListItemBuilder()
+        stateListItemBuilder = RestoreStateListItemBuilder()
         viewModel = RestoreCompleteViewModel(
                 stateListItemBuilder,
                 TEST_DISPATCHER

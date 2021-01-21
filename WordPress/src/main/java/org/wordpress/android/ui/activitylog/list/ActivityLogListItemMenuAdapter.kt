@@ -54,7 +54,7 @@ class ActivityLogListItemMenuAdapter(
             }
             DOWNLOAD_BACKUP -> {
                 textRes = R.string.activity_log_item_menu_download_backup_label
-                iconRes = R.drawable.ic_get_app_24dp
+                iconRes = R.drawable.ic_get_app_white_24dp
             }
         }
         holder.text.setText(textRes)
