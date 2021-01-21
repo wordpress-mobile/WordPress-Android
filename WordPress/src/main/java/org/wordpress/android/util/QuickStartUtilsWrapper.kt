@@ -1,7 +1,9 @@
 package org.wordpress.android.util
 
 import android.text.Spannable
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -27,5 +29,9 @@ class QuickStartUtilsWrapper
 
     fun isEveryQuickStartTaskDone(siteId: Int): Boolean {
         return QuickStartUtils.isEveryQuickStartTaskDone(quickStartStore, siteId)
+    }
+
+    fun getTaskCompletedTracker(task: QuickStartTask): Stat {
+        return QuickStartUtils.getTaskCompletedTracker(task)
     }
 }
