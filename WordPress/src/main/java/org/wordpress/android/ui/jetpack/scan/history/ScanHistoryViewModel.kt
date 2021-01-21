@@ -21,12 +21,15 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState.RequestFailed
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
+private const val RETRY_DELAY = 300L
 class ScanHistoryViewModel @Inject constructor(
     private val scanStore: ScanStore,
+    private val networkUtilsWrapper: NetworkUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -42,6 +45,9 @@ class ScanHistoryViewModel @Inject constructor(
             )
     )
 
+    private val _uiState = MutableLiveData<UiState>()
+    val uiState: LiveData<UiState> = _uiState
+
     lateinit var site: SiteModel
 
     fun start(site: SiteModel) {
@@ -53,13 +59,22 @@ class ScanHistoryViewModel @Inject constructor(
 
     private fun fetchScanHistory() {
         launch {
-            val result = scanStore.fetchScanHistory(FetchScanHistoryPayload(site))
-            if (result.isError) {
-                // TODO malinjir handle error
+            _uiState.value = ContentUiState
+            if (networkUtilsWrapper.isNetworkAvailable()) {
+                val result = scanStore.fetchScanHistory(FetchScanHistoryPayload(site))
+                if (result.isError) {
+                    _uiState.value = RequestFailed(this@ScanHistoryViewModel::onRetryClicked)
+                } else {
+                    _threats.value = scanStore.getScanHistoryForSite(site)
+                }
             } else {
-                _threats.value = scanStore.getScanHistoryForSite(site)
+                _uiState.value = NoConnection(this@ScanHistoryViewModel::onRetryClicked)
             }
         }
+    }
+
+    private fun onRetryClicked() {
+        fetchScanHistory()
     }
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
