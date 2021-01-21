@@ -408,6 +408,9 @@
     <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
     <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>
     <dimen name="quick_start_focus_point_size">40dp</dimen>
+    <dimen name="quick_start_focus_point_small_size">30dp</dimen>
+    <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
+    <dimen name="quick_start_focus_point_elevation">100dp</dimen>
     <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
     <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
