@@ -1,17 +1,23 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
+import androidx.annotation.DrawableRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.FIXED
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.IGNORED
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -47,4 +53,19 @@ class ScanHistoryListViewModel @Inject constructor(
                 FIXED -> listOf(ThreatStatus.FIXED)
                 IGNORED -> listOf(ThreatStatus.IGNORED)
             }
+
+    sealed class ScanHistoryUiState(
+        open val emptyVisibility: Boolean = false,
+        open val contentVisibility: Boolean = false
+    ) {
+
+        sealed class EmptyUiState : ScanHistoryUiState(emptyVisibility = true) {
+            object EmptyHistory : EmptyUiState() {
+                val label: UiString = UiStringRes(R.string.scan_history_no_threats_found)
+                @DrawableRes val img: Int = R.drawable.img_illustration_empty_results_216dp
+            }
+        }
+
+        data class ContentUiState(val items: List<ScanListItemState>) : ScanHistoryUiState(contentVisibility = true)
+    }
 }
