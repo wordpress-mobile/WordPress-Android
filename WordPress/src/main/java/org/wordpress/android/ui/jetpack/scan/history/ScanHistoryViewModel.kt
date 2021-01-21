@@ -31,11 +31,11 @@ class ScanHistoryViewModel @Inject constructor(
     val threats: LiveData<List<ThreatModel>> = _threats
 
     val tabs: LiveData<List<TabUiState>> = MutableLiveData(
-                    listOf(
-                            TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
-                            TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
-                            TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
-                    )
+            listOf(
+                    TabUiState(UiStringRes(R.string.scan_history_all_threats_tab), ALL),
+                    TabUiState(UiStringRes(R.string.scan_history_fixed_threats_tab), FIXED),
+                    TabUiState(UiStringRes(R.string.scan_history_ignored_threats_tab), IGNORED)
+            )
     )
 
     lateinit var site: SiteModel
@@ -59,6 +59,7 @@ class ScanHistoryViewModel @Inject constructor(
     }
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
+
     @Parcelize
     enum class ScanHistoryTabType : Parcelable {
         ALL, FIXED, IGNORED
