@@ -409,7 +409,7 @@ class SubFilterViewModelTest {
         viewModel.onSubfilterSelected(filter)
 
         requireNotNull(readerModeInfo).let {
-            assertThat(it.listType).isEqualTo(ReaderPostListType.BLOG_PREVIEW)
+            assertThat(it.listType).isEqualTo(ReaderPostListType.TAG_FOLLOWED)
             assertThat(it.isFiltered).isEqualTo(true)
         }
     }
