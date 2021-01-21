@@ -36,13 +36,21 @@ class ScanHistoryListViewModel @Inject constructor(
         if (isStarted) return
         isStarted = true
         this.site = site
-        uiState = parentViewModel
-                .threats
-                .map { threats ->
-                    threats.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
-                            .map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
-                }
+        uiState.map {transformThreatsToUiState(parentViewModel, tabType) }
     }
+
+    private fun transformThreatsToUiState(
+        parentViewModel: ScanHistoryViewModel,
+        tabType: ScanHistoryTabType
+    ) = parentViewModel.threats
+            .map { threatList -> filterByTabType(threatList, tabType) }
+            .map { threatList -> mapToThreatUiStateList(threatList) }
+
+    private fun filterByTabType(threatList: List<ThreatModel>, tabType: ScanHistoryTabType) =
+            threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
+
+    private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
+            threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
 
     private fun onItemClicked(threatId: Long) {
     }
