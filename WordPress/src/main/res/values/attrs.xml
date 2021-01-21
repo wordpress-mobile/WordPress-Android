@@ -247,7 +247,7 @@
     </declare-styleable>
 
     <!--
-        ReaderIconCountView attributes
+        QuickStartFocusPoint attributes
     -->
     <declare-styleable name="QuickStartFocusPoint">
         <attr name="size" format="enum">
