@@ -77,10 +77,7 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
@@ -406,10 +403,6 @@ class MySiteFragment : Fragment(),
             )
         }
         row_themes.setOnClickListener {
-            completeQuickStarTask(CHOOSE_THEME)
-            if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
-                requestNextStepOfActiveQuickStartTask()
-            }
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
             }
@@ -1416,7 +1409,7 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
-            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
+            activeTutorialPrompt!!.task == CHECK_STATS -> {
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }

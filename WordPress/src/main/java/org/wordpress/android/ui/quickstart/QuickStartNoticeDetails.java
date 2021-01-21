@@ -18,16 +18,6 @@ public enum QuickStartNoticeDetails {
             R.string.quick_start_dialog_view_site_title,
             R.string.quick_start_dialog_view_site_message
     ),
-    CHOSE_THEME_TUTORIAL(
-            QuickStartTask.CHOOSE_THEME,
-            R.string.quick_start_dialog_choose_theme_title,
-            R.string.quick_start_dialog_choose_theme_message
-    ),
-    CUSTOMIZE_SITE_TUTORIAL(
-            QuickStartTask.CUSTOMIZE_SITE,
-            R.string.quick_start_dialog_customize_site_title,
-            R.string.quick_start_dialog_customize_site_message
-    ),
     SHARE_SITE_TUTORIAL(
             QuickStartTask.ENABLE_POST_SHARING,
             R.string.quick_start_dialog_share_site_title,
@@ -47,11 +37,6 @@ public enum QuickStartNoticeDetails {
             QuickStartTask.UPLOAD_SITE_ICON,
             R.string.quick_start_dialog_upload_icon_title,
             R.string.quick_start_dialog_upload_icon_message
-    ),
-    CREATE_NEW_PAGE(
-            QuickStartTask.CREATE_NEW_PAGE,
-            R.string.quick_start_dialog_create_page_title,
-            R.string.quick_start_dialog_create_page_message
     ),
     CHECK_STATS(
             QuickStartTask.CHECK_STATS,

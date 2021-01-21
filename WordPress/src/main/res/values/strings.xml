@@ -2791,19 +2791,10 @@
     <string name="quick_start_remove_next_steps_menu_title">Remove this</string>
     <string name="quick_start_dialog_remove_next_steps_title">Remove Next Steps</string>
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
-    <string name="quick_start_dialog_browse_themes_message">Explore dozens of layout options and find your perfect fit.</string>
-    <string name="quick_start_dialog_browse_themes_message_short" tools:ignore="UnusedResources">Tap %1$s Themes %2$s to discover new themes</string>
-    <string name="quick_start_dialog_browse_themes_title">Browse themes</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
     <string name="quick_start_dialog_choose_theme_title">Choose a theme</string>
     <string name="quick_start_dialog_choose_theme_message">Browse all our themes to find your perfect fit.</string>
-    <string name="quick_start_dialog_create_page_message">Add a page for key content — an \"About\" page is a great start.</string>
-    <string name="quick_start_dialog_create_page_title">Create a new page</string>
-    <string name="quick_start_dialog_customize_site_message">Tweak fonts, add images, and more.</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Tap %1$s Customize %2$s to start personalizing your site</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes" tools:ignore="UnusedResources">Tap %1$s Themes %2$s to continue</string>
-    <string name="quick_start_dialog_customize_site_title">Customize your site</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
@@ -2828,8 +2819,6 @@
     <string name="quick_start_dialog_share_site_message">Connect to your social media accounts – your site will automatically share new posts.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short" tools:ignore="UnusedResources">Tap %1$s Your Site Icon %2$s to upload a new one</string>
     <string name="quick_start_dialog_check_stats_message_short" tools:ignore="UnusedResources">Tap %1$s Stats %2$s to see how your site is performing.</string>
-    <string name="quick_start_dialog_create_new_page_message_short" tools:ignore="UnusedResources">Tap %1$s Pages %2$s to continue.</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Tap %1$s Add Page %2$s to create a new page.</string>
     <string name="quick_start_dialog_create_new_post_message_short" tools:ignore="UnusedResources">Tap %1$s Create. %2$s Then select &lt;b&gt;Blog post&lt;/b&gt;</string>
     <string name="quick_start_dialog_explore_plans_message_short" tools:ignore="UnusedResources">Tap %1$s Plan %2$s to see your current plan and other available plans</string>
     <string name="quick_start_dialog_upload_icon_message">Your visitors will see your icon in their browser. Add a custom icon for a polished, pro look.</string>
@@ -2839,18 +2828,12 @@
     <string name="quick_start_dialog_view_site_title">View your site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b&gt;%1$s&lt;/b&gt; to set a new title</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
-    <string name="quick_start_list_browse_themes_subtitle" translatable="false">@string/quick_start_dialog_browse_themes_message</string>
-    <string name="quick_start_list_browse_themes_title" translatable="false">@string/quick_start_dialog_browse_themes_title</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
     <string name="quick_start_list_check_stats_title" translatable="false">@string/quick_start_dialog_check_stats_title</string>
-    <string name="quick_start_list_create_page_subtitle" translatable="false">@string/quick_start_dialog_create_page_message</string>
-    <string name="quick_start_list_create_page_title" translatable="false">@string/quick_start_dialog_create_page_title</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_update_site_title_title">Set your site title</string>
     <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
-    <string name="quick_start_list_customize_site_subtitle" translatable="false">@string/quick_start_dialog_customize_site_message</string>
-    <string name="quick_start_list_customize_site_title" translatable="false">@string/quick_start_dialog_customize_site_title</string>
     <string name="quick_start_list_enable_sharing_subtitle" translatable="false">@string/quick_start_dialog_enable_sharing_message</string>
     <string name="quick_start_list_enable_sharing_title" translatable="false">@string/quick_start_dialog_enable_sharing_title</string>
     <string name="quick_start_list_explore_plans_subtitle" translatable="false">@string/quick_start_dialog_explore_plans_message</string>
