@@ -155,8 +155,6 @@ import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQu
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
-import org.wordpress.android.util.ScanFeatureConfig
-import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
