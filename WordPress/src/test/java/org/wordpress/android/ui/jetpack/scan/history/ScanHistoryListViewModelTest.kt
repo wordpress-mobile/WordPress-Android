@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argumentCaptor
-import com.nhaarman.mockitokotlin2.atLeast
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -67,7 +67,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.FIXED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, atLeast(1)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(3)).buildThreatItem(captor.capture(), anyOrNull())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.FIXED }
     }
 
@@ -76,7 +76,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.IGNORED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, atLeast(1)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(1)).buildThreatItem(captor.capture(), anyOrNull())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.IGNORED }
     }
 
@@ -85,7 +85,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.ALL, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, atLeast(1)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(4)).buildThreatItem(captor.capture(), anyOrNull())
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }
