@@ -43,7 +43,7 @@ class QuickStartFocusPoint : FrameLayout {
     private fun initView(readSize: Int = SIZE_NORMAL) {
         val layout = when (readSize) {
             SIZE_SMALL -> R.layout.quick_start_focus_circle_small
-            else ->  R.layout.quick_start_focus_circle
+            else -> R.layout.quick_start_focus_circle
         }
         View.inflate(context, layout, this)
         startAnimation()
