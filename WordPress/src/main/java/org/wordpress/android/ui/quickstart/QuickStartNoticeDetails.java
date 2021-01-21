@@ -47,6 +47,10 @@ public enum QuickStartNoticeDetails {
             QuickStartTask.EXPLORE_PLANS,
             R.string.quick_start_dialog_explore_plans_title,
             R.string.quick_start_dialog_explore_plans_message
+    REVIEW_PAGES(
+            QuickStartTask.REVIEW_PAGES,
+            R.string.quick_start_dialog_review_pages_title,
+            R.string.quick_start_dialog_review_pages_message
     );
 
     QuickStartNoticeDetails(QuickStartTask task, int titleResId, int messageResId) {

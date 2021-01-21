@@ -60,6 +60,11 @@ public enum QuickStartTaskDetails {
             R.string.quick_start_list_explore_plans_title,
             R.string.quick_start_list_explore_plans_subtitle,
             R.drawable.ic_plans_white_24dp
+    REVIEW_PAGES(
+            QuickStartTask.REVIEW_PAGES,
+            R.string.quick_start_dialog_review_pages_title,
+            R.string.quick_start_dialog_edit_homepage_message,
+            R.drawable.ic_pages_white_24dp
     );
 
     QuickStartTaskDetails(QuickStartTask task, int titleResId, int subtitleResId, int iconResId) {

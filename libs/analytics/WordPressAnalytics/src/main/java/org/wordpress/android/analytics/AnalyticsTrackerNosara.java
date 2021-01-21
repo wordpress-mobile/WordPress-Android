@@ -402,6 +402,11 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
                 predefinedEventProperties.put("task_name", "explore_plans");
                 break;
+            case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
+            case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
+                predefinedEventProperties.put("task_name", "review_pages");
+                break;
             case QUICK_START_REQUEST_DIALOG_NEGATIVE_TAPPED:
                 predefinedEventProperties.put("type", "negative");
                 break;
@@ -1703,6 +1708,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_UPLOAD_ICON_SKIPPED:
             case QUICK_START_LIST_CHECK_STATS_SKIPPED:
             case QUICK_START_LIST_EXPLORE_PLANS_SKIPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_SKIPPED:
                 return "quick_start_list_item_skipped";
             case QUICK_START_LIST_CREATE_SITE_TAPPED:
             case QUICK_START_LIST_UPDATE_SITE_TITLE_TAPPED:
@@ -1713,6 +1719,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_LIST_UPLOAD_ICON_TAPPED:
             case QUICK_START_LIST_CHECK_STATS_TAPPED:
             case QUICK_START_LIST_EXPLORE_PLANS_TAPPED:
+            case QUICK_START_LIST_REVIEW_PAGES_TAPPED:
                 return "quick_start_list_item_tapped";
             case QUICK_START_CREATE_SITE_TASK_COMPLETED:
             case QUICK_START_UPDATE_SITE_TITLE_COMPLETED:
@@ -1723,6 +1730,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case QUICK_START_UPLOAD_ICON_COMPLETED:
             case QUICK_START_CHECK_STATS_COMPLETED:
             case QUICK_START_EXPLORE_PLANS_COMPLETED:
+            case QUICK_START_REVIEW_PAGES_TASK_COMPLETED:
                 return "quick_start_task_completed";
             case QUICK_START_ALL_TASKS_COMPLETED:
                 return "quick_start_all_tasks_completed";

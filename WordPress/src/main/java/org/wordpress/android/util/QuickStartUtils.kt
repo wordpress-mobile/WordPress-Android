@@ -33,6 +33,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_P
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -272,6 +273,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
@@ -291,6 +293,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
@@ -306,6 +309,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
                 CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
                 EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+                REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }

@@ -78,8 +78,10 @@ import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -527,6 +529,7 @@ class MySiteFragment : Fragment(),
 
     private fun viewPages() {
         requestNextStepOfActiveQuickStartTask()
+            completeQuickStarTask(REVIEW_PAGES)
         val selectedSite = selectedSite
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
@@ -1409,7 +1412,7 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
-            activeTutorialPrompt!!.task == CHECK_STATS -> {
+            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == REVIEW_PAGES || activeTutorialPrompt!!.task == EDIT_HOMEPAGE -> {
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }
