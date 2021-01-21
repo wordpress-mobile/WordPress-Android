@@ -4,7 +4,7 @@
 * [**] Reader: adds a capability to mark individual posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13811]
 * [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
 * [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
-
+* [*] Quick Start: Removed the Browse theme step and added guidance for reviewing pages and editing your Homepage. [#]
 
 16.5
 -----
@@ -17,7 +17,7 @@
 * [***] Activity Log: Adds support for Date Range and Activity Type filters. [https://github.com/wordpress-mobile/WordPress-Android/issues/13268]
 * [**] Page List: Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
 * [**] Block Editor: Fix crash in text-based blocks with custom font size [https://github.com/WordPress/gutenberg/pull/28121]
- 
+
 16.4
 -----
 * [*] My Site: Fixes crash on rotation while editing site title [https://github.com/wordpress-mobile/WordPress-Android/pull/13505]
