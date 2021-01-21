@@ -1,11 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-08 10:54:09+0000
+Translation-Revision-Date: 2021-01-17 22:57:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="label_control_upload">Yükle</string>
+    <string name="backup_download_complete_info">Ayrıca size dosyanızın bağlantısını da e-postayla gönderdik.</string>
+    <string name="jetpack_icon_content_description">simge</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Bağlantıyı paylaş düğmesi</string>
+    <string name="backup_download_complete_download_action_button_content_description">İndirme düğmesi</string>
+    <string name="backup_download_complete_icon_content_description">İndirilebilir yedekleme hazır simgesi</string>
+    <string name="backup_download_complete_download_share_action_button">Bağlantıyı paylaş</string>
+    <string name="backup_download_complete_download_action_button">İndir</string>
+    <string name="backup_download_complete_description_with_two_parameters">%1$s %2$s üzerinden başarıyla sitenizin bir yedeğini oluşturduk.</string>
+    <string name="backup_download_complete_header">Yedeklemeniz artık indirilebilir</string>
+    <string name="backup_download_complete_page_title">Yedeklemeniz</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_additional_info">Beklemeye gerek yok. Yedeklemeniz hazır olduğunda sizi bilgilendireceğiz</string>
+    <string name="backup_download_progress_action_button_content_description">Tamami beni bilgilendir düğmesi</string>
+    <string name="backup_download_progress_icon_content_description">İndirişebilir yedek simgesi oluşturuluyor</string>
+    <string name="backup_download_progress_action_button">Tamam, beni bilgilendir!</string>
+    <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s üzerinden sitenizin indirilebilir bir yedeğini oluşturuyoruz.</string>
+    <string name="backup_download_progress_header">Şu anda sitenizin indirilebilir bir yedeği oluşturuluyor</string>
+    <string name="backup_download_another_download_running">Çalışan başka bir indirme var.</string>
+    <string name="backup_download_details_action_button_content_description">İndirilebilir yedekleme düğmesi oluştur</string>
+    <string name="backup_download_progress_page_title">Yedeklemeyi indir</string>
+    <string name="backup_download_generic_failure">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="gutenberg_native_image_link_url">Görsel bağlantı adresi</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">crosspost</string>
+    <string name="suggestion_user">kullanıcı</string>
+    <string name="suggestion_no_matching">\"Eşleşen %s yok.\"</string>
+    <string name="suggestion_problem">\"Öneriler yüklenirken bir problem oluştu.\"</string>
+    <string name="suggestion_none">\"Uygun %s önerisi yok.\"</string>
+    <string name="suggestion_selection_needed">\"Lütfen öneri listesini filtrelemek için yazmaya başlayın.\"</string>
+    <string name="threat_fix">Tehdidi düzelt</string>
+    <string name="threat_get_free_estimate">Ücretsiz bir tahmin edinin</string>
+    <string name="threat_ignore">Tehdidi yok say</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan tehdidi ortadan kaldıracak.</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan enfekte dosya ya da dizini düzenleyecek.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan daha güncel bir sürüme yükseltilecek (%s).</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan enfekte dosya ya da dizini silecek.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan enfekte dosya ya da dizini değiştirecek.</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
+    <string name="threat_file_description">Tehdit bulunan dosya:</string>
+    <string name="threat_details_icon">Tehdit ayrıntıları simgesi</string>
+    <string name="threat_fix_current_not_fixable_header">Tehdidi çözme</string>
+    <string name="threat_fix_fixed_header">Jetpack bunu nasıl düzeltti?</string>
+    <string name="threat_fix_default_header">Nasıl düzelteceğiz?</string>
+    <string name="threat_technical_details_header">Teknik ayrıntılar</string>
+    <string name="threat_problem_header">Problem neydi?</string>
+    <string name="threat_details">Tehdit detayları</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Temada açık bulundu</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Eklentide açık bulundu</string>
+    <string name="threat_item_sub_header_file_signature">Tehdir bulundu %s</string>
+    <string name="threat_item_sub_header_core_file">WordPress içinde güvenlik açığı bulundu</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Gizemli güvenlik açığı</string>
+    <string name="threat_item_header_vulnerable_theme">Savunmasız tema: %s (sürüm %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Savunmasız eklenti: %s (sürüm %s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: kötü amaçlı kod deseni</string>
+    <string name="threat_item_header_database_threat">Veritabanı %s tehditleri</string>
+    <string name="threats_found">Tehditler bulundu</string>
+    <string name="scan_in_few_seconds">bir kaç saniye önce</string>
+    <string name="scan_in_minutes_ago">%s dakika önce</string>
+    <string name="scan_in_hours_ago">%s saat önce</string>
+    <string name="scan_this_site">bu site</string>
+    <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
+    <string name="threat_item_header_threat_found">Tehdit bulundu</string>
+    <string name="threats_fix_all">Tümünü düzelt</string>
+    <string name="scan_scanning_title">Tarama için hazırlanıyor</string>
+    <string name="scan_again">Yeniden tara</string>
+    <string name="scan_now">Şimdi tara</string>
+    <string name="scan_state_icon">Tarama durumu simgesi</string>
+    <string name="backup">Yedek</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Etkinlik türü filtresi (%s tür seçili)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s öğe gösteriliyor)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Etkinlik türü filtresi</string>
+    <string name="activity_log_activity_type_empty_subtitle">Seçili tarih aralığında bir etkinlik kayıt edilmemiş.</string>
+    <string name="activity_log_activity_type_empty_title">Kullanılabilir etkinlik yok</string>
+    <string name="activity_log_activity_type_error_subtitle">Lütfen internet bağlantınızı kontrol edin ve yeniden deneyin.</string>
+    <string name="activity_log_activity_type_error_title">Bağlantı yok</string>
+    <string name="activity_log_activity_type_filter_active_label">Etkinlik türü (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">Tarih aralığı filtresi</string>
+    <string name="activity_log_active_filter_empty_subtitle">Tarih aralığınızı veya etkinlik türü filtrelerinizi ayarlamayı deneyin</string>
+    <string name="activity_log_active_filter_empty_title">Eşleşen etkinlik bulunamadı</string>
+    <string name="rewind">Geri al</string>
     <string name="backup_item_sqls">Site veritabanı (SQL)</string>
     <string name="backup_item_contents">WP-İçerik dizini (temalar, eklentiler ve yüklemeler hariç)</string>
     <string name="backup_item_roots">WordPress Root (wp-config.php ve WordPress\'e ait olmayan tüm dosyaları içerir)</string>
@@ -22,6 +105,8 @@ Language: tr
     <string name="gutenberg_native_choose_file">Dosya seçin</string>
     <string name="activity_log_item_menu_download_backup_label">Yedeklemeyi indir</string>
     <string name="activity_log_item_menu_restore_label">Bu noktaya kadar geri yükle</string>
+    <string name="activity_log_activity_type_filter_label">Etkinlik türü</string>
+    <string name="activity_log_date_range_filter_label">Tarih aralığı</string>
     <string name="activity_log_activity_type_filter_header">Etkinlik Türüne göre filtrele</string>
     <string name="dialog_confirm_copy_local_copy_button">Sürümü bu uygulamadan kopyala</string>
     <string name="dialog_confirm_copy_local_edit_button">Önce gönderiyi düzenle</string>
@@ -358,6 +443,7 @@ Language: tr
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
     <string name="site_settings_classic_blog">Klasik blog</string>
     <string name="site_settings_static_homepage">Sabit ana sayfa</string>
+    <string name="suggestion_invalid">“%s geçerli bir %s değil”</string>
     <string name="site_settings_accept_homepage">Kabul et</string>
     <string name="site_settings_homepage_settings">Ana sayfa ayarları</string>
     <string name="site_settings_failed_update_homepage_settings">Ana sayfa ayarları güncellenemedi, internet bağlantınızı kontrol edin</string>
@@ -486,6 +572,7 @@ Language: tr
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Portföyüm, kariyerim boyunca oluşturduğum çeşitli projeleri sergilemektedir. İletişim bilgilerim aşağıdadır, benimle iletişime geçebilirsiniz.</string>
     <string name="gutenberg_native_link_to">Şuna Bağlantı:</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hadi konuşalım 👋 Aşağıdaki iletişim bilgilerini kullanarak bize ulaşabilir veya form aracılığıyla bize mesaj gönderebilirsiniz.</string>
+    <string name="gutenberg_native_link_settings">Bağlantı ayarları</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Hadi birlikte bir şeyler oluşturalım.</string>
     <string name="gutenberg_native_let_s_build_something_together">Hadi birlikte bir şeyler oluşturalım!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -603,6 +690,7 @@ Language: tr
     <string name="reader_my_likes_display_name">Beğeniler</string>
     <string name="site_cannot_be_loaded">Şu anda siteniz için veri yüklemesi yapamıyoruz. Lütfen daha sonra tekrar deneyin</string>
     <string name="reader_filter_tags_title">Konular</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress Ortam Kütüphanesi</string>
     <string name="gutenberg_native_take_a_photo">Fotoğraf Çek</string>
     <string name="gutenberg_native_start_writing">Yazmaya başlayın…</string>
@@ -989,10 +1077,10 @@ Language: tr
     <string name="notification_channel_reminder_title">Hatırlatıcı</string>
     <string name="stats_select_next_period_description">Gelecek dönemi seç</string>
     <string name="stats_select_previous_period_description">Önceki dönemi seç</string>
-    <string name="stats_most_popular_percent_views">Görüntülemelere ait %1$d%%</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="stats_insights_popular">En popüler zaman</string>
+    <string name="stats_most_popular_percent_views">Görüntülemelerein %%%1$d kadarı</string>
     <string name="new_site_creation_create_site_button">Site oluştur</string>
     <string name="notification_new_site_creation_title">Site Oluştur</string>
     <string name="notification_new_site_creation_failed">Bir sorun vardı</string>
@@ -1082,8 +1170,8 @@ Language: tr
     <string name="stats_followers_count_message">Toplam %1$s takipçisi: %2$s</string>
     <string name="stats_followers_email">E-posta</string>
     <string name="stats_followers_wordpress_com">WordPress.com</string>
-    <string name="stats_follower_since_label">Şu tarihten başlayarak:</string>
     <string name="stats_manage_insights">Yönelimleri yönet</string>
+    <string name="stats_follower_since_label">İtibaren</string>
     <string name="stats_no_data_yet">Henüz veri yok</string>
     <string name="stats_empty_insights_title">Henüz yönelim eklenmedi</string>
     <string name="menu_debug">Hata ayıklama menüsü</string>
@@ -1234,10 +1322,16 @@ Language: tr
     <string name="support_contact_email_not_set">Ayarlanmadı</string>
     <string name="support_contact_email">İletişim e-postası</string>
     <string name="application_log_button">Uygulama kaydı</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Geri alma devam ediyor</string>
+    <string name="activity_log_rewind_site">Siteyi geri al</string>
     <string name="my_tickets">Taleplerim</string>
+    <string name="activity_log_currently_restoring_message">%1$s %2$s durumuna geri alınıyor</string>
+    <string name="activity_log_rewind_dialog_message">Sitenizi %1$s %2$s durumuna geri almak istediğinize emin misiniz? Bu, o tarihten itibaren oluşturulan veya değiştirilen tüm içeriği ve seçenekleri silecektir.</string>
     <string name="activity_log_button">Etkinlik kaydı eylem düğmesi</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Siteniz başarıyla geri alındı</string>
     <string name="activity_log_currently_restoring_title">Siteniz şuan geri alınıyor</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Siteniz başarıyla geri alındı\n%1$s %2$s durumuna geri alındı</string>
+    <string name="activity_log_rewind_started_snackbar_message">Siteniz geri yükleniyor\n%1$s %2$s durumuna geri alınıyor</string>
     <string name="plugin_auto_managed">Otomatik yönetilen</string>
     <string name="reader_save_posts_locally_dialog_message">Bu yazıyı saklayın ve istediğiniz zaman okumak için geri dönün. Yalnızca bu cihazda kullanılabilir; kaydedilen yazılar diğer cihazlarınızla senkronize edilmez.</string>
     <string name="reader_empty_search_title">Sonuç bulunamadı</string>

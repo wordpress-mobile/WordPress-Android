@@ -62,6 +62,7 @@ import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
@@ -86,6 +87,7 @@ class ReaderPostCardActionsHandlerTest {
     @Mock private lateinit var blockBlogUseCase: BlockBlogUseCase
     @Mock private lateinit var likeUseCase: PostLikeUseCase
     @Mock private lateinit var siteNotificationsUseCase: ReaderSiteNotificationsUseCase
+    @Mock private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
     @Mock private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var dispatcher: Dispatcher
@@ -108,6 +110,7 @@ class ReaderPostCardActionsHandlerTest {
                 resourceProvider,
                 htmlMessageUtils,
                 mock(),
+                seenStatusToggleUseCase,
                 TEST_DISPATCHER,
                 TEST_SCOPE,
                 TEST_SCOPE

@@ -308,7 +308,7 @@ class QuickStartUtils {
             }
         }
 
-        private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
+        fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
