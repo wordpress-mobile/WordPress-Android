@@ -17,6 +17,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.fluxc.store.ScanStore.OnScanHistoryFetched
 import org.wordpress.android.test
+import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -25,6 +26,7 @@ class ScanHistoryViewModelTest {
     @JvmField val rule = InstantTaskExecutorRule()
 
     @Mock private lateinit var scanStore: ScanStore
+    @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
 
     private val site: SiteModel = SiteModel()
 
@@ -32,7 +34,7 @@ class ScanHistoryViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ScanHistoryViewModel(scanStore, TEST_DISPATCHER)
+        viewModel = ScanHistoryViewModel(scanStore, networkUtilsWrapper, TEST_DISPATCHER)
     }
 
     @Test
