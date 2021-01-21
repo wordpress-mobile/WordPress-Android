@@ -1,10 +1,11 @@
 package org.wordpress.android.datasets
 
 import org.wordpress.android.models.ReaderBlog
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import javax.inject.Inject
 
 class ReaderBlogTableWrapper
-@Inject constructor() {
+@Inject constructor(private val readerUtilsWrapper: ReaderUtilsWrapper) {
     fun getFollowedBlogs(): List<ReaderBlog> = ReaderBlogTable.getFollowedBlogs()!!
     fun getBlogInfo(blogId: Long): ReaderBlog? = ReaderBlogTable.getBlogInfo(blogId)
     fun getFeedInfo(feedId: Long): ReaderBlog? = ReaderBlogTable.getFeedInfo(feedId)
@@ -13,7 +14,7 @@ class ReaderBlogTableWrapper
             ReaderBlogTable.setNotificationsEnabledByBlogId(blogId, isEnabled)
 
     fun getReaderBlog(blogId: Long, feedId: Long): ReaderBlog? {
-        return if (feedId != 0L) {
+        return if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
             ReaderBlogTable.getFeedInfo(feedId)
         } else {
             ReaderBlogTable.getBlogInfo(blogId)
@@ -21,7 +22,7 @@ class ReaderBlogTableWrapper
     }
 
     fun isSiteFollowed(blogId: Long, feedId: Long): Boolean {
-        return if (feedId != 0L) {
+        return if (readerUtilsWrapper.isExternalFeed(blogId, feedId)) {
             ReaderBlogTable.isFollowedFeed(feedId)
         } else {
             ReaderBlogTable.isFollowedBlog(blogId)
