@@ -28,7 +28,7 @@ class ReaderSiteFollowUseCase @Inject constructor(
 ) {
     private val continuations: MutableMap<Param, Continuation<Boolean>?> = mutableMapOf()
 
-    suspend fun toggleFollow(param: Param) = flow<FollowSiteState> {
+    suspend fun toggleFollow(param: Param) = flow {
         val (blogId, feedId) = param
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(NoNetwork)
