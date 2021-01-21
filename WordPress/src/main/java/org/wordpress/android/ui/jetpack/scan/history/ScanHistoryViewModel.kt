@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
@@ -57,9 +58,12 @@ class ScanHistoryViewModel @Inject constructor(
         fetchScanHistory()
     }
 
-    private fun fetchScanHistory() {
+    private fun fetchScanHistory(isRetry: Boolean = false) {
         launch {
             _uiState.value = ContentUiState
+            if (isRetry) {
+                delay(RETRY_DELAY)
+            }
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 val result = scanStore.fetchScanHistory(FetchScanHistoryPayload(site))
                 if (result.isError) {
@@ -74,7 +78,7 @@ class ScanHistoryViewModel @Inject constructor(
     }
 
     private fun onRetryClicked() {
-        fetchScanHistory()
+        fetchScanHistory(true)
     }
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
