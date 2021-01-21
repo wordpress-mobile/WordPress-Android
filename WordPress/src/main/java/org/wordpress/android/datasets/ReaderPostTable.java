@@ -88,7 +88,8 @@ public class ReaderPostTable {
             + "is_bookmarked," // 46
             + "is_private_atomic," // 47
             + "tags," // 48
-            + "organization_id"; // 49
+            + "organization_id," // 49
+            + "is_seen"; // 50
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -139,7 +140,8 @@ public class ReaderPostTable {
             + "is_bookmarked," // 45
             + "is_private_atomic," // 46
             + "tags," // 47
-            + "organization_id"; // 48
+            + "organization_id," // 48
+            + "is_seen"; // 49
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -192,6 +194,7 @@ public class ReaderPostTable {
                    + " is_private_atomic INTEGER DEFAULT 0,"
                    + " tags TEXT,"
                    + " organization_id INTEGER DEFAULT 0,"
+                   + " is_seen INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -537,6 +540,28 @@ public class ReaderPostTable {
                                      args);
     }
 
+    public static boolean isPostSeen(ReaderPost post) {
+        String[] args = new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)};
+        return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
+                "SELECT is_seen FROM tbl_posts WHERE feed_id=? AND feed_item_id=?",
+                args);
+    }
+
+    public static void setPostSeenStatus(ReaderPost post, boolean isSeen) {
+        SQLiteDatabase db = ReaderDatabase.getWritableDb();
+        db.beginTransaction();
+        try {
+            String sql = "UPDATE tbl_posts SET is_seen=" + SqlUtils.boolToSql(isSeen)
+                         + " WHERE feed_id=? AND feed_item_id=?";
+            db.execSQL(sql, new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)});
+
+            db.setTransactionSuccessful();
+            EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
+        } finally {
+            db.endTransaction();
+        }
+    }
+
     public static int deletePostsWithTag(final ReaderTag tag) {
         if (tag == null) {
             return 0;
@@ -836,7 +861,7 @@ public class ReaderPostTable {
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
                 + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47,"
-                + "?48,?49)");
+                + "?48,?49,?50)");
 
         db.beginTransaction();
         try {
@@ -898,6 +923,7 @@ public class ReaderPostTable {
                 stmtPosts.bindLong(47, SqlUtils.boolToSql(post.isPrivateAtomic));
                 stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
                 stmtPosts.bindLong(49, post.organizationId);
+                stmtPosts.bindLong(50, SqlUtils.boolToSql(post.isSeen));
                 stmtPosts.execute();
             }
 
@@ -1145,6 +1171,8 @@ public class ReaderPostTable {
         post.setCardType(ReaderCardType.fromString(c.getString(c.getColumnIndex("card_type"))));
 
         post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
+
+        post.isSeen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen")));
 
         String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
         if (commaSeparatedTags != null) {

@@ -5,6 +5,7 @@ import kotlinx.coroutines.flow.flow
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.QUEUED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
@@ -28,10 +29,6 @@ class GetRestoreStatusUseCase @Inject constructor(
                 return@flow
             }
 
-            // start off with a delay until "queued" status is implemented in RewindStatusModel
-            // this will be moved to after the result check once queued is added
-            delay(DELAY_MILLIS)
-
             val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
             if (rewind != null && rewind.restoreId == restoreId) {
                 when (rewind.status) {
@@ -48,7 +45,10 @@ class GetRestoreStatusUseCase @Inject constructor(
                         return@flow
                     }
                     RUNNING -> {
-                        emit(Progress(rewind.rewindId as String, rewind.progress))
+                        emit(Progress(rewind.rewindId as String, rewind.progress, rewind.message, rewind.currentEntry))
+                    }
+                    QUEUED -> {
+                        // no op
                     }
                 }
             }
@@ -58,6 +58,8 @@ class GetRestoreStatusUseCase @Inject constructor(
                 emit(RemoteRequestFailure)
                 return@flow
             }
+
+            delay(DELAY_MILLIS)
         }
     }
 }

@@ -156,13 +156,15 @@ import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgre
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -207,8 +209,8 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
-    @Inject lateinit var backupsFeatureConfig: BackupsFeatureConfig
-    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
+    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
@@ -278,13 +280,13 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateBackupMenuVisibility() {
-        row_backup.setVisible(backupsFeatureConfig.isEnabled())
+        row_backup.setVisible(backupScreenFeatureConfig.isEnabled())
     }
 
     private fun updateScanMenuVisibility() {
         uiScope.launch {
             val show = withContext(bgDispatcher) {
-                scanFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
+                scanScreenFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
                     jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
                             .find { it == SCAN } != null
                 } ?: false

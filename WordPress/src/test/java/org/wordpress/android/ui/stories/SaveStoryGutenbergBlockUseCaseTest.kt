@@ -193,10 +193,12 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         whenever(mediaFile.id).thenReturn(TestContent.localMediaId.toInt())
         whenever(mediaFile.fileURL).thenReturn(TestContent.localImageUrl)
         whenever(mediaFile.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
+        whenever(mediaFile.alt).thenReturn("")
 
         whenever(mediaFile2.id).thenReturn(TestContent.localMediaId2.toInt())
         whenever(mediaFile2.fileURL).thenReturn(TestContent.localImageUrl2)
         whenever(mediaFile2.mimeType).thenReturn(TestContent.storyMediaFileMimeTypeImage)
+        whenever(mediaFile2.alt).thenReturn("")
 
         val mediaFiles = ArrayList<MediaFile>()
         mediaFiles.add(mediaFile)
@@ -221,6 +223,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
                     mediaFile.id = i
                     mediaFile.mediaId = (i + 1000).toString()
                     mediaFile.mimeType = "image/jpeg"
+                    mediaFile.alt = ""
                     mediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
                     mediaFiles.add(mediaFile)
                 }
@@ -234,6 +237,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         mediaFile.id = id
         mediaFile.mediaId = (id + 1000).toString()
         mediaFile.mimeType = "image/jpeg"
+        mediaFile.alt = ""
         mediaFile.fileURL = "https://testsite.files.wordpress.com/2020/10/wp-0000000.jpg"
         return mediaFile
     }

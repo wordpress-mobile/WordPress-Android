@@ -1519,22 +1519,25 @@ public class CommentDetailFragment extends ViewPagerFragment implements Notifica
     }
 
     private void showSnackBar(String message) {
-        WPSnackbar snackBar = WPSnackbar.make(getView(), message, Snackbar.LENGTH_LONG)
-                                        .setAction(getString(R.string.share_action),
-                                                v -> {
-                                                    try {
-                                                        Intent intent = new Intent(Intent.ACTION_SEND);
-                                                        intent.setType("text/plain");
-                                                        intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
-                                                        startActivity(Intent.createChooser(intent,
-                                                                getString(R.string.comment_share_link_via)));
-                                                    } catch (ActivityNotFoundException exception) {
-                                                        ToastUtils.showToast(getContext(),
-                                                                R.string.comment_toast_err_share_intent);
-                                                    }
-                                                })
-                                        .setAnchorView(mSnackbarAnchor);
-        snackBar.show();
+        View view = getView();
+        if (view != null) {
+            Snackbar snackBar = WPSnackbar.make(view, message, Snackbar.LENGTH_LONG)
+                                          .setAction(getString(R.string.share_action),
+                                                  v -> {
+                                                      try {
+                                                          Intent intent = new Intent(Intent.ACTION_SEND);
+                                                          intent.setType("text/plain");
+                                                          intent.putExtra(Intent.EXTRA_TEXT, mComment.getUrl());
+                                                          startActivity(Intent.createChooser(intent,
+                                                                  getString(R.string.comment_share_link_via)));
+                                                      } catch (ActivityNotFoundException exception) {
+                                                          ToastUtils.showToast(view.getContext(),
+                                                                  R.string.comment_toast_err_share_intent);
+                                                      }
+                                                  })
+                                          .setAnchorView(mSnackbarAnchor);
+            snackBar.show();
+        }
     }
 
     @Override

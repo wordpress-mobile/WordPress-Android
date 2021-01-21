@@ -516,6 +516,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 }
             }
 
+            viewModel.onStorySaved()
+            // TODO add tracks
+            processStorySaving()
+
             val savedContentIntent = Intent()
             val blockId = intent.extras?.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
@@ -526,6 +530,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 // if not, let's use the current Story
                 storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
             }
+
             // if we are editing this Story Block, then the id is assured to be a remote media file id, but
             // the frame no longer points to such media Id on the site given we are just about to save a
             // new flattened media. Hence, we need to set a new temporary Id we can use to identify
@@ -540,12 +545,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             setResult(Activity.RESULT_OK, savedContentIntent)
-
-            viewModel.onStorySaved()
-
-            // TODO add tracks
-            processStorySaving()
-
             finish()
         } else {
             // assume this is a new Post, and proceed to PrePublish bottom sheet
@@ -590,6 +589,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
                             val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
                             mediaFile?.let { mediafile ->
+                                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+                                mediaModel.alt = mediaFile.alt
                                 val storyMediaFileData =
                                         saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
                                                 mediaFile = mediafile,
