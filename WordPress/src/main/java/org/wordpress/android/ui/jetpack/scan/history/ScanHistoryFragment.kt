@@ -8,19 +8,24 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.google.android.material.tabs.TabLayoutMediator
+import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.scan_history_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.TabUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
+    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: ScanHistoryViewModel
 
@@ -44,6 +49,23 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
         viewModel.tabs.observe(viewLifecycleOwner, {
             updateTabs(it)
         })
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            uiHelpers.updateVisibility(tab_layout, it.contentVisible)
+            uiHelpers.updateVisibility(view_pager, it.contentVisible)
+            uiHelpers.updateVisibility(error_layout, it.errorVisible)
+            when (it) {
+                ContentUiState -> { // no-op
+                }
+                is ErrorUiState -> updateErrorLayout(it)
+            }
+        })
+    }
+
+    private fun updateErrorLayout(uiState: ErrorUiState) {
+        uiHelpers.setTextOrHide(error_title, uiState.title)
+        uiHelpers.updateVisibility(error_image, true)
+        error_image.setImageResource(uiState.img)
+        error_retry.setOnClickListener { uiState.retry.invoke() }
     }
 
     private fun updateTabs(list: List<TabUiState>) {
