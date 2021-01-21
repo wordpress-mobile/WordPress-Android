@@ -69,8 +69,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         }
     }
 
-    private fun getTabType(): ScanHistoryTabType =
-            requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
+    private fun getTabType(): ScanHistoryTabType = requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
 
     override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
 

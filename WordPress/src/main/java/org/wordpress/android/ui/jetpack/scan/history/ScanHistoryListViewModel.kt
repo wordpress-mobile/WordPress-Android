@@ -33,11 +33,8 @@ class ScanHistoryListViewModel @Inject constructor(
         uiState = parentViewModel
                 .threats
                 .map { threats ->
-                    threats
-                            .filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
-                            .map {
-                                scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked)
-                            }
+                    threats.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
+                            .map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
                 }
     }
 
