@@ -408,5 +408,4 @@ class RestoreViewModelTest : BaseUnitTest() {
     private val postRestoreNetworkError = RestoreRequestState.Failure.NetworkUnavailable
     private val postRestoreRemoteRequestError = RestoreRequestState.Failure.RemoteRequestFailure
     private val otherRequestRunningError = RestoreRequestState.Failure.OtherRequestRunning
-
 }
