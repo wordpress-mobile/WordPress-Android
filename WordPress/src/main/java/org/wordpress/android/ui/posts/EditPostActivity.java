@@ -1696,17 +1696,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         FluxCUtils.mediaFileFromMediaModel(media));
                 if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
                     // make sure to sync the local post object with the UI and save
-                    updateAndSavePostAsync();
-                    // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
-                    // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
-                    // mediaId.
-                    // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
-                    // within a story block in this post: we will only replace items for which a local-keyed frame has
-                    // been created before, which can only happen when using the Story Creator.
-                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                            media.getId(),
-                            media.getMediaId(),
-                            mSite.getId()
+                    // then post the event for StoriesEventListener to process
+                    updateAndSavePostAsync(
+                            updatePostResult -> mStoriesEventListener.postStoryMediaUploadedEvent(media)
                     );
                 }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
@@ -2604,8 +2596,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
-                case RequestCodes.EDIT_STORY:
-                    mStoryEditingCancelled = true;
                 default:
                     // noop
                     return;
@@ -2613,6 +2603,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (requestCode == RequestCodes.EDIT_STORY) {
+            if (resultCode != Activity.RESULT_OK) {
+                mStoryEditingCancelled = true;
+            }
             if (mEditorFragment instanceof GutenbergEditorFragment) {
                 mEditorFragment.onActivityResult(requestCode, resultCode, data);
                 return;
@@ -3348,20 +3341,18 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
         // we need to save the latest before editing
-        updateAndSavePostAsync(new OnPostUpdatedFromUIListener() {
-            @Override public void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult) {
-                boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
-                        EditPostActivity.this,
-                        new LocalId(mEditPostRepository.getId()),
-                        mNetworkErrorOnLastMediaFetchAttempt,
-                        mediaFiles,
-                        blockId
-                );
+        updateAndSavePostAsync(updatePostResult -> {
+            boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
+                    EditPostActivity.this,
+                    new LocalId(mEditPostRepository.getId()),
+                    mNetworkErrorOnLastMediaFetchAttempt,
+                    mediaFiles,
+                    blockId
+            );
 
-                if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
-                    // try another fetchMedia request
-                    fetchMediaList();
-                }
+            if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
+                // try another fetchMedia request
+                fetchMediaList();
             }
         });
     }

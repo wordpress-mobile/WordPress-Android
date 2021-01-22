@@ -416,28 +416,28 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // know so it can process all of the pending block save / update / upload events
                             mStoryBlockReplacedSignalWait = false;
                             mEditorFragmentListener.onReplaceStoryEditedBlockActionReceived();
-                        }
-
-                        // caclulate the hash to verify whether this is the block that needs to get replaced
-                        // this is important given we could be receiving a request to sync from a different Story block
-                        // in the same Post otherwise
-                        String calculatedHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
-                        if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null &&
-                            mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
-                            if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
-                                getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
-                                mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
-                                // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
-                                // new block to signal a replaceBlockSync to us again after loading, calling this
-                                // very callback method again
-                                mStoryBlockReplacedSignalWait = true;
-                            } else {
-                                // TODO handle / log error here, or maybe just skip it
-                            }
                         } else {
-                            // no op
-                            // the arrays don't match means we're getting a signal to sync a different Story block,
-                            // other than the one that was actually edited. Just skip it.
+                            // caclulate the hash to verify whether this is the block that needs to get replaced
+                            // this is important given we could be receiving a request to sync from a different Story block
+                            // in the same Post otherwise
+                            String calculatedHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
+                            if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null &&
+                                mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
+                                if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
+                                    getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
+                                    mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
+                                    // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
+                                    // new block to signal a replaceBlockSync to us again after loading, calling this
+                                    // very callback method again
+                                    mStoryBlockReplacedSignalWait = true;
+                                } else {
+                                    // TODO handle / log error here, or maybe just skip it
+                                }
+                            } else {
+                                // no op
+                                // the arrays don't match means we're getting a signal to sync a different Story block,
+                                // other than the one that was actually edited. Just skip it.
+                            }
                         }
                     }
                 },
@@ -546,6 +546,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                 // TODO maybe we need to track something here?
             } else {
                 // TODO maybe we need to track something here?
+                mExternallyEditedBlockOriginalHash = null;
             }
         }
     }
@@ -1279,6 +1280,19 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     @Override public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
         getGutenbergContainerFragment().onMediaModelCreatedForFile(oldId, newId, oldUrl);
+    }
+
+    @Override public void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl) {
+        mUploadingMediaProgressMax.remove(localId);
+        // this method may end up being called twice if the original FluxC OnMediaUploaded event was correctly caught
+        // when posted, and can be retriggered by StoriesEventListener in the case a Gutenberg instance is re-mounted
+        // while a Story media item upload is progressing. In any case, it's harmless (the second time the event
+        // arrives at Gutenberg it will simply not find the old ids in the blocks anymore and the event gets discarded)
+        getGutenbergContainerFragment().mediaFileUploadSucceeded(
+                Integer.parseInt(localId),
+                newUrl,
+                Integer.parseInt(remoteId)
+        );
     }
 
     @Override
