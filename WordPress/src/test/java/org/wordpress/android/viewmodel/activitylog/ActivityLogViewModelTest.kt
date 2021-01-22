@@ -42,13 +42,6 @@ import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAULT
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
@@ -125,7 +118,7 @@ class ActivityLogViewModelTest {
             null,
             Date(),
             true,
-            DEFAULT,
+            ActivityLogListItem.Icon.DEFAULT,
             false
     )
     val activity = ActivityLogModel(
@@ -271,19 +264,19 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = Event(activityLogList[0], true, false, false)
-        val second = Event(activityLogList[1], true, false, false)
-        val third = Event(activityLogList[2], true, false, false)
-        activityLogListItems.add(Header(first.formattedDate))
+        val first = ActivityLogListItem.Event(activityLogList[0], true, false, false)
+        val second = ActivityLogListItem.Event(activityLogList[1], true, false, false)
+        val third = ActivityLogListItem.Event(activityLogList[2], true, false, false)
+        activityLogListItems.add(ActivityLogListItem.Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
-        activityLogListItems.add(Header(third.formattedDate))
+        activityLogListItems.add(ActivityLogListItem.Header(third.formattedDate))
         activityLogListItems.add(third)
         if (isLastPageAndFreeSite) {
-            activityLogListItems.add(Footer)
+            activityLogListItems.add(ActivityLogListItem.Footer)
         }
         if (canLoadMore) {
-            activityLogListItems.add(Loading)
+            activityLogListItems.add(ActivityLogListItem.Loading)
         }
         return activityLogListItems
     }
@@ -331,8 +324,8 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site, rewindableOnly)
 
-        assertTrue(events.last()?.get(0) is Header)
-        assertTrue(events.last()?.get(3) is Header)
+        assertTrue(events.last()?.get(0) is ActivityLogListItem.Header)
+        assertTrue(events.last()?.get(3) is ActivityLogListItem.Header)
     }
 
     @Test
@@ -465,14 +458,14 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
-        viewModel.onSecondaryActionClicked(RESTORE, event)
+        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.RESTORE, event)
 
         assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
     }
 
     @Test
     fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
-        viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
+        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP, event)
 
         assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
     }

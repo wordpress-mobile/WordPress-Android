@@ -22,11 +22,6 @@ import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBack
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
-import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
@@ -321,14 +316,14 @@ class ActivityLogViewModel @Inject constructor(
     ): Boolean {
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = when (secondaryAction) {
-                RESTORE -> {
+                ActivityLogListItem.SecondaryAction.RESTORE -> {
                     if (item.launchRestoreWizard) {
                         ShowRestore(item)
                     } else {
                         ShowRewindDialog(item)
                     }
                 }
-                DOWNLOAD_BACKUP -> {
+                ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP -> {
                     ShowBackupDownload(item)
                 }
             }
@@ -416,7 +411,7 @@ class ActivityLogViewModel @Inject constructor(
         val rewindFinished = isRewindProgressItemShown && !displayProgressItem
         if (displayProgressItem) {
             val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
-            items.add(Header(resourceProvider.getString(R.string.now)))
+            items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
             items.add(getRewindProgressItem(activityLogModel))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
         }
@@ -429,15 +424,15 @@ class ActivityLogViewModel @Inject constructor(
             )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
-                items.add(Header(currentItem.formattedDate))
+                items.add(ActivityLogListItem.Header(currentItem.formattedDate))
             }
             items.add(currentItem)
         }
         if (eventList.isNotEmpty() && !done) {
-            items.add(Loading)
+            items.add(ActivityLogListItem.Loading)
         }
         if (eventList.isNotEmpty() && site.hasFreePlan && done) {
-            items.add(Footer)
+            items.add(ActivityLogListItem.Footer)
         }
         areActionsEnabled = !disableActions
 
