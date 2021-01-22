@@ -1,17 +1,20 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.FIXED
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.IGNORED
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -23,6 +26,9 @@ class ScanHistoryListViewModel @Inject constructor(
     private var isStarted = false
 
     lateinit var uiState: LiveData<List<ScanListItemState>>
+
+    private val _navigation = MutableLiveData<Event<ShowThreatDetails>>()
+    val navigation: LiveData<Event<ShowThreatDetails>> = _navigation
 
     lateinit var site: SiteModel
 
@@ -39,6 +45,7 @@ class ScanHistoryListViewModel @Inject constructor(
     }
 
     private fun onItemClicked(threatId: Long) {
+        _navigation.value = Event(ShowThreatDetails(threatId))
     }
 
     private fun mapTabTypeToThreatStatuses(tabType: ScanHistoryTabType): List<ThreatStatus> =
