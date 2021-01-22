@@ -1863,8 +1863,8 @@
     <string name="reader_btn_notifications_on">Turn on site notifications</string>
     <string name="reader_btn_select_few_interests">Select a few to continue</string>
     <string name="reader_btn_done">Done</string>
-    <string name="reader_btn_follow_comments">Follow conversation</string>
-    <string name="reader_btn_following_comments">Following conversation</string>
+    <string name="reader_btn_follow_comments">Follow conversation by email</string>
+    <string name="reader_btn_following_comments">Following conversation by email</string>
 
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
@@ -2441,12 +2441,12 @@
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
-    <string name="suggestion_invalid">"%s is not a valid %s"</string>
-    <string name="suggestion_selection_needed">"Please type to filter the list of suggestions."</string>
-    <string name="suggestion_none">"No %s suggestions available."</string>
-    <string name="suggestion_problem">"There was a problem loading suggestions."</string>
-    <string name="suggestion_no_matching">"No matching %s."</string>
-    <string name="suggestion_no_connection">"No internet connection.\nSuggestions are unavailable."</string>
+    <string name="suggestion_invalid">%s is not a valid %s</string>
+    <string name="suggestion_selection_needed">Please type to filter the list of suggestions.</string>
+    <string name="suggestion_none">No %s suggestions available.</string>
+    <string name="suggestion_problem">There was a problem loading suggestions.</string>
+    <string name="suggestion_no_matching">No matching %s.</string>
+    <string name="suggestion_no_connection">No internet connection.\nSuggestions are unavailable.</string>
     <string name="suggestion_user">user</string>
     <string name="suggestion_xpost">crosspost</string>
 
@@ -3428,5 +3428,8 @@
     <string name="restore_complete_failed_action_button">@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Done button</string>
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
+
+    <string name="rewind_generic_failure">@string/backup_download_generic_failure</string>
+    <string name="rewind_another_process_running">There is another restore running.</string>
 
 </resources>

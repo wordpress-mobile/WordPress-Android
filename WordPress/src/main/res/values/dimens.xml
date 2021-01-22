@@ -155,7 +155,7 @@
 
     <!-- reader follow unfollow comments dimensions -->
     <dimen name="reader_follow_button_min_height">32dp</dimen>
-    <dimen name="reader_follow_button_skeleton_width">165dp</dimen>
+    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
