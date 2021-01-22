@@ -335,7 +335,7 @@ class ReaderPostCardActionsHandlerTest {
     fun `given site not present in db, when follow action is requested, fetch site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
-        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(flowOf(FetchSiteState.Success))
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
         whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(FollowSiteState.Success))
 
         // Act
@@ -350,7 +350,7 @@ class ReaderPostCardActionsHandlerTest {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
         whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                .thenReturn(flowOf(FetchSiteState.Failed.RequestFailed))
+                .thenReturn(FetchSiteState.Failed.RequestFailed)
         val observedValues = startObserving()
 
         // Act
@@ -364,7 +364,7 @@ class ReaderPostCardActionsHandlerTest {
     fun `given fetch site request succeeds, when follow action is requested, follow site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
-        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(flowOf(FetchSiteState.Success))
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
         whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(FollowSiteState.Success))
 
         // Act
@@ -446,7 +446,7 @@ class ReaderPostCardActionsHandlerTest {
     fun `given site not present in db, when site notifications action is requested, fetch site is triggered`() = test {
         // Arrange
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
-        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(flowOf(FetchSiteState.Success))
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
         whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
 
         // Act
@@ -462,7 +462,7 @@ class ReaderPostCardActionsHandlerTest {
             // Arrange
             whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
             whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
-                    .thenReturn(flowOf(FetchSiteState.Failed.RequestFailed))
+                    .thenReturn(FetchSiteState.Failed.RequestFailed)
             val observedValues = startObserving()
 
             // Act
@@ -477,7 +477,7 @@ class ReaderPostCardActionsHandlerTest {
         test {
             // Arrange
             whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
-            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(flowOf(FetchSiteState.Success))
+            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
             whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
 
             // Act
