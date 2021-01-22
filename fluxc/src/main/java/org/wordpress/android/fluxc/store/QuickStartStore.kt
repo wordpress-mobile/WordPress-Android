@@ -7,7 +7,6 @@ import org.wordpress.android.fluxc.annotations.action.Action
 import org.wordpress.android.fluxc.persistence.QuickStartSqlUtils
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.util.AppLog
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -20,15 +19,13 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
         val taskType: QuickStartTaskType,
         val order: Int
     ) {
+        UNKNOWN("unknown", QuickStartTaskType.UNKNOWN, 0),
         CREATE_SITE("create_site", CUSTOMIZE, 0),
         UPDATE_SITE_TITLE("update_site_title", CUSTOMIZE, 1),
         UPLOAD_SITE_ICON("upload_site_icon", CUSTOMIZE, 2),
-        CHOOSE_THEME("choose_theme", CUSTOMIZE, 3),
-        // Disabeling until a long term plan is made https://github.com/wordpress-mobile/WordPress-Android/issues/13713
-        CUSTOMIZE_SITE("customize_site", UNKNOWN, 0),
-        // Disabeling until a long term plan is made https://github.com/wordpress-mobile/WordPress-Android/issues/13713
-        CREATE_NEW_PAGE("create_new_page", UNKNOWN, 1),
-        VIEW_SITE("view_site", CUSTOMIZE, 4),
+        EDIT_HOMEPAGE("edit_homepage", CUSTOMIZE, 3),
+        REVIEW_PAGES("review_pages", CUSTOMIZE, 4),
+        VIEW_SITE("view_site", CUSTOMIZE, 5),
         ENABLE_POST_SHARING("enable_post_sharing", GROW, 7),
         PUBLISH_POST("publish_post", GROW, 8),
         FOLLOW_SITE("follow_site", GROW, 9),
@@ -47,7 +44,7 @@ constructor(private val quickStartSqlUtils: QuickStartSqlUtils, dispatcher: Disp
                     }
                 }
 
-                return CHOOSE_THEME
+                return UNKNOWN
             }
 
             fun getTasksByType(taskType: QuickStartTaskType): List<QuickStartTask> {
