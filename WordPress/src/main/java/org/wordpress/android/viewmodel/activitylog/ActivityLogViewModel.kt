@@ -18,9 +18,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
@@ -302,9 +299,9 @@ class ActivityLogViewModel @Inject constructor(
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = if (item.launchRestoreWizard) {
-                ShowRestore(item)
+                ActivityLogNavigationEvents.ShowRestore(item)
             } else {
-                ShowRewindDialog(item)
+                ActivityLogNavigationEvents.ShowRewindDialog(item)
             }
             _navigationEvents.value = Event(navigationEvent)
         }
@@ -318,13 +315,13 @@ class ActivityLogViewModel @Inject constructor(
             val navigationEvent = when (secondaryAction) {
                 ActivityLogListItem.SecondaryAction.RESTORE -> {
                     if (item.launchRestoreWizard) {
-                        ShowRestore(item)
+                        ActivityLogNavigationEvents.ShowRestore(item)
                     } else {
-                        ShowRewindDialog(item)
+                        ActivityLogNavigationEvents.ShowRewindDialog(item)
                     }
                 }
                 ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP -> {
-                    ShowBackupDownload(item)
+                    ActivityLogNavigationEvents.ShowBackupDownload(item)
                 }
             }
             _navigationEvents.value = Event(navigationEvent)

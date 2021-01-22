@@ -39,8 +39,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayloa
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
-import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
@@ -341,7 +339,8 @@ class ActivityLogViewModelTest {
     fun onActionButtonClickShowsRewindDialog() {
         viewModel.onActionButtonClicked(event)
 
-        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
+        assertThat(navigationEvents.last().peekContent())
+                .isInstanceOf(ActivityLogNavigationEvents.ShowRewindDialog::class.java)
     }
 
     @Test
@@ -460,14 +459,16 @@ class ActivityLogViewModelTest {
     fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
         viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.RESTORE, event)
 
-        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowRewindDialog::class.java)
+        assertThat(navigationEvents.last().peekContent())
+                .isInstanceOf(ActivityLogNavigationEvents.ShowRewindDialog::class.java)
     }
 
     @Test
     fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
         viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP, event)
 
-        assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
+        assertThat(navigationEvents.last().peekContent())
+                .isInstanceOf(ActivityLogNavigationEvents.ShowBackupDownload::class.java)
     }
 
     @Test
