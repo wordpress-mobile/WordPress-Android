@@ -80,30 +80,11 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `refresh loads model when quick start in progress and model not yet refreshed`() {
-        initQuickStartInProgress()
-
-        assertModel()
-    }
-
-    @Test
-    fun `refresh doesn't reload model when already initialized`() {
-        initQuickStartInProgress()
-
-        assertModel()
-
+    fun `refresh loads model`() {
+        initStore()
         quickStartRepository.refreshIfNecessary()
 
         assertModel()
-    }
-
-    @Test
-    fun `refresh doesn't load model when quick start not in progress`() {
-        whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(false)
-
-        quickStartRepository.refreshIfNecessary()
-
-        assertEmptyModel()
     }
 
     @Test
@@ -119,7 +100,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `sets active task and shows sylized snackbar when not UPDATE_SITE_TITLE`() {
-        initQuickStartInProgress()
+        initStore()
+        quickStartRepository.refreshIfNecessary()
 
         val spannableString = initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
 
@@ -170,13 +152,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun initQuickStartInProgress() {
-        whenever(quickStartUtils.isQuickStartInProgress()).thenReturn(true)
         initStore()
         quickStartRepository.refreshIfNecessary()
     }
 
     private fun initStore() {
         selectedSite.value = site
+        whenever(quickStartUtils.isQuickStartInProgress(site)).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
