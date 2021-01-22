@@ -12,6 +12,13 @@ class ReaderPostTableWrapper @Inject constructor() {
     fun getBlogPost(
         blogId: Long,
         postId: Long,
+        excludeTextColumn: Boolean
+    ): ReaderPost? =
+            ReaderPostTable.getBlogPost(blogId, postId, excludeTextColumn)
+
+    fun getBlogPost(
+        blogId: Long,
+        postId: Long,
         excludeTextColumn: Boolean,
         tryIncludeFeedItemId: Boolean = false
     ): ReaderPost? =
