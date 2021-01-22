@@ -22,7 +22,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
 
-import org.greenrobot.eventbus.EventBus;
 import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
