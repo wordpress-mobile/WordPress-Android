@@ -22,9 +22,14 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData.genericThreatModel
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
+
+private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -52,6 +57,11 @@ class ScanHistoryListViewModelTest {
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
+        whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull())).thenAnswer {
+            ThreatItemState(1L, true, mock(), mock(), 0, 0) {
+                it.getArgument<(Long) -> Unit>(ON_ITEM_CLICKED_PARAM_POSITION)(1L)
+            }
+        }
     }
 
     @Test
@@ -89,5 +99,16 @@ class ScanHistoryListViewModelTest {
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }
+    }
+
+    @Test
+    fun `Threat detail screen opened, when the user clicks on threat list item`() {
+        viewModel.start(ALL, site, scanHistoryViewModel)
+        viewModel.uiState.observeForever(mock())
+        viewModel.navigation.observeForever(mock())
+
+        (viewModel.uiState.value!![0] as ThreatItemState).onClick.invoke()
+
+        assertThat(viewModel.navigation.value!!.peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
 }
