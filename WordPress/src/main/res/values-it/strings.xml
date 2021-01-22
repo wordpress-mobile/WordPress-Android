@@ -1,11 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-10 12:54:11+0000
+Translation-Revision-Date: 2020-12-31 08:54:56+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="backup_item_media_uploads">Caricamento di contenuti multimediali</string>
+    <string name="backup_item_plugins">Plugin WordPress</string>
+    <string name="backup_item_themes">Temi WordPress</string>
+    <string name="dialog_confirm_copy_local_title">Conflitto di sincronizzazione dell\'articolo</string>
     <string name="gutenberg_native_file_name">Nome file</string>
     <string name="gutenberg_native_file_block_settings">Impostazioni del blocco file</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Impossibile caricare i file.\nTocca per le opzioni.</string>
@@ -270,7 +274,6 @@ Language: it
     <string name="gutenberg_native_gradient_type">Tipo di gradiente</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Tocca due volte per selezionare l\'opzione</string>
     <string name="gutenberg_native_customize_gradient">Personalizza gradiente</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autore della pagina</string>
     <string name="photo_picker_use_gif">Usa questa GIF</string>
     <string name="error_media_thumbnail_not_loaded">Impossibile caricare la miniatura del file multimediale</string>
@@ -306,7 +309,6 @@ Language: it
     <string name="ccpa_privacy_notice_header">Nota sulla privacy per utenti in California</string>
     <string name="status_and_visibility">Stato e visibilità</string>
     <string name="update_now">Aggiorna ora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova un layout di inizio</string>
     <string name="gutenberg_native_open_block_actions_menu">Apri menu azioni del blocco</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tocca due volte per aprire il foglio in basso con le opzioni disponibili</string>
@@ -314,8 +316,6 @@ Language: it
     <string name="pages_cannot_be_started">Al momento non possiamo aprire le pagine. Riprova più tardi</string>
     <string name="pages_set_as_posts_page">Imposta come pagine degli articoli</string>
     <string name="pages_set_as_homepage">Imposta come homepage</string>
-    <string name="suggestion_no_matching_users">\"Nessun utente corrispondente disponibile.\"</string>
-    <string name="suggestion_invalid_user">\"%s non è un utente valido\"</string>
     <string name="site_settings_select_page">Seleziona una pagina</string>
     <string name="site_settings_posts_page">Pagina degli articoli</string>
     <string name="site_settings_static_homepage">Homepage statica</string>
@@ -488,7 +488,6 @@ Language: it
     <string name="stats_management_add_new_stats_card">Aggiungi nuova scheda statistiche</string>
     <string name="reader_self_hosted_select_filter">Utilizza il pulsante di filtro per trovare articoli su argomenti specifici</string>
     <string name="reader_bottom_sheet_content_description">Seleziona un tag o un sito, finestra pop-up</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Selezionati</string>
     <string name="reader_btn_select_filter_content_description">Seleziona un sito o un tag per filtrare gli articoli</string>
     <string name="reader_btn_remove_filter_content_description">Rimuovi filtro attuale</string>
     <string name="reader_title_subs">Gestisci argomenti e siti</string>
@@ -565,7 +564,6 @@ Language: it
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Non siamo in grado di aprire gli articoli in questo momento. Riprova più tardi.</string>
     <string name="site_cannot_be_loaded">Non siamo in grado di caricare i dati per il tuo sito in questo momento. Riprova più tardi.</string>
     <string name="gutenberg_native_wordpress_media_library">Libreria multimediale WordPress</string>
@@ -1200,14 +1198,8 @@ Language: it
     <string name="support_contact_email">Email di contatto</string>
     <string name="application_log_button">Registro applicazione</string>
     <string name="my_tickets">I miei ticket</string>
-    <string name="activity_log_rewind_dialog_message">Sei sicuro di voler riportare il tuo sito al %1$s alle %2$s? Questo rimuoverà tutti i contenuti e le opzioni create o modificate dopo di allora.</string>
-    <string name="activity_log_rewind_site">Ripristina sito</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Ripristino in corso</string>
-    <string name="activity_log_currently_restoring_message">Ripristino al %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Al momento stiamo ripristinando il tuo sito</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Il tuo sito è stato ripristinato correttamente</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Il tuo sito è stato ripristinato correttamente\nTornando al %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Il tuo sito è in fase di ripristino\nRitorno al %1$s %2$s</string>
     <string name="activity_log_button">Pulsante di azione Registro applicazione</string>
     <string name="plugin_auto_managed">Auto-gestito</string>
     <string name="reader_save_posts_locally_dialog_message">Salva questo articolo e torna a leggerlo quando vorrai. Sarà disponibile solo su questo dispositivo — gli articoli salvati non vengono sincronizzati con gli altri dispositivi.</string>
@@ -1250,7 +1242,6 @@ Language: it
     <string name="reader_btn_notifications_on">Attiva notifiche sito</string>
     <string name="reader_btn_notifications_off">Disattiva notifiche sito</string>
     <string name="activity_log_jetpack_icon">Icona Jetpack</string>
-    <string name="rewind">Ripristina</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icona attività</string>
     <string name="activity_log">Log attività</string>

@@ -125,7 +125,6 @@ import org.wordpress.android.util.ViewUtilsKt;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
@@ -208,7 +207,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ViewModelProvider.Factory mViewModelFactory;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject ReaderTracker mReaderTracker;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
@@ -441,7 +439,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     handleNewPostAction(PagePostCreationSourcesDetail.POST_FROM_MY_SITE);
                     break;
                 case CREATE_NEW_PAGE:
-                    if (mModalLayoutPickerFeatureConfig.isEnabled() && mMLPViewModel.canShowModalLayoutPicker()) {
+                    if (mMLPViewModel.canShowModalLayoutPicker()) {
                         mMLPViewModel.createPageFlowTriggered();
                     } else {
                         handleNewPageAction("", "", null,
@@ -1027,7 +1025,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
 
                 setSite(data);
-                showQuickStartDialog();
+                if (getMySiteFragment() != null) {
+                    showQuickStartDialog();
+                } else {
+                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
+                }
                 mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -1067,6 +1069,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
+                } else {
+                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:

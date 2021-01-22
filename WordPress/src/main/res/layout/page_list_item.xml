@@ -52,11 +52,41 @@
             android:textColor="?attr/wpColorOnSurfaceMedium"
             app:layout_goneMarginBottom="@dimen/margin_large"
             app:layout_constraintBottom_toTopOf="@+id/labels"
-            app:layout_constraintEnd_toStartOf="@+id/featured_image"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/page_title"
-            tools:text="99 days ago • Eulah Kuvalis"/>
+            tools:text="99 days ago • Eulah Kuvalis •" />
+
+        <ImageView
+            android:id="@+id/page_subtitle_icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            app:layout_constraintBottom_toTopOf="@+id/labels"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/page_subtitle"
+            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_goneMarginBottom="@dimen/margin_large"
+            tools:ignore="ContentDescription"
+            tools:src="@drawable/ic_posts_16dp" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/page_subtitle_suffix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_small"
+            android:layout_marginTop="@dimen/margin_extra_small"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:textAppearance="?attr/textAppearanceBody2"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            app:layout_constraintBottom_toTopOf="@+id/labels"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toEndOf="@+id/page_subtitle_icon"
+            app:layout_constraintEnd_toStartOf="@+id/featured_image"
+            app:layout_constraintTop_toBottomOf="@+id/page_title"
+            app:layout_goneMarginBottom="@dimen/margin_large"
+            tools:text="@string/site_settings_posts_page" />
 
         <ImageView
             android:id="@+id/featured_image"

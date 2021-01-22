@@ -67,6 +67,7 @@ public class ReaderPost {
     public boolean isVideoPress;
     public boolean isJetpack;
     public boolean useExcerpt;
+    public boolean isSeen;
 
     public int organizationId;
 
@@ -116,6 +117,7 @@ public class ReaderPost {
         post.isPrivateAtomic = JSONUtils.getBool(json, "site_is_atomic");
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
         post.useExcerpt = JSONUtils.getBool(json, "use_excerpt");
+        post.isSeen = JSONUtils.getBool(json, "is_seen");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {

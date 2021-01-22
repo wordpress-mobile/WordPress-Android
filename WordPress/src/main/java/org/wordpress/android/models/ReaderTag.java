@@ -2,6 +2,7 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
+import org.wordpress.android.ui.Organization;
 import org.wordpress.android.ui.reader.ReaderConstants;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.StringUtils;
@@ -202,9 +203,29 @@ public class ReaderTag implements Serializable, FilterCriteria {
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/a8c");
     }
 
+    public boolean isFilterable() {
+        return this.isFollowedSites() || this.isA8C() || this.isP2();
+    }
+
     public boolean isListTopic() {
         String endpoint = getEndpoint();
         return endpoint.toLowerCase(Locale.ROOT).contains("/read/list/");
+    }
+
+    public Organization getOrganization() {
+        if (this.isA8C()) {
+            return Organization.A8C;
+        } else if (this.isP2()) {
+            return Organization.P2;
+        } else if (this.isFollowedSites() || this.isDefaultInMemoryTag()) {
+            return Organization.NO_ORGANIZATION;
+        } else {
+            return Organization.UNKNOWN;
+        }
+    }
+
+    public String getKeyString() {
+        return tagType.toInt() + getTagSlug();
     }
 
     /*

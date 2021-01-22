@@ -2,6 +2,7 @@ package org.wordpress.android.util
 
 import android.app.Activity
 import android.content.Context
+import com.google.android.material.snackbar.Snackbar
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
@@ -10,7 +11,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog.T
-import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
 import java.util.LinkedList
 import java.util.Queue
@@ -77,7 +77,7 @@ class SnackbarSequencer @Inject constructor(
         return !activity.isFinishing
     }
 
-    private fun prepareSnackBar(context: Context, item: SnackbarItem): WPSnackbar? {
+    private fun prepareSnackBar(context: Context, item: SnackbarItem): Snackbar? {
         return item.info.view.get()?.let { view ->
             val message = uiHelper.getTextOfUiString(context, item.info.textRes)
 

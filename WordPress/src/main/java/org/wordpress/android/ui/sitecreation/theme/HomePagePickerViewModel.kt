@@ -18,6 +18,9 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
+import org.wordpress.android.ui.sitecreation.theme.PreviewMode.valueOf
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -30,6 +33,7 @@ const val defaultTemplateSlug = "default"
 private const val ERROR_CONTEXT = "design"
 private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
 private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
+private const val PREVIEW_MODE = "PREVIEW_MODE"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -38,7 +42,7 @@ class HomePagePickerViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), CoroutineScope, PreviewModeHandler {
     private val fetchHomePageLayoutsJob = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
@@ -60,6 +64,15 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
+    private val _previewMode = SingleLiveEvent<PreviewMode>()
+    val previewMode: LiveData<PreviewMode> = _previewMode
+
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
+    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
+    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
+
     sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
         object Skip : DesignSelectionAction(defaultTemplateSlug, null)
         class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
@@ -74,13 +87,20 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 
+    override fun getPreviewMode() = previewMode.value ?: MOBILE
+
+    override fun setPreviewMode(mode: PreviewMode) = onThumbnailModeChanged(mode)
+
     override fun onCleared() {
         super.onCleared()
         fetchHomePageLayoutsJob.cancel()
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start() {
+    fun start(isTablet: Boolean = false) {
+        if (_previewMode.value == null) {
+            _previewMode.value = if (isTablet) TABLET else MOBILE
+        }
         if (uiState.value !is UiState.Content) {
             analyticsTracker.trackSiteDesignViewed()
             fetchLayouts()
@@ -88,6 +108,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     private fun fetchLayouts() {
+        if (_uiState.value === UiState.Loading) return
         updateUiState(UiState.Loading)
         launch {
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
@@ -110,7 +131,11 @@ class HomePagePickerViewModel @Inject constructor(
                 LayoutGridItemUiState(
                         slug = it.slug!!,
                         title = it.title ?: "",
-                        preview = it.screenshot!!,
+                        preview = when (_previewMode.value) {
+                            MOBILE -> it.mobileScreenshot!!
+                            TABLET -> it.tabletScreenshot!!
+                            else -> it.screenshot!!
+                        },
                         selected = it.slug == state.selectedLayoutSlug,
                         onItemTapped = { onLayoutTapped(layoutSlug = it.slug!!) },
                         onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug!!) }
@@ -197,6 +222,14 @@ class HomePagePickerViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
+    fun onThumbnailModePressed() {
+        _onThumbnailModeButtonPressed.call()
+    }
+
+    fun onPreviewModePressed() {
+        _onPreviewModeButtonPressed.call()
+    }
+
     fun onRetryClicked() {
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
@@ -210,6 +243,7 @@ class HomePagePickerViewModel @Inject constructor(
         if (savedInstanceState == null) return
         val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
+        val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -217,6 +251,7 @@ class HomePagePickerViewModel @Inject constructor(
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
+        _previewMode.value = valueOf(previewMode)
         loadLayouts()
     }
 
@@ -224,6 +259,7 @@ class HomePagePickerViewModel @Inject constructor(
         (uiState.value as? UiState.Content)?.let {
             outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+            outState.putString(PREVIEW_MODE, _previewMode.value?.name ?: MOBILE.name)
         }
     }
 
@@ -244,6 +280,15 @@ class HomePagePickerViewModel @Inject constructor(
                 updateUiState(state.copy(selectedLayoutSlug = layoutSlug, isToolbarVisible = true))
             }
             loadLayouts()
+        }
+    }
+
+    fun onThumbnailModeChanged(mode: PreviewMode) {
+        if (_previewMode.value !== mode) {
+            _previewMode.value = mode
+            if (uiState.value is UiState.Content) {
+                loadLayouts()
+            }
         }
     }
 

@@ -1,0 +1,9 @@
+16,4:
+Yang Baru:
+
+Editor Blok: Kini Anda dapat memasukkan Blok File, yang menyediakan tombol unduh untuk berbagai file seperti dokumen. Kami juga telah memperbaiki kesalahan yang ada pada blok Judul dan Galeri.
+
+Daftar Pos: Dengan tombol “Duplikat”, Anda sekarang dapat menyalin sebuah pos di daftar Pos Blog.
+
+Situs Saya: Kami juga telah memperbaiki crash yang terjadi ketika menyunting judul situs Anda.
+

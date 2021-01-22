@@ -76,6 +76,12 @@ class PageListViewModel @Inject constructor(
 
     private lateinit var pagesViewModel: PagesViewModel
 
+    private val PageModel.isHomepage: Boolean
+        get() = remoteId == pagesViewModel.site.pageOnFront
+
+    private val PageModel.isPostsPage: Boolean
+        get() = remoteId == pagesViewModel.site.pageForPosts
+
     private val featuredImageMap = mutableMapOf<Long, String>()
 
     private val isSitePhotonCapable: Boolean by lazy {
@@ -264,11 +270,11 @@ class PageListViewModel @Inject constructor(
         else pages
 
         val shouldSortTopologically = filteredPages.size < MAX_TOPOLOGICAL_PAGE_COUNT
-        val sortedPages = if (shouldSortTopologically) {
-            topologicalSort(filteredPages, listType = PUBLISHED)
+        val sortedPages = (if (shouldSortTopologically) {
+            topologicalSort(filteredPages.sortedBy { !(it.isHomepage && it.parent == null) }, listType = PUBLISHED)
         } else {
-            filteredPages.sortedByDescending { it.date }
-        }
+            filteredPages.sortedByDescending { it.date }.sortedBy { !it.isHomepage }
+        })
 
         return sortedPages
                 .map {
@@ -283,6 +289,7 @@ class PageListViewModel @Inject constructor(
                             localId = it.pageId,
                             title = it.title,
                             subtitle = itemUiStateData.subtitle,
+                            icon = itemUiStateData.icon,
                             date = it.date,
                             labels = itemUiStateData.labels,
                             labelsColor = itemUiStateData.labelsColor,
@@ -441,12 +448,17 @@ class PageListViewModel @Inject constructor(
                 pagesViewModel.site,
                 pageModel.remoteId
         )
-        val subtitle = when (pageModel.remoteId) {
-            pagesViewModel.site.pageOnFront -> R.string.site_settings_homepage
-            pagesViewModel.site.pageForPosts -> R.string.site_settings_posts_page
+        val subtitle = when {
+            pageModel.isHomepage -> R.string.site_settings_homepage
+            pageModel.isPostsPage -> R.string.site_settings_posts_page
             else -> null
         }
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle)
+        val icon = when {
+            pageModel.isHomepage -> R.drawable.ic_homepage_16dp
+            pageModel.isPostsPage -> R.drawable.ic_posts_16dp
+            else -> null
+        }
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon)
     }
 
     private data class ItemUiStateData(
@@ -455,6 +467,7 @@ class PageListViewModel @Inject constructor(
         val progressBarUiState: ProgressBarUiState,
         val showOverlay: Boolean,
         val actions: Set<Action>,
-        val subtitle: Int? = null
+        val subtitle: Int? = null,
+        val icon: Int? = null
     )
 }

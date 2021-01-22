@@ -1,15 +1,37 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-01 08:32:12+0000
+Translation-Revision-Date: 2020-12-30 18:19:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
+    <string name="backup_item_sqls">Nettstedsdatabase (SQL)</string>
+    <string name="backup_item_contents">Mappen WP-content (unntatt temaer, utvidelser og opplastinger)</string>
+    <string name="backup_item_roots">WordPress-roten (inkludert wp-config.php og filer som ikke tilhærer WordPress)</string>
+    <string name="backup_item_media_uploads">Media-opplastinger</string>
+    <string name="backup_item_plugins">WordPress-utvidelser</string>
+    <string name="backup_item_themes">WordPress-temaer</string>
+    <string name="backup_download_details_icon_content_description">Lag ikon for nedlastbar sikkerhetskopi</string>
+    <string name="backup_download_details_action_button">Lag nedlastbar fil</string>
+    <string name="backup_download_details_choose_items_header">Velg elementene du ønsker å ha med i nedlastingen:</string>
+    <string name="backup_download_details_header">Lag nedlastbar sikkerhetskopi</string>
+    <string name="backup_download_details_page_title">Last ned sikkerhetskopi</string>
+    <string name="backup_download">Nedlasting av sikkerhetskopi</string>
+    <string name="gutenberg_native_error">Feil</string>
+    <string name="gutenberg_native_choose_file">Velg fil</string>
+    <string name="activity_log_item_menu_download_backup_label">Last  ned sikkerhetskopi</string>
+    <string name="activity_log_item_menu_restore_label">Gjenopprett til dette tidspunktet</string>
+    <string name="activity_log_activity_type_filter_header">Filtrer på aktivitetstype</string>
+    <string name="dialog_confirm_copy_local_copy_button">Kopier versjonen fra denne appen</string>
+    <string name="dialog_confirm_copy_local_edit_button">Rediger innlegget først</string>
+    <string name="button_copy">Dupliser</string>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
     <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="activity_log_activity_type_filter_clear">Tøm</string>
+    <string name="activity_log_activity_type_filter_apply">Bruk</string>
     <string name="dialog_edit_story_unsupported_format_title">GIF-filer ikke støttet</string>
     <string name="color_picker_label_background">Bakgrunn</string>
     <string name="color_picker_label_text">Tekst</string>
@@ -172,7 +194,6 @@ Language: nb_NO
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Sideforfatter</string>
     <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="everyone">Alle</string>
@@ -202,13 +223,11 @@ Language: nb_NO
     <string name="publish_date">Publiseringsdato</string>
     <string name="status_and_visibility">Status og synlighet</string>
     <string name="update_now">Oppdater nå</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prøv et startoppsett</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
-    <string name="suggestion_invalid_user">\"%s er ikke en gyldig bruker\"</string>
     <string name="site_settings_select_page">Velg side</string>
     <string name="site_settings_posts_page">Innleggsside</string>
     <string name="site_settings_static_homepage">Statisk hjemmeside</string>
@@ -352,7 +371,6 @@ Language: nb_NO
     <string name="stats_insights_management_general">Generelt</string>
     <string name="stats_management_screen_title">Legg til nytt kort</string>
     <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Valgt</string>
     <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
     <string name="reader_title_subs">Behandle emner og nettsteder</string>
@@ -422,7 +440,6 @@ Language: nb_NO
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Vi kan ikke åpne innlegget akkurat nå. Vennligst prøv igjen senere</string>
     <string name="site_cannot_be_loaded">Vi kan ikke laste data for ditt nettsted akkurat nå. Vennligst prøv igjen senere.</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
@@ -1051,12 +1068,8 @@ Language: nb_NO
     <string name="support_contact_email">Epost for kontakt</string>
     <string name="application_log_button">Appllikasjonslogg</string>
     <string name="my_tickets">Mine saker</string>
-    <string name="activity_log_rewind_site">Tilbakestill nettsted</string>
-    <string name="activity_log_currently_restoring_message">Tilbakestiller til %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ditt nettsted tilbakestilles nå</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ditt nettsted er tilbakestilt</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Ditt nettsted er gjenopprettet\nTilbakestilt til %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Ditt nettsted gjenopprettes\nTilbakestiller til %1$s %2$s</string>
     <string name="activity_log_button">Handlingsknapp for aktivitetslogg</string>
     <string name="plugin_auto_managed">Automatisk behandlet</string>
     <string name="reader_save_posts_locally_dialog_message">Lagre dette innlegget og kom tilbake for å lese det når som helst. Det vil bare bli lagret på denne enheten — lagrede innlegg synkroniseres ikke til andre enheter.</string>
@@ -1099,7 +1112,6 @@ Language: nb_NO
     <string name="reader_btn_notifications_on">Skru på varsler for nettstedet</string>
     <string name="reader_btn_notifications_off">Skru av varsler for nettstedet</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
-    <string name="rewind">Tilbakestill</string>
     <string name="activity_log_event">Hendelse</string>
     <string name="activity_log_icon">Aktivtitetsikon</string>
     <string name="activity_log">Aktivitetslogg</string>

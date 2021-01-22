@@ -209,7 +209,7 @@ public class WPMediaUtils {
             case GENERIC_ERROR:
                 return context.getString(R.string.error_generic_error);
             case EXCEEDS_SITE_SPACE_QUOTA_LIMIT:
-                return context.getString(R.string.error_media_quota_exceeded);
+                return context.getString(R.string.error_media_not_enough_storage);
             case XMLRPC_OPERATION_NOT_ALLOWED:
                 return context.getString(R.string.error_media_xmlrpc_not_allowed);
             case XMLRPC_UPLOAD_ERROR:
