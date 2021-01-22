@@ -16,7 +16,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.R.id
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
 import org.wordpress.android.ui.pages.PageItem.Empty
@@ -101,7 +100,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
-                itemView.setOnClickListener { onItemTapped(page) }
+                itemView.setOnClickListener {
+                    QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                    onItemTapped(page)
+                }
 
                 pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =

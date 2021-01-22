@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Context
 import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -14,13 +15,13 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
@@ -38,6 +39,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -63,13 +65,15 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
+    private val quickStartStore: QuickStartStore,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
-    var quickStartEvent: QuickStartEvent? = null
+    private val _quickStartEvent: MutableLiveData<QuickStartEvent?> = MutableLiveData()
+    val quickStartEvent: LiveData<QuickStartEvent?> = _quickStartEvent
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
     private var retryScrollToPage: LocalId? = null
@@ -92,10 +96,6 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePrivateAt: Boolean by lazy {
         pagesViewModel.site.isPrivateWPComAtomic
-    }
-
-    val site: SiteModel by lazy {
-        pagesViewModel.site
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
@@ -158,14 +158,29 @@ class PageListViewModel @Inject constructor(
         return pagesViewModel.onMenuAction(action, pageItem)
     }
 
-    fun onItemTapped(pageItem: Page) {
-        quickStartEvent = null
+    fun onItemTapped(pageItem: Page, context: Context) {
+        if (isHomepage(pageItem)) {
+            QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore,
+                    EDIT_HOMEPAGE,
+                    dispatcher,
+                    pagesViewModel.site,
+                    _quickStartEvent.value,
+                    context)
+        }
+
+        _quickStartEvent.postValue(null)
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
     }
 
-    fun isHomepage(pageItem: Page): Boolean {
+    fun onQuickStartEvent(event: QuickStartEvent) {
+        if (event.task == EDIT_HOMEPAGE) {
+            _quickStartEvent.postValue(event)
+        }
+    }
+
+    private fun isHomepage(pageItem: Page): Boolean {
         return pageItem.remoteId == pagesViewModel.site.pageOnFront
     }
 
@@ -474,7 +489,7 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
-                quickStartEvent?.task == EDIT_HOMEPAGE
+                _quickStartEvent.value?.task == EDIT_HOMEPAGE
         return ItemUiStateData(labels,
                 labelColor,
                 progressBarUiState,
