@@ -13,8 +13,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.modules.UI_THREAD
@@ -142,7 +141,7 @@ class ActivityLogViewModel @Inject constructor(
     private var areActionsEnabled: Boolean = true
 
     private var lastRewindActivityId: String? = null
-    private var lastRewindStatus: Status? = null
+    private var lastRewindStatus: Rewind.Status? = null
 
     private var currentDateRangeFilter: DateRange? = null
     private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
@@ -393,11 +392,11 @@ class ActivityLogViewModel @Inject constructor(
         requestEventsUpdate(true)
     }
 
-    private fun updateRewindState(status: Status?) {
+    private fun updateRewindState(status: Rewind.Status?) {
         lastRewindStatus = status
-        if (status == RUNNING && !isRewindProgressItemShown) {
+        if (status == Rewind.Status.RUNNING && !isRewindProgressItemShown) {
             reloadEvents(disableActions = true, displayProgressItem = true)
-        } else if (status != RUNNING && isRewindProgressItemShown) {
+        } else if (status != Rewind.Status.RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
         }
     }
