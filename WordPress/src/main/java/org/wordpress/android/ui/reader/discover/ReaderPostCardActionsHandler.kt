@@ -55,6 +55,9 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
+import org.wordpress.android.ui.reader.usecases.ReaderGetSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
@@ -88,6 +91,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
+    private val getSiteUseCase: ReaderGetSiteUseCase,
+    private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
@@ -126,19 +131,62 @@ class ReaderPostCardActionsHandler @Inject constructor(
         fromPostDetails: Boolean = false
     ) {
         withContext(bgDispatcher) {
-            when (type) {
-                FOLLOW -> handleFollowClicked(post)
-                SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-                SHARE -> handleShareClicked(post)
-                VISIT_SITE -> handleVisitSiteClicked(post)
-                BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
-                LIKE -> handleLikeClicked(post, fromPostDetails)
-                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
-                REBLOG -> handleReblogClicked(post)
-                COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
-                REPORT_POST -> handleReportPostClicked(post)
-                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
+            var isSitePresentInDb = false
+            getSiteUseCase.get(post.blogId, post.feedId)?.let { isSitePresentInDb = true }
+
+            if (!isSitePresentInDb && (type == SITE_NOTIFICATIONS || type == FOLLOW)) {
+                handleActionAfterSiteFetch(post, type, isBookmarkList, fromPostDetails)
+            } else {
+                handleAction(post, type, fromPostDetails, isBookmarkList)
             }
+        }
+    }
+
+    private suspend fun handleActionAfterSiteFetch(
+        post: ReaderPost,
+        type: ReaderPostCardActionType,
+        isBookmarkList: Boolean,
+        fromPostDetails: Boolean
+    ) {
+        fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null).collect {
+            when (it) {
+                FetchSiteState.Success, FetchSiteState.AlreadyRunning -> {
+                    handleAction(post, type, fromPostDetails, isBookmarkList)
+                }
+                FetchSiteState.Failed.NoNetwork -> {
+                    _snackbarEvents.postValue(
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                    )
+                }
+                FetchSiteState.Failed.RequestFailed -> {
+                    _snackbarEvents.postValue(
+                        Event(
+                            SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
+                        )
+                    )
+                }
+            }
+        }
+    }
+
+    private suspend fun handleAction(
+        post: ReaderPost,
+        type: ReaderPostCardActionType,
+        fromPostDetails: Boolean,
+        isBookmarkList: Boolean
+    ) {
+        when (type) {
+            FOLLOW -> handleFollowClicked(post)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
+            SHARE -> handleShareClicked(post)
+            VISIT_SITE -> handleVisitSiteClicked(post)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
+            LIKE -> handleLikeClicked(post, fromPostDetails)
+            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
+            REBLOG -> handleReblogClicked(post)
+            COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+            REPORT_POST -> handleReportPostClicked(post)
+            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
         }
     }
 
