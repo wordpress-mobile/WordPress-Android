@@ -29,6 +29,7 @@ import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnSer
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -54,6 +55,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject AccountStore mAccountStore;
     @Inject QuickStartStore mQuickStartStore;
     @Inject Dispatcher mDispatcher;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -94,7 +96,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
 
         if (getActivity() instanceof ScrollableViewInitializedListener) {
-           ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
         }
     }
 
@@ -140,8 +142,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
             showQuickStartFocusPoint();
 
-            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
-                    R.string.quick_start_dialog_enable_sharing_message_short_connections);
+            Spannable title = mQuickStartUtilsWrapper
+                    .stylizeQuickStartPrompt(R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
             WPDialogSnackbar.make(getView(), title,
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)).show();

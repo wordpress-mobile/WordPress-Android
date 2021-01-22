@@ -154,7 +154,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemin
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
-import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -213,6 +213,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -1537,8 +1538,7 @@ class MySiteFragment : Fragment(),
                             ), HtmlCompat.FROM_HTML_MODE_COMPACT
                     )
                 } else {
-                    stylizeQuickStartPrompt(
-                            requireActivity(),
+                    quickStartUtilsWrapper.stylizeQuickStartPrompt(
                             activeTutorialPrompt!!.shortMessagePrompt,
                             activeTutorialPrompt!!.iconId
                     )

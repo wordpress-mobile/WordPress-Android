@@ -151,7 +151,7 @@ class MySiteViewModel
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
 
-    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar)
+    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onQuickStartMenuShown = _onQuickStartMenuShown as LiveData<Event<String>>
@@ -278,6 +278,7 @@ class MySiteViewModel
     }
 
     private fun titleClick(selectedSite: SiteModel) {
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {

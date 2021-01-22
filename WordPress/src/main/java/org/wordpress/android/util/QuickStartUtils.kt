@@ -15,7 +15,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
-import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
@@ -48,6 +47,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
+import org.wordpress.android.viewmodel.ResourceProvider
 
 class QuickStartUtils {
     companion object {
@@ -67,13 +67,13 @@ class QuickStartUtils {
         @JvmStatic
         @JvmOverloads
         fun stylizeQuickStartPrompt(
-            context: Context,
+            resourceProvider: ResourceProvider,
             messageId: Int,
             iconId: Int = ICON_NOT_SET
         ): Spannable {
-            val spanTagOpen = context.resources.getString(R.string.quick_start_span_start)
-            val spanTagEnd = context.resources.getString(R.string.quick_start_span_end)
-            var formattedMessage = context.resources.getString(messageId, spanTagOpen, spanTagEnd)
+            val spanTagOpen = resourceProvider.getString(R.string.quick_start_span_start)
+            val spanTagEnd = resourceProvider.getString(R.string.quick_start_span_end)
+            var formattedMessage = resourceProvider.getString(messageId, spanTagOpen, spanTagEnd)
 
             val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 
@@ -97,7 +97,7 @@ class QuickStartUtils {
             )
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
-                val highlightColor = ContextCompat.getColor(context, android.R.color.white)
+                val highlightColor = resourceProvider.getColor(android.R.color.white)
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -105,13 +105,13 @@ class QuickStartUtils {
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
-                    ContextCompat.getDrawable(context, iconId)?.mutate()
+                    resourceProvider.getDrawable(iconId)?.mutate()
                 } catch (e: Resources.NotFoundException) {
                     null
                 }
 
                 if (icon != null) {
-                    val iconSize = context.resources.getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
+                    val iconSize = resourceProvider.getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
                     icon.setBounds(0, 0, iconSize, iconSize)
 
                     DrawableCompat.setTint(icon, highlightColor)
@@ -214,7 +214,12 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore): Boolean {
-            return quickStartStore.getDoneCount(AppPrefs.getSelectedSite().toLong()) == QuickStartTask.values().size
+            return isEveryQuickStartTaskDone(quickStartStore, AppPrefs.getSelectedSite())
+        }
+
+        @JvmStatic
+        fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
+            return quickStartStore.getDoneCount(selectedSiteId.toLong()) == QuickStartTask.values().size
         }
 
         @JvmStatic
@@ -303,7 +308,7 @@ class QuickStartUtils {
             }
         }
 
-        private fun getTaskCompletedTracker(task: QuickStartTask): Stat {
+        fun getTaskCompletedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED

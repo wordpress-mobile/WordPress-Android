@@ -42,6 +42,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
@@ -113,6 +114,7 @@ public class ThemeBrowserFragment extends Fragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject Dispatcher mDispatcher;
     @Inject ImageManager mImageManager;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -206,7 +208,7 @@ public class ThemeBrowserFragment extends Fragment
             getView().post(() -> {
                 showQuickStartFocusPoint();
 
-                Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+                Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                         R.string.quick_start_dialog_customize_site_message_short_customize,
                         R.drawable.ic_customize_white_24dp);
 
