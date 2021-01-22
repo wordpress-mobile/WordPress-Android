@@ -43,7 +43,6 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -94,7 +93,7 @@ class ActivityLogViewModelTest {
     private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
-    private var rewindProgress = MutableLiveData<RewindProgress>()
+    private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
 
     private val rewindStatusModel = RewindStatusModel(
