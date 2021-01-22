@@ -22,7 +22,10 @@ class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore
 ) {
-    suspend fun getRestoreStatus(site: SiteModel, restoreId: Long) = flow {
+    suspend fun getRestoreStatus(
+        site: SiteModel,
+        restoreId: Long
+    ) = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
