@@ -26,6 +26,13 @@ class GetRestoreStatusUseCase @Inject constructor(
         site: SiteModel,
         restoreId: Long? = null
     ) = flow {
+        if (restoreId == null) {
+            val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
+            if (result.isError) {
+                emit(RemoteRequestFailure)
+                return@flow
+            }
+        }
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
