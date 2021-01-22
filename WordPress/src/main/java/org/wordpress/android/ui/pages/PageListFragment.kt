@@ -23,6 +23,7 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
@@ -36,6 +37,7 @@ class PageListFragment : ViewPagerFragment() {
     @Inject internal lateinit var imageManager: ImageManager
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var dispatcher: Dispatcher
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
     private var snackbar: WPDialogSnackbar? = null
@@ -174,8 +176,7 @@ class PageListFragment : ViewPagerFragment() {
 
     fun showSnackbar() {
             view?.post {
-                val title = QuickStartUtils.stylizeQuickStartPrompt(
-                        requireActivity(),
+                val title = quickStartUtilsWrapper.stylizeQuickStartPrompt(
                         R.string.quick_start_dialog_edit_homepage_message_pages_short,
                         R.drawable.ic_homepage_16dp
                 )
