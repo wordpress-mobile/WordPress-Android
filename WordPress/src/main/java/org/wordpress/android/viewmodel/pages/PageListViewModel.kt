@@ -14,12 +14,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.MediaActionBuilder
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,6 +34,7 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
@@ -66,10 +69,9 @@ class PageListViewModel @Inject constructor(
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
-
+    var quickStartEvent: QuickStartEvent? = null
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
-
     private var retryScrollToPage: LocalId? = null
     private var isStarted: Boolean = false
     private lateinit var listType: PageListType
@@ -90,6 +92,10 @@ class PageListViewModel @Inject constructor(
 
     private val isSitePrivateAt: Boolean by lazy {
         pagesViewModel.site.isPrivateWPComAtomic
+    }
+
+    val site: SiteModel by lazy {
+        pagesViewModel.site
     }
 
     enum class PageListType(val pageStatuses: List<PageStatus>) {
@@ -156,6 +162,10 @@ class PageListViewModel @Inject constructor(
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
+    }
+
+    fun isHomepage(pageItem: Page): Boolean {
+        return pageItem.remoteId == pagesViewModel.site.pageOnFront
     }
 
     fun onEmptyListNewPageButtonTapped() {
@@ -300,7 +310,8 @@ class PageListViewModel @Inject constructor(
                             progressBarUiState = itemUiStateData.progressBarUiState,
                             showOverlay = itemUiStateData.showOverlay,
                             author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                null else it.post.authorDisplayName
+                                null else it.post.authorDisplayName,
+                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                     )
                 }
     }
@@ -332,7 +343,8 @@ class PageListViewModel @Inject constructor(
                                         progressBarUiState = itemUiStateData.progressBarUiState,
                                         showOverlay = itemUiStateData.showOverlay,
                                         author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                            null else it.post.authorDisplayName
+                                            null else it.post.authorDisplayName,
+                                        showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                                 )
                             }
                 }
@@ -363,7 +375,8 @@ class PageListViewModel @Inject constructor(
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
                     author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName
+                        null else it.post.authorDisplayName,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
             )
         }
     }
@@ -392,7 +405,8 @@ class PageListViewModel @Inject constructor(
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
                     author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName
+                        null else it.post.authorDisplayName,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
             )
         }
     }
@@ -458,7 +472,8 @@ class PageListViewModel @Inject constructor(
             pageModel.isPostsPage -> R.drawable.ic_posts_16dp
             else -> null
         }
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon)
+        val showQuickStartFocusPoint: Boolean = pageModel.isHomepage && quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE
+        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon, showQuickStartFocusPoint)
     }
 
     private data class ItemUiStateData(
@@ -468,6 +483,7 @@ class PageListViewModel @Inject constructor(
         val showOverlay: Boolean,
         val actions: Set<Action>,
         val subtitle: Int? = null,
-        val icon: Int? = null
+        val icon: Int? = null,
+        val showQuickStartFocusPoint: Boolean = false
     )
 }

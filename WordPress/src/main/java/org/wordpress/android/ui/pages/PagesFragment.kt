@@ -38,8 +38,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
@@ -52,7 +50,6 @@ import org.wordpress.android.ui.posts.PreviewStateHelper
 import org.wordpress.android.ui.posts.ProgressDialogHelper
 import org.wordpress.android.ui.posts.RemotePreviewLogicHelper
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
@@ -91,7 +88,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
      */
     @Suppress("unused")
     @Inject lateinit var postStore: PostStore
-    @Inject lateinit var quickStartStore: QuickStartStore
     @Inject lateinit var dispatcher: Dispatcher
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var remotePreviewLogicHelper: RemotePreviewLogicHelper
@@ -100,7 +96,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
 
-    private var quickStartEvent: QuickStartEvent? = null
     private var progressDialog: ProgressDialog? = null
 
     private var restorePreviousSearch = false
@@ -116,8 +111,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
-
-        quickStartEvent = savedInstanceState?.getParcelable(QuickStartEvent.KEY)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -548,50 +541,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
 
     fun onNegativeClickedForBasicDialog(instanceTag: String) {
         viewModel.onNegativeClickedForBasicDialog(instanceTag)
-    }
-
-    override fun onStart() {
-        super.onStart()
-        EventBus.getDefault().register(this)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        EventBus.getDefault().unregister(this)
-    }
-
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    @SuppressWarnings("unused")
-    fun onEvent(event: QuickStartEvent) {
-        if (!isAdded || view == null) {
-            return
-        }
-
-        EventBus.getDefault().removeStickyEvent(event)
-        quickStartEvent = event
-
-        if (quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE) {
-            view?.post {
-                val marginOffset = resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
-                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                        fab_container,
-                        newPageButton,
-                        -marginOffset,
-                        -marginOffset
-                )
-
-                val title = QuickStartUtils.stylizeQuickStartPrompt(
-                        requireActivity(),
-                        R.string.quick_start_dialog_edit_homepage_message_pages_short,
-                        R.drawable.ic_homepage_16dp
-                )
-
-                WPDialogSnackbar.make(
-                        requireView().findViewById(R.id.coordinatorLayout), title,
-                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                ).show()
-            }
-        }
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
