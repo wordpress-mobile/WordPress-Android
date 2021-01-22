@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
@@ -9,6 +10,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
@@ -27,11 +29,7 @@ class GetRestoreStatusUseCase @Inject constructor(
         restoreId: Long? = null
     ) = flow {
         if (restoreId == null) {
-            val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
-            if (result.isError) {
-                emit(RemoteRequestFailure)
-                return@flow
-            }
+            if (fetchActivitiesRewind(site)) return@flow
         }
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -64,13 +62,18 @@ class GetRestoreStatusUseCase @Inject constructor(
                 }
             }
 
-            val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
-            if (result.isError) {
-                emit(RemoteRequestFailure)
-                return@flow
-            }
+            if (fetchActivitiesRewind(site)) return@flow
 
             delay(DELAY_MILLIS)
         }
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.fetchActivitiesRewind(site: SiteModel): Boolean {
+        val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
+        if (result.isError) {
+            emit(RemoteRequestFailure)
+            return true
+        }
+        return false
     }
 }
