@@ -144,7 +144,12 @@ class PageListFragment : ViewPagerFragment() {
 
     fun onItemTapped(pageItem: Page) {
         if (viewModel.isHomepage(pageItem)) {
-            QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore, EDIT_HOMEPAGE, dispatcher, viewModel.site, viewModel.quickStartEvent, requireContext())
+            QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore,
+                    EDIT_HOMEPAGE,
+                    dispatcher,
+                    viewModel.site,
+                    viewModel.quickStartEvent,
+                    requireContext())
         }
         viewModel.onItemTapped(pageItem)
     }

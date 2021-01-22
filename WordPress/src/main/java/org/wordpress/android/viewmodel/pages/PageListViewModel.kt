@@ -472,8 +472,16 @@ class PageListViewModel @Inject constructor(
             pageModel.isPostsPage -> R.drawable.ic_posts_16dp
             else -> null
         }
-        val showQuickStartFocusPoint: Boolean = pageModel.isHomepage && quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon, showQuickStartFocusPoint)
+        val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
+                quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE
+        return ItemUiStateData(labels,
+                labelColor,
+                progressBarUiState,
+                showOverlay,
+                actions,
+                subtitle,
+                icon,
+                showQuickStartFocusPoint)
     }
 
     private data class ItemUiStateData(

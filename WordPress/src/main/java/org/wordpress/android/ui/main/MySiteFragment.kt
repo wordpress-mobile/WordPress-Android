@@ -148,7 +148,6 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemindNextOne
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
@@ -529,7 +528,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun viewPages() {
-        if(activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
+        if (activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
             requestNextStepOfActiveQuickStartTask()
         } else {
             completeQuickStarTask(REVIEW_PAGES)
@@ -1416,7 +1415,9 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
-            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == REVIEW_PAGES || activeTutorialPrompt!!.task == EDIT_HOMEPAGE -> {
+            activeTutorialPrompt!!.task == CHECK_STATS ||
+                    activeTutorialPrompt!!.task == REVIEW_PAGES ||
+                    activeTutorialPrompt!!.task == EDIT_HOMEPAGE -> {
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }

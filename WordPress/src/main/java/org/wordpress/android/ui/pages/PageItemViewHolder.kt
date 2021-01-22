@@ -113,7 +113,7 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
                 updateProgressBarState(page.progressBarUiState)
 
-                if(page.showQuickStartFocusPoint) {
+                if (page.showQuickStartFocusPoint) {
                     val focusPointSize = pageItemContainer.resources.getDimensionPixelOffset(
                             dimen.quick_start_focus_point_size
                     )
