@@ -464,16 +464,6 @@ public class ThemeBrowserFragment extends Fragment
                || planId == PlansConstants.JETPACK_BUSINESS_PLAN_ID;
     }
 
-    @Override public void onStart() {
-        super.onStart();
-        EventBus.getDefault().register(this);
-    }
-
-    @Override public void onStop() {
-        super.onStop();
-        EventBus.getDefault().unregister(this);
-    }
-
     private class ThemeDataSetObserver extends DataSetObserver {
         @Override public void onChanged() {
             updateDisplay();
