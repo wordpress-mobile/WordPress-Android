@@ -828,7 +828,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site = eq(site),
                 onClick = any(),
                 isBackupAvailable = eq(true),
-                isScanAvailable = any()
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = eq(false)
         )
     }
 
@@ -845,7 +846,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site = eq(site),
                 onClick = any(),
                 isBackupAvailable = any(),
-                isScanAvailable = eq(true)
+                isScanAvailable = eq(true),
+                showViewSiteFocusPoint = eq(false)
         )
     }
 
@@ -926,7 +928,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any())
 
         onSiteChange.postValue(site)
 

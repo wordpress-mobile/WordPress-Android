@@ -151,7 +151,9 @@ class MySiteViewModel
     private val _onQuickStartMenuShown = MutableLiveData<Event<String>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
+    private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
 
+    val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
@@ -225,9 +227,13 @@ class MySiteViewModel
                             site,
                             this::onItemClick,
                             backupScreenFeatureConfig.isEnabled(),
-                            scanAvailable
+                            scanAvailable,
+                            quickStartModel?.activeTask == QuickStartTask.VIEW_SITE
                     )
             )
+            scrollToQuickStartTaskIfNecessary(
+                    quickStartModel?.activeTask,
+                    siteItems.indexOfFirst { it.activeQuickStartItem })
             State.SiteSelected(siteItems)
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
@@ -235,6 +241,17 @@ class MySiteViewModel
             State.NoSites(shouldShowImage)
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun scrollToQuickStartTaskIfNecessary(
+        quickStartTask: QuickStartTask?,
+        position: Int
+    ) {
+        if (quickStartTask == null) {
+            _scrollToQuickStartTask.postValue(null)
+        } else if (_scrollToQuickStartTask.value?.peekContent()?.first != quickStartTask && position >= 0) {
+            _scrollToQuickStartTask.postValue(Event(quickStartTask to position))
+        }
     }
 
     private fun updateScanItemState(site: SiteModel) {
@@ -264,7 +281,10 @@ class MySiteViewModel
                 STATS -> getStatsNavigationActionForSite(site)
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
-                VIEW_SITE -> OpenSite(site)
+                VIEW_SITE -> {
+                    quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
+                    OpenSite(site)
+                }
                 JETPACK_SETTINGS -> OpenJetpackSettings(site)
             }
             _onNavigation.postValue(Event(navigationAction))
