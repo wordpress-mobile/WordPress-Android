@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
@@ -57,7 +58,6 @@ import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostCon
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
-import org.wordpress.android.ui.reader.usecases.ReaderGetSiteUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
@@ -91,7 +91,6 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
-    private val getSiteUseCase: ReaderGetSiteUseCase,
     private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
@@ -99,6 +98,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val appRatingDialogWrapper: AppRatingDialogWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
@@ -131,10 +131,14 @@ class ReaderPostCardActionsHandler @Inject constructor(
         fromPostDetails: Boolean = false
     ) {
         withContext(bgDispatcher) {
-            var isSitePresentInDb = false
-            getSiteUseCase.get(post.blogId, post.feedId)?.let { isSitePresentInDb = true }
-
-            if (!isSitePresentInDb && (type == SITE_NOTIFICATIONS || type == FOLLOW)) {
+            var shouldPrefetchSite = false
+            if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
+                val readerBlog = readerBlogTableWrapper.getReaderBlog(post.blogId, post.feedId)
+                if (readerBlog == null) {
+                    shouldPrefetchSite = true
+                }
+            }
+            if (shouldPrefetchSite) {
                 handleActionAfterSiteFetch(post, type, isBookmarkList, fromPostDetails)
             } else {
                 handleAction(post, type, fromPostDetails, isBookmarkList)
@@ -150,7 +154,9 @@ class ReaderPostCardActionsHandler @Inject constructor(
     ) {
         fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null).collect {
             when (it) {
-                FetchSiteState.Success, FetchSiteState.AlreadyRunning -> {
+                FetchSiteState.AlreadyRunning -> { // Do Nothing
+                }
+                FetchSiteState.Success -> {
                     handleAction(post, type, fromPostDetails, isBookmarkList)
                 }
                 FetchSiteState.Failed.NoNetwork -> {
