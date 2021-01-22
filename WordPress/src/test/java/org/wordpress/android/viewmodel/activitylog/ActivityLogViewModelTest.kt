@@ -266,9 +266,24 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
             List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = ActivityLogListItem.Event(activityLogList[0], true, false, false)
-        val second = ActivityLogListItem.Event(activityLogList[1], true, false, false)
-        val third = ActivityLogListItem.Event(activityLogList[2], true, false, false)
+        val first = ActivityLogListItem.Event(
+                model = activityLogList[0],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
+        val second = ActivityLogListItem.Event(
+                model = activityLogList[1],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
+        val third = ActivityLogListItem.Event(
+                model = activityLogList[2],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
         activityLogListItems.add(ActivityLogListItem.Header(first.formattedDate))
         activityLogListItems.add(first)
         activityLogListItems.add(second)
