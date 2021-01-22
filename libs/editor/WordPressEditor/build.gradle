@@ -32,8 +32,6 @@ apply plugin: 'kotlin-android-extensions'
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
 
-def buildGutenbergFromSource = rootProject.ext.has("buildGutenbergFromSource") ? rootProject.ext.buildGutenbergFromSource : false
-
 android {
     compileSdkVersion 29
 
@@ -42,7 +40,7 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 29
-        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", buildGutenbergFromSource.toString()
+        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", "false"
     }
     compileOptions {
         sourceCompatibility 1.8
@@ -82,14 +80,7 @@ dependencies {
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-shortcodes:$aztecVersion")
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:wordpress-comments:$aztecVersion")
 
-    if (buildGutenbergFromSource) {
-        implementation (project(':@wordpress_react-native-bridge')) {
-            exclude group: "com.android.volley"
-            exclude group: 'com.google.code.findbugs'
-        }
-    } else {
-      implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
-    }
+    implementation "$rootProject.gradle.ext.gutenbergMobileBinaryPath:$rootProject.ext.gutenbergMobileVersion"
 
     // Required Aztec dependencies (they should be included but Jitpack seems to be stripping these out)
     implementation "org.jetbrains.kotlin:kotlin-stdlib:1.1.4"

@@ -5,7 +5,6 @@ buildscript {
     ext.kotlin_coroutines_version = '1.3.9'
     ext.coroutinesVersion = '1.3.9'
     ext.kotlin_ktx_version = '1.2.0'
-    ext.buildGutenbergMobileJSBundle = 1
     ext.wordPressUtilsVersion = '1.30.3-beta.3'
     ext.detektVersion = '1.15.0'
     ext.gutenbergMobileVersion = 'd8e250e06eff12b44995e3e594ddf10a6b000a55-built-locally'
@@ -26,15 +25,7 @@ buildscript {
     }
 }
 
-ext {
-    buildGutenbergMobileJSBundle = 1
-}
-
 apply plugin: 'com.automattic.android.fetchstyle'
-
-project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
-def suppressJSBundle =  System.getenv('SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD').asBoolean()
-project.ext.buildGutenbergMobileJSBundle = !(suppressJSBundle || project.ext.buildGutenbergFromSource)
 
 allprojects {
     apply plugin: 'checkstyle'
@@ -45,17 +36,7 @@ allprojects {
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
         maven { url "https://jitpack.io" }
-
-        if (rootProject.ext.buildGutenbergFromSource) {
-            // nested RN libraries need the RN maven repo defined from outside so, do it here when building from source
-
-            maven {
-                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
-                url "$rootDir/libs/gutenberg-mobile/gutenberg/node_modules/react-native/android"
-            }
-        } else {
-            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
-        }
+        maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
 
         flatDir {
             dirs '../aars'
