@@ -355,6 +355,15 @@ public class ReaderPostTable {
                        excludeTextColumn);
     }
 
+    public static ReaderPost getBlogPost(long blogId, long postId, boolean excludeTextColumn,
+                                         boolean tryIncludeFeedItemId) {
+        String sortingOptions = (tryIncludeFeedItemId) ? " ORDER BY feed_item_id DESC" : "";
+
+        return getPost("blog_id=? AND post_id=?" + sortingOptions,
+                new String[]{Long.toString(blogId), Long.toString(postId)},
+                excludeTextColumn);
+    }
+
     private static ReaderPost getPost(String where, String[] args, boolean excludeTextColumn) {
         String columns = (excludeTextColumn ? COLUMN_NAMES_NO_TEXT : "*");
         String sql = "SELECT " + columns + " FROM tbl_posts WHERE " + where + " LIMIT 1";

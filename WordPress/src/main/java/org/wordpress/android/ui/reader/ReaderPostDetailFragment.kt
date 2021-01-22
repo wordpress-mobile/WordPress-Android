@@ -717,7 +717,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             if (isAdded && post != null) {
                 // if the post has changed, reload it from the db and update the like/comment counts
                 if (result.isNewOrChanged) {
-                    this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false)
+                    this.post = ReaderPostTable.getBlogPost(post.blogId, post.postId, false, true)
                     this.post?.let {
                         viewModel.onUpdatePost(it)
                     }
@@ -1001,7 +1001,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             post = if (isFeed)
                 ReaderPostTable.getFeedPost(blogId, postId, false)
             else
-                ReaderPostTable.getBlogPost(blogId, postId, false)
+                ReaderPostTable.getBlogPost(blogId, postId, false, true)
             if (post == null) {
                 return false
             }

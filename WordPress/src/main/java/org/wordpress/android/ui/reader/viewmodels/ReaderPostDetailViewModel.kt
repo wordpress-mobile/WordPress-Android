@@ -183,7 +183,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         return readerPostTableWrapper.getBlogPost(
                 blogId,
                 postId,
-                true
+                excludeTextColumn = true,
+                tryIncludeFeedItemId = true
         )
     }
 
