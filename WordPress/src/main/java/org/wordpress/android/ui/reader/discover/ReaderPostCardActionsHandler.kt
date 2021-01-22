@@ -131,48 +131,41 @@ class ReaderPostCardActionsHandler @Inject constructor(
         fromPostDetails: Boolean = false
     ) {
         withContext(bgDispatcher) {
-            var shouldPrefetchSite = false
             if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
                 val readerBlog = readerBlogTableWrapper.getReaderBlog(post.blogId, post.feedId)
                 if (readerBlog == null) {
-                    shouldPrefetchSite = true
+                    val isSiteFetched = preFetchSite(post)
+                    if (!isSiteFetched) {
+                        return@withContext
+                    }
                 }
             }
-            if (shouldPrefetchSite) {
-                handleActionAfterSiteFetch(post, type, isBookmarkList, fromPostDetails)
-            } else {
-                handleAction(post, type, fromPostDetails, isBookmarkList)
-            }
+            handleAction(post, type, fromPostDetails, isBookmarkList)
         }
     }
 
-    private suspend fun handleActionAfterSiteFetch(
-        post: ReaderPost,
-        type: ReaderPostCardActionType,
-        isBookmarkList: Boolean,
-        fromPostDetails: Boolean
-    ) {
-        fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null).collect {
-            when (it) {
-                FetchSiteState.AlreadyRunning -> { // Do Nothing
-                }
-                FetchSiteState.Success -> {
-                    handleAction(post, type, fromPostDetails, isBookmarkList)
-                }
-                FetchSiteState.Failed.NoNetwork -> {
-                    _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+    private suspend fun preFetchSite(post: ReaderPost): Boolean {
+        var isSiteFetched = false
+        when (fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null)) {
+            FetchSiteState.AlreadyRunning -> { // Do Nothing
+            }
+            FetchSiteState.Success -> {
+                isSiteFetched = true
+            }
+            FetchSiteState.Failed.NoNetwork -> {
+                _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                )
+            }
+            FetchSiteState.Failed.RequestFailed -> {
+                _snackbarEvents.postValue(
+                    Event(
+                        SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
                     )
-                }
-                FetchSiteState.Failed.RequestFailed -> {
-                    _snackbarEvents.postValue(
-                        Event(
-                            SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
-                        )
-                    )
-                }
+                )
             }
         }
+        return isSiteFetched
     }
 
     private suspend fun handleAction(

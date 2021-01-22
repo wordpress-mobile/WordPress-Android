@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.reader.usecases
 
-import kotlinx.coroutines.flow.FlowCollector
-import kotlinx.coroutines.flow.flow
 import org.wordpress.android.models.ReaderBlog
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateBlogInfoListener
 import org.wordpress.android.ui.reader.actions.ReaderBlogActionsWrapper
@@ -21,22 +19,18 @@ class ReaderFetchSiteUseCase @Inject constructor(
 ) {
     private val continuations: MutableMap<FetchSiteRequestParams, Continuation<ReaderBlog?>?> = mutableMapOf()
 
-    suspend fun fetchSite(blogId: Long, feedId: Long, blogUrl: String? = null) = flow {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(NoNetwork)
+    suspend fun fetchSite(blogId: Long, feedId: Long, blogUrl: String? = null): FetchSiteState {
+        return if (!networkUtilsWrapper.isNetworkAvailable()) {
+            NoNetwork
         } else {
             val requestParams = FetchSiteRequestParams(blogId, feedId, blogUrl)
             // There is already an action running for this request
             if (continuations[requestParams] != null) {
-                emit(AlreadyRunning)
-                return@flow
+                AlreadyRunning
+            } else {
+                fetchSiteAndWaitForResult(requestParams)?.let { Success } ?: RequestFailed
             }
-            performAction(requestParams)
         }
-    }
-
-    private suspend fun FlowCollector<FetchSiteState>.performAction(requestParams: FetchSiteRequestParams) {
-        fetchSiteAndWaitForResult(requestParams)?.let { emit(Success) } ?: emit(RequestFailed)
     }
 
     private suspend fun fetchSiteAndWaitForResult(requestParams: FetchSiteRequestParams): ReaderBlog? {
