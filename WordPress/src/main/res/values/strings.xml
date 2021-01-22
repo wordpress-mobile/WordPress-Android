@@ -3441,4 +3441,7 @@
     <string name="restore_complete_failed_action_button_content_description">Done button</string>
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
 
+    <string name="rewind_generic_failure">@string/backup_download_generic_failure</string>
+    <string name="rewind_another_process_running">There is another restore running.</string>
+
 </resources>
