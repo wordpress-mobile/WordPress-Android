@@ -63,8 +63,21 @@ class StoriesEventListener @Inject constructor(
 
     @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
     private fun onCreate() {
-        dispatcher.register(this)
-        eventBusWrapper.register(this)
+        // startListening()
+    }
+
+    fun startListening() {
+        if (!eventBusWrapper.isRegistered(this)) {
+            dispatcher.register(this)
+            eventBusWrapper.register(this)
+        }
+    }
+
+    fun pauseListening() {
+        if (eventBusWrapper.isRegistered(this)) {
+            dispatcher.unregister(this)
+            eventBusWrapper.unregister(this)
+        }
     }
 
     /**
@@ -74,8 +87,7 @@ class StoriesEventListener @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
-        dispatcher.unregister(this)
-        eventBusWrapper.unregister(this)
+        pauseListening()
     }
 
     fun start(

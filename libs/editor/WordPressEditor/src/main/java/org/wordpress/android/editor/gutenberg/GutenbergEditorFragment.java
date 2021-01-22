@@ -132,6 +132,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
     private GutenbergPropsBuilder mCurrentGutenbergPropsBuilder;
     private boolean mUpdateCapabilitiesOnCreate = false;
     private String mExternallyEditedBlockOriginalHash = null;
+    private boolean mStoryBlockReplacedSignalWait = false;
 
     private String mUpdatedStoryBlockContent = null;
 
@@ -325,7 +326,10 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     @Override
                     public void onEditorDidMount(ArrayList<Object> unsupportedBlocks) {
                         mEditorDidMount = true;
-                        mEditorFragmentListener.onEditorFragmentContentReady(unsupportedBlocks);
+                        mEditorFragmentListener.onEditorFragmentContentReady(
+                                unsupportedBlocks,
+                                mExternallyEditedBlockOriginalHash != null
+                        );
 
                         // Hide the progress bar when editor is ready
                         new Handler(Looper.getMainLooper()).post(new Runnable() {
@@ -407,6 +411,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     }
 
                     @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
+                        if (mStoryBlockReplacedSignalWait) {
+                            // in case we were expecting a fresh block replacement sync signal, let the fragment listener
+                            // know so it can process all of the pending block save / update / upload events
+                            mStoryBlockReplacedSignalWait = false;
+                            mEditorFragmentListener.onReplaceStoryEditedBlockActionReceived();
+                        }
+
                         // caclulate the hash to verify whether this is the block that needs to get replaced
                         // this is important given we could be receiving a request to sync from a different Story block
                         // in the same Post otherwise
@@ -415,6 +426,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
                             if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
                                 getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
+                                mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
+                                // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
+                                // new block to signal a replaceBlockSync to us again after loading, calling this
+                                // very callback method again
+                                mStoryBlockReplacedSignalWait = true;
                             } else {
                                 // TODO handle / log error here, or maybe just skip it
                             }

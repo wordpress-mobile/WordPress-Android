@@ -417,6 +417,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
     private boolean mIsJetpackSsoEnabled;
+    private boolean mStoryEditingCancelled = false;
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
@@ -2603,6 +2604,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
+                case RequestCodes.EDIT_STORY:
+                    mStoryEditingCancelled = true;
                 default:
                     // noop
                     return;
@@ -3252,13 +3255,35 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+    public void onEditorFragmentContentReady(
+            ArrayList<Object> unsupportedBlocksList,
+            boolean replaceBlockActionWaiting
+    ) {
         // Note that this method is also used to track startup performance
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
         presentNewPageNoticeIfNeeded();
+
+        // don't start listening for Story events just now if we're waiting for a block to be replaced,
+        // unless the user cancelled editing in which case we should continue as normal and attach the listener
+        if (!replaceBlockActionWaiting || mStoryEditingCancelled ) {
+            mStoriesEventListener.startListening();
+        }
+    }
+
+    @Override
+    public void onReplaceStoryEditedBlockActionSent() {
+        // when a replaceBlock signal has been sent, it uses the DeferredEventemitter so we have to wait for
+        // the block replacement to be completed before we can start throwing block-related events at it
+        // otherwise these events will miss their target
+        mStoriesEventListener.pauseListening();
+    }
+
+    @Override
+    public void onReplaceStoryEditedBlockActionReceived() {
+        mStoriesEventListener.startListening();
     }
 
     private void logTemplateSelection() {
@@ -3322,18 +3347,23 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
-                this,
-                new LocalId(mEditPostRepository.getId()),
-                mNetworkErrorOnLastMediaFetchAttempt,
-                mediaFiles,
-                blockId
-        );
+        // we need to save the latest before editing
+        updateAndSavePostAsync(new OnPostUpdatedFromUIListener() {
+            @Override public void onPostUpdatedFromUI(@Nullable UpdatePostResult updatePostResult) {
+                boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
+                        EditPostActivity.this,
+                        new LocalId(mEditPostRepository.getId()),
+                        mNetworkErrorOnLastMediaFetchAttempt,
+                        mediaFiles,
+                        blockId
+                );
 
-        if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
-            // try another fetchMedia request
-            fetchMediaList();
-        }
+                if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
+                    // try another fetchMedia request
+                    fetchMediaList();
+                }
+            }
+        });
     }
 
     @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
