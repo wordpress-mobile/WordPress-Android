@@ -52,7 +52,7 @@ class GetRestoreStatusUseCase @Inject constructor(
                         emit(Progress(rewind.rewindId as String, rewind.progress, rewind.message, rewind.currentEntry))
                     }
                     QUEUED -> {
-                        // no op
+                        emit(Progress(rewind.rewindId as String, rewind.progress, rewind.message, rewind.currentEntry))
                     }
                 }
             }
