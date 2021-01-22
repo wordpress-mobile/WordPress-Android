@@ -24,7 +24,7 @@ class GetRestoreStatusUseCase @Inject constructor(
 ) {
     suspend fun getRestoreStatus(
         site: SiteModel,
-        restoreId: Long
+        restoreId: Long? = null
     ) = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -33,7 +33,8 @@ class GetRestoreStatusUseCase @Inject constructor(
             }
 
             val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-            if (rewind != null && rewind.restoreId == restoreId) {
+            if (rewind != null &&
+                    (restoreId == null || rewind.restoreId == restoreId)) {
                 when (rewind.status) {
                     FINISHED -> {
                         if (rewind.rewindId != null) {
