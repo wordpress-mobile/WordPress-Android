@@ -89,6 +89,7 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
     @Inject lateinit var progressDialogHelper: ProgressDialogHelper
     @Inject lateinit var uploadActionUseCase: UploadActionUseCase
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
 
     private var progressDialog: ProgressDialog? = null
 

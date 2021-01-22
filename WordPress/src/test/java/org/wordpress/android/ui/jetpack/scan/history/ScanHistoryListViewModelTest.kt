@@ -22,8 +22,12 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData.genericThreatModel
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 
 @InternalCoroutinesApi
@@ -52,6 +56,18 @@ class ScanHistoryListViewModelTest {
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
+        whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull())).thenReturn(mock())
+    }
+
+    @Test
+    fun `Loading skeletons shown, when the user opens the screen`() {
+        whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData())
+
+        viewModel.start(ScanHistoryTabType.ALL, site, scanHistoryViewModel)
+        viewModel.uiState.observeForever(mock())
+
+        assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+        assertThat((viewModel.uiState.value as ContentUiState).items).allMatch { it is ThreatItemLoadingSkeletonState }
     }
 
     @Test
@@ -59,7 +75,8 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.ALL, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        assertThat(viewModel.uiState.value).isNotEmpty
+        assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+        assertThat((viewModel.uiState.value as ContentUiState).items).allMatch { it is ThreatItemState }
     }
 
     @Test
@@ -89,5 +106,15 @@ class ScanHistoryListViewModelTest {
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }
+    }
+
+    @Test
+    fun `Empty screen shown, when history is empty`() {
+        whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(listOf()))
+
+        viewModel.start(ScanHistoryTabType.ALL, site, scanHistoryViewModel)
+        viewModel.uiState.observeForever(mock())
+
+        assertThat(viewModel.uiState.value).isInstanceOf(EmptyHistory::class.java)
     }
 }

@@ -119,6 +119,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
@@ -220,6 +221,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -890,7 +892,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
-            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 

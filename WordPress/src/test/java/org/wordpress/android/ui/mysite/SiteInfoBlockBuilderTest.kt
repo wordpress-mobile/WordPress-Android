@@ -21,8 +21,8 @@ class SiteInfoBlockBuilderTest {
     }
 
     @Test
-    fun `shows quick start focus point when showUpdateSiteTitleFocusPoint is true`() {
-        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(site, false, {}, {}, {}, {},
+    fun `shows title quick start focus point when showUpdateSiteTitleFocusPoint is true`() {
+        val buildSiteInfoBlock = buildSiteInfoBlock(
                 showUpdateSiteTitleFocusPoint = true
         )
 
@@ -30,17 +30,39 @@ class SiteInfoBlockBuilderTest {
     }
 
     @Test
-    fun `hides quick start focus point when showUpdateSiteTitleFocusPoint is false`() {
-        val buildSiteInfoBlock = siteInfoBlockBuilder.buildSiteInfoBlock(
-                site,
-                false,
-                {},
-                {},
-                {},
-                {},
+    fun `hides title quick start focus point when showUpdateSiteTitleFocusPoint is false`() {
+        val buildSiteInfoBlock = buildSiteInfoBlock(
                 showUpdateSiteTitleFocusPoint = false
         )
 
         assertThat(buildSiteInfoBlock.showTitleFocusPoint).isFalse()
     }
+
+    @Test
+    fun `shows icon quick start focus point when showUploadSiteIconFocusPoint is true`() {
+        val buildSiteInfoBlock = buildSiteInfoBlock(
+                showUploadSiteIconFocusPoint = true
+        )
+
+        assertThat(buildSiteInfoBlock.showIconFocusPoint).isTrue()
+    }
+
+    @Test
+    fun `hides icon quick start focus point when showUploadSiteIconFocusPoint is false`() {
+        val buildSiteInfoBlock = buildSiteInfoBlock(
+                showUploadSiteIconFocusPoint = false
+        )
+
+        assertThat(buildSiteInfoBlock.showIconFocusPoint).isFalse()
+    }
+
+    private fun buildSiteInfoBlock(
+        showUpdateSiteTitleFocusPoint: Boolean = false,
+        showUploadSiteIconFocusPoint: Boolean = false
+    ) =
+            siteInfoBlockBuilder.buildSiteInfoBlock(site,
+                    showUploadSiteIconFocusPoint, {}, {}, {}, {},
+                    showUpdateSiteTitleFocusPoint = showUpdateSiteTitleFocusPoint,
+                    showUploadSiteIconFocusPoint = showUploadSiteIconFocusPoint
+            )
 }
