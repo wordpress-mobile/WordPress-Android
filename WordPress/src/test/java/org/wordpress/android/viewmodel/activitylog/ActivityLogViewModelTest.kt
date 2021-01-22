@@ -200,7 +200,8 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -215,12 +216,14 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedLoadsMoreDataIfCanLoadMore() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
         reset(store)
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
@@ -230,7 +233,8 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedPostsDataAndChangesStatusIfCannotLoadMore() = runBlocking {
         val canLoadMore = false
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -246,7 +250,8 @@ class ActivityLogViewModelTest {
     fun onDataFetchedShowsFooterIfCannotLoadMoreAndIsFreeSite() = runBlocking {
         val canLoadMore = false
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -281,7 +286,8 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = runBlocking<Unit> {
         val canLoadMore = false
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(1, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -296,7 +302,8 @@ class ActivityLogViewModelTest {
     fun onDataFetchedGoesToTopWhenSomeRowsAffected() = runBlocking {
         assertTrue(moveToTopEvents.isEmpty())
 
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -307,7 +314,8 @@ class ActivityLogViewModelTest {
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() = runBlocking<Unit> {
         val canLoadMore = true
 
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(0, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(0, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -317,7 +325,8 @@ class ActivityLogViewModelTest {
     @Test
     fun headerIsDisplayedForFirstItemOrWhenDifferentThenPrevious() = runBlocking {
         val canLoadMore = true
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(3, canLoadMore, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(3, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
 
@@ -366,11 +375,13 @@ class ActivityLogViewModelTest {
 
     @Test
     fun loadsNextPageOnScrollToBottom() = runBlocking {
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.start(site, rewindableOnly)
         reset(store)
-        whenever(store.fetchActivities(anyOrNull())).thenReturn(OnActivityLogFetched(10, true, FETCH_ACTIVITIES))
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
