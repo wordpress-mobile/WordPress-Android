@@ -25,6 +25,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
@@ -329,6 +330,9 @@ class BackupDownloadViewModel @Inject constructor(
             is Complete -> {
                 backupDownloadState = backupDownloadState.copy(url = state.url)
                 wizardManager.showNextStep()
+            }
+            is Empty -> {
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             else -> {
             } // no op
