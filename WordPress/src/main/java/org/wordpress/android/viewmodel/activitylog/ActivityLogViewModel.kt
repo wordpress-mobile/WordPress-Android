@@ -368,7 +368,7 @@ class ActivityLogViewModel @Inject constructor(
         activityLogTracker.trackActivityTypeFilterButtonClicked()
         _showActivityTypeFilterDialog.value = ShowActivityTypePicker(
                 RemoteId(site.siteId),
-                currentActivityTypeFilter.mapNotNull { it.key },
+                currentActivityTypeFilter.map { it.key },
                 currentDateRangeFilter
         )
     }
@@ -493,7 +493,7 @@ class ActivityLogViewModel @Inject constructor(
                 loadMore,
                 currentDateRangeFilter?.first?.let { Date(it) },
                 currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter.mapNotNull { it.key }
+                currentActivityTypeFilter.map { it.key }
         )
         fetchActivitiesJob = launch {
             val result = activityLogStore.fetchActivities(payload)
