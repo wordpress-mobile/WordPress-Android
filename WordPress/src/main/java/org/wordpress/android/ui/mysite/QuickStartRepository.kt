@@ -61,9 +61,13 @@ class QuickStartRepository
             selectedSiteRepository.selectedSiteChange,
             distinct = false
     ) { _, site ->
-        val customizeCategory = buildQuickStartCategory(site, CUSTOMIZE)
-        val growCategory = buildQuickStartCategory(site, GROW)
-        listOfNotNull(customizeCategory, growCategory)
+        if (quickStartUtils.isQuickStartInProgress(site)) {
+            val customizeCategory = buildQuickStartCategory(site, CUSTOMIZE)
+            val growCategory = buildQuickStartCategory(site, GROW)
+            listOfNotNull(customizeCategory, growCategory)
+        } else {
+            listOf()
+        }
     }
     val quickStartModel: LiveData<QuickStartModel> = merge(quickStartCategories, activeTask) { categories, activeTask ->
         categories?.let {
@@ -88,9 +92,7 @@ class QuickStartRepository
     }
 
     fun refreshIfNecessary() {
-        if (quickStartModel.value == null && quickStartUtils.isQuickStartInProgress()) {
-            refresh.postValue(false)
-        }
+        refresh.postValue(false)
     }
 
     fun setActiveTask(task: QuickStartTask) {
