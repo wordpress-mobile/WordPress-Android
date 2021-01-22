@@ -99,6 +99,7 @@ class ReaderPostDetailViewModelTest {
         whenever(readerPostTableWrapper.getBlogPost(
                 anyOrNull(),
                 anyOrNull(),
+                anyOrNull(),
                 anyOrNull()
         )).thenReturn(readerPost)
 
