@@ -16,7 +16,6 @@ import androidx.annotation.LayoutRes
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.R.id
 import org.wordpress.android.ui.ActionableEmptyView
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -28,6 +27,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.currentLocale
@@ -113,10 +113,9 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
                 updateProgressBarState(page.progressBarUiState)
 
+                // Clean up focus tip if there
+                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
                 if (page.showQuickStartFocusPoint) {
-                    val focusPointSize = pageItemContainer.resources.getDimensionPixelOffset(
-                            dimen.quick_start_focus_point_size
-                    )
                     pageItemContainer.post {
                         val horizontalOffset = pageItemContainer.width / 2
                         val verticalOffset = (pageItemContainer.height)

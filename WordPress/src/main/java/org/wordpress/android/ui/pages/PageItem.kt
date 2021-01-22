@@ -29,7 +29,7 @@ sealed class PageItem(open val type: Type) {
         open val progressBarUiState: ProgressBarUiState,
         open val showOverlay: Boolean,
         open val author: String?,
-        open val showQuickStartFocusPoint: Boolean
+        open var showQuickStartFocusPoint: Boolean
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -48,7 +48,7 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
         override val author: String? = null,
-        override val showQuickStartFocusPoint: Boolean = false
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -81,7 +81,7 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
         override val author: String? = null,
-        override val showQuickStartFocusPoint: Boolean = false
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -114,7 +114,7 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
         override val author: String? = null,
-        override val showQuickStartFocusPoint: Boolean = false
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -147,7 +147,7 @@ sealed class PageItem(open val type: Type) {
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
         override val author: String? = null,
-        override val showQuickStartFocusPoint: Boolean = false
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,

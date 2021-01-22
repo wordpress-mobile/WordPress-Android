@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -159,6 +159,7 @@ class PageListViewModel @Inject constructor(
     }
 
     fun onItemTapped(pageItem: Page) {
+        quickStartEvent = null
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
@@ -473,7 +474,7 @@ class PageListViewModel @Inject constructor(
             else -> null
         }
         val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
-                quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE
+                quickStartEvent?.task == EDIT_HOMEPAGE
         return ItemUiStateData(labels,
                 labelColor,
                 progressBarUiState,

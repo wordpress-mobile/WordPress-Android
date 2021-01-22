@@ -19,7 +19,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.pages.PageItem.Page
@@ -43,6 +42,7 @@ class PageListFragment : ViewPagerFragment() {
     @Inject lateinit var dispatcher: Dispatcher
     private lateinit var viewModel: PageListViewModel
     private var linearLayoutManager: LinearLayoutManager? = null
+    private var snackbar: WPDialogSnackbar? = null
 
     private val listStateKey = "list_state"
 
@@ -143,6 +143,8 @@ class PageListFragment : ViewPagerFragment() {
     }
 
     fun onItemTapped(pageItem: Page) {
+        snackbar?.dismiss()
+        snackbar = null
         if (viewModel.isHomepage(pageItem)) {
             QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore,
                     EDIT_HOMEPAGE,
@@ -178,7 +180,7 @@ class PageListFragment : ViewPagerFragment() {
         EventBus.getDefault().removeStickyEvent(event)
         viewModel.quickStartEvent = event
 
-        if (viewModel.quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE) {
+        if (viewModel.quickStartEvent?.task == EDIT_HOMEPAGE) {
             view?.post {
                 val title = QuickStartUtils.stylizeQuickStartPrompt(
                         requireActivity(),
@@ -186,10 +188,11 @@ class PageListFragment : ViewPagerFragment() {
                         R.drawable.ic_homepage_16dp
                 )
 
-                WPDialogSnackbar.make(
+                snackbar = WPDialogSnackbar.make(
                         requireView().findViewById(R.id.page_list_layout), title,
                         resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-                ).show()
+                )
+                snackbar?.show()
             }
         }
     }

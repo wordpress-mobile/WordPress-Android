@@ -50,7 +50,6 @@ import org.wordpress.android.ui.uploads.UploadActionUseCase
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -172,7 +171,6 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         }
 
         newPageButton.setOnClickListener {
-            QuickStartUtils.removeQuickStartFocusPoint(fab_container)
             viewModel.onNewPageButtonTapped()
         }
 
