@@ -40,7 +40,7 @@ import javax.inject.Inject
 class SubfilterPageFragment : DaggerFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    @Inject lateinit var seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
     @Inject lateinit var statsUtils: StatsUtils
 
     private lateinit var subFilterViewModel: SubFilterViewModel
@@ -79,7 +79,7 @@ class SubfilterPageFragment : DaggerFragment() {
 
         recyclerView = view.findViewById(R.id.content_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(requireActivity())
-        recyclerView.adapter = SubfilterListAdapter(uiHelpers, statsUtils, mSeenUnseenWithCounterFeatureConfig)
+        recyclerView.adapter = SubfilterListAdapter(uiHelpers, statsUtils, seenUnseenWithCounterFeatureConfig)
 
         emptyStateContainer = view.findViewById(R.id.empty_state_container)
         title = emptyStateContainer.findViewById(R.id.title)
