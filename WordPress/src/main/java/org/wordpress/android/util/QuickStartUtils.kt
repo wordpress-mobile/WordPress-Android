@@ -273,6 +273,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
                 REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
@@ -293,6 +294,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
                 REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
@@ -309,6 +311,7 @@ class QuickStartUtils {
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
                 CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
                 EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
                 REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }

@@ -38,6 +38,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.PAGE_FROM_PAGES_LIST
 import org.wordpress.android.ui.RequestCodes
@@ -72,6 +74,7 @@ import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBL
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.SCHEDULED
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.TRASHED
 import org.wordpress.android.viewmodel.pages.PagesViewModel
+import org.wordpress.android.widgets.WPDialogSnackbar
 import org.wordpress.android.widgets.WPSnackbar
 import java.lang.ref.WeakReference
 import javax.inject.Inject
@@ -567,29 +570,28 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         EventBus.getDefault().removeStickyEvent(event)
         quickStartEvent = event
 
-//        ToDo: Refactor for EDIT_HOMEPAGE
-//        if (quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE) {
-//            view?.post {
-//                val marginOffset = resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
-//                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-//                        fab_container,
-//                        newPageButton,
-//                        -marginOffset,
-//                        -marginOffset
-//                )
-//
-//                val title = QuickStartUtils.stylizeQuickStartPrompt(
-//                        requireActivity(),
-//                        R.string.quick_start_dialog_create_new_page_message_short_pages,
-//                        R.drawable.ic_create_white_24dp
-//                )
-//
-//                WPDialogSnackbar.make(
-//                        requireView().findViewById(R.id.coordinatorLayout), title,
-//                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
-//                ).show()
-//            }
-//        }
+        if (quickStartEvent?.task == QuickStartTask.EDIT_HOMEPAGE) {
+            view?.post {
+                val marginOffset = resources.getDimensionPixelOffset(R.dimen.margin_extra_large)
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        fab_container,
+                        newPageButton,
+                        -marginOffset,
+                        -marginOffset
+                )
+
+                val title = QuickStartUtils.stylizeQuickStartPrompt(
+                        requireActivity(),
+                        R.string.quick_start_dialog_edit_homepage_message_pages_short,
+                        R.drawable.ic_homepage_16dp
+                )
+
+                WPDialogSnackbar.make(
+                        requireView().findViewById(R.id.coordinatorLayout), title,
+                        resources.getInteger(R.integer.quick_start_snackbar_duration_ms)
+                ).show()
+            }
+        }
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {

@@ -69,6 +69,7 @@ enum class QuickStartMySitePrompts constructor(
             R.id.row_plan,
             R.string.quick_start_dialog_explore_plans_message_short,
             R.drawable.ic_plans_white_24dp
+    ),
     REVIEW_PAGES(
             QuickStartTask.REVIEW_PAGES,
             R.id.my_site_scroll_view_root,
@@ -76,6 +77,12 @@ enum class QuickStartMySitePrompts constructor(
             R.string.quick_start_dialog_review_pages_message_short,
             R.drawable.ic_pages_white_24dp
     ),
+    EDIT_HOMEPAGE(
+            QuickStartTask.EDIT_HOMEPAGE,
+            R.id.my_site_scroll_view_root,
+            R.id.quick_action_pages_button,
+            R.string.quick_start_dialog_edit_homepage_message_short,
+            R.drawable.ic_pages_white_24dp
     );
 
     companion object {

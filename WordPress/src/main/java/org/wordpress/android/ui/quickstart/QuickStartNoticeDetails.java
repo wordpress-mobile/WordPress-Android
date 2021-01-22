@@ -47,6 +47,12 @@ public enum QuickStartNoticeDetails {
             QuickStartTask.EXPLORE_PLANS,
             R.string.quick_start_dialog_explore_plans_title,
             R.string.quick_start_dialog_explore_plans_message
+    ),
+    EDIT_HOMEPAGE(
+            QuickStartTask.EDIT_HOMEPAGE,
+            R.string.quick_start_dialog_edit_homepage_title,
+            R.string.quick_start_dialog_edit_homepage_message
+    ),
     REVIEW_PAGES(
             QuickStartTask.REVIEW_PAGES,
             R.string.quick_start_dialog_review_pages_title,
