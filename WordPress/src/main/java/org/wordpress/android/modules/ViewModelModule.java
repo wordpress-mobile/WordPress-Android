@@ -7,9 +7,6 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel;
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.restore.complete.RestoreCompleteViewModel;
 import org.wordpress.android.ui.jetpack.restore.details.RestoreDetailsViewModel;
@@ -476,21 +473,6 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BackupDownloadViewModel.class)
     abstract ViewModel backupDownloadViewModel(BackupDownloadViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(BackupDownloadDetailsViewModel.class)
-    abstract ViewModel backupDownloadDetailsViewModel(BackupDownloadDetailsViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(BackupDownloadProgressViewModel.class)
-    abstract ViewModel backupDownloadProgressViewModel(BackupDownloadProgressViewModel viewModel);
-
-    @Binds
-    @IntoMap
-    @ViewModelKey(BackupDownloadCompleteViewModel.class)
-    abstract ViewModel backupDownloadCompleteViewModel(BackupDownloadCompleteViewModel viewModel);
 
     @Binds
     @IntoMap

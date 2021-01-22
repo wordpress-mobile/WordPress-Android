@@ -5,7 +5,7 @@ import org.wordpress.android.R
 import org.wordpress.android.ui.utils.UiString
 
 sealed class ThreatDetailsNavigationEvents {
-    class OpenIgnoreThreatActionDialog(
+    class OpenThreatActionDialog(
         val title: UiString,
         val message: UiString,
         val okButtonAction: () -> Unit
@@ -14,5 +14,7 @@ sealed class ThreatDetailsNavigationEvents {
         @StringRes val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }
 
-    object ShowUpdatedScanState : ThreatDetailsNavigationEvents()
+    data class ShowUpdatedScanStateWithMessage(@StringRes val messageRes: Int) : ThreatDetailsNavigationEvents()
+
+    data class ShowUpdatedFixState(val threatId: Long) : ThreatDetailsNavigationEvents()
 }

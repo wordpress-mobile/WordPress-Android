@@ -13,8 +13,9 @@ import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenIgnoreThreatActionDialog
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedScanStateWithMessage
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.details.adapters.ThreatDetailsAdapter
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -69,10 +70,16 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
             {
                 it.applyIfNotHandled {
                     when (this) {
-                        is OpenIgnoreThreatActionDialog -> showThreatActionDialog(this)
+                        is OpenThreatActionDialog -> showThreatActionDialog(this)
 
-                        is ShowUpdatedScanState -> {
-                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, true)
+                        is ShowUpdatedScanStateWithMessage -> {
+                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, this.messageRes)
+                            activity?.setResult(Activity.RESULT_OK, intent)
+                            activity?.finish()
+                        }
+
+                        is ShowUpdatedFixState -> {
+                            val intent = Intent().putExtra(REQUEST_FIX_STATE, this.threatId)
                             activity?.setResult(Activity.RESULT_OK, intent)
                             activity?.finish()
                         }
@@ -95,7 +102,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         snackbar.show()
     }
 
-    private fun showThreatActionDialog(holder: OpenIgnoreThreatActionDialog) {
+    private fun showThreatActionDialog(holder: OpenThreatActionDialog) {
         threatActionDialog = MaterialAlertDialogBuilder(requireActivity())
             .setTitle(uiHelpers.getTextOfUiString(requireContext(), holder.title))
             .setMessage(uiHelpers.getTextOfUiString(requireContext(), holder.message))
@@ -113,5 +120,6 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
 
     companion object {
         const val REQUEST_SCAN_STATE = "request_scan_state"
+        const val REQUEST_FIX_STATE = "request_fix_state"
     }
 }

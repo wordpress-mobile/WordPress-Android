@@ -11,6 +11,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -27,7 +28,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initRecyclerView()
-        initViewModel(getSite(savedInstanceState))
+        initViewModel(getSite(savedInstanceState), getTabType())
     }
 
     private fun initDagger() {
@@ -43,12 +44,12 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         recycler_view.itemAnimator = null
     }
 
-    private fun initViewModel(site: SiteModel) {
+    private fun initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
         parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
                 ScanHistoryViewModel::class.java
         )
-        viewModel.start(site, parentViewModel)
+        viewModel.start(tabType, site, parentViewModel)
         setupObservers()
     }
 
@@ -68,10 +69,23 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         }
     }
 
+    private fun getTabType(): ScanHistoryTabType = requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
+
     override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        private const val ARG_TAB_TYPE = "arg_tab_type"
+
+        fun newInstance(tabType: ScanHistoryTabType): ScanHistoryListFragment {
+            val newBundle = Bundle().apply {
+                putParcelable(ARG_TAB_TYPE, tabType)
+            }
+            return ScanHistoryListFragment().apply { arguments = newBundle }
+        }
     }
 }

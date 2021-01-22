@@ -18,6 +18,8 @@ class ThreatViewHolder(
             threat_header.text = getTextOfUiString(itemView.context, threatItemState.header)
             threat_sub_header.text = getTextOfUiString(itemView.context, threatItemState.subHeader)
         }
+        threat_icon.setImageResource(itemUiState.icon)
+        threat_icon.setBackgroundResource(itemUiState.iconBackground)
         itemView.setOnClickListener { threatItemState.onClick.invoke() }
     }
 }

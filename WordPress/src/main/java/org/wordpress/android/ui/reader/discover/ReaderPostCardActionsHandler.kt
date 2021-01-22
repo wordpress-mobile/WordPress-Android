@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
@@ -44,6 +45,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.usecases.BlockBlogUseCase
@@ -54,6 +56,12 @@ import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.PostSeenStateChanged
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.UserNotAuthenticated
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_CARD
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.ReaderPostSeenToggleSource.READER_POST_DETAILS
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -62,6 +70,8 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteNotificationsUseCase.S
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -83,6 +93,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val appRatingDialogWrapper: AppRatingDialogWrapper,
+    private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
@@ -126,6 +137,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                 REBLOG -> handleReblogClicked(post)
                 COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
                 REPORT_POST -> handleReportPostClicked(post)
+                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
             }
         }
     }
@@ -161,6 +173,38 @@ class ReaderPostCardActionsHandler @Inject constructor(
             properties["post_id"] = post.postId
             analyticsTrackerWrapper.track(READER_POST_REPORTED, properties)
             _navigationEvents.postValue(Event(ShowReportPost(post.blogUrl)))
+        }
+    }
+
+    private suspend fun handleToggleSeenStatusClicked(post: ReaderPost, fromPostDetails: Boolean) {
+        val actionSource = if (fromPostDetails) {
+            READER_POST_DETAILS
+        } else {
+            READER_POST_CARD
+        }
+        seenStatusToggleUseCase.toggleSeenStatus(post, actionSource).flowOn(bgDispatcher).collect { state ->
+            when (state) {
+                is Error -> {
+                    state.message?.let {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(it))
+                        )
+                    }
+                }
+                is PostSeenStateChanged -> {
+                    state.userMessage?.let {
+                        _snackbarEvents.postValue(
+                                Event(SnackbarMessageHolder(it))
+                        )
+                    }
+                }
+                is UserNotAuthenticated -> { // should not happen with current implementation
+                    AppLog.e(
+                            T.READER,
+                            "User was not authenticated when attempting to toggle Seen/Unseen status of the post"
+                    )
+                }
+            }
         }
     }
 

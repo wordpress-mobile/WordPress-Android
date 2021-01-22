@@ -1976,6 +1976,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case READER_POST_MARKED_AS_SEEN:
+                return "reader_mark_as_seen";
+            case READER_POST_MARKED_AS_UNSEEN:
+                return "reader_mark_as_unseen";
         }
         return null;
     }
