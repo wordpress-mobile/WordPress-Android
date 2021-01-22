@@ -234,7 +234,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
                 }
-                is FollowSiteState.Success -> Unit // Do nothing
+                is FollowSiteState.AlreadyRunning, FollowSiteState.Success -> Unit // Do nothing
                 is FollowStatusChanged -> {
                     _followStatusUpdated.postValue(it)
                     siteNotificationsUseCase.fetchSubscriptions()
