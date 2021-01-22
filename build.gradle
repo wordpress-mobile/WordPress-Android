@@ -36,16 +36,6 @@ project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD
 def suppressJSBundle =  System.getenv('SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD').asBoolean()
 project.ext.buildGutenbergMobileJSBundle = !(suppressJSBundle || project.ext.buildGutenbergFromSource)
 
-if (project.ext.buildGutenbergFromSource) {
-    def nodeModulesDir = new File('libs/gutenberg-mobile/node_modules')
-    if (!nodeModulesDir.exists()) {
-        def message = "Attempting to build Gutenberg from source without a libs/gutenberg-mobile/node_modules directory. \
-Either run `npm install` manually within libs/gutenberg-mobile or disable building Gutenberg from source by \
-setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
-        throw new GradleException(message)
-    }
-}
-
 allprojects {
     apply plugin: 'checkstyle'
     apply plugin: 'io.gitlab.arturbosch.detekt'
