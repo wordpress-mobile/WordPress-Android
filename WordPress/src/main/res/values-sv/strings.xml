@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 20:40:27+0000
+Translation-Revision-Date: 2021-01-20 10:56:26+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="gutenberg_native_move_block_position">Ändra blockets position</string>
+    <string name="gutenberg_native_move_to_bottom">Flytta längst ned</string>
     <string name="jetpack_icon_content_description">ikon</string>
     <string name="label_control_upload">Ladda upp</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Knapp för delning av länk</string>
@@ -441,6 +443,7 @@ Language: sv_SE
     <string name="ccpa_privacy_notice_header">Integritetsnotis för användare i Kalifornien</string>
     <string name="gutenberg_native_try_a_starter_layout">Prova någon av grundlayouterna</string>
     <string name="gutenberg_native_open_block_actions_menu">Öppna menyn för blockåtgärder</string>
+    <string name="gutenberg_native_move_to_top">Flytta till toppen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltryck för att öppna åtgärdsbladet med tillgängliga alternativ</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltryck för att öppna det nedre arket med tillgänliga alternativ</string>
     <string name="site_settings_select_page">Välj sida</string>

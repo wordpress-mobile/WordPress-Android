@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-17 22:57:54+0000
+Translation-Revision-Date: 2021-01-21 15:54:08+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
@@ -28,6 +28,7 @@ Language: tr
     <string name="backup_download_details_action_button_content_description">İndirilebilir yedekleme düğmesi oluştur</string>
     <string name="backup_download_progress_page_title">Yedeklemeyi indir</string>
     <string name="backup_download_generic_failure">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s indirme yedeklemesi oluşturmak için seçtiğiniz saattir.</string>
     <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
     <string name="gutenberg_native_image_link_url">Görsel bağlantı adresi</string>
     <string name="pages_item_date_author">%1$s · %2$s</string>
@@ -46,6 +47,7 @@ Language: tr
     <string name="threat_fix_fixable_update">Jetpack Scan daha güncel bir sürüme yükseltilecek (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan enfekte dosya ya da dizini silecek.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan enfekte dosya ya da dizini değiştirecek.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan bu tehdidi otomatik olarak düzeltemez.\n Tehdidi sizin manuel olarak çözmenizi öneririz: WordPress\'in, temanızın ve tüm eklentilerinizin güncel olduğundan emin olduktan sonra sorun yaratan kod, tema veya eklentiyi sitenizden kaldırın. \n \n\n Bu tehdidi gidermek için daha fazla yardıma ihtiyacınız varsa son derece deneyimli WordPress uzmanlarından oluşan güvenilir bir serbest çalışan pazarı olan &lt;b>Codeable&lt;/b>\'ı öneririz.\n Bunlar bu projelerde yardımcı olacak seçkin bir güvenlik uzmanı grubu belirlemiştir. Fiyatlandırma 70–120 ABD doları/saat arasında değişir ve kiralama zorunluluğu olmadan ücretsiz bir tahmin alabilirsiniz.</string>
     <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
     <string name="threat_file_description">Tehdit bulunan dosya:</string>
     <string name="threat_details_icon">Tehdit ayrıntıları simgesi</string>
@@ -72,12 +74,18 @@ Language: tr
     <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
     <string name="threat_item_header_threat_found">Tehdit bulundu</string>
     <string name="threats_fix_all">Tümünü düzelt</string>
+    <string name="scan_idle_threats_found_description">Tarama işlemi %s üzerinde %s olası tehdit buldu. Lütfen aşağıdakileri inceleyin ve gerekli işlemi yapın. Bize ihtiyacınız olursa yardım etmek için buradayız.</string>
+    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı (%s) ve her şey yolunda görünüyor. %s</string>
+    <string name="scan_idle_manual_scan_description">Şimdi manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
+    <string name="scan_scanning_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.\n\n \n Tarama tamamlandığında size bir bildirim göndereceğiz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir, istediğiniz zaman taramanın gidişatını kontrol edebilirsiniz.</string>
     <string name="scan_scanning_title">Tarama için hazırlanıyor</string>
     <string name="scan_again">Yeniden tara</string>
     <string name="scan_now">Şimdi tara</string>
     <string name="scan_state_icon">Tarama durumu simgesi</string>
     <string name="backup">Yedek</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Etkinlik türü filtresi (%s tür seçili)</string>
+    <string name="scan_idle_threats_found_title">Siteniz risk altında olabilir</string>
+    <string name="scan_idle_no_threats_found_title">Hiç endişe etmeyin</string>
     <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (%s öğe gösteriliyor)</string>
     <string name="activity_log_activity_type_filter_no_item_selected_content_description">Etkinlik türü filtresi</string>
     <string name="activity_log_activity_type_empty_subtitle">Seçili tarih aralığında bir etkinlik kayıt edilmemiş.</string>

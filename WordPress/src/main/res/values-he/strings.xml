@@ -1,11 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-05 13:54:08+0000
+Translation-Revision-Date: 2021-01-21 18:56:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="label_control_upload">להעלות</string>
+    <string name="jetpack_icon_content_description">סמל</string>
+    <string name="backup_download_complete_info">בנוסף, שלחנו לך הודעת אימייל עם קישור לקובץ שלך.</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">כפתור לשיתוף הקישור</string>
+    <string name="backup_download_complete_download_action_button_content_description">כפתור ההורדה</string>
+    <string name="backup_download_complete_icon_content_description">סמל \'הגיבוי להורדה מוכן\'</string>
+    <string name="backup_download_complete_download_share_action_button">שיתוף הקישור</string>
+    <string name="backup_download_complete_download_action_button">הורדה</string>
+    <string name="backup_download_complete_description_with_two_parameters">יצרנו בהצלחה גיבוי של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
+    <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
+    <string name="backup_download_complete_page_title">הגיבוי שלך</string>
+    <string name="backup_download_progress_additional_info">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה</string>
+    <string name="backup_download_progress_action_button_content_description">כפתור \'בסדר, תשלחו לי הודעה\'</string>
+    <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
+    <string name="backup_download_progress_action_button">בסדר, תשלחו לי הודעה!</string>
+    <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
+    <string name="backup_download_progress_header">אנחנו כעת יוצרים גיבוי של האתר שלך להורדה</string>
+    <string name="backup_download_progress_page_title">להוריד גיבוי</string>
+    <string name="backup_download_another_download_running">יש הורדה נוספת שמופעלת כרגע.</string>
+    <string name="backup_download_generic_failure">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
+    <string name="backup_download_details_action_button_content_description">כפתור \'ליצור גיבוי להורדה\'</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s ⁦%2$s⁩ הוא המועד שנבחר ליצירת הגיבוי להורדה.</string>
+    <string name="gutenberg_native_image_link_url">כתובת URL לקישור התמונה</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">crosspost</string>
+    <string name="suggestion_user">משתמש</string>
+    <string name="suggestion_no_matching">\"לא נמצאה התאמה ל-%s.\"</string>
+    <string name="suggestion_problem">\"הייתה בעיה בטעינת ההצעות.\"</string>
+    <string name="suggestion_none">\"אין הצעות זמינות של %s.\"</string>
+    <string name="suggestion_selection_needed">\"יש להקליד כדי לסנן את רשימת ההצעות.\"</string>
+    <string name="threat_get_free_estimate">הערכה חינם</string>
+    <string name="threat_ignore">להתעלם מהאיום</string>
+    <string name="threat_fix">לתקן את האיום</string>
+    <string name="threat_fix_fixable_default">הסריקה של Jetpack Scan תפתור את האיום הזה.</string>
+    <string name="threat_fix_fixable_edit">השירות של Jetpack Scan יערוך את הקובץ או הספרייה שהושפעו.</string>
+    <string name="threat_fix_fixable_update">השירות של Jetpack Scan יתעדכן לגרסה חדשה יותר (%s).</string>
+    <string name="threat_fix_fixable_delete">הסריקה של Jetpack Scan תמחק את הקובץ או הספרייה שהושפעו.</string>
+    <string name="threat_fix_fixable_replace">הסריקה של Jetpack Scan תחליף את הקובץ או הספרייה שהושפעו.</string>
+    <string name="threat_fix_current_not_fixable_description">השירות של Jetpack Scan לא יכול לתקן את האיום הזה באופן אוטומטי.\n אנחנו מציעים לפתור את האיום באופן ידני: יש לוודא ש-WordPress, ערכת העיצוב שלך וכל התוספים שלך מעודכנים ולהסיר מאתר האינטרנט שלך את הקוד, ערכת העיצוב או התוסף שגרמו לבעיה. \n \n\nאם נדרשת לך עזרה נוספת בפתרון האיום הזה, אנחנו מציעים להשתמש בשירות של &lt;b>Codeable&lt;/b>, זהו מאגר של פרילנסרים שכולל מומחי WordPress נחשבים.\n במאגר יש קבוצה נבחרת של מומחי אבטחה שיכולים לאזור עם פרויקטים כאלה. התמחור נע בין 70 $ ל-120 $ לשעה. אפשר לקבל הערכה בחינם, ללא התחייבות.</string>
+    <string name="threat_fix_current_not_fixable_header">תיקון האיום</string>
+    <string name="threat_fix_current_fixable_header">‎@string/threat_fix_default_header</string>
+    <string name="threat_fix_fixed_header">איך הבעיה תוקנה על ידי Jetpack?</string>
+    <string name="threat_fix_default_header">איך נתקן את זה?</string>
+    <string name="threat_file_description">נמצא איום בקובץ:</string>
+    <string name="threat_technical_details_header">הפרטים הטכניים</string>
+    <string name="threat_problem_header">מתי הבעיה התרחשה?</string>
+    <string name="threat_details_icon">סמל של פרטי האיום</string>
+    <string name="threat_details">פרטי האיום</string>
+    <string name="threat_item_sub_header_vulnerable_theme">מאפיינים פגיעים שנמצאו בערכת העיצוב</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">מאפיינים פגיעים שנמצאו בתוסף</string>
+    <string name="threat_item_sub_header_file_signature">אותר איום %s</string>
+    <string name="threat_item_sub_header_core_file">מאפיינים פגיעים שנמצאו ב-WordPress</string>
+    <string name="threat_item_sub_header_misc_vulnerability">מאפיינים פגיעים שונים</string>
+    <string name="threat_item_header_vulnerable_theme">ערכת עיצוב פגיעה: %s (גרסה %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">תוסף פגיע: %s (%s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: תבנית קוד זדוני</string>
+    <string name="threat_item_header_database_threat">%s איומים בבסיס הנתונים</string>
+    <string name="threat_item_header_infected_core_file">%s: קובץ ליבה נגוע</string>
+    <string name="threat_item_header_threat_found">אותר איום</string>
+    <string name="threats_found">נמצאו איומים</string>
+    <string name="threats_fix_all">לתקן הכול</string>
+    <string name="scan_in_few_seconds">בעוד מספר שניות</string>
+    <string name="scan_in_minutes_ago">לפני %s דקות</string>
+    <string name="scan_in_hours_ago">לפני %s שעות</string>
+    <string name="scan_this_site">האתר הזה</string>
+    <string name="scan_idle_threats_found_description">הסריקה איתרה %s איומים פוטנציאליים על %s. עליך לבדוק את הפרטים למטה ולבצע את הפעולה הנדרשת. אנחנו כאן לעזור אם צריך.</string>
+    <string name="scan_idle_last_scan_description">הסריקה האחרונה של Jetpack Scan פעלה %s והכול נראה מצוין. %s</string>
+    <string name="scan_idle_manual_scan_description">ניתן להפעיל סריקה ידנית כעת או להמתין ש-Jetpack יסרוק את האתר מאוחר יותר היום.</string>
+    <string name="scan_scanning_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.\n\n \nאנחנו נשלח אליך הודעה כאשר הסריקה תסתיים. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="scan_idle_threats_found_title">ייתכן שהאתר שלך בסיכון</string>
+    <string name="scan_idle_no_threats_found_title">אל דאגה</string>
+    <string name="scan_scanning_title">מתכונן לסריקה</string>
+    <string name="scan_again">לסרוק שוב</string>
+    <string name="scan_now">לסרוק עכשיו</string>
+    <string name="scan_state_icon">סמל של מצב סריקה</string>
+    <string name="backup">גיבוי</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">מסנן סוג פעילות (%s סוגים נבחרו)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (מציג %s פריטים)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">מסנן סוג פעילות</string>
+    <string name="activity_log_activity_type_empty_subtitle">לא נרשמה פעילות בטווח התאריכים שנבחר.</string>
+    <string name="activity_log_activity_type_empty_title">אין פעילויות זמינות</string>
+    <string name="activity_log_activity_type_error_subtitle">יש לבדוק את החיבור לאינטרנט ולנסות שוב.</string>
+    <string name="activity_log_activity_type_error_title">אין חיבור</string>
+    <string name="activity_log_activity_type_filter_active_label">סוג הפעילות (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">מסנן טווח תאריכים</string>
+    <string name="activity_log_active_filter_empty_subtitle">יש להתאים את המסננים של טווח התאריכים או של סוג הפעילות</string>
+    <string name="activity_log_active_filter_empty_title">לא נמצאו אירועים תואמים</string>
+    <string name="rewind">לשחזר</string>
     <string name="backup_item_sqls">בסיס הנתונים של האתר (SQL)</string>
     <string name="backup_item_contents">ספריית WP-content (לא כולל ערכות עיצוב, תוספים והעלאות)</string>
     <string name="backup_item_roots">בסיס WordPress (כולל wp-config.php וקבצים שאינם WordPress)</string>
@@ -348,6 +438,7 @@ Language: he_IL
     <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="pages_set_as_posts_page">להגדיר כעמוד פוסטים</string>
     <string name="pages_set_as_homepage">להגדיר כעמוד הבית</string>
+    <string name="suggestion_invalid">\"הפריט %s אינו %s חוקי\"</string>
     <string name="site_settings_select_page">לבחור עמוד</string>
     <string name="site_settings_posts_page">עמוד הפוסטים</string>
     <string name="site_settings_static_homepage">עמוד בית קבוע</string>
@@ -480,6 +571,7 @@ Language: he_IL
     <string name="gutenberg_native_only_show_excerpt">להציג את התקציר בלבד</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">תיק העבודות שלי מציג מספר פרויקטים שיצרתי במהלך הקריירה. פרטי הקשר שלי למטה ואשמח אם תצרו קשר.</string>
     <string name="gutenberg_native_link_to">קישור אל</string>
+    <string name="gutenberg_native_link_settings">הגדרות הקישור</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">נשמח לשוחח 👋 אפשר ליצור איתנו קשר ללא היסוס באמצעות הפרטים שלמטה, או לשלוח לנו הודעה באמצעות הטופס.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">נשמח לבנות משהו ביחד!</string>
     <string name="gutenberg_native_let_s_build_something_together">נשמח לבנות משהו ביחד!</string>
@@ -596,6 +688,7 @@ Language: he_IL
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000">‎%sK</string>
     <string name="posts_cannot_be_started">אין לנו אפשרות לפתוח את הפוסטים כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="site_cannot_be_loaded">אין לנו אפשרות לטעון את הנתונים של האתר שלך כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
@@ -1227,8 +1320,14 @@ Language: he_IL
     <string name="support_contact_email">אימייל ליצירת קשר</string>
     <string name="application_log_button">יומן יישום</string>
     <string name="my_tickets">הפנייה שלי</string>
+    <string name="activity_log_rewind_dialog_message">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד ⁦%1$s⁩ בשעה ⁦%2$s⁩? פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
+    <string name="activity_log_rewind_site">לשחזר את האתר</string>
+    <string name="activity_log_currently_restoring_message_no_dates">שחזור בתהליך</string>
+    <string name="activity_log_currently_restoring_message">משחזר אל ⁦%1$s⁩ %2$s</string>
     <string name="activity_log_currently_restoring_title">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">האתר שלך שוחזר בהצלחה</string>
+    <string name="activity_log_rewind_finished_snackbar_message">האתר שלך שוחזר בהצלחה\nשוחזר לגרסה ממועד ⁦%1$s⁩ %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">אנחנו משחזרים את האתר שלך כעת\nמשחזר לגרסה ממועד ⁦%1$s⁩ %2$s</string>
     <string name="activity_log_button">כפתור לפעולות ביומן הפעילות</string>
     <string name="plugin_auto_managed">ניהול אוטומטי</string>
     <string name="reader_save_posts_locally_dialog_message">באפשרותך לשמור את הפוסט הנוכחי ולקרוא אותו במועד מאוחר יותר כרצונך. הפוסט יהיה זמין במכשיר זה בלבד - פוסטים שנשמרו לא מסתנכרנים בין מכשירים.</string>
