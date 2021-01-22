@@ -78,11 +78,13 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given state, when backup download is running, then Progress is returned`() = testWithSuccessResponse {
-        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
+    fun `given progress is not null, when backup is running, then Progress is returned`() = testWithSuccessResponse {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                .thenReturn(inProgressModel)
+                .thenReturn(completeStateModel)
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
 
-        Assertions.assertThat(result).contains(Empty)
+        Assertions.assertThat(result).contains(progressStatus)
     }
 
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
@@ -97,6 +99,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val rewindId = "rewindId"
     private val url = "www.wordpress.com"
     private val downloadId = 100L
+    private val progress = 50
 
     private val completeStateModel = BackupDownloadStatusModel(
         downloadId = downloadId,
@@ -105,9 +108,21 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
         startedAt = Date(1609690147756),
         progress = null,
         downloadCount = 0,
-        validUntil = Date(1609690147756)   ,
+        validUntil = Date(1609690147756),
         url = url
     )
 
+    private val inProgressModel = BackupDownloadStatusModel(
+            downloadId = downloadId,
+            rewindId = rewindId,
+            backupPoint = Date(1609690147756),
+            startedAt = Date(1609690147756),
+            progress = progress,
+            downloadCount = 0,
+            validUntil = Date(1609690147756),
+            url = url
+    )
+
     private val completeStatus = Complete(rewindId, downloadId, url)
+    private val progressStatus = Progress(rewindId, progress)
 }
