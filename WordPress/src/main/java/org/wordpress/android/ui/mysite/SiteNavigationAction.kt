@@ -47,4 +47,5 @@ sealed class SiteNavigationAction {
         val mediaUris: List<String>
     ) : SiteNavigationAction()
     data class OpenDomainRegistration(val site: SiteModel) : SiteNavigationAction()
+    data class AddNewSite(val isSignedInWpCom: Boolean) : SiteNavigationAction()
 }

@@ -1,11 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-30 21:32:16+0000
+Translation-Revision-Date: 2021-01-14 12:50:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="label_control_upload">Subir</string>
+    <string name="jetpack_icon_content_description">Icono</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Botón de compartir enlace</string>
+    <string name="backup_download_complete_download_share_action_button">Compartir enlace</string>
+    <string name="backup_download_complete_download_action_button">Descargar</string>
+    <string name="backup_download_complete_download_action_button_content_description">Botón de descarga</string>
+    <string name="backup_download_complete_page_title">Tu copia de seguridad</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_action_button">¡Vale, avísame!</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">entrada cruzada</string>
+    <string name="suggestion_user">usuario</string>
+    <string name="threat_ignore">Ignorar amenaza</string>
+    <string name="threat_fix">Corregir amenaza</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan solucionará la amenaza.</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan editará el archivo o el directorio afectados.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan se actualizará a una versión más reciente (%s).</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan borrará el archivo o el directorio afectados.</string>
+    <string name="threat_get_free_estimate">Consigue un presupuesto gratuito</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan reemplazará el archivo o el directorio afectados.</string>
+    <string name="threat_fix_current_not_fixable_header">Solucionando la amenaza</string>
+    <string name="threat_problem_header">¿Cuál fue el problema?</string>
+    <string name="threat_technical_details_header">Información técnica</string>
+    <string name="threat_details">Detalles de la amenaza</string>
+    <string name="threat_item_sub_header_file_signature">Amenaza encontrada %s</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Se ha encontrado una vulnerabilidad en un tema</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Se ha encontrado una vulnerabilidad en un plugin</string>
+    <string name="threat_item_sub_header_core_file">Se ha encontrado una vulnerabilidad en WordPress</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Varias vulnerabilidades</string>
+    <string name="backup">Copias de seguridad</string>
+    <string name="rewind">Restaurar</string>
     <string name="backup_item_sqls">Base de datos del sitio (SQL)</string>
     <string name="backup_item_contents">Directorio wp-content (excluye themes, plugins y uploads)</string>
     <string name="backup_item_roots">Raíz de WordPress (incluye wp-config php y cualquier archivo que no sea de WordPress)</string>
@@ -15,7 +48,6 @@ Language: es
     <string name="backup_download_details_icon_content_description">Crea un icono de copia de seguridad descargable</string>
     <string name="backup_download_details_action_button">Crear un archivo descargable</string>
     <string name="backup_download_details_choose_items_header">Elige los elementos que quieres incluir en la descarga:</string>
-    <string name="backup_download_details_description">%1$s es el punto seleccionado para crear una copia de seguridad descargable.</string>
     <string name="backup_download_details_header">Crear una copia de seguridad descargable</string>
     <string name="backup_download_details_page_title">Descargar copia de seguridad</string>
     <string name="backup_download">Descarga de la copia de seguridad</string>
@@ -314,7 +346,6 @@ Language: es
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dos veces para seleccionar la opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar el degradado</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor de la página</string>
     <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniatura del medio no se ha podido cargar</string>
@@ -350,7 +381,6 @@ Language: es
     <string name="ccpa_privacy_notice_header">Aviso de privacidad para usuarios de California</string>
     <string name="status_and_visibility">Estado y visibilidad</string>
     <string name="update_now">Actualizar ahora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces pata abrir la hoja de acción con las opciones disponibles</string>
@@ -363,8 +393,7 @@ Language: es
     <string name="pages_set_as_homepage">Establecer como página de inicio</string>
     <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="suggestion_invalid_user">«%s no es un usuario válido»</string>
-    <string name="suggestion_no_matching_users">«No hay disponibles usuarios que coincidan.»</string>
+    <string name="suggestion_invalid">«%s no es una %s válida»</string>
     <string name="site_settings_homepage_settings">Ajustes de la página de inicio</string>
     <string name="site_settings_homepage_settings_description">Elige entre una página de inicio que muestre tus últimas publicaciones (blog clásico) o una página fija/estática.</string>
     <string name="site_settings_failed_to_load_pages">Ha fallado la carga de las páginas</string>
@@ -493,6 +522,7 @@ Language: es
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mi porfolio presenta varios proyectos creados a lo largo de mi carrera. Mira a continuación mi información de contacto y ponte en contacto.</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Hablemos 👋 No dudes en contactar en la siguiente información de contacto o envía un mensaje usando el formulario.</string>
+    <string name="gutenberg_native_link_settings">Ajustes de enlace</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">¡Vamos a construir algo juntos!</string>
     <string name="gutenberg_native_let_s_build_something_together">¡Vamos a construir algo juntos!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -532,7 +562,6 @@ Language: es
     <string name="stats_management_screen_title">Añadir una nueva tarjeta</string>
     <string name="reader_self_hosted_select_filter">Usa el botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_bottom_sheet_content_description">Selecciona una etiqueta o sitio, ventana emergente</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio o etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar el filtro actual</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
@@ -600,7 +629,6 @@ Language: es
     <string name="enter_credentials_for_site">Accede con las credenciales de tu sitio %1$s</string>
     <string name="enter_site_credentials_instead">Accede con las credenciales del sitio.</string>
     <string name="posts_cannot_be_started">No podemos abrir las entradas en este momento. Por favor, inténtalo de nuevo más tarde</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="reader_filter_sites_title">Sitios</string>
@@ -612,6 +640,7 @@ Language: es
     <string name="suffix_1_000_000_000_000_000">%sP</string>
     <string name="suffix_1_000_000_000_000_000_000">%sE</string>
     <string name="reader_filter_tags_title">Temas</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
     <string name="gutenberg_native_ungroup">Desagrupar</string>
     <string name="gutenberg_native_translate">Traducir</string>
@@ -1240,19 +1269,19 @@ Language: es
     <string name="support_identity_input_dialog_enter_email">Por favor, introduce tu dirección de correo electrónico</string>
     <string name="support_contact_email_not_set">No establecido</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Para continuar, por favor, introduce tu dirección de correo electrónico y nombre</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rebobinado en curso</string>
-    <string name="activity_log_rewind_site">Rebobinar sitio</string>
     <string name="application_log_button">Registro de la aplicación</string>
     <string name="notification_channel_transient_title">Dato transitorio</string>
     <string name="my_tickets">Mis tickets</string>
-    <string name="activity_log_currently_restoring_message">Rebobinando a %1$s %2$s</string>
-    <string name="activity_log_rewind_dialog_message">¿Quieres rebobinar tu sitio al %1$s a las %2$s? Esto borrará todo el contenido y opciones creadas o cambiadas desde entonces.</string>
     <string name="support_push_notification_message">Nuevo mensaje de «Ayuda y soporte»</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Restauración en progreso</string>
+    <string name="activity_log_rewind_site">Restaurar el sitio</string>
+    <string name="activity_log_currently_restoring_message">Restaurando a %1$s %2$s</string>
+    <string name="activity_log_rewind_dialog_message">¿Seguro que quieres restaurar tu sitio al %1$s a las %2$s? Esto eliminará todo el contenido y las opciones creadas o cambiadas desde entonces.</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando tu sitio</string>
     <string name="activity_log_button">Botón de acción del registro de actividad</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Tu sitio ha sido restaurado satisfactoriamente</string>
-    <string name="activity_log_rewind_started_snackbar_message">Tu sitio está siendo restaurado\nRebobinando a %1$s %2$s</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Tu sitio ha sido restaurado satisfactoriamente\nRebobinado a %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Tu sitio está siendo restaurado\nRestaurando a %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Tu sitio ha sido restaurado correctamente\nRestaurado a %1$s %2$s</string>
     <string name="plugin_auto_managed">Gestionado automáticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Guarda esta entrada y vuelve cuando quieras para leerla. Solo estará disponible en este dispositivo — las entradas guardadas no se sincronizan con otros dispositivos.</string>
     <string name="reader_empty_search_title">No se han encontrado resultados</string>
@@ -1301,7 +1330,6 @@ Language: es
     <string name="privacy_policy_learn_more_header">Política de privacidad</string>
     <string name="preference_privacy_settings">Ajustes de privacidad</string>
     <string name="privacy_policy_read">Lee la política de privacidad</string>
-    <string name="rewind">Rebobinar</string>
     <string name="third_party_policy_learn_more_header">Política de terceros</string>
     <string name="reader_btn_notifications_off">Desactivar los avisos del sitio</string>
     <string name="reader_btn_notifications_on">Activar los avisos del sitio</string>

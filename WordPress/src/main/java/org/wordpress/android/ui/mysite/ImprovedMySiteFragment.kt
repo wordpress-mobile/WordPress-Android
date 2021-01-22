@@ -27,8 +27,12 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
+import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
+import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
+import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaIds
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStoryWithMediaUris
@@ -73,10 +77,12 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
+import org.wordpress.android.util.ToastUtils.showToast
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.USER
+import org.wordpress.android.util.setVisible
 import java.io.File
 import javax.inject.Inject
 
@@ -91,6 +97,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
+    private lateinit var quickStartMenuViewModel: QuickStartMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -98,6 +105,8 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
+        quickStartMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(QuickStartMenuViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -142,6 +151,8 @@ class ImprovedMySiteFragment : Fragment(),
             }
         }
 
+        actionable_empty_view.button.setOnClickListener { viewModel.onAddSitePressed() }
+
         val layoutManager = LinearLayoutManager(activity)
 
         savedInstanceState?.getParcelable<Parcelable>(KEY_LIST_STATE)?.let {
@@ -150,10 +161,21 @@ class ImprovedMySiteFragment : Fragment(),
 
         recycler_view.layoutManager = layoutManager
 
+        val adapter = MySiteAdapter(imageManager, uiHelpers)
+
+        savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
+            adapter.onRestoreInstanceState(it)
+        }
+
+        recycler_view.adapter = adapter
+
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
-                loadData(uiModel.items)
+                when (val state = uiModel.state) {
+                    is State.SiteSelected -> loadData(state.items)
+                    is State.NoSites -> loadEmptyView(state.shouldShowImage)
+                }
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
@@ -183,6 +205,13 @@ class ImprovedMySiteFragment : Fragment(),
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
             }
         })
+        viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { id ->
+                ((parentFragmentManager.findFragmentByTag(id) as? QuickStartMenuFragment)
+                        ?: QuickStartMenuFragment.newInstance(id))
+                        .show(parentFragmentManager, id)
+            }
+        })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
@@ -192,7 +221,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
                     is OpenCropActivity -> startCropActivity(action.imageUri)
                     is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-                    is OpenBackup -> Unit // Do nothing. TODO: Launch 'Backups' screen.
+                    is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
@@ -235,6 +264,7 @@ class ImprovedMySiteFragment : Fragment(),
                             action.site,
                             CTA_DOMAIN_CREDIT_REDEMPTION
                     )
+                    is AddNewSite -> SitePickerActivity.addSite(activity, action.isSignedInWpCom)
                 }
             }
         })
@@ -250,6 +280,10 @@ class ImprovedMySiteFragment : Fragment(),
         })
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
+        })
+        quickStartMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
+            // TODO Handle Quick Start menu interaction
+            it?.getContentIfNotHandled()?.let { interaction -> showToast(context, interaction.toString()) }
         })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
@@ -297,6 +331,9 @@ class ImprovedMySiteFragment : Fragment(),
         super.onSaveInstanceState(outState)
         recycler_view.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
+        }
+        (recycler_view.adapter as? MySiteAdapter)?.let {
+            outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
     }
 
@@ -357,7 +394,7 @@ class ImprovedMySiteFragment : Fragment(),
                     AppLog.e(
                             MAIN,
                             "Image cropping failed!",
-                            UCrop.getError(data!!)
+                            UCrop.getError(data)
                     )
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
@@ -365,15 +402,27 @@ class ImprovedMySiteFragment : Fragment(),
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
+            RequestCodes.CREATE_SITE -> {
+                viewModel.startQuickStart()
+            }
+            RequestCodes.SITE_PICKER -> {
+                if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.startQuickStart()
+                }
+            }
         }
     }
 
     private fun loadData(items: List<MySiteItem>) {
-        if (recycler_view.adapter == null) {
-            recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
-        }
-        val adapter = recycler_view.adapter as MySiteAdapter
-        adapter.loadData(items)
+        recycler_view.setVisible(true)
+        actionable_empty_view.setVisible(false)
+        (recycler_view.adapter as? MySiteAdapter)?.loadData(items)
+    }
+
+    private fun loadEmptyView(shouldShowEmptyViewImage: Boolean) {
+        recycler_view.setVisible(false)
+        actionable_empty_view.setVisible(true)
+        actionable_empty_view.image.setVisible(shouldShowEmptyViewImage)
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
@@ -397,6 +446,7 @@ class ImprovedMySiteFragment : Fragment(),
 
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
+        private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }

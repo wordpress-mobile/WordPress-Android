@@ -252,7 +252,6 @@ Language: ku_TR
     <string name="dialog_confirm_trash_losing_unsaved_changes_title">Guhertinên netomarkirî</string>
     <string name="my_site_title_changer_dialog_hint">Sernavê Malperê, li benda-sernavê ya geroka webê tê xuyan û di pirî rûkaran de jî li sermalperê tê xuyan.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Girêdanê di gerokê de veke</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient">Diçe beşa taybetkirina gradyanê</string>
     <string name="gutenberg_native_customize_gradient">Gradyanê taybet bike</string>
     <string name="gutenberg_native_gradient_type">Cûreya Gradyanê</string>
@@ -293,13 +292,11 @@ Language: ku_TR
     <string name="ccpa_privacy_notice_header">Hişyariya nihêniyê ji bo bikarhênerên Kalîforniyayê</string>
     <string name="status_and_visibility">Rewş &amp; Xuyanî</string>
     <string name="update_now">Aniha Hildemîne</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_open_block_actions_menu">Menuya çalakiyên blokê veke</string>
     <string name="gutenberg_native_try_a_starter_layout">Raxistina destpêkê biceribîne</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Ji bo ku Rûpela Jêrîn bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Ji bo Rûpela Çalakiyan bi vebijarkên berdest re vebe, ducar bitikîne</string>
     <string name="pages_set_as_posts_page">Bike Rûpela Şandiyan</string>
-    <string name="suggestion_no_matching_users">\"Bikarhênerên wiha tune ne.\"</string>
     <string name="site_settings_select_page">Rûpelê hilbijêre</string>
     <string name="pages_cannot_be_started">Em aniha nikarin rûpelan vekin. Ji kerema xwe piştre dîsa biceribîne</string>
     <string name="pages_set_as_homepage">Wekî Serrûpel saz bike</string>
@@ -307,7 +304,6 @@ Language: ku_TR
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Serrûpela hilbijartî û rûpela şandiyan nabe wekî hev bin.</string>
     <string name="site_settings_posts_page">Rûpela Şandiyan</string>
     <string name="site_settings_classic_blog">Bloga Klasîk</string>
-    <string name="suggestion_invalid_user">\"%s ne bikarhênerekî derbasdar e\"</string>
     <string name="site_settings_accept_homepage">Bipejirîne</string>
     <string name="site_settings_failed_update_homepage_settings">Sazkariyên serrûpelê nehat hildemandin, girêdana înterneta xwe kontrol bike</string>
     <string name="site_settings_cannot_save_homepage_settings_before_pages_loaded">Heta rûpel neyên barkirin sazkariyên serrûpelê nayên tomarkirin</string>
@@ -473,7 +469,6 @@ Language: ku_TR
     <string name="stats_insights_management_general">Giştî</string>
     <string name="stats_management_screen_title">Karta nû tevlî bike</string>
     <string name="stats_management_add_new_stats_card">Karta amarên nû tevlî bike</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Hilbijartî</string>
     <string name="reader_btn_remove_filter_content_description">Fîltreya heyî rake</string>
     <string name="reader_self_hosted_select_filter">Ji bo şandiyên ji mijarên spesifîk bibînî bişkoka fîtreyê bi kar bîne</string>
     <string name="reader_btn_select_filter_content_description">Ji bo şandiyan fîltre bikî Malperekê an Etîketekê bibijêre</string>
@@ -547,7 +542,6 @@ Language: ku_TR
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="reader_my_likes_display_name">Ecibandî</string>
     <string name="reader_discover_display_name">Keşf bike</string>
     <string name="reader_filter_sites_title">Malper</string>
@@ -1178,8 +1172,6 @@ Language: ku_TR
     <string name="button_discard">Biavêje</string>
     <string name="reader_avatar_desc">wêneyê profîlê</string>
     <string name="support_push_notification_title">WordPress</string>
-    <string name="activity_log_rewind_site">Malperê Vegerîne</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Vegerandin didome</string>
     <string name="notification_channel_transient_title">Demkî</string>
     <string name="support_contact_email_not_set">Saz nebû</string>
     <string name="support_identity_input_dialog_email_label">Email</string>
@@ -1187,14 +1179,10 @@ Language: ku_TR
     <string name="support_contact_email">Emaila têkiliyê</string>
     <string name="application_log_button">Tomargeha sepanê</string>
     <string name="my_tickets">Bilêtên Min</string>
-    <string name="activity_log_currently_restoring_message">Vedigere rewşa %1$s %2$s\'ê</string>
     <string name="support_identity_input_dialog_enter_email_and_name">Ji bo domandinê ji kerema xwe, email û navê xwe bikevê</string>
     <string name="support_push_notification_message">Peyameke nû ji \'Alîkarî û Piştgirî\'yê heye</string>
-    <string name="activity_log_rewind_dialog_message">Tu bi rastî jî dixwazî malpera xwe vegerînî rewşa %1$s %2$s\'ê? Ev, ew ê hemû naverok û vebijarkên ji wê demê û vir ve hatine afirandin an jî guhertin, ji holê rake.</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Malpera te bi serkeftî hat vegerandin</string>
     <string name="activity_log_currently_restoring_title">Malpera te niha tê vegerandin</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Malpera te bi serkeftî hat vegerandin\nVegeriya rewşa %1$s %2$s\'ê</string>
-    <string name="activity_log_rewind_started_snackbar_message">Malpera te bi serkeftî hat vegerandin\nVedigere rewşa %1$s %2$s\'ê</string>
     <string name="activity_log_button">Bişkoka Tomargeha Çalakiyan</string>
     <string name="reader_save_posts_locally_dialog_message">Vê şandiyê tomar bike û kengî tu bixwazî wê bixwînî lê vegere. Ew ê tenê li ser vê cîhazê berdest be, şandiyên qeydkirî bi cîhazên te yên din re senkronîze nabin.</string>
     <string name="plugin_auto_managed">Bixweber tên birevêbirin</string>
@@ -1234,7 +1222,6 @@ Language: ku_TR
     <string name="my_site_icon_dialog_change_message">Tu dixwazî îkonê çawa sererast bikî?</string>
     <string name="my_site_icon_dialog_add_message">Tu dixwazî îkona malperê tevlî bikî?</string>
     <string name="cookie_policy_learn_more_caption">Dema têketina te ya ajimêra WordPress.comê, di derheqê bikaranîna xizmetan de bi alavê me ya analîzê re agahî parve bikin.</string>
-    <string name="rewind">Vegerîne</string>
     <string name="activity">Çalakî</string>
     <string name="reader_btn_notifications_on">Danezanên malperê veke</string>
     <string name="reader_btn_notifications_off">Danezanên malperê bigire</string>

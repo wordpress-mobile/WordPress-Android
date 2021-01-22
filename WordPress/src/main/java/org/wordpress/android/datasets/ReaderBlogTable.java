@@ -328,6 +328,20 @@ public class ReaderBlogTable {
         }
     }
 
+    public static void incrementUnseenCount(long blogId) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET unseen_count = unseen_count+1"
+                + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
+    }
+
+    public static void decrementUnseenCount(long blogId) {
+        ReaderDatabase.getWritableDb().execSQL(
+                "UPDATE tbl_blog_info SET unseen_count = unseen_count-1"
+                + " WHERE blog_id=?",
+                new String[]{Long.toString(blogId)});
+    }
+
     /*
      * determine whether the passed blog info should be updated based on when it was last updated
      */

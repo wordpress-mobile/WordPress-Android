@@ -13,6 +13,6 @@
         android:contentDescription="@string/jetpack_icon_content_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_get_app_24dp" />
+        tools:src="@drawable/ic_get_app_white_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

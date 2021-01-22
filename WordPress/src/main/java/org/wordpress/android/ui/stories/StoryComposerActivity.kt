@@ -79,6 +79,8 @@ import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
@@ -180,13 +182,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 .get(StoryComposerViewModel::class.java)
 
         site?.let {
-            viewModel.start(
+            val postInitialized = viewModel.start(
                     it,
                     editPostRepository,
                     LocalId(localPostId),
                     postEditorAnalyticsSession,
                     notificationType
             )
+
+            // Ensure we have a valid post
+            if (!postInitialized) {
+                showErrorAndFinish(R.string.post_not_found)
+                return@let
+            }
         }
 
         storyEditorMedia.start(requireNotNull(site), this)
@@ -247,6 +255,15 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 }
             }
         })
+    }
+
+    private fun showErrorAndFinish(errorMessageId: Int) {
+        ToastUtils.showToast(
+                this,
+                errorMessageId,
+                ToastUtils.Duration.LONG
+        )
+        finish()
     }
 
     override fun onLoadFromIntent(intent: Intent) {
@@ -499,6 +516,10 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 }
             }
 
+            viewModel.onStorySaved()
+            // TODO add tracks
+            processStorySaving()
+
             val savedContentIntent = Intent()
             val blockId = intent.extras?.getString(ARG_STORY_BLOCK_ID)
             savedContentIntent.putExtra(ARG_STORY_BLOCK_ID, blockId)
@@ -509,6 +530,7 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 // if not, let's use the current Story
                 storyIndex = storyRepositoryWrapper.getCurrentStoryIndex()
             }
+
             // if we are editing this Story Block, then the id is assured to be a remote media file id, but
             // the frame no longer points to such media Id on the site given we are just about to save a
             // new flattened media. Hence, we need to set a new temporary Id we can use to identify
@@ -523,12 +545,6 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
 
             savedContentIntent.putExtra(ARG_STORY_BLOCK_UPDATED_CONTENT, updatedStoryBlock)
             setResult(Activity.RESULT_OK, savedContentIntent)
-
-            viewModel.onStorySaved()
-
-            // TODO add tracks
-            processStorySaving()
-
             finish()
         } else {
             // assume this is a new Post, and proceed to PrePublish bottom sheet
@@ -573,6 +589,8 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                             val mediaModel = mediaStore.getSiteMediaWithId(site, it.toLong())
                             val mediaFile = fluxCUtilsWrapper.mediaFileFromMediaModel(mediaModel)
                             mediaFile?.let { mediafile ->
+                                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+                                mediaModel.alt = mediaFile.alt
                                 val storyMediaFileData =
                                         saveStoryGutenbergBlockUseCase.buildMediaFileDataWithTemporaryId(
                                                 mediaFile = mediafile,

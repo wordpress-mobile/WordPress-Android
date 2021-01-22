@@ -24,13 +24,14 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Footer
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
-import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
@@ -39,9 +40,10 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.BackupFeatureConfig
 import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
+import org.wordpress.android.util.config.BackupDownloadFeatureConfig
+import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -55,21 +57,34 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 
+const val ACTIVITY_LOG_REWINDABLE_ONLY_KEY = "activity_log_rewindable_only"
+
 private const val DAY_IN_MILLIS = 1000 * 60 * 60 * 24
 private const val ONE_SECOND_IN_MILLIS = 1000
 private const val TIMEZONE_GMT_0 = "GMT+0"
 
 typealias DateRange = Pair<Long, Long>
 
+/**
+ * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
+ * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
+ * hand, not much more complexity would be introduced if the 'Activity Log' screen is reused (mainly some 'if/else'
+ * code branches here and there).
+ *
+ * However, should more 'Backup' related additions are added to the 'Activity Log' screen, then it should become a
+ * necessity to split those features in separate screens in order not to increase further the complexity of this
+ * screen's architecture.
+ */
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
-    private val backupFeatureConfig: BackupFeatureConfig,
+    private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
-    private val fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase,
+    private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
+    private val restoreFeatureConfig: RestoreFeatureConfig,
     @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(uiDispatcher) {
     enum class ActivityLogListStatus {
@@ -79,6 +94,7 @@ class ActivityLogViewModel @Inject constructor(
         FETCHING,
         LOADING_MORE
     }
+
     private var isStarted = false
 
     private val _events = MutableLiveData<List<ActivityLogListItem>>()
@@ -93,9 +109,8 @@ class ActivityLogViewModel @Inject constructor(
     val filtersUiState: LiveData<FiltersUiState>
         get() = _filtersUiState
 
-    private val _showRewindDialog = SingleLiveEvent<ActivityLogListItem>()
-    val showRewindDialog: LiveData<ActivityLogListItem>
-        get() = _showRewindDialog
+    private val _emptyUiState = MutableLiveData<EmptyUiState>(EmptyUiState.ActivityLog.EmptyFilters)
+    val emptyUiState: LiveData<EmptyUiState> = _emptyUiState
 
     private val _showActivityTypeFilterDialog = SingleLiveEvent<ShowActivityTypePicker>()
     val showActivityTypeFilterDialog: LiveData<ShowActivityTypePicker>
@@ -154,13 +169,16 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     lateinit var site: SiteModel
+    var rewindableOnly: Boolean = false
 
-    fun start(site: SiteModel) {
+    fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
             return
         }
+        isStarted = true
 
         this.site = site
+        this.rewindableOnly = rewindableOnly
 
         rewindStatusService.start(site)
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
@@ -172,8 +190,6 @@ class ActivityLogViewModel @Inject constructor(
         requestEventsUpdate(false)
 
         showFiltersIfSupported()
-
-        isStarted = true
     }
 
     private fun showFiltersIfSupported() {
@@ -182,10 +198,11 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 launch {
-                    val result = fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(site.siteId)
-                    result.capabilities?.find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }?.let {
-                        refreshFiltersUiState()
-                    }
+                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
+                            .find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }
+                            ?.let {
+                                refreshFiltersUiState()
+                            }
                 }
             }
         }
@@ -217,6 +234,31 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.let { ::onClearDateRangeFilterClicked },
                 currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let { ::onClearActivityTypeFilterClicked }
         )
+        refreshEmptyUiState()
+    }
+
+    private fun refreshEmptyUiState() {
+        if (rewindableOnly) {
+            refreshBackupEmptyUiState()
+        } else {
+            refreshActivityLogEmptyUiState()
+        }
+    }
+
+    private fun refreshBackupEmptyUiState() {
+        if (currentDateRangeFilter != null) {
+            _emptyUiState.value = EmptyUiState.Backup.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.Backup.EmptyFilters
+        }
+    }
+
+    private fun refreshActivityLogEmptyUiState() {
+        if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
+            _emptyUiState.value = EmptyUiState.ActivityLog.ActiveFilters
+        } else {
+            _emptyUiState.value = EmptyUiState.ActivityLog.EmptyFilters
+        }
     }
 
     private fun createDateRangeFilterLabel(): kotlin.Pair<UiString, UiString> {
@@ -235,7 +277,7 @@ class ActivityLogViewModel @Inject constructor(
         return currentActivityTypeFilter.takeIf { it.isNotEmpty() }?.let {
             if (it.size == 1) {
                 kotlin.Pair(
-                        UiStringText("${it[0].name} (${it[0].count})"),
+                        UiStringText(it[0].name),
                         UiStringResWithParams(
                                 R.string.activity_log_activity_type_filter_single_item_selected_content_description,
                                 listOf(UiStringText(it[0].name), UiStringText(it[0].count.toString()))
@@ -272,7 +314,12 @@ class ActivityLogViewModel @Inject constructor(
     // todo: annmarie - Remove once the feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
-            _showRewindDialog.value = item
+            val navigationEvent = if (item.launchRestoreWizard) {
+                ShowRestore(item)
+            } else {
+                ShowRewindDialog(item)
+            }
+            _navigationEvents.value = Event(navigationEvent)
         }
     }
 
@@ -283,7 +330,11 @@ class ActivityLogViewModel @Inject constructor(
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = when (secondaryAction) {
                 RESTORE -> {
-                    ShowRestore(item)
+                    if (item.launchRestoreWizard) {
+                        ShowRestore(item)
+                    } else {
+                        ShowRewindDialog(item)
+                    }
                 }
                 DOWNLOAD_BACKUP -> {
                     ShowBackupDownload(item)
@@ -363,7 +414,11 @@ class ActivityLogViewModel @Inject constructor(
         displayProgressItem: Boolean = isRewindProgressItemShown,
         done: Boolean = isDone
     ) {
-        val eventList = activityLogStore.getActivityLogForSite(site, false)
+        val eventList = activityLogStore.getActivityLogForSite(
+                site = site,
+                ascending = false,
+                rewindableOnly = rewindableOnly
+        )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
         val rewindFinished = isRewindProgressItemShown && !displayProgressItem
@@ -374,7 +429,12 @@ class ActivityLogViewModel @Inject constructor(
             moveToTop = eventListStatus.value != LOADING_MORE
         }
         eventList.forEach { model ->
-            val currentItem = ActivityLogListItem.Event(model, disableActions, backupFeatureConfig.isEnabled())
+            val currentItem = ActivityLogListItem.Event(
+                    model,
+                    disableActions,
+                    backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureConfig.isEnabled()
+            )
             val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
             if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
                 items.add(Header(currentItem.formattedDate))
@@ -406,7 +466,8 @@ class ActivityLogViewModel @Inject constructor(
         return activityLogModel?.let {
             val rewoundEvent = ActivityLogListItem.Event(
                     model = it,
-                    backupFeatureEnabled = backupFeatureConfig.isEnabled()
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
             )
             ActivityLogListItem.Progress(
                     resourceProvider.getString(R.string.activity_log_currently_restoring_title),
@@ -449,7 +510,11 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun showRewindStartedMessage() {
         rewindStatusService.rewindingActivity?.let {
-            val event = ActivityLogListItem.Event(model = it, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val event = ActivityLogListItem.Event(
+                    model = it,
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
+            )
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
                     event.formattedDate,
@@ -461,7 +526,11 @@ class ActivityLogViewModel @Inject constructor(
     private fun showRewindFinishedMessage() {
         val item = rewindStatusService.rewindingActivity
         if (item != null) {
-            val event = ActivityLogListItem.Event(model = item, backupFeatureEnabled = backupFeatureConfig.isEnabled())
+            val event = ActivityLogListItem.Event(
+                    model = item,
+                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
+            )
             _showSnackbarMessage.value =
                     resourceProvider.getString(
                             R.string.activity_log_rewind_finished_snackbar_message,
@@ -518,5 +587,34 @@ class ActivityLogViewModel @Inject constructor(
             val onClearDateRangeFilterClicked: (() -> Unit)?,
             val onClearActivityTypeFilterClicked: (() -> Unit)?
         ) : FiltersUiState(visibility = true)
+    }
+
+    sealed class EmptyUiState {
+        abstract val emptyScreenTitle: UiString
+        abstract val emptyScreenSubtitle: UiString
+
+        object ActivityLog {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_empty_subtitle)
+            }
+
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.activity_log_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.activity_log_active_filter_empty_subtitle)
+            }
+        }
+
+        object Backup {
+            object EmptyFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_empty_subtitle)
+            }
+
+            object ActiveFilters : EmptyUiState() {
+                override val emptyScreenTitle = UiStringRes(R.string.backup_active_filter_empty_title)
+                override val emptyScreenSubtitle = UiStringRes(R.string.backup_active_filter_empty_subtitle)
+            }
+        }
     }
 }
