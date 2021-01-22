@@ -19,13 +19,11 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.LocaleManagerWrapper
-import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
 class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
-    @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: ScanHistoryViewModel
 
