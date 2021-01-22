@@ -26,3 +26,39 @@ Site Pages: Copy a page with the Duplicate button.
 
 Страницы сайта: копируйте страницу с помощью кнопки «Дублировать».
 </ru-RU>
+
+<es-ES>
+16.5:
+Bloques: Hemos añadido compatibilidad para entradas cruzadas para P2, compatibilidad de alineación de ancho completo y amplia en el bloque de columnas, la capacidad de elegir un enlace en el bloque de imagen y la capacidad de mover un bloque manteniendo pulsados los botones arriba/abajo. 
+
+Registro de actividad: Rastrea la actividad de tu sitio con filtros que ordenan por fecha o por tipo.
+
+Páginas del sitio: Copia una página con el botón «Duplicar».
+</es-ES>
+
+<sv-SV>
+16.5:
+Block: Vi har lagt till stöd för korspublicering via P2, stöd för fullbred och bred justering i kolumnblocket, möjlighet att välja länk i bildblocket och att flytta ett block inom en sida med långt tryck på knapparna upp/ned. Dessutom har vi åtgärdat ett problem med anpassad textstorlek i textbaserade block.
+
+Aktivitetslogg: Följ händelserna på din webbplats med filter för sortering på datum eller aktivitetstyp.
+
+Sidor på webbplatsen: Skapa kopia av en sida med dupliceringsknappen.
+</sv-SV>
+
+<nl-NL>
+16.5:
+Blokken: we hebben cross-bericht-ondersteuning toegevoegd voor P2, ondersteuning voor volledige en brede uitlijning in het Kolommen blok, de mogelijkheid om een link te kiezen in het afbeelding-blok en de mogelijkheid om een blok te verplaatsen door lang op de knoppen omhoog/omlaag te drukken. 
+
+Activiteitenlog: houd je site activiteit bij met filters die op datum of type sorteren.
+
+Sitepagina's: kopieer een pagina met de knop Dupliceren.
+</nl-NL>
+
+<it-IT>
+16.5:
+Editor a blocchi: Abbiamo aggiunto il support per il cross-post nei P2, la possibilità di selezionare un link nel blocco immagine, e la possibilità di muovere un blocco premendo a lungo sui bottoni su/giù. 
+
+Activity Log: Ora puoi ordinare l'attività del tuo sito per data e tipo.
+
+Site Pages: Copia una pagina con il bottone Duplica.
+</it-IT>
