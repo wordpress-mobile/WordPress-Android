@@ -22,7 +22,6 @@ import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.viewmodel.pages.PageListViewModel
