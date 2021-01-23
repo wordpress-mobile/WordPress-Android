@@ -31,7 +31,6 @@ import org.wordpress.android.ui.reader.utils.PostSeenStatusApiCallsProvider.Seen
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -45,7 +44,6 @@ class ReaderPostSeenStatusToggleUseCaseTest {
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
-    @Mock private lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
 
@@ -54,7 +52,6 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         whenever(accountStore.hasAccessToken()).thenReturn(true)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(readerPostTableWrapper.isPostSeen(any())).thenReturn(true)
-        whenever(mSeenUnseenWithCounterFeatureConfig.isEnabled()).thenReturn(true)
 
         seenStatusToggleUseCase = ReaderSeenStatusToggleUseCase(
                 networkUtilsWrapper,
@@ -62,8 +59,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
                 accountStore,
                 analyticsUtilsWrapper,
                 readerPostTableWrapper,
-                readerBlogTableWrapper,
-                mSeenUnseenWithCounterFeatureConfig
+                readerBlogTableWrapper
         )
     }
 

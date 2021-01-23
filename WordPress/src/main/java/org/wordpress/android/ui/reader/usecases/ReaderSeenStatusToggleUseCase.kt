@@ -19,7 +19,6 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
-import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 
 class ReaderSeenStatusToggleUseCase @Inject constructor(
@@ -28,8 +27,7 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
     private val accountStore: AccountStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val readerPostTableWrapper: ReaderPostTableWrapper,
-    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    private val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper
 ) {
     companion object {
         const val ACTION_SOURCE_PARAM_NAME = "source"
@@ -39,23 +37,19 @@ class ReaderSeenStatusToggleUseCase @Inject constructor(
      * Convenience method for toggling seen status based on the current state in local DB
      */
     suspend fun toggleSeenStatus(post: ReaderPost, actionSource: ReaderPostSeenToggleSource) = flow {
-        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
-            val status = if (isAskingToMarkAsSeen) {
-                markPostAsSeen(post, actionSource)
-            } else {
-                markPostAsUnseen(post, actionSource)
-            }
-
-            emit(status)
+        val isAskingToMarkAsSeen = !readerPostTableWrapper.isPostSeen(post)
+        val status = if (isAskingToMarkAsSeen) {
+            markPostAsSeen(post, actionSource)
+        } else {
+            markPostAsUnseen(post, actionSource)
         }
+
+        emit(status)
     }
 
     suspend fun markPostAsSeenIfNecessary(post: ReaderPost) {
-        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            if (!readerPostTableWrapper.isPostSeen(post)) {
-                markPostAsSeen(post, READER_POST_DETAILS)
-            }
+        if (!readerPostTableWrapper.isPostSeen(post)) {
+            markPostAsSeen(post, READER_POST_DETAILS)
         }
     }
 
