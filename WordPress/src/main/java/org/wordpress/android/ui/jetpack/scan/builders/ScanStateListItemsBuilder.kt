@@ -122,7 +122,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildScanningStateItems(progress: Int): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_scan_scanning, null)
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_jetpack_green_5_stroke_jetpack_green_40, null)
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
