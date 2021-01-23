@@ -26,14 +26,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -273,15 +272,14 @@ class QuickStartUtils {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_TAPPED
-                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_TAPPED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_TAPPED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_TAPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_TAPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_TAPPED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_TAPPED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_CREATE_PAGE_TAPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_TAPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_TAPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_TAPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_TAPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
@@ -295,15 +293,14 @@ class QuickStartUtils {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_LIST_CREATE_SITE_SKIPPED
                 VIEW_SITE -> Stat.QUICK_START_LIST_VIEW_SITE_SKIPPED
-                CHOOSE_THEME -> Stat.QUICK_START_LIST_BROWSE_THEMES_SKIPPED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_LIST_CUSTOMIZE_SITE_SKIPPED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_LIST_ADD_SOCIAL_SKIPPED
                 PUBLISH_POST -> Stat.QUICK_START_LIST_PUBLISH_POST_SKIPPED
                 FOLLOW_SITE -> Stat.QUICK_START_LIST_FOLLOW_SITE_SKIPPED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_LIST_UPLOAD_ICON_SKIPPED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_LIST_CREATE_PAGE_SKIPPED
                 CHECK_STATS -> Stat.QUICK_START_LIST_CHECK_STATS_SKIPPED
                 EXPLORE_PLANS -> Stat.QUICK_START_LIST_EXPLORE_PLANS_SKIPPED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_LIST_EDIT_HOMEPAGE_SKIPPED
+                REVIEW_PAGES -> Stat.QUICK_START_LIST_REVIEW_PAGES_SKIPPED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
@@ -313,15 +310,14 @@ class QuickStartUtils {
                 CREATE_SITE -> Stat.QUICK_START_CREATE_SITE_TASK_COMPLETED
                 UPDATE_SITE_TITLE -> Stat.QUICK_START_UPDATE_SITE_TITLE_COMPLETED
                 VIEW_SITE -> Stat.QUICK_START_VIEW_SITE_TASK_COMPLETED
-                CHOOSE_THEME -> Stat.QUICK_START_BROWSE_THEMES_TASK_COMPLETED
-                CUSTOMIZE_SITE -> Stat.QUICK_START_CUSTOMIZE_SITE_TASK_COMPLETED
                 ENABLE_POST_SHARING -> Stat.QUICK_START_SHARE_SITE_TASK_COMPLETED
                 PUBLISH_POST -> Stat.QUICK_START_PUBLISH_POST_TASK_COMPLETED
                 FOLLOW_SITE -> Stat.QUICK_START_FOLLOW_SITE_TASK_COMPLETED
                 UPLOAD_SITE_ICON -> Stat.QUICK_START_UPLOAD_ICON_COMPLETED
-                CREATE_NEW_PAGE -> Stat.QUICK_START_CREATE_PAGE_COMPLETED
                 CHECK_STATS -> Stat.QUICK_START_CHECK_STATS_COMPLETED
                 EXPLORE_PLANS -> Stat.QUICK_START_EXPLORE_PLANS_COMPLETED
+                EDIT_HOMEPAGE -> Stat.QUICK_START_EDIT_HOMEPAGE_TASK_COMPLETED
+                REVIEW_PAGES -> Stat.QUICK_START_REVIEW_PAGES_TASK_COMPLETED
                 else -> throw IllegalStateException("The task '$task' is not valid")
             }
         }
