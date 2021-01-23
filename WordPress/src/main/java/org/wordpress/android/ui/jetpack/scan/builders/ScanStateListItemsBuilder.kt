@@ -83,11 +83,12 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
-        items.add(scanButton)
 
         val fixableThreats = threats.map { it.baseThreatModel.fixable != null }
         buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
             ?.let { items.add(it) }
+
+        items.add(scanButton)
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
