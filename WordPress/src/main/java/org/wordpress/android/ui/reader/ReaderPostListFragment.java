@@ -124,6 +124,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -222,6 +223,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -2434,7 +2436,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             discoverData.getPostId());
                     return;
                 } else if (discoverData.hasPermalink()) {
-                    mViewModel.onExternalPostOpened(post);
+                    if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                        mViewModel.onExternalPostOpened(post);
+                    }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
@@ -2548,7 +2552,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
                 break;
             case TOGGLE_SEEN_STATUS:
-                mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                    mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                }
                 break;
         }
     }
