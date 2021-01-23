@@ -1115,7 +1115,7 @@
     <!-- threat fix -->
     <string name="threat_fix_default_header">How will we fix it?</string>
     <string name="threat_fix_fixed_header">How did Jetpack fix it?</string>
-    <string name="threat_fix_current_fixable_header">@string/threat_fix_default_header</string>
+    <string name="threat_fix_current_fixable_header" translatable="false">@string/threat_fix_default_header</string>
     <string name="threat_fix_current_not_fixable_header">Resolving the threat</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.
         We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n
@@ -2037,7 +2037,7 @@
     <string name="support_contact_email_not_set">Not set</string>
     <string name="support_push_notification_title">WordPress</string>
     <string name="support_push_notification_message">New message from \'Help &amp; Support\'</string>
-    <string name="contact_fragment_title">@string/contact_support</string>
+    <string name="contact_fragment_title" translatable="false">@string/contact_support</string>
 
     <!--My Site-->
     <string name="my_site_header_external">External</string>
