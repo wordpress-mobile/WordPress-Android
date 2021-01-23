@@ -178,7 +178,8 @@ class RestoreStateListItemBuilder @Inject constructor() {
 
     private fun buildProgressState(progress: Int) = ProgressState(
             progress = progress,
-            label = UiStringResWithParams(R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
+            progressLabel = UiStringResWithParams(
+                    R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
             )
     )
 }

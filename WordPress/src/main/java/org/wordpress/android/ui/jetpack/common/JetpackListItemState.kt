@@ -38,7 +38,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
 
     data class ProgressState(
         val progress: Int,
-        val label: UiString,
+        val progressLabel: UiString,
         val isIndeterminate: Boolean = false,
         val isVisible: Boolean = true,
         val isLabelVisible: Boolean = !isIndeterminate

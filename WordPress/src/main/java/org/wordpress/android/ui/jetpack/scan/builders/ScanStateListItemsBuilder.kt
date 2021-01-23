@@ -136,7 +136,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildProgressState(progress: Int = 0, isIndeterminate: Boolean = false, isVisible: Boolean = true) =
         ProgressState(
             progress = progress,
-            label = UiStringResWithParams(
+            progressLabel = UiStringResWithParams(
                 R.string.backup_download_progress_label, // TODO ashiagr replace label
                 listOf(UiStringText(progress.toString()))
             ),

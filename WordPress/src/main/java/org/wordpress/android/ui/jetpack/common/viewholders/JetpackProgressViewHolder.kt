@@ -16,7 +16,7 @@ class JetpackProgressViewHolder(
         val state = itemUiState as ProgressState
         with(progress_label) {
             setVisible(state.isLabelVisible)
-            text = uiHelpers.getTextOfUiString(itemView.context, state.label)
+            text = uiHelpers.getTextOfUiString(itemView.context, state.progressLabel)
         }
 
         with(progress_bar) {

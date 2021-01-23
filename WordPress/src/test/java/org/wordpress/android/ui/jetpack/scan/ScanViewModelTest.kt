@@ -386,7 +386,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ),
         ProgressState(
             progress = 0,
-            label = fakeUiStringText,
+            progressLabel = fakeUiStringText,
             isIndeterminate = true,
             isVisible = false
         ),
