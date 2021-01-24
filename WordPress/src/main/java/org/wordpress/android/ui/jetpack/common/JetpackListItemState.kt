@@ -3,6 +3,7 @@ package org.wordpress.android.ui.jetpack.common
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
@@ -13,12 +14,13 @@ abstract class JetpackListItemState(open val type: ViewType) {
 
     data class IconState(
         @DrawableRes val icon: Int,
+        @ColorRes val colorResId: Int? = null,
+        @DimenRes val sizeResId: Int = R.dimen.jetpack_icon_size,
         val contentDescription: UiString,
-        @ColorRes val colorResId: Int? = null
     ) : JetpackListItemState(ViewType.ICON)
 
     data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-        JetpackListItemState(ViewType.HEADER)
+            JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(val text: UiString) : JetpackListItemState(ViewType.DESCRIPTION)
 

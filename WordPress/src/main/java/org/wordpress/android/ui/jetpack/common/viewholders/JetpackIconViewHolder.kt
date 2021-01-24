@@ -14,13 +14,21 @@ class JetpackIconViewHolder(
 ) : JetpackViewHolder(R.layout.jetpack_list_icon_item, parent) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val iconState = itemUiState as IconState
+        val context = itemView.context
+
+        with(icon.layoutParams) {
+            val size = context.resources.getDimensionPixelSize(iconState.sizeResId)
+            width = size
+            height = size
+        }
+
         if (iconState.colorResId == null) {
             imageManager.load(icon, iconState.icon)
         } else {
             ColorUtils.setImageResourceWithTint(
-                    icon,
-                    iconState.icon,
-                    iconState.colorResId
+                icon,
+                iconState.icon,
+                iconState.colorResId
             )
         }
     }

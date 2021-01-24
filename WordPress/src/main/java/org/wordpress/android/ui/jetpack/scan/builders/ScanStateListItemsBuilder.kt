@@ -145,6 +145,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildScanIcon(@DrawableRes icon: Int, @ColorRes color: Int?) = IconState(
         icon = icon,
         colorResId = color,
+        sizeResId = R.dimen.scan_icon_size,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 
@@ -209,7 +210,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         val progressInfoLabel = threats
             .filter { it.baseThreatModel.id in fixingThreatIds }
             .joinToString(",") {
-                uiHelpers.getTextOfUiString(contextProvider.getContext(), threatItemBuilder.buildThreatItemHeader(it))
+                uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    threatItemBuilder.buildThreatItemHeader(it)
+                )
             }
         return progressInfoLabel.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
     }
