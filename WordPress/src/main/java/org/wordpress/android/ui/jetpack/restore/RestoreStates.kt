@@ -10,6 +10,11 @@ import org.wordpress.android.ui.jetpack.restore.StateType.WARNING
 import org.wordpress.android.ui.jetpack.restore.StateType.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.StateType.COMPLETE
 import org.wordpress.android.ui.jetpack.restore.StateType.ERROR
+import org.wordpress.android.ui.jetpack.restore.ToolbarState.CompleteToolbarState
+import org.wordpress.android.ui.jetpack.restore.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.restore.ToolbarState.ErrorToolbarState
+import org.wordpress.android.ui.jetpack.restore.ToolbarState.ProgressToolbarState
+import org.wordpress.android.ui.jetpack.restore.ToolbarState.WarningToolbarState
 
 abstract class RestoreUiState(open val type: StateType) {
     abstract val items: List<JetpackListItemState>
@@ -17,35 +22,40 @@ abstract class RestoreUiState(open val type: StateType) {
 
     data class ErrorState(
         val errorType: RestoreErrorTypes,
-        override val items: List<JetpackListItemState>,
-        override val toolbarState: ToolbarState
-    ) : RestoreUiState(ERROR)
+        override val items: List<JetpackListItemState>
+    ) : RestoreUiState(ERROR) {
+        override val toolbarState: ToolbarState = ErrorToolbarState
+    }
 
     sealed class ContentState(override val type: StateType) : RestoreUiState(type) {
         data class DetailsState(
             val activityLogModel: ActivityLogModel,
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(DETAILS)
+        ) : ContentState(DETAILS) {
+            override val toolbarState: ToolbarState = DetailsToolbarState
+        }
 
         data class WarningState(
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(WARNING)
+        ) : ContentState(WARNING) {
+            override val toolbarState: ToolbarState = WarningToolbarState
+        }
 
         data class ProgressState(
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(PROGRESS)
+        ) : ContentState(PROGRESS) {
+            override val toolbarState: ToolbarState = ProgressToolbarState
+        }
 
         data class CompleteState(
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(COMPLETE)
+        ) : ContentState(COMPLETE) {
+            override val toolbarState: ToolbarState = CompleteToolbarState
+        }
     }
 }
 
@@ -61,25 +71,25 @@ sealed class ToolbarState {
     abstract val title: Int
     @DrawableRes val icon: Int = R.drawable.ic_close_24px
 
-    data class DetailsToolbarState(
+    object DetailsToolbarState : ToolbarState() {
         @StringRes override val title: Int = R.string.restore_details_page_title
-    ) : ToolbarState()
+    }
 
-    data class WarningToolbarState(
+    object WarningToolbarState : ToolbarState() {
         @StringRes override val title: Int = R.string.restore_warning_page_title
-    ) : ToolbarState()
+    }
 
-    data class ProgressToolbarState(
+    object ProgressToolbarState : ToolbarState() {
         @StringRes override val title: Int = R.string.restore_progress_page_title
-    ) : ToolbarState()
+    }
 
-    data class CompleteToolbarState(
+    object CompleteToolbarState : ToolbarState() {
         @StringRes override val title: Int = R.string.restore_complete_page_title
-    ) : ToolbarState()
+    }
 
-    data class ErrorToolbarState(
+    object ErrorToolbarState : ToolbarState() {
         @StringRes override val title: Int = R.string.restore_complete_failed_title
-    ) : ToolbarState()
+    }
 }
 
 sealed class RestoreRequestState {
