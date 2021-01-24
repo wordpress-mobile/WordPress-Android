@@ -2,17 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/item_container"
     android:layout_width="match_parent"
-    android:layout_height="?attr/listPreferredItemHeight">
+    android:layout_height="wrap_content">
 
     <com.google.android.material.button.MaterialButton
         android:id="@+id/button"
-        style="@style/Jetpack.PrimaryButton"
+        style="@style/Jetpack.SecondaryButton"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        tools:text="@string/backup_download_details_action_button"/>
+        tools:text="@string/scan_again"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

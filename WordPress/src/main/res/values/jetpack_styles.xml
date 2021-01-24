@@ -39,9 +39,17 @@
         <item name="android:textAllCaps">false</item>
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginTop">@dimen/margin_large</item>
+    </style>
+
+    <style name="Jetpack.SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="textAllCaps">false</item>
+        <item name="materialThemeOverlay">@style/ThemeOverlay.SecondaryButton.OnSurface</item>
+    </style>
+
+    <style name="ThemeOverlay.SecondaryButton.OnSurface" parent="">
+        <item name="colorPrimary">?attr/colorOnSurface</item>
     </style>
 
     <style name="Jetpack.ListItem.Label" parent="Jetpack.TextView">

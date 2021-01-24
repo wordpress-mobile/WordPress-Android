@@ -29,7 +29,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val isEnabled: Boolean = true,
         val isVisible: Boolean = true,
         val onClick: () -> Unit
-    ) : JetpackListItemState(ViewType.ACTION_BUTTON)
+    ) : JetpackListItemState(if (isSecondary) ViewType.SECONDARY_ACTION_BUTTON else ViewType.PRIMARY_ACTION_BUTTON)
 
     data class CheckboxState(
         val availableItemType: JetpackAvailableItemType,

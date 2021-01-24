@@ -32,7 +32,8 @@ class ThreatDetailsAdapter(
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.THREAT_FILE_NAME.id -> ThreatFileNameViewHolder(uiHelpers, parent)
             ViewType.THREAT_CONTEXT_LINES.id -> ThreatContextLinesViewHolder(parent)
-            ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
+            ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
+            ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }
