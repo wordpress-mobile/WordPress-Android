@@ -20,7 +20,7 @@ abstract class BackupDownloadUiState(open val type: StateType) {
 
     data class ErrorState(
         val errorType: BackupDownloadErrorTypes,
-        override val items: List<JetpackListItemState>,
+        override val items: List<JetpackListItemState>
     ) : BackupDownloadUiState(ERROR) {
         override val toolbarState: ToolbarState = ErrorToolbarState
     }
