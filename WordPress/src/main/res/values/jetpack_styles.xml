@@ -1,5 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Icon -->
+    <style name="Jetpack.Icon" parent="">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_medium_large</item>
+        <item name="android:importantForAccessibility">no</item>
+    </style>
+
     <!-- TextViews -->
     <style name="Jetpack.TextView" parent="android:Widget.TextView">
         <item name="android:includeFontPadding">false</item>
