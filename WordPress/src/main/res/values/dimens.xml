@@ -155,7 +155,7 @@
 
     <!-- reader follow unfollow comments dimensions -->
     <dimen name="reader_follow_button_min_height">32dp</dimen>
-    <dimen name="reader_follow_button_skeleton_width">165dp</dimen>
+    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
@@ -424,6 +424,9 @@
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- scan -->
+    <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>

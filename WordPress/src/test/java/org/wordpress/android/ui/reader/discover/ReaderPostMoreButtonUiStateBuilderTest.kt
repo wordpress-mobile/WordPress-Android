@@ -22,6 +22,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_PREVIEW
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -34,13 +35,17 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Before
     fun setUp() = test {
+        whenever(mSeenUnseenWithCounterFeatureConfig.isEnabled()).thenReturn(true)
+
         builder = ReaderPostMoreButtonUiStateBuilder(
                 readerPostTableWrapper,
                 readerBlogTableWrapper,
                 readerUtilsWrapper,
+                mSeenUnseenWithCounterFeatureConfig,
                 TEST_DISPATCHER
         )
     }

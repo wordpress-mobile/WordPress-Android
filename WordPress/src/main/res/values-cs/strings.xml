@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-18 23:00:32+0000
+Translation-Revision-Date: 2021-01-20 10:04:00+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">Přesunout dolů</string>
+    <string name="gutenberg_native_move_block_position">Změňte pozici bloku</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Tlačítko sdílet odkaz</string>
     <string name="backup_download_complete_info">Také jsme vám zaslali e-mailem odkaz na váš soubor.</string>
     <string name="jetpack_icon_content_description">ikona</string>
@@ -441,6 +443,7 @@ Language: cs_CZ
     <string name="ccpa_privacy_notice_header">Oznámení o ochraně osobních údajů pro uživatele Kalifornie</string>
     <string name="gutenberg_native_open_block_actions_menu">Otevřete nabídku blokovat akce</string>
     <string name="gutenberg_native_try_a_starter_layout">Zkuste rozložení startéru</string>
+    <string name="gutenberg_native_move_to_top">Přesunout nahoru</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dvojitým klepnutím otevřete akční list s dostupnými možnostmi</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dvojitým klepnutím otevřete spodní list s dostupnými možnostmi</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Vybraná domovská stránka a stránka pro příspěvky nemohou být stejné.</string>

@@ -108,6 +108,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     private fun fetchLayouts() {
+        if (_uiState.value === UiState.Loading) return
         updateUiState(UiState.Loading)
         launch {
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
@@ -285,7 +286,9 @@ class HomePagePickerViewModel @Inject constructor(
     fun onThumbnailModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
             _previewMode.value = mode
-            loadLayouts()
+            if (uiState.value is UiState.Content) {
+                loadLayouts()
+            }
         }
     }
 

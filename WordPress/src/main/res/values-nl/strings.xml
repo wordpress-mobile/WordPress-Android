@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 10:54:17+0000
+Translation-Revision-Date: 2021-01-20 12:06:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">Verplaats naar beneden</string>
+    <string name="gutenberg_native_move_block_position">Wijzig blokpositie</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Deel link knop</string>
     <string name="jetpack_icon_content_description">pictogram</string>
     <string name="label_control_upload">Upload</string>
@@ -441,6 +443,7 @@ Language: nl
     <string name="ccpa_privacy_notice_header">Privacybericht voor gebruikers in Californie</string>
     <string name="gutenberg_native_try_a_starter_layout">Probeer een starter lay-out</string>
     <string name="gutenberg_native_open_block_actions_menu">Open menu met blokacties</string>
+    <string name="gutenberg_native_move_to_top">Verplaats naar boven</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltik om onderste blad te openen met beschikbare opties</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltik om actieblad te openen met beschikbare opties</string>
     <string name="pages_cannot_be_started">We kunnen momenteel geen pagina\'s openen. Probeer het later opnieuw</string>

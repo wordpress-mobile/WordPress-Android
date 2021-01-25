@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -43,6 +44,7 @@ class ScanViewModel @Inject constructor(
     private val startScanUseCase: StartScanUseCase,
     private val fixThreatsUseCase: FixThreatsUseCase,
     private val fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase,
+    private val scanStore: ScanStore,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -99,18 +101,18 @@ class ScanViewModel @Inject constructor(
 
     private fun fixAllThreats() {
         launch {
-            updateActionButtons(isEnabled = false)
+            updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
                     fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
-                    updateActionButtons(isEnabled = true)
+                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
-                    updateActionButtons(isEnabled = true)
+                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
                 }
             }
@@ -120,33 +122,32 @@ class ScanViewModel @Inject constructor(
     private fun fetchFixThreatsStatus(fixableThreatIds: List<Long>) {
         launch {
             @StringRes var messageRes: Int? = null
-            var isFixing: Boolean
+            val scanStateModel = requireNotNull(scanStore.getScanStateForSite(site))
             fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
                 remoteSiteId = site.siteId,
                 fixableThreatIds = fixableThreatIds
             ).collect { status ->
+                var fixingThreatIds = emptyList<Long>()
                 when (status) {
-                    is FetchFixThreatsState.InProgress -> isFixing = true
+                    is FetchFixThreatsState.InProgress -> {
+                        fixingThreatIds = status.threatIds
+                    }
                     is FetchFixThreatsState.Complete -> {
-                        isFixing = false
                         messageRes = R.string.threat_fix_all_status_success_message
                         fetchScanState()
                     }
                     is FetchFixThreatsState.Failure.NetworkUnavailable -> {
-                        isFixing = false
                         messageRes = R.string.error_generic_network
                     }
                     is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
-                        isFixing = false
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                     is FetchFixThreatsState.Failure.FixFailure -> {
-                        isFixing = false
                         messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
                     }
                 }
-                updateActionButtons(isEnabled = !isFixing)
-                updateFixThreatsStatusProgressBar(isVisible = isFixing)
+                updateActionButtons(isVisible = fixingThreatIds.isEmpty())
+                updateFixThreatsStatusProgressBar(scanStateModel, fixingThreatIds)
                 messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
         }
@@ -182,11 +183,11 @@ class ScanViewModel @Inject constructor(
         fetchFixThreatsStatus(listOf(threatId))
     }
 
-    private fun updateActionButtons(isEnabled: Boolean) {
+    private fun updateActionButtons(isVisible: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
-                    contentItem.copy(isEnabled = isEnabled)
+                    contentItem.copy(isVisible = isVisible)
                 } else {
                     contentItem
                 }
@@ -195,11 +196,20 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun updateFixThreatsStatusProgressBar(isVisible: Boolean) {
+    private fun updateFixThreatsStatusProgressBar(
+        scanStateModel: ScanStateModel,
+        fixingThreatIds: List<Long>
+    ) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ProgressState && contentItem.isIndeterminate) {
-                    contentItem.copy(isVisible = isVisible)
+                    contentItem.copy(
+                        isVisible = fixingThreatIds.isNotEmpty(),
+                        progressInfoLabel = scanStateListItemsBuilder.buildFixThreatsProgressInfoLabel(
+                            threats = scanStateModel.threats ?: emptyList(),
+                            fixingThreatIds = fixingThreatIds
+                        )
+                    )
                 } else {
                     contentItem
                 }

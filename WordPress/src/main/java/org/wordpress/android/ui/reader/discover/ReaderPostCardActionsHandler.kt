@@ -17,6 +17,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_POST_REPORTE
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_POST_OPENED_FROM_OTHER_POST_LIST
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM_READER
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.DELETE
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
@@ -55,6 +56,8 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase.PostSeenState.Error
@@ -88,12 +91,14 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val likeUseCase: PostLikeUseCase,
     private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase,
     private val undoBlockBlogUseCase: UndoBlockBlogUseCase,
+    private val fetchSiteUseCase: ReaderFetchSiteUseCase,
     private val appPrefsWrapper: AppPrefsWrapper,
     private val dispatcher: Dispatcher,
     private val resourceProvider: ResourceProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val appRatingDialogWrapper: AppRatingDialogWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
+    private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_SCOPE) private val uiScope: CoroutineScope,
     @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
@@ -126,19 +131,61 @@ class ReaderPostCardActionsHandler @Inject constructor(
         fromPostDetails: Boolean = false
     ) {
         withContext(bgDispatcher) {
-            when (type) {
-                FOLLOW -> handleFollowClicked(post)
-                SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
-                SHARE -> handleShareClicked(post)
-                VISIT_SITE -> handleVisitSiteClicked(post)
-                BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
-                LIKE -> handleLikeClicked(post, fromPostDetails)
-                BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
-                REBLOG -> handleReblogClicked(post)
-                COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
-                REPORT_POST -> handleReportPostClicked(post)
-                TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
+            if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
+                val readerBlog = readerBlogTableWrapper.getReaderBlog(post.blogId, post.feedId)
+                if (readerBlog == null) {
+                    val isSiteFetched = preFetchSite(post)
+                    if (!isSiteFetched) {
+                        return@withContext
+                    }
+                }
             }
+            handleAction(post, type, fromPostDetails, isBookmarkList)
+        }
+    }
+
+    private suspend fun preFetchSite(post: ReaderPost): Boolean {
+        var isSiteFetched = false
+        when (fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null)) {
+            FetchSiteState.AlreadyRunning -> { // Do Nothing
+            }
+            FetchSiteState.Success -> {
+                isSiteFetched = true
+            }
+            FetchSiteState.Failed.NoNetwork -> {
+                _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                )
+            }
+            FetchSiteState.Failed.RequestFailed -> {
+                _snackbarEvents.postValue(
+                    Event(
+                        SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title)))
+                    )
+                )
+            }
+        }
+        return isSiteFetched
+    }
+
+    private suspend fun handleAction(
+        post: ReaderPost,
+        type: ReaderPostCardActionType,
+        fromPostDetails: Boolean,
+        isBookmarkList: Boolean
+    ) {
+        when (type) {
+            FOLLOW -> handleFollowClicked(post)
+            SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
+            SHARE -> handleShareClicked(post)
+            VISIT_SITE -> handleVisitSiteClicked(post)
+            BLOCK_SITE -> handleBlockSiteClicked(post.blogId)
+            LIKE -> handleLikeClicked(post, fromPostDetails)
+            BOOKMARK -> handleBookmarkClicked(post.postId, post.blogId, isBookmarkList, fromPostDetails)
+            REBLOG -> handleReblogClicked(post)
+            COMMENTS -> handleCommentsClicked(post.postId, post.blogId)
+            REPORT_POST -> handleReportPostClicked(post)
+            TOGGLE_SEEN_STATUS -> handleToggleSeenStatusClicked(post, fromPostDetails)
         }
     }
 
@@ -234,7 +281,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                             Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                     )
                 }
-                is FollowSiteState.Success -> Unit // Do nothing
+                is FollowSiteState.AlreadyRunning, FollowSiteState.Success -> Unit // Do nothing
                 is FollowStatusChanged -> {
                     _followStatusUpdated.postValue(it)
                     siteNotificationsUseCase.fetchSubscriptions()

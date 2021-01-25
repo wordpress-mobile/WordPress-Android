@@ -5,11 +5,11 @@ import org.wordpress.android.annotation.FeatureInDevelopment
 import javax.inject.Inject
 
 /**
- * Configuration of the Unread Posts Count
+ * Configuration of the Unread Posts Count and Seen Status Toggle
  */
 @FeatureInDevelopment
-class UnreadPostsCountFeatureConfig
+class SeenUnseenWithCounterFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.UNREAD_POSTS_COUNT
+        BuildConfig.SEEN_UNSEEN_WITH_COUNTER
 )
