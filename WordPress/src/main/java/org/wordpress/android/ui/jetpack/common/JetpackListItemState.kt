@@ -16,11 +16,12 @@ abstract class JetpackListItemState(open val type: ViewType) {
         @DrawableRes val icon: Int,
         @ColorRes val colorResId: Int? = null,
         @DimenRes val sizeResId: Int = R.dimen.jetpack_icon_size,
-        val contentDescription: UiString,
+        @DimenRes val marginResId: Int = R.dimen.jetpack_icon_margin,
+        val contentDescription: UiString
     ) : JetpackListItemState(ViewType.ICON)
 
     data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
-            JetpackListItemState(ViewType.HEADER)
+        JetpackListItemState(ViewType.HEADER)
 
     data class DescriptionState(val text: UiString) : JetpackListItemState(ViewType.DESCRIPTION)
 

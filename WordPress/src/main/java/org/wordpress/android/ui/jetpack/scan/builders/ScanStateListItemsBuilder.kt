@@ -146,6 +146,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         icon = icon,
         colorResId = color,
         sizeResId = R.dimen.scan_icon_size,
+        marginResId = R.dimen.scan_icon_margin,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 
