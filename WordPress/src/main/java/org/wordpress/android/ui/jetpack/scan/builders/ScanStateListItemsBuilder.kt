@@ -104,7 +104,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_40)
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_tick_white, R.color.jetpack_green_40)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
         val scanDescription = scanStateModel.mostRecentStatus?.startDate?.time?.let {
             buildLastScanDescription(it)

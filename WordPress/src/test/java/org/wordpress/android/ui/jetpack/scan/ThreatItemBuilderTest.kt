@@ -213,7 +213,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Act
         val threatItem = buildThreatItem(threatModel)
         // Assert
-        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_shield_white)
+        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_shield_tick_white)
         assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_success_50)
     }
 

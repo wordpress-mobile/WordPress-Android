@@ -107,7 +107,7 @@ class ThreatItemBuilder @Inject constructor() {
 
     private fun buildThreatItemIcon(threatModel: ThreatModel): Int =
             when (threatModel.baseThreatModel.status) {
-                FIXED -> R.drawable.ic_shield_white
+                FIXED -> R.drawable.ic_shield_tick_white
                 IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
             }
 
