@@ -25,4 +25,6 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
     ) {
         override fun longId() = threatId.hashCode().toLong()
     }
+
+    object ThreatItemLoadingSkeletonState : ScanListItemState(ViewType.THREAT_ITEM_LOADING_SKELETON)
 }

@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PagePostCreationSourcesDetail.STORY_FROM_MY_SITE
@@ -151,7 +152,7 @@ class MySiteViewModel
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
 
-    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar)
+    val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onQuickStartMenuShown = _onQuickStartMenuShown as LiveData<Event<String>>
@@ -193,7 +194,8 @@ class MySiteViewModel
                             this::iconClick,
                             this::urlClick,
                             this::switchSiteClick,
-                            quickStartModel?.activeTask == UPDATE_SITE_TITLE
+                            quickStartModel?.activeTask == UPDATE_SITE_TITLE,
+                            quickStartModel?.activeTask == UPLOAD_SITE_ICON
                     )
             )
             siteItems.add(
@@ -278,6 +280,7 @@ class MySiteViewModel
     }
 
     private fun titleClick(selectedSite: SiteModel) {
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
@@ -300,6 +303,7 @@ class MySiteViewModel
 
     private fun iconClick(site: SiteModel) {
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
+        quickStartRepository.completeTask(UPLOAD_SITE_ICON)
         val hasIcon = site.iconUrl != null
         if (site.hasCapabilityManageOptions && site.hasCapabilityUploadFiles) {
             if (hasIcon) {

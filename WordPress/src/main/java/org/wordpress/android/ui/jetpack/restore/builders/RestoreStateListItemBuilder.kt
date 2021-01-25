@@ -60,7 +60,8 @@ class RestoreStateListItemBuilder @Inject constructor() {
 
     fun buildWarningListStateItems(
         published: Date,
-        onConfirmRestoreClick: () -> Unit
+        onConfirmRestoreClick: () -> Unit,
+        onCancelClick: () -> Unit
     ): List<JetpackListItemState> = listOf(
             buildIconState(
                     R.drawable.ic_notice_white_24dp,
@@ -71,7 +72,11 @@ class RestoreStateListItemBuilder @Inject constructor() {
             buildActionButtonState(
                     R.string.restore_warning_action_button,
                     R.string.restore_warning_action_button_content_description,
-                    onConfirmRestoreClick)
+                    onConfirmRestoreClick),
+            buildActionButtonState(
+                    R.string.cancel,
+                    R.string.cancel,
+                    onCancelClick)
     )
 
     fun buildProgressListStateItems(

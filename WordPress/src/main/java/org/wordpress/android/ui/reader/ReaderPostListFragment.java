@@ -119,10 +119,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -220,6 +222,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -890,7 +894,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
-            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
@@ -2432,7 +2436,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             discoverData.getPostId());
                     return;
                 } else if (discoverData.hasPermalink()) {
-                    mViewModel.onExternalPostOpened(post);
+                    if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                        mViewModel.onExternalPostOpened(post);
+                    }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
@@ -2500,10 +2506,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             stat = Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = Stat.READER_LIST_LOADED;
-        } else if (tag.isP2()) {
-            stat = Stat.READER_P2_SHOWN;
-        } else if (tag.isA8C()) {
-            stat = Stat.READER_A8C_SHOWN;
         } else {
             return;
         }
@@ -2550,7 +2552,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
                 break;
             case TOGGLE_SEEN_STATUS:
-                mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                    mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                }
                 break;
         }
     }

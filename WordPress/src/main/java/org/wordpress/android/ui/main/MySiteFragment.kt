@@ -77,12 +77,11 @@ import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -154,7 +153,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemin
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
-import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
@@ -213,6 +212,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -406,10 +406,6 @@ class MySiteFragment : Fragment(),
             )
         }
         row_themes.setOnClickListener {
-            completeQuickStarTask(CHOOSE_THEME)
-            if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
-                requestNextStepOfActiveQuickStartTask()
-            }
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
             }
@@ -533,7 +529,11 @@ class MySiteFragment : Fragment(),
     }
 
     private fun viewPages() {
-        requestNextStepOfActiveQuickStartTask()
+        if (activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
+            requestNextStepOfActiveQuickStartTask()
+        } else {
+            completeQuickStarTask(REVIEW_PAGES)
+        }
         val selectedSite = selectedSite
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
@@ -1416,7 +1416,9 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
-            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
+            activeTutorialPrompt!!.task == CHECK_STATS ||
+                    activeTutorialPrompt!!.task == REVIEW_PAGES ||
+                    activeTutorialPrompt!!.task == EDIT_HOMEPAGE -> {
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }
@@ -1537,8 +1539,7 @@ class MySiteFragment : Fragment(),
                             ), HtmlCompat.FROM_HTML_MODE_COMPACT
                     )
                 } else {
-                    stylizeQuickStartPrompt(
-                            requireActivity(),
+                    quickStartUtilsWrapper.stylizeQuickStartPrompt(
                             activeTutorialPrompt!!.shortMessagePrompt,
                             activeTutorialPrompt!!.iconId
                     )

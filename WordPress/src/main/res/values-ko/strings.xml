@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 10:50:51+0000
+Translation-Revision-Date: 2021-01-20 15:27:01+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">아래로 이동하기</string>
+    <string name="gutenberg_native_move_block_position">블록 위치 이동하기</string>
     <string name="label_control_upload">업로드하기</string>
     <string name="jetpack_icon_content_description">아이콘</string>
     <string name="backup_download_complete_info">파일에 연결하는 링크도 이메일했습니다.</string>
@@ -423,7 +425,7 @@ Language: ko_KR
     <string name="prepublishing_nudges_tags_action">태그</string>
     <string name="prepublishing_nudges_publish_action">발행일</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_negative">취소</string>
-    <string name="post_list_move_trashed_post_to_draft_dialog_positive">초안으로 이동</string>
+    <string name="post_list_move_trashed_post_to_draft_dialog_positive">초안으로 이동하기</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_message">휴지통에 있는 글은 편집할 수 없습니다. 이 글의 상태를 “초안”으로 변경하여 작업할 수 있기를 원하십니까?</string>
     <string name="post_list_move_trashed_post_to_draft_dialog_title">글을 초안으로 옮깁니까?</string>
     <string name="reader_label_choose_your_interests">관심 항목을 고르세요</string>
@@ -441,6 +443,7 @@ Language: ko_KR
     <string name="update_now">지금 업데이트하기</string>
     <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
+    <string name="gutenberg_native_move_to_top">위로 이동하기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 동작 시트를 열기</string>
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
@@ -983,7 +986,7 @@ Language: ko_KR
     <string name="post_trashing">글이 휴지통으로 이동 중</string>
     <string name="dialog_confirm_trash_losing_unsaved_changes_message">이 글을 휴지통에 버리면 로컬 변경 사항이 취소됩니다. 계속하시겠습니까?</string>
     <string name="dialog_confirm_trash_losing_local_changes_title">로컬 변경</string>
-    <string name="button_move_to_draft">임시글로 이동</string>
+    <string name="button_move_to_draft">임시글로 이동하기</string>
     <string name="post_list_toggle_item_layout_list_view">목록 보기로 전환</string>
     <string name="post_list_toggle_item_layout_cards_view">카드 보기로 전환</string>
     <string name="posts_trashed_empty">휴지통에 버린 글이 없습니다.</string>
@@ -1219,8 +1222,8 @@ Language: ko_KR
     <string name="pages_search_suggestion">페이지 검색</string>
     <string name="pages_empty_search_result">검색어와 일치하는 페이지 없음</string>
     <string name="pages_delete_permanently">영구적으로 삭제하기</string>
-    <string name="pages_move_to_trash">휴지통으로 이동</string>
-    <string name="pages_move_to_draft">임시글로 이동</string>
+    <string name="pages_move_to_trash">휴지통으로 이동하기</string>
+    <string name="pages_move_to_draft">임시글로 이동하기</string>
     <string name="pages_set_parent">상위 항목 설정</string>
     <string name="pages_view">보기</string>
     <string name="pages_trashed">삭제된</string>
