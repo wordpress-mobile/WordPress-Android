@@ -122,13 +122,12 @@ class ScanViewModel @Inject constructor(
     private fun fetchFixThreatsStatus(fixableThreatIds: List<Long>) {
         launch {
             @StringRes var messageRes: Int? = null
-            var fixingThreatIds: List<Long>
             val scanStateModel = requireNotNull(scanStore.getScanStateForSite(site))
             fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
                 remoteSiteId = site.siteId,
                 fixableThreatIds = fixableThreatIds
             ).collect { status ->
-                fixingThreatIds = emptyList()
+                var fixingThreatIds = emptyList<Long>()
                 when (status) {
                     is FetchFixThreatsState.InProgress -> {
                         fixingThreatIds = status.threatIds
