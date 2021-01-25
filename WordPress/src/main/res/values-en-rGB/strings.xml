@@ -1,11 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-11 22:18:52+0000
+Translation-Revision-Date: 2021-01-20 10:33:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">Move to bottom</string>
+    <string name="gutenberg_native_move_block_position">Move block position</string>
     <string name="label_control_upload">Upload</string>
     <string name="jetpack_icon_content_description">icon</string>
     <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
@@ -441,6 +443,7 @@ Language: en_GB
     <string name="update_now">Update Now</string>
     <string name="gutenberg_native_try_a_starter_layout">Try a starter layout</string>
     <string name="gutenberg_native_open_block_actions_menu">Open Block Actions Menu</string>
+    <string name="gutenberg_native_move_to_top">Move to top</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Double tap to open Bottom Sheet with available options</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Double tap to open Action Sheet with available options</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>

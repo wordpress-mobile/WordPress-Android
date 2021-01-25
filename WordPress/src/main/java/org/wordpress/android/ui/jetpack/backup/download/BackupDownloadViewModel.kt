@@ -315,7 +315,7 @@ class BackupDownloadViewModel @Inject constructor(
                             contentState as JetpackListItemState.ProgressState
                             contentState.copy(
                                     progress = state.progress ?: 0,
-                                    label = UiStringResWithParams(
+                                    progressLabel = UiStringResWithParams(
                                             string.backup_download_progress_label,
                                             listOf(UiStringText(state.progress?.toString() ?: "0"))
                                     )

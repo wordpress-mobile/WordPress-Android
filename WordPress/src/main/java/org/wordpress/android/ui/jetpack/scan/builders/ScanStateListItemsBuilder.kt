@@ -17,9 +17,11 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressStat
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -28,7 +30,9 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val threatItemBuilder: ThreatItemBuilder
+    private val threatItemBuilder: ThreatItemBuilder,
+    private val uiHelpers: UiHelpers,
+    private val contextProvider: ContextProvider
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
@@ -69,7 +73,11 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
-        val scanProgress = buildProgressState(isIndeterminate = true, isVisible = false)
+        val scanProgress = ProgressState(
+            progressStateLabel = UiStringRes(R.string.threat_fixing),
+            isIndeterminate = true,
+            isVisible = false
+        )
 
         items.add(scanIcon)
         items.add(scanHeader)
@@ -117,7 +125,13 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
-        val scanProgress = buildProgressState(progress)
+        val scanProgress = ProgressState(
+            progress = progress,
+            progressLabel = UiStringResWithParams(
+                R.string.backup_download_progress_label, // TODO ashiagr replace label
+                listOf(UiStringText(progress.toString()))
+            )
+        )
 
         items.add(scanIcon)
         items.add(scanHeader)
@@ -132,17 +146,6 @@ class ScanStateListItemsBuilder @Inject constructor(
         colorResId = color,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
-
-    private fun buildProgressState(progress: Int = 0, isIndeterminate: Boolean = false, isVisible: Boolean = true) =
-        ProgressState(
-            progress = progress,
-            label = UiStringResWithParams(
-                R.string.backup_download_progress_label, // TODO ashiagr replace label
-                listOf(UiStringText(progress.toString()))
-            ),
-            isIndeterminate = isIndeterminate,
-            isVisible = isVisible
-        )
 
     private fun buildScanButtonAction(@StringRes titleRes: Int, onClick: () -> Unit) = ActionButtonState(
         text = UiStringRes(titleRes),
@@ -197,6 +200,18 @@ class ScanStateListItemsBuilder @Inject constructor(
                 )
         )
     )
+
+    fun buildFixThreatsProgressInfoLabel(
+        threats: List<ThreatModel>,
+        fixingThreatIds: List<Long>
+    ): UiStringText? {
+        val progressInfoLabel = threats
+            .filter { it.baseThreatModel.id in fixingThreatIds }
+            .joinToString(",") {
+                uiHelpers.getTextOfUiString(contextProvider.getContext(), threatItemBuilder.buildThreatItemHeader(it))
+            }
+        return progressInfoLabel.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
+    }
 
     companion object {
         private const val ONE_MINUTE = 60 * 1000L

@@ -1,16 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 18:47:58+0000
+Translation-Revision-Date: 2021-01-20 18:41:28+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">Nach unten verschieben</string>
+    <string name="gutenberg_native_move_block_position">Block-Position verschieben</string>
     <string name="jetpack_icon_content_description">Icon</string>
     <string name="backup_download_complete_info">Wir haben dir auch einen Link zu deiner Datei per E-Mail geschickt.</string>
+    <string name="label_control_upload">Upload</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">„Link teilen“-Button</string>
     <string name="backup_download_complete_download_action_button_content_description">Download-Button</string>
     <string name="backup_download_complete_download_action_button">Herunterladen</string>
     <string name="backup_download_complete_header">Du kannst dein Backup nun herunterladen</string>
+    <string name="backup_download_complete_download_share_action_button">Link teilen</string>
     <string name="backup_download_complete_page_title">Dein Backup</string>
     <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_page_title">Backup herunterladen</string>
@@ -19,6 +24,7 @@ Language: de
     <string name="threat_ignore">Bedrohung ignorieren</string>
     <string name="threat_fix">Bedrohung beheben</string>
     <string name="threat_get_free_estimate">Kostenloses Angebot einholen</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
     <string name="threats_fix_all">Alles beheben</string>
     <string name="scan_in_few_seconds">in wenigen Sekunden</string>
     <string name="scan_this_site">diese Website</string>
@@ -26,13 +32,15 @@ Language: de
     <string name="scan_in_minutes_ago">vor %s Minuten</string>
     <string name="threats_found">Bedrohungen gefunden</string>
     <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
-    <string name="threat_item_header_infected_core_file">%s: infizierte Core-Dateien</string>
+    <string name="threat_item_header_infected_core_file">%s: infizierte Core-Datei</string>
     <string name="backup">Backup</string>
     <string name="scan_now">Jetzt scannen</string>
     <string name="scan_again">Erneut scannen</string>
     <string name="scan_scanning_title">Scannen wird vorbereitet</string>
     <string name="scan_idle_no_threats_found_title">Mach dir keine Sorgen</string>
     <string name="scan_idle_threats_found_title">Deine Website ist möglicherweise gefährdet</string>
+    <string name="activity_log_activity_type_error_title">Keine Verbindung</string>
+    <string name="activity_log_activity_type_filter_active_label">Aktivitätstyp (%s)</string>
     <string name="activity_log_active_filter_empty_title">Keine passenden Ereignisse gefunden</string>
     <string name="rewind">Wiederherstellen</string>
     <string name="backup_item_sqls">Website-Datenbank (SQL)</string>
@@ -52,6 +60,7 @@ Language: de
     <string name="backup_download">Backup-Download</string>
     <string name="backup_download_details_choose_items_header">Wähle die Elemente aus, die du in den Download aufnehmen möchtest:</string>
     <string name="backup_download_details_action_button">Herunterladbare Datei erstellen</string>
+    <string name="activity_log_date_range_filter_label">Zeitraum</string>
     <string name="button_copy">Duplizieren</string>
     <string name="activity_log_activity_type_filter_header">Nach Aktivitätstyp filtern</string>
     <string name="dialog_confirm_copy_local_copy_button">Die Version von dieser App kopieren</string>
@@ -378,6 +387,7 @@ Language: de
     <string name="ccpa_privacy_notice_header">Datenschutzhinweis für Benutzer in Kalifornien</string>
     <string name="gutenberg_native_open_block_actions_menu">Öffne das Menü mit den Blockaktionen</string>
     <string name="gutenberg_native_try_a_starter_layout">Probiere ein Layout für Neueinsteiger aus</string>
+    <string name="gutenberg_native_move_to_top">Nach oben verschieben</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Tippe zweimal, um das Bottom Sheet mit den verfügbaren Optionen zu öffnen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Tippe zweimal, um das Action Sheet mit den verfügbaren Optionen zu öffnen</string>
     <string name="site_settings_classic_blog">Klassischer Blog</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 08:53:05+0000
+Translation-Revision-Date: 2021-01-20 10:17:32+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
@@ -350,6 +350,7 @@ Language: es_VE
     <string name="update_now">Actualizar ahora</string>
     <string name="gutenberg_native_try_a_starter_layout">Prueba un diseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir el menú de acciones de bloques</string>
+    <string name="gutenberg_native_move_to_top">Mover arriba</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dos veces para abrir la hoja inferior con las opciones disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dos veces para abrir la hoja de acción con las opciones disponibles</string>
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>

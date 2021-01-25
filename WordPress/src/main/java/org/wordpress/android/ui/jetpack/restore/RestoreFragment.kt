@@ -76,8 +76,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(RestoreViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(RestoreViewModel::class.java)
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
@@ -171,12 +170,5 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     override fun onSaveInstanceState(outState: Bundle) {
         viewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        const val TAG = "RESTORE_FRAGMENT"
-        fun newInstance(bundle: Bundle?): RestoreFragment {
-            return RestoreFragment().apply { arguments = bundle }
-        }
     }
 }

@@ -14,4 +14,13 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <org.wordpress.android.ui.ActionableEmptyView
+        android:id="@+id/actionable_empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"
+        app:aevImage="@drawable/img_illustration_empty_results_216dp"
+        app:aevSubtitle=""
+        app:aevTitle="@string/scan_history_no_threats_found" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

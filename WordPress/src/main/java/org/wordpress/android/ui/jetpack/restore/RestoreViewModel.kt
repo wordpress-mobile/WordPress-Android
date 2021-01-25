@@ -51,11 +51,6 @@ import org.wordpress.android.ui.jetpack.restore.RestoreUiState.ErrorState
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
-import org.wordpress.android.ui.jetpack.restore.ToolbarState.CompleteToolbarState
-import org.wordpress.android.ui.jetpack.restore.ToolbarState.DetailsToolbarState
-import org.wordpress.android.ui.jetpack.restore.ToolbarState.ErrorToolbarState
-import org.wordpress.android.ui.jetpack.restore.ToolbarState.ProgressToolbarState
-import org.wordpress.android.ui.jetpack.restore.ToolbarState.WarningToolbarState
 import org.wordpress.android.ui.jetpack.restore.builders.RestoreStateListItemBuilder
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -174,7 +169,6 @@ class RestoreViewModel @Inject constructor(
             if (activityLogModel != null) {
                 _uiState.value = DetailsState(
                         activityLogModel = activityLogModel,
-                        toolbarState = DetailsToolbarState(),
                         items = stateListItemBuilder.buildDetailsListStateItems(
                                 availableItems = availableItems,
                                 published = activityLogModel.published,
@@ -191,7 +185,6 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildWarning() {
         _uiState.value = WarningState(
-                toolbarState = WarningToolbarState(),
                 items = stateListItemBuilder.buildWarningListStateItems(
                         published = restoreState.published as Date,
                         onConfirmRestoreClick = this@RestoreViewModel::onConfirmRestoreClick,
@@ -203,7 +196,6 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildProgress() {
         _uiState.value = ProgressState(
-                toolbarState = ProgressToolbarState(),
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = progressStart,
                         published = restoreState.published as Date,
@@ -216,7 +208,6 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildComplete() {
         _uiState.value = CompleteState(
-                toolbarState = CompleteToolbarState(),
                 items = stateListItemBuilder.buildCompleteListStateItems(
                         published = restoreState.published as Date,
                         onDoneClick = this@RestoreViewModel::onDoneClick,
@@ -228,7 +219,6 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildError(errorType: RestoreErrorTypes) {
         _uiState.value = ErrorState(
-                toolbarState = ErrorToolbarState(),
                 items = stateListItemBuilder.buildCompleteListStateErrorItems(
                         onDoneClick = this@RestoreViewModel::onDoneClick
                 ),
@@ -341,7 +331,7 @@ class RestoreViewModel @Inject constructor(
                             contentState as JetpackListItemState.ProgressState
                             contentState.copy(
                                     progress = state.progress ?: 0,
-                                    label = UiStringResWithParams(
+                                    progressLabel = UiStringResWithParams(
                                             string.restore_progress_label,
                                             listOf(UiStringText(state.progress?.toString() ?: "0"))
                                     )

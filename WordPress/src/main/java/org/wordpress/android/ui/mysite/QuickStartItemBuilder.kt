@@ -5,14 +5,13 @@ import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -102,14 +101,14 @@ class QuickStartItemBuilder
             UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
             VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
             // Replace with an actual drawable or change the tasks
-            CHOOSE_THEME -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
             ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_review_site_pages
             CREATE_SITE,
-            CUSTOMIZE_SITE,
-            CREATE_NEW_PAGE,
             PUBLISH_POST,
             FOLLOW_SITE,
             CHECK_STATS,
+            EDIT_HOMEPAGE,
+            REVIEW_PAGES,
+            QuickStartTask.UNKNOWN,
             EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_visit_your_site
         }
     }
