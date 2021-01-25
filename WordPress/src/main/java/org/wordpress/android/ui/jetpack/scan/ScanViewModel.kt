@@ -199,7 +199,7 @@ class ScanViewModel @Inject constructor(
 
     private fun updateFixThreatsStatusProgressBar(
         scanStateModel: ScanStateModel,
-        fixingThreatIds: List<Long> = emptyList()
+        fixingThreatIds: List<Long>
     ) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
