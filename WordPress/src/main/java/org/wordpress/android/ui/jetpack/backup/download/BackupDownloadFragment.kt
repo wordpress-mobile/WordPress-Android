@@ -77,8 +77,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(BackupDownloadViewModel::class.java)
+        viewModel = ViewModelProvider(this, viewModelFactory).get(BackupDownloadViewModel::class.java)
 
         val (site, activityId) = when {
             requireActivity().intent?.extras != null -> {
@@ -146,6 +145,8 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     private fun updateToolbar(toolbarState: ToolbarState) {
         val activity = requireActivity() as? AppCompatActivity
         activity?.supportActionBar?.let {
+            it.setHomeButtonEnabled(true)
+            it.setDisplayHomeAsUpEnabled(true)
             it.title = getString(toolbarState.title)
             it.setHomeAsUpIndicator(toolbarState.icon)
         }
@@ -175,12 +176,5 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
     override fun onSaveInstanceState(outState: Bundle) {
         viewModel.writeToBundle(outState)
         super.onSaveInstanceState(outState)
-    }
-
-    companion object {
-        const val TAG = "BACKUP_DOWNLOAD_FRAGMENT"
-        fun newInstance(bundle: Bundle?): BackupDownloadFragment {
-            return BackupDownloadFragment().apply { arguments = bundle }
-        }
     }
 }
