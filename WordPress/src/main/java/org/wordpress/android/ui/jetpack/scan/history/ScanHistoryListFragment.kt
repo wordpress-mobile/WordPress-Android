@@ -9,6 +9,7 @@ import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
@@ -65,6 +66,11 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
                 EmptyHistory -> { // no-op
                 }
                 is ContentUiState -> refreshContentScreen(it.items)
+            }
+        })
+        viewModel.navigation.observe(viewLifecycleOwner, { event ->
+            event.applyIfNotHandled {
+                ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, threatId)
             }
         })
     }
