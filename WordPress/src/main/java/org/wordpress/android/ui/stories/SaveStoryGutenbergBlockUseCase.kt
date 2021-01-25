@@ -45,7 +45,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     private fun buildMediaFileData(mediaFile: MediaFile): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = mediaFile.id.toString(),
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
@@ -57,7 +57,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun buildMediaFileDataWithTemporaryId(mediaFile: MediaFile, temporaryId: String): StoryMediaFileData {
         return StoryMediaFileData(
-                alt = "",
+                alt = mediaFile.alt,
                 id = temporaryId, // mediaFile.id,
                 link = StringUtils.notNullStr(mediaFile.fileURL),
                 type = if (mediaFile.isVideo) "video" else "image",
@@ -174,6 +174,18 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     TempId(requireNotNull(frame.id)), // should not be null at this point
                     frame
             )
+        }
+    }
+
+    fun assignAltOnEachMediaFile(
+        frames: List<StoryFrameItem>,
+        mediaFiles: ArrayList<MediaFile>
+    ): List<MediaFile> {
+        return mediaFiles.mapIndexed { index, mediaFile -> run {
+            mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
+            mediaFile
+        }
+            mediaFile
         }
     }
 

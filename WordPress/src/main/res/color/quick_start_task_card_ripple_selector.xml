@@ -1,0 +1,4 @@
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:color="@android:color/transparent" android:state_checked="true" />
+    <item android:alpha="@dimen/emphasis_low" android:color="?attr/colorOnSurface" android:state_checked="false" />
+</selector>

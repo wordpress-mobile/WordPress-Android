@@ -651,10 +651,16 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewThreatDetails(Activity activity, @NonNull Long threatId) {
-        Intent intent = new Intent(activity, ThreatDetailsActivity.class);
+    public static void viewThreatDetailsForResult(@NonNull Fragment fragment, @NonNull Long threatId) {
+        Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
         intent.putExtra(ARG_THREAT_ID, threatId);
-        activity.startActivity(intent);
+        fragment.startActivityForResult(intent, RequestCodes.SHOW_THREAT_DETAILS);
+    }
+
+    public static void viewThreatDetails(@NonNull Fragment fragment, @NonNull Long threatId) {
+        Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
+        intent.putExtra(ARG_THREAT_ID, threatId);
+        fragment.startActivity(intent);
     }
 
     public static void viewBlogSettingsForResult(Activity activity, SiteModel site) {

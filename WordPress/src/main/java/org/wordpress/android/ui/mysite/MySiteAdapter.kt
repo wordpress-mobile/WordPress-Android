@@ -38,7 +38,12 @@ class MySiteAdapter(val imageManager: ImageManager, val uiHelpers: UiHelpers) : 
             SITE_INFO_BLOCK.ordinal -> MySiteInfoViewHolder(parent, imageManager)
             QUICK_ACTIONS_BLOCK.ordinal -> QuickActionsViewHolder(parent)
             DOMAIN_REGISTRATION_BLOCK.ordinal -> DomainRegistrationViewHolder(parent)
-            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(parent, quickStartViewPool, nestedScrollStates)
+            QUICK_START_CARD.ordinal -> QuickStartCardViewHolder(
+                    parent,
+                    quickStartViewPool,
+                    nestedScrollStates,
+                    uiHelpers
+            )
             CATEGORY_HEADER.ordinal -> MySiteCategoryViewHolder(parent, uiHelpers)
             LIST_ITEM.ordinal -> MySiteListItemViewHolder(parent, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view type")

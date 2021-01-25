@@ -3,6 +3,7 @@ package org.wordpress.android.util
 import android.app.Activity
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.google.android.material.snackbar.Snackbar
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -22,7 +23,6 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.SnackbarItem.Info
-import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPSnackbarWrapper
 
 private val TEST_MESSAGE_TEMPLATE = "This is test message number "
@@ -35,7 +35,7 @@ class SnackbarSequencerConcurrentTest {
     @get:Rule val rule = InstantTaskExecutorRule()
 
     @Mock lateinit var wpSnackbarWrapper: WPSnackbarWrapper
-    @Mock lateinit var wpSnackbar: WPSnackbar
+    @Mock lateinit var wpSnackbar: Snackbar
     @Mock lateinit var view: View
     @Mock lateinit var activity: Activity
 

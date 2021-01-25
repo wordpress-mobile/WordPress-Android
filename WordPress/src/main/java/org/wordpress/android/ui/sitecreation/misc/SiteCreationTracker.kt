@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.sitecreation.misc
 
 import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import java.util.Locale
 import javax.inject.Inject
@@ -14,6 +13,8 @@ enum class SiteCreationErrorType {
 
 @Singleton
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) {
+    private var designSelectionSkipped: Boolean = false
+
     fun trackSiteCreationAccessed() {
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_ACCESSED)
     }
@@ -47,7 +48,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackPreviewLoading(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
+        if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_LOADING)
         } else {
             tracker.track(
@@ -58,7 +59,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackPreviewWebviewShown(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
+        if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_VIEWED)
         } else {
             tracker.track(
@@ -69,7 +70,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackPreviewWebviewFullyLoaded(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
+        if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SUCCESS_PREVIEW_LOADED)
         } else {
             tracker.track(
@@ -88,7 +89,7 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
      * making ANY modification to this stat please refer to: p4qSXL-35X-p2
      */
     fun trackSiteCreated(template: String?) {
-        if (template == null || template == defaultTemplateSlug) {
+        if (template == null || designSelectionSkipped) {
             tracker.track(AnalyticsTracker.Stat.SITE_CREATED)
         } else {
             tracker.track(AnalyticsTracker.Stat.SITE_CREATED, mapOf("template" to template))
@@ -121,10 +122,12 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
     }
 
     fun trackSiteDesignSkipped() {
+        designSelectionSkipped = true
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED)
     }
 
     fun trackSiteDesignSelected(template: String) {
+        designSelectionSkipped = false
         tracker.track(AnalyticsTracker.Stat.ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED, mapOf("template" to template))
     }
 

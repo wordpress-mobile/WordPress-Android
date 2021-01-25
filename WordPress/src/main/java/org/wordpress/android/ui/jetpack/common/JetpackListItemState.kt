@@ -25,6 +25,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val text: UiString,
         val contentDescription: UiString,
         val isSecondary: Boolean = false,
+        val isEnabled: Boolean = true,
         val onClick: () -> Unit
     ) : JetpackListItemState(ViewType.ACTION_BUTTON)
 
@@ -35,5 +36,11 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)
 
-    data class ProgressState(val progress: Int, val label: UiString) : JetpackListItemState(ViewType.PROGRESS)
+    data class ProgressState(
+        val progress: Int,
+        val label: UiString,
+        val isIndeterminate: Boolean = false,
+        val isVisible: Boolean = true,
+        val isLabelVisible: Boolean = !isIndeterminate
+    ) : JetpackListItemState(ViewType.PROGRESS)
 }

@@ -245,4 +245,14 @@
         <attr name="badgeHorizontalOffset" format="dimension" />
         <attr name="badgeVerticalOffset" format="dimension" />
     </declare-styleable>
+
+    <!--
+        QuickStartFocusPoint attributes
+    -->
+    <declare-styleable name="QuickStartFocusPoint">
+        <attr name="size" format="enum">
+            <enum name="small" value="0" />
+            <enum name="normal" value="1" />
+        </attr>
+    </declare-styleable>
 </resources>

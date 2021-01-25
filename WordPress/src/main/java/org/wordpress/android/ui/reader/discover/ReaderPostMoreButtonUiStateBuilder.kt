@@ -16,9 +16,11 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,6 +29,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildMoreMenuItems(
@@ -95,6 +98,37 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             onClicked = onButtonClicked
                     )
             )
+        }
+
+        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
+            // only show toggle button for posts with a feedItemId
+            if (post.feedItemId > 0) {
+                if (readerPostTableWrapper.isPostSeen(post)) {
+                    menuItems.add(
+                            SecondaryAction(
+                                    type = TOGGLE_SEEN_STATUS,
+                                    label = UiStringRes(R.string.reader_menu_mark_as_unseen),
+                                    labelColor = R.attr.colorOnSurface,
+                                    iconRes = R.drawable.ic_not_visible_white_24dp,
+                                    iconColor = R.attr.wpColorOnSurfaceMedium,
+                                    isSelected = false,
+                                    onClicked = onButtonClicked
+                            )
+                    )
+                } else {
+                    menuItems.add(
+                            SecondaryAction(
+                                    type = TOGGLE_SEEN_STATUS,
+                                    label = UiStringRes(R.string.reader_menu_mark_as_seen),
+                                    labelColor = R.attr.colorOnSurface,
+                                    iconRes = R.drawable.ic_visible_white_24dp,
+                                    iconColor = R.attr.wpColorOnSurfaceMedium,
+                                    isSelected = false,
+                                    onClicked = onButtonClicked
+                            )
+                    )
+                }
+            }
         }
 
         menuItems.add(
