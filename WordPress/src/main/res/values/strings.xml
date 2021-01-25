@@ -1088,6 +1088,7 @@
     <!-- threats -->
     <string name="threats_fix_num_of_threats">Fix %s threats</string>
     <string name="threats_found">Threats found</string>
+    <string name="threat_fixing">Fixing threat</string>
 
     <!-- threat item header -->
     <string name="threat_item_header_threat_found">Threat found</string>

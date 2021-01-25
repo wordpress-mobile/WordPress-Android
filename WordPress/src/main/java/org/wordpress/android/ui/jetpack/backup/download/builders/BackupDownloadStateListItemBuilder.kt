@@ -158,7 +158,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
 
     private fun buildProgressState(progress: Int) = ProgressState(
             progress = progress,
-            label = UiStringResWithParams(
+            progressLabel = UiStringResWithParams(
                     R.string.backup_download_progress_label,
                     listOf(UiStringText(progress.toString()))
             )
