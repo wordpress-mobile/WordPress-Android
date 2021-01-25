@@ -475,6 +475,19 @@ class ActivityLogRestClientTest {
     }
 
     @Test
+    fun fetchEmptyActivityBackupDownload_dispatchesResponseOnSuccess() = test {
+        initFetchBackupDownloadStatus(arrayOf())
+
+        val payload = activityRestClient.fetchBackupDownloadState(site)
+
+        with(payload) {
+            assertEquals(this.site, site)
+            assertNull(error)
+            assertNull(backupDownloadStatusModelResponse)
+        }
+    }
+
+    @Test
     fun fetchActivityTypes_dispatchesSuccessResponseOnSuccess() = test {
         initFetchActivityTypes()
         val siteId = 90L
