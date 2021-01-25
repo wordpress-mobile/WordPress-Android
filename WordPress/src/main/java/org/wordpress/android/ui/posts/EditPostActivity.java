@@ -2596,6 +2596,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
+                case RequestCodes.EDIT_STORY:
+                    mStoryEditingCancelled = true;
                 default:
                     // noop
                     return;
@@ -2603,9 +2605,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (requestCode == RequestCodes.EDIT_STORY) {
-            if (resultCode != Activity.RESULT_OK) {
-                mStoryEditingCancelled = true;
-            }
+            mStoryEditingCancelled = false;
             if (mEditorFragment instanceof GutenbergEditorFragment) {
                 mEditorFragment.onActivityResult(requestCode, resultCode, data);
                 return;
