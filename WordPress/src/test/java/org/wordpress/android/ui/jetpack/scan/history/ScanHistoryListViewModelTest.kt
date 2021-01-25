@@ -22,11 +22,15 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData.genericThreatModel
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
@@ -128,7 +132,7 @@ class ScanHistoryListViewModelTest {
         viewModel.uiState.observeForever(mock())
         viewModel.navigation.observeForever(mock())
 
-        (viewModel.uiState.value!![0] as ThreatItemState).onClick.invoke()
+        ((viewModel.uiState.value!! as ContentUiState).items[0] as ThreatItemState).onClick.invoke()
 
         assertThat(viewModel.navigation.value!!.peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
