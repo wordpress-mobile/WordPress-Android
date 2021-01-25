@@ -28,7 +28,8 @@ sealed class PageItem(open val type: Type) {
         open val tapActionEnabled: Boolean,
         open val progressBarUiState: ProgressBarUiState,
         open val showOverlay: Boolean,
-        open val author: String?
+        open val author: String?,
+        open var showQuickStartFocusPoint: Boolean
     ) : PageItem(PAGE)
 
     data class PublishedPage(
@@ -46,7 +47,8 @@ sealed class PageItem(open val type: Type) {
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
-        override val author: String? = null
+        override val author: String? = null,
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -61,7 +63,8 @@ sealed class PageItem(open val type: Type) {
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
             showOverlay = showOverlay,
-            author = author
+            author = author,
+            showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     data class DraftPage(
@@ -77,7 +80,8 @@ sealed class PageItem(open val type: Type) {
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
-        override val author: String? = null
+        override val author: String? = null,
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -92,7 +96,8 @@ sealed class PageItem(open val type: Type) {
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
             showOverlay = showOverlay,
-            author = author
+            author = author,
+            showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     data class ScheduledPage(
@@ -108,7 +113,8 @@ sealed class PageItem(open val type: Type) {
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
-        override val author: String? = null
+        override val author: String? = null,
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -123,7 +129,8 @@ sealed class PageItem(open val type: Type) {
             tapActionEnabled = true,
             progressBarUiState = progressBarUiState,
             showOverlay = showOverlay,
-            author = author
+            author = author,
+            showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     data class TrashedPage(
@@ -139,7 +146,8 @@ sealed class PageItem(open val type: Type) {
         override var actionsEnabled: Boolean = true,
         override val progressBarUiState: ProgressBarUiState,
         override val showOverlay: Boolean,
-        override val author: String? = null
+        override val author: String? = null,
+        override var showQuickStartFocusPoint: Boolean = false
     ) : Page(
             remoteId = remoteId,
             localId = localId,
@@ -154,8 +162,8 @@ sealed class PageItem(open val type: Type) {
             tapActionEnabled = false,
             progressBarUiState = progressBarUiState,
             showOverlay = showOverlay,
-            author = author
-
+            author = author,
+            showQuickStartFocusPoint = showQuickStartFocusPoint
     )
 
     data class ParentPage(

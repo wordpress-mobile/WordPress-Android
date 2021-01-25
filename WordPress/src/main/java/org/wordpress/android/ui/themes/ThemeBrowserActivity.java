@@ -156,9 +156,6 @@ public class ThemeBrowserActivity extends LocaleAwareActivity implements ThemeBr
 
     @Override
     public void onTryAndCustomizeSelected(String themeId) {
-        if (mThemeBrowserFragment != null) {
-            mThemeBrowserFragment.completeQuickStartCustomizeTask();
-        }
         startWebActivity(themeId, ThemeWebActivity.ThemeWebActivityType.PREVIEW);
     }
 
