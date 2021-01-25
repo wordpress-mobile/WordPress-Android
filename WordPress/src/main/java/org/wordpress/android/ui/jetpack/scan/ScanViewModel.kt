@@ -101,18 +101,18 @@ class ScanViewModel @Inject constructor(
 
     private fun fixAllThreats() {
         launch {
-            updateActionButtons(isEnabled = false)
+            updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
                     fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
-                    updateActionButtons(isEnabled = true)
+                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
-                    updateActionButtons(isEnabled = true)
+                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
                 }
             }
@@ -147,7 +147,7 @@ class ScanViewModel @Inject constructor(
                         messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
                     }
                 }
-                updateActionButtons(isEnabled = fixingThreatIds.isEmpty())
+                updateActionButtons(isVisible = fixingThreatIds.isEmpty())
                 updateFixThreatsStatusProgressBar(scanStateModel, fixingThreatIds)
                 messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
@@ -184,11 +184,11 @@ class ScanViewModel @Inject constructor(
         fetchFixThreatsStatus(listOf(threatId))
     }
 
-    private fun updateActionButtons(isEnabled: Boolean) {
+    private fun updateActionButtons(isVisible: Boolean) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
-                    contentItem.copy(isEnabled = isEnabled)
+                    contentItem.copy(isVisible = isVisible)
                 } else {
                     contentItem
                 }
