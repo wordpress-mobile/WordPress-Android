@@ -9,6 +9,8 @@ import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 
 // private const val DUMMY_CURRENT_TIME = 10000000L
@@ -24,6 +26,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock private lateinit var uiHelpers: UiHelpers
+    @Mock private lateinit var contextProvider: ContextProvider
 
 //    private val baseThreatModel = BaseThreatModel(
 //        id = 1L,
@@ -39,7 +43,14 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = ScanStateListItemsBuilder(dateProvider, htmlMessageUtils, resourceProvider, threatItemBuilder)
+        builder = ScanStateListItemsBuilder(
+            dateProvider,
+            htmlMessageUtils,
+            resourceProvider,
+            threatItemBuilder,
+            uiHelpers,
+            contextProvider
+        )
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
 //        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))

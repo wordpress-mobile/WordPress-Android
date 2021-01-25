@@ -17,6 +17,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -50,6 +51,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     private fun initAdapter() {
         recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
         recycler_view.itemAnimator = null
+        recycler_view.addItemDecoration(
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+        )
     }
 
     private fun initViewModel(site: SiteModel) {

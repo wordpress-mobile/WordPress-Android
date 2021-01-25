@@ -70,7 +70,7 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
-    fun buildThreatItemSubHeader(threatModel: ThreatModel): UiString {
+    fun buildThreatItemSubHeader(threatModel: ThreatModel): UiString? {
         return when (threatModel.baseThreatModel.status) {
             FIXED -> {
                 UiStringRes(R.string.threat_item_sub_header_status_fixed)
@@ -82,7 +82,7 @@ class ThreatItemBuilder @Inject constructor() {
                 when (threatModel) {
                     is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
-                    is DatabaseThreatModel -> UiStringText("")
+                    is DatabaseThreatModel -> null
 
                     is FileThreatModel -> UiStringResWithParams(
                             R.string.threat_item_sub_header_file_signature,
@@ -107,7 +107,7 @@ class ThreatItemBuilder @Inject constructor() {
 
     private fun buildThreatItemIcon(threatModel: ThreatModel): Int =
             when (threatModel.baseThreatModel.status) {
-                FIXED -> R.drawable.ic_shield_white
+                FIXED -> R.drawable.ic_shield_tick_white
                 IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
             }
 

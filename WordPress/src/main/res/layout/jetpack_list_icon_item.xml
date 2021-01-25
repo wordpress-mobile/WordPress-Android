@@ -4,15 +4,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_container"
     android:layout_width="match_parent"
-    android:layout_height="?attr/listPreferredItemHeight">
+    android:layout_height="wrap_content">
 
     <ImageView
+        style="@style/Jetpack.Icon"
         android:id="@+id/icon"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:contentDescription="@string/jetpack_icon_content_description"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:src="@drawable/ic_get_app_white_24dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
