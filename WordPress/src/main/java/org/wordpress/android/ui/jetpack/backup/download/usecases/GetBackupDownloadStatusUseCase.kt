@@ -29,9 +29,11 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             }
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
-            if (result.isError && (retryAttempts++ >= MAX_RETRY)) {
-                emit(RemoteRequestFailure)
-                return@flow
+            if (result.isError) {
+                if (retryAttempts++ >= MAX_RETRY) {
+                    emit(RemoteRequestFailure)
+                    return@flow
+                }
             } else {
                 val status = activityLogStore.getBackupDownloadStatusForSite(site)
                 if (status == null) {

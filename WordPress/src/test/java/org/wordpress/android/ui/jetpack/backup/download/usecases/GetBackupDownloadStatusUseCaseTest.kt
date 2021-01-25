@@ -5,7 +5,8 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import org.assertj.core.api.Assertions
+import kotlinx.coroutines.test.runBlockingTest
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -32,59 +33,65 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-    @Mock lateinit var statusModel: BackupDownloadStatusModel
 
     @Before
     fun setup() {
         useCase = GetBackupDownloadStatusUseCase(networkUtilsWrapper, activityLogStore)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
-        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
     }
 
     @Test
-    fun `given site, when status is fetched, then NetworkUnavailable is returned on no network`() = test {
+    fun `given no network, then NetworkUnavailable is returned`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
 
-        Assertions.assertThat(result).contains(Failure.NetworkUnavailable)
+        assertThat(result).contains(Failure.NetworkUnavailable)
     }
 
     @Test
-    fun `given site, when status is fetched, then RemoteRequestFailure is returned on failure`() = test {
+    fun `given failure, then RemoteRequestFailure is returned`() = runBlockingTest {
         whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                 OnBackupDownloadStatusFetched(BackupDownloadStatusError(GENERIC_ERROR), FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        advanceTimeBy(DELAY_MILLIS)
 
-        Assertions.assertThat(result).contains(RemoteRequestFailure)
+        assertThat(result).contains(RemoteRequestFailure)
     }
 
     @Test
-    fun `given site, when status is fetched, then Complete is returned on success`() = testWithSuccessResponse {
-        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(completeStateModel)
+    fun `given success, then Complete is returned`() = testWithSuccessResponse {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
+
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
 
-        Assertions.assertThat(result).contains(completeStatus)
+        assertThat(result).contains(completeStatus)
     }
 
     @Test
-    fun `given site, when status is fetched, then Empty is returned when empty`() = testWithSuccessResponse {
+    fun `given status model is null, then Empty is returned`() = testWithSuccessResponse {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
+
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
 
-        Assertions.assertThat(result).contains(Empty)
+        assertThat(result).contains(Empty)
     }
 
     @Test
-    fun `given progress is not null, when backup is running, then Progress is returned`() = testWithSuccessResponse {
+    fun `given download in process, then Progress is returned`() = runBlockingTest {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site))
                 .thenReturn(inProgressModel)
-                .thenReturn(completeStateModel)
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+                .thenReturn(statusModel)
+        whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
+                OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
+        )
 
-        Assertions.assertThat(result).contains(progressStatus)
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        advanceTimeBy(DELAY_MILLIS)
+
+        assertThat(result).contains(progressStatus, completeStatus)
     }
 
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
@@ -101,7 +108,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val downloadId = 100L
     private val progress = 50
 
-    private val completeStateModel = BackupDownloadStatusModel(
+    private val statusModel = BackupDownloadStatusModel(
         downloadId = downloadId,
         rewindId = rewindId,
         backupPoint = Date(1609690147756),
