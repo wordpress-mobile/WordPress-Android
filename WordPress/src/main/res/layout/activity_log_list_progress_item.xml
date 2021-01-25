@@ -11,6 +11,25 @@
     android:minHeight="?attr/listPreferredItemHeight"
     tools:layout_height="?attr/listPreferredItemHeightLarge">
 
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/activity_progress_bar_height"
+        android:layout_alignParentBottom="true">
+
+        <ProgressBar
+            android:id="@+id/rewind_progress_bar"
+            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
+            android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
+            android:background="@color/neutral_10"
+            android:indeterminate="true"
+            android:theme="@style/LinearProgress" />
+
+    </FrameLayout>
+
     <ImageView
         android:id="@+id/action_icon"
         android:layout_width="@dimen/activity_log_icon_size"
@@ -60,24 +79,5 @@
         android:layout_height="@dimen/list_divider_height"
         android:layout_alignParentBottom="true"
         android:background="?android:attr/listDivider" />
-
-    <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/activity_progress_bar_height"
-        android:layout_alignParentBottom="true">
-
-        <ProgressBar
-            android:id="@+id/rewind_progress_bar"
-            style="@style/Widget.AppCompat.ProgressBar.Horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_marginBottom="@dimen/activity_progress_bar_margin_vertical"
-            android:layout_marginTop="@dimen/activity_progress_bar_margin_vertical"
-            android:background="@color/neutral_10"
-            android:indeterminate="true"
-            android:theme="@style/LinearProgress" />
-
-    </FrameLayout>
 
 </RelativeLayout>
