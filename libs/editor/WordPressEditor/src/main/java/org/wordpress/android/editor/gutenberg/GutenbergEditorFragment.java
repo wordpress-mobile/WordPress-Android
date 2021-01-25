@@ -412,18 +412,18 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
                     @Override public void onMediaFilesBlockReplaceSync(ArrayList<Object> mediaFiles, String blockId) {
                         if (mStoryBlockReplacedSignalWait) {
-                            // in case we were expecting a fresh block replacement sync signal, let the fragment listener
-                            // know so it can process all of the pending block save / update / upload events
+                            // in case we were expecting a fresh block replacement sync signal, let the fragment
+                            // listener know so it can process all of the pending block save / update / upload events
                             mStoryBlockReplacedSignalWait = false;
                             mExternallyEditedBlockOriginalHash = null;
                             mEditorFragmentListener.onReplaceStoryEditedBlockActionReceived();
                         } else {
                             // caclulate the hash to verify whether this is the block that needs to get replaced
-                            // this is important given we could be receiving a request to sync from a different Story block
-                            // in the same Post otherwise
+                            // this is important given we could be receiving a request to sync from a different Story
+                            // block in the same Post otherwise
                             String calculatedHash = calculateHashOnMediaCollectionBasedBlock(mediaFiles);
-                            if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null &&
-                                mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
+                            if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null
+                                && mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
                                 if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
                                     // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
                                     // new block to signal a replaceBlockSync to us again after loading, calling this
@@ -431,7 +431,8 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                                     mStoryBlockReplacedSignalWait = true;
                                     // this call needs to be made right before `replaceStoryEditedBlock()`
                                     mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
-                                    getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
+                                    getGutenbergContainerFragment()
+                                            .replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
                                 } else {
                                     // TODO handle / log error here, or maybe just skip it
                                 }
@@ -487,9 +488,9 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
             // this conversion is needed to strip off decimals that can come from RN when using int as
             // string
             if (((HashMap<String, Object>) mediaFile).get("id") instanceof Double) {
-                Double originalValue = (Double)((HashMap<String, Object>) mediaFile).get("id");
+                Double originalValue = (Double) ((HashMap<String, Object>) mediaFile).get("id");
                 // now set it back to String to normalize with temporary ids
-                ((HashMap)mediaFile).put("id", String.valueOf(originalValue.longValue()));
+                ((HashMap) mediaFile).put("id", String.valueOf(originalValue.longValue()));
             }
         }
     }

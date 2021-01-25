@@ -2598,6 +2598,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     return;
                 case RequestCodes.EDIT_STORY:
                     mStoryEditingCancelled = true;
+                    return;
                 default:
                     // noop
                     return;
@@ -3261,7 +3262,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         // don't start listening for Story events just now if we're waiting for a block to be replaced,
         // unless the user cancelled editing in which case we should continue as normal and attach the listener
-        if (!replaceBlockActionWaiting || mStoryEditingCancelled ) {
+        if (!replaceBlockActionWaiting || mStoryEditingCancelled) {
             mStoriesEventListener.startListening();
         }
     }
