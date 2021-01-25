@@ -71,11 +71,6 @@ class StoriesEventListener @Inject constructor(
         val newUrl: String
     )
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    private fun onCreate() {
-        // startListening()
-    }
-
     fun startListening() {
         if (!eventBusWrapper.isRegistered(this)) {
             dispatcher.register(this)
