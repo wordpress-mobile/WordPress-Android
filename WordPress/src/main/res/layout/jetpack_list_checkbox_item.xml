@@ -4,7 +4,7 @@
     android:id="@+id/item_container"
     android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
-    android:layout_height="?attr/listPreferredItemHeight"
+    android:layout_height="wrap_content"
     android:focusable="true">
 
     <com.google.android.material.checkbox.MaterialCheckBox

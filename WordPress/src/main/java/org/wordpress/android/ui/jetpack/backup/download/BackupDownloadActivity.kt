@@ -14,8 +14,6 @@ class BackupDownloadActivity : LocaleAwareActivity() {
         setContentView(R.layout.backup_download_activity)
 
         setSupportActionBar(toolbar_main)
-        supportActionBar?.setHomeButtonEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

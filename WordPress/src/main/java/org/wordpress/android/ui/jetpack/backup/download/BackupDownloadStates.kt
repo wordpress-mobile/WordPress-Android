@@ -8,6 +8,10 @@ import org.wordpress.android.ui.jetpack.backup.download.StateType.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.StateType.DETAILS
 import org.wordpress.android.ui.jetpack.backup.download.StateType.ERROR
 import org.wordpress.android.ui.jetpack.backup.download.StateType.PROGRESS
+import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.CompleteToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.DetailsToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ErrorToolbarState
+import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 
 abstract class BackupDownloadUiState(open val type: StateType) {
@@ -16,29 +20,33 @@ abstract class BackupDownloadUiState(open val type: StateType) {
 
     data class ErrorState(
         val errorType: BackupDownloadErrorTypes,
-        override val items: List<JetpackListItemState>,
-        override val toolbarState: ToolbarState
-    ) : BackupDownloadUiState(ERROR)
+        override val items: List<JetpackListItemState>
+    ) : BackupDownloadUiState(ERROR) {
+        override val toolbarState: ToolbarState = ErrorToolbarState
+    }
 
     sealed class ContentState(override val type: StateType) : BackupDownloadUiState(type) {
         data class DetailsState(
             val activityLogModel: ActivityLogModel,
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(DETAILS)
+        ) : ContentState(DETAILS) {
+            override val toolbarState: ToolbarState = DetailsToolbarState
+        }
 
         data class ProgressState(
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(PROGRESS)
+        ) : ContentState(PROGRESS) {
+            override val toolbarState: ToolbarState = ProgressToolbarState
+        }
 
         data class CompleteState(
             override val items: List<JetpackListItemState>,
-            override val toolbarState: ToolbarState,
             override val type: StateType
-        ) : ContentState(COMPLETE)
+        ) : ContentState(COMPLETE) {
+            override val toolbarState: ToolbarState = CompleteToolbarState
+        }
     }
 }
 
@@ -51,27 +59,23 @@ enum class StateType(val id: Int) {
 
 sealed class ToolbarState {
     abstract val title: Int
-    abstract val icon: Int
+    @DrawableRes val icon: Int = R.drawable.ic_close_24px
 
-    data class DetailsToolbarState(
-        @StringRes override val title: Int = R.string.backup_download_details_page_title,
-        @DrawableRes override val icon: Int = R.drawable.ic_arrow_back
-    ) : ToolbarState()
+    object DetailsToolbarState : ToolbarState() {
+        @StringRes override val title: Int = R.string.backup_download_details_page_title
+    }
 
-    data class ProgressToolbarState(
-        @StringRes override val title: Int = R.string.backup_download_progress_page_title,
-        @DrawableRes override val icon: Int = R.drawable.ic_close_24px
-    ) : ToolbarState()
+    object ProgressToolbarState : ToolbarState() {
+        @StringRes override val title: Int = R.string.backup_download_progress_page_title
+    }
 
-    data class CompleteToolbarState(
-        @StringRes override val title: Int = R.string.backup_download_complete_page_title,
-        @DrawableRes override val icon: Int = R.drawable.ic_close_24px
-    ) : ToolbarState()
+    object CompleteToolbarState : ToolbarState() {
+        @StringRes override val title: Int = R.string.backup_download_complete_page_title
+    }
 
-    data class ErrorToolbarState(
-        @StringRes override val title: Int = R.string.backup_download_complete_failed_title,
-        @DrawableRes override val icon: Int = R.drawable.ic_close_24px
-    ) : ToolbarState()
+    object ErrorToolbarState : ToolbarState() {
+        @StringRes override val title: Int = R.string.backup_download_complete_failed_title
+    }
 }
 
 sealed class BackupDownloadRequestState {

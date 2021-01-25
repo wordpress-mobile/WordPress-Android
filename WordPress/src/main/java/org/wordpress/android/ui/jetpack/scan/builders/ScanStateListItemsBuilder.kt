@@ -83,11 +83,12 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
-        items.add(scanButton)
 
-        val fixableThreats = threats.map { it.baseThreatModel.fixable != null }
+        val fixableThreats = threats.filter { it.baseThreatModel.fixable != null }
         buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
             ?.let { items.add(it) }
+
+        items.add(scanButton)
 
         threats.takeIf { it.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
@@ -103,7 +104,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
-        val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_40)
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_tick_white, R.color.jetpack_green_40)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
         val scanDescription = scanStateModel.mostRecentStatus?.startDate?.time?.let {
             buildLastScanDescription(it)
@@ -120,8 +121,8 @@ class ScanStateListItemsBuilder @Inject constructor(
 
     private fun buildScanningStateItems(progress: Int): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
-
-        val scanIcon = buildScanIcon(R.drawable.ic_scan_scanning, null)
+        // TODO: ashiagr replace icon with stroke, using direct icon (color = null) causing issues with dynamic tinting
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_5)
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
@@ -144,6 +145,8 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildScanIcon(@DrawableRes icon: Int, @ColorRes color: Int?) = IconState(
         icon = icon,
         colorResId = color,
+        sizeResId = R.dimen.scan_icon_size,
+        marginResId = R.dimen.scan_icon_margin,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
 
@@ -208,7 +211,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         val progressInfoLabel = threats
             .filter { it.baseThreatModel.id in fixingThreatIds }
             .joinToString(",") {
-                uiHelpers.getTextOfUiString(contextProvider.getContext(), threatItemBuilder.buildThreatItemHeader(it))
+                uiHelpers.getTextOfUiString(
+                    contextProvider.getContext(),
+                    threatItemBuilder.buildThreatItemHeader(it)
+                )
             }
         return progressInfoLabel.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
     }

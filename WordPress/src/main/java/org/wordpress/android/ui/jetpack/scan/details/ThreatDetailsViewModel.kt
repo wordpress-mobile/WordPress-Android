@@ -120,7 +120,7 @@ class ThreatDetailsViewModel @Inject constructor(
         updateNavigationEvent(
             OpenThreatActionDialog(
                 title = UiStringRes(R.string.threat_fix),
-                message = builder.buildFixableThreatDescription(fixable).text,
+                message = requireNotNull(builder.buildFixableThreatDescription(fixable).text),
                 okButtonAction = this@ThreatDetailsViewModel::fixThreat
             )
         )
