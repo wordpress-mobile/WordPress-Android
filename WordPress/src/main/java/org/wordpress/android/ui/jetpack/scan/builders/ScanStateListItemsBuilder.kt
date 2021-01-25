@@ -203,7 +203,7 @@ class ScanStateListItemsBuilder @Inject constructor(
 
     fun buildFixThreatsProgressInfoLabel(
         threats: List<ThreatModel>,
-        fixingThreatIds: List<Long> = emptyList()
+        fixingThreatIds: List<Long>
     ): UiStringText? {
         val progressInfoLabel = threats
             .filter { it.baseThreatModel.id in fixingThreatIds }
