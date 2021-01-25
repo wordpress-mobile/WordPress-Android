@@ -15,9 +15,11 @@ class ThreatViewHolder(
     override fun onBind(itemUiState: JetpackListItemState) {
         val threatItemState = itemUiState as ThreatItemState
         with(uiHelpers) {
-            threat_header.text = getTextOfUiString(itemView.context, threatItemState.header)
-            threat_sub_header.text = getTextOfUiString(itemView.context, threatItemState.subHeader)
+            setTextOrHide(threat_header, threatItemState.header)
+            setTextOrHide(threat_sub_header, threatItemState.subHeader)
         }
+        threat_icon.setImageResource(itemUiState.icon)
+        threat_icon.setBackgroundResource(itemUiState.iconBackground)
         itemView.setOnClickListener { threatItemState.onClick.invoke() }
     }
 }

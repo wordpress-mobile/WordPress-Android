@@ -37,7 +37,8 @@ class JetpackBackupRestoreAdapter(
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.PROGRESS.id -> JetpackProgressViewHolder(uiHelpers, parent)
-            ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
+            ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
+            ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
             ViewType.BACKUP_RESTORE_ADDITIONAL_INFORMATION.id ->
                 JetpackBackupRestoreAdditionalInformationViewHolder(uiHelpers, parent)

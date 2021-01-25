@@ -75,7 +75,11 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
                 .toList(mutableListOf())
 
             verify(scanStore, times(3)).fetchFixThreatsStatus(any())
-            assertThat(useCaseResult).containsSequence(InProgress, InProgress, Complete)
+            assertThat(useCaseResult).containsSequence(
+                InProgress(listOf(fakeThreatId)),
+                InProgress(listOf(fakeThreatId)),
+                Complete
+            )
         }
 
     @Test

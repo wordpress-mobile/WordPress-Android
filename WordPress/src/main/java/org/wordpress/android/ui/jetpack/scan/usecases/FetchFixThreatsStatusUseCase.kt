@@ -44,7 +44,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
             } else {
                 val fixState = mapToFixState(result.fixThreatStatusModels, fixableThreatIds)
                 emit(fixState)
-                if (fixState == InProgress) {
+                if (fixState is InProgress) {
                     delay(delayInMs)
                 } else {
                     return@flow
@@ -54,12 +54,13 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
     }.flowOn(ioDispatcher)
 
     private fun mapToFixState(models: List<FixThreatStatusModel>, fixableThreatIds: List<Long>): FetchFixThreatsState {
-        val isFixing = models.any { it.status == FixStatus.IN_PROGRESS }
+        val fixingThreatIds = models.filter { it.status == FixStatus.IN_PROGRESS }.map { it.id }
+        val isFixing = fixingThreatIds.isNotEmpty()
         val isFixingComplete = models.filter { it.status == FixStatus.FIXED }.size == fixableThreatIds.size
         val containsError = models.any { it.error != null }
 
         return when {
-            isFixing -> InProgress
+            isFixing -> InProgress(fixingThreatIds)
             isFixingComplete -> Complete
             else -> {
                 // TODO ashiagr replace AppLog tag
@@ -70,7 +71,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
     }
 
     sealed class FetchFixThreatsState {
-        object InProgress : FetchFixThreatsState()
+        data class InProgress(val threatIds: List<Long>) : FetchFixThreatsState()
         object Complete : FetchFixThreatsState()
         sealed class Failure : FetchFixThreatsState() {
             object NetworkUnavailable : Failure()

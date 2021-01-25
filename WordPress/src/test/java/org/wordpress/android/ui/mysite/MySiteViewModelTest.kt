@@ -28,6 +28,7 @@ import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
@@ -200,23 +201,25 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.name = siteName
         site.iconUrl = siteIcon
         siteInfoBlock = SiteInfoBlock(
-                siteName,
-                siteUrl,
-                IconState.Visible(siteIcon),
-                false,
-                null,
-                mock(),
-                mock(),
-                mock()
+                title = siteName,
+                url = siteUrl,
+                iconState = IconState.Visible(siteIcon),
+                showTitleFocusPoint = false,
+                showIconFocusPoint = false,
+                onTitleClick = null,
+                onIconClick = mock(),
+                onUrlClick = mock(),
+                onSwitchSiteClick = mock()
         )
         whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
-                eq(site),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = any(),
+                showUploadSiteIconFocusPoint = any()
         )).thenReturn(
                 siteInfoBlock
         )
@@ -405,17 +408,18 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `passes active quick start task into site info block builder`() {
+    fun `passes active UPDATE_SITE_TITLE into site info block builder`() {
         onSiteChange.postValue(site)
 
         whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
-                eq(site),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                eq(true)
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = eq(true),
+                showUploadSiteIconFocusPoint = eq(false)
         )).thenReturn(
                 siteInfoBlock.copy(showTitleFocusPoint = true)
         )
@@ -423,6 +427,28 @@ class MySiteViewModelTest : BaseUnitTest() {
         quickStartModel.value = QuickStartModel(UPDATE_SITE_TITLE, listOf())
 
         assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
+    }
+
+    @Test
+    fun `passes active UPLOAD_SITE_ICON into site info block builder`() {
+        onSiteChange.postValue(site)
+
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = eq(false),
+                showUploadSiteIconFocusPoint = eq(true)
+        )).thenReturn(
+                siteInfoBlock.copy(showIconFocusPoint = true)
+        )
+
+        quickStartModel.value = QuickStartModel(UPLOAD_SITE_ICON, listOf())
+
+        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue()
     }
 
     @Test
@@ -878,13 +904,14 @@ class MySiteViewModelTest : BaseUnitTest() {
             clickAction = it.getArgument(argument)
             siteInfoBlock
         }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(
-                eq(site),
-                any(),
-                any(),
-                any(),
-                any(),
-                any(),
-                any()
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = any(),
+                showUploadSiteIconFocusPoint = any()
         )
 
         onSiteChange.postValue(site)

@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -15,6 +16,7 @@ import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
@@ -51,12 +53,15 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var startScanUseCase: StartScanUseCase
     @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
     @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
+    @Mock private lateinit var scanStore: ScanStore
 
     private lateinit var viewModel: ScanViewModel
 
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
     private val fakeUiStringText = UiStringText("")
     private val fakeThreatId = 1L
+    private val fakeIconId = 1
+    private val fakeIconBackgroundId = 1
 
     @Before
     fun setUp() = test {
@@ -66,6 +71,7 @@ class ScanViewModelTest : BaseUnitTest() {
             startScanUseCase,
             fixThreatsUseCase,
             fetchFixThreatsStatusUseCase,
+            scanStore,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
@@ -76,6 +82,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
             )
         }
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
     }
 
     @Test
@@ -289,7 +296,7 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given threats are fixing, when threats fix status is checked, then an indeterminate progress bar is shown`() =
         test {
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.InProgress)
+                flowOf(FetchFixThreatsState.InProgress(mock()))
             )
             val observers = init()
 
@@ -384,7 +391,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ),
         ProgressState(
             progress = 0,
-            label = fakeUiStringText,
+            progressLabel = fakeUiStringText,
             isIndeterminate = true,
             isVisible = false
         ),
@@ -392,7 +399,9 @@ class ScanViewModelTest : BaseUnitTest() {
             threatId = fakeThreatId,
             isFixable = true,
             header = fakeUiStringText,
-            subHeader = fakeUiStringText
+            subHeader = fakeUiStringText,
+            icon = fakeIconId,
+            iconBackground = fakeIconBackgroundId
         ) { onThreatItemClicked(fakeThreatId) }
     )
 

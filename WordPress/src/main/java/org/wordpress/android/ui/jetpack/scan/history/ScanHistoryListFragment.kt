@@ -4,13 +4,18 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import kotlinx.android.synthetic.main.actionable_empty_view.*
 import kotlinx.android.synthetic.main.scan_history_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
@@ -27,7 +32,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         super.onViewCreated(view, savedInstanceState)
         initDagger()
         initRecyclerView()
-        initViewModel(getSite(savedInstanceState))
+        initViewModel(getSite(savedInstanceState), getTabType())
     }
 
     private fun initDagger() {
@@ -43,17 +48,31 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         recycler_view.itemAnimator = null
     }
 
-    private fun initViewModel(site: SiteModel) {
+    private fun initViewModel(site: SiteModel, tabType: ScanHistoryTabType) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ScanHistoryListViewModel::class.java)
         parentViewModel = ViewModelProvider(parentFragment as ViewModelStoreOwner, viewModelFactory).get(
                 ScanHistoryViewModel::class.java
         )
-        viewModel.start(site, parentViewModel)
+        viewModel.start(tabType, site, parentViewModel)
         setupObservers()
     }
 
     private fun setupObservers() {
-        viewModel.uiState.observe(viewLifecycleOwner, { listItems -> refreshContentScreen(listItems) })
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            uiHelpers.updateVisibility(actionable_empty_view, it.emptyVisibility)
+            uiHelpers.updateVisibility(recycler_view, it.contentVisibility)
+            uiHelpers.updateVisibility(button, false)
+            when (it) {
+                EmptyHistory -> { // no-op
+                }
+                is ContentUiState -> refreshContentScreen(it.items)
+            }
+        })
+        viewModel.navigation.observe(viewLifecycleOwner, { event ->
+            event.applyIfNotHandled {
+                ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, threatId)
+            }
+        })
     }
 
     private fun refreshContentScreen(items: List<ScanListItemState>) {
@@ -68,10 +87,23 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         }
     }
 
+    private fun getTabType(): ScanHistoryTabType = requireNotNull(arguments?.getParcelable(ARG_TAB_TYPE))
+
     override fun getScrollableViewForUniqueIdProvision(): View? = recycler_view
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    companion object {
+        private const val ARG_TAB_TYPE = "arg_tab_type"
+
+        fun newInstance(tabType: ScanHistoryTabType): ScanHistoryListFragment {
+            val newBundle = Bundle().apply {
+                putParcelable(ARG_TAB_TYPE, tabType)
+            }
+            return ScanHistoryListFragment().apply { arguments = newBundle }
+        }
     }
 }

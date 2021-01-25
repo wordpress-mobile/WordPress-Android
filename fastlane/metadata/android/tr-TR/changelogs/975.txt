@@ -1,9 +1,0 @@
-16.4:
-Yenilikler:
-
-Blok Düzenleyici: Artık, belgeler gibi dosyalar için indirme düğmesi yerleştiren bir Dosya bloğu ekleyebilirsiniz. Başlık ve Galeri bloklarıyla ilgili sorunları da giderdik.
-
-Gönderi Listesi: Artık Blog Gönderileri listenizdeki "Çoğalt" düğmesiyle bir gönderiyi kopyalayabilirsiniz
-
-Sitem: Site başlığınızı düzenlerken meydana gelen bir kilitlenme durumunu da düzelttik.
-

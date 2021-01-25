@@ -27,6 +27,7 @@ sealed class MySiteItem(val type: Type) {
         val url: String,
         val iconState: IconState,
         val showTitleFocusPoint: Boolean,
+        val showIconFocusPoint: Boolean,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,

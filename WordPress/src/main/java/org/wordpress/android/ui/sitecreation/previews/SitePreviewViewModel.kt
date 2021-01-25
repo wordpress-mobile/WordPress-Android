@@ -18,7 +18,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.QuickStartStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
@@ -42,7 +41,6 @@ import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.S
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.FAILURE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.IDLE
 import org.wordpress.android.ui.sitecreation.services.SiteCreationServiceState.SiteCreationStep.SUCCESS
-import org.wordpress.android.ui.sitecreation.theme.defaultTemplateSlug
 import org.wordpress.android.ui.sitecreation.usecases.isWordPressComSubDomain
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -249,8 +247,6 @@ class SitePreviewViewModel @Inject constructor(
                 val siteBySiteId = requireNotNull(siteStore.getSiteBySiteId(remoteSiteId)) {
                     "Site successfully fetched but has not been found in the local db."
                 }
-                val userHasSelectedDesign = siteCreationState.siteDesign != defaultTemplateSlug
-                quickStartStore.setDoneTask(siteBySiteId.id.toLong(), CHOOSE_THEME, userHasSelectedDesign)
                 CreateSiteState.SiteCreationCompleted(siteBySiteId.id)
             } else {
                 SiteNotInLocalDb(remoteSiteId)

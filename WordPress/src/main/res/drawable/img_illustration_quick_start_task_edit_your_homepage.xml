@@ -1,6 +1,4 @@
 <vector xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="UnusedResources"
     android:width="168dp"
     android:height="94dp"
     android:viewportWidth="168"
