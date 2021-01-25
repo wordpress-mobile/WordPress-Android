@@ -17,4 +17,6 @@ enum class ScanAction : IAction {
     IGNORE_THREAT,
     @Action(payloadType = ScanStore.FetchFixThreatsStatusPayload::class)
     FETCH_FIX_THREATS_STATUS,
+    @Action(payloadType = ScanStore.FetchScanHistoryPayload::class)
+    FETCH_SCAN_HISTORY,
 }

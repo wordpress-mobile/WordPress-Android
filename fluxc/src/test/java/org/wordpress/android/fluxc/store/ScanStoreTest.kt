@@ -1,9 +1,12 @@
 package org.wordpress.android.fluxc.store
 
+import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.argumentCaptor
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
@@ -16,7 +19,13 @@ import org.wordpress.android.fluxc.generated.ScanActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
+import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.ScanRestClient
 import org.wordpress.android.fluxc.persistence.ScanSqlUtils
 import org.wordpress.android.fluxc.persistence.ThreatSqlUtils
@@ -42,6 +51,7 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.fluxc.test
 import org.wordpress.android.fluxc.tools.initCoroutineEngine
+import org.wordpress.android.fluxc.utils.BuildConfigWrapper
 
 @RunWith(MockitoJUnitRunner::class)
 class ScanStoreTest {
@@ -50,7 +60,24 @@ class ScanStoreTest {
     @Mock private lateinit var threatSqlUtils: ThreatSqlUtils
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var siteModel: SiteModel
-    @Mock private lateinit var threat: ThreatModel
+    @Mock private lateinit var buildConfigWrapper: BuildConfigWrapper
+
+    private val threatInCurrentState: ThreatModel = GenericThreatModel(
+            BaseThreatModel(
+                    1L,
+                    "",
+                    "",
+                    CURRENT,
+                    mock(),
+                    mock(),
+                    mock()
+            )
+    )
+    private val threatInFixedState: ThreatModel = GenericThreatModel(
+            threatInCurrentState.baseThreatModel.copy(status = FIXED)
+
+    )
+
     private lateinit var scanStore: ScanStore
     private val siteId = 11L
     private val threatId = 1L
@@ -63,6 +90,8 @@ class ScanStoreTest {
             scanSqlUtils,
             threatSqlUtils,
             initCoroutineEngine(),
+            mock(),
+            buildConfigWrapper,
             dispatcher
         )
     }
@@ -97,27 +126,47 @@ class ScanStoreTest {
         val scanStateModel = mock<ScanStateModel>()
         val payload = FetchedScanStatePayload(scanStateModel, siteModel)
         whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(payload)
-        whenever(scanStateModel.threats).thenReturn(listOf(threat))
+        whenever(scanStateModel.threats).thenReturn(listOf(threatInCurrentState))
 
         val fetchAction = ScanActionBuilder.newFetchScanStateAction(FetchScanStatePayload(siteModel))
         scanStore.onAction(fetchAction)
 
         verify(scanSqlUtils).replaceScanState(siteModel, scanStateModel)
-        verify(threatSqlUtils).replaceThreatsForSite(siteModel, listOf(threat))
+        verify(threatSqlUtils).removeThreatsWithStatus(siteModel, listOf(CURRENT))
+        verify(threatSqlUtils).insertThreats(siteModel, listOf(threatInCurrentState))
         val expectedChangeEvent = ScanStore.OnScanStateFetched(ScanAction.FETCH_SCAN_STATE)
         verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     @Test
+    fun `fetch scan state filters out threats which do not have CURRENT status`() = test {
+        whenever(buildConfigWrapper.isDebug()).thenReturn(false)
+        val threatsInResponse = listOf(
+                threatInCurrentState,
+                threatInFixedState
+        )
+        val expectedThreatsInDb = listOf(threatsInResponse[0])
+        val scanStateModel = mock<ScanStateModel>()
+        val payload = FetchedScanStatePayload(scanStateModel, siteModel)
+        whenever(scanRestClient.fetchScanState(siteModel)).thenReturn(payload)
+        whenever(scanStateModel.threats).thenReturn(threatsInResponse)
+
+        val fetchAction = ScanActionBuilder.newFetchScanStateAction(FetchScanStatePayload(siteModel))
+        scanStore.onAction(fetchAction)
+
+        verify(threatSqlUtils).insertThreats(siteModel, expectedThreatsInDb)
+    }
+
+    @Test
     fun `get scan state returns state and threats from the db`() {
-        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threat))
+        val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threatInCurrentState))
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
-        whenever(threatSqlUtils.getThreatsForSite(siteModel)).thenReturn(listOf(threat))
+        whenever(threatSqlUtils.getThreats(siteModel, listOf(CURRENT))).thenReturn(listOf(threatInCurrentState))
 
         val scanStateFromDb = scanStore.getScanStateForSite(siteModel)
 
         verify(scanSqlUtils).getScanStateForSite(siteModel)
-        verify(threatSqlUtils).getThreatsForSite(siteModel)
+        verify(threatSqlUtils).getThreats(siteModel, listOf(CURRENT))
         Assert.assertEquals(scanStateModel, scanStateFromDb)
     }
 
@@ -234,5 +283,15 @@ class ScanStoreTest {
             ScanAction.FETCH_FIX_THREATS_STATUS
         )
         verify(dispatcher).emitChange(expectedEventWithError)
+    }
+
+    @Test
+    fun `getScanHistoryForSite returns only FIXED and IGNORED threats`() = test {
+        val captor = argumentCaptor<List<ThreatStatus>>()
+        whenever(threatSqlUtils.getThreats(anyOrNull(), captor.capture())).thenReturn(mock())
+
+        scanStore.getScanHistoryForSite(siteModel)
+
+        assertThat(captor.firstValue).isEqualTo(listOf(IGNORED, FIXED))
     }
 }

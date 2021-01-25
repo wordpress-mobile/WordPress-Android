@@ -72,10 +72,10 @@ class QuickStartSqlUtilsTest {
     fun testShownCount() {
         assertEquals(0, quickStartSqlUtils.getShownCount(testLocalSiteId))
 
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CHOOSE_THEME, true)
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.UNKNOWN, true)
         assertEquals(1, quickStartSqlUtils.getShownCount(testLocalSiteId))
 
-        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.CHOOSE_THEME, false)
+        quickStartSqlUtils.setShownTask(testLocalSiteId, QuickStartTask.UNKNOWN, false)
         assertEquals(0, quickStartSqlUtils.getShownCount(testLocalSiteId))
     }
 
@@ -103,13 +103,13 @@ class QuickStartSqlUtilsTest {
 
     @Test
     fun testTaskDoneStatus() {
-        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CUSTOMIZE_SITE))
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.UNKNOWN))
 
-        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CUSTOMIZE_SITE, true)
-        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CUSTOMIZE_SITE))
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.UNKNOWN, true)
+        assertTrue(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.UNKNOWN))
 
-        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.CUSTOMIZE_SITE, false)
-        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.CUSTOMIZE_SITE))
+        quickStartSqlUtils.setDoneTask(testLocalSiteId, QuickStartTask.UNKNOWN, false)
+        assertFalse(quickStartSqlUtils.hasDoneTask(testLocalSiteId, QuickStartTask.UNKNOWN))
     }
 
     @Test

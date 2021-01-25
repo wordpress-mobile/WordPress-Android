@@ -12,7 +12,9 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel.FixStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatMapper
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.fluxc.network.UserAgent
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient
 import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder
@@ -21,7 +23,11 @@ import org.wordpress.android.fluxc.network.rest.wpcom.WPComGsonRequestBuilder.Re
 import org.wordpress.android.fluxc.network.rest.wpcom.auth.AccessToken
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsStatusResponse
+import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryError
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
@@ -172,40 +178,34 @@ class ScanRestClient(
         }
     }
 
+    suspend fun fetchScanHistory(remoteSiteId: Long): FetchScanHistoryResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).scan.history.url
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), FetchScanHistoryResponse::class.java)
+        return when (response) {
+            is Success -> {
+                buildScanHistoryResultPayload(remoteSiteId, response.data)
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
+                        FetchScanHistoryErrorType.GENERIC_ERROR,
+                        FetchScanHistoryErrorType.INVALID_RESPONSE,
+                        FetchScanHistoryErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = FetchScanHistoryError(errorType, response.error.message)
+                FetchScanHistoryResultPayload(remoteSiteId = remoteSiteId, error = error)
+            }
+        }
+    }
+
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
         val state = State.fromValue(response.state) ?: return buildScanStateErrorPayload(
             site,
-            ScanStateErrorType.INVALID_RESPONSE
+            ScanStateError(ScanStateErrorType.INVALID_RESPONSE, "Unknown scan state")
         )
-        var error: ScanStateErrorType? = null
-        val threatModels = response.threats?.mapNotNull { threat ->
-            val threatModel = when {
-                threat.id == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_ID
-                    null
-                }
-                threat.signature == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_SIGNATURE
-                    null
-                }
-                threat.firstDetected == null -> {
-                    error = ScanStateErrorType.MISSING_THREAT_FIRST_DETECTED
-                    null
-                }
-                else -> {
-                    val threatStatus = ThreatStatus.fromValue(threat.status)
-                    if (threatStatus != ThreatStatus.UNKNOWN) {
-                        threatMapper.map(threat)
-                    } else {
-                        error = ScanStateErrorType.INVALID_RESPONSE
-                        null
-                    }
-                }
-            }
-            threatModel
-        }
-        error?.let {
-            return buildScanStateErrorPayload(site, it)
+        val (threatModels, isError, errorMsg) = mapThreatsToThreatModels(response.threats)
+        if (isError) {
+            return buildScanStateErrorPayload(site, ScanStateError(ScanStateErrorType.INVALID_RESPONSE, errorMsg))
         }
         val scanStateModel = ScanStateModel(
             state = state,
@@ -235,6 +235,56 @@ class ScanRestClient(
         return FetchedScanStatePayload(scanStateModel, site)
     }
 
+    private fun mapThreatsToThreatModels(threats: List<Threat>?): Triple<List<ThreatModel>?, Boolean, String?> {
+        var isError = false
+        var errorMsg: String? = null
+        val threatModels = threats?.mapNotNull { threat ->
+            val threatModel = when {
+                threat.id == null -> {
+                    isError = true
+                    errorMsg = "Missing threat id"
+                    null
+                }
+                threat.signature == null -> {
+                    isError = true
+                    errorMsg = "Missing threat signature"
+                    null
+                }
+                threat.firstDetected == null -> {
+                    isError = true
+                    errorMsg = "Missing threat firstDetected"
+                    null
+                }
+                else -> {
+                    val threatStatus = ThreatStatus.fromValue(threat.status)
+                    if (threatStatus != UNKNOWN) {
+                        threatMapper.map(threat)
+                    } else {
+                        isError = true
+                        null
+                    }
+                }
+            }
+            threatModel
+        }
+        return Triple(threatModels, isError, errorMsg)
+    }
+
+    private fun buildScanHistoryResultPayload(
+        remoteSiteId: Long,
+        response: FetchScanHistoryResponse
+    ): FetchScanHistoryResultPayload {
+        val (threatModels, error) = mapThreatsToThreatModels(response.threats)
+        return if (error) {
+            FetchScanHistoryResultPayload(
+                    remoteSiteId,
+                    FetchScanHistoryError(FetchScanHistoryErrorType.INVALID_RESPONSE)
+            )
+        } else {
+            FetchScanHistoryResultPayload(remoteSiteId, threatModels)
+        }
+    }
+
     private fun buildFixThreatsStatusPayload(
         response: FixThreatsStatusResponse,
         remoteSiteId: Long
@@ -257,6 +307,6 @@ class ScanRestClient(
         )
     }
 
-    private fun buildScanStateErrorPayload(site: SiteModel, errorType: ScanStateErrorType) =
-        FetchedScanStatePayload(ScanStateError(errorType), site)
+    private fun buildScanStateErrorPayload(site: SiteModel, errorType: ScanStateError) =
+        FetchedScanStatePayload(errorType, site)
 }

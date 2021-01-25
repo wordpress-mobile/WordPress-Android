@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.CoreFileModificationThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.DatabaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import java.util.Date
@@ -22,19 +23,24 @@ import javax.inject.Singleton
 
 @Singleton
 class ThreatSqlUtils @Inject constructor(private val gson: Gson, private val threatMapper: ThreatMapper) {
-    fun replaceThreatsForSite(site: SiteModel, threatModels: List<ThreatModel>) {
+    fun removeThreatsWithStatus(site: SiteModel, statuses: List<ThreatStatus>) {
         WellSql.delete(ThreatBuilder::class.java)
-            .where()
-            .equals(ThreatModelTable.LOCAL_SITE_ID, site.id)
-            .endWhere()
-            .execute()
+                .where()
+                .equals(ThreatModelTable.LOCAL_SITE_ID, site.id)
+                .isIn(ThreatModelTable.STATUS, statuses.map { it.value })
+                .endWhere()
+                .execute()
+    }
+
+    fun insertThreats(site: SiteModel, threatModels: List<ThreatModel>) {
         WellSql.insert(threatModels.map { it.toBuilder(site) }).execute()
     }
 
-    fun getThreatsForSite(site: SiteModel): List<ThreatModel> {
+    fun getThreats(site: SiteModel, statuses: List<ThreatStatus>): List<ThreatModel> {
         return WellSql.select(ThreatBuilder::class.java)
             .where()
             .equals(ThreatModelTable.LOCAL_SITE_ID, site.id)
+            .isIn(ThreatModelTable.STATUS, statuses.map { it.value })
             .endWhere()
             .asModel
             .map { it.build(gson, threatMapper) }

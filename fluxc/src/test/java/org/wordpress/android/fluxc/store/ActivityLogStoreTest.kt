@@ -54,9 +54,6 @@ class ActivityLogStoreTest {
 
     @Test
     fun onFetchActivityLogFirstPageActionCleanupDbAndCallRestClient() = test {
-        val number = 10
-        val offset = 0
-
         val payload = FetchActivityLogPayload(siteModel)
         whenever(activityLogRestClient.fetchActivity(eq(payload), any(), any())).thenReturn(
                 FetchedActivityLogPayload(
@@ -71,13 +68,11 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivity(payload, number, offset)
+        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, OFFSET)
     }
 
     @Test
     fun onFetchActivityLogNextActionReadCurrentDataAndCallRestClient() = test {
-        val number = 10
-
         val payload = FetchActivityLogPayload(siteModel, loadMore = true)
         whenever(activityLogRestClient.fetchActivity(eq(payload), any(), any())).thenReturn(
                 FetchedActivityLogPayload(
@@ -96,7 +91,7 @@ class ActivityLogStoreTest {
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(payload)
         activityLogStore.onAction(action)
 
-        verify(activityLogRestClient).fetchActivity(payload, number, existingActivities.size)
+        verify(activityLogRestClient).fetchActivity(payload, PAGE_SIZE, existingActivities.size)
     }
 
     @Test
@@ -186,10 +181,30 @@ class ActivityLogStoreTest {
         whenever(activityLogSqlUtils.getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING))
                 .thenReturn(activityModels)
 
-        val activityModelsFromDb = activityLogStore.getActivityLogForSite(siteModel, ascending = false)
+        val activityModelsFromDb = activityLogStore.getActivityLogForSite(
+                site = siteModel,
+                ascending = false,
+                rewindableOnly = false
+        )
 
         verify(activityLogSqlUtils).getActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
         assertEquals(activityModels, activityModelsFromDb)
+    }
+
+    @Test
+    fun returnRewindableOnlyActivitiesFromDb() {
+        val rewindableActivityModels = listOf<ActivityLogModel>(mock())
+        whenever(activityLogSqlUtils.getRewindableActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING))
+                .thenReturn(rewindableActivityModels)
+
+        val activityModelsFromDb = activityLogStore.getActivityLogForSite(
+                site = siteModel,
+                ascending = false,
+                rewindableOnly = true
+        )
+
+        verify(activityLogSqlUtils).getRewindableActivitiesForSite(siteModel, SelectQuery.ORDER_DESCENDING)
+        assertEquals(rewindableActivityModels, activityModelsFromDb)
     }
 
     @Test
@@ -414,9 +429,9 @@ class ActivityLogStoreTest {
     private suspend fun initRestClient(
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
-        offset: Int = 0,
-        number: Int = 10,
-        totalItems: Int = 10
+        offset: Int = OFFSET,
+        number: Int = PAGE_SIZE,
+        totalItems: Int = PAGE_SIZE
     ): Action<*> {
         val requestPayload = FetchActivityLogPayload(siteModel)
         val action = ActivityLogActionBuilder.newFetchActivitiesAction(requestPayload)
@@ -425,5 +440,10 @@ class ActivityLogStoreTest {
         whenever(activityLogRestClient.fetchActivity(requestPayload, number, offset)).thenReturn(payload)
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
         return action
+    }
+
+    companion object {
+        private const val OFFSET = 0
+        private const val PAGE_SIZE = 20
     }
 }

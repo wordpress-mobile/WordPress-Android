@@ -56,6 +56,17 @@ class ActivityLogSqlUtils
                 .map { it.build(formattableContentMapper) }
     }
 
+    fun getRewindableActivitiesForSite(site: SiteModel, @SelectQuery.Order order: Int): List<ActivityLogModel> {
+        return WellSql.select(ActivityLogBuilder::class.java)
+                .where()
+                .equals(ActivityLogTable.LOCAL_SITE_ID, site.id)
+                .equals(ActivityLogTable.REWINDABLE, true)
+                .endWhere()
+                .orderBy(ActivityLogTable.PUBLISHED, order)
+                .asModel
+                .map { it.build(formattableContentMapper) }
+    }
+
     fun getActivityByRewindId(rewindId: String): ActivityLogModel? {
         return WellSql.select(ActivityLogBuilder::class.java)
                 .where()
@@ -184,7 +195,9 @@ class ActivityLogSqlUtils
                 restoreId = this.rewind?.restoreId,
                 rewindStatus = this.rewind?.status?.value,
                 rewindProgress = this.rewind?.progress,
-                rewindReason = this.rewind?.reason
+                rewindReason = this.rewind?.reason,
+                message = this.rewind?.message,
+                currentEntry = this.rewind?.currentEntry
         )
     }
 
@@ -283,7 +296,9 @@ class ActivityLogSqlUtils
         @Column var restoreId: Long? = null,
         @Column var rewindStatus: String? = null,
         @Column var rewindProgress: Int? = null,
-        @Column var rewindReason: String? = null
+        @Column var rewindReason: String? = null,
+        @Column var message: String? = null,
+        @Column var currentEntry: String? = null
     ) : Identifiable {
         constructor() : this(-1, 0, 0, "", 0)
 
@@ -299,7 +314,9 @@ class ActivityLogSqlUtils
                     restoreId,
                     rewindStatus,
                     rewindProgress,
-                    rewindReason
+                    rewindReason,
+                    message,
+                    currentEntry
             )
             return RewindStatusModel(
                     RewindStatusModel.State.fromValue(state) ?: RewindStatusModel.State.UNKNOWN,
