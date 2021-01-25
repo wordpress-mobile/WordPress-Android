@@ -129,7 +129,7 @@ class ActivityLogRestClientTest {
         with(paramsCaptor.firstValue) {
             assertEquals("1", this["page"])
             assertEquals("$number", this["number"])
-            assertEquals(2, this.size)
+            assertEquals(2, size)
         }
     }
 
@@ -185,22 +185,22 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchActivity(requestPayload, number, offset)
 
         with(payload) {
-            assertEquals(this.number, number)
-            assertEquals(this.offset, offset)
-            assertEquals(this.totalItems, 1)
-            assertEquals(this.site, site)
-            assertEquals(this.activityLogModels.size, 1)
-            assertNull(this.error)
-            with(this.activityLogModels[0]) {
-                assertEquals(this.activityID, ACTIVITY_RESPONSE.activity_id)
-                assertEquals(this.gridicon, ACTIVITY_RESPONSE.gridicon)
-                assertEquals(this.name, ACTIVITY_RESPONSE.name)
-                assertEquals(this.published, ACTIVITY_RESPONSE.published)
-                assertEquals(this.rewindID, ACTIVITY_RESPONSE.rewind_id)
-                assertEquals(this.rewindable, ACTIVITY_RESPONSE.is_rewindable)
-                assertEquals(this.content, ACTIVITY_RESPONSE.content)
-                assertEquals(this.actor?.avatarURL, ACTIVITY_RESPONSE.actor?.icon?.url)
-                assertEquals(this.actor?.wpcomUserID, ACTIVITY_RESPONSE.actor?.wpcom_user_id)
+            assertEquals(this@ActivityLogRestClientTest.number, number)
+            assertEquals(this@ActivityLogRestClientTest.offset, offset)
+            assertEquals(totalItems, 1)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
+            assertEquals(activityLogModels.size, 1)
+            assertNull(error)
+            with(activityLogModels[0]) {
+                assertEquals(activityID, ACTIVITY_RESPONSE.activity_id)
+                assertEquals(gridicon, ACTIVITY_RESPONSE.gridicon)
+                assertEquals(name, ACTIVITY_RESPONSE.name)
+                assertEquals(published, ACTIVITY_RESPONSE.published)
+                assertEquals(rewindID, ACTIVITY_RESPONSE.rewind_id)
+                assertEquals(rewindable, ACTIVITY_RESPONSE.is_rewindable)
+                assertEquals(content, ACTIVITY_RESPONSE.content)
+                assertEquals(actor?.avatarURL, ACTIVITY_RESPONSE.actor?.icon?.url)
+                assertEquals(actor?.wpcomUserID, ACTIVITY_RESPONSE.actor?.wpcom_user_id)
             }
         }
     }
@@ -268,15 +268,15 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchActivityRewind(site)
 
         with(payload) {
-            assertEquals(this.site, site)
-            assertNull(this.error)
-            assertNotNull(this.rewindStatusModelResponse)
-            this.rewindStatusModelResponse?.apply {
-                assertEquals(this.reason, REWIND_STATUS_RESPONSE.reason)
-                assertEquals(this.state, state)
-                assertNotNull(this.rewind)
-                this.rewind?.apply {
-                    assertEquals(this.status.value, REWIND_RESPONSE.status)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
+            assertNull(error)
+            assertNotNull(rewindStatusModelResponse)
+            rewindStatusModelResponse?.apply {
+                assertEquals(reason, REWIND_STATUS_RESPONSE.reason)
+                assertEquals(state, state)
+                assertNotNull(rewind)
+                rewind?.apply {
+                    assertEquals(status.value, REWIND_RESPONSE.status)
                 }
             }
         }
@@ -458,18 +458,18 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
         with(payload) {
-            assertEquals(this.site, site)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
             assertNull(error)
-            assertNotNull(this.backupDownloadStatusModelResponse)
-            this.backupDownloadStatusModelResponse?.apply {
-                assertEquals(this.downloadId, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadId)
-                assertEquals(this.rewindId, BACKUP_DOWNLOAD_STATUS_RESPONSE.rewindId)
-                assertEquals(this.backupPoint, BACKUP_DOWNLOAD_STATUS_RESPONSE.backupPoint)
-                assertEquals(this.startedAt, BACKUP_DOWNLOAD_STATUS_RESPONSE.startedAt)
-                assertEquals(this.downloadCount, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadCount)
-                assertEquals(this.validUntil, BACKUP_DOWNLOAD_STATUS_RESPONSE.validUntil)
-                assertEquals(this.url, BACKUP_DOWNLOAD_STATUS_RESPONSE.url)
-                assertEquals(this.progress, progress)
+            assertNotNull(backupDownloadStatusModelResponse)
+            backupDownloadStatusModelResponse?.apply {
+                assertEquals(downloadId, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadId)
+                assertEquals(rewindId, BACKUP_DOWNLOAD_STATUS_RESPONSE.rewindId)
+                assertEquals(backupPoint, BACKUP_DOWNLOAD_STATUS_RESPONSE.backupPoint)
+                assertEquals(startedAt, BACKUP_DOWNLOAD_STATUS_RESPONSE.startedAt)
+                assertEquals(downloadCount, BACKUP_DOWNLOAD_STATUS_RESPONSE.downloadCount)
+                assertEquals(validUntil, BACKUP_DOWNLOAD_STATUS_RESPONSE.validUntil)
+                assertEquals(url, BACKUP_DOWNLOAD_STATUS_RESPONSE.url)
+                assertEquals(progress, progress)
             }
         }
     }
@@ -481,7 +481,7 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
         with(payload) {
-            assertEquals(this.site, site)
+            assertEquals(site, this@ActivityLogRestClientTest.site)
             assertNull(error)
             assertNull(backupDownloadStatusModelResponse)
         }
@@ -685,19 +685,19 @@ class ActivityLogRestClientTest {
 
     private fun assertEmittedActivityError(payload: FetchedActivityLogPayload, errorType: ActivityLogErrorType) {
         with(payload) {
-            assertEquals(this.number, number)
-            assertEquals(this.offset, offset)
-            assertEquals(this.site, site)
-            assertTrue(this.isError)
-            assertEquals(this.error.type, errorType)
+            assertEquals(this@ActivityLogRestClientTest.number, number)
+            assertEquals(this@ActivityLogRestClientTest.offset, offset)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
+            assertTrue(isError)
+            assertEquals(error.type, errorType)
         }
     }
 
     private fun assertEmittedRewindStatusError(payload: FetchedRewindStatePayload, errorType: RewindStatusErrorType) {
         with(payload) {
-            assertEquals(this.site, site)
-            assertTrue(this.isError)
-            assertEquals(errorType, this.error.type)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
+            assertTrue(isError)
+            assertEquals(errorType, error.type)
         }
     }
 
@@ -706,7 +706,7 @@ class ActivityLogRestClientTest {
         errorType: BackupDownloadStatusErrorType
     ) {
         with(payload) {
-            assertEquals(site, site)
+            assertEquals(this@ActivityLogRestClientTest.site, site)
             assertTrue(isError)
             assertEquals(errorType, error.type)
         }
