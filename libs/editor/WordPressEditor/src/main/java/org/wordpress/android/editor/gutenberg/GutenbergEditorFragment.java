@@ -415,6 +415,7 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             // in case we were expecting a fresh block replacement sync signal, let the fragment listener
                             // know so it can process all of the pending block save / update / upload events
                             mStoryBlockReplacedSignalWait = false;
+                            mExternallyEditedBlockOriginalHash = null;
                             mEditorFragmentListener.onReplaceStoryEditedBlockActionReceived();
                         } else {
                             // caclulate the hash to verify whether this is the block that needs to get replaced
@@ -424,12 +425,13 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                             if (mExternallyEditedBlockOriginalHash != null && calculatedHash != null &&
                                 mExternallyEditedBlockOriginalHash.contentEquals(calculatedHash)) {
                                 if (!TextUtils.isEmpty(mUpdatedStoryBlockContent)) {
-                                    getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
-                                    mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
                                     // after the replaceStoryEditedBlock is sent down to Gutenberg, we can expect the
                                     // new block to signal a replaceBlockSync to us again after loading, calling this
                                     // very callback method again
                                     mStoryBlockReplacedSignalWait = true;
+                                    // this call needs to be made right before `replaceStoryEditedBlock()`
+                                    mEditorFragmentListener.onReplaceStoryEditedBlockActionSent();
+                                    getGutenbergContainerFragment().replaceStoryEditedBlock(mUpdatedStoryBlockContent, blockId);
                                 } else {
                                     // TODO handle / log error here, or maybe just skip it
                                 }
@@ -474,7 +476,22 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
 
     private String calculateHashOnMediaCollectionBasedBlock(ArrayList<Object> mediaFiles) {
         Gson gson = new Gson();
+        // make sure to normalize ids to Strings as these may vary and make the hash not coincide
+        normalizeMediaFilesIds(mediaFiles);
         return StringUtils.getMd5Hash(gson.toJson(mediaFiles));
+    }
+
+    private void normalizeMediaFilesIds(ArrayList<Object> mediaFiles) {
+        // iterate through all of mediaFiles objects    and convert ids to String
+        for (Object mediaFile : mediaFiles) {
+            // this conversion is needed to strip off decimals that can come from RN when using int as
+            // string
+            if (((HashMap<String, Object>) mediaFile).get("id") instanceof Double) {
+                Double originalValue = (Double)((HashMap<String, Object>) mediaFile).get("id");
+                // now set it back to String to normalize with temporary ids
+                ((HashMap)mediaFile).put("id", String.valueOf(originalValue.longValue()));
+            }
+        }
     }
 
     private void initializeSavingProgressDialog() {
