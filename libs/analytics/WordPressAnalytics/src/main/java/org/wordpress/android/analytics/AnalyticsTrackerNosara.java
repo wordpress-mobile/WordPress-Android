@@ -480,6 +480,12 @@ public class AnalyticsTrackerNosara extends Tracker {
             case FEATURE_ANNOUNCEMENT_FIND_OUT_MORE_TAPPED:
                 predefinedEventProperties.put("button", "find_out_more");
                 break;
+            case READER_ARTICLE_COMMENTED_ON:
+                predefinedEventProperties.put("replying_to", "post");
+                break;
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
+                predefinedEventProperties.put("replying_to", "comment");
+                break;
         }
 
         final String user;
@@ -638,6 +644,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             case READER_ACCESSED:
                 return "reader_accessed";
             case READER_ARTICLE_COMMENTED_ON:
+            case READER_ARTICLE_COMMENT_REPLIED_TO:
                 return "reader_article_commented_on";
             case READER_ARTICLE_COMMENTS_OPENED:
                 return "reader_article_comments_opened";
@@ -691,6 +698,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_reader_tag_followed";
             case READER_TAG_LOADED:
                 return "reader_tag_loaded";
+            case READER_P2_SHOWN:
+                return "reader_p2_shown";
+            case READER_A8C_SHOWN:
+                return "reader_a8c_shown";
             case READER_TAG_PREVIEWED:
                 return "reader_tag_previewed";
             case READER_SEARCH_LOADED:
@@ -1662,6 +1673,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activity_log_detail_opened";
             case ACTIVITY_LOG_REWIND_STARTED:
                 return "activity_log_rewind_started";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "activitylog_filterbar_range_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_BUTTON_TAPPED:
+                return "activitylog_filterbar_type_button_tapped";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "activitylog_filterbar_select_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED:
+                return "activitylog_filterbar_select_type";
+            case ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET:
+                return "activitylog_filterbar_reset_range";
+            case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
+                return "activitylog_filterbar_reset_type";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:
@@ -1904,6 +1927,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "encrypted_logging_upload_failed";
             case READER_POST_REPORTED:
                 return "reader_post_reported";
+            case SUGGESTION_SESSION_FINISHED:
+                return "suggestion_session_finished";
             case COMMENT_APPROVED:
             case COMMENT_QUICK_ACTION_APPROVED:
                 return "comment_approved";
@@ -1933,6 +1958,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_deleted";
             case COMMENT_FOLLOW_CONVERSATION:
                 return "comment_follow_conversation";
+            case COMMENT_BATCH_APPROVED:
+                return "comment_batch_approved";
+            case COMMENT_BATCH_UNAPPROVED:
+                return "comment_batch_unapproved";
+            case COMMENT_BATCH_SPAMMED:
+                return "comment_batch_spammed";
+            case COMMENT_BATCH_TRASHED:
+                return "comment_batch_trashed";
+            case COMMENT_BATCH_DELETED:
+                return "comment_batch_deleted";
+            case COMMENT_EDITOR_OPENED:
+                return "comment_editor_opened";
         }
         return null;
     }

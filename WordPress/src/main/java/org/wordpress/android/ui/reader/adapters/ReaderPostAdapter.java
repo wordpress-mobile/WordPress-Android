@@ -319,7 +319,12 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
             } else {
                 if (isAskingToFollow) {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                        new HashMap<String, String>() { { put("tag", slugForTracking); }});
+                            new HashMap<String, String>() {
+                                {
+                                    put("tag", slugForTracking);
+                                    put("source", "unknown");
+                                }
+                            });
                 } else {
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_UNFOLLOWED,
                         new HashMap<String, String>() { { put("tag", slugForTracking); }});
@@ -352,7 +357,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         GravatarUtils.fixGravatarUrl(post.getPostAvatar(), mAvatarSzSmall));
 
         mImageManager.loadIntoCircle(holder.mImgBlavatar,
-                SiteUtils.getSiteImageType(post.isWpForTeams, BlavatarShape.CIRCULAR),
+                SiteUtils.getSiteImageType(post.isP2orA8C(), BlavatarShape.CIRCULAR),
                 GravatarUtils.fixGravatarUrl(post.getBlogImageUrl(), mAvatarSzSmall));
 
         holder.mTxtTitle.setText(ReaderXPostUtils.getXPostTitle(post));

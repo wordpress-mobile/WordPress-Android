@@ -1,11 +1,101 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-07 13:54:09+0000
+Translation-Revision-Date: 2021-01-21 18:55:54+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="label_control_upload">Charger</string>
+    <string name="jetpack_icon_content_description">icône</string>
+    <string name="backup_download_complete_info">Nous vous avons également envoyé par e-mail un lien vers votre fichier.</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Bouton Lien de partage</string>
+    <string name="backup_download_complete_download_action_button_content_description">Bouton Téléchargement</string>
+    <string name="backup_download_complete_icon_content_description">Icône de sauvegarde téléchargeable prête</string>
+    <string name="backup_download_complete_download_share_action_button">Lien de partage</string>
+    <string name="backup_download_complete_download_action_button">Téléchargement</string>
+    <string name="backup_download_complete_description_with_two_parameters">Nous avons créé une sauvegarde de votre site le %1$s %2$s.</string>
+    <string name="backup_download_complete_header">Votre sauvegarde peut désormais être téléchargée</string>
+    <string name="backup_download_complete_page_title">Votre sauvegarde</string>
+    <string name="backup_download_progress_additional_info">Pas besoin d’attendre. Nous vous informerons lorsque votre sauvegarde sera prête.</string>
+    <string name="backup_download_progress_action_button_content_description">Bouton D’accord, m’avertir</string>
+    <string name="backup_download_progress_icon_content_description">Icône de sauvegarde téléchargeable en cours de création</string>
+    <string name="backup_download_progress_action_button">D’accord, m’avertir !</string>
+    <string name="backup_download_progress_description_with_two_parameters">Nous créons une sauvegarde téléchargeable de votre site tel qu’il était le %1$s %2$s.</string>
+    <string name="backup_download_progress_header">Création d’une sauvegarde téléchargeable de votre site en cours</string>
+    <string name="backup_download_progress_page_title">Télécharger la sauvegarde</string>
+    <string name="backup_download_another_download_running">Un autre téléchargement est en cours.</string>
+    <string name="backup_download_generic_failure">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
+    <string name="backup_download_details_action_button_content_description">Créer un bouton de sauvegarde téléchargeable</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s est le point sélectionné pour créer une sauvegarde téléchargeable.</string>
+    <string name="gutenberg_native_image_link_url">URL du lien de l’image</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">partage de contenu</string>
+    <string name="suggestion_user">utilisateur</string>
+    <string name="suggestion_no_matching">« Aucun %s correspondant. »</string>
+    <string name="suggestion_problem">« Un problème est survenu lors du chargement des suggestions. »</string>
+    <string name="suggestion_none">« Aucune suggestion %s disponible. »</string>
+    <string name="suggestion_selection_needed">« Veuillez taper pour filtrer la liste de suggestions. »</string>
+    <string name="threat_get_free_estimate">Recevoir un devis gratuit</string>
+    <string name="threat_ignore">Ignorer la menace</string>
+    <string name="threat_fix">Résoudre la menace</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan résoudra la menace.</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan modifiera le fichier ou répertoire concerné.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan procédera à la mise à jour vers une version plus récente (%s).</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan supprimera le fichier ou répertoire concerné.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan remplacera le fichier ou répertoire concerné.</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan ne peut pas résoudre cette menace automatiquement.\n Nous vous conseillons de procéder à une résolution manuelle. Vérifiez que WordPress, votre thème, ainsi que toutes vos extensions sont bien à jour, puis supprimez le code, le thème ou l’extension corrompu de votre site. \n \n\n Pour obtenir de l’aide pour éliminer cette menace, nous vous recommandons &lt;b>Codeable&lt;/b>, une plateforme fiable de freelances WordPress triés sur le volet.\n Un groupe d’experts en sécurité pourra vous venir en aide sur ces projets. Les prix vont de 70 à 120 $ par heure et vous pouvez obtenir une estimation gratuite, sans obligation de contrat.</string>
+    <string name="threat_fix_current_not_fixable_header">Résolution de la menace en cours</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
+    <string name="threat_fix_fixed_header">Comment Jetpack a-t-il réparé ?</string>
+    <string name="threat_fix_default_header">Comment allons-nous y remédier ?</string>
+    <string name="threat_file_description">Menace détectée dans le fichier :</string>
+    <string name="threat_technical_details_header">Détails techniques</string>
+    <string name="threat_problem_header">Quel était le problème ?</string>
+    <string name="threat_details_icon">Icône de détails de la menace</string>
+    <string name="threat_details">Détails de la menace</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Vulnérabilité détectée dans le thème</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Vulnérabilité détectée dans l’extension</string>
+    <string name="threat_item_sub_header_file_signature">Menace détectée %s</string>
+    <string name="threat_item_sub_header_core_file">Vulnérabilité détectée dans WordPress</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Vulnérabilité diverse</string>
+    <string name="threat_item_header_vulnerable_theme">Thème vulnérable : %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">Extension vulnérable : %s (version %s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s : modèle de code malveillant</string>
+    <string name="threat_item_header_database_threat">Menaces concernant la base de données %s</string>
+    <string name="threat_item_header_infected_core_file">%s : fichier core infecté</string>
+    <string name="threat_item_header_threat_found">Menace détectée</string>
+    <string name="threats_found">Menaces détectées</string>
+    <string name="threats_fix_all">Tout corriger</string>
+    <string name="scan_in_few_seconds">en quelques secondes</string>
+    <string name="scan_in_minutes_ago">Il y a %s minutes</string>
+    <string name="scan_in_hours_ago">Il y a %s heures</string>
+    <string name="scan_this_site">ce site</string>
+    <string name="scan_idle_threats_found_description">L’analyse a trouvé %s menaces potentielles sur %s. Veuillez passer en revue les éléments ci-dessous et corriger. Nous sommes là pour vous aider si vous avez besoin de nous.</string>
+    <string name="scan_idle_last_scan_description">La dernière analyse Jetpack a eu lieu %s et tout avait l’air normal. %s</string>
+    <string name="scan_idle_manual_scan_description">Exécutez une analyse manuelle maintenant ou attendez la prochaine analyse Jetpack plus tard dans la journée.</string>
+    <string name="scan_scanning_description">Bienvenue sur Jetpack Scan. Nous réalisons actuellement un état des lieux de votre site et le résultat devrait bientôt vous parvenir.\n\n \n Nous vous enverrons une notification une fois que l’analyse sera terminée. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
+    <string name="scan_idle_threats_found_title">Votre site est peut-être menacé.</string>
+    <string name="scan_idle_no_threats_found_title">Ne vous inquiétez pas.</string>
+    <string name="scan_scanning_title">Préparation de l’analyse</string>
+    <string name="scan_again">Analyser de nouveau</string>
+    <string name="scan_now">Lancer une analyse</string>
+    <string name="scan_state_icon">Icône d’état de l’analyse</string>
+    <string name="backup">Sauvegardes</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Filtre Type d’activité (%s types sélectionnés)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (affichage de %s éléments)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Filtre Type d’activité</string>
+    <string name="activity_log_activity_type_empty_subtitle">Aucune activité n’est enregistrée dans la plage de dates sélectionnée.</string>
+    <string name="activity_log_activity_type_empty_title">Aucune activité disponible</string>
+    <string name="activity_log_activity_type_error_subtitle">Veuillez vérifier votre connexion internet et réessayer.</string>
+    <string name="activity_log_activity_type_error_title">Pas de connexion</string>
+    <string name="activity_log_activity_type_filter_active_label">Type d’activité (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">Filtre Période</string>
+    <string name="activity_log_active_filter_empty_subtitle">Essayez d’ajuster les filtres Période et Type d’activité.</string>
+    <string name="activity_log_active_filter_empty_title">Aucun événement ne correspond</string>
+    <string name="rewind">Restaurer</string>
     <string name="toast_edit_story_update_in_progress_title">La story a été enregistrée, veuillez patienter…</string>
     <string name="gutenberg_native_file_name">Nom du fichier</string>
     <string name="gutenberg_native_file_block_settings">Réglages du bloc fichier</string>
@@ -289,7 +379,6 @@ Language: fr
     <string name="gutenberg_native_gradient_type">Type de dégradé</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Touchez deux fois pour sélectionner l’option</string>
     <string name="gutenberg_native_customize_gradient">Personnaliser le dégradé</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Auteur de la page</string>
     <string name="photo_picker_use_gif">Utiliser ce GIF</string>
     <string name="error_media_thumbnail_not_loaded">La miniature n’a pas pu être chargée</string>
@@ -325,7 +414,6 @@ Language: fr
     <string name="ccpa_privacy_notice_header">Avis de confidentialité pour les utilisateurs californiens</string>
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Essayer une mise en page de démarrage</string>
     <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille du bas avec des options disponibles</string>
@@ -333,8 +421,7 @@ Language: fr
     <string name="pages_cannot_be_started">Impossible d’ouvrir des pages pour le moment. Réessayez ultérieurement.</string>
     <string name="pages_set_as_posts_page">Définir comme page d’articles</string>
     <string name="pages_set_as_homepage">Définir comme page d’accueil</string>
-    <string name="suggestion_no_matching_users">« Aucun utilisateur correspondant disponible. »</string>
-    <string name="suggestion_invalid_user">« %s n’est pas un utilisateur valide »</string>
+    <string name="suggestion_invalid">« %s n’est pas un %s valide »</string>
     <string name="site_settings_select_page">Sélectionner une page</string>
     <string name="site_settings_posts_page">Page des articles</string>
     <string name="site_settings_static_homepage">Page d’accueil statique</string>
@@ -467,6 +554,7 @@ Language: fr
     <string name="gutenberg_native_only_show_excerpt">N’afficher que l’extrait</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Mon portfolio présente des projets variés créés tout au long de ma carrière. Mes coordonnées sont plus bas. Contactez-moi !</string>
     <string name="gutenberg_native_link_to">Lier à</string>
+    <string name="gutenberg_native_link_settings">Réglages du lien</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Parlons-en ! 👋 N’hésitez pas à communiquer en utilisant les coordonnées ci-dessous ou utiliser le formulaire.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Créons quelque chose ensemble !</string>
     <string name="gutenberg_native_let_s_build_something_together">Créons quelque chose ensemble !</string>
@@ -507,7 +595,6 @@ Language: fr
     <string name="stats_management_add_new_stats_card">Ajouter une nouvelle carte de statistiques</string>
     <string name="reader_self_hosted_select_filter">Utiliser le bouton de filtre pour trouver des articles sur des sujets spécifiques</string>
     <string name="reader_bottom_sheet_content_description">Sélectionner une étiquette ou un site, fenêtre contextuelle</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Sélectionné</string>
     <string name="reader_btn_select_filter_content_description">Sélectionner un site ou une étiquette pour filtrer des articles</string>
     <string name="reader_btn_remove_filter_content_description">Supprimer le filtre actuel</string>
     <string name="reader_title_subs">Gérer les sujets et les sites</string>
@@ -584,7 +671,7 @@ Language: fr
     <string name="suffix_1_000_000_000_000">%s billion</string>
     <string name="suffix_1_000_000_000">%s milliard</string>
     <string name="suffix_1_000_000">%s million</string>
-    <string name="suffix_1_000">%s mille</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="site_cannot_be_loaded">Nous ne pouvons pas charger les données de votre site pour le moment. Réessayez ultérieurement.</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliothèque des médias WordPress</string>
@@ -1219,14 +1306,14 @@ Language: fr
     <string name="support_contact_email">E-mail de contact</string>
     <string name="application_log_button">Journal d’application</string>
     <string name="my_tickets">Mes tickets</string>
-    <string name="activity_log_rewind_dialog_message">Voulez vous vraiment faire retourner votre site en arrière de %1$s à %2$s ? Ceci va supprimer tout le contenu et les options créées ou changées depuis.</string>
-    <string name="activity_log_rewind_site">Retour en arrière du site</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Retour en arrière en cours</string>
-    <string name="activity_log_currently_restoring_message">Retour en arrière de %1$s %2$s</string>
+    <string name="activity_log_rewind_dialog_message">Confirmez-vous vouloir rétablir votre site au %1$s sur %2$s ? Cela supprimera tout le contenu et les options créés ou modifiés jusqu’à maintenant.</string>
+    <string name="activity_log_rewind_site">Rétablir le site</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Rétablissement en cours</string>
+    <string name="activity_log_currently_restoring_message">Rétablissement vers %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Restauration de votre site en cours</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Votre site a bien été restauré</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Votre site a bien été restauré\nRetour en arrière de %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Votre site a bien été rétabli\nRétabli à %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">Votre site est en cours de rétablissement\nRétablissement vers %1$s %2$s</string>
     <string name="activity_log_button">Bouton d’action de journal d’activité</string>
     <string name="plugin_auto_managed">Auto-géré</string>
     <string name="reader_save_posts_locally_dialog_message">Enregistrez cet article pour le consulter de nouveau quand vous le désirez. Il ne sera disponible que sur cet appareil. En effet, la synchronisation entre appareils n\'est pas disponible pour les articles enregistrés.</string>
@@ -1269,7 +1356,6 @@ Language: fr
     <string name="reader_btn_notifications_on">Activer les notifications de site</string>
     <string name="reader_btn_notifications_off">Désactiver les notifications de site</string>
     <string name="activity_log_jetpack_icon">Icône Jetpack</string>
-    <string name="rewind">Rembobiner</string>
     <string name="activity_log_event">Événement</string>
     <string name="activity_log_icon">Icône d\'activité</string>
     <string name="activity_log">Journal d\'activités</string>

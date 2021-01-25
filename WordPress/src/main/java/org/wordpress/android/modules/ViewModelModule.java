@@ -6,8 +6,12 @@ import androidx.lifecycle.ViewModelProvider;
 import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
-import org.wordpress.android.ui.jetpack.backup.details.BackupDownloadDetailsViewModel;
-import org.wordpress.android.ui.jetpack.backup.BackupDownloadViewModel;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
+import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel;
+import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel;
+import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel;
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
@@ -32,7 +36,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostListViewModel;
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel;
 import org.wordpress.android.ui.reader.viewmodels.SubfilterPageViewModel;
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.sitecreation.SiteCreationMainVM;
 import org.wordpress.android.ui.sitecreation.domains.SiteCreationDomainsViewModel;
 import org.wordpress.android.ui.sitecreation.previews.SitePreviewViewModel;
@@ -54,6 +57,7 @@ import org.wordpress.android.ui.stats.refresh.lists.widget.configuration.StatsWi
 import org.wordpress.android.ui.stats.refresh.lists.widget.minified.StatsMinifiedWidgetConfigureViewModel;
 import org.wordpress.android.ui.stories.StoryComposerViewModel;
 import org.wordpress.android.ui.stories.intro.StoriesIntroViewModel;
+import org.wordpress.android.ui.suggestion.SuggestionViewModel;
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementViewModel;
 import org.wordpress.android.util.config.manual.ManualFeatureConfigViewModel;
 import org.wordpress.android.viewmodel.ViewModelFactory;
@@ -422,6 +426,11 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(SuggestionViewModel.class)
+    abstract ViewModel suggestionViewModel(SuggestionViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(ActivityLogTypeFilterViewModel.class)
     abstract ViewModel activityLogTypeFilterViewModel(ActivityLogTypeFilterViewModel viewModel);
 
@@ -429,6 +438,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(ScanViewModel.class)
     abstract ViewModel scanViewModel(ScanViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ThreatDetailsViewModel.class)
+    abstract ViewModel threatDetailsViewModel(ThreatDetailsViewModel viewModel);
 
     @Binds
     @IntoMap
@@ -449,6 +463,16 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(BackupDownloadDetailsViewModel.class)
     abstract ViewModel backupDownloadDetailsViewModel(BackupDownloadDetailsViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadProgressViewModel.class)
+    abstract ViewModel backupDownloadProgressViewModel(BackupDownloadProgressViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(BackupDownloadCompleteViewModel.class)
+    abstract ViewModel backupDownloadCompleteViewModel(BackupDownloadCompleteViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

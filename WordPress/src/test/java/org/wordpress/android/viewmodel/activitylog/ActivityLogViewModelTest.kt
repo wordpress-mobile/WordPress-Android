@@ -1,6 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.core.util.Pair
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
@@ -22,17 +23,25 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_ACTIVITIES
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State.ACTIVE
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
+import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
@@ -46,12 +55,29 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Icon.DEFAUL
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Loading
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.SecondaryAction.RESTORE
+import org.wordpress.android.ui.jetpack.FetchJetpackCapabilitiesUseCase
+import org.wordpress.android.ui.stats.refresh.utils.DateUtils
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.BackupFeatureConfig
+import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ShowDateRangePicker
 import java.util.Calendar
 import java.util.Date
+
+private const val DATE_1_IN_MILLIS = 1578614400000L // 2020-01-10T00:00:00+00:00
+private const val DATE_2_IN_MILLIS = 1578787200000L // 2020-01-12T00:00:00+00:00
+
+private const val TIMEZONE_GMT_0 = "GMT+0"
+private const val ONE_DAY_WITHOUT_SECOND_IN_MILLIS = 1000 * 60 * 60 * 24 - 1000
+
+private const val SITE_ID = 1L
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -62,7 +88,11 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupFeatureConfig: BackupFeatureConfig
+    @Mock private lateinit var dateUtils: DateUtils
+    @Mock private lateinit var activityLogTracker: ActivityLogTracker
+    @Mock private lateinit var fetchJetpackCapabilitiesUseCase: FetchJetpackCapabilitiesUseCase
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
+    private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
@@ -72,6 +102,7 @@ class ActivityLogViewModelTest {
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
     private var navigationEvents:
             MutableList<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents?>> = mutableListOf()
+    private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
     private var rewindProgress = MutableLiveData<RewindProgress>()
@@ -121,6 +152,9 @@ class ActivityLogViewModelTest {
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupFeatureConfig,
+                dateUtils,
+                activityLogTracker,
+                fetchJetpackCapabilitiesUseCase,
                 Dispatchers.Unconfined
         )
         viewModel.site = site
@@ -131,7 +165,9 @@ class ActivityLogViewModelTest {
         viewModel.showSnackbarMessage.observeForever { snackbarMessages.add(it) }
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
+        viewModel.showDateRangePicker.observeForever { showDateRangePickerEvents.add(it) }
         fetchActivityLogCaptor = argumentCaptor()
+        formatDateRangeTimezoneCaptor = argumentCaptor()
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false)).thenReturn(activityLogList.toList())
@@ -139,6 +175,10 @@ class ActivityLogViewModelTest {
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
+        whenever(site.hasFreePlan).thenReturn(false)
+        whenever(site.siteId).thenReturn(SITE_ID)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(), null))
     }
 
     @Test
@@ -366,6 +406,62 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun filtersAreVisibleWhenSiteOnPaidPlan() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(false)
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreNotVisibleWhenSiteOnFreePlan() {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+
+        viewModel.start(site)
+
+        assertEquals(false, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(SITE_ID))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP), null))
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupDailyProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_DAILY), null))
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
+    fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupRealtimeProduct() = test {
+        whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(site.hasFreePlan).thenReturn(true)
+        whenever(fetchJetpackCapabilitiesUseCase.fetchJetpackCapabilities(anyLong()))
+                .thenReturn(OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null))
+
+        viewModel.start(site)
+
+        assertEquals(true, viewModel.filtersUiState.value!!.visibility)
+    }
+
+    @Test
     fun onActivityTypeFilterClickShowsActivityTypeFilter() {
         viewModel.onActivityTypeFilterClicked()
 
@@ -376,17 +472,20 @@ class ActivityLogViewModelTest {
     fun onActivityTypeFilterClickRemoteSiteIdIsPassed() {
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(RemoteId(site.siteId), viewModel.showActivityTypeFilterDialog.value!!.siteId)
+        assertEquals(RemoteId(SITE_ID), viewModel.showActivityTypeFilterDialog.value!!.siteId)
     }
 
     @Test
     fun onActivityTypeFilterClickPreviouslySelectedTypesPassed() {
-        val selectedItems = listOf(1, 4)
+        val selectedItems = listOf(
+                ActivityTypeModel("user", "User", 10),
+                ActivityTypeModel("backup", "Backup", 5)
+        )
         viewModel.onActivityTypesSelected(selectedItems)
 
         viewModel.onActivityTypeFilterClicked()
 
-        assertEquals(selectedItems, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
+        assertEquals(selectedItems.map { it.key }, viewModel.showActivityTypeFilterDialog.value!!.initialSelection)
     }
 
     @Test
@@ -401,6 +500,172 @@ class ActivityLogViewModelTest {
         viewModel.onSecondaryActionClicked(DOWNLOAD_BACKUP, event)
 
         Assertions.assertThat(navigationEvents.last().peekContent()).isInstanceOf(ShowBackupDownload::class.java)
+    }
+
+    @Test
+    fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        val dateRange = Pair(10L, 20L)
+
+        viewModel.onDateRangeSelected(dateRange)
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action != null).isTrue
+    }
+
+    @Test
+    fun dateRangeFilterClearActionHiddenWhenFilterEmpty() {
+        viewModel.onDateRangeSelected(null)
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun onDateRangeFilterClearActionClickClearActionDisappears() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked!!.invoke()
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearDateRangeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun basicDateRangeLabelShownWhenFilterEmpty() {
+        viewModel.onDateRangeSelected(null)
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+                .isEqualTo(UiStringRes(R.string.activity_log_date_range_filter_label))
+    }
+
+    @Test
+    fun dateRangeLabelWithDatesShownWhenFilterNotEmpty() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
+                .isEqualTo(UiStringText("TEST"))
+    }
+
+    @Test
+    fun dateRangeLabelFormattingUsesGMT0Timezone() {
+        whenever(
+                dateUtils.formatDateRange(
+                        anyOrNull(),
+                        anyOrNull(),
+                        formatDateRangeTimezoneCaptor.capture()
+                )
+        ).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(10L, 20L))
+
+        Assertions.assertThat(formatDateRangeTimezoneCaptor.firstValue)
+                .isEqualTo(TIMEZONE_GMT_0)
+    }
+
+    @Test
+    fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
+        whenever(
+                dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())
+        ).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
+        viewModel.dateRangePickerClicked()
+
+        Assertions.assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
+                Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS)
+        )
+    }
+
+    @Test
+    fun activityTypeFilterClearActionShownWhenFilterNotEmpty() {
+        viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action != null).isTrue
+    }
+
+    @Test
+    fun activityTypeFilterClearActionHiddenWhenFilterEmpty() {
+        viewModel.onActivityTypesSelected(listOf())
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun onActivityTypeFilterClearActionClickClearActionDisappears() {
+        viewModel.onActivityTypesSelected(
+                listOf(ActivityTypeModel("user", "User", 10))
+        )
+
+        (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
+
+        val action = (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked
+        Assertions.assertThat(action == null).isTrue
+    }
+
+    @Test
+    fun basicActivityTypeLabelShownWhenFilterEmpty() {
+        viewModel.onActivityTypesSelected(listOf())
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(UiStringRes(R.string.activity_log_activity_type_filter_label))
+    }
+
+    @Test
+    fun activityTypeLabelWithNameShownWhenFilterHasOneItem() {
+        val activityTypeName = "Backups and Restores"
+        val activityTypeCount = 5
+        viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("backup", activityTypeName, activityTypeCount)))
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(UiStringText("$activityTypeName ($activityTypeCount)"))
+    }
+
+    @Test
+    fun activityTypeLabelWithCountShownWhenFilterHasMoreThanOneItem() {
+        viewModel.onActivityTypesSelected(
+                listOf(
+                        ActivityTypeModel("user", "User", 10),
+                        ActivityTypeModel("backup", "Backup", 5)
+                )
+        )
+
+        Assertions.assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
+                .isEqualTo(
+                        UiStringResWithParams(
+                                R.string.activity_log_activity_type_filter_active_label,
+                                listOf(UiStringText("2"))
+                        )
+                )
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenFiltersAreEmpty() {
+        viewModel.onClearDateRangeFilterClicked()
+        viewModel.onClearActivityTypeFilterClicked()
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.EmptyFilters)
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenDateRangeFilterSet() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+
+        viewModel.onDateRangeSelected(Pair(1L, 2L))
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
+    }
+
+    @Test
+    fun verifyEmptyScreenTextsWhenActivityTypeFilterSet() {
+        viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
+
+        Assertions.assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.ActiveFilters)
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {

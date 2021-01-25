@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.util.Pair
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.datepicker.CalendarConstraints
+import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.activity_log_list_activity.*
 import kotlinx.android.synthetic.main.activity_log_list_fragment.*
 import kotlinx.android.synthetic.main.activity_log_list_loading_item.*
 import org.wordpress.android.R
@@ -37,6 +39,7 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
+private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
 
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -83,12 +86,15 @@ class ActivityLogListFragment : Fragment() {
             }
         })
 
-        activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
-        date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
-
         setupObservers()
 
         viewModel.start(site)
+    }
+
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        requireActivity().activity_type_filter.setOnClickListener { viewModel.onActivityTypeFilterClicked() }
+        requireActivity().date_range_picker.setOnClickListener { viewModel.dateRangePickerClicked() }
     }
 
     override fun onViewStateRestored(savedInstanceState: Bundle?) {
@@ -113,57 +119,70 @@ class ActivityLogListFragment : Fragment() {
     }
 
     private fun setupObservers() {
-        viewModel.events.observe(viewLifecycleOwner, Observer {
+        viewModel.events.observe(viewLifecycleOwner, {
             reloadEvents(it ?: emptyList())
         })
 
-        viewModel.eventListStatus.observe(viewLifecycleOwner, Observer { listStatus ->
+        viewModel.eventListStatus.observe(viewLifecycleOwner, { listStatus ->
             refreshProgressBars(listStatus)
         })
 
-        viewModel.filtersUiState.observe(viewLifecycleOwner, Observer { uiState ->
-            uiHelpers.updateVisibility(filters_bar, uiState.visibility)
-            if (uiState is FiltersShown) {
-                date_range_picker.text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
-                activity_type_filter.text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
-            }
+        viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
+            uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
+            uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
+            if (uiState is FiltersShown) { updateFilters(uiState) }
         })
 
-        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, Observer { event ->
-            showActivityTypeFilterDialog(event.siteId, event.initialSelection)
+        viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
+            actionable_empty_view.title.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    emptyState.emptyScreenTitle
+            )
+            actionable_empty_view.subtitle.text = uiHelpers.getTextOfUiString(
+                    requireContext(),
+                    emptyState.emptyScreenSubtitle
+            )
         })
 
-        viewModel.showDateRangePicker.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.showActivityTypeFilterDialog.observe(viewLifecycleOwner, { event ->
+            showActivityTypeFilterDialog(event.siteId, event.initialSelection, event.dateRange)
+        })
+
+        viewModel.showDateRangePicker.observe(viewLifecycleOwner, { event ->
             showDateRangePicker(event.initialSelection)
         })
 
-        viewModel.showItemDetail.observe(viewLifecycleOwner, Observer {
+        viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
             }
         })
 
-        viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer {
+        viewModel.showRewindDialog.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
                 displayRewindDialog(it)
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { message ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { message ->
             val parent: View? = activity?.findViewById(android.R.id.content)
             if (message != null && parent != null) {
                 WPSnackbar.make(parent, message, Snackbar.LENGTH_LONG).show()
             }
         })
 
-        viewModel.moveToTop.observe(this, Observer {
+        viewModel.moveToTop.observe(this, {
             log_list_view.scrollToPosition(0)
         })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+        viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 when (this) {
-                    is ShowBackupDownload -> ActivityLauncher.showBackupDownload(requireActivity())
+                    is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            event.activityId,
+                            BACKUP_DOWNLOAD_REQUEST_CODE)
                     // todo: annmarie replace with the ActivityLauncher for showing restore details
                     is ShowRestore -> displayRewindDialog(event) }
                 }
@@ -185,6 +204,13 @@ class ActivityLogListFragment : Fragment() {
     private fun showDateRangePicker(initialDateRange: DateRange?) {
         val picker = MaterialDatePicker.Builder
                 .dateRangePicker()
+                .setTheme(R.style.WordPress_MaterialCalendarFullscreenTheme)
+                .setCalendarConstraints(
+                        CalendarConstraints.Builder()
+                                .setValidator(DateValidatorPointBackward.now())
+                                .setEnd(MaterialDatePicker.todayInUtcMilliseconds())
+                                .build()
+                )
                 .setSelection(initialDateRange)
                 .build()
         initDateRangePickerButtonClickListener(picker)
@@ -195,9 +221,30 @@ class ActivityLogListFragment : Fragment() {
         picker.addOnPositiveButtonClickListener { viewModel.onDateRangeSelected(it) }
     }
 
-    private fun showActivityTypeFilterDialog(remoteSiteId: RemoteId, initialSelection: List<Int>) {
-        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection)
+    private fun showActivityTypeFilterDialog(
+        remoteSiteId: RemoteId,
+        initialSelection: List<String>,
+        dateRange: DateRange?
+    ) {
+        ActivityLogTypeFilterFragment.newInstance(remoteSiteId, initialSelection, dateRange)
                 .show(childFragmentManager, ACTIVITY_TYPE_FILTER_TAG)
+    }
+
+    private fun updateFilters(uiState: FiltersShown) {
+        with(requireActivity().date_range_picker) {
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabel)
+            contentDescription = uiHelpers.getTextOfUiString(requireContext(), uiState.dateRangeLabelContentDescription)
+            isCloseIconVisible = uiState.onClearDateRangeFilterClicked != null
+            setOnCloseIconClickListener { uiState.onClearDateRangeFilterClicked?.invoke() }
+        }
+
+        with(requireActivity().activity_type_filter) {
+            text = uiHelpers.getTextOfUiString(requireContext(), uiState.activityTypeLabel)
+            contentDescription = uiHelpers
+                    .getTextOfUiString(requireContext(), uiState.activityTypeLabelContentDescription)
+            isCloseIconVisible = uiState.onClearActivityTypeFilterClicked != null
+            setOnCloseIconClickListener { uiState.onClearActivityTypeFilterClicked?.invoke() }
+        }
     }
 
     private fun refreshProgressBars(eventListStatus: ActivityLogViewModel.ActivityLogListStatus?) {

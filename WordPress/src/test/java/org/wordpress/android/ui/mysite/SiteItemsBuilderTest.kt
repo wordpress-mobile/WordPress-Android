@@ -54,6 +54,7 @@ class SiteItemsBuilderTest {
                 addShareItem = true,
                 addSiteSettingsItem = true,
                 addThemesItem = true,
+                addBackupItem = true,
                 addScanItem = true
         )
 
@@ -64,12 +65,13 @@ class SiteItemsBuilderTest {
                 JETPACK_HEADER,
                 STATS_ITEM,
                 ACTIVITY_ITEM,
+                BACKUP_ITEM,
                 SCAN_ITEM,
                 JETPACK_ITEM,
                 PUBLISH_HEADER,
-                PAGES_ITEM,
                 POSTS_ITEM,
                 MEDIA_ITEM,
+                PAGES_ITEM,
                 COMMENTS_ITEM,
                 LOOK_AND_FEEL_HEADER,
                 THEMES_ITEM,
@@ -98,6 +100,7 @@ class SiteItemsBuilderTest {
         addShareItem: Boolean = false,
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
+        addBackupItem: Boolean = false,
         addScanItem: Boolean = false
     ) {
         if (addJetpackHeader) {
@@ -128,6 +131,11 @@ class SiteItemsBuilderTest {
         if (addActivityLogItem) {
             whenever(siteListItemBuilder.buildActivityLogItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
                     ACTIVITY_ITEM
+            )
+        }
+        if (addBackupItem) {
+            whenever(siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION)).thenReturn(
+                    BACKUP_ITEM
             )
         }
         if (addScanItem) {

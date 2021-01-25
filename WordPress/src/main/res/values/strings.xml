@@ -937,7 +937,7 @@
 
     <!-- Number suffixes -->
     <string name="negative_prefix">-%s</string>
-    <string name="suffix_1_000">%sk</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000_000_000">%sT</string>
@@ -1012,31 +1012,108 @@
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
-    <string name="rewind">Rewind</string>
+    <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_title">No activity yet</string>
     <string name="activity_log_empty_subtitle">When you make changes to your site you\'ll be able to see your activity history here</string>
-    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRewinding to %1$s %2$s</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRewound to %1$s %2$s</string>
+    <string name="activity_log_active_filter_empty_title">No matching events found</string>
+    <string name="activity_log_active_filter_empty_subtitle">Try adjusting your date range or activity type filters</string>
+    <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
+    <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
-    <string name="activity_log_currently_restoring_message">Rewinding to %1$s %2$s</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rewind in progress</string>
-    <string name="activity_log_rewind_site">Rewind Site</string>
-    <string name="activity_log_rewind_dialog_message">Are you sure you want to rewind your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
+    <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
+    <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
+    <string name="activity_log_rewind_site">Restore Site</string>
+    <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
     <string name="activity_log_activity_type_filter_header">Filter by Activity Type</string>
     <string name="activity_log_activity_type_filter_apply">Apply</string>
     <string name="activity_log_activity_type_filter_clear">Clear</string>
-    <string name="activity_log_date_range_filter_label">Date range</string>
-    <string name="activity_log_activity_type_filter_label">Activity type</string>
+    <string name="activity_log_date_range_filter_label">Date Range</string>
+    <string name="activity_log_date_range_filter_label_content_description">Date Range filter</string>
+    <string name="activity_log_activity_type_filter_label">Activity Type</string>
+    <string name="activity_log_activity_type_filter_active_label">Activity Type (%s)</string>
+    <string name="activity_log_activity_type_error_title">No connection</string>
+    <string name="activity_log_activity_type_error_subtitle">Please check your internet connection and retry.</string>
+    <string name="activity_log_activity_type_empty_title">No activities available</string>
+    <string name="activity_log_activity_type_empty_subtitle">No activities recorded in the selected date range.</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Activity Type filter</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (showing %s items)</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Activity Type filter (%s types selected)</string>
+
     <!-- activity log list popup menu -->
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- backup -->
+    <string name="backup">Backup</string>
+
     <!-- scan -->
     <string name="scan">Scan</string>
+
+    <string name="scan_state_icon">Scan state icon</string>
+    <string name="scan_now">Scan now</string>
+    <string name="scan_again">Scan again</string>
+    <string name="scan_scanning_title">Preparing to scan</string>
+    <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
+    <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
+        \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
+    <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
+    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_this_site">this site</string>
+    <string name="scan_in_hours_ago">%s hours ago</string>
+    <string name="scan_in_minutes_ago">%s minutes ago</string>
+    <string name="scan_in_few_seconds">in a few seconds</string>
+
+    <!-- threats -->
+    <string name="threats_fix_all">Fix all</string>
+    <string name="threats_found">Threats found</string>
+
+    <!-- threat item header -->
+    <string name="threat_item_header_threat_found">Threat found</string>
+    <string name="threat_item_header_infected_core_file">%s: infected core file</string>
+    <string name="threat_item_header_database_threat">Database %s threats</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: malicious code pattern</string>
+    <string name="threat_item_header_vulnerable_plugin">Vulnerable Plugin: %s (version %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Vulnerable Theme: %s (version %s)</string>
+
+    <!-- threat item sub header -->
+    <string name="threat_item_sub_header_misc_vulnerability">Miscellaneous vulnerability</string>
+    <string name="threat_item_sub_header_core_file">Vulnerability found in WordPress</string>
+    <string name="threat_item_sub_header_file_signature">Threat found %s</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
+    <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
+
+    <!-- threat details -->
+    <string name="threat_details">Threat Details</string>
+    <string name="threat_details_icon">Threat details icon</string>
+    <string name="threat_problem_header">What was the problem?</string>
+    <string name="threat_technical_details_header">The technical details</string>
+    <string name="threat_file_description">Threat found in file:</string>
+    <!-- threat fix -->
+    <string name="threat_fix_default_header">How will we fix it?</string>
+    <string name="threat_fix_fixed_header">How did Jetpack fix it?</string>
+    <string name="threat_fix_current_fixable_header">@string/threat_fix_default_header</string>
+    <string name="threat_fix_current_not_fixable_header">Resolving the threat</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan cannot automatically fix this threat.
+        We suggest that you resolve the threat manually: ensure that WordPress, your theme, and all of your plugins are up to date, and remove the offending code, theme, or plugin from your site. \n \n
+        If you need more help to resolve this threat, we recommend &lt;b&gt;Codeable&lt;/b&gt;, a trusted freelancer marketplace of highly vetted WordPress experts.
+        They have identified a select group of security experts to help with these projects. Pricing ranges from $70–120/hour, and you can get a free estimate with no obligation to hire.
+    </string>
+    <!-- threat fixable -->
+    <string name="threat_fix_fixable_replace">Jetpack Scan will replace the affected file or directory.</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan will delete the affected file or directory.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan will update to a newer version (%s).</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan will edit the affected file or directory.</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan will resolve the threat.</string>
+    <!-- threat button labels -->
+    <string name="threat_fix">Fix threat</string>
+    <string name="threat_ignore">Ignore threat</string>
+    <string name="threat_get_free_estimate">Get a free estimate</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -1759,7 +1836,6 @@
     <!-- accessibility content desciptions -->
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Selected</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
     <string name="reader_choose_interests_content_description">Choose your interests</string>
 
@@ -2332,9 +2408,14 @@
     <string name="edit">Edit</string>
     <string name="tap_to_try_again">Tap to try again!</string>
     <string name="add_media_progress">Adding media</string>
-    <string name="suggestion_invalid_user">"%s is not a valid user"</string>
-    <string name="suggestion_no_matching_users">"No matching users available."</string>
+    <string name="suggestion_invalid">"%s is not a valid %s"</string>
+    <string name="suggestion_selection_needed">"Please type to filter the list of suggestions."</string>
+    <string name="suggestion_none">"No %s suggestions available."</string>
+    <string name="suggestion_problem">"There was a problem loading suggestions."</string>
+    <string name="suggestion_no_matching">"No matching %s."</string>
     <string name="suggestion_no_connection">"No internet connection.\nSuggestions are unavailable."</string>
+    <string name="suggestion_user">user</string>
+    <string name="suggestion_xpost">crosspost</string>
 
     <string name="stop_upload_dialog_title">Stop uploading?</string>
 
@@ -2782,8 +2863,9 @@
     <string name="pages_and_posts_cancel_auto_upload">Cancel upload</string>
     <string name="pages_list_author">Page author</string>
     <string name="pages_cannot_be_started">We cannot open pages at the moment. Please try again later</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
 
     <string name="page_status_pending_review" translatable="false">@string/post_status_pending_review</string>
     <string name="page_status_page_private" translatable="false">@string/post_status_post_private</string>
@@ -3154,6 +3236,7 @@ translators: sample content for "Team" page template -->
     <string name="gutenberg_native_hide_keyboard" tools:ignore="UnusedResources">Hide keyboard</string>
     <!-- translators: accessibility text. %s: image caption. -->
     <string name="gutenberg_native_image_caption_s" tools:ignore="UnusedResources">Image caption. %s</string>
+    <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
     <!-- translators: sample content for "Services" page template -->
     <string name="gutenberg_native_inspiration" tools:ignore="UnusedResources">Inspiration</string>
     <!-- translators: sample content for "About" page template -->
@@ -3169,6 +3252,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3" tools:ignore="UnusedResources">Let\'s build something together!</string>
     <!-- translators: sample content for "Contact" page template -->
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati" tools:ignore="UnusedResources">Let\'s talk 👋 Don\'t hesitate to reach out with the contact information below, or send a message using the form.</string>
+    <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
@@ -3176,6 +3260,7 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Move block left</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block left from position %1$s to position %2$s</string>
+    <string name="gutenberg_native_move_block_position" tools:ignore="UnusedResources">Move block position</string>
     <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Move block right</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block right from position %1$s to position %2$s</string>
@@ -3184,6 +3269,8 @@ translators: sample content for "Services" page template -->
     <string name="gutenberg_native_move_block_up_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block up from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_image_backward" tools:ignore="UnusedResources">Move Image Backward</string>
     <string name="gutenberg_native_move_image_forward" tools:ignore="UnusedResources">Move Image Forward</string>
+    <string name="gutenberg_native_move_to_bottom" tools:ignore="UnusedResources">Move to bottom</string>
+    <string name="gutenberg_native_move_to_top" tools:ignore="UnusedResources">Move to top</string>
     <string name="gutenberg_native_my_document_setting_panel" tools:ignore="UnusedResources">My Document Setting Panel</string>
     <!-- translators: sample content for "Portfolio" page template -->
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car" tools:ignore="UnusedResources">My portfolio showcases various projects created throughout my career. See my contact information below and get in touch.</string>
@@ -3313,10 +3400,22 @@ translators: sample content for "Services" page template -->
     <string name="backup_download">Backup Download</string>
     <string name="backup_download_details_page_title">Download Backup</string>
     <string name="backup_download_details_header">Create downloadable backup</string>
-    <string name="backup_download_details_description">%1$s is the selected point to create a downloadable backup.</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
     <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
+    <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
+    <string name="backup_download_generic_failure">There was a problem handling the request. Please try again later.</string>
+    <string name="backup_download_another_download_running">There is another download running.</string>
+
+    <string name="backup_download_progress_page_title">Download Backup</string>
+    <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
+    <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
+    <string name="backup_download_progress_action_button">OK, notify me!</string>
+    <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
+    <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
+    <string name="backup_download_progress_additional_info">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
@@ -3324,4 +3423,18 @@ translators: sample content for "Services" page template -->
     <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
     <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
     <string name="backup_item_sqls">Site database (SQL)</string>
+
+    <string name="backup_download_complete_page_title">Your Backup</string>
+    <string name="backup_download_complete_header">Your backup is now available for download</string>
+    <string name="backup_download_complete_description_with_two_parameters">We successfully created a backup of your site from %1$s %2$s.</string>
+    <string name="backup_download_complete_download_action_button">Download</string>
+    <string name="backup_download_complete_download_share_action_button">Share link</string>
+    <string name="backup_download_complete_icon_content_description">Downloadable backup ready icon</string>
+    <string name="backup_download_complete_download_action_button_content_description">Download button</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Share link button</string>
+    <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
+
+    <string name="jetpack_icon_content_description">icon</string>
+    <string name="label_control_upload">Upload</string>
+
 </resources>

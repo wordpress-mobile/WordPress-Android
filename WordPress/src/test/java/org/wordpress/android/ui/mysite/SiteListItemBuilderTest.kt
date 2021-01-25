@@ -14,12 +14,14 @@ import org.wordpress.android.ui.plugins.PluginUtilsWrapper
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
 import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
+import org.wordpress.android.util.config.BackupsFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
 class SiteListItemBuilderTest {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var pluginUtilsWrapper: PluginUtilsWrapper
     @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Mock lateinit var backupsFeatureConfig: BackupsFeatureConfig
     @Mock lateinit var scanFeatureConfig: ScanFeatureConfig
     @Mock lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Mock lateinit var siteModel: SiteModel
@@ -31,6 +33,7 @@ class SiteListItemBuilderTest {
                 accountStore,
                 pluginUtilsWrapper,
                 siteUtilsWrapper,
+                backupsFeatureConfig,
                 scanFeatureConfig,
                 themeBrowserUtils
         )
@@ -104,10 +107,30 @@ class SiteListItemBuilderTest {
     }
 
     @Test
-    fun `scan item built if scan feature config enabled`() {
+    fun `backup item built if backups feature config enabled & backups feature is available`() {
+        val isBackupsAvailable = true
+        whenever(backupsFeatureConfig.isEnabled()).thenReturn(true)
+
+        val item = siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION, isBackupsAvailable)
+
+        assertThat(item).isEqualTo(BACKUP_ITEM)
+    }
+
+    @Test
+    fun `backup item not built if backups feature config not enabled`() {
+        whenever(backupsFeatureConfig.isEnabled()).thenReturn(false)
+
+        val item = siteListItemBuilder.buildBackupItemIfAvailable(SITE_ITEM_ACTION)
+
+        assertThat(item).isNull()
+    }
+
+    @Test
+    fun `scan item built if scan feature config enabled & scan feature is available`() {
+        val isScanAvailable = true
         whenever(scanFeatureConfig.isEnabled()).thenReturn(true)
 
-        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildScanItemIfAvailable(SITE_ITEM_ACTION, isScanAvailable)
 
         assertThat(item).isEqualTo(SCAN_ITEM)
     }

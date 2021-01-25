@@ -40,6 +40,7 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
     ): View? {
         val layout = inflater.inflate(R.layout.comment_dialog_fragment, container, false) as ViewGroup
         reply = layout.findViewById(R.id.edit_comment_expand)
+        reply.initializeWithPrefix('@')
         reply.requestFocus()
         reply.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence, start: Int, count: Int, after: Int) {}
@@ -85,13 +86,11 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
                 activity,
                 site.siteId
         )
-        val suggestionAdapter = SuggestionUtils.setupSuggestions(
-                site, activity,
+        val suggestionAdapter = SuggestionUtils.setupUserSuggestions(
+                site, requireActivity(),
                 suggestionServiceConnectionManager
         )
-        if (suggestionAdapter != null) {
-            this.reply.setAdapter(suggestionAdapter)
-        }
+        this.reply.setAdapter(suggestionAdapter)
     }
 
     override fun onCollapseClicked(controller: CollapseFullScreenDialogController): Boolean {

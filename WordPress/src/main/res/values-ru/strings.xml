@@ -1,11 +1,104 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-30 18:31:47+0000
+Translation-Revision-Date: 2021-01-20 10:08:41+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">Сдвинуть вниз</string>
+    <string name="gutenberg_native_move_block_position">Переместить блок</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">Кнопка поделиться ссылкой</string>
+    <string name="backup_download_complete_info">Мы также отправили вам ссылку на файл по email.</string>
+    <string name="jetpack_icon_content_description">значок</string>
+    <string name="label_control_upload">Загрузка</string>
+    <string name="backup_download_complete_header">Резервная копия доступна для скачивания</string>
+    <string name="backup_download_complete_description_with_two_parameters">Резервная копия вашего сайта на %1$s %2$s создана.</string>
+    <string name="backup_download_complete_download_action_button">Скачать</string>
+    <string name="backup_download_complete_download_share_action_button">Поделиться ссылкой</string>
+    <string name="backup_download_complete_icon_content_description">Значок готовой к скачиванию резервной копии</string>
+    <string name="backup_download_complete_download_action_button_content_description">Кнопка «Скачать»</string>
+    <string name="backup_download_progress_header">Идёт создание скачиваемой резервной копии вашего сайта</string>
+    <string name="backup_download_progress_description_with_two_parameters">Создается резервная копия вашего сайта на %1$s %2$s.</string>
+    <string name="backup_download_progress_action_button">ОК, уведомите меня!</string>
+    <string name="backup_download_progress_icon_content_description">Создание значка скачиваемой резервной копии</string>
+    <string name="backup_download_progress_action_button_content_description">Кнопка \"уведомите меня\"</string>
+    <string name="backup_download_progress_additional_info">Не обязательно ждать. Мы уведомим вас о готовности резервной копии</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_complete_page_title">Резервная копия</string>
+    <string name="backup_download_details_description_with_two_parameters">%1$s %2$s - выбранная точка создания резервной копии для скачивания.</string>
+    <string name="backup_download_details_action_button_content_description">Кнопка создания скачиваемой резервной копии</string>
+    <string name="backup_download_generic_failure">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
+    <string name="backup_download_another_download_running">Сейчас активно другое скачивание.</string>
+    <string name="backup_download_progress_page_title">Скачать резервную копию</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="gutenberg_native_image_link_url">Ссылка изображения</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="threat_fix_fixable_delete">Jetpack Scan удалит затронутый файл или папку.</string>
+    <string name="threat_fix_fixable_update">Jetpack Scan обновится до последней версии (%s).</string>
+    <string name="threat_fix_fixable_edit">Jetpack Scan изменит затронутый файл или папку.</string>
+    <string name="threat_fix_fixable_default">Jetpack Scan устранит угрозу.</string>
+    <string name="threat_fix">Устранить угрозу</string>
+    <string name="threat_ignore">Игнорировать угрозу</string>
+    <string name="threat_get_free_estimate">Получить оценку</string>
+    <string name="suggestion_selection_needed">\"Введите что-либо для использования фильтра предложений.\"</string>
+    <string name="suggestion_none">\"Нет предложения для %s.\"</string>
+    <string name="suggestion_problem">\"Ошибка загрузки предложений.\"</string>
+    <string name="suggestion_no_matching">\"Нет подходящих %s.\"</string>
+    <string name="suggestion_user">пользователь</string>
+    <string name="suggestion_xpost">кросспост</string>
+    <string name="threat_fix_current_not_fixable_description">Jetpack Scan не может автоматически устранить эту угрозу.\nМы предлагаем вам устранить угрозу вручную: убедитесь, что WordPress, ваша тема и все ваши плагины обновлены, и удалите вредоносный код, тему или плагин со своего сайта.\n\n\nЕсли вам нужна дополнительная помощь в устранении этой угрозы, мы рекомендуем &lt;b>Codeable&lt;/b>, надежную торговую площадку для фрилансеров, состоящую из проверенных экспертов WordPress.\nОни определили избранную группу экспертов по безопасности для помощи в этих проектах. Цены варьируются от 70 до 120 долларов в час, и вы можете получить бесплатную оценку без каких-либо обязательств по найму.</string>
+    <string name="threat_fix_fixable_replace">Jetpack Scan заменит затронутый файл или папку.</string>
+    <string name="threat_details_icon">Значок подробностей угрозы</string>
+    <string name="threat_problem_header">В чем была проблема?</string>
+    <string name="threat_technical_details_header">Технические сведения</string>
+    <string name="threat_file_description">Угроза обнаружена в файле:</string>
+    <string name="threat_fix_default_header">Как мы это исправим?</string>
+    <string name="threat_fix_fixed_header">Как Jetpack исправил это?</string>
+    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
+    <string name="threat_fix_current_not_fixable_header">Устранение угрозы</string>
+    <string name="threat_item_header_database_threat">Угроза базы данных %s</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: шаблон вредоносного кода</string>
+    <string name="threat_item_header_vulnerable_plugin">Уязвимый плагин: %s (версия %s)</string>
+    <string name="threat_item_header_vulnerable_theme">Уязвимая тема: %s (версия %s)</string>
+    <string name="threat_item_sub_header_misc_vulnerability">Прочие уязвимости</string>
+    <string name="threat_item_sub_header_core_file">В WordPress обнаружена уязвимость</string>
+    <string name="threat_item_sub_header_file_signature">Обнаружена угроза %s</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">В плагине обнаружена уязвимость</string>
+    <string name="threat_item_sub_header_vulnerable_theme">В теме обнаружена уязвимость</string>
+    <string name="threat_details">Подробности об угрозе</string>
+    <string name="scan_scanning_description">Добро пожаловать в Jetpack Scan! Мы сейчас взглянем на ваш сайт, и вскоре вы получите результат.\n\n\nПосле завершения сканирования мы отправим вам уведомление. А пока не стесняйтесь продолжать использовать свой сайт в обычном режиме. вы можете проверить прогресс в любое время.</string>
+    <string name="scan_idle_manual_scan_description">Запустите проверку вручную или подождите пока Jetpack просканирует ваш сайт позже сегодня.</string>
+    <string name="scan_idle_last_scan_description">Последняя проверка Jetpack была %s и всё выглядело замечательно, %s</string>
+    <string name="scan_idle_threats_found_description">При проверке найдены %s потенциальные угрозы на %s. Просмотрите их и предпримите действия по устранению.</string>
+    <string name="scan_this_site">этот сайт</string>
+    <string name="scan_in_hours_ago">%s часов назад</string>
+    <string name="scan_in_minutes_ago">%s минут(ы) назад</string>
+    <string name="scan_in_few_seconds">несколько секунд</string>
+    <string name="threats_fix_all">Устранить все</string>
+    <string name="threats_found">Обнаружены угрозы</string>
+    <string name="threat_item_header_threat_found">Обнаружена угроза</string>
+    <string name="threat_item_header_infected_core_file">%s: заражены файлы ядра</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Фильтр типа активности (выбрано %s типов)</string>
+    <string name="backup">Резервные копии</string>
+    <string name="scan_state_icon">Значок состояния проверки</string>
+    <string name="scan_now">Проверить сейчас</string>
+    <string name="scan_again">Повтор проверки</string>
+    <string name="scan_scanning_title">Подготовка проверки</string>
+    <string name="scan_idle_no_threats_found_title">Ни о чем не волнуйтесь</string>
+    <string name="scan_idle_threats_found_title">Ваш сайт может быть под угрозой</string>
+    <string name="activity_log_activity_type_error_subtitle">Проверьте подключение к Интернету и повторите попытку.</string>
+    <string name="activity_log_activity_type_empty_title">Пока нет активности</string>
+    <string name="activity_log_activity_type_empty_subtitle">Нет зарегистрированных действий в выбранном диапазоне дат.</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">Фильтр типа активности</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (показ %s элементов)</string>
+    <string name="activity_log_date_range_filter_label_content_description">Фильтр диапазона дат</string>
+    <string name="activity_log_activity_type_filter_active_label">Тип активности (%s)</string>
+    <string name="activity_log_activity_type_error_title">Нет подключения</string>
+    <string name="activity_log_active_filter_empty_title">Соответствующие события не найдены</string>
+    <string name="activity_log_active_filter_empty_subtitle">Попробуйте настроить диапазон дат или фильтры по типу активности</string>
+    <string name="rewind">Восстановление</string>
     <string name="backup_item_themes">Темы WordPress</string>
     <string name="backup_item_plugins">Плагины WordPress</string>
     <string name="backup_item_media_uploads">Загруженные медиафайлы</string>
@@ -22,7 +115,6 @@ Language: ru
     <string name="backup_download">Скачивание резервной копии</string>
     <string name="backup_download_details_page_title">Скачать резервную копию</string>
     <string name="backup_download_details_header">Создать резервную копию для скачивания</string>
-    <string name="backup_download_details_description">%1$s - выбранная точка создания резервной копии для скачивания.</string>
     <string name="backup_download_details_choose_items_header">Выберите элементы, которые нужно включить для скачивания:</string>
     <string name="backup_download_details_action_button">Создать скачиваемый файл</string>
     <string name="button_copy">Дублировать</string>
@@ -309,7 +401,6 @@ Language: ru
     <string name="reader_title_tag_preview">Тема</string>
     <string name="my_site_title_changer_dialog_hint">Название сайта отображается в заголовке браузера и отображается большинством тем в заголовке сайта.</string>
     <string name="gutenberg_native_open_link_in_a_browser">Открыть ссылку в браузере</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="gutenberg_native_customize_gradient">Настройка градиента</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Нажмите дважды для выбора</string>
     <string name="gutenberg_native_gradient_type">Тип градиента</string>
@@ -350,9 +441,9 @@ Language: ru
     <string name="update_now">Обновить сейчас</string>
     <string name="status_and_visibility">Статус и видимость</string>
     <string name="ccpa_privacy_notice_header">Уведомление о конфиденциальности для жителей Калифорнии</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
     <string name="gutenberg_native_try_a_starter_layout">Попробуйте стартовый макет</string>
     <string name="gutenberg_native_open_block_actions_menu">Открыть меню действий с блоком</string>
+    <string name="gutenberg_native_move_to_top">Сдвинуть наверх</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Нажмите дважды для того, чтобы открыть панель действий со всеми доступными возможностями</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Нажмите дважды для того, чтобы открыть нижнюю панель действий с доступными возможностями</string>
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Выбранная главная страница и страница записей не могут быть однаковыми.</string>
@@ -360,11 +451,10 @@ Language: ru
     <string name="site_settings_static_homepage">Статическая главная страница</string>
     <string name="site_settings_posts_page">Страница записей</string>
     <string name="site_settings_select_page">Выберите страницу</string>
-    <string name="suggestion_invalid_user">\"%s не является действительным пользователем\"</string>
-    <string name="suggestion_no_matching_users">\"Нет подходящих пользователей.\"</string>
     <string name="pages_set_as_homepage">Установить в качестве главной страницы</string>
     <string name="pages_set_as_posts_page">Выбрать в качестве страницы записей</string>
     <string name="pages_cannot_be_started">Невозможно открыть страницы в данный момент. Пожалуйста, попробуйте позже.</string>
+    <string name="suggestion_invalid">\"%s не является действительным %s\"</string>
     <string name="site_settings_homepage_settings">Настройки главной страницы</string>
     <string name="site_settings_homepage_settings_description">Выберите в качестве главной страницы страницу последних записей (классический блог) или фиксированную (статическую) страницу.</string>
     <string name="site_settings_failed_to_load_pages">Загрузка страниц не удалась</string>
@@ -493,6 +583,7 @@ Language: ru
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Мое портфолио демонстрирует различные проекты созданные в течении моей карьеры. Информация для договора представлена ниже, свяжитесь со мной.</string>
     <string name="gutenberg_native_only_show_excerpt">Показывать только отрывок</string>
     <string name="gutenberg_native_portfolio">Портфолио</string>
+    <string name="gutenberg_native_link_settings">Настройки ссылок</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Давайте сотворим что-нибудь вместе!</string>
     <string name="gutenberg_native_let_s_build_something_together">Давайте сотворим что-нибудь вместе!</string>
     <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
@@ -533,7 +624,6 @@ Language: ru
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Войти на WordPress.com</string>
     <string name="reader_btn_remove_filter_content_description">Убрать текущий фильтр</string>
     <string name="reader_btn_select_filter_content_description">Выберите сайт или метку для фильтрации записей</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Выбрано</string>
     <string name="reader_bottom_sheet_content_description">Выберите метку или сайт, всплывающее окно</string>
     <string name="reader_self_hosted_select_filter">Используйте кнопку фильтра для поиска записей по интересующим темам</string>
     <string name="reader_title_subs">Управление темами и сайтами</string>
@@ -1303,7 +1393,6 @@ Language: ru
     <string name="activity_log">Журнал активности</string>
     <string name="activity_log_icon">Значок активности</string>
     <string name="activity_log_event">Событие</string>
-    <string name="rewind">Откат</string>
     <string name="activity_log_jetpack_icon">Значок Jetpack</string>
     <string name="reader_btn_notifications_off">Отключить уведомления сайта</string>
     <string name="reader_btn_notifications_on">Включить уведомления сайта</string>

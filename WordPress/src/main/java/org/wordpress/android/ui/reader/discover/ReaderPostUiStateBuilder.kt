@@ -124,7 +124,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         return ReaderPostUiState(
                 postId = post.postId,
                 blogId = post.blogId,
-                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isWpForTeams),
+                blogSection = buildBlogSection(post, onPostHeaderViewClicked, postListType, post.isP2orA8C),
                 excerpt = buildExcerpt(post),
                 title = buildTitle(post),
                 tagItems = buildTagItems(post, onTagItemClicked),
