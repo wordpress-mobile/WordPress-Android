@@ -1,3 +1,6 @@
+16.7
+-----
+ 
 16.6
 -----
 * [**] Reader: adds site filter capability to Followed P2s tab page. Now the sites listed in the filters are only those relevant to the page (Following/Followed P2s) [https://github.com/wordpress-mobile/WordPress-Android/pull/13766]
