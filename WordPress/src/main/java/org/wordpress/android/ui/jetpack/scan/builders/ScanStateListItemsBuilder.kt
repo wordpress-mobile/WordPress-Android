@@ -17,9 +17,11 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressStat
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -28,7 +30,9 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val threatItemBuilder: ThreatItemBuilder
+    private val threatItemBuilder: ThreatItemBuilder,
+    private val uiHelpers: UiHelpers,
+    private val contextProvider: ContextProvider
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
@@ -196,6 +200,18 @@ class ScanStateListItemsBuilder @Inject constructor(
                 )
         )
     )
+
+    fun buildFixThreatsProgressInfoLabel(
+        threats: List<ThreatModel>,
+        fixingThreatIds: List<Long> = emptyList()
+    ): UiStringText? {
+        val progressInfoLabel = threats
+            .filter { it.baseThreatModel.id in fixingThreatIds }
+            .joinToString(",") {
+                uiHelpers.getTextOfUiString(contextProvider.getContext(), threatItemBuilder.buildThreatItemHeader(it))
+            }
+        return progressInfoLabel.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
+    }
 
     companion object {
         private const val ONE_MINUTE = 60 * 1000L
