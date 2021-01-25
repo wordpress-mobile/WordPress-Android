@@ -1,7 +1,5 @@
-Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons. We also addressed an issue in text-based blocks with custom font size.
+* [**] Reader: adds site filter capability to Followed P2s tab page. Now the sites listed in the filters are only those relevant to the page (Following/Followed P2s) [https://github.com/wordpress-mobile/WordPress-Android/pull/13766]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop thumbnails in the home page design picker when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13674]
+* [**] Site Creation: Adds the option to choose between mobile, tablet or desktop home page design previews when creating a WordPress.com site [https://github.com/wordpress-mobile/WordPress-Android/pull/13673]
+* [*] Quick Start: Removed the browse theme step and added guidance for reviewing pages and editing your Homepage. [#13855]
 
-Activity Log: Track your site activity with filters that sort by date or type.
-
-Site Pages: Copy a page with the Duplicate button.
-
- 
