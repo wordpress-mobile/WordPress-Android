@@ -458,7 +458,7 @@ class ActivityLogRestClientTest {
         val payload = activityRestClient.fetchBackupDownloadState(site)
 
         with(payload) {
-            assertEquals(site, site)
+            assertEquals(this.site, site)
             assertNull(error)
             assertNotNull(this.backupDownloadStatusModelResponse)
             this.backupDownloadStatusModelResponse?.apply {
