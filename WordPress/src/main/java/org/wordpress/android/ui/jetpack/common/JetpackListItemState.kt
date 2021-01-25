@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.common
 
+import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
@@ -37,10 +38,17 @@ abstract class JetpackListItemState(open val type: ViewType) {
     ) : JetpackListItemState(ViewType.CHECKBOX)
 
     data class ProgressState(
-        val progress: Int,
-        val progressLabel: UiString,
+        val progress: Int = 0,
+        val progressLabel: UiString? = null,
+        val progressStateLabel: UiString? = null,
+        val progressInfoLabel: UiString? = null,
         val isIndeterminate: Boolean = false,
-        val isVisible: Boolean = true,
-        val isLabelVisible: Boolean = !isIndeterminate
-    ) : JetpackListItemState(ViewType.PROGRESS)
+        val isVisible: Boolean = true
+    ) : JetpackListItemState(ViewType.PROGRESS) {
+        val progressStateLabelTextAlignment = if (progressLabel == null) {
+            View.TEXT_ALIGNMENT_TEXT_START
+        } else {
+            View.TEXT_ALIGNMENT_TEXT_END
+        }
+    }
 }

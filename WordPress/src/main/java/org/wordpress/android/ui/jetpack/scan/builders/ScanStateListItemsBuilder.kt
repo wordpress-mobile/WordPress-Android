@@ -69,7 +69,11 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
-        val scanProgress = buildProgressState(isIndeterminate = true, isVisible = false)
+        val scanProgress = ProgressState(
+            progressStateLabel = UiStringRes(R.string.threat_fixing),
+            isIndeterminate = true,
+            isVisible = false
+        )
 
         items.add(scanIcon)
         items.add(scanHeader)
@@ -117,7 +121,13 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
         val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
-        val scanProgress = buildProgressState(progress)
+        val scanProgress = ProgressState(
+            progress = progress,
+            progressLabel = UiStringResWithParams(
+                R.string.backup_download_progress_label, // TODO ashiagr replace label
+                listOf(UiStringText(progress.toString()))
+            )
+        )
 
         items.add(scanIcon)
         items.add(scanHeader)
@@ -132,17 +142,6 @@ class ScanStateListItemsBuilder @Inject constructor(
         colorResId = color,
         contentDescription = UiStringRes(R.string.scan_state_icon)
     )
-
-    private fun buildProgressState(progress: Int = 0, isIndeterminate: Boolean = false, isVisible: Boolean = true) =
-        ProgressState(
-            progress = progress,
-            progressLabel = UiStringResWithParams(
-                R.string.backup_download_progress_label, // TODO ashiagr replace label
-                listOf(UiStringText(progress.toString()))
-            ),
-            isIndeterminate = isIndeterminate,
-            isVisible = isVisible
-        )
 
     private fun buildScanButtonAction(@StringRes titleRes: Int, onClick: () -> Unit) = ActionButtonState(
         text = UiStringRes(titleRes),
