@@ -31,27 +31,26 @@ class PostRestoreUseCase @Inject constructor(
         types: RewindRequestTypes
     ): RestoreRequestState = withContext(ioDispatcher) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            NetworkUnavailable
+            return@withContext NetworkUnavailable
         }
 
         val fetchResult = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
         if (fetchResult.isError) {
+            return@withContext RemoteRequestFailure
+        }
+
+        val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+        if (isRestoreRunning(rewind)) {
+            return@withContext OtherRequestRunning
+        }
+        val result = activityLogStore.rewind(RewindPayload(site, rewindId, types))
+        if (result.isError) {
             RemoteRequestFailure
         } else {
-            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-            if (isRestoreRunning(rewind)) {
-                OtherRequestRunning
-            }
-
-            val result = activityLogStore.rewind(RewindPayload(site, rewindId, types))
-            if (result.isError) {
+            if (result.restoreId == null) {
                 RemoteRequestFailure
             } else {
-                if (result.restoreId == null) {
-                    RemoteRequestFailure
-                } else {
-                    Success(rewindId, result.rewindId, result.restoreId)
-                }
+                Success(rewindId, result.rewindId, result.restoreId)
             }
         }
     }
