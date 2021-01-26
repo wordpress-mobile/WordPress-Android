@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatDetailHeaderState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -47,6 +48,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
+            add(buildThreatDetailHeader(threatModel))
             add(buildThreatDetailsIcon())
             add(buildThreatHeaderItem(threatModel))
             add(buildThreatSubHeaderItem(threatModel))
@@ -119,6 +121,13 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
             }
         }
     }
+
+    private fun buildThreatDetailHeader(threatModel: ThreatModel) = ThreatDetailHeaderState(
+            icon = threatItemBuilder.buildThreatItemIcon(threatModel),
+            iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
+            header = threatItemBuilder.buildThreatItemHeader(threatModel),
+            description = UiStringText("TEST")
+    )
 
     private fun buildThreatDetailsIcon() = IconState(
         icon = R.drawable.ic_shield_warning_white,
