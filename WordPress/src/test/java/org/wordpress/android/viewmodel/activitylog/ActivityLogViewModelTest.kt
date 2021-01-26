@@ -69,6 +69,7 @@ private const val SITE_ID = 1L
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
     @Rule @JvmField val rule = InstantTaskExecutorRule()
+
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
@@ -79,8 +80,11 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
+
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
+    private lateinit var activityLogList: List<ActivityLogModel>
+    private lateinit var viewModel: ActivityLogViewModel
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
     private var itemDetails: MutableList<ActivityLogListItem?> = mutableListOf()
@@ -89,8 +93,6 @@ class ActivityLogViewModelTest {
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
     private var navigationEvents: MutableList<Event<ActivityLogNavigationEvents?>> = mutableListOf()
     private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
-    private lateinit var activityLogList: List<ActivityLogModel>
-    private lateinit var viewModel: ActivityLogViewModel
     private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
 
