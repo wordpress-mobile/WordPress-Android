@@ -325,16 +325,17 @@ class ActivityLogViewModelTest {
 
     @Test
     fun loadsNextPageOnScrollToBottom() = runBlocking {
+        val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
+                .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
         viewModel.start(site, rewindableOnly)
         reset(store)
         whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
+                .thenReturn(OnActivityLogFetched(10, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
         viewModel.onScrolledToBottom()
 
-        assertFetchEvents(true)
+        assertFetchEvents(canLoadMore)
     }
 
     @Test
