@@ -95,20 +95,6 @@ class ActivityLogViewModelTest {
     private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
 
-    val event = ActivityLogListItem.Event(
-            "activityId",
-            "",
-            ",",
-            null,
-            null,
-            true,
-            null,
-            Date(),
-            true,
-            ActivityLogListItem.Icon.DEFAULT,
-            false
-    )
-
     private val rewindableOnly = false
 
     @Before
@@ -272,6 +258,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onItemClickShowsItemDetail() {
+        val event = event()
         assertTrue(itemDetails.isEmpty())
 
         viewModel.onItemClicked(event)
@@ -281,7 +268,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActionButtonClickShowsRewindDialog() {
-        viewModel.onActionButtonClicked(event)
+        viewModel.onActionButtonClicked(event())
 
         assertThat(navigationEvents.last().peekContent())
                 .isInstanceOf(ActivityLogNavigationEvents.ShowRewindDialog::class.java)
@@ -403,7 +390,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onSecondaryActionClickRestoreNavigationEventIsShowRewindDialog() {
-        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.RESTORE, event)
+        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.RESTORE, event())
 
         assertThat(navigationEvents.last().peekContent())
                 .isInstanceOf(ActivityLogNavigationEvents.ShowRewindDialog::class.java)
@@ -411,7 +398,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onSecondaryActionClickDownloadBackupNavigationEventIsShowBackupDownload() {
-        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP, event)
+        viewModel.onSecondaryActionClicked(ActivityLogListItem.SecondaryAction.DOWNLOAD_BACKUP, event())
 
         assertThat(navigationEvents.last().peekContent())
                 .isInstanceOf(ActivityLogNavigationEvents.ShowBackupDownload::class.java)
@@ -671,4 +658,18 @@ class ActivityLogViewModelTest {
             assertEquals(this@ActivityLogViewModelTest.site, site)
         }
     }
+
+    private fun event() = ActivityLogListItem.Event(
+            "activityId",
+            "",
+            ",",
+            null,
+            null,
+            true,
+            null,
+            Date(),
+            true,
+            ActivityLogListItem.Icon.DEFAULT,
+            false
+    )
 }
