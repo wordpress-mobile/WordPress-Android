@@ -129,8 +129,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     )
 
     private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
-        text = threatItemBuilder.buildThreatItemHeader(threatModel),
-        textColorRes = R.attr.colorError
+        text = threatItemBuilder.buildThreatItemHeader(threatModel)
     )
 
     private fun buildThreatSubHeaderItem(threatModel: ThreatModel) =
