@@ -274,6 +274,8 @@ class MySiteFragment : Fragment(),
     }
 
     private fun updateScanAndBackupVisibility(site: SiteModel) {
+        row_scan.setVisible(false)
+        row_backup.setVisible(false)
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
             uiScope.launch {
                 val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
