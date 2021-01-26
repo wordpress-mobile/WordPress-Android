@@ -605,23 +605,23 @@ class ActivityLogViewModelTest {
         isLastPageAndFreeSite: Boolean = false,
         canLoadMore: Boolean = false
     ): List<ActivityLogListItem> {
-        val activityLogListItems = mutableListOf<ActivityLogListItem>()
+        val list = mutableListOf<ActivityLogListItem>()
         firstItem().let {
-            activityLogListItems.add(ActivityLogListItem.Header(it.formattedDate))
-            activityLogListItems.add(it)
+            list.add(ActivityLogListItem.Header(it.formattedDate))
+            list.add(it)
         }
-        activityLogListItems.add(secondItem())
+        list.add(secondItem())
         thirdItem().let {
-            activityLogListItems.add(ActivityLogListItem.Header(it.formattedDate))
-            activityLogListItems.add(it)
+            list.add(ActivityLogListItem.Header(it.formattedDate))
+            list.add(it)
         }
         if (isLastPageAndFreeSite) {
-            activityLogListItems.add(ActivityLogListItem.Footer)
+            list.add(ActivityLogListItem.Footer)
         }
         if (canLoadMore) {
-            activityLogListItems.add(ActivityLogListItem.Loading)
+            list.add(ActivityLogListItem.Loading)
         }
-        return activityLogListItems
+        return list
     }
 
     private fun firstItem() = ActivityLogListItem.Event(
