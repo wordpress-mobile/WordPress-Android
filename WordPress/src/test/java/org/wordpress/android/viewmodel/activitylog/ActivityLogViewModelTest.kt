@@ -164,7 +164,6 @@ class ActivityLogViewModelTest {
 
         activityLogList = initializeActivityList()
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
-        whenever(store.getRewindStatusForSite(site)).thenReturn(rewindStatusModel)
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())

@@ -169,8 +169,6 @@ class ActivityLogViewModel @Inject constructor(
         rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
         rewindStatusService.rewindAvailable.observeForever(rewindAvailableObserver)
 
-        activityLogStore.getRewindStatusForSite(site)
-
         reloadEvents(done = true)
         requestEventsUpdate(false)
 
