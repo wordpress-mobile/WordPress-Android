@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.activitylog
 
+import androidx.annotation.VisibleForTesting
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -391,7 +392,8 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun reloadEvents(
+    @VisibleForTesting
+    fun reloadEvents(
         disableActions: Boolean = areActionsEnabled,
         displayProgressItem: Boolean = isRewindProgressItemShown,
         done: Boolean = isDone
