@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
@@ -74,6 +73,8 @@ private const val RESTORING_DATE_TIME = "Restoring to date time"
 private const val RESTORING_NO_DATE = "Restore in progress"
 private const val RESTORED_DATE_TIME = "Your site has been successfully restored\\nRestored to date time"
 private const val RESTORED_NO_DATE = "Your site has been successfully restored"
+
+private const val REWIND_ID = "rewindId"
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -293,11 +294,10 @@ class ActivityLogViewModelTest {
     @Test
     fun onRewindConfirmedTriggersRewindOperation() {
         viewModel.start(site, rewindableOnly)
-        val rewindId = "rewindId"
 
-        viewModel.onRewindConfirmed(rewindId)
+        viewModel.onRewindConfirmed(REWIND_ID)
 
-        verify(rewindStatusService).rewind(rewindId, site)
+        verify(rewindStatusService).rewind(REWIND_ID, site)
     }
 
     @Test
@@ -307,7 +307,7 @@ class ActivityLogViewModelTest {
         val snackBarMessage = "snackBar message"
         whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
 
-        viewModel.onRewindConfirmed("rewindId")
+        viewModel.onRewindConfirmed(REWIND_ID)
 
         assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
     }
@@ -682,7 +682,7 @@ class ActivityLogViewModelTest {
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayProgressItem, rewindId = REWIND_ID)
         )
 
         assertEquals(
@@ -730,7 +730,7 @@ class ActivityLogViewModelTest {
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = true)
+                restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
         )
 
         assertTrue(moveToTopEvents.isNotEmpty())
@@ -742,7 +742,7 @@ class ActivityLogViewModelTest {
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true)
+                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true, rewindId = REWIND_ID)
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_DATE_TIME)
@@ -754,7 +754,7 @@ class ActivityLogViewModelTest {
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true)
+                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true, rewindId = REWIND_ID)
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
@@ -1004,8 +1004,9 @@ class ActivityLogViewModelTest {
     )
 
     private fun initProgressMocks(displayProgressWithDate: Boolean = true) {
-        rewindProgress.value = rewindProgress(displayProgressWithDate)
-        whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
+        if (displayProgressWithDate) {
+            whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        }
         whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
         whenever(resourceProvider.getString(R.string.activity_log_currently_restoring_title))
                 .thenReturn(CURRENTLY_RESTORING)
@@ -1022,7 +1023,7 @@ class ActivityLogViewModelTest {
         initProgressMocks()
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = true)
+                restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
         )
         whenever(rewindStatusService.rewindingActivity).thenReturn(activity)
         if (activity != null) {
@@ -1038,12 +1039,4 @@ class ActivityLogViewModelTest {
                     .thenReturn(RESTORED_NO_DATE)
         }
     }
-
-    private fun rewindProgress(displayProgressWithDate: Boolean) = RewindStatusService.RewindProgress(
-            activityLogItem = if (displayProgressWithDate) activity() else null,
-            progress = 50,
-            date = activity().published,
-            status = Rewind.Status.RUNNING,
-            failureReason = null
-    )
 }

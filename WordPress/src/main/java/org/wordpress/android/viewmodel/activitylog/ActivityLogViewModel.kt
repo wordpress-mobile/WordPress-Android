@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -33,6 +32,8 @@ import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
+import org.wordpress.android.util.toFormattedDateString
+import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -406,9 +407,8 @@ class ActivityLogViewModel @Inject constructor(
         var moveToTop = false
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         if (withRestoreProgressItem) {
-            val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRewindProgressItem(activityLogModel))
+            items.add(getRewindProgressItem(restoreEvent.rewindId))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
         }
         eventList.forEach { model ->
@@ -445,18 +445,14 @@ class ActivityLogViewModel @Inject constructor(
         return this.find { it is ActivityLogListItem.Progress } != null
     }
 
-    private fun getRewindProgressItem(activityLogModel: ActivityLogModel?): ActivityLogListItem.Progress {
-        return activityLogModel?.let {
-            val rewoundEvent = ActivityLogListItem.Event(
-                    model = it,
-                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
-                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
-            )
+    private fun getRewindProgressItem(rewindId: String?): ActivityLogListItem.Progress {
+        val date = rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        return date?.let {
             ActivityLogListItem.Progress(
                     resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(
                             R.string.activity_log_currently_restoring_message,
-                            rewoundEvent.formattedDate, rewoundEvent.formattedTime
+                            it.toFormattedDateString(), it.toFormattedTimeString()
                     )
             )
         } ?: ActivityLogListItem.Progress(
