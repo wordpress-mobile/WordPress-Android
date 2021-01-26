@@ -69,6 +69,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun init() {
+        readerPostCardActionsHandler.initScope(this)
         _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
 
