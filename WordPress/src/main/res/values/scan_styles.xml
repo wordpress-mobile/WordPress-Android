@@ -85,4 +85,14 @@
         <item name="android:paddingBottom">@dimen/margin_small_medium</item>
     </style>
 
+    <!-- Threat Details -->
+    <style name="Scan.ThreatDetails.Icon" parent="Scan.Threat.Icon">
+        <item name="android:layout_marginStart">0dp</item>
+    </style>
+
+    <style name="Scan.ThreatDetails.Header" parent="Scan.Threat.Header">
+    </style>
+
+    <style name="Scan.ThreatDetails.SecondaryHeader" parent="Scan.Threat.SecondaryHeader">
+    </style>
 </resources>
