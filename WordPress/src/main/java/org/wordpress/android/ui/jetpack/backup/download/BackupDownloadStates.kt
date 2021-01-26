@@ -87,6 +87,7 @@ sealed class BackupDownloadRequestState {
     data class Progress(val rewindId: String, val progress: Int?) : BackupDownloadRequestState()
     data class Complete(val rewindId: String, val downloadId: Long, val url: String?) :
             BackupDownloadRequestState()
+    object Empty : BackupDownloadRequestState()
     sealed class Failure : BackupDownloadRequestState() {
         object NetworkUnavailable : Failure()
         object RemoteRequestFailure : Failure()

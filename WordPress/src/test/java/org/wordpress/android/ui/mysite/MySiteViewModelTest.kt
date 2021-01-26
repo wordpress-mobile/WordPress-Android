@@ -24,13 +24,13 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMP
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.AccountModel
-import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -143,7 +143,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
         whenever(quickStartRepository.quickStartModel).thenReturn(quickStartModel)
-        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,
@@ -801,43 +800,80 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `jetpack capabilities requested, when selected site changes`() = test {
+    fun `jetpack menu visibility requested, when selected site changes and scanScreenFeatureFlag is enabled`() = test {
         whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
 
         onSiteChange.postValue(site)
 
-        verify(jetpackCapabilitiesUseCase).getOrFetchJetpackCapabilities(site.siteId)
+        verify(jetpackCapabilitiesUseCase).getJetpackPurchasedProducts(site.siteId)
     }
 
     @Test
-    fun `jetpack capabilities not requested, when scan screen feature flag is off`() = test {
-        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
-
-        onSiteChange.postValue(site)
-
-        verify(jetpackCapabilitiesUseCase, never()).getOrFetchJetpackCapabilities(site.siteId)
-    }
-
-    @Test
-    fun `site items builder invoked with the selected site's backup screen availability`() {
+    fun `jetpack menu visibility requested, when selected site changes and backupScreenFeatureFlag is enabled`() =
+            test {
         whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
+
+        onSiteChange.postValue(site)
+
+        verify(jetpackCapabilitiesUseCase).getJetpackPurchasedProducts(site.siteId)
+    }
+
+    @Test
+    fun `jetpack menu visibility not requested, when scan and backup screen feature flags are off`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(false)
+
+        onSiteChange.postValue(site)
+
+        verify(jetpackCapabilitiesUseCase, never()).getJetpackPurchasedProducts(site.siteId)
+    }
+
+    @Test
+    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
 
         onSiteChange.postValue(site)
 
         verify(siteItemsBuilder, times(2)).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
-                isBackupAvailable = eq(true),
+                isBackupAvailable = eq(false),
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false)
         )
     }
 
     @Test
-    fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
+    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
         whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
-                listOf(JetpackCapability.SCAN)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
+
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder, times(2)).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = eq(false)
+        )
+    }
+
+    @Test
+    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = true, backup = false)
         )
 
         onSiteChange.postValue(site)
@@ -848,6 +884,23 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = any(),
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false)
+        )
+    }
+
+    @Test
+    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = true)
+        )
+
+        onSiteChange.postValue(site)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(site),
+                onClick = any(),
+                isBackupAvailable = eq(true),
+                isScanAvailable = any()
         )
     }
 

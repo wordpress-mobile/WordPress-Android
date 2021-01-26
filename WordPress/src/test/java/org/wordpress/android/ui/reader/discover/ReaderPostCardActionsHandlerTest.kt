@@ -121,10 +121,9 @@ class ReaderPostCardActionsHandlerTest {
                 mock(),
                 seenStatusToggleUseCase,
                 readerBlogTableWrapper,
-                TEST_DISPATCHER,
-                TEST_SCOPE,
-                TEST_SCOPE
+                TEST_DISPATCHER
         )
+        actionHandler.initScope(TEST_SCOPE)
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())
