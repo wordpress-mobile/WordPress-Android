@@ -49,6 +49,7 @@ import org.wordpress.android.util.analytics.ActivityLogTracker
 import org.wordpress.android.util.config.ActivityLogFiltersFeatureConfig
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
@@ -86,8 +87,7 @@ class ActivityLogViewModelTest {
     private var eventListStatuses: MutableList<ActivityLogListStatus?> = mutableListOf()
     private var snackbarMessages: MutableList<String?> = mutableListOf()
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
-    private var navigationEvents:
-            MutableList<org.wordpress.android.viewmodel.Event<ActivityLogNavigationEvents?>> = mutableListOf()
+    private var navigationEvents: MutableList<Event<ActivityLogNavigationEvents?>> = mutableListOf()
     private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
     private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
