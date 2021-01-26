@@ -377,7 +377,7 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onRewindConfirmed(rewindId: String) {
         rewindStatusService.rewind(rewindId, site)
-        showRewindStartedMessage()
+        showRewindStartedMessage(rewindId)
     }
 
     fun onScrolledToBottom() {
@@ -490,17 +490,12 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun showRewindStartedMessage() {
-        rewindStatusService.rewindingActivity?.let {
-            val event = ActivityLogListItem.Event(
-                    model = it,
-                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
-                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
-            )
+    private fun showRewindStartedMessage(rewindId: String) {
+        activityLogStore.getActivityLogItemByRewindId(rewindId)?.published?.let {
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
-                    event.formattedDate,
-                    event.formattedTime
+                    it.toFormattedDateString(),
+                    it.toFormattedTimeString()
             )
         }
     }

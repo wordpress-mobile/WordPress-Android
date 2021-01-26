@@ -303,7 +303,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onRewindConfirmedShowsRewindStartedMessage() {
         assertTrue(snackbarMessages.isEmpty())
-        whenever(rewindStatusService.rewindingActivity).thenReturn(activity())
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         val snackBarMessage = "snackBar message"
         whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
 
