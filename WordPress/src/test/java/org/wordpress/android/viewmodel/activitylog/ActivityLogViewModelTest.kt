@@ -653,9 +653,6 @@ class ActivityLogViewModelTest {
     }
 
     private fun initializeActivityList(): List<ActivityLogModel> {
-        val birthday = Calendar.getInstance()
-        birthday.set(1985, 8, 27)
-
         val list = mutableListOf<ActivityLogModel>()
         val activity = ActivityLogModel(
                 activityID = "",
@@ -667,14 +664,17 @@ class ActivityLogViewModelTest {
                 status = "",
                 rewindable = true,
                 rewindID = "",
-                published = birthday.time
+                published = activityPublishedTime(1985, 8, 27)
         )
         list.add(activity)
         list.add(activity.copy(rewindable = false))
-
-        birthday.set(1987, 5, 26)
-        list.add(activity.copy(published = birthday.time))
-
+        list.add(activity.copy(published = activityPublishedTime(1987, 5, 26)))
         return list
+    }
+
+    private fun activityPublishedTime(year: Int, month: Int, date: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, date)
+        return calendar.time
     }
 }
