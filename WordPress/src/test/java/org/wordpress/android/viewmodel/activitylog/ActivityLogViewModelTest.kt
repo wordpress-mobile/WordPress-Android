@@ -109,19 +109,6 @@ class ActivityLogViewModelTest {
             ActivityLogListItem.Icon.DEFAULT,
             false
     )
-    val activity = ActivityLogModel(
-            "activityId",
-            "",
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            null,
-            Date(),
-            null
-    )
 
     private val rewindableOnly = false
 
@@ -314,7 +301,7 @@ class ActivityLogViewModelTest {
     @Test
     fun onRewindConfirmedShowsRewindStartedMessage() {
         assertTrue(snackbarMessages.isEmpty())
-        whenever(rewindStatusService.rewindingActivity).thenReturn(activity)
+        whenever(rewindStatusService.rewindingActivity).thenReturn(activity())
         val snackBarMessage = "snackBar message"
         whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
 
@@ -604,23 +591,28 @@ class ActivityLogViewModelTest {
 
     private fun initializeActivityList(): List<ActivityLogModel> {
         val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel(
-                activityID = "",
-                summary = "",
-                content = null,
-                name = "",
-                type = "",
-                gridicon = "",
-                status = "",
-                rewindable = true,
-                rewindID = "",
-                published = activityPublishedTime(1985, 8, 27)
-        )
-        list.add(activity)
-        list.add(activity.copy(rewindable = false))
-        list.add(activity.copy(published = activityPublishedTime(1987, 5, 26)))
+        list.add(activity())
+        list.add(activity(rewindable = false))
+        list.add(activity(published = activityPublishedTime(1987, 5, 26)))
         return list
     }
+
+    private fun activity(
+        rewindable: Boolean = true,
+        published: Date = activityPublishedTime(1985, 8, 27)
+    ) = ActivityLogModel(
+            activityID = "activityId",
+            summary = "",
+            content = null,
+            name = "",
+            type = "",
+            gridicon = "",
+            status = "",
+            rewindable = rewindable,
+            rewindID = "",
+            published = published,
+            actor = null
+    )
 
     private fun activityPublishedTime(year: Int, month: Int, date: Int): Date {
         val calendar = Calendar.getInstance()
