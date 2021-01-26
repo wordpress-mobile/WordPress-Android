@@ -25,6 +25,9 @@ import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsResp
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.FixThreatsStatusResponse
 import org.wordpress.android.fluxc.network.rest.wpcom.scan.threat.Threat
 import org.wordpress.android.fluxc.store.ScanStore.FetchFixThreatsStatusResultPayload
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryError
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryErrorType
+import org.wordpress.android.fluxc.store.ScanStore.FetchScanHistoryResultPayload
 import org.wordpress.android.fluxc.store.ScanStore.FetchedScanStatePayload
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsError
 import org.wordpress.android.fluxc.store.ScanStore.FixThreatsErrorType
@@ -175,6 +178,26 @@ class ScanRestClient(
         }
     }
 
+    suspend fun fetchScanHistory(remoteSiteId: Long): FetchScanHistoryResultPayload {
+        val url = WPCOMV2.sites.site(remoteSiteId).scan.history.url
+        val response = wpComGsonRequestBuilder.syncGetRequest(this, url, mapOf(), FetchScanHistoryResponse::class.java)
+        return when (response) {
+            is Success -> {
+                buildScanHistoryResultPayload(remoteSiteId, response.data)
+            }
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(
+                        response.error,
+                        FetchScanHistoryErrorType.GENERIC_ERROR,
+                        FetchScanHistoryErrorType.INVALID_RESPONSE,
+                        FetchScanHistoryErrorType.AUTHORIZATION_REQUIRED
+                )
+                val error = FetchScanHistoryError(errorType, response.error.message)
+                FetchScanHistoryResultPayload(remoteSiteId = remoteSiteId, error = error)
+            }
+        }
+    }
+
     private fun buildScanStatePayload(response: ScanStateResponse, site: SiteModel): FetchedScanStatePayload {
         val state = State.fromValue(response.state) ?: return buildScanStateErrorPayload(
             site,
@@ -245,6 +268,21 @@ class ScanRestClient(
             threatModel
         }
         return Triple(threatModels, isError, errorMsg)
+    }
+
+    private fun buildScanHistoryResultPayload(
+        remoteSiteId: Long,
+        response: FetchScanHistoryResponse
+    ): FetchScanHistoryResultPayload {
+        val (threatModels, error) = mapThreatsToThreatModels(response.threats)
+        return if (error) {
+            FetchScanHistoryResultPayload(
+                    remoteSiteId,
+                    FetchScanHistoryError(FetchScanHistoryErrorType.INVALID_RESPONSE)
+            )
+        } else {
+            FetchScanHistoryResultPayload(remoteSiteId, threatModels)
+        }
     }
 
     private fun buildFixThreatsStatusPayload(
