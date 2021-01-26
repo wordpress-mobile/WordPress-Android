@@ -20,4 +20,8 @@ class EventBusWrapper @Inject constructor() {
     fun removeStickyEvent(event: Any) {
         EventBus.getDefault().removeStickyEvent(event)
     }
+
+    fun postSticky(event: Any) {
+        EventBus.getDefault().postSticky(event)
+    }
 }
