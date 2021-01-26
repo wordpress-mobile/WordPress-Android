@@ -465,7 +465,10 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
-    private fun requestEventsUpdate(loadMore: Boolean, restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)) {
+    private fun requestEventsUpdate(
+        loadMore: Boolean,
+        restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)
+    ) {
         val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
         val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
         if (loadMore && (isLoadingMore || !canLoadMore)) {
@@ -526,7 +529,11 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun onActivityLogFetched(event: OnActivityLogFetched, loadingMore: Boolean, restoreEvent: RestoreEvent) {
+    private fun onActivityLogFetched(
+        event: OnActivityLogFetched,
+        loadingMore: Boolean,
+        restoreEvent: RestoreEvent
+    ) {
         if (event.isError) {
             _eventListStatus.value = ActivityLogListStatus.ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
