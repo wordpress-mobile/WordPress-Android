@@ -91,7 +91,7 @@ class PostBackupDownloadUseCaseTest : BaseUnitTest() {
 
         val result = useCase.postBackupDownloadRequest(rewindId, siteModel, types)
 
-        assertThat(result).isEqualTo(Success(requestRewindId = rewindId, rewindId= rewindId, downloadId=downloadId))
+        assertThat(result).isEqualTo(Success(requestRewindId = rewindId, rewindId = rewindId, downloadId = downloadId))
     }
 
     @Test
