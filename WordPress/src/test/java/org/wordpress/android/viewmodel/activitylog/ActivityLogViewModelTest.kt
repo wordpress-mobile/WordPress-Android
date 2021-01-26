@@ -91,7 +91,6 @@ class ActivityLogViewModelTest {
 
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
-    private lateinit var activityLogList: List<ActivityLogModel>
     private lateinit var viewModel: ActivityLogViewModel
 
     private var events: MutableList<List<ActivityLogListItem>?> = mutableListOf()
@@ -104,6 +103,7 @@ class ActivityLogViewModelTest {
     private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
 
+    private val activityList = listOf(firstActivity(), secondActivity(), thirdActivity())
     private val rewindableOnly = false
 
     @Before
@@ -134,8 +134,7 @@ class ActivityLogViewModelTest {
         fetchActivityLogCaptor = argumentCaptor()
         formatDateRangeTimezoneCaptor = argumentCaptor()
 
-        activityLogList = initializeActivityList()
-        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
         whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
@@ -797,7 +796,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `given not done and the event list is not empty, when reloading events, then the loading item is visible`() {
-        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = false
 
         viewModel.reloadEvents(
@@ -847,7 +846,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `given done and the event list is not empty, when reloading events, then the loading item is not visible`() {
-        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
 
         viewModel.reloadEvents(
@@ -873,7 +872,7 @@ class ActivityLogViewModelTest {
     @Test
     fun `given done a not empty event list and free plan, when reloading events, then the footer item is visible`() {
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityLogList.toList())
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
 
         viewModel.reloadEvents(
@@ -898,13 +897,11 @@ class ActivityLogViewModelTest {
 
     /* PRIVATE */
 
-    private fun initializeActivityList(): List<ActivityLogModel> {
-        val list = mutableListOf<ActivityLogModel>()
-        list.add(activity())
-        list.add(activity(rewindable = false))
-        list.add(activity(published = activityPublishedTime(1987, 5, 26)))
-        return list
-    }
+    private fun firstActivity() = activity()
+
+    private fun secondActivity() = activity(rewindable = false)
+
+    private fun thirdActivity() = activity(published = activityPublishedTime(1987, 5, 26))
 
     private fun activity(
         rewindable: Boolean = true,
@@ -972,21 +969,21 @@ class ActivityLogViewModelTest {
     }
 
     private fun firstItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
-            model = activityLogList[0],
+            model = activityList[0],
             rewindDisabled = rewindDisabled,
             backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
     )
 
     private fun secondItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
-            model = activityLogList[1],
+            model = activityList[1],
             rewindDisabled = rewindDisabled,
             backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
     )
 
     private fun thirdItem(rewindDisabled: Boolean) = ActivityLogListItem.Event(
-            model = activityLogList[2],
+            model = activityList[2],
             rewindDisabled = rewindDisabled,
             backupDownloadFeatureEnabled = false,
             restoreFeatureEnabled = false
