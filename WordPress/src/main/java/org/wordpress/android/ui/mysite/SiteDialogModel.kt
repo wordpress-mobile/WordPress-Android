@@ -12,7 +12,7 @@ sealed class SiteDialogModel(
     @StringRes val cancelButtonLabel: Int? = null
 ) {
     object AddSiteIconDialogModel : SiteDialogModel(
-            MySiteViewModel.TAG_ADD_SITE_ICON_DIALOG,
+            MySiteContentViewModel.TAG_ADD_SITE_ICON_DIALOG,
             R.string.my_site_icon_dialog_title,
             R.string.my_site_icon_dialog_add_message,
             R.string.yes,
@@ -21,7 +21,7 @@ sealed class SiteDialogModel(
     )
 
     object ChangeSiteIconDialogModel : SiteDialogModel(
-            MySiteViewModel.TAG_CHANGE_SITE_ICON_DIALOG,
+            MySiteContentViewModel.TAG_CHANGE_SITE_ICON_DIALOG,
             R.string.my_site_icon_dialog_title,
             R.string.my_site_icon_dialog_change_message,
             R.string.my_site_icon_dialog_change_button,
