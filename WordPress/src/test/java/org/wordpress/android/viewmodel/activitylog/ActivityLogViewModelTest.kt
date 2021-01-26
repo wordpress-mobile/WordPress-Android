@@ -246,41 +246,6 @@ class ActivityLogViewModelTest {
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
-    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
-            List<ActivityLogListItem> {
-        val activityLogListItems = mutableListOf<ActivityLogListItem>()
-        val first = ActivityLogListItem.Event(
-                model = activityLogList[0],
-                rewindDisabled = true,
-                backupDownloadFeatureEnabled = false,
-                restoreFeatureEnabled = false
-        )
-        val second = ActivityLogListItem.Event(
-                model = activityLogList[1],
-                rewindDisabled = true,
-                backupDownloadFeatureEnabled = false,
-                restoreFeatureEnabled = false
-        )
-        val third = ActivityLogListItem.Event(
-                model = activityLogList[2],
-                rewindDisabled = true,
-                backupDownloadFeatureEnabled = false,
-                restoreFeatureEnabled = false
-        )
-        activityLogListItems.add(ActivityLogListItem.Header(first.formattedDate))
-        activityLogListItems.add(first)
-        activityLogListItems.add(second)
-        activityLogListItems.add(ActivityLogListItem.Header(third.formattedDate))
-        activityLogListItems.add(third)
-        if (isLastPageAndFreeSite) {
-            activityLogListItems.add(ActivityLogListItem.Footer)
-        }
-        if (canLoadMore) {
-            activityLogListItems.add(ActivityLogListItem.Loading)
-        }
-        return activityLogListItems
-    }
-
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfCannotLoadMore() = runBlocking<Unit> {
         val canLoadMore = false
@@ -641,6 +606,43 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(1L, 2L))
 
         assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
+    }
+
+    /* PRIVATE */
+
+    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
+            List<ActivityLogListItem> {
+        val activityLogListItems = mutableListOf<ActivityLogListItem>()
+        val first = ActivityLogListItem.Event(
+                model = activityLogList[0],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
+        val second = ActivityLogListItem.Event(
+                model = activityLogList[1],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
+        val third = ActivityLogListItem.Event(
+                model = activityLogList[2],
+                rewindDisabled = true,
+                backupDownloadFeatureEnabled = false,
+                restoreFeatureEnabled = false
+        )
+        activityLogListItems.add(ActivityLogListItem.Header(first.formattedDate))
+        activityLogListItems.add(first)
+        activityLogListItems.add(second)
+        activityLogListItems.add(ActivityLogListItem.Header(third.formattedDate))
+        activityLogListItems.add(third)
+        if (isLastPageAndFreeSite) {
+            activityLogListItems.add(ActivityLogListItem.Footer)
+        }
+        if (canLoadMore) {
+            activityLogListItems.add(ActivityLogListItem.Loading)
+        }
+        return activityLogListItems
     }
 
     private suspend fun assertFetchEvents(canLoadMore: Boolean = false) {
