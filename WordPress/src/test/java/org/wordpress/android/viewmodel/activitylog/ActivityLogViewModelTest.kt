@@ -32,8 +32,6 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.State
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
@@ -95,15 +93,6 @@ class ActivityLogViewModelTest {
     private lateinit var viewModel: ActivityLogViewModel
     private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
     private var rewindAvailable = MutableLiveData<Boolean>()
-
-    private val rewindStatusModel = RewindStatusModel(
-            State.ACTIVE,
-            null,
-            Date(),
-            true,
-            null,
-            null
-    )
 
     val event = ActivityLogListItem.Event(
             "activityId",
