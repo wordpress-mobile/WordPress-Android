@@ -1002,17 +1002,17 @@ class ActivityLogViewModelTest {
     }
 
     private fun event() = ActivityLogListItem.Event(
-            "activityId",
-            "",
-            ",",
-            null,
-            null,
-            true,
-            null,
-            Date(),
-            true,
-            ActivityLogListItem.Icon.DEFAULT,
-            false
+            activityId = "activityId",
+            title = "",
+            description = ",",
+            gridIcon = null,
+            eventStatus = null,
+            isRewindable = true,
+            rewindId = null,
+            date = Date(),
+            isButtonVisible = true,
+            buttonIcon = ActivityLogListItem.Icon.DEFAULT,
+            isProgressBarVisible = false
     )
 
     private fun initProgressMocks(displayProgressWithDate: Boolean = true) {
