@@ -601,6 +601,32 @@ class ActivityLogViewModelTest {
 
     /* PRIVATE */
 
+    private fun initializeActivityList(): List<ActivityLogModel> {
+        val list = mutableListOf<ActivityLogModel>()
+        val activity = ActivityLogModel(
+                activityID = "",
+                summary = "",
+                content = null,
+                name = "",
+                type = "",
+                gridicon = "",
+                status = "",
+                rewindable = true,
+                rewindID = "",
+                published = activityPublishedTime(1985, 8, 27)
+        )
+        list.add(activity)
+        list.add(activity.copy(rewindable = false))
+        list.add(activity.copy(published = activityPublishedTime(1987, 5, 26)))
+        return list
+    }
+
+    private fun activityPublishedTime(year: Int, month: Int, date: Int): Date {
+        val calendar = Calendar.getInstance()
+        calendar.set(year, month, date)
+        return calendar.time
+    }
+
     private fun expectedActivityList(
         isLastPageAndFreeSite: Boolean = false,
         canLoadMore: Boolean = false
@@ -652,31 +678,5 @@ class ActivityLogViewModelTest {
             assertEquals(canLoadMore, loadMore)
             assertEquals(this@ActivityLogViewModelTest.site, site)
         }
-    }
-
-    private fun initializeActivityList(): List<ActivityLogModel> {
-        val list = mutableListOf<ActivityLogModel>()
-        val activity = ActivityLogModel(
-                activityID = "",
-                summary = "",
-                content = null,
-                name = "",
-                type = "",
-                gridicon = "",
-                status = "",
-                rewindable = true,
-                rewindID = "",
-                published = activityPublishedTime(1985, 8, 27)
-        )
-        list.add(activity)
-        list.add(activity.copy(rewindable = false))
-        list.add(activity.copy(published = activityPublishedTime(1987, 5, 26)))
-        return list
-    }
-
-    private fun activityPublishedTime(year: Int, month: Int, date: Int): Date {
-        val calendar = Calendar.getInstance()
-        calendar.set(year, month, date)
-        return calendar.time
     }
 }
