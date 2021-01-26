@@ -687,8 +687,8 @@ class ActivityLogViewModelTest {
         verify(store).fetchActivities(fetchActivityLogCaptor.capture())
 
         fetchActivityLogCaptor.lastValue.apply {
-            assertEquals(this.loadMore, canLoadMore)
-            assertEquals(this.site, site)
+            assertEquals(canLoadMore, loadMore)
+            assertEquals(this@ActivityLogViewModelTest.site, site)
         }
     }
 
