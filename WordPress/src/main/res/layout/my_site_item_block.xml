@@ -8,7 +8,7 @@
 
     <ImageView
         android:id="@+id/my_site_item_primary_icon"
-        style="@style/MySiteListRowIcon"
+        style="@style/UpdatedMySiteListRowIcon"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginEnd="@dimen/my_site_list_row_icon_margin_right"
         android:layout_marginTop="@dimen/margin_large"
@@ -21,7 +21,7 @@
 
     <org.wordpress.android.widgets.WPTextView
         android:id="@+id/my_site_item_primary_text"
-        style="@style/MySiteListRowTextView"
+        style="@style/UpdatedMySiteListRowTextView"
         android:layout_marginBottom="@dimen/margin_large"
         android:layout_marginTop="@dimen/margin_large"
         app:layout_constraintBottom_toBottomOf="parent"
