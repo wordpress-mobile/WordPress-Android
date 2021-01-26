@@ -2,7 +2,6 @@ package org.wordpress.android.viewmodel.activitylog
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.core.util.Pair
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.KArgumentCaptor
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
@@ -82,7 +81,6 @@ class ActivityLogViewModelTest {
 
     @Mock private lateinit var store: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-    @Mock private lateinit var rewindStatusService: RewindStatusService
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
@@ -102,8 +100,6 @@ class ActivityLogViewModelTest {
     private var moveToTopEvents: MutableList<Unit?> = mutableListOf()
     private var navigationEvents: MutableList<Event<ActivityLogNavigationEvents?>> = mutableListOf()
     private var showDateRangePickerEvents: MutableList<ShowDateRangePicker> = mutableListOf()
-    private var rewindProgress = MutableLiveData<RewindStatusService.RewindProgress>()
-    private var rewindAvailable = MutableLiveData<Boolean>()
 
     private val activityList = listOf(firstActivity(), secondActivity(), thirdActivity())
     private val rewindableOnly = false
@@ -112,7 +108,6 @@ class ActivityLogViewModelTest {
     fun setUp() = test {
         viewModel = ActivityLogViewModel(
                 store,
-                rewindStatusService,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupDownloadFeatureConfig,
@@ -137,8 +132,6 @@ class ActivityLogViewModelTest {
         formatDateRangeTimezoneCaptor = argumentCaptor()
 
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
-        whenever(rewindStatusService.rewindProgress).thenReturn(rewindProgress)
-        whenever(rewindStatusService.rewindAvailable).thenReturn(rewindAvailable)
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
@@ -157,7 +150,6 @@ class ActivityLogViewModelTest {
         assertEquals(eventListStatuses[0], ActivityLogListStatus.FETCHING)
         assertEquals(eventListStatuses[1], ActivityLogListStatus.DONE)
         assertFetchEvents()
-        verify(rewindStatusService).start(site)
     }
 
     @Test
@@ -297,7 +289,7 @@ class ActivityLogViewModelTest {
 
         viewModel.onRewindConfirmed(REWIND_ID)
 
-        verify(rewindStatusService).rewind(REWIND_ID, site)
+        // TODO: Replace with restore use case.
     }
 
     @Test

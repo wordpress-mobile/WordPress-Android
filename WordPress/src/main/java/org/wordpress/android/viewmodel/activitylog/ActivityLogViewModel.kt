@@ -4,7 +4,6 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
@@ -13,15 +12,12 @@ import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -64,7 +60,6 @@ typealias DateRange = Pair<Long, Long>
  */
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
@@ -132,28 +127,8 @@ class ActivityLogViewModel @Inject constructor(
 
     private var fetchActivitiesJob: Job? = null
 
-    private var areActionsEnabled: Boolean = true
-
-    private var lastRewindActivityId: String? = null
-    private var lastRewindStatus: Rewind.Status? = null
-
     private var currentDateRangeFilter: DateRange? = null
     private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
-
-    private val rewindProgressObserver = Observer<RewindProgress> {
-        if (it?.activityLogItem?.activityID != lastRewindActivityId || it?.status != lastRewindStatus) {
-            lastRewindActivityId = it?.activityLogItem?.activityID
-            updateRewindState(it?.status)
-        }
-    }
-
-    private val rewindAvailableObserver = Observer<Boolean> { isRewindAvailable ->
-        if (areActionsEnabled != isRewindAvailable) {
-            isRewindAvailable?.let {
-                reloadEvents(!isRewindAvailable)
-            }
-        }
-    }
 
     lateinit var site: SiteModel
     var rewindableOnly: Boolean = false
@@ -166,10 +141,6 @@ class ActivityLogViewModel @Inject constructor(
 
         this.site = site
         this.rewindableOnly = rewindableOnly
-
-        rewindStatusService.start(site)
-        rewindStatusService.rewindProgress.observeForever(rewindProgressObserver)
-        rewindStatusService.rewindAvailable.observeForever(rewindAvailableObserver)
 
         reloadEvents(done = true)
         requestEventsUpdate(false)
@@ -193,9 +164,6 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        rewindStatusService.rewindAvailable.removeObserver(rewindAvailableObserver)
-        rewindStatusService.rewindProgress.removeObserver(rewindProgressObserver)
-        rewindStatusService.stop()
         if (currentDateRangeFilter != null || currentActivityTypeFilter.isNotEmpty()) {
             /**
              * Clear cache when filters are not empty. Filters are not retained across sessions, therefore the data is
@@ -376,21 +344,12 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onRewindConfirmed(rewindId: String) {
-        rewindStatusService.rewind(rewindId, site)
+        // TODO: Replace with restore use case.
         showRewindStartedMessage(rewindId)
     }
 
     fun onScrolledToBottom() {
         requestEventsUpdate(true)
-    }
-
-    private fun updateRewindState(status: Rewind.Status?) {
-        lastRewindStatus = status
-        if (status == Rewind.Status.RUNNING && !isRewindProgressItemShown) {
-            reloadEvents(restoreEvent = RestoreEvent(displayProgress = true))
-        } else if (status != Rewind.Status.RUNNING && isRewindProgressItemShown) {
-            requestEventsUpdate(false)
-        }
     }
 
     @VisibleForTesting
@@ -430,7 +389,6 @@ class ActivityLogViewModel @Inject constructor(
         if (eventList.isNotEmpty() && site.hasFreePlan && done) {
             items.add(ActivityLogListItem.Footer)
         }
-        areActionsEnabled = !withRestoreProgressItem
 
         _events.value = items
         if (moveToTop) {
@@ -533,7 +491,7 @@ class ActivityLogViewModel @Inject constructor(
             if (!loadingMore) {
                 moveToTop.call()
             }
-            rewindStatusService.requestStatusUpdate()
+            // TODO: Replace with restore use case.
         }
 
         if (event.canLoadMore) {
