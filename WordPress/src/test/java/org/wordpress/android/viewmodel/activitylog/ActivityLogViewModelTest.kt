@@ -658,8 +658,16 @@ class ActivityLogViewModelTest {
 
         val list = mutableListOf<ActivityLogModel>()
         val activity = ActivityLogModel(
-                "", "", null, "", "", "",
-                "", true, "", birthday.time
+                activityID = "",
+                summary = "",
+                content = null,
+                name = "",
+                type = "",
+                gridicon = "",
+                status = "",
+                rewindable = true,
+                rewindID = "",
+                published = birthday.time
         )
         list.add(activity)
         list.add(activity.copy(rewindable = false))
