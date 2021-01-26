@@ -123,7 +123,7 @@ class ActivityLogViewModel @Inject constructor(
         get() = _navigationEvents
 
     private val isRewindProgressItemShown: Boolean
-        get() = _events.value?.containsProgressItem() == true
+        get() = events.value?.containsProgressItem() == true
 
     private val isDone: Boolean
         get() = eventListStatus.value == ActivityLogListStatus.DONE
@@ -465,8 +465,8 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun requestEventsUpdate(loadMore: Boolean) {
-        val isLoadingMore = fetchActivitiesJob != null && _eventListStatus.value == ActivityLogListStatus.LOADING_MORE
-        val canLoadMore = _eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+        val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
+        val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
         if (loadMore && (isLoadingMore || !canLoadMore)) {
             // Ignore loadMore request when already loading more items or there are no more items to load
             return
