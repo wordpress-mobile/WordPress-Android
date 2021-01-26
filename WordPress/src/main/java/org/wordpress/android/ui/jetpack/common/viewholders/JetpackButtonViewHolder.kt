@@ -2,9 +2,9 @@ package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import android.widget.Button
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -13,7 +13,10 @@ import org.wordpress.android.util.setVisible
 import kotlinx.android.synthetic.main.jetpack_list_button_primary_item.button as primaryButton
 import kotlinx.android.synthetic.main.jetpack_list_button_secondary_item.button as secondaryButton
 
-sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) : JetpackViewHolder(layout, parent) {
+sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) : JetpackViewHolder(
+        layout,
+        parent
+) {
     class Primary(
         private val uiHelpers: UiHelpers,
         parent: ViewGroup
@@ -32,11 +35,15 @@ sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) 
         }
     }
 
-    internal fun Button.updateState(buttonState: ActionButtonState, uiHelpers: UiHelpers) {
+    internal fun MaterialButton.updateState(buttonState: ActionButtonState, uiHelpers: UiHelpers) {
         updateItemViewVisibility(buttonState.isVisible)
         uiHelpers.setTextOrHide(this, buttonState.text)
         isEnabled = buttonState.isEnabled
         setOnClickListener { buttonState.onClick.invoke() }
+        buttonState.iconRes?.let {
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            icon = this.context.getDrawable(it)
+        }
     }
 
     private fun updateItemViewVisibility(isVisible: Boolean) {

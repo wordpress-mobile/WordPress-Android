@@ -40,9 +40,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.restore_details_header),
                 buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.restore_details_action_button,
-                        R.string.restore_details_action_button_content_description,
-                        onCreateDownloadClick),
+                        titleRes = R.string.restore_details_action_button,
+                        contentDescRes = R.string.restore_details_action_button_content_description,
+                        onClick = onCreateDownloadClick),
                 buildSubHeaderState()
         )
 
@@ -70,13 +70,14 @@ class RestoreStateListItemBuilder @Inject constructor() {
             buildHeaderState(R.string.restore_warning_header),
             buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
             buildActionButtonState(
-                    R.string.restore_warning_action_button,
-                    R.string.restore_warning_action_button_content_description,
-                    onConfirmRestoreClick),
+                    titleRes = R.string.restore_warning_action_button,
+                    contentDescRes = R.string.restore_warning_action_button_content_description,
+                    onClick = onConfirmRestoreClick),
             buildActionButtonState(
-                    R.string.cancel,
-                    R.string.cancel,
-                    onCancelClick)
+                    titleRes = R.string.cancel,
+                    contentDescRes = R.string.cancel,
+                    isSecondary = true,
+                    onClick = onCancelClick)
     )
 
     fun buildProgressListStateItems(
@@ -93,9 +94,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
                 buildProgressState(progress),
                 buildActionButtonState(
-                        R.string.restore_progress_action_button,
-                        R.string.restore_progress_action_button_content_description,
-                        onNotifyMeClick),
+                        titleRes = R.string.restore_progress_action_button,
+                        contentDescRes = R.string.restore_progress_action_button_content_description,
+                        onClick = onNotifyMeClick),
                 buildAdditionalInformationState(R.string.restore_progress_additional_info)
         )
     }
@@ -113,13 +114,14 @@ class RestoreStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.restore_complete_header),
                 buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.restore_complete_done_action_button,
-                        R.string.restore_complete_done_button_content_description,
-                        onDoneClick),
+                        titleRes = R.string.restore_complete_done_action_button,
+                        contentDescRes = R.string.restore_complete_done_button_content_description,
+                        onClick = onDoneClick),
                 buildActionButtonState(
-                        R.string.restore_complete_visit_site_action_button,
-                        R.string.restore_complete_visit_site_button_content_description,
-                        onVisitSiteClick)
+                        titleRes = R.string.restore_complete_visit_site_action_button,
+                        contentDescRes = R.string.restore_complete_visit_site_button_content_description,
+                        isSecondary = true,
+                        onClick = onVisitSiteClick)
         )
     }
 
@@ -130,9 +132,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
                     R.color.error_50),
             buildDescriptionState(R.string.restore_complete_failed_description),
             buildActionButtonState(
-                    R.string.restore_complete_failed_action_button,
-                    R.string.restore_complete_failed_action_button_content_description,
-                    onDoneClick)
+                    titleRes = R.string.restore_complete_failed_action_button,
+                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+                    onClick = onDoneClick)
     )
 
     private fun buildIconState(
@@ -162,10 +164,12 @@ class RestoreStateListItemBuilder @Inject constructor() {
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
+        isSecondary: Boolean = false,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
+        isSecondary = isSecondary,
         onClick = onClick
     )
 
