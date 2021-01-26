@@ -7,6 +7,10 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.JetpackCapability
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
+import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
@@ -20,6 +24,8 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 
 const val MAX_CACHE_VALIDITY = 1000 * 60 * 15L // 15 minutes
+private val SCAN_CAPABILITIES = listOf(SCAN)
+val BACKUP_CAPABILITIES = listOf(BACKUP, BACKUP_DAILY, BACKUP_REALTIME)
 
 class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
@@ -29,6 +35,16 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private var continuation: Continuation<OnJetpackCapabilitiesFetched>? = null
+
+    suspend fun getJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts {
+        val capabilities = withContext(bgDispatcher) {
+            getOrFetchJetpackCapabilities(remoteSiteId)
+        }
+        return JetpackPurchasedProducts(
+                scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
+                backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
+        )
+    }
 
     suspend fun getOrFetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
         return if (hasValidCache(remoteSiteId)) {
@@ -87,4 +103,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         continuation?.resume(event)
         continuation = null
     }
+
+    data class JetpackPurchasedProducts(val scan: Boolean, val backup: Boolean)
 }
