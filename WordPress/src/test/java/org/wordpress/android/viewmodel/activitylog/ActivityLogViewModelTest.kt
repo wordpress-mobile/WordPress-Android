@@ -601,8 +601,10 @@ class ActivityLogViewModelTest {
 
     /* PRIVATE */
 
-    private fun expectedActivityList(isLastPageAndFreeSite: Boolean = false, canLoadMore: Boolean = false):
-            List<ActivityLogListItem> {
+    private fun expectedActivityList(
+        isLastPageAndFreeSite: Boolean = false,
+        canLoadMore: Boolean = false
+    ): List<ActivityLogListItem> {
         val activityLogListItems = mutableListOf<ActivityLogListItem>()
         firstItem().let {
             activityLogListItems.add(ActivityLogListItem.Header(it.formattedDate))
