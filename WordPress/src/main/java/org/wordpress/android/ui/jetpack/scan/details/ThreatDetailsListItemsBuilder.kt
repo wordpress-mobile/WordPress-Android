@@ -49,7 +49,6 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
             add(buildThreatDetailHeader(threatModel))
-            add(buildThreatDetailsIcon())
             add(buildThreatHeaderItem(threatModel))
             add(buildThreatSubHeaderItem(threatModel))
             add(buildProblemHeaderItem())
@@ -127,12 +126,6 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
             iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
             header = threatItemBuilder.buildThreatItemHeader(threatModel),
             description = UiStringText("TEST")
-    )
-
-    private fun buildThreatDetailsIcon() = IconState(
-        icon = R.drawable.ic_shield_warning_white,
-        colorResId = R.color.error,
-        contentDescription = UiStringRes(R.string.threat_details_icon)
     )
 
     private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
