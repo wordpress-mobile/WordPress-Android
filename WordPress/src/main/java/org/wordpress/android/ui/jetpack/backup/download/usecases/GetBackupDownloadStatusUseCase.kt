@@ -11,41 +11,45 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import kotlinx.coroutines.delay
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 
 const val DELAY_MILLIS = 5000L
+const val MAX_RETRY = 3
 
 class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore
 ) {
     suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
+        var retryAttempts = 0
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
                 return@flow
             }
 
-            val downloadStatusForSite = activityLogStore.getBackupDownloadStatusForSite(site)
-            if (downloadStatusForSite != null && downloadStatusForSite.downloadId == downloadId) {
-                if (downloadStatusForSite.progress == null && downloadId == downloadStatusForSite.downloadId) {
-                    emit(
-                            Complete(
-                                    downloadStatusForSite.rewindId,
-                                    downloadStatusForSite.downloadId,
-                                    downloadStatusForSite.url
-                            )
-                    )
-                    return@flow
-                } else {
-                    emit(Progress(downloadStatusForSite.rewindId, downloadStatusForSite.progress))
-                }
-            }
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
-                emit(RemoteRequestFailure)
-                return@flow
+                if (retryAttempts++ >= MAX_RETRY) {
+                    emit(RemoteRequestFailure)
+                    return@flow
+                }
+            } else {
+                val status = activityLogStore.getBackupDownloadStatusForSite(site)
+                if (status == null) {
+                    emit(Empty)
+                    return@flow
+                }
+                if (status.downloadId == downloadId) {
+                    if (status.progress == null && downloadId == status.downloadId) {
+                        emit(Complete(status.rewindId, status.downloadId, status.url))
+                        return@flow
+                    } else {
+                        emit(Progress(status.rewindId, status.progress))
+                    }
+                }
+                delay(DELAY_MILLIS)
             }
-            delay(DELAY_MILLIS)
         }
     }
 }

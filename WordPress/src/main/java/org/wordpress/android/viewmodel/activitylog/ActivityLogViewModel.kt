@@ -9,9 +9,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
-import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
-import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
@@ -198,11 +195,10 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 launch {
-                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(site.siteId)
-                            .find { it == BACKUP || it == BACKUP_DAILY || it == BACKUP_REALTIME }
-                            ?.let {
-                                refreshFiltersUiState()
-                            }
+                    val purchasedProducts = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
+                    if (purchasedProducts.backup) {
+                        refreshFiltersUiState()
+                    }
                 }
             }
         }

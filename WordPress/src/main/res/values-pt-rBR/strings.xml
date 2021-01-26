@@ -1,11 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2020-12-04 19:18:17+0000
+Translation-Revision-Date: 2021-01-21 21:25:58+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: pt_BR
 -->
 <resources>
+    <string name="gutenberg_native_move_block_position">Mover a posição do bloco</string>
+    <string name="gutenberg_native_move_to_bottom">Mover para o fim</string>
+    <string name="label_control_upload">Enviar</string>
+    <string name="jetpack_icon_content_description">ícone</string>
+    <string name="backup_download_complete_info">Nós também enviarmos um e-mail com link para seu arquivo.</string>
+    <string name="backup_download_complete_download_action_button_content_description">Botão de download</string>
+    <string name="backup_download_complete_download_share_action_button">Compartilhar link</string>
+    <string name="backup_download_complete_download_action_button">Fazer download</string>
+    <string name="backup_download_complete_page_title">Seu backup</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_additional_info">Não precisa esperar. Vamos lhe avisar quando o backup ficar pronto</string>
+    <string name="backup_download_progress_action_button">Tudo bem, me avise!</string>
+    <string name="suggestion_user">usuário</string>
+    <string name="suggestion_problem">\"Ocorreu um problema no carregamento das sugestões.\"</string>
+    <string name="suggestion_none">\"Sem sugestões para %s.\"</string>
+    <string name="threat_ignore">Ignorar ameaça</string>
+    <string name="threat_fix_current_not_fixable_header">Resolvendo ameaça</string>
+    <string name="threat_item_sub_header_core_file">Vulnerabilidade encontrada no WordPress</string>
+    <string name="activity_log_item_menu_restore_label">Restaurar até este ponto</string>
+    <string name="activity_log_activity_type_filter_label">Tipo de atividade</string>
+    <string name="activity_log_date_range_filter_label">Período</string>
+    <string name="activity_log_activity_type_filter_header">Filtrar por tipo de atividade</string>
+    <string name="dialog_confirm_copy_local_copy_button">Copiar a versão deste aplicativo</string>
+    <string name="button_copy">Duplicar</string>
     <string name="gutenberg_native_file_name">Nome do arquivo</string>
     <string name="gutenberg_native_file_block_settings">Configurações do bloco Arquivo</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">Falha ao enviar arquivos.\nToque para ver mais opções.</string>

@@ -56,6 +56,7 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.widgets.WPSwipeSnackbar;
 import org.wordpress.android.widgets.WPViewPager;
 import org.wordpress.android.widgets.WPViewPagerTransformer;
@@ -132,6 +133,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
     @Inject UploadActionUseCase mUploadActionUseCase;
     @Inject UploadUtilsWrapper mUploadUtilsWrapper;
     @Inject ReaderPostSeenStatusWrapper mPostSeenStatusWrapper;
+    @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -600,9 +602,11 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
         // bump the page view
         ReaderPostActions.bumpPageViewForPost(mSiteStore, blogId, postId);
 
-        ReaderPost currentPost = ReaderPostTable.getBlogPost(blogId, postId, true);
-        if (currentPost != null) {
-            mPostSeenStatusWrapper.markPostAsSeenSilently(currentPost);
+        if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+            ReaderPost currentPost = ReaderPostTable.getBlogPost(blogId, postId, true);
+            if (currentPost != null) {
+                mPostSeenStatusWrapper.markPostAsSeenSilently(currentPost);
+            }
         }
 
         // analytics tracking

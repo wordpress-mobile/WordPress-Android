@@ -25,6 +25,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
@@ -37,10 +38,6 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState.Er
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
-import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.CompleteToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.DetailsToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ErrorToolbarState
-import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownloadUseCase
@@ -103,6 +100,7 @@ class BackupDownloadViewModel @Inject constructor(
     private lateinit var activityId: String
 
     private lateinit var backupDownloadState: BackupDownloadState
+    private val progressStart = 0
 
     private val _wizardFinishedObservable = MutableLiveData<Event<BackupDownloadWizardState>>()
     val wizardFinishedObservable: LiveData<Event<BackupDownloadWizardState>> = _wizardFinishedObservable
@@ -145,9 +143,7 @@ class BackupDownloadViewModel @Inject constructor(
 
     fun onBackPressed() {
         when (wizardManager.currentStep) {
-            DETAILS.id -> {
-                _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
-            }
+            DETAILS.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
             PROGRESS.id -> {
                 _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
                     Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
@@ -155,9 +151,8 @@ class BackupDownloadViewModel @Inject constructor(
                     Event(BackupDownloadCanceled)
                 }
             }
-            COMPLETE.id -> {
-                _wizardFinishedObservable.value = Event(BackupDownloadCompleted)
-            }
+            COMPLETE.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCompleted) }
+            ERROR.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
         }
     }
 
@@ -173,7 +168,6 @@ class BackupDownloadViewModel @Inject constructor(
             if (activityLogModel != null) {
                 _uiState.value = DetailsState(
                         activityLogModel = activityLogModel,
-                        toolbarState = DetailsToolbarState(),
                         items = stateListItemBuilder.buildDetailsListStateItems(
                                 availableItems = availableItems,
                                 published = activityLogModel.published,
@@ -190,9 +184,8 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun buildProgress() {
         _uiState.value = ProgressState(
-                toolbarState = ProgressToolbarState(),
                 items = stateListItemBuilder.buildProgressListStateItems(
-                        progress = 0,
+                        progress = progressStart,
                         published = backupDownloadState.published as Date,
                         onNotifyMeClick = this@BackupDownloadViewModel::onNotifyMeClick
                 ),
@@ -203,7 +196,6 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun buildComplete() {
         _uiState.value = CompleteState(
-                toolbarState = CompleteToolbarState(),
                 items = stateListItemBuilder.buildCompleteListStateItems(
                         published = backupDownloadState.published as Date,
                         onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
@@ -213,7 +205,6 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun buildError(errorType: BackupDownloadErrorTypes) {
         _uiState.value = ErrorState(
-                toolbarState = ErrorToolbarState(),
                 errorType = errorType,
                 items = stateListItemBuilder.buildCompleteListStateErrorItems(
                         onDoneClick = this@BackupDownloadViewModel::onDoneClick
@@ -314,7 +305,7 @@ class BackupDownloadViewModel @Inject constructor(
                             contentState as JetpackListItemState.ProgressState
                             contentState.copy(
                                     progress = state.progress ?: 0,
-                                    label = UiStringResWithParams(
+                                    progressLabel = UiStringResWithParams(
                                             string.backup_download_progress_label,
                                             listOf(UiStringText(state.progress?.toString() ?: "0"))
                                     )
@@ -329,6 +320,9 @@ class BackupDownloadViewModel @Inject constructor(
             is Complete -> {
                 backupDownloadState = backupDownloadState.copy(url = state.url)
                 wizardManager.showNextStep()
+            }
+            is Empty -> {
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             else -> {
             } // no op

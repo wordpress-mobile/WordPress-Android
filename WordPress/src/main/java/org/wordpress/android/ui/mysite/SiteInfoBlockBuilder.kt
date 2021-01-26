@@ -18,7 +18,8 @@ class SiteInfoBlockBuilder
         iconClick: (SiteModel) -> Unit,
         urlClick: (SiteModel) -> Unit,
         switchSiteClick: (SiteModel) -> Unit,
-        showUpdateSiteTitleFocusPoint: Boolean
+        showUpdateSiteTitleFocusPoint: Boolean,
+        showUploadSiteIconFocusPoint: Boolean
     ): SiteInfoBlock {
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
@@ -37,6 +38,7 @@ class SiteInfoBlockBuilder
                 homeUrl,
                 siteIcon,
                 showUpdateSiteTitleFocusPoint,
+                showUploadSiteIconFocusPoint,
                 buildTitleClick(site, titleClick),
                 ListItemInteraction.create(site, iconClick),
                 ListItemInteraction.create(site, urlClick),
