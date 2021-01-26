@@ -31,6 +31,7 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUT
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -42,6 +43,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var eventBus: EventBusWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var selectedSite: MutableLiveData<SiteModel>
@@ -61,7 +63,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 selectedSiteRepository,
                 resourceProvider,
                 analyticsTrackerWrapper,
-                dispatcher
+                dispatcher,
+                eventBus
         )
         models = mutableListOf()
         quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
