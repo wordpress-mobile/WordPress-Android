@@ -738,11 +738,17 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `given rewind finished with date, when reloading events, then show rewind finished message with date`() {
-        initProgressFinishedMocks(activity())
+        val date = activity().published
+        initProgressFinishedMocks(date)
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true, rewindId = REWIND_ID)
+                restoreEvent = RestoreEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        date = date
+                )
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_DATE_TIME)
@@ -750,11 +756,17 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `given rewind finished without date, when reloading events, then show rewind finished message without date`() {
-        initProgressFinishedMocks(null)
+        val date = null
+        initProgressFinishedMocks(date)
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true, rewindId = REWIND_ID)
+                restoreEvent = RestoreEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        date = date
+                )
         )
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
@@ -1019,14 +1031,13 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initProgressFinishedMocks(activity: ActivityLogModel?) {
+    private fun initProgressFinishedMocks(date: Date?) {
         initProgressMocks()
         viewModel.reloadEvents(
                 done = false,
                 restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
         )
-        whenever(rewindStatusService.rewindingActivity).thenReturn(activity)
-        if (activity != null) {
+        if (date != null) {
             whenever(
                     resourceProvider.getString(
                             eq(R.string.activity_log_rewind_finished_snackbar_message),

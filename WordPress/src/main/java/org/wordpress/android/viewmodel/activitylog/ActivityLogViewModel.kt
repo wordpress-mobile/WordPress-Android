@@ -437,7 +437,7 @@ class ActivityLogViewModel @Inject constructor(
             _moveToTop.call()
         }
         if (restoreEvent.isCompleted) {
-            showRewindFinishedMessage()
+            showRewindFinishedMessage(restoreEvent.date)
         }
     }
 
@@ -500,19 +500,13 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun showRewindFinishedMessage() {
-        val item = rewindStatusService.rewindingActivity
-        if (item != null) {
-            val event = ActivityLogListItem.Event(
-                    model = item,
-                    backupDownloadFeatureEnabled = backupDownloadFeatureConfig.isEnabled(),
-                    restoreFeatureEnabled = restoreFeatureConfig.isEnabled()
-            )
+    private fun showRewindFinishedMessage(date: Date?) {
+        if (date != null) {
             _showSnackbarMessage.value =
                     resourceProvider.getString(
                             R.string.activity_log_rewind_finished_snackbar_message,
-                            event.formattedDate,
-                            event.formattedTime
+                            date.toFormattedDateString(),
+                            date.toFormattedTimeString()
                     )
         } else {
             _showSnackbarMessage.value =
