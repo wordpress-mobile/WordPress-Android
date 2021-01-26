@@ -3,14 +3,16 @@ package org.wordpress.android.ui.jetpack.backup.download.usecases
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
@@ -27,12 +29,16 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
 import java.util.Date
 
-@InternalCoroutinesApi
+@ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
+
+    @ExperimentalCoroutinesApi
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     @Before
     fun setup() {
@@ -50,7 +56,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given failure, then RemoteRequestFailure is returned`() = runBlockingTest {
+    fun `given failure, then RemoteRequestFailure is returned`() = coroutineScope.runBlockingTest {
         whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                 OnBackupDownloadStatusFetched(BackupDownloadStatusError(GENERIC_ERROR), FETCH_BACKUP_DOWNLOAD_STATE)
         )
@@ -80,7 +86,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given download in process, then Progress is returned`() = runBlockingTest {
+    fun `given download in process, then Progress is returned`() = coroutineScope.runBlockingTest {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site))
                 .thenReturn(inProgressModel)
                 .thenReturn(statusModel)
@@ -95,7 +101,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
-        test {
+        coroutineScope.runBlockingTest {
             whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                     OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
             )
