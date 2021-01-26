@@ -17,6 +17,7 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
+import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_DAILY
 import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.store.SiteStore
@@ -106,9 +107,75 @@ class JetpackCapabilitiesUseCaseTest {
     fun `updates cache, when fetch finishes`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        val result = useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        useCase.getOrFetchJetpackCapabilities(SITE_ID)
 
         verify(appPrefsWrapper).setSiteJetpackCapabilities(SITE_ID, event.capabilities!!)
+    }
+
+    @Test
+    fun `Scan enabled, when JetpackCapabilities contains SCAN`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(SCAN)))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.scan).isTrue
+    }
+
+    @Test
+    fun `Scan disabled, when JetpackCapabilities does NOT contain SCAN`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf()))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.scan).isFalse
+    }
+
+    @Test
+    fun `Backup enabled, when JetpackCapabilities contains BACKUP`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP)))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.backup).isTrue
+    }
+
+    @Test
+    fun `Backup enabled, when JetpackCapabilities contains BACKUP_REALTIME`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP_REALTIME)))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.backup).isTrue
+    }
+
+    @Test
+    fun `Backup enabled, when JetpackCapabilities contains BACKUP_DAILY`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP_DAILY)))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.backup).isTrue
+    }
+
+    @Test
+    fun `Backup disabled, when JetpackCapabilities does not contain any BACKUP capability`() = test {
+        whenever(dispatcher.dispatch(any())).then {
+            useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf()))
+        }
+
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+
+        assertThat(result.backup).isFalse
     }
 
     private fun buildCapabilitiesFetchedEvent(capabilities: List<JetpackCapability>) =
