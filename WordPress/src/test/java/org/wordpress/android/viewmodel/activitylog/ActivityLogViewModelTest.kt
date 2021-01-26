@@ -180,13 +180,9 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site, rewindableOnly)
 
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList()
-        )
+        assertEquals(viewModel.events.value, expectedActivityList())
         assertEquals(eventListStatuses[0], ActivityLogListStatus.FETCHING)
         assertEquals(eventListStatuses[1], ActivityLogListStatus.DONE)
-
         assertFetchEvents()
         verify(rewindStatusService).start(site)
     }
@@ -206,11 +202,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site, rewindableOnly)
 
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList(false, canLoadMore)
-        )
-
+        assertEquals(viewModel.events.value, expectedActivityList(false, canLoadMore))
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.CAN_LOAD_MORE)
     }
 
@@ -219,9 +211,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
-
         viewModel.start(site, rewindableOnly)
-
         reset(store)
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
@@ -239,11 +229,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site, rewindableOnly)
 
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList()
-        )
-
+        assertEquals(viewModel.events.value, expectedActivityList())
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
@@ -256,11 +242,7 @@ class ActivityLogViewModelTest {
 
         viewModel.start(site, rewindableOnly)
 
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList(true)
-        )
-
+        assertEquals(viewModel.events.value, expectedActivityList(true))
         assertEquals(viewModel.eventListStatus.value, ActivityLogListStatus.DONE)
     }
 
@@ -304,9 +286,7 @@ class ActivityLogViewModelTest {
         val canLoadMore = false
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(1, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
-
         viewModel.start(site, rewindableOnly)
-
         reset(store)
 
         viewModel.onScrolledToBottom()
@@ -317,7 +297,6 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedGoesToTopWhenSomeRowsAffected() = runBlocking {
         assertTrue(moveToTopEvents.isEmpty())
-
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
 
@@ -329,7 +308,6 @@ class ActivityLogViewModelTest {
     @Test
     fun onDataFetchedDoesNotLoadMoreDataIfNoRowsAffected() = runBlocking<Unit> {
         val canLoadMore = true
-
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(0, canLoadMore, ActivityLogAction.FETCH_ACTIVITIES))
 
@@ -393,7 +371,6 @@ class ActivityLogViewModelTest {
     fun loadsNextPageOnScrollToBottom() = runBlocking {
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(10, true, ActivityLogAction.FETCH_ACTIVITIES))
-
         viewModel.start(site, rewindableOnly)
         reset(store)
         whenever(store.fetchActivities(anyOrNull()))
@@ -541,38 +518,28 @@ class ActivityLogViewModelTest {
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel)
-                .isEqualTo(UiStringText("TEST"))
+        assertThat((viewModel.filtersUiState.value as FiltersShown).dateRangeLabel).isEqualTo(UiStringText("TEST"))
     }
 
     @Test
     fun dateRangeLabelFormattingUsesGMT0Timezone() {
-        whenever(
-                dateUtils.formatDateRange(
-                        anyOrNull(),
-                        anyOrNull(),
-                        formatDateRangeTimezoneCaptor.capture()
-                )
-        ).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), formatDateRangeTimezoneCaptor.capture()))
+                .thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
-        assertThat(formatDateRangeTimezoneCaptor.firstValue)
-                .isEqualTo(TIMEZONE_GMT_0)
+        assertThat(formatDateRangeTimezoneCaptor.firstValue).isEqualTo(TIMEZONE_GMT_0)
     }
 
     @Test
     fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
-        whenever(
-                dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())
-        ).thenReturn("TEST")
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 
         viewModel.onDateRangeSelected(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS))
         viewModel.dateRangePickerClicked()
 
-        assertThat(showDateRangePickerEvents[0].initialSelection).isEqualTo(
-                Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS)
-        )
+        assertThat(showDateRangePickerEvents[0].initialSelection)
+                .isEqualTo(Pair(DATE_1_IN_MILLIS, DATE_2_IN_MILLIS + ONE_DAY_WITHOUT_SECOND_IN_MILLIS))
     }
 
     @Test
@@ -593,9 +560,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun onActivityTypeFilterClearActionClickClearActionDisappears() {
-        viewModel.onActivityTypesSelected(
-                listOf(ActivityTypeModel("user", "User", 10))
-        )
+        viewModel.onActivityTypesSelected(listOf(ActivityTypeModel("user", "User", 10)))
 
         (viewModel.filtersUiState.value as FiltersShown).onClearActivityTypeFilterClicked!!.invoke()
 
@@ -630,13 +595,9 @@ class ActivityLogViewModelTest {
                 )
         )
 
+        val params = listOf(UiStringText("2"))
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
-                .isEqualTo(
-                        UiStringResWithParams(
-                                R.string.activity_log_activity_type_filter_active_label,
-                                listOf(UiStringText("2"))
-                        )
-                )
+                .isEqualTo(UiStringResWithParams(R.string.activity_log_activity_type_filter_active_label, params))
     }
 
     @Test
