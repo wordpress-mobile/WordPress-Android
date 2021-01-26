@@ -79,29 +79,32 @@ class ThreatItemBuilder @Inject constructor() {
                 UiStringRes(R.string.threat_item_sub_header_status_ignored)
             }
             else -> {
-                when (threatModel) {
-                    is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
+                buildThreatItemDescription(threatModel)
+            }
+        }
+    }
+    fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {
+        return when (threatModel) {
+            is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
-                    is DatabaseThreatModel -> null
+            is DatabaseThreatModel -> null
 
-                    is FileThreatModel -> UiStringResWithParams(
-                            R.string.threat_item_sub_header_file_signature,
-                            listOf(UiStringText(threatModel.baseThreatModel.signature))
+            is FileThreatModel -> UiStringResWithParams(
+                    R.string.threat_item_sub_header_file_signature,
+                    listOf(UiStringText(threatModel.baseThreatModel.signature))
+            )
+
+            is VulnerableExtensionThreatModel -> {
+                when (threatModel.extension.type) {
+                    ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
+                    ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
+                    ExtensionType.UNKNOWN -> throw IllegalArgumentException(
+                            "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
                     )
-
-                    is VulnerableExtensionThreatModel -> {
-                        when (threatModel.extension.type) {
-                            ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
-                            ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
-                            ExtensionType.UNKNOWN -> throw IllegalArgumentException(
-                                    "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
-                            )
-                        }
-                    }
-
-                    is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
                 }
             }
+
+            is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
         }
     }
 
