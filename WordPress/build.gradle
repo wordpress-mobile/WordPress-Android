@@ -340,7 +340,7 @@ dependencies {
         exclude group: 'org.wordpress', module: 'utils' 
     }
 
-    implementation (group: 'com.zendesk', name: 'support', version: '5.0.1') {
+    implementation (group: 'com.zendesk', name: 'support', version: '5.0.2') {
         exclude group: 'com.google.dagger'
         exclude group: 'com.android.support', module: 'support-annotations'
     }
