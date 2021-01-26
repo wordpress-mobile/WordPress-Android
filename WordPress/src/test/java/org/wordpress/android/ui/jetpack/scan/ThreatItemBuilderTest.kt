@@ -89,12 +89,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
     @Test
     fun `builds threat sub header correctly for DatabaseThreatModel`() {
-        // Arrange
-        val expectedSubHeader = UiStringText("")
         // Act
         val threatItem = buildThreatItem(ThreatTestData.databaseThreatModel)
         // Assert
-        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
+        assertThat(threatItem.subHeader).isNull()
     }
 
     @Test
@@ -215,7 +213,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Act
         val threatItem = buildThreatItem(threatModel)
         // Assert
-        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_shield_white)
+        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_shield_tick_white)
         assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_success_50)
     }
 

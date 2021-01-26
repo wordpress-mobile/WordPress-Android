@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.jetpack_list_button_item.item_container
 import kotlinx.android.synthetic.main.jetpack_list_checkbox_item.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
