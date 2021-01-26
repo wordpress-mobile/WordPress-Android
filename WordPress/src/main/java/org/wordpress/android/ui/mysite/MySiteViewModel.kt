@@ -279,7 +279,10 @@ class MySiteViewModel
                 PAGES -> OpenPages(site)
                 ADMIN -> OpenAdmin(site)
                 PEOPLE -> OpenPeople(site)
-                SHARING -> OpenSharing(site)
+                SHARING -> {
+                    quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+                    OpenSharing(site)
+                }
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
