@@ -15,6 +15,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP
 import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
@@ -48,7 +49,7 @@ class JetpackCapabilitiesUseCaseTest {
                 currentTimeProvider,
                 TEST_DISPATCHER
         )
-        event = OnJetpackCapabilitiesFetched(SITE_ID, listOf(BACKUP_REALTIME), null)
+        event = buildCapabilitiesFetchedEvent(listOf(BACKUP_REALTIME))
         whenever(appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(anyLong())).thenReturn(0)
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(99999999))
     }
@@ -109,4 +110,7 @@ class JetpackCapabilitiesUseCaseTest {
 
         verify(appPrefsWrapper).setSiteJetpackCapabilities(SITE_ID, event.capabilities!!)
     }
+
+    private fun buildCapabilitiesFetchedEvent(capabilities: List<JetpackCapability>) =
+        OnJetpackCapabilitiesFetched(SITE_ID, capabilities, null)
 }
