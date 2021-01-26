@@ -90,7 +90,7 @@ class ExperimentRestClientTest {
         val payload = experimentRestClient.fetchAssignments(defaultPlatform)
 
         assertThat(payload).isNotNull
-        assertThat(payload.isError).isTrue()
+        assertThat(payload.isError).isTrue
     }
 
     private suspend fun initRequest(response: Response<FetchAssignmentsResponse>) {
@@ -113,10 +113,9 @@ class ExperimentRestClientTest {
         val defaultPlatform = CALYPSO
 
         private val successfulVariations = mapOf(
-                "experiment_one" to "control",
+                "experiment_one" to null,
                 "experiment_two" to "treatment",
-                "experiment_three" to null,
-                "experiment_four" to "other"
+                "experiment_three" to "other"
         )
 
         val successfulResponse = FetchAssignmentsResponse(successfulVariations, 3600)
