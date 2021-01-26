@@ -55,8 +55,8 @@ class PostRestoreUseCase @Inject constructor(
         }
     }
 
-    private fun isRestoreRunning(rewind: RewindStatusModel.Rewind?) : Boolean {
-        if (rewind == null ) return false
+    private fun isRestoreRunning(rewind: RewindStatusModel.Rewind?): Boolean {
+        if (rewind == null) return false
         return (rewind.status == QUEUED || rewind.status == RUNNING)
     }
 }

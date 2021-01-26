@@ -105,7 +105,7 @@ class PostRestoreUseCaseTest : BaseUnitTest() {
 
         val result = useCase.postRestoreRequest(rewindId, siteModel, types)
 
-        assertThat(result).isEqualTo(Success(requestRewindId = rewindId, rewindId= rewindId, restoreId=restoreId))
+        assertThat(result).isEqualTo(Success(requestRewindId = rewindId, rewindId = rewindId, restoreId = restoreId))
     }
 
     @Test
