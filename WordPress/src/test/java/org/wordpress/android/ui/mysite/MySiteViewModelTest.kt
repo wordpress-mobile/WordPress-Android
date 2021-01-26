@@ -27,6 +27,8 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
@@ -54,6 +56,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -109,6 +112,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
+    @Mock lateinit var quickStartRepository: QuickStartRepository
+    @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -126,6 +131,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData<Boolean>()
+    private val quickStartModel = MutableLiveData<QuickStartModel>()
 
     @InternalCoroutinesApi
     @Before
@@ -136,6 +142,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
+        whenever(quickStartRepository.quickStartModel).thenReturn(quickStartModel)
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
@@ -156,7 +163,9 @@ class MySiteViewModelTest : BaseUnitTest() {
                 backupScreenFeatureConfig,
                 displayUtilsWrapper,
                 jetpackCapabilitiesUseCase,
-                scanScreenFeatureConfig
+                scanScreenFeatureConfig,
+                quickStartRepository,
+                quickStartItemBuilder
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -192,15 +201,26 @@ class MySiteViewModelTest : BaseUnitTest() {
         site.name = siteName
         site.iconUrl = siteIcon
         siteInfoBlock = SiteInfoBlock(
-                siteName,
-                siteUrl,
-                IconState.Visible(siteIcon),
-                null,
-                mock(),
-                mock(),
-                mock()
+                title = siteName,
+                url = siteUrl,
+                iconState = IconState.Visible(siteIcon),
+                showTitleFocusPoint = false,
+                showIconFocusPoint = false,
+                onTitleClick = null,
+                onIconClick = mock(),
+                onUrlClick = mock(),
+                onSwitchSiteClick = mock()
         )
-        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())).thenReturn(
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = any(),
+                showUploadSiteIconFocusPoint = any()
+        )).thenReturn(
                 siteInfoBlock
         )
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
@@ -221,7 +241,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
-        assertThat(getLastItems()).hasSize(4) // TODO Change to 2 after implementing the Quick Start card logic
+        assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
     }
 
@@ -385,6 +405,50 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeSiteInfoBlockAction(SWITCH_SITE_CLICK)
 
         assertThat(navigationActions).containsOnly(OpenSitePicker(site))
+    }
+
+    @Test
+    fun `passes active UPDATE_SITE_TITLE into site info block builder`() {
+        onSiteChange.postValue(site)
+
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = eq(true),
+                showUploadSiteIconFocusPoint = eq(false)
+        )).thenReturn(
+                siteInfoBlock.copy(showTitleFocusPoint = true)
+        )
+
+        quickStartModel.value = QuickStartModel(UPDATE_SITE_TITLE, listOf())
+
+        assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
+    }
+
+    @Test
+    fun `passes active UPLOAD_SITE_ICON into site info block builder`() {
+        onSiteChange.postValue(site)
+
+        whenever(siteInfoBlockBuilder.buildSiteInfoBlock(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = eq(false),
+                showUploadSiteIconFocusPoint = eq(true)
+        )).thenReturn(
+                siteInfoBlock.copy(showIconFocusPoint = true)
+        )
+
+        quickStartModel.value = QuickStartModel(UPLOAD_SITE_ICON, listOf())
+
+        assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue()
     }
 
     @Test
@@ -823,6 +887,9 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findDomainRegistrationBlock() =
             getLastItems().find { it is DomainRegistrationBlock } as DomainRegistrationBlock?
 
+    private fun findSiteInfoBlock() =
+            getLastItems().find { it is SiteInfoBlock } as SiteInfoBlock?
+
     private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
@@ -836,7 +903,16 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(argument)
             siteInfoBlock
-        }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(eq(site), any(), any(), any(), any(), any())
+        }.whenever(siteInfoBlockBuilder).buildSiteInfoBlock(
+                site = eq(site),
+                showSiteIconProgressBar = any(),
+                titleClick = any(),
+                iconClick = any(),
+                urlClick = any(),
+                switchSiteClick = any(),
+                showUpdateSiteTitleFocusPoint = any(),
+                showUploadSiteIconFocusPoint = any()
+        )
 
         onSiteChange.postValue(site)
 

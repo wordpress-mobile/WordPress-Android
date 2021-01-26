@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
@@ -78,24 +79,26 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     @Test
     fun `builds basic list items correctly for a ThreatModel`() {
         // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
         val expectedIconItem = IconState(
-            icon = R.drawable.ic_scan_idle_threats_found,
+            icon = R.drawable.ic_shield_warning_white,
+            colorResId = R.color.error,
             contentDescription = UiStringRes(R.string.threat_details_icon)
         )
         val expectedThreatItemHeader = HeaderState(
-            text = threatItemBuilder.buildThreatItemHeader(ThreatTestData.genericThreatModel),
+            text = threatItemBuilder.buildThreatItemHeader(threatModel),
             textColorRes = R.attr.colorError
         )
         val expectedThreatItemSubHeader = DescriptionState(
-            threatItemBuilder.buildThreatItemSubHeader(ThreatTestData.genericThreatModel)
+            threatItemBuilder.buildThreatItemSubHeader(threatModel)
         )
         val expectedProblemHeader = HeaderState(UiStringRes(R.string.threat_problem_header))
         val expectedProblemDescription = DescriptionState(
-            UiStringText(ThreatTestData.genericThreatModel.baseThreatModel.description)
+            UiStringText(threatModel.baseThreatModel.description)
         )
 
         // Act
-        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
+        val threatItems = buildThreatDetailsListItems(threatModel)
 
         // Assert
         Assertions.assertThat(threatItems).size().isEqualTo(5)

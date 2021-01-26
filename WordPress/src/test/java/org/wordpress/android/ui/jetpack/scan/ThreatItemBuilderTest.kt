@@ -9,6 +9,10 @@ import org.junit.Test
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
@@ -23,6 +27,28 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     @Before
     fun setUp() {
         builder = ThreatItemBuilder()
+    }
+
+    @Test
+    fun `builds threat sub header correctly for fixed threat`() {
+        // Arrange
+        val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_status_fixed)
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = FIXED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
+    }
+
+    @Test
+    fun `builds threat sub header correctly for ignored threat`() {
+        // Arrange
+        val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_status_ignored)
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = IGNORED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
     }
 
     @Test
@@ -63,12 +89,10 @@ class ThreatItemBuilderTest : BaseUnitTest() {
 
     @Test
     fun `builds threat sub header correctly for DatabaseThreatModel`() {
-        // Arrange
-        val expectedSubHeader = UiStringText("")
         // Act
         val threatItem = buildThreatItem(ThreatTestData.databaseThreatModel)
         // Assert
-        assertThat(threatItem.subHeader).isEqualTo(expectedSubHeader)
+        assertThat(threatItem.subHeader).isNull()
     }
 
     @Test
@@ -180,6 +204,39 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         threatItem.onClick.invoke()
         // Assert
         verify(onThreatItemClicked).invoke(ThreatTestData.genericThreatModel.baseThreatModel.id)
+    }
+
+    @Test
+    fun `Shield icon and green background is used for fixed threat`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_shield_tick_white)
+        assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_success_50)
+    }
+
+    @Test
+    fun `Notice icon and grey background is used for ignored threat`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = IGNORED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_notice_outline_white_24dp)
+        assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_neutral_30)
+    }
+
+    @Test
+    fun `Notice icon and red background is used for current threat`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = CURRENT))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.icon).isEqualTo(R.drawable.ic_notice_outline_white_24dp)
+        assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_error_50)
     }
 
     private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((Long) -> Unit) = mock()) =

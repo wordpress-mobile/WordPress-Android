@@ -7,8 +7,8 @@ import android.view.animation.Animation
 import android.view.animation.Animation.AnimationListener
 import android.view.animation.AnimationUtils
 import android.widget.FrameLayout
-
 import org.wordpress.android.R
+import org.wordpress.android.R.styleable
 
 /**
  * Perpetually animated quick start focus point (hint)
@@ -22,6 +22,10 @@ class QuickStartFocusPoint : FrameLayout {
     companion object {
         const val OUTER_CIRCLE_ANIMATION_START_OFFSET_MS = 1000L
         const val INNER_CIRCLE_ANIMATION_START_OFFSET_MS = OUTER_CIRCLE_ANIMATION_START_OFFSET_MS + 50L
+
+        // these must match the same values in attrs.xml
+        private const val SIZE_SMALL = 0
+        private const val SIZE_NORMAL = 1
     }
 
     constructor(context: Context) : super(context) {
@@ -29,16 +33,45 @@ class QuickStartFocusPoint : FrameLayout {
     }
 
     constructor(context: Context, attrs: AttributeSet) : super(context, attrs) {
-        initView()
+        initView(readSize(attrs))
     }
 
     constructor(context: Context, attrs: AttributeSet, defStyle: Int) : super(context, attrs, defStyle) {
-        initView()
+        initView(readSize(attrs))
     }
 
-    private fun initView() {
-        View.inflate(context, R.layout.quick_start_focus_circle, this)
+    private fun initView(readSize: Int = SIZE_NORMAL) {
+        val layout = when (readSize) {
+            SIZE_SMALL -> R.layout.quick_start_focus_circle_small
+            else -> R.layout.quick_start_focus_circle
+        }
+        View.inflate(context, layout, this)
+        startAnimation()
+    }
 
+    private fun readSize(attrs: AttributeSet): Int {
+        val a = context.theme.obtainStyledAttributes(
+                attrs,
+                styleable.QuickStartFocusPoint,
+                0, 0
+        )
+        try {
+            return a.getInteger(styleable.QuickStartFocusPoint_size, SIZE_NORMAL)
+        } finally {
+            a.recycle()
+        }
+    }
+
+    fun setVisibleOrGone(visible: Boolean) {
+        if (visible) {
+            this.visibility = View.VISIBLE
+            startAnimation()
+        } else {
+            this.visibility = View.GONE
+        }
+    }
+
+    private fun startAnimation() {
         val outerCircle = findViewById<View>(R.id.quick_start_focus_outer_circle)
         val innerCircle = findViewById<View>(R.id.quick_start_focus_inner_circle)
 

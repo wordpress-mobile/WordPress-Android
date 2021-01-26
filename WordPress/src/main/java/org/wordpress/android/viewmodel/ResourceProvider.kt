@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel
 
+import android.graphics.drawable.Drawable
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
@@ -47,5 +48,13 @@ class ResourceProvider @Inject constructor(private val contextProvider: ContextP
         return if (quantity == 1) {
             contextProvider.getContext().getString(one)
         } else String.format(contextProvider.getContext().getString(other), quantity)
+    }
+
+    fun getDimensionPixelOffset(id: Int): Int {
+        return contextProvider.getContext().resources.getDimensionPixelOffset(id)
+    }
+
+    fun getDrawable(iconId: Int): Drawable? {
+        return ContextCompat.getDrawable(contextProvider.getContext(), iconId)
     }
 }

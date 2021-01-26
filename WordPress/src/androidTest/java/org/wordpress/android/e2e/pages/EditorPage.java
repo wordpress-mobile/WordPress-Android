@@ -4,6 +4,8 @@ import androidx.test.core.app.ApplicationProvider;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
+import com.google.android.material.snackbar.SnackbarContentLayout;
+
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -13,6 +15,7 @@ import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.RootMatchers.isDialog;
+import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.isDescendantOfA;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withHint;
@@ -33,7 +36,7 @@ public class EditorPage {
     private static ViewInteraction titleField = onView(allOf(withId(R.id.title),
             withHint("Title")));
     private static ViewInteraction publishConfirmation = onView(allOf(
-            withText("Post published"), isDescendantOfA(withId(R.id.snackbar))));
+            withText("Post published"), isDescendantOfA(isAssignableFrom(SnackbarContentLayout.class))));
     private static ViewInteraction allowMediaAccessButton = onView(allOf(withId(R.id.button),
             withText("Allow")));
     private static ViewInteraction confirmButton = onView(withId(R.id.mnu_confirm_selection));
