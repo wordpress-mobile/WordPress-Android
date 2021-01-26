@@ -150,6 +150,7 @@ class ActivityLogViewModelTest {
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
+
         viewModel.events.observeForever { events.add(it) }
         viewModel.eventListStatus.observeForever { eventListStatuses.add(it) }
         viewModel.showItemDetail.observeForever { itemDetails.add(it) }
@@ -157,6 +158,7 @@ class ActivityLogViewModelTest {
         viewModel.moveToTop.observeForever { moveToTopEvents.add(it) }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
         viewModel.showDateRangePicker.observeForever { showDateRangePickerEvents.add(it) }
+
         fetchActivityLogCaptor = argumentCaptor()
         formatDateRangeTimezoneCaptor = argumentCaptor()
 
