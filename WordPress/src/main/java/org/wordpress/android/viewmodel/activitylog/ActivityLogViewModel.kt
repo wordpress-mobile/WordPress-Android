@@ -386,7 +386,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun updateRewindState(status: Rewind.Status?) {
         lastRewindStatus = status
         if (status == Rewind.Status.RUNNING && !isRewindProgressItemShown) {
-            reloadEvents(disableActions = true, displayProgressItem = true)
+            reloadEvents(restoreEvent = RestoreEvent(displayProgress = true))
         } else if (status != Rewind.Status.RUNNING && isRewindProgressItemShown) {
             requestEventsUpdate(false)
         }
@@ -394,9 +394,8 @@ class ActivityLogViewModel @Inject constructor(
 
     @VisibleForTesting
     fun reloadEvents(
-        disableActions: Boolean = areActionsEnabled,
-        displayProgressItem: Boolean = isRewindProgressItemShown,
-        done: Boolean = isDone
+        done: Boolean = isDone,
+        restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)
     ) {
         val eventList = activityLogStore.getActivityLogForSite(
                 site = site,
@@ -405,8 +404,8 @@ class ActivityLogViewModel @Inject constructor(
         )
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
-        val rewindFinished = isRewindProgressItemShown && !displayProgressItem
-        if (displayProgressItem) {
+        val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
+        if (withRestoreProgressItem) {
             val activityLogModel = rewindStatusService.rewindProgress.value?.activityLogItem
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
             items.add(getRewindProgressItem(activityLogModel))
@@ -415,7 +414,7 @@ class ActivityLogViewModel @Inject constructor(
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
                     model,
-                    disableActions,
+                    withRestoreProgressItem,
                     backupDownloadFeatureConfig.isEnabled(),
                     restoreFeatureConfig.isEnabled()
             )
@@ -431,13 +430,13 @@ class ActivityLogViewModel @Inject constructor(
         if (eventList.isNotEmpty() && site.hasFreePlan && done) {
             items.add(ActivityLogListItem.Footer)
         }
-        areActionsEnabled = !disableActions
+        areActionsEnabled = !withRestoreProgressItem
 
         _events.value = items
         if (moveToTop) {
             _moveToTop.call()
         }
-        if (rewindFinished) {
+        if (restoreEvent.isCompleted) {
             showRewindFinishedMessage()
         }
     }
@@ -466,7 +465,7 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
-    private fun requestEventsUpdate(loadMore: Boolean) {
+    private fun requestEventsUpdate(loadMore: Boolean, restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)) {
         val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
         val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
         if (loadMore && (isLoadingMore || !canLoadMore)) {
@@ -486,7 +485,7 @@ class ActivityLogViewModel @Inject constructor(
         fetchActivitiesJob = launch {
             val result = activityLogStore.fetchActivities(payload)
             if (isActive) {
-                onActivityLogFetched(result, loadMore)
+                onActivityLogFetched(result, loadMore, restoreEvent)
                 fetchActivitiesJob = null
             }
         }
@@ -527,7 +526,7 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun onActivityLogFetched(event: OnActivityLogFetched, loadingMore: Boolean) {
+    private fun onActivityLogFetched(event: OnActivityLogFetched, loadingMore: Boolean, restoreEvent: RestoreEvent) {
         if (event.isError) {
             _eventListStatus.value = ActivityLogListStatus.ERROR
             AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
@@ -536,9 +535,8 @@ class ActivityLogViewModel @Inject constructor(
 
         if (event.rowsAffected > 0) {
             reloadEvents(
-                    !rewindStatusService.isRewindAvailable,
-                    rewindStatusService.isRewindInProgress,
-                    !event.canLoadMore
+                    done = !event.canLoadMore,
+                    restoreEvent = restoreEvent.copy(displayProgress = isRewindProgressItemShown),
             )
             if (!loadingMore) {
                 moveToTop.call()
@@ -558,6 +556,13 @@ class ActivityLogViewModel @Inject constructor(
         val siteId: RemoteId,
         val initialSelection: List<String>,
         val dateRange: DateRange?
+    )
+
+    data class RestoreEvent(
+        val displayProgress: Boolean,
+        val isCompleted: Boolean = false,
+        val rewindId: String? = null,
+        val date: Date? = null,
     )
 
     sealed class FiltersUiState(val visibility: Boolean) {
