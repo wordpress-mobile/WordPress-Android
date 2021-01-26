@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 132
+        return 133
     }
 
     override fun getDbName(): String {
@@ -1441,7 +1441,17 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "URL TEXT)"
                     )
                 }
-                131 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                131 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS RewindStatus")
+                    db.execSQL(
+                            "CREATE TABLE RewindStatus (_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "LOCAL_SITE_ID INTEGER,REMOTE_SITE_ID INTEGER,STATE TEXT NOT NULL," +
+                                    "LAST_UPDATED INTEGER,REASON TEXT,CAN_AUTOCONFIGURE INTEGER,REWIND_ID TEXT," +
+                                    "RESTORE_ID INTEGER,REWIND_STATUS TEXT,REWIND_PROGRESS INTEGER," +
+                                    "REWIND_REASON TEXT,MESSAGE TEXT,CURRENT_ENTRY TEXT)"
+                    )
+                }
+                132 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCProductAttributeModel")
                     db.execSQL(
                             "CREATE TABLE WCProductAttributeModel (" +
