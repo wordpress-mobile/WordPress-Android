@@ -18,10 +18,14 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateFormatWrapper
+import java.util.Date
 import javax.inject.Inject
 
 @Reusable
-class ThreatItemBuilder @Inject constructor() {
+class ThreatItemBuilder @Inject constructor(
+    private val dateFormatWrapper: DateFormatWrapper
+) {
     fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatId: Long) -> Unit) =
         ThreatItemState(
             threatId = threatModel.baseThreatModel.id,
@@ -70,10 +74,13 @@ class ThreatItemBuilder @Inject constructor() {
         is GenericThreatModel -> UiStringRes(R.string.threat_item_header_threat_found)
     }
 
-    fun buildThreatItemSubHeader(threatModel: ThreatModel): UiString? {
+    private fun buildThreatItemSubHeader(threatModel: ThreatModel): UiString? {
         return when (threatModel.baseThreatModel.status) {
             FIXED -> {
-                UiStringRes(R.string.threat_item_sub_header_status_fixed)
+                UiStringResWithParams(
+                    R.string.threat_item_sub_header_status_fixed,
+                    listOf(getDateString(threatModel.baseThreatModel.fixedOn))
+                )
             }
             IGNORED -> {
                 UiStringRes(R.string.threat_item_sub_header_status_ignored)
@@ -120,6 +127,13 @@ class ThreatItemBuilder @Inject constructor() {
                 IGNORED -> R.drawable.bg_oval_neutral_30
                 UNKNOWN, CURRENT -> R.drawable.bg_oval_error_50
             }
+
+    private fun getDateString(date: Date?): UiStringText {
+        return date?.let {
+            val dateFormat = dateFormatWrapper.getLongDateFormat()
+            return UiStringText(dateFormat.format(date))
+        } ?: UiStringText("")
+    }
 
     /**
      * Uses regex to remove the whole path except of the file name
