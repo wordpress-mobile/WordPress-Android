@@ -368,7 +368,7 @@ class ReaderDiscoverViewModel @Inject constructor(
             findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItems(
-                            post, TAG_FOLLOWED, this@ReaderDiscoverViewModel::onButtonClicked
+                            post, this@ReaderDiscoverViewModel::onButtonClicked
                     )
                 } else {
                     null
