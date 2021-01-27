@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
-import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
@@ -89,7 +88,9 @@ class RewindStatusServiceTest {
             restoreId = 10,
             status = RUNNING,
             progress = progress,
-            reason = null
+            reason = null,
+            message = null,
+            currentEntry = null
     )
 
     @Before
@@ -201,7 +202,7 @@ class RewindStatusServiceTest {
         rewindStatusService.requestStatusUpdate()
 
         assertEquals(rewindAvailable, false)
-        assertEquals(rewindProgress?.status, Status.RUNNING)
+        assertEquals(rewindProgress?.status, RUNNING)
         assertEquals(rewindProgress, RewindProgress(activityLogModel, progress, published, RUNNING))
     }
 
@@ -218,7 +219,7 @@ class RewindStatusServiceTest {
         rewindStatusService.requestStatusUpdate()
 
         assertEquals(rewindAvailable, true)
-        assertEquals(rewindProgress?.status, Status.FINISHED)
+        assertEquals(rewindProgress?.status, FINISHED)
     }
 
     @Test

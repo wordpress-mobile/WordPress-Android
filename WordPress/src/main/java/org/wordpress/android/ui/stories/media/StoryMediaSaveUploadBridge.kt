@@ -96,16 +96,22 @@ class StoryMediaSaveUploadBridge @Inject constructor(
     private fun addNewStoryFrameMediaItemsToPostAndUploadAsync(site: SiteModel, saveResult: StorySaveResult) {
         // let's invoke the UploadService and enqueue all the files that were saved by the FrameSaveService
         val frames = storyRepositoryWrapper.getStoryAtIndex(saveResult.storyIndex).frames
-        val uriList = frames.map { Uri.fromFile(it.composedFrameFile) }
-        addNewMediaItemsToPostAsync(site, uriList, saveResult.isEditMode)
+        addNewMediaItemsInStoryFramesToPostAsync(site, frames, saveResult.isEditMode)
     }
 
-    private fun addNewMediaItemsToPostAsync(site: SiteModel, uriList: List<Uri>, isEditMode: Boolean) {
+    private fun addNewMediaItemsInStoryFramesToPostAsync(
+        site: SiteModel,
+        frames: List<StoryFrameItem>,
+        isEditMode: Boolean
+    ) {
+        val uriList = frames.map { Uri.fromFile(it.composedFrameFile) }
+
         // this is similar to addNewMediaItemsToEditorAsync in EditorMedia
         launch {
             val localEditorMediaListener = object : EditorMediaListener {
                 override fun appendMediaFiles(mediaFiles: Map<String, MediaFile>) {
                     if (!isEditMode) {
+                        saveStoryGutenbergBlockUseCase.assignAltOnEachMediaFile(frames, ArrayList(mediaFiles.values))
                         saveStoryGutenbergBlockUseCase.buildJetpackStoryBlockInPost(
                                 editPostRepository,
                                 ArrayList(mediaFiles.values)
@@ -135,44 +141,45 @@ class StoryMediaSaveUploadBridge @Inject constructor(
 
                     // here we change the ids on the actual StoryFrameItems, and also update the flattened / composed image
                     // urls with the new URLs which may have been replaced after image optimization
-                    for (story in storyRepositoryWrapper.getImmutableStories()) {
-                        // find the MediaModel for a given Uri from composedFrameFile
-                        for (frame in story.frames) {
-                            // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
-                            // value with the new (probably optimized) URL and also keep track of the new id.
-                            val oldUri = Uri.fromFile(frame.composedFrameFile)
-                            val mediaModel = oldUriToMediaFiles.get(oldUri)
-                            mediaModel?.let {
-                                val oldTemporaryId = frame.id ?: ""
-                                frame.id = it.id.toString()
+                    // find the MediaModel for a given Uri from composedFrameFile
+                    for (frame in frames) {
+                        // if the old URI in frame.composedFrameFile exists as a key in the passed map, then update that
+                        // value with the new (probably optimized) URL and also keep track of the new id.
+                        val oldUri = Uri.fromFile(frame.composedFrameFile)
+                        val mediaModel = oldUriToMediaFiles.get(oldUri)
+                        mediaModel?.let {
+                            val oldTemporaryId = frame.id ?: ""
+                            frame.id = it.id.toString()
 
-                                // if prefs has this Slide with the temporary key, replace it
-                                // if not, let's now save the new slide with the local key
-                                storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
-                                        TempId(oldTemporaryId),
-                                        LocalId(it.id),
-                                        it.localSiteId.toLong()
-                                ) ?: storiesPrefs.saveSlideWithLocalId(
-                                        it.localSiteId.toLong(),
-                                        // use the local id to save the original, will be replaced later
-                                        // with mediaModel.mediaId after uploading to the remote site
-                                        LocalId(it.id),
-                                        frame
+                            // set alt text on MediaModel too
+                            mediaModel.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frame)
+
+                            // if prefs has this Slide with the temporary key, replace it
+                            // if not, let's now save the new slide with the local key
+                            storiesPrefs.replaceTempMediaIdKeyedSlideWithLocalMediaIdKeyedSlide(
+                                    TempId(oldTemporaryId),
+                                    LocalId(it.id),
+                                    it.localSiteId.toLong()
+                            ) ?: storiesPrefs.saveSlideWithLocalId(
+                                    it.localSiteId.toLong(),
+                                    // use the local id to save the original, will be replaced later
+                                    // with mediaModel.mediaId after uploading to the remote site
+                                    LocalId(it.id),
+                                    frame
+                            )
+
+                            // for editMode, we'll need to tell the Gutenberg Editor to replace their mediaFiles
+                            // ids with the new MediaModel local ids are created so, broadcasting the event.
+                            if (isEditMode) {
+                                // finally send the event that this frameId has changed
+                                EventBus.getDefault().post(
+                                        StoryFrameMediaModelCreatedEvent(
+                                                oldTemporaryId,
+                                                it.id,
+                                                oldUri.toString(),
+                                                frame
+                                        )
                                 )
-
-                                // for editMode, we'll need to tell the Gutenberg Editor to replace their mediaFiles
-                                // ids with the new MediaModel local ids are created so, broadcasting the event.
-                                if (isEditMode) {
-                                    // finally send the event that this frameId has changed
-                                    EventBus.getDefault().post(
-                                            StoryFrameMediaModelCreatedEvent(
-                                                    oldTemporaryId,
-                                                    it.id,
-                                                    oldUri.toString(),
-                                                    frame
-                                            )
-                                    )
-                                }
                             }
                         }
                     }

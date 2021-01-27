@@ -3,13 +3,12 @@ package org.wordpress.android.viewmodel.pages
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
-import org.wordpress.android.modules.UI_SCOPE
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -20,6 +19,7 @@ import org.wordpress.android.ui.pages.PageItem.PublishedPage
 import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.viewmodel.ResourceProvider
+import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.DRAFTS
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -36,8 +36,8 @@ class SearchListViewModel
     private val pageListItemActionsUseCase: CreatePageListItemActionsUseCase,
     private val pageItemProgressUiStateUseCase: PageItemProgressUiStateUseCase,
     private val resourceProvider: ResourceProvider,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope
-) : ViewModel() {
+    @Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
+) : ScopedViewModel(uiDispatcher) {
     private val _searchResult: MutableLiveData<List<PageItem>> = MutableLiveData()
     val searchResult: LiveData<List<PageItem>> = _searchResult
 
@@ -76,7 +76,7 @@ class SearchListViewModel
         pagesViewModel.onItemTapped(pageItem)
     }
 
-    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = uiScope.launch {
+    private fun loadFoundPages(pages: SortedMap<PageListType, List<PageModel>>) = launch {
         if (pages.isNotEmpty()) {
             val pageItems = pages
                     .map { (listType, results) ->

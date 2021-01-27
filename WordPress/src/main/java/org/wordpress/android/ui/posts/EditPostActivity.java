@@ -3367,6 +3367,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError()) {
+            View view = mEditorFragment.getView();
+            if (view != null) {
+                mUploadUtilsWrapper.showSnackbarError(
+                        view,
+                        getString(R.string.error_media_upload_failed_for_reason,
+                                UploadUtils.getErrorMessageFromMedia(this, event.media))
+                );
+            }
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful

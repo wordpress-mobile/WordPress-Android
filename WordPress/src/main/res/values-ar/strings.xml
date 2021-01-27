@@ -1,11 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-01 03:32:53+0000
+Translation-Revision-Date: 2021-01-19 22:00:15+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="label_control_upload">رفع</string>
+    <string name="jetpack_icon_content_description">أيقونة</string>
+    <string name="backup_download_complete_download_share_action_button">رابط المشاركة</string>
+    <string name="backup_download_complete_download_action_button">تنزيل</string>
+    <string name="backup_download_complete_header">أصبحت نسختك الاحتياطية متاحة للتنزيل الآن</string>
+    <string name="backup_download_complete_page_title">نسختك الاحتياطية</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="threat_get_free_estimate">احصل على عرض سعر مجاني</string>
+    <string name="threat_ignore">تجاهل التهديد</string>
+    <string name="threat_fix">إصلاح التهديد</string>
+    <string name="threat_fix_fixed_header">كيف أصلح Jetpack هذا الأمر؟</string>
+    <string name="threat_fix_default_header">كيف سنقوم بإصلاحه؟</string>
+    <string name="threat_file_description">تم العثور على تهديد في الملف:</string>
+    <string name="threat_technical_details_header">التفاصيل الفنية</string>
+    <string name="threat_problem_header">ما المشكلة؟</string>
+    <string name="threat_details_icon">أيقونة تفاصيل التهديد</string>
+    <string name="threat_details">تفاصيل التهديد</string>
+    <string name="scan_in_few_seconds">في بضع ثوانٍ</string>
+    <string name="scan_in_minutes_ago">قبل %s دقيقة</string>
+    <string name="scan_in_hours_ago">قبل %s ساعة</string>
+    <string name="scan_this_site">هذا الموقع</string>
+    <string name="scan_idle_threats_found_title">قد يكون موقعك معرَّضًا للخطر</string>
+    <string name="scan_idle_no_threats_found_title">لا داعي للقلق تجاه أي شيء</string>
+    <string name="scan_scanning_title">الإعداد للفحص</string>
+    <string name="scan_again">إعادة الفحص مرة أخرى</string>
+    <string name="scan_now">الفحص الآن</string>
+    <string name="scan_state_icon">أيقونة حالة الفحص</string>
+    <string name="backup">النسخ الاحتياطي</string>
+    <string name="activity_log_activity_type_empty_subtitle">لم تُسجّل أي أنشطة في مدى التاريخ المحدد.</string>
+    <string name="activity_log_activity_type_empty_title">لا توجد أنشطة متاحة</string>
+    <string name="activity_log_activity_type_error_subtitle">يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
+    <string name="activity_log_activity_type_error_title">لا يوجد اتصال</string>
+    <string name="activity_log_active_filter_empty_subtitle">حاول ضبط مدى التاريخ أو مرشحات نوع النشاط</string>
+    <string name="activity_log_active_filter_empty_title">لم يتم العثور على أحداث متطابقة</string>
+    <string name="rewind">استعادة</string>
     <string name="backup_item_sqls">قاعدة بيانات الموقع (SQL)</string>
     <string name="backup_item_contents">دليل WP-content (باستثناء القوالب والإضافات، والوسائط المرفوعة)</string>
     <string name="backup_item_roots">جذر ووردبريس (يتضمن wp-config.php وأي ملفات لا تنتمي إلى ووردبريس)</string>
@@ -16,12 +51,14 @@ Language: ar
     <string name="backup_download_details_action_button">إنشاء ملف قابل للتنزيل</string>
     <string name="backup_download_details_choose_items_header">اختر العناصر التي ترغب في تضمينها في التنزيل:</string>
     <string name="backup_download_details_header">إنشاء نسخة احتياطية قابلة للتنزيل</string>
-    <string name="backup_download_details_page_title">تنزيل النسخ الاحتياطي</string>
+    <string name="backup_download_details_page_title">تنزيل النسخة الاحتياطية</string>
     <string name="backup_download">تنزيل النسخ الاحتياطي</string>
     <string name="gutenberg_native_error">خطأ</string>
     <string name="gutenberg_native_choose_file">اختيار ملف</string>
     <string name="activity_log_item_menu_download_backup_label">تنزيل النسخة الاحتياطية</string>
     <string name="activity_log_item_menu_restore_label">استعادة إلى هذه النقطة</string>
+    <string name="activity_log_activity_type_filter_label">نوع النشاط</string>
+    <string name="activity_log_date_range_filter_label">نطاق التاريخ</string>
     <string name="activity_log_activity_type_filter_header">تصفية حسب نوع النشاط</string>
     <string name="dialog_confirm_copy_local_copy_button">نسخ الإصدار من هذا التطبيق</string>
     <string name="dialog_confirm_copy_local_edit_button">تحرير المقالة أولاً</string>
@@ -353,6 +390,7 @@ Language: ar
     <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
     <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
+    <string name="suggestion_invalid">\"%s ليس %s صالح\"</string>
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_posts_page">صفحة المقالات</string>
     <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
@@ -485,6 +523,7 @@ Language: ar
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
     <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
     <string name="gutenberg_native_link_to">رابط لـ</string>
+    <string name="gutenberg_native_link_settings">إعدادات الرابط</string>
     <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
     <string name="gutenberg_native_let_s_build_something_together_7019bfe3">دعونا نبني شيئًا معًا!</string>
     <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا!</string>
@@ -601,6 +640,7 @@ Language: ar
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
+    <string name="suffix_1_000">%sK</string>
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
@@ -1235,8 +1275,14 @@ Language: ar
     <string name="support_contact_email">البريد الإلكتروني الخاص بجهة الاتصال</string>
     <string name="application_log_button">سجل التطبيق</string>
     <string name="my_tickets">تذاكري</string>
+    <string name="activity_log_rewind_dialog_message">هل تريد بالتأكيد استعادة موقعك مرة أخرى إلى %1$s في %2$s؟ سيؤدي هذا الإجراء إلى حذف كل المحتوى والخيارات التي تم إنشاؤها أو تم تغييرها من ذلك الحين.</string>
+    <string name="activity_log_rewind_site">استعادة الموقع</string>
+    <string name="activity_log_currently_restoring_message_no_dates">الاستعادة قيد التقدّم</string>
+    <string name="activity_log_currently_restoring_message">الاستعادة إلى %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">استعادة موقعك حاليًا</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">تمت استعادة موقعك بنجاح</string>
+    <string name="activity_log_rewind_finished_snackbar_message">تمت استعادة موقعك بنجاح\nتمت الاستعادة إلى %1$s %2$s</string>
+    <string name="activity_log_rewind_started_snackbar_message">جاري الآن استعادة موقعك\nالاستعادة إلى %1$s %2$s</string>
     <string name="activity_log_button">زر الإجراء في سجل النشاط</string>
     <string name="plugin_auto_managed">إدارة تلقائية</string>
     <string name="reader_save_posts_locally_dialog_message">احفظ هذه المقالة، وعُد إلى قراءتها وقتما تشاء. لن تتوافر إلا على هذا الجهاز — لا تقوم المقالات المحفوظة بالمزامنة إلى أجهزتك الأخرى.</string>
@@ -2464,7 +2510,7 @@ Language: ar
     <string name="cancel_edit">إلغاء التحرير</string>
     <string name="connection_error">خطأ في الاتصال</string>
     <string name="select_categories">تحديد التصنيفات</string>
-    <string name="share_link">مشاركة الرابط</string>
+    <string name="share_link">رابط المشاركة</string>
     <string name="reader_empty_posts_in_tag_updating">يتم الآن جلب المقالات …</string>
     <string name="reader_likes_you_and_multi">أنت و %,d آخرون أحببتم هذا</string>
     <string name="reader_likes_multi">%,d أحبوا هذا</string>

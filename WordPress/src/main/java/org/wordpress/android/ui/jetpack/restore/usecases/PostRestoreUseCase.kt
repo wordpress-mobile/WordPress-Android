@@ -3,7 +3,11 @@ package org.wordpress.android.ui.jetpack.restore.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.QUEUED
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
+import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.IO_THREAD
@@ -27,22 +31,32 @@ class PostRestoreUseCase @Inject constructor(
         types: RewindRequestTypes
     ): RestoreRequestState = withContext(ioDispatcher) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            NetworkUnavailable
+            return@withContext NetworkUnavailable
         }
 
+        val fetchResult = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
+        if (fetchResult.isError) {
+            return@withContext RemoteRequestFailure
+        }
+
+        val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+        if (isRestoreRunning(rewind)) {
+            return@withContext OtherRequestRunning
+        }
         val result = activityLogStore.rewind(RewindPayload(site, rewindId, types))
         if (result.isError) {
             RemoteRequestFailure
         } else {
-            if (result.rewindId == rewindId) {
-                if (result.restoreId == null) {
-                    RemoteRequestFailure
-                } else {
-                    Success(rewindId, result.rewindId, result.restoreId)
-                }
+            if (result.restoreId == null) {
+                RemoteRequestFailure
             } else {
-                OtherRequestRunning
+                Success(rewindId, result.rewindId, result.restoreId)
             }
         }
+    }
+
+    private fun isRestoreRunning(rewind: RewindStatusModel.Rewind?): Boolean {
+        if (rewind == null) return false
+        return (rewind.status == QUEUED || rewind.status == RUNNING)
     }
 }

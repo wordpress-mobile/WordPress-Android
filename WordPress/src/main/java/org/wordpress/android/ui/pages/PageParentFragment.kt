@@ -22,19 +22,24 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.page_parent_fragment.*
 import kotlinx.android.synthetic.main.pages_list_fragment.recyclerView
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
-import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
-class PageParentFragment : Fragment() {
+class PageParentFragment : Fragment(), CoroutineScope {
+    protected var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private lateinit var viewModel: PageParentViewModel
 
     private val listStateKey = "list_state"
@@ -214,7 +219,7 @@ class PageParentFragment : Fragment() {
     private fun setPages(pages: List<PageItem>) {
         val adapter: PageParentAdapter
         if (recyclerView.adapter == null) {
-            adapter = PageParentAdapter({ page -> viewModel.onParentSelected(page) }, uiScope)
+            adapter = PageParentAdapter({ page -> viewModel.onParentSelected(page) }, this)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PageParentAdapter
@@ -240,5 +245,10 @@ class PageParentFragment : Fragment() {
         if (!myActionMenuItem.isActionViewExpanded) {
             myActionMenuItem.expandActionView()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

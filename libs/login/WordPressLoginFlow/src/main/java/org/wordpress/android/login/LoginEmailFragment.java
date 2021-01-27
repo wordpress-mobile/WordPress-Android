@@ -193,14 +193,16 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
                 if (!mShouldUseNewLayout) {
                     label.setText(R.string.enter_email_wordpress_com);
                 } else if (!TextUtils.isEmpty(mLoginSiteUrl)) {
-                    label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                    label.setText(Html.fromHtml(
+                            getString(R.string.enter_email_for_site, mLoginSiteUrl)));
                 } else {
                     label.setText(R.string.enter_email_to_continue_wordpress_com);
                 }
                 break;
             case WOO_LOGIN_MODE:
                 if (mOptionalSiteCredsLayout) {
-                    label.setText(getString(R.string.enter_email_for_site, mLoginSiteUrl));
+                    label.setText(Html.fromHtml(
+                            getString(R.string.enter_email_for_site, mLoginSiteUrl)));
                 } else {
                     label.setText(getString(R.string.enter_email_wordpress_com));
                 }
@@ -573,10 +575,13 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
     @Override
     protected void buildToolbar(Toolbar toolbar, ActionBar actionBar) {
+        if (mLoginListener.getLoginMode() == LoginMode.WOO_LOGIN_MODE) {
+            actionBar.setTitle(R.string.log_in);
+            return;
+        }
+
         if (mShouldUseNewLayout) {
             actionBar.setTitle(R.string.get_started);
-        } else if (mOptionalSiteCredsLayout) {
-            actionBar.setTitle(R.string.log_in);
         } else {
             super.buildToolbar(toolbar, actionBar);
         }
