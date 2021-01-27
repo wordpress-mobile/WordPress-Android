@@ -159,7 +159,6 @@ android {
         checkDependencies = true
         lintConfig file('lint.xml')
         baseline file("lint-baseline.xml")
-        disable 'LintError'
     }
 
     packagingOptions {
