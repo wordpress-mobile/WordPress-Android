@@ -39,7 +39,7 @@ sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) 
         setOnClickListener { buttonState.onClick.invoke() }
         buttonState.iconRes?.let {
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
-            icon = this.context.getDrawable(it)
+            icon = context.getDrawable(it)
         }
     }
 
