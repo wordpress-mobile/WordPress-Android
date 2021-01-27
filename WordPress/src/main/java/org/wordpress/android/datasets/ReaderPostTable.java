@@ -89,7 +89,8 @@ public class ReaderPostTable {
             + "is_private_atomic," // 47
             + "tags," // 48
             + "organization_id," // 49
-            + "is_seen"; // 50
+            + "is_seen," // 50
+            + "is_seen_supported"; // 51
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -141,7 +142,8 @@ public class ReaderPostTable {
             + "is_private_atomic," // 46
             + "tags," // 47
             + "organization_id," // 48
-            + "is_seen"; // 49
+            + "is_seen," // 49
+            + "is_seen_supported"; // 50
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -195,6 +197,7 @@ public class ReaderPostTable {
                    + " tags TEXT,"
                    + " organization_id INTEGER DEFAULT 0,"
                    + " is_seen INTEGER DEFAULT 0,"
+                   + " is_seen_supported INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -1173,6 +1176,7 @@ public class ReaderPostTable {
         post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
 
         post.isSeen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen")));
+        post.isSeenSupported = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen_supported")));
 
         String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
         if (commaSeparatedTags != null) {
