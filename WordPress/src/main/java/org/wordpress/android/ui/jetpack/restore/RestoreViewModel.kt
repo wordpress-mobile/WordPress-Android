@@ -13,7 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.BG_THREAD
@@ -320,8 +320,8 @@ class RestoreViewModel @Inject constructor(
         }
     }
 
-    private fun handleQueryStatus(state: RestoreRequestState) {
-        when (state) {
+    private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
+        when (restoreStatus) {
             is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.NetworkUnavailable) }
             is RemoteRequestFailure -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
             is Progress -> {
@@ -330,11 +330,16 @@ class RestoreViewModel @Inject constructor(
                         if (contentState.type == ViewType.PROGRESS) {
                             contentState as JetpackListItemState.ProgressState
                             contentState.copy(
-                                    progress = state.progress ?: 0,
+                                    progress = restoreStatus.progress ?: 0,
                                     progressLabel = UiStringResWithParams(
-                                            string.restore_progress_label,
-                                            listOf(UiStringText(state.progress?.toString() ?: "0"))
-                                    )
+                                            R.string.restore_progress_label,
+                                            listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
+                                    ),
+                                    progressStateLabel = if (restoreStatus.currentEntry != null) {
+                                                UiStringText("${restoreStatus.currentEntry}")
+                                            } else {
+                                                UiStringText("Restoring your site") },
+                                    progressInfoLabel = UiStringRes(R.string.restore_progress_current_entry)
                             )
                         } else {
                             contentState
@@ -432,9 +437,9 @@ class RestoreViewModel @Inject constructor(
     }
 
     companion object {
-        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(string.error_network_connection))
-        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(string.rewind_generic_failure))
-        private val OtherRequestRunningMsg = SnackbarMessageHolder(UiStringRes(string.rewind_another_process_running))
+        private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.rewind_generic_failure))
+        private val OtherRequestRunningMsg = SnackbarMessageHolder(UiStringRes(R.string.rewind_another_process_running))
     }
 
     sealed class RestoreWizardState : Parcelable {
