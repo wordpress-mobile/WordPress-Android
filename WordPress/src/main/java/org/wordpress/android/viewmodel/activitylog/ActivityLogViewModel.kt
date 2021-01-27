@@ -225,6 +225,21 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
+    private fun showRewindFinishedMessage(rewindId: String?, date: Date?) {
+        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        if (rewindDate != null) {
+            _showSnackbarMessage.value =
+                    resourceProvider.getString(
+                            R.string.activity_log_rewind_finished_snackbar_message,
+                            rewindDate.toFormattedDateString(),
+                            rewindDate.toFormattedTimeString()
+                    )
+        } else {
+            _showSnackbarMessage.value =
+                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
+        }
+    }
+
     private fun requestEventsUpdate(
         loadMore: Boolean,
         restoreEvent: RestoreEvent = currentRestoreEvent
@@ -540,21 +555,6 @@ class ActivityLogViewModel @Inject constructor(
                     it.toFormattedDateString(),
                     it.toFormattedTimeString()
             )
-        }
-    }
-
-    private fun showRewindFinishedMessage(rewindId: String?, date: Date?) {
-        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
-        if (rewindDate != null) {
-            _showSnackbarMessage.value =
-                    resourceProvider.getString(
-                            R.string.activity_log_rewind_finished_snackbar_message,
-                            rewindDate.toFormattedDateString(),
-                            rewindDate.toFormattedTimeString()
-                    )
-        } else {
-            _showSnackbarMessage.value =
-                    resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
         }
     }
 
