@@ -6,7 +6,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -15,9 +18,13 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
+import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
+import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
 import org.wordpress.android.ui.stats.refresh.utils.DateUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -37,6 +44,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersU
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import java.util.Date
 import javax.inject.Inject
+import javax.inject.Named
 
 const val ACTIVITY_LOG_REWINDABLE_ONLY_KEY = "activity_log_rewindable_only"
 
@@ -58,13 +66,16 @@ typealias DateRange = Pair<Long, Long>
  */
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
+    private val postRestoreUseCase: PostRestoreUseCase,
+    private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val restoreFeatureConfig: RestoreFeatureConfig
+    private val restoreFeatureConfig: RestoreFeatureConfig,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -123,6 +134,7 @@ class ActivityLogViewModel @Inject constructor(
         get() = eventListStatus.value == ActivityLogListStatus.DONE
 
     private var fetchActivitiesJob: Job? = null
+    private var restoreStatusJob: Job? = null
 
     private var currentDateRangeFilter: DateRange? = null
     private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
@@ -341,8 +353,40 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onRewindConfirmed(rewindId: String) {
-        // TODO: Replace with restore use case.
+        viewModelScope.launch { handleRestoreRequest(postRestoreUseCase.postRestoreRequest(rewindId, site)) }
         showRewindStartedMessage(rewindId)
+    }
+
+    private fun handleRestoreRequest(state: RestoreRequestState) {
+        when (state) {
+            is RestoreRequestState.Success -> state.restoreId?.let { queryRestoreStatus(it) }
+            else -> Unit // Do nothing
+        }
+    }
+
+    private fun queryRestoreStatus(restoreId: Long? = null) {
+        restoreStatusJob?.cancel()
+        restoreStatusJob = viewModelScope.launch {
+            getRestoreStatusUseCase.getRestoreStatus(site, restoreId)
+                    .flowOn(bgDispatcher).collect { handleRestoreStatus(it) }
+        }
+    }
+
+    private fun handleRestoreStatus(state: RestoreRequestState) {
+        when (state) {
+            is RestoreRequestState.Progress -> if (!isRewindProgressItemShown) {
+                reloadEvents(
+                        restoreEvent = RestoreEvent(displayProgress = true, rewindId = state.rewindId),
+                )
+            }
+            is RestoreRequestState.Complete -> if (isRewindProgressItemShown) {
+                requestEventsUpdate(
+                        loadMore = false,
+                        restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true)
+                )
+            }
+            else -> Unit // Do nothing
+        }
     }
 
     fun onScrolledToBottom() {
@@ -488,7 +532,7 @@ class ActivityLogViewModel @Inject constructor(
             if (!loadingMore) {
                 moveToTop.call()
             }
-            // TODO: Replace with restore use case.
+            if (!restoreEvent.isCompleted) queryRestoreStatus()
         }
 
         if (event.canLoadMore) {
