@@ -2,10 +2,12 @@ package org.wordpress.android.ui.jetpack.scan
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -19,20 +21,33 @@ import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateFormatWrapper
+import java.text.DateFormat
+
+private const val TEST_FIXED_ON_DATE = "2 January, 2020"
 
 @InternalCoroutinesApi
 class ThreatItemBuilderTest : BaseUnitTest() {
     private lateinit var builder: ThreatItemBuilder
 
+    @Mock private lateinit var dateFormatWrapper: DateFormatWrapper
+    @Mock private lateinit var dateFormat: DateFormat
+
     @Before
     fun setUp() {
-        builder = ThreatItemBuilder()
+        builder = ThreatItemBuilder(dateFormatWrapper)
+        whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
+        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
+            .thenReturn(TEST_FIXED_ON_DATE)
     }
 
     @Test
     fun `builds threat sub header correctly for fixed threat`() {
         // Arrange
-        val expectedSubHeader = UiStringRes(R.string.threat_item_sub_header_status_fixed)
+        val expectedSubHeader = UiStringResWithParams(
+            R.string.threat_item_sub_header_status_fixed,
+            listOf(UiStringText(TEST_FIXED_ON_DATE))
+        )
         val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = FIXED))
         // Act
         val threatItem = buildThreatItem(threatModel)
