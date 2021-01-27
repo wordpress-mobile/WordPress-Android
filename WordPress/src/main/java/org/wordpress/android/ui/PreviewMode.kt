@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.theme
+package org.wordpress.android.ui
 
 /**
  * Holds the available preview/thumbnail modes

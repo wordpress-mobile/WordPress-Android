@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.theme
+package org.wordpress.android.ui
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable

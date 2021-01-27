@@ -15,11 +15,11 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus.AVAILABLE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.DESKTOP
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
-import org.wordpress.android.ui.sitecreation.theme.PreviewModeHandler
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewFullscreenProgressUiState

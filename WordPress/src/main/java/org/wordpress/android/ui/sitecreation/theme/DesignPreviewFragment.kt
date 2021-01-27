@@ -18,12 +18,13 @@ import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.previewT
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
+import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Error
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loaded
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loading
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.DESKTOP
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible

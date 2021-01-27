@@ -45,8 +45,6 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePaylo
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.reader.ReaderActivityLauncher;
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode;
-import org.wordpress.android.ui.sitecreation.theme.PreviewModeSelectorPopup;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
