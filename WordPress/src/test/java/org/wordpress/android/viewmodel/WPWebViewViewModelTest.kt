@@ -13,10 +13,10 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.test
 import org.wordpress.android.ui.WPWebViewUsageCategory
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.DESKTOP
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus

@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
+import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
