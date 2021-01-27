@@ -133,16 +133,16 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     }
 
     private fun buildThreatDetailHeader(threatModel: ThreatModel) = ThreatDetailHeaderState(
-            icon = threatItemBuilder.buildThreatItemIcon(threatModel),
-            iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
-            header = when (threatModel.baseThreatModel.status) {
-                FIXED -> UiStringRes(R.string.threat_status_fixed)
-                IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
-            },
-            description = when(threatModel.baseThreatModel.status) {
-                FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
-                IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
-            }
+        icon = threatItemBuilder.buildThreatItemIcon(threatModel),
+        iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
+        header = when (threatModel.baseThreatModel.status) {
+            FIXED -> UiStringRes(R.string.threat_status_fixed)
+            IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
+        },
+        description = when (threatModel.baseThreatModel.status) {
+            FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
+            IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
+        }
     )
 
     private fun buildThreatFoundHeaderItem() = HeaderState(text = UiStringRes(R.string.threat_found_header))

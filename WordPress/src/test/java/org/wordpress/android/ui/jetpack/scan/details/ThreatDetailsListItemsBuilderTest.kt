@@ -14,14 +14,20 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.*
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.*
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_PATH
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.*
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatDetailHeaderState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -32,7 +38,6 @@ private const val TEST_THREAT_ITEM_HEADER = "Threat found"
 private const val TEST_THREAT_ITEM_SUB_HEADER = "Miscellaneous vulnerability"
 private const val TEST_FOUND_ON_DATE = "1 January, 2020"
 private const val TEST_FIXED_ON_DATE = "2 January, 2020"
-
 
 @InternalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
