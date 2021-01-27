@@ -293,108 +293,6 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onRewindConfirmedTriggersRewindOperation() = test {
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        verify(postRestoreUseCase).postRestoreRequest(REWIND_ID, site)
-    }
-
-    @Test
-    fun `given restore requests is a success, when rewind confirmed, then do trigger get restore status`() = test {
-        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
-        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        verify(getRestoreStatusUseCase).getRestoreStatus(site, RESTORE_ID)
-    }
-
-    @Test
-    fun `given restore requests is something else, when rewind confirmed, then do not trigger anything`() = test {
-        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
-        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(progress)
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        verify(getRestoreStatusUseCase, times(0)).getRestoreStatus(site, RESTORE_ID)
-    }
-
-    @Test
-    fun `given restore status is a progress, when rewind confirmed, then reload events for progress`() = test {
-        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
-        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
-        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
-        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
-        initProgressMocks()
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayProgress = true,
-                        progressWithDate = true,
-                        emptyList = false,
-                        rewindDisabled = true,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = true,
-                        withFooter = false
-                )
-        )
-    }
-
-    @Test
-    fun `given restore status is a complete, when rewind confirmed, then request events update for complete`() = test {
-        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
-        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
-        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
-        val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
-        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
-                .thenReturn(flow { emit(progress); emit(complete) })
-        initProgressMocks()
-        whenever(store.fetchActivities(anyOrNull()))
-                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        assertEquals(
-                viewModel.events.value,
-                expectedActivityList(
-                        displayProgress = false,
-                        progressWithDate = false,
-                        emptyList = false,
-                        rewindDisabled = false,
-                        isLastPageAndFreeSite = false,
-                        canLoadMore = false,
-                        withFooter = false
-                )
-        )
-    }
-
-    @Test
-    fun `given restore status is something else, when rewind confirmed, then do not trigger anything`() = test {
-        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
-        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
-        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(success) })
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        assertNull(viewModel.events.value)
-    }
-
-    @Test
-    fun onRewindConfirmedShowsRewindStartedMessage() {
-        assertTrue(snackbarMessages.isEmpty())
-        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
-        val snackBarMessage = "snackBar message"
-        whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
-
-        viewModel.onRewindConfirmed(REWIND_ID)
-
-        assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
-    }
-
-    @Test
     fun loadsNextPageOnScrollToBottom() = test {
         val canLoadMore = true
         whenever(store.fetchActivities(anyOrNull()))
@@ -978,6 +876,110 @@ class ActivityLogViewModelTest {
                         withFooter = true
                 )
         )
+    }
+
+    /* REWIND CONFIRMED */
+
+    @Test
+    fun onRewindConfirmedTriggersRewindOperation() = test {
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        verify(postRestoreUseCase).postRestoreRequest(REWIND_ID, site)
+    }
+
+    @Test
+    fun `given restore requests is a success, when rewind confirmed, then do trigger get restore status`() = test {
+        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
+        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        verify(getRestoreStatusUseCase).getRestoreStatus(site, RESTORE_ID)
+    }
+
+    @Test
+    fun `given restore requests is something else, when rewind confirmed, then do not trigger anything`() = test {
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(progress)
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        verify(getRestoreStatusUseCase, times(0)).getRestoreStatus(site, RESTORE_ID)
+    }
+
+    @Test
+    fun `given restore status is a progress, when rewind confirmed, then reload events for progress`() = test {
+        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
+        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
+        initProgressMocks()
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayProgress = true,
+                        progressWithDate = true,
+                        emptyList = false,
+                        rewindDisabled = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given restore status is a complete, when rewind confirmed, then request events update for complete`() = test {
+        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
+        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
+                .thenReturn(flow { emit(progress); emit(complete) })
+        initProgressMocks()
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayProgress = false,
+                        progressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = false,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given restore status is something else, when rewind confirmed, then do not trigger anything`() = test {
+        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
+        whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(success) })
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        assertNull(viewModel.events.value)
+    }
+
+    @Test
+    fun onRewindConfirmedShowsRewindStartedMessage() {
+        assertTrue(snackbarMessages.isEmpty())
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        val snackBarMessage = "snackBar message"
+        whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
+
+        viewModel.onRewindConfirmed(REWIND_ID)
+
+        assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
     }
 
     /* PRIVATE */
