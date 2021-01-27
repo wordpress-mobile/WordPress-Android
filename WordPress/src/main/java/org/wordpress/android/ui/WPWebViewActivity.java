@@ -17,6 +17,8 @@ import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -48,6 +50,7 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.AniUtils;
 import org.wordpress.android.util.AppLog;
+import org.wordpress.android.util.DisplayUtilsWrapper;
 import org.wordpress.android.util.ErrorManagedWebViewClient.ErrorManagedWebViewClientListener;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
@@ -133,6 +136,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
     @Inject UiHelpers mUiHelpers;
     @Inject PrivateAtomicCookie mPrivateAtomicCookie;
     @Inject Dispatcher mDispatcher;
+    @Inject DisplayUtilsWrapper mDisplayUtilsWrapper;
 
     private ActionableEmptyView mActionableEmptyView;
     private ViewGroup mFullScreenProgressLayout;
@@ -682,6 +686,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
 
     private void enforcePreviewMode() {
         int previewWidth = mViewModel.selectedPreviewMode().getPreviewWidth();
+        setWebViewWidth(previewWidth);
         String script = getResources().getString(R.string.web_preview_width_script, previewWidth);
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -689,6 +694,19 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
                 mWebView.evaluateJavascript(script, value -> mViewModel.onUrlLoaded());
             }
         }, 100);
+    }
+
+    private void setWebViewWidth(int previewWidth) {
+        if (!mDisplayUtilsWrapper.isTablet()) return;
+        if (mViewModel.selectedPreviewMode() == PreviewMode.MOBILE) {
+            int width = previewWidth * (int) getResources().getDisplayMetrics().density;
+            LayoutParams params = new LayoutParams(width, LayoutParams.MATCH_PARENT);
+            params.addRule(RelativeLayout.CENTER_HORIZONTAL);
+            mWebView.setLayoutParams(params);
+        } else {
+            LayoutParams params = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+            mWebView.setLayoutParams(params);
+        }
     }
 
     @Override
