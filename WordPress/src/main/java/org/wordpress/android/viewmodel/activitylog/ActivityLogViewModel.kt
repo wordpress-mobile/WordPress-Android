@@ -208,6 +208,23 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
+    private fun getRewindProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
+        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        return rewindDate?.let {
+            ActivityLogListItem.Progress(
+                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                    resourceProvider.getString(
+                            R.string.activity_log_currently_restoring_message,
+                            rewindDate.toFormattedDateString(),
+                            rewindDate.toFormattedTimeString()
+                    )
+            )
+        } ?: ActivityLogListItem.Progress(
+                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
+                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates)
+        )
+    }
+
     private fun requestEventsUpdate(
         loadMore: Boolean,
         restoreEvent: RestoreEvent = currentRestoreEvent
@@ -514,23 +531,6 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun List<ActivityLogListItem>.containsProgressItem(): Boolean {
         return this.find { it is ActivityLogListItem.Progress } != null
-    }
-
-    private fun getRewindProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
-        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
-        return rewindDate?.let {
-            ActivityLogListItem.Progress(
-                    resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                    resourceProvider.getString(
-                            R.string.activity_log_currently_restoring_message,
-                            rewindDate.toFormattedDateString(),
-                            rewindDate.toFormattedTimeString()
-                    )
-            )
-        } ?: ActivityLogListItem.Progress(
-                resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates)
-        )
     }
 
     private fun showRewindStartedMessage(rewindId: String) {
