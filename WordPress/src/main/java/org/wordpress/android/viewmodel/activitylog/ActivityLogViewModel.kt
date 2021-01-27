@@ -208,6 +208,64 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
+    private fun requestEventsUpdate(
+        loadMore: Boolean,
+        restoreEvent: RestoreEvent = currentRestoreEvent
+    ) {
+        val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
+        val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
+        if (loadMore && (isLoadingMore || !canLoadMore)) {
+            // Ignore loadMore request when already loading more items or there are no more items to load
+            return
+        }
+        fetchActivitiesJob?.cancel()
+        val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
+        _eventListStatus.value = newStatus
+        val payload = ActivityLogStore.FetchActivityLogPayload(
+                site,
+                loadMore,
+                currentDateRangeFilter?.first?.let { Date(it) },
+                currentDateRangeFilter?.second?.let { Date(it) },
+                currentActivityTypeFilter.map { it.key }
+        )
+        fetchActivitiesJob = viewModelScope.launch {
+            val result = activityLogStore.fetchActivities(payload)
+            if (isActive) {
+                onActivityLogFetched(result, loadMore, restoreEvent)
+                fetchActivitiesJob = null
+            }
+        }
+    }
+
+    private fun onActivityLogFetched(
+        event: OnActivityLogFetched,
+        loadingMore: Boolean,
+        restoreEvent: RestoreEvent
+    ) {
+        if (event.isError) {
+            _eventListStatus.value = ActivityLogListStatus.ERROR
+            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
+            return
+        }
+
+        if (event.rowsAffected > 0) {
+            reloadEvents(
+                    done = !event.canLoadMore,
+                    restoreEvent = restoreEvent,
+            )
+            if (!loadingMore) {
+                moveToTop.call()
+            }
+            if (!restoreEvent.isCompleted) queryRestoreStatus()
+        }
+
+        if (event.canLoadMore) {
+            _eventListStatus.value = ActivityLogListStatus.CAN_LOAD_MORE
+        } else {
+            _eventListStatus.value = ActivityLogListStatus.DONE
+        }
+    }
+
     private fun showFiltersIfSupported() {
         when {
             !activityLogFiltersFeatureConfig.isEnabled() -> return
@@ -473,64 +531,6 @@ class ActivityLogViewModel @Inject constructor(
                 resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                 resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates)
         )
-    }
-
-    private fun requestEventsUpdate(
-        loadMore: Boolean,
-        restoreEvent: RestoreEvent = currentRestoreEvent
-    ) {
-        val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
-        val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
-        if (loadMore && (isLoadingMore || !canLoadMore)) {
-            // Ignore loadMore request when already loading more items or there are no more items to load
-            return
-        }
-        fetchActivitiesJob?.cancel()
-        val newStatus = if (loadMore) ActivityLogListStatus.LOADING_MORE else ActivityLogListStatus.FETCHING
-        _eventListStatus.value = newStatus
-        val payload = ActivityLogStore.FetchActivityLogPayload(
-                site,
-                loadMore,
-                currentDateRangeFilter?.first?.let { Date(it) },
-                currentDateRangeFilter?.second?.let { Date(it) },
-                currentActivityTypeFilter.map { it.key }
-        )
-        fetchActivitiesJob = viewModelScope.launch {
-            val result = activityLogStore.fetchActivities(payload)
-            if (isActive) {
-                onActivityLogFetched(result, loadMore, restoreEvent)
-                fetchActivitiesJob = null
-            }
-        }
-    }
-
-    private fun onActivityLogFetched(
-        event: OnActivityLogFetched,
-        loadingMore: Boolean,
-        restoreEvent: RestoreEvent
-    ) {
-        if (event.isError) {
-            _eventListStatus.value = ActivityLogListStatus.ERROR
-            AppLog.e(AppLog.T.ACTIVITY_LOG, "An error occurred while fetching the Activity log events")
-            return
-        }
-
-        if (event.rowsAffected > 0) {
-            reloadEvents(
-                    done = !event.canLoadMore,
-                    restoreEvent = restoreEvent,
-            )
-            if (!loadingMore) {
-                moveToTop.call()
-            }
-            if (!restoreEvent.isCompleted) queryRestoreStatus()
-        }
-
-        if (event.canLoadMore) {
-            _eventListStatus.value = ActivityLogListStatus.CAN_LOAD_MORE
-        } else {
-            _eventListStatus.value = ActivityLogListStatus.DONE
-        }
     }
 
     private fun showRewindStartedMessage(rewindId: String) {
