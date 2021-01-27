@@ -881,7 +881,7 @@ class ActivityLogViewModelTest {
     /* REWIND CONFIRMED */
 
     @Test
-    fun onRewindConfirmedTriggersRewindOperation() = test {
+    fun `when rewind confirmed, then trigger post restore request`() = test {
         viewModel.onRewindConfirmed(REWIND_ID)
 
         verify(postRestoreUseCase).postRestoreRequest(REWIND_ID, site)
@@ -971,7 +971,7 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun onRewindConfirmedShowsRewindStartedMessage() {
+    fun `when rewind confirmed, then show rewind started message`() {
         assertTrue(snackbarMessages.isEmpty())
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         val snackBarMessage = "snackBar message"
