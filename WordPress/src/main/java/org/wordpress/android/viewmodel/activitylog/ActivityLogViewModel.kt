@@ -127,7 +127,7 @@ class ActivityLogViewModel @Inject constructor(
     val navigationEvents: LiveData<Event<ActivityLogNavigationEvents>>
         get() = _navigationEvents
 
-    private val isRewindProgressItemShown: Boolean
+    private val isRestoreProgressItemShown: Boolean
         get() = events.value?.containsProgressItem() == true
 
     private val isDone: Boolean
@@ -376,7 +376,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun handleRestoreStatus(state: RestoreRequestState) {
         when (state) {
-            is RestoreRequestState.Progress -> if (!isRewindProgressItemShown) {
+            is RestoreRequestState.Progress -> if (!isRestoreProgressItemShown) {
                 reloadEvents(
                         restoreEvent = RestoreEvent(
                                 displayProgress = true,
@@ -386,7 +386,7 @@ class ActivityLogViewModel @Inject constructor(
                         ),
                 )
             }
-            is RestoreRequestState.Complete -> if (isRewindProgressItemShown) {
+            is RestoreRequestState.Complete -> if (isRestoreProgressItemShown) {
                 requestEventsUpdate(
                         loadMore = false,
                         restoreEvent = RestoreEvent(
