@@ -88,7 +88,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     webView.setVisible(true)
                     errorView.setVisible(false)
                     desktopPreviewHint.setText(
-                            when (viewModel.getPreviewMode()) {
+                            when (viewModel.selectedPreviewMode()) {
                                 MOBILE -> R.string.web_preview_mobile
                                 TABLET -> R.string.web_preview_tablet
                                 DESKTOP -> R.string.web_preview_desktop
@@ -125,7 +125,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                 super.onPageFinished(view, url)
                 val widthScript = context?.getString(
                         R.string.web_preview_width_script,
-                        viewModel.getPreviewMode().previewWidth
+                        viewModel.selectedPreviewMode().previewWidth
                 )
                 if (widthScript != null) {
                     view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }

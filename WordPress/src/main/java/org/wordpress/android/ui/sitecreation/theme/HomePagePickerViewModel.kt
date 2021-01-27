@@ -87,7 +87,7 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 
-    override fun getPreviewMode() = previewMode.value ?: MOBILE
+    override fun selectedPreviewMode() = previewMode.value ?: MOBILE
 
     override fun onCleared() {
         super.onCleared()
@@ -100,7 +100,7 @@ class HomePagePickerViewModel @Inject constructor(
             _previewMode.value = if (isTablet) TABLET else MOBILE
         }
         if (uiState.value !is UiState.Content) {
-            analyticsTracker.trackSiteDesignViewed(getPreviewMode().key)
+            analyticsTracker.trackSiteDesignViewed(selectedPreviewMode().key)
             fetchLayouts()
         }
     }
@@ -160,7 +160,7 @@ class HomePagePickerViewModel @Inject constructor(
                 it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
             }?.let { layout ->
                 val template = layout.slug!!
-                analyticsTracker.trackSiteDesignPreviewViewed(template, getPreviewMode().key)
+                analyticsTracker.trackSiteDesignPreviewViewed(template, selectedPreviewMode().key)
                 _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
                 return
             }
@@ -181,7 +181,7 @@ class HomePagePickerViewModel @Inject constructor(
     fun onPreviewLoading(template: String) {
         if (networkUtils.isNetworkAvailable()) {
             _previewState.value = PreviewUiState.Loading
-            analyticsTracker.trackSiteDesignPreviewLoading(template, getPreviewMode().key)
+            analyticsTracker.trackSiteDesignPreviewLoading(template, selectedPreviewMode().key)
         } else {
             _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
             analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Preview error")
@@ -190,7 +190,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onPreviewLoaded(template: String) {
         _previewState.value = PreviewUiState.Loaded
-        analyticsTracker.trackSiteDesignPreviewLoaded(template, getPreviewMode().key)
+        analyticsTracker.trackSiteDesignPreviewLoaded(template, selectedPreviewMode().key)
     }
 
     fun onPreviewError() {
@@ -221,12 +221,12 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     fun onThumbnailModePressed() {
-        analyticsTracker.trackSiteDesignThumbnailModeTapped(getPreviewMode().key)
+        analyticsTracker.trackSiteDesignThumbnailModeTapped(selectedPreviewMode().key)
         _onThumbnailModeButtonPressed.call()
     }
 
     fun onPreviewModePressed() {
-        analyticsTracker.trackSiteDesignPreviewModeTapped(getPreviewMode().key)
+        analyticsTracker.trackSiteDesignPreviewModeTapped(selectedPreviewMode().key)
         _onPreviewModeButtonPressed.call()
     }
 

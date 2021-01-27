@@ -16,6 +16,6 @@ enum class PreviewMode(val key: String, val previewWidth: Int) {
  * Defines an interface for handling the [PreviewMode]
  */
 interface PreviewModeHandler {
-    fun getPreviewMode(): PreviewMode
+    fun selectedPreviewMode(): PreviewMode
     fun onPreviewModeChanged(mode: PreviewMode)
 }
