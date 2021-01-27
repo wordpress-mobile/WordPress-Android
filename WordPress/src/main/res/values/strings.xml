@@ -1109,7 +1109,6 @@
 
     <!-- threat details -->
     <string name="threat_details">Threat Details</string>
-    <string name="threat_details_icon">Threat details icon</string>
     <string name="threat_problem_header">What was the problem?</string>
     <string name="threat_found_header">Found</string>
     <string name="threat_technical_details_header">The technical details</string>
