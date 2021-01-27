@@ -174,7 +174,11 @@ class ActivityLogRestClient(
         )
         return when (response) {
             is Success -> {
-                buildBackupDownloadStatusPayload(response.data[0], site)
+                if (response.data.isNotEmpty()) {
+                    buildBackupDownloadStatusPayload(response.data[0], site)
+                } else {
+                    FetchedBackupDownloadStatePayload(null, site)
+                }
             }
             is Error -> {
                 val errorType = NetworkErrorMapper.map(
