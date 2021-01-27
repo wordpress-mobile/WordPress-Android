@@ -33,10 +33,7 @@ class GetRestoreStatusUseCase @Inject constructor(
             if (fetchActivitiesRewind(site)) return@flow
         }
         while (true) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NetworkUnavailable)
-                return@flow
-            }
+            if (isNetworkUnavailable()) return@flow
 
             val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
             if (rewind != null &&
@@ -59,6 +56,14 @@ class GetRestoreStatusUseCase @Inject constructor(
 
             delay(DELAY_MILLIS)
         }
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.isNetworkUnavailable(): Boolean {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            emit(NetworkUnavailable)
+            return true
+        }
+        return false
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.fetchActivitiesRewind(site: SiteModel): Boolean {
