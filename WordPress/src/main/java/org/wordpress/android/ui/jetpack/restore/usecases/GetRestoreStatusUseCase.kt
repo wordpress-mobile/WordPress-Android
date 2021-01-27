@@ -46,12 +46,12 @@ class GetRestoreStatusUseCase @Inject constructor(
                         if (rewind.rewindId != null) {
                             emitComplete(rewind)
                         } else {
-                            emit(RemoteRequestFailure)
+                            emitFailure()
                         }
                         return@flow
                     }
                     FAILED -> {
-                        emit(RemoteRequestFailure)
+                        emitFailure()
                         return@flow
                     }
                     RUNNING -> {
@@ -83,6 +83,8 @@ class GetRestoreStatusUseCase @Inject constructor(
         val date = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
         emit(Complete(rewind.rewindId as String, rewind.restoreId, date))
     }
+
+    private suspend fun FlowCollector<RestoreRequestState>.emitFailure() = emit(RemoteRequestFailure)
 
     private suspend fun FlowCollector<RestoreRequestState>.emitProgress(rewind: Rewind) {
         val rewindId = rewind.rewindId as String
