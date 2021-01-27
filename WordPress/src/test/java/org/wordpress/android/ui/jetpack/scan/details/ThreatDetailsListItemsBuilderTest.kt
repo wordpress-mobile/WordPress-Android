@@ -263,6 +263,71 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `given threat status = fixed, when detail shown, then Fixed header is shown as main header`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
+
+        // Act
+        val threatItems = buildThreatDetailsListItems(threatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
+            .isEqualTo(UiStringRes(R.string.threat_status_fixed))
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
+            .isEqualTo(UiStringText(TEST_FIXED_ON_DATE))
+    }
+
+    @Test
+    fun `given threat status = fixed, when detail shown, then Found header is shown below main header`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
+
+        // Act
+        val threatItems = buildThreatDetailsListItems(threatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<HeaderState>()[0].text)
+            .isEqualTo(UiStringRes(R.string.threat_found_header))
+        assertThat(threatItems.filterIsInstance<DescriptionState>()[0].text)
+            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+    }
+
+    @Test
+    fun `given threat status = ignored, when detail shown, then Found header is shown as main header`() {
+        // Arrange
+        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = IGNORED))
+
+        // Act
+        val threatItems = buildThreatDetailsListItems(threatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
+            .isEqualTo(UiStringRes(R.string.threat_found_header))
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
+            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+    }
+
+    @Test
+    fun `given threat status = current, when detail shown, then Found header is shown as main header`() {
+        // Arrange
+        val threatModel = GenericThreatModel(
+            ThreatTestData.genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)
+        )
+
+        // Act
+        val threatItems = buildThreatDetailsListItems(threatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>().size).isEqualTo(1)
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].header)
+            .isEqualTo(UiStringRes(R.string.threat_found_header))
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
+            .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
+    }
+
     private fun buildThreatDetailsListItems(
         model: ThreatModel,
         onFixThreatButtonClicked: () -> Unit = mock(),
