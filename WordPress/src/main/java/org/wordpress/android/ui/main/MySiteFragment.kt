@@ -149,7 +149,6 @@ import org.wordpress.android.util.MediaUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemindNextOne
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
