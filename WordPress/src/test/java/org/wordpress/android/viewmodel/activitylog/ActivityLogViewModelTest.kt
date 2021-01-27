@@ -72,7 +72,7 @@ private const val SITE_ID = 1L
 
 private const val NOW = "Now"
 private const val RESTORE_STARTED = "Your site is being restored\nRestoring to date time"
-private const val CURRENTLY_RESTORING = "Currently restoring your site"
+private const val RESTORING_CURRENTLY = "Currently restoring your site"
 private const val RESTORING_DATE_TIME = "Restoring to date time"
 private const val RESTORING_NO_DATE = "Restore in progress"
 private const val RESTORED_DATE_TIME = "Your site has been successfully restored\\nRestored to date time"
@@ -1026,9 +1026,9 @@ class ActivityLogViewModelTest {
         if (displayProgress) {
             list.add(ActivityLogListItem.Header(NOW))
             if (progressWithDate) {
-                list.add(ActivityLogListItem.Progress(CURRENTLY_RESTORING, RESTORING_DATE_TIME))
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME))
             } else {
-                list.add(ActivityLogListItem.Progress(CURRENTLY_RESTORING, RESTORING_NO_DATE))
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE))
             }
         }
         if (!emptyList) {
@@ -1105,7 +1105,7 @@ class ActivityLogViewModelTest {
         }
         whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
         whenever(resourceProvider.getString(R.string.activity_log_currently_restoring_title))
-                .thenReturn(CURRENTLY_RESTORING)
+                .thenReturn(RESTORING_CURRENTLY)
         if (displayProgressWithDate) {
             whenever(resourceProvider.getString(eq(R.string.activity_log_currently_restoring_message), any(), any()))
                     .thenReturn(RESTORING_DATE_TIME)
