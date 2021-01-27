@@ -32,6 +32,7 @@ class ThreatItemBuilder @Inject constructor(
             isFixable = threatModel.baseThreatModel.fixable != null,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
+            subHeaderColor = buildThreatItemSubHeaderColor(threatModel) ,
             icon = buildThreatItemIcon(threatModel),
             iconBackground = buildThreatItemIconBackground(threatModel),
             onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
@@ -90,6 +91,14 @@ class ThreatItemBuilder @Inject constructor(
             }
         }
     }
+
+    fun buildThreatItemSubHeaderColor(threatModel: ThreatModel) =
+        if (threatModel.baseThreatModel.status == FIXED) {
+            R.attr.wpColorSuccess
+        } else {
+            R.attr.colorOnSurface
+        }
+
     fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {
         return when (threatModel) {
             is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
