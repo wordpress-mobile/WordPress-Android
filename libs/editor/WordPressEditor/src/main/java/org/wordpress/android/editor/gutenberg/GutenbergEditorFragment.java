@@ -229,6 +229,11 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                         mEditorFragmentListener.onAddLibraryFileClicked(allowMultipleSelection);
                     }
 
+                    @Override public void onMediaLibraryAudioButtonClicked(boolean allowMultipleSelection) {
+                        // TODO replace when Audio block media picker integration PR gets merged
+                        // https://github.com/wordpress-mobile/WordPress-Android/pull/13808
+                    }
+
                     @Override
                     public void onUploadPhotoButtonClicked(boolean allowMultipleSelection) {
                         mEditorFragmentListener.onAddPhotoClicked(allowMultipleSelection);
@@ -279,6 +284,12 @@ public class GutenbergEditorFragment extends EditorFragmentAbstract implements
                     public ArrayList<MediaOption> onGetOtherMediaFileOptions() {
                         ArrayList<MediaOption> otherMediaFileOptions = initOtherMediaFileOptions();
                         return otherMediaFileOptions;
+                    }
+
+                    @Override public ArrayList<MediaOption> onGetOtherMediaAudioFileOptions() {
+                        // TODO replace when Audio block media picker integration PR gets merged
+                        // https://github.com/wordpress-mobile/WordPress-Android/pull/13808
+                        return null;
                     }
 
                     @Override
