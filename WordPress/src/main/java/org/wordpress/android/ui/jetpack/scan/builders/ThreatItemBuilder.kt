@@ -32,7 +32,7 @@ class ThreatItemBuilder @Inject constructor(
             isFixable = threatModel.baseThreatModel.fixable != null,
             header = buildThreatItemHeader(threatModel),
             subHeader = buildThreatItemSubHeader(threatModel),
-            subHeaderColor = buildThreatItemSubHeaderColor(threatModel) ,
+            subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
             icon = buildThreatItemIcon(threatModel),
             iconBackground = buildThreatItemIconBackground(threatModel),
             onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }

@@ -254,6 +254,39 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         assertThat(threatItem.iconBackground).isEqualTo(R.drawable.bg_oval_error_50)
     }
 
+    @Test
+    fun `Subheader for fixed threat has success color`() {
+        // Arrange
+        val expectedSubHeader = R.attr.wpColorSuccess
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = FIXED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeaderColor).isEqualTo(expectedSubHeader)
+    }
+
+    @Test
+    fun `sub header for current threat has onSurface color`() {
+        // Arrange
+        val expectedSubHeader = R.attr.colorOnSurface
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = CURRENT))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeaderColor).isEqualTo(expectedSubHeader)
+    }
+
+    @Test
+    fun `sub header for ignored threat has onSurface color`() {
+        // Arrange
+        val expectedSubHeader = R.attr.colorOnSurface
+        val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = IGNORED))
+        // Act
+        val threatItem = buildThreatItem(threatModel)
+        // Assert
+        assertThat(threatItem.subHeaderColor).isEqualTo(expectedSubHeader)
+    }
+
     private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((Long) -> Unit) = mock()) =
         builder.buildThreatItem(
             threatModel = threatModel,
