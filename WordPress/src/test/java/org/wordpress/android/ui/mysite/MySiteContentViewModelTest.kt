@@ -884,8 +884,8 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         )
     }
 
-    private fun buildSiteInfoBlockInteraction(function: ((SiteModel) -> Unit)) =
-            ListItemInteraction.create { function.invoke(site) }
+    private fun buildSiteInfoBlockInteraction(function: (() -> Unit)) =
+            ListItemInteraction.create { function.invoke() }
 
     private fun invokeItemClickAction(action: ListItemAction) {
         uiModels.last().filterIsInstance<ListItem>()[ListItemAction.values().indexOf(action)].onClick.click()
