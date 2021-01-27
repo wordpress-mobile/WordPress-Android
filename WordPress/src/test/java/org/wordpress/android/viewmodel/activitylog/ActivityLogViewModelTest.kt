@@ -71,6 +71,7 @@ private const val ONE_DAY_WITHOUT_SECOND_IN_MILLIS = 1000 * 60 * 60 * 24 - 1000
 private const val SITE_ID = 1L
 
 private const val NOW = "Now"
+private const val RESTORE_STARTED = "Your site is being restored\nRestoring to date time"
 private const val CURRENTLY_RESTORING = "Currently restoring your site"
 private const val RESTORING_DATE_TIME = "Restoring to date time"
 private const val RESTORING_NO_DATE = "Restore in progress"
@@ -972,14 +973,13 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `when rewind confirmed, then show rewind started message`() {
-        assertTrue(snackbarMessages.isEmpty())
         whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
-        val snackBarMessage = "snackBar message"
-        whenever(resourceProvider.getString(any(), any(), any())).thenReturn(snackBarMessage)
+        whenever(resourceProvider.getString(eq(R.string.activity_log_rewind_started_snackbar_message), any(), any()))
+                .thenReturn(RESTORE_STARTED)
 
         viewModel.onRewindConfirmed(REWIND_ID)
 
-        assertEquals(snackbarMessages.firstOrNull(), snackBarMessage)
+        assertEquals(snackbarMessages.firstOrNull(), RESTORE_STARTED)
     }
 
     /* PRIVATE */
