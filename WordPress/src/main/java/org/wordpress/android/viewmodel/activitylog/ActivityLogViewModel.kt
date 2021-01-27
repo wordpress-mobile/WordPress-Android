@@ -4,7 +4,8 @@ import androidx.annotation.VisibleForTesting
 import androidx.core.util.Pair
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kotlinx.coroutines.CoroutineDispatcher
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -14,7 +15,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
@@ -32,13 +32,11 @@ import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
-import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import java.util.Date
 import javax.inject.Inject
-import javax.inject.Named
 
 const val ACTIVITY_LOG_REWINDABLE_ONLY_KEY = "activity_log_rewindable_only"
 
@@ -66,9 +64,8 @@ class ActivityLogViewModel @Inject constructor(
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val restoreFeatureConfig: RestoreFeatureConfig,
-    @param:Named(UI_THREAD) private val uiDispatcher: CoroutineDispatcher
-) : ScopedViewModel(uiDispatcher) {
+    private val restoreFeatureConfig: RestoreFeatureConfig
+) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
         DONE,
@@ -153,7 +150,7 @@ class ActivityLogViewModel @Inject constructor(
             !activityLogFiltersFeatureConfig.isEnabled() -> return
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
-                launch {
+                viewModelScope.launch {
                     val purchasedProducts = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
                     if (purchasedProducts.backup) {
                         refreshFiltersUiState()
@@ -439,7 +436,7 @@ class ActivityLogViewModel @Inject constructor(
                 currentDateRangeFilter?.second?.let { Date(it) },
                 currentActivityTypeFilter.map { it.key }
         )
-        fetchActivitiesJob = launch {
+        fetchActivitiesJob = viewModelScope.launch {
             val result = activityLogStore.fetchActivities(payload)
             if (isActive) {
                 onActivityLogFetched(result, loadMore, restoreEvent)
