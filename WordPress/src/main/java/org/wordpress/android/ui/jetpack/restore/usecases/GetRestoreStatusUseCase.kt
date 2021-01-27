@@ -50,12 +50,8 @@ class GetRestoreStatusUseCase @Inject constructor(
                         emitFailure()
                         return@flow
                     }
-                    RUNNING -> {
-                        emitProgress(rewind)
-                    }
-                    QUEUED -> {
-                        emitProgress(rewind)
-                    }
+                    RUNNING -> emitProgress(rewind)
+                    QUEUED -> emitProgress(rewind)
                 }
             }
 
