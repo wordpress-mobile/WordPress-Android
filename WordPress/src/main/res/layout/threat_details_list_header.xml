@@ -20,17 +20,18 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header"
-        style="@style/Scan.ThreatDetails.Header"
-        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Jetpack.Header"
+        app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@+id/icon"
+        app:layout_constraintVertical_chainStyle="packed"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/threat_item_header_vulnerable_plugin" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/description"
-        style="@style/Scan.ThreatDetails.SecondaryHeader"
+        style="@style/Jetpack.Description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/header"
         app:layout_constraintTop_toBottomOf="@+id/header"
