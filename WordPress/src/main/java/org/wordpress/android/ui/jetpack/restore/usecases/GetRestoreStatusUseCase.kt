@@ -43,11 +43,7 @@ class GetRestoreStatusUseCase @Inject constructor(
                     (restoreId == null || rewind.restoreId == restoreId)) {
                 when (rewind.status) {
                     FINISHED -> {
-                        if (rewind.rewindId != null) {
-                            emitComplete(rewind)
-                        } else {
-                            emitFailure()
-                        }
+                        emitFinished(rewind)
                         return@flow
                     }
                     FAILED -> {
@@ -77,6 +73,9 @@ class GetRestoreStatusUseCase @Inject constructor(
         }
         return false
     }
+
+    private suspend fun FlowCollector<RestoreRequestState>.emitFinished(rewind: Rewind) =
+            if (rewind.rewindId != null) emitComplete(rewind) else emitFailure()
 
     private suspend fun FlowCollector<RestoreRequestState>.emitComplete(rewind: Rewind) {
         val rewindId = rewind.rewindId as String
