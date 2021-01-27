@@ -403,6 +403,10 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
+    fun onScrolledToBottom() {
+        requestEventsUpdate(true)
+    }
+
     fun onPullToRefresh() {
         requestEventsUpdate(false)
     }
@@ -538,10 +542,6 @@ class ActivityLogViewModel @Inject constructor(
             }
             else -> Unit // Do nothing
         }
-    }
-
-    fun onScrolledToBottom() {
-        requestEventsUpdate(true)
     }
 
     private fun showRewindStartedMessage(rewindId: String) {
