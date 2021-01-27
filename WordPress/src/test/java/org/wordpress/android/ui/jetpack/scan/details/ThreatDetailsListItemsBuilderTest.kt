@@ -7,36 +7,43 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.GenericThreatModel
-import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.*
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.*
 import org.wordpress.android.ui.jetpack.scan.TEST_FILE_PATH
 import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.*
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateFormatWrapper
+import java.text.DateFormat
 
 private const val TEST_THREAT_ITEM_HEADER = "Threat found"
 private const val TEST_THREAT_ITEM_SUB_HEADER = "Miscellaneous vulnerability"
+private const val TEST_FOUND_ON_DATE = "1 January, 2020"
+private const val TEST_FIXED_ON_DATE = "2 January, 2020"
+
 
 @InternalCoroutinesApi
 class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
-    @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
-    @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock
+    private lateinit var htmlMessageUtils: HtmlMessageUtils
+    @Mock
+    private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock
+    private lateinit var dateFormatWrapper: DateFormatWrapper
+    @Mock
+    private lateinit var dateFormat: DateFormat
     private lateinit var builder: ThreatDetailsListItemsBuilder
 
     private val technicalDetailsHeaderItem = HeaderState(UiStringRes(R.string.threat_technical_details_header))
@@ -65,32 +72,42 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        builder = ThreatDetailsListItemsBuilder(htmlMessageUtils, threatItemBuilder)
+        builder = ThreatDetailsListItemsBuilder(htmlMessageUtils, threatItemBuilder, dateFormatWrapper)
 
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(any())).thenReturn(
             SpannedString("")
         )
         with(threatItemBuilder) {
             whenever(buildThreatItemHeader(any())).thenReturn(UiStringText(TEST_THREAT_ITEM_HEADER))
-            whenever(buildThreatItemSubHeader(any())).thenReturn(UiStringText(TEST_THREAT_ITEM_SUB_HEADER))
+            whenever(buildThreatItemDescription(any())).thenReturn(UiStringText(TEST_THREAT_ITEM_SUB_HEADER))
         }
+        whenever(dateFormatWrapper.getLongDateFormat()).thenReturn(dateFormat)
+        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.firstDetected))
+            .thenReturn(TEST_FOUND_ON_DATE)
+        whenever(dateFormat.format(ThreatTestData.genericThreatModel.baseThreatModel.fixedOn))
+            .thenReturn(TEST_FIXED_ON_DATE)
     }
 
     @Test
-    fun `builds basic list items correctly for a ThreatModel`() {
+    fun `builds basic list items correctly for a ThreatModel in Fixed state`() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
-        val expectedIconItem = IconState(
-            icon = R.drawable.ic_shield_warning_white,
-            colorResId = R.color.error,
-            contentDescription = UiStringRes(R.string.threat_details_icon)
+        val expectedThreatDetailHeaderState = ThreatDetailHeaderState(
+            icon = threatItemBuilder.buildThreatItemIcon(threatModel),
+            iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
+            header = UiStringRes(R.string.threat_status_fixed),
+            description = UiStringText(TEST_FIXED_ON_DATE)
         )
+        val expectedFoundHeader = HeaderState(text = UiStringRes(R.string.threat_found_header))
+
+        val expectedFoundSubHeader = DescriptionState(UiStringText(TEST_FOUND_ON_DATE))
+
         val expectedThreatItemHeader = HeaderState(
             text = threatItemBuilder.buildThreatItemHeader(threatModel),
-            textColorRes = R.attr.colorError
+            textColorRes = R.attr.colorOnSurface
         )
         val expectedThreatItemSubHeader = DescriptionState(
-            threatItemBuilder.buildThreatItemSubHeader(threatModel)
+            threatItemBuilder.buildThreatItemDescription(threatModel)
         )
         val expectedProblemHeader = HeaderState(UiStringRes(R.string.threat_problem_header))
         val expectedProblemDescription = DescriptionState(
@@ -101,9 +118,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(threatModel)
 
         // Assert
-        Assertions.assertThat(threatItems).size().isEqualTo(5)
+        Assertions.assertThat(threatItems).size().isEqualTo(7)
         Assertions.assertThat(threatItems).containsSequence(
-            expectedIconItem,
+            expectedThreatDetailHeaderState,
+            expectedFoundHeader,
+            expectedFoundSubHeader,
             expectedThreatItemHeader,
             expectedThreatItemSubHeader,
             expectedProblemHeader,
