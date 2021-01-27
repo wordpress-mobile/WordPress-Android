@@ -1114,6 +1114,7 @@
     <string name="threat_found_header">Found</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
+    <string name="threat_status_fixed">Fixed</string>
     <!-- threat fix -->
     <string name="threat_fix_default_header">How will we fix it?</string>
     <string name="threat_fix_fixed_header">How did Jetpack fix it?</string>

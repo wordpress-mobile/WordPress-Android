@@ -8,6 +8,9 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -52,7 +55,8 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
             add(buildThreatDetailHeader(threatModel))
-            if (threatModel.baseThreatModel.status != CURRENT) {
+            // show both Fixed and Found rows for threats in Fixed state
+            if (threatModel.baseThreatModel.status == FIXED) {
                 add(buildThreatFoundHeaderItem())
                 add(buildThreatFoundDateSubHeaderItem(threatModel))
             }
@@ -131,8 +135,14 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildThreatDetailHeader(threatModel: ThreatModel) = ThreatDetailHeaderState(
             icon = threatItemBuilder.buildThreatItemIcon(threatModel),
             iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
-            header = threatItemBuilder.buildThreatItemHeader(threatModel),
-            description = UiStringText("TEST")
+            header = when (threatModel.baseThreatModel.status) {
+                FIXED -> UiStringRes(R.string.threat_status_fixed)
+                IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
+            },
+            description = when(threatModel.baseThreatModel.status) {
+                FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
+                IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
+            }
     )
 
     private fun buildThreatFoundHeaderItem() = HeaderState(text = UiStringRes(R.string.threat_found_header))
@@ -141,9 +151,11 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         return DescriptionState(text = getThreatFoundString(threatModel.baseThreatModel.firstDetected))
     }
 
-    private fun getThreatFoundString(date: Date): UiStringText {
-        val dateFormat = dateFormatWrapper.getLongDateFormat()
-        return UiStringText(dateFormat.format(date))
+    private fun getThreatFoundString(date: Date?): UiStringText {
+        return date?.let {
+            val dateFormat = dateFormatWrapper.getLongDateFormat()
+            return UiStringText(dateFormat.format(date))
+        } ?: UiStringText("")
     }
 
     private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
