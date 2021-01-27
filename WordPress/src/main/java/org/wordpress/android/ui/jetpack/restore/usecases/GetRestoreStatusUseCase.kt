@@ -18,7 +18,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 
-const val DELAY_MILLIS = 10000L
+const val DELAY_MILLIS = 5000L
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
