@@ -142,6 +142,8 @@ class ActivityLogViewModel @Inject constructor(
     lateinit var site: SiteModel
     var rewindableOnly: Boolean = false
 
+    private var currentRestoreEvent = RestoreEvent(false)
+
     fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
             return
@@ -151,7 +153,7 @@ class ActivityLogViewModel @Inject constructor(
         this.site = site
         this.rewindableOnly = rewindableOnly
 
-        reloadEvents(done = true)
+        reloadEvents(true, currentRestoreEvent)
         requestEventsUpdate(false)
 
         showFiltersIfSupported()
@@ -396,8 +398,9 @@ class ActivityLogViewModel @Inject constructor(
     @VisibleForTesting
     fun reloadEvents(
         done: Boolean = isDone,
-        restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)
+        restoreEvent: RestoreEvent
     ) {
+        currentRestoreEvent = restoreEvent
         val eventList = activityLogStore.getActivityLogForSite(
                 site = site,
                 ascending = false,
@@ -437,6 +440,7 @@ class ActivityLogViewModel @Inject constructor(
         }
         if (restoreEvent.isCompleted) {
             showRewindFinishedMessage(restoreEvent.date)
+            currentRestoreEvent = RestoreEvent(false)
         }
     }
 
@@ -462,7 +466,7 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun requestEventsUpdate(
         loadMore: Boolean,
-        restoreEvent: RestoreEvent = RestoreEvent(isRewindProgressItemShown)
+        restoreEvent: RestoreEvent = currentRestoreEvent
     ) {
         val isLoadingMore = fetchActivitiesJob != null && eventListStatus.value == ActivityLogListStatus.LOADING_MORE
         val canLoadMore = eventListStatus.value == ActivityLogListStatus.CAN_LOAD_MORE
@@ -527,7 +531,7 @@ class ActivityLogViewModel @Inject constructor(
         if (event.rowsAffected > 0) {
             reloadEvents(
                     done = !event.canLoadMore,
-                    restoreEvent = restoreEvent.copy(displayProgress = isRewindProgressItemShown),
+                    restoreEvent = restoreEvent,
             )
             if (!loadingMore) {
                 moveToTop.call()
