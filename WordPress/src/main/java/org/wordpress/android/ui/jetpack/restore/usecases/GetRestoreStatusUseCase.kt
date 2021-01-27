@@ -30,6 +30,7 @@ class GetRestoreStatusUseCase @Inject constructor(
         restoreId: Long? = null
     ) = flow {
         if (restoreId == null) {
+            if (isNetworkUnavailable()) return@flow
             if (fetchActivitiesRewind(site)) return@flow
         }
         while (true) {
