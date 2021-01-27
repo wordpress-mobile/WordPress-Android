@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import android.util.Log
 import androidx.recyclerview.widget.DiffUtil
 import org.apache.commons.lang3.NotImplementedException
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
@@ -21,7 +22,12 @@ class MySiteAdapterDiffCallback(
         val oldItem = oldItems[oldItemPosition]
         val updatedItem = updatedItems[newItemPosition]
         return oldItem.type == updatedItem.type && when {
-            oldItem is SiteInfoBlock && updatedItem is SiteInfoBlock -> true
+            oldItem is SiteInfoBlock && updatedItem is SiteInfoBlock -> {
+                Log.d("vojta", "Comparing site info block: ${oldItem == updatedItem}")
+                Log.d("vojta", "Old item: $oldItem")
+                Log.d("vojta", "New item: $updatedItem")
+                true
+            }
             oldItem is QuickActionsBlock && updatedItem is QuickActionsBlock -> true
             oldItem is DomainRegistrationBlock && updatedItem is DomainRegistrationBlock -> true
             oldItem is QuickStartCard && updatedItem is QuickStartCard -> oldItem.id == updatedItem.id

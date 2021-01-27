@@ -196,16 +196,16 @@ class MySiteContentViewModel
         )
         siteItems.add(
                 QuickActionsBlock(
-                        ListItemInteraction.create(site, this::quickActionStatsClick),
-                        ListItemInteraction.create(site, this::quickActionPagesClick),
-                        ListItemInteraction.create(site, this::quickActionPostsClick),
-                        ListItemInteraction.create(site, this::quickActionMediaClick),
+                        ListItemInteraction.create(this::quickActionStatsClick),
+                        ListItemInteraction.create(this::quickActionPagesClick),
+                        ListItemInteraction.create(this::quickActionPostsClick),
+                        ListItemInteraction.create(this::quickActionMediaClick),
                         site.isSelfHostedAdmin || site.hasCapabilityEditPages
                 )
         )
         if (isDomainCreditAvailable) {
             analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-            siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
+            siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
         }
 
         siteItems.addAll(quickStartModel?.categories?.map {
@@ -276,11 +276,11 @@ class MySiteContentViewModel
         quickStartRepository.setActiveTask(task)
     }
 
-    private fun titleClick(selectedSite: SiteModel) {
+    private fun titleClick() {
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
-        } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
+        } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite()) || !selectedSite().hasCapabilityManageOptions) {
             _onSnackbarMessage.value = Event(
                     SnackbarMessageHolder(UiStringRes(R.string.my_site_title_changer_dialog_not_allowed_hint))
             )
@@ -289,7 +289,7 @@ class MySiteContentViewModel
                     TextInputDialogModel(
                             callbackId = SITE_NAME_CHANGE_CALLBACK_ID,
                             title = R.string.my_site_title_changer_dialog_title,
-                            initialText = selectedSite.name,
+                            initialText = selectedSite().name,
                             hint = R.string.my_site_title_changer_dialog_hint,
                             isMultiline = false,
                             isInputEnabled = true
@@ -298,7 +298,8 @@ class MySiteContentViewModel
         }
     }
 
-    private fun iconClick(site: SiteModel) {
+    private fun iconClick() {
+        val site = selectedSite()
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
         quickStartRepository.completeTask(UPLOAD_SITE_ICON)
         val hasIcon = site.iconUrl != null
@@ -324,37 +325,37 @@ class MySiteContentViewModel
         }
     }
 
-    private fun urlClick(site: SiteModel) {
-        _onNavigation.value = Event(OpenSite(site))
+    private fun urlClick() {
+        _onNavigation.value = Event(OpenSite(selectedSite()))
     }
 
-    private fun switchSiteClick(site: SiteModel) {
-        _onNavigation.value = Event(OpenSitePicker(site))
+    private fun switchSiteClick() {
+        _onNavigation.value = Event(OpenSitePicker(selectedSite()))
     }
 
-    private fun quickActionStatsClick(site: SiteModel) {
+    private fun quickActionStatsClick() {
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
-        _onNavigation.value = Event(getStatsNavigationActionForSite(site))
+        _onNavigation.value = Event(getStatsNavigationActionForSite(selectedSite()))
     }
 
-    private fun quickActionPagesClick(site: SiteModel) {
+    private fun quickActionPagesClick() {
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
-        _onNavigation.value = Event(OpenPages(site))
+        _onNavigation.value = Event(OpenPages(selectedSite()))
     }
 
-    private fun quickActionPostsClick(site: SiteModel) {
+    private fun quickActionPostsClick() {
         analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
-        _onNavigation.value = Event(OpenPosts(site))
+        _onNavigation.value = Event(OpenPosts(selectedSite()))
     }
 
-    private fun quickActionMediaClick(site: SiteModel) {
+    private fun quickActionMediaClick() {
         analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
-        _onNavigation.value = Event(OpenMedia(site))
+        _onNavigation.value = Event(OpenMedia(selectedSite()))
     }
 
-    private fun domainRegistrationClick(site: SiteModel) {
-        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
-        _onNavigation.value = Event(OpenDomainRegistration(site))
+    private fun domainRegistrationClick() {
+        analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, selectedSite())
+        _onNavigation.value = Event(OpenDomainRegistration(selectedSite()))
     }
 
     fun refresh() {
