@@ -83,6 +83,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
     fun buildProgressListStateItems(
         progress: Int = 0,
         published: Date,
+        isIndeterminate: Boolean = false,
         onNotifyMeClick: () -> Unit
     ): List<JetpackListItemState> {
         return mutableListOf(
@@ -92,7 +93,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
                         R.color.success_50),
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
-                buildProgressState(progress),
+                buildProgressState(progress, isIndeterminate),
                 buildActionButtonState(
                         titleRes = R.string.restore_progress_action_button,
                         contentDescRes = R.string.restore_progress_action_button_content_description,
@@ -180,8 +181,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
             UiStringRes(textRes)
     )
 
-    private fun buildProgressState(progress: Int) = ProgressState(
+    private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
             progress = progress,
+            isIndeterminate = true,
             progressLabel = UiStringResWithParams(
                     R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
             )
