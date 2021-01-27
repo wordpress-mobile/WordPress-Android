@@ -4,6 +4,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.QUEUED
@@ -56,14 +57,10 @@ class GetRestoreStatusUseCase @Inject constructor(
                         return@flow
                     }
                     RUNNING -> {
-                        val rewindId = rewind.rewindId as String
-                        val date = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
-                        emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, date))
+                        emitProgress(rewind)
                     }
                     QUEUED -> {
-                        val rewindId = rewind.rewindId as String
-                        val date = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
-                        emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, date))
+                        emitProgress(rewind)
                     }
                 }
             }
@@ -81,5 +78,11 @@ class GetRestoreStatusUseCase @Inject constructor(
             return true
         }
         return false
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.emitProgress(rewind: Rewind) {
+        val rewindId = rewind.rewindId as String
+        val date = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
+        emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, date))
     }
 }
