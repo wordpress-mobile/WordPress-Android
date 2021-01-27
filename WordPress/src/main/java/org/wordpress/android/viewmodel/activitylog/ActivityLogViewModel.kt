@@ -175,7 +175,7 @@ class ActivityLogViewModel @Inject constructor(
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         if (withRestoreProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRewindProgressItem(restoreEvent.rewindId, restoreEvent.date))
+            items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.date))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
         }
         eventList.forEach { model ->
@@ -208,7 +208,7 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun getRewindProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
+    private fun getRestoreProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
         val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         return rewindDate?.let {
             ActivityLogListItem.Progress(
