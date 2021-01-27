@@ -159,6 +159,55 @@ class ActivityLogViewModel @Inject constructor(
         showFiltersIfSupported()
     }
 
+    @VisibleForTesting
+    fun reloadEvents(
+        done: Boolean = isDone,
+        restoreEvent: RestoreEvent
+    ) {
+        currentRestoreEvent = restoreEvent
+        val eventList = activityLogStore.getActivityLogForSite(
+                site = site,
+                ascending = false,
+                rewindableOnly = rewindableOnly
+        )
+        val items = mutableListOf<ActivityLogListItem>()
+        var moveToTop = false
+        val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
+        if (withRestoreProgressItem) {
+            items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
+            items.add(getRewindProgressItem(restoreEvent.rewindId, restoreEvent.date))
+            moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
+        }
+        eventList.forEach { model ->
+            val currentItem = ActivityLogListItem.Event(
+                    model,
+                    withRestoreProgressItem,
+                    backupDownloadFeatureConfig.isEnabled(),
+                    restoreFeatureConfig.isEnabled()
+            )
+            val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
+            if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
+                items.add(ActivityLogListItem.Header(currentItem.formattedDate))
+            }
+            items.add(currentItem)
+        }
+        if (eventList.isNotEmpty() && !done) {
+            items.add(ActivityLogListItem.Loading)
+        }
+        if (eventList.isNotEmpty() && site.hasFreePlan && done) {
+            items.add(ActivityLogListItem.Footer)
+        }
+
+        _events.value = items
+        if (moveToTop) {
+            _moveToTop.call()
+        }
+        if (restoreEvent.isCompleted) {
+            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.date)
+            currentRestoreEvent = RestoreEvent(false)
+        }
+    }
+
     private fun showFiltersIfSupported() {
         when {
             !activityLogFiltersFeatureConfig.isEnabled() -> return
@@ -403,55 +452,6 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onScrolledToBottom() {
         requestEventsUpdate(true)
-    }
-
-    @VisibleForTesting
-    fun reloadEvents(
-        done: Boolean = isDone,
-        restoreEvent: RestoreEvent
-    ) {
-        currentRestoreEvent = restoreEvent
-        val eventList = activityLogStore.getActivityLogForSite(
-                site = site,
-                ascending = false,
-                rewindableOnly = rewindableOnly
-        )
-        val items = mutableListOf<ActivityLogListItem>()
-        var moveToTop = false
-        val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
-        if (withRestoreProgressItem) {
-            items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRewindProgressItem(restoreEvent.rewindId, restoreEvent.date))
-            moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
-        }
-        eventList.forEach { model ->
-            val currentItem = ActivityLogListItem.Event(
-                    model,
-                    withRestoreProgressItem,
-                    backupDownloadFeatureConfig.isEnabled(),
-                    restoreFeatureConfig.isEnabled()
-            )
-            val lastItem = items.lastOrNull() as? ActivityLogListItem.Event
-            if (lastItem == null || lastItem.formattedDate != currentItem.formattedDate) {
-                items.add(ActivityLogListItem.Header(currentItem.formattedDate))
-            }
-            items.add(currentItem)
-        }
-        if (eventList.isNotEmpty() && !done) {
-            items.add(ActivityLogListItem.Loading)
-        }
-        if (eventList.isNotEmpty() && site.hasFreePlan && done) {
-            items.add(ActivityLogListItem.Footer)
-        }
-
-        _events.value = items
-        if (moveToTop) {
-            _moveToTop.call()
-        }
-        if (restoreEvent.isCompleted) {
-            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.date)
-            currentRestoreEvent = RestoreEvent(false)
-        }
     }
 
     private fun List<ActivityLogListItem>.containsProgressItem(): Boolean {
