@@ -5,17 +5,17 @@
     android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true">
+    android:focusable="true"
+    android:layout_marginTop="@dimen/margin_extra_large"
+    android:layout_marginBottom="@dimen/margin_medium">
 
     <com.google.android.material.checkbox.MaterialCheckBox
         android:id="@+id/checkbox"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        style="@style/Jetpack.ListItem.Checkbox"
         android:clickable="false"
         android:focusable="false"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/vertical_guideline"
-        app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
