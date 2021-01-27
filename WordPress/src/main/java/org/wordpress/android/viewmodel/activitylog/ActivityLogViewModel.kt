@@ -128,7 +128,7 @@ class ActivityLogViewModel @Inject constructor(
         get() = _navigationEvents
 
     private val isRestoreProgressItemShown: Boolean
-        get() = events.value?.containsProgressItem() == true
+        get() = events.value?.find { it is ActivityLogListItem.Progress } != null
 
     private val isDone: Boolean
         get() = eventListStatus.value == ActivityLogListStatus.DONE
@@ -542,10 +542,6 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onScrolledToBottom() {
         requestEventsUpdate(true)
-    }
-
-    private fun List<ActivityLogListItem>.containsProgressItem(): Boolean {
-        return this.find { it is ActivityLogListItem.Progress } != null
     }
 
     private fun showRewindStartedMessage(rewindId: String) {
