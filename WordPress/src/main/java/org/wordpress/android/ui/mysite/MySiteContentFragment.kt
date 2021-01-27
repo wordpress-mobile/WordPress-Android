@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.os.Parcelable
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -195,7 +196,7 @@ class MySiteContentFragment : Fragment(),
         (recycler_view.adapter as? MySiteAdapter)?.let {
             outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
-        outState.putInt(KEY_SITE_ID, viewModel.site.id)
+        outState.putInt(KEY_SITE_ID, viewModel.selectedSiteId)
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -291,10 +292,10 @@ class MySiteContentFragment : Fragment(),
         private const val KEY_LIST_STATE = "key_list_state"
         private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         private const val KEY_SITE_ID = "key_site_id"
-        fun newInstance(site: SiteModel): MySiteContentFragment {
+        fun newInstance(siteId: Int): MySiteContentFragment {
             val fragment = MySiteContentFragment()
             val bundle = Bundle()
-            bundle.putSerializable(KEY_SITE_ID, site.id)
+            bundle.putSerializable(KEY_SITE_ID, siteId)
             fragment.arguments = bundle
             return fragment
         }

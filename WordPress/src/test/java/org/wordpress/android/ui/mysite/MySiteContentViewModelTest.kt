@@ -28,7 +28,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
-import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
@@ -112,7 +111,6 @@ class MySiteContentViewModelTest : BaseUnitTest() {
     @Mock lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
-    @Mock lateinit var siteStore: SiteStore
     private lateinit var viewModel: MySiteContentViewModel
     private lateinit var uiModels: MutableList<List<MySiteItem>>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -128,6 +126,7 @@ class MySiteContentViewModelTest : BaseUnitTest() {
     private lateinit var site: SiteModel
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
     private val isDomainCreditAvailable = MutableLiveData<Boolean>()
+    private val onSiteChange = MutableLiveData<SiteModel>()
     private val quickStartModel = MutableLiveData<QuickStartModel>()
 
     @InternalCoroutinesApi
@@ -136,6 +135,7 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         onShowSiteIconProgressBar.value = null
         isDomainCreditAvailable.value = null
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
+        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
         whenever(quickStartRepository.quickStartModel).thenReturn(quickStartModel)
         whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
@@ -144,7 +144,8 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         site.url = siteUrl
         site.name = siteName
         site.iconUrl = siteIcon
-        whenever(siteStore.getSiteByLocalId(siteId)).thenReturn(site)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        onSiteChange.value = site
         initSiteInfoBuilder()
         initSiteItems()
         viewModel = MySiteContentViewModel(
@@ -156,7 +157,6 @@ class MySiteContentViewModelTest : BaseUnitTest() {
                 siteItemsBuilder,
                 accountStore,
                 selectedSiteRepository,
-                siteStore,
                 wpMediaUtilsWrapper,
                 mediaUtilsWrapper,
                 fluxCUtilsWrapper,
@@ -737,6 +737,7 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         )
 
         val updatedSite = updateSite()
+        onSiteChange.value = updatedSite
 
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(updatedSite),
@@ -749,7 +750,7 @@ class MySiteContentViewModelTest : BaseUnitTest() {
     private fun updateSite(): SiteModel {
         val updatedSite = SiteModel()
         updatedSite.id = updatedSiteId
-        whenever(siteStore.getSiteByLocalId(updatedSiteId)).thenReturn(updatedSite)
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(updatedSite)
 
         viewModel.start(updatedSiteId)
 

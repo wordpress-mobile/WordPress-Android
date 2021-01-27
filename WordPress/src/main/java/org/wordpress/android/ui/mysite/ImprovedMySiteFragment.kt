@@ -95,9 +95,9 @@ class ImprovedMySiteFragment : Fragment() {
                 }
             }
         })
-        viewModel.onSiteChange.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { site ->
-                showFragment(MySiteContentFragment.newInstance(site))
+        viewModel.onSiteSelected.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { siteId ->
+                showFragment(MySiteContentFragment.newInstance(siteId))
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {

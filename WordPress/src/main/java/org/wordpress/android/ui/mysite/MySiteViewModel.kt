@@ -4,13 +4,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import org.wordpress.android.fluxc.model.SiteModel
+import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenMeScreen
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.distinct
 import org.wordpress.android.util.map
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -29,8 +28,8 @@ class MySiteViewModel
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
 
     val onNavigation: LiveData<Event<SiteNavigationAction>> = _onNavigation
-    val uiModel: LiveData<UiModel> = merge(_currentAvatar, selectedSiteRepository.selectedSiteChange) { avatar, site ->
-        val state = if (site != null) {
+    val uiModel: LiveData<UiModel> = merge(_currentAvatar, selectedSiteRepository.siteSelected) { avatar, siteId ->
+        val state = if (siteId != null) {
             State.SiteSelected
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
@@ -39,11 +38,13 @@ class MySiteViewModel
         }
         UiModel(avatar.orEmpty(), state)
     }
-    val onSiteChange: LiveData<Event<SiteModel>> = selectedSiteRepository.selectedSiteChange.distinct()
+    val onSiteSelected: LiveData<Event<Int>> = selectedSiteRepository.siteSelected
             .map { Event(it) }
 
     fun refresh() {
-        selectedSiteRepository.updateSiteSettingsIfNecessary()
+        launch {
+            selectedSiteRepository.updateSiteSettingsIfNecessary()
+        }
         _currentAvatar.value = accountStore.account?.avatarUrl.orEmpty()
     }
 

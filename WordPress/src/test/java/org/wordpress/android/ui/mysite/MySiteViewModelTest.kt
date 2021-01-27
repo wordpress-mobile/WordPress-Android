@@ -22,7 +22,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var site: SiteModel
-    private val onSiteChange = MutableLiveData<SiteModel>()
+    private val onSiteChange = MutableLiveData<Int>()
     private lateinit var uiModels: MutableList<UiModel>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteId = 1
@@ -34,7 +34,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Before
     fun setUp() {
         onSiteChange.value = null
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
+        whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteChange)
         viewModel = MySiteViewModel(TEST_DISPATCHER, accountStore, selectedSiteRepository, displayUtilsWrapper)
         uiModels = mutableListOf()
         viewModel.uiModel.observeForever {
