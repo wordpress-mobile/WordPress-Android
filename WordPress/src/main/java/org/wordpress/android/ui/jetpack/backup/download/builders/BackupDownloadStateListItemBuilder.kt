@@ -40,9 +40,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.backup_download_details_header),
                 buildDescriptionState(published, R.string.backup_download_details_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.backup_download_details_action_button,
-                        R.string.backup_download_details_action_button_content_description,
-                        onCreateDownloadClick),
+                        titleRes = R.string.backup_download_details_action_button,
+                        contentDescRes = R.string.backup_download_details_action_button_content_description,
+                        onClick = onCreateDownloadClick),
                 buildSubHeaderState()
         )
 
@@ -72,9 +72,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                 buildDescriptionState(published, R.string.backup_download_progress_description_with_two_parameters),
                 buildProgressState(progress),
                 buildActionButtonState(
-                        R.string.backup_download_progress_action_button,
-                        R.string.backup_download_progress_action_button_content_description,
-                        onNotifyMeClick),
+                        titleRes = R.string.backup_download_progress_action_button,
+                        contentDescRes = R.string.backup_download_progress_action_button_content_description,
+                        onClick = onNotifyMeClick),
                 buildAdditionalInformationState(R.string.backup_download_progress_additional_info)
         )
     }
@@ -92,13 +92,16 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.backup_download_complete_header),
                 buildDescriptionState(published, R.string.backup_download_complete_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.backup_download_complete_download_action_button,
-                        R.string.backup_download_complete_download_action_button_content_description,
-                        onDownloadFileClick),
+                        titleRes = R.string.backup_download_complete_download_action_button,
+                        contentDescRes = R.string.backup_download_complete_download_action_button_content_description,
+                        onClick = onDownloadFileClick),
                 buildActionButtonState(
-                        R.string.backup_download_complete_download_share_action_button,
-                        R.string.backup_download_complete_download_share_action_button_content_description,
-                        onShareLinkClick),
+                        titleRes = R.string.backup_download_complete_download_share_action_button,
+                        contentDescRes =
+                            R.string.backup_download_complete_download_share_action_button_content_description,
+                        isSecondary = true,
+                        iconRes = R.drawable.ic_share_white_24dp,
+                        onClick = onShareLinkClick),
                 buildAdditionalInformationState(R.string.backup_download_complete_info)
         )
     }
@@ -110,9 +113,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                     R.color.error_50),
             buildDescriptionState(R.string.backup_download_complete_failed_description),
             buildActionButtonState(
-                    R.string.backup_download_complete_failed_action_button,
-                    R.string.backup_download_complete_failed_action_button_content_description,
-                    onDoneClick)
+                    titleRes = R.string.backup_download_complete_failed_action_button,
+                    contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
+                    onClick = onDoneClick)
     )
 
     private fun buildIconState(
@@ -142,10 +145,14 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
+        isSecondary: Boolean = false,
+        @DrawableRes iconRes: Int? = null,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
+        isSecondary = isSecondary,
+        iconRes = iconRes,
         onClick = onClick
     )
 

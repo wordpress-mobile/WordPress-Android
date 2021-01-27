@@ -78,7 +78,8 @@
             app:iconGravity="textStart"
             app:iconPadding="@dimen/margin_small_medium"
             app:iconSize="14dp"
-            app:iconTint="@null"
+            app:iconTint="@color/login_secondary_button_icon_tint_color"
+            app:iconTintMode="src_in"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent" />

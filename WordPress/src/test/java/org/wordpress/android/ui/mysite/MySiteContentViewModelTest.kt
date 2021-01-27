@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
-import com.nhaarman.mockitokotlin2.reset
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -23,13 +23,13 @@ import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -138,7 +138,6 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(domainRegistrationHandler.isDomainCreditAvailable).thenReturn(isDomainCreditAvailable)
         whenever(quickStartRepository.quickStartModel).thenReturn(quickStartModel)
-        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(listOf())
         site = SiteModel()
         site.id = siteId
         site.url = siteUrl
@@ -204,7 +203,7 @@ class MySiteContentViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is contains header of selected site`() {
-        assertThat(uiModels).hasSize(1)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last()).isNotEmpty()
 
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
@@ -714,30 +713,88 @@ class MySiteContentViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `site items builder invoked with the selected site's backup screen availability`() {
+    fun `jetpack menu visibility requested, when selected site changes and scanScreenFeatureFlag is enabled`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
+
+        val updatedSite = updateSite()
+        onSiteChange.postValue(updatedSite)
+
+        verify(jetpackCapabilitiesUseCase).getJetpackPurchasedProducts(updatedSite.siteId)
+    }
+
+    @Test
+    fun `jetpack menu visibility requested, when selected site changes and backupScreenFeatureFlag is enabled`() =
+            test {
+                whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+                whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                        JetpackPurchasedProducts(scan = false, backup = false)
+                )
+
+                val updatedSite = updateSite()
+                onSiteChange.postValue(updatedSite)
+
+                verify(jetpackCapabilitiesUseCase).getJetpackPurchasedProducts(updatedSite.siteId)
+            }
+
+    @Test
+    fun `jetpack menu visibility not requested, when scan and backup screen feature flags are off`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(false)
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(false)
+
+        val updatedSite = updateSite()
+        onSiteChange.postValue(updatedSite)
+
+        verify(jetpackCapabilitiesUseCase, never()).getJetpackPurchasedProducts(site.siteId)
+    }
+
+    @Test
+    fun `backup menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
         whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
+        )
 
-        reset(siteItemsBuilder)
+        val updatedSite = updateSite()
+        onSiteChange.postValue(updatedSite)
 
-        onShowSiteIconProgressBar.value = true
-
-        verify(siteItemsBuilder).buildSiteItems(
+        verify(siteItemsBuilder, times(3)).buildSiteItems(
                 site = eq(site),
                 onClick = any(),
-                isBackupAvailable = eq(true),
+                isBackupAvailable = eq(false),
                 isScanAvailable = any()
         )
     }
 
     @Test
-    fun `scan menu item is visible, when jetpack capabilities contain JETPACK item`() = test {
+    fun `scan menu item is NOT visible, when getJetpackMenuItemsVisibility is false`() = test {
         whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(anyLong())).thenReturn(
-                listOf(JetpackCapability.SCAN)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = false)
         )
 
         val updatedSite = updateSite()
-        onSiteChange.value = updatedSite
+        onSiteChange.postValue(updatedSite)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(updatedSite),
+                onClick = any(),
+                isBackupAvailable = any(),
+                isScanAvailable = eq(false)
+        )
+    }
+
+    @Test
+    fun `scan menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        whenever(scanScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = true, backup = false)
+        )
+
+        val updatedSite = updateSite()
+        onSiteChange.postValue(updatedSite)
 
         verify(siteItemsBuilder).buildSiteItems(
                 site = eq(updatedSite),
@@ -747,13 +804,29 @@ class MySiteContentViewModelTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `backup menu item is visible, when getJetpackMenuItemsVisibility is true`() = test {
+        whenever(backupScreenFeatureConfig.isEnabled()).thenReturn(true)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong())).thenReturn(
+                JetpackPurchasedProducts(scan = false, backup = true)
+        )
+
+        val updatedSite = updateSite()
+        onSiteChange.postValue(updatedSite)
+
+        verify(siteItemsBuilder).buildSiteItems(
+                site = eq(updatedSite),
+                onClick = any(),
+                isBackupAvailable = eq(true),
+                isScanAvailable = any()
+        )
+    }
+
     private fun updateSite(): SiteModel {
         val updatedSite = SiteModel()
         updatedSite.id = updatedSiteId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(updatedSite)
-
         viewModel.start(updatedSiteId)
-
         return updatedSite
     }
 

@@ -23,8 +23,6 @@ import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPay
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction.NEW
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.DEFAULT_SCOPE
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
@@ -99,10 +97,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
     private val appRatingDialogWrapper: AppRatingDialogWrapper,
     private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
-    @Named(UI_SCOPE) private val uiScope: CoroutineScope,
-    @Named(DEFAULT_SCOPE) private val defaultScope: CoroutineScope
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private lateinit var coroutineScope: CoroutineScope
+
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
 
@@ -122,6 +120,10 @@ class ReaderPostCardActionsHandler @Inject constructor(
 
     init {
         dispatcher.register(siteNotificationsUseCase)
+    }
+
+    fun initScope(coroutineScope: CoroutineScope) {
+        this.coroutineScope = coroutineScope
     }
 
     suspend fun onAction(
@@ -340,7 +342,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                             UiStringRes(R.string.reader_toast_blog_blocked),
                                             UiStringRes(R.string.undo),
                                             {
-                                                uiScope.launch {
+                                                coroutineScope.launch {
                                                     undoBlockBlogUseCase.undoBlockBlog(it.blockedBlogData)
                                                     _refreshPosts.postValue(Event(Unit))
                                                 }
@@ -466,7 +468,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
                                     UiStringText(notificationMessage),
                                     UiStringRes(R.string.reader_followed_blog_notifications_action),
                                     buttonAction = {
-                                        defaultScope.launch {
+                                        coroutineScope.launch(bgDispatcher) {
                                             analyticsTrackerWrapper
                                                     .track(FOLLOWED_BLOG_NOTIFICATIONS_READER_ENABLED, blogId)
                                             siteNotificationsUseCase.updateSubscription(blogId, NEW)

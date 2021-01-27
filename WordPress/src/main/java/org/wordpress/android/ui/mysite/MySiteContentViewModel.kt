@@ -22,7 +22,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
-import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -52,8 +51,8 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.ScanAvailable
 import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteContentViewModel.UiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
@@ -178,6 +177,7 @@ class MySiteContentViewModel
             showSiteIconProgressBar,
             isDomainCreditAvailable,
             scanAvailable,
+            backupAvailable,
             quickStartModel
     ) ->
         val site = selectedSite ?: return@mapAsync listOf<MySiteItem>()
@@ -220,18 +220,26 @@ class MySiteContentViewModel
                 siteItemsBuilder.buildSiteItems(
                         site,
                         this::onItemClick,
-                        backupScreenFeatureConfig.isEnabled(),
+                        backupAvailable,
                         scanAvailable
                 )
         )
         siteItems
     }
 
-    private fun updateScanItemState() {
-        if (scanScreenFeatureConfig.isEnabled()) {
+    private fun updateScanAndBackupItemState() {
+        _partialState.value = JetpackCapabilities(scanAvailable = false, backupAvailable = false)
+        if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
             launch {
-                val capabilities = jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(selectedSite().siteId)
-                _partialState.value = ScanAvailable(capabilities.find { it == JetpackCapability.SCAN } != null)
+                val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(
+                        requireNotNull(
+                                selectedSiteRepository.getSelectedSite()
+                        ).siteId
+                )
+                _partialState.value = JetpackCapabilities(
+                        scanAvailable = scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan,
+                        backupAvailable = backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup
+                )
             }
         }
     }
@@ -501,7 +509,7 @@ class MySiteContentViewModel
         if (!isStarted || siteId != selectedSiteId) {
             isStarted = true
             this.selectedSiteId = siteId
-            updateScanItemState()
+            updateScanAndBackupItemState()
         }
     }
 
@@ -515,13 +523,14 @@ class MySiteContentViewModel
         val showSiteIconProgressBar: Boolean = false,
         val isDomainCreditAvailable: Boolean = false,
         val scanAvailable: Boolean = false,
+        val backupAvailable: Boolean = false,
         val quickStartModel: QuickStartModel? = null
     ) {
         sealed class PartialState {
             data class SelectedSite(val selectedSite: SiteModel) : PartialState()
             data class ShowSiteIconProgressBar(val showSiteIconProgressBar: Boolean) : PartialState()
             data class DomainCreditAvailable(val isDomainCreditAvailable: Boolean) : PartialState()
-            data class ScanAvailable(val scanAvailable: Boolean) : PartialState()
+            data class JetpackCapabilities(val scanAvailable: Boolean, val backupAvailable: Boolean) : PartialState()
             data class QuickStartUpdate(val quickStartModel: QuickStartModel) : PartialState()
         }
 
@@ -529,7 +538,10 @@ class MySiteContentViewModel
             return when (partialState) {
                 is ShowSiteIconProgressBar -> this.copy(showSiteIconProgressBar = partialState.showSiteIconProgressBar)
                 is DomainCreditAvailable -> this.copy(isDomainCreditAvailable = partialState.isDomainCreditAvailable)
-                is ScanAvailable -> this.copy(scanAvailable = partialState.scanAvailable)
+                is JetpackCapabilities -> this.copy(
+                        scanAvailable = partialState.scanAvailable,
+                        backupAvailable = partialState.backupAvailable
+                )
                 is QuickStartUpdate -> this.copy(quickStartModel = partialState.quickStartModel)
                 is SelectedSite -> this.copy(selectedSite = partialState.selectedSite)
             }
