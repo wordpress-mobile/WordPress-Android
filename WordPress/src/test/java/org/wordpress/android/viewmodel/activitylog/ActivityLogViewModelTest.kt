@@ -720,7 +720,7 @@ class ActivityLogViewModelTest {
     @Test
     fun `given rewind finished with date, when reloading events, then show rewind finished message with date`() {
         val date = activity().published
-        initProgressFinishedMocks(date)
+        initProgressFinishedMocks(date, true)
 
         viewModel.reloadEvents(
                 done = false,
@@ -738,7 +738,7 @@ class ActivityLogViewModelTest {
     @Test
     fun `given rewind finished without date, when reloading events, then show rewind finished message without date`() {
         val date = null
-        initProgressFinishedMocks(date)
+        initProgressFinishedMocks(date, false)
 
         viewModel.reloadEvents(
                 done = false,
@@ -1115,8 +1115,8 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initProgressFinishedMocks(date: Date?) {
-        initProgressMocks()
+    private fun initProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
+        initProgressMocks(displayProgressWithDate)
         viewModel.reloadEvents(
                 done = false,
                 restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)

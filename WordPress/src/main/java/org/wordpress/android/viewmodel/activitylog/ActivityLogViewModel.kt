@@ -378,13 +378,23 @@ class ActivityLogViewModel @Inject constructor(
         when (state) {
             is RestoreRequestState.Progress -> if (!isRewindProgressItemShown) {
                 reloadEvents(
-                        restoreEvent = RestoreEvent(displayProgress = true, rewindId = state.rewindId),
+                        restoreEvent = RestoreEvent(
+                                displayProgress = true,
+                                isCompleted = false,
+                                rewindId = state.rewindId,
+                                date = state.date
+                        ),
                 )
             }
             is RestoreRequestState.Complete -> if (isRewindProgressItemShown) {
                 requestEventsUpdate(
                         loadMore = false,
-                        restoreEvent = RestoreEvent(displayProgress = false, isCompleted = true)
+                        restoreEvent = RestoreEvent(
+                                displayProgress = false,
+                                isCompleted = true,
+                                rewindId = state.rewindId,
+                                date = state.date
+                        )
                 )
             }
             else -> Unit // Do nothing
@@ -411,7 +421,7 @@ class ActivityLogViewModel @Inject constructor(
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         if (withRestoreProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRewindProgressItem(restoreEvent.rewindId))
+            items.add(getRewindProgressItem(restoreEvent.rewindId, restoreEvent.date))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
         }
         eventList.forEach { model ->
@@ -439,7 +449,7 @@ class ActivityLogViewModel @Inject constructor(
             _moveToTop.call()
         }
         if (restoreEvent.isCompleted) {
-            showRewindFinishedMessage(restoreEvent.date)
+            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.date)
             currentRestoreEvent = RestoreEvent(false)
         }
     }
@@ -448,14 +458,15 @@ class ActivityLogViewModel @Inject constructor(
         return this.find { it is ActivityLogListItem.Progress } != null
     }
 
-    private fun getRewindProgressItem(rewindId: String?): ActivityLogListItem.Progress {
-        val date = rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
-        return date?.let {
+    private fun getRewindProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
+        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        return rewindDate?.let {
             ActivityLogListItem.Progress(
                     resourceProvider.getString(R.string.activity_log_currently_restoring_title),
                     resourceProvider.getString(
                             R.string.activity_log_currently_restoring_message,
-                            it.toFormattedDateString(), it.toFormattedTimeString()
+                            rewindDate.toFormattedDateString(),
+                            rewindDate.toFormattedTimeString()
                     )
             )
         } ?: ActivityLogListItem.Progress(
@@ -503,13 +514,14 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun showRewindFinishedMessage(date: Date?) {
-        if (date != null) {
+    private fun showRewindFinishedMessage(rewindId: String?, date: Date?) {
+        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        if (rewindDate != null) {
             _showSnackbarMessage.value =
                     resourceProvider.getString(
                             R.string.activity_log_rewind_finished_snackbar_message,
-                            date.toFormattedDateString(),
-                            date.toFormattedTimeString()
+                            rewindDate.toFormattedDateString(),
+                            rewindDate.toFormattedTimeString()
                     )
         } else {
             _showSnackbarMessage.value =
