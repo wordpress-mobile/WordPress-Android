@@ -499,7 +499,7 @@ class ActivityLogViewModel @Inject constructor(
 
     fun onRestoreConfirmed(rewindId: String) {
         viewModelScope.launch { handleRestoreRequest(postRestoreUseCase.postRestoreRequest(rewindId, site)) }
-        showRewindStartedMessage(rewindId)
+        showRestoreStartedMessage(rewindId)
     }
 
     private fun handleRestoreRequest(state: RestoreRequestState) {
@@ -544,7 +544,7 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun showRewindStartedMessage(rewindId: String) {
+    private fun showRestoreStartedMessage(rewindId: String) {
         activityLogStore.getActivityLogItemByRewindId(rewindId)?.published?.let {
             _showSnackbarMessage.value = resourceProvider.getString(
                     R.string.activity_log_rewind_started_snackbar_message,
