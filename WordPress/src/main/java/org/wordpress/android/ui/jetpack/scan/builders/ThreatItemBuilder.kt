@@ -92,7 +92,7 @@ class ThreatItemBuilder @Inject constructor(
         }
     }
 
-    fun buildThreatItemSubHeaderColor(threatModel: ThreatModel) =
+   private fun buildThreatItemSubHeaderColor(threatModel: ThreatModel) =
         if (threatModel.baseThreatModel.status == FIXED) {
             R.attr.wpColorSuccess
         } else {
