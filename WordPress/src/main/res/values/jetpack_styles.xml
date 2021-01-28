@@ -66,12 +66,6 @@
         <item name="colorPrimary">?attr/colorOnSurface</item>
     </style>
 
-    <style name="Jetpack.ListItem.Label" parent="Jetpack.TextView">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAlignment">viewStart</item>
-    </style>
-
     <style name="Jetpack.ListItem.Progress.Label" parent="Jetpack.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
