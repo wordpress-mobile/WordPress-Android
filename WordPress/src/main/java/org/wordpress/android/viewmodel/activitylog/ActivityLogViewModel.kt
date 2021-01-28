@@ -170,7 +170,7 @@ class ActivityLogViewModel @Inject constructor(
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         if (withRestoreProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.date))
+            items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.published))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
         }
         eventList.forEach { model ->
@@ -198,13 +198,13 @@ class ActivityLogViewModel @Inject constructor(
             _moveToTop.call()
         }
         if (restoreEvent.isCompleted) {
-            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.date)
+            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.published)
             currentRestoreEvent = RestoreEvent(false)
         }
     }
 
-    private fun getRestoreProgressItem(rewindId: String?, date: Date?): ActivityLogListItem.Progress {
-        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+    private fun getRestoreProgressItem(rewindId: String?, published: Date?): ActivityLogListItem.Progress {
+        val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         return rewindDate?.let {
             ActivityLogListItem.Progress(
                     resourceProvider.getString(R.string.activity_log_currently_restoring_title),
@@ -220,8 +220,8 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
-    private fun showRewindFinishedMessage(rewindId: String?, date: Date?) {
-        val rewindDate = date ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+    private fun showRewindFinishedMessage(rewindId: String?, published: Date?) {
+        val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         if (rewindDate != null) {
             _showSnackbarMessage.value =
                     resourceProvider.getString(
@@ -520,7 +520,7 @@ class ActivityLogViewModel @Inject constructor(
                                 displayProgress = true,
                                 isCompleted = false,
                                 rewindId = state.rewindId,
-                                date = state.date
+                                published = state.published
                         )
                 )
             }
@@ -531,7 +531,7 @@ class ActivityLogViewModel @Inject constructor(
                                 displayProgress = false,
                                 isCompleted = true,
                                 rewindId = state.rewindId,
-                                date = state.date
+                                published = state.published
                         )
                 )
             }
@@ -560,7 +560,7 @@ class ActivityLogViewModel @Inject constructor(
         val displayProgress: Boolean,
         val isCompleted: Boolean = false,
         val rewindId: String? = null,
-        val date: Date? = null
+        val published: Date? = null
     )
 
     sealed class FiltersUiState(val visibility: Boolean) {

@@ -105,13 +105,13 @@ sealed class RestoreRequestState {
         val progress: Int?,
         val message: String? = null,
         val currentEntry: String? = null,
-        val date: Date? = null
+        val published: Date? = null
     ) : RestoreRequestState()
 
     data class Complete(
         val rewindId: String,
         val restoreId: Long,
-        val date: Date? = null
+        val published: Date? = null
     ) : RestoreRequestState()
 
     sealed class Failure : RestoreRequestState() {

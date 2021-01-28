@@ -726,7 +726,7 @@ class ActivityLogViewModelTest {
                         displayProgress = false,
                         isCompleted = true,
                         rewindId = REWIND_ID,
-                        date = date
+                        published = date
                 )
         )
 
@@ -744,7 +744,7 @@ class ActivityLogViewModelTest {
                         displayProgress = false,
                         isCompleted = true,
                         rewindId = REWIND_ID,
-                        date = date
+                        published = date
                 )
         )
 

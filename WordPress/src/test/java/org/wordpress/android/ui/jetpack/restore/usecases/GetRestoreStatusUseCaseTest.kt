@@ -38,7 +38,7 @@ private const val PROGRESS = 50
 private const val MESSAGE = "message"
 private const val CURRENT_ENTRY = "current entry"
 
-private val DATE = Date()
+private val PUBLISHED = Date()
 
 @InternalCoroutinesApi
 @ExperimentalCoroutinesApi
@@ -107,7 +107,7 @@ class GetRestoreStatusUseCaseTest {
 
         val result = useCase.getRestoreStatus(site, null).toList()
 
-        assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, DATE))
+        assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
     }
 
     @Test
@@ -117,7 +117,7 @@ class GetRestoreStatusUseCaseTest {
 
         val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
 
-        assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, DATE))
+        assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
     }
 
     @Test
@@ -171,8 +171,8 @@ class GetRestoreStatusUseCaseTest {
                 advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
-                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, DATE),
-                        Complete(REWIND_ID, RESTORE_ID, DATE)
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
 
@@ -187,8 +187,8 @@ class GetRestoreStatusUseCaseTest {
                 advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
-                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, DATE),
-                        Complete(REWIND_ID, RESTORE_ID, DATE)
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
 
@@ -203,8 +203,8 @@ class GetRestoreStatusUseCaseTest {
                 advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
-                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, DATE),
-                        Complete(REWIND_ID, RESTORE_ID, DATE)
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
 
@@ -219,8 +219,8 @@ class GetRestoreStatusUseCaseTest {
                 advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
-                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, DATE),
-                        Complete(REWIND_ID, RESTORE_ID, DATE)
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
                 )
             }
 
@@ -236,7 +236,7 @@ class GetRestoreStatusUseCaseTest {
             status = null,
             rewindable = null,
             rewindID = null,
-            published = DATE,
+            published = PUBLISHED,
             actor = null
     )
 
@@ -246,7 +246,7 @@ class GetRestoreStatusUseCaseTest {
     ) = RewindStatusModel(
             state = State.ACTIVE,
             reason = null,
-            lastUpdated = DATE,
+            lastUpdated = PUBLISHED,
             canAutoconfigure = null,
             credentials = null,
             rewind = rewind(rewindId, status)
