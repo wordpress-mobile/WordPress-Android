@@ -27,7 +27,7 @@ class StockMediaInsertUseCase(
         emit(InsertModel.Progress(actionTitle))
         val result = stockMediaStore.performUploadStockMedia(site, identifiers.mapNotNull { identifier ->
             (identifier as? StockMediaIdentifier)?.let {
-                StockMediaUploadItem(it.name, it.title, it.url)
+                StockMediaUploadItem(it.name, it.title, it.url, it.caption)
             }
         })
         emit(when {

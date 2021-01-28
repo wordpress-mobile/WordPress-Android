@@ -37,13 +37,15 @@ class StockMediaDataSourceTest : BaseUnitTest() {
     private val title = "title"
     private val name = "name"
     private val thumbnail = "image.jpg"
+    private val caption = "caption"
     private val stockMediaItem = StockMediaItem(
             "id",
             name,
             title,
             url,
             "123",
-            thumbnail
+            thumbnail,
+            caption
     )
 
     @Before
@@ -87,7 +89,7 @@ class StockMediaDataSourceTest : BaseUnitTest() {
             assertThat(this.data).hasSize(1)
             assertThat(this.data).containsExactly(
                     MediaItem(
-                            StockMediaIdentifier(url, name, title),
+                            StockMediaIdentifier(url, name, title, caption),
                             url,
                             name,
                             IMAGE,
