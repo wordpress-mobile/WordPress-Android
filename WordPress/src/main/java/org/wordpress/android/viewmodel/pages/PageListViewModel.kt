@@ -154,23 +154,29 @@ class PageListViewModel @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
+        completeEditHomePageTour(pageItem, context)
         return pagesViewModel.onMenuAction(action, pageItem)
     }
 
     fun onItemTapped(pageItem: Page, context: Context) {
+        completeEditHomePageTour(pageItem, context)
+        _quickStartEvent.postValue(null)
+        if (pageItem.tapActionEnabled) {
+            pagesViewModel.onItemTapped(pageItem)
+        }
+    }
+
+    private fun completeEditHomePageTour(pageItem: Page, context: Context) {
         if (isHomepage(pageItem)) {
-            QuickStartUtils.completeTaskAndRemindNextOne(quickStartStore,
+            QuickStartUtils.completeTaskAndRemindNextOne(
+                    quickStartStore,
                     EDIT_HOMEPAGE,
                     dispatcher,
                     pagesViewModel.site,
                     _quickStartEvent.value,
-                    context)
-        }
-
-        _quickStartEvent.postValue(null)
-        if (pageItem.tapActionEnabled) {
-            pagesViewModel.onItemTapped(pageItem)
+                    context
+            )
         }
     }
 
