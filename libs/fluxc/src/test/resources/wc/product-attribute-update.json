@@ -1,0 +1,20 @@
+{
+  "id": 99,
+  "name": "test_name",
+  "slug": "pa_test",
+  "type": "test_type",
+  "order_by": "test",
+  "has_archives": false,
+  "_links": {
+    "self": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/products/attributes/6"
+      }
+    ],
+    "collection": [
+      {
+        "href": "https://example.com/wp-json/wc/v3/products/attributes"
+      }
+    ]
+  }
+}
