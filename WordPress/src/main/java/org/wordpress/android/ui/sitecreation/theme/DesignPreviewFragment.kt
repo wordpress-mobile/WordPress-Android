@@ -134,7 +134,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                 if (widthScript != null) {
                     Handler().postDelayed({
                         view.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
-                    }, 100)
+                    }, 250)
                 }
             }
 

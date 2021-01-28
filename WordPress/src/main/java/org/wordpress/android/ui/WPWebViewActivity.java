@@ -693,7 +693,7 @@ public class WPWebViewActivity extends WebViewActivity implements ErrorManagedWe
             public void run() {
                 mWebView.evaluateJavascript(script, value -> mViewModel.onUrlLoaded());
             }
-        }, 100);
+        }, 250);
     }
 
     private void setWebViewWidth(int previewWidth) {
