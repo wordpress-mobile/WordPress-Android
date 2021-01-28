@@ -26,12 +26,17 @@ class FetchScanStateUseCase @Inject constructor(
     suspend fun fetchScanState(
         site: SiteModel,
         polling: Boolean = true,
-        delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS
+        delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS,
+        startAfterDelay: Boolean = false
     ): Flow<FetchScanState> = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(Failure.NetworkUnavailable)
                 return@flow
+            }
+
+            if (startAfterDelay) {
+                delay(FETCH_SCAN_STATE_DELAY_MILLIS)
             }
 
             val result = scanStore.fetchScanState(FetchScanStatePayload(site))
