@@ -199,6 +199,7 @@ class RestoreViewModel @Inject constructor(
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = progressStart,
                         published = restoreState.published as Date,
+                        isIndeterminate = true,
                         onNotifyMeClick = this@RestoreViewModel::onNotifyMeClick
                 ),
                 type = StateType.PROGRESS
@@ -335,11 +336,13 @@ class RestoreViewModel @Inject constructor(
                                             R.string.restore_progress_label,
                                             listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
                                     ),
-                                    progressStateLabel = if (restoreStatus.currentEntry != null) {
-                                                UiStringText("${restoreStatus.currentEntry}")
-                                            } else {
-                                                UiStringText("Restoring your site") },
-                                    progressInfoLabel = UiStringRes(R.string.restore_progress_current_entry)
+                                    progressInfoLabel = if (restoreStatus.currentEntry != null) {
+                                            UiStringText("${restoreStatus.currentEntry}") }
+                                        else {
+                                            null
+                                        },
+                                    progressStateLabel = UiStringText("${restoreStatus.message}"),
+                                    isIndeterminate = (restoreStatus.progress ?: 0) <= 0
                             )
                         } else {
                             contentState
