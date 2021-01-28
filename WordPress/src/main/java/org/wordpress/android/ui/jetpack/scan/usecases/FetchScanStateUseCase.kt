@@ -25,9 +25,7 @@ class FetchScanStateUseCase @Inject constructor(
 ) {
     suspend fun fetchScanState(
         site: SiteModel,
-        polling: Boolean = true,
-        delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS,
-        startAfterDelay: Boolean = false
+        startWithDelay: Boolean = false
     ): Flow<FetchScanState> = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -35,7 +33,7 @@ class FetchScanStateUseCase @Inject constructor(
                 return@flow
             }
 
-            if (startAfterDelay) {
+            if (startWithDelay) {
                 delay(FETCH_SCAN_STATE_DELAY_MILLIS)
             }
 
@@ -47,8 +45,8 @@ class FetchScanStateUseCase @Inject constructor(
                 val scanStateModel = scanStore.getScanStateForSite(site)
                 if (scanStateModel != null) {
                     emit(Success(scanStateModel))
-                    if (polling && scanStateModel.state == ScanStateModel.State.SCANNING) {
-                        delay(delayInMs)
+                    if (scanStateModel.state == ScanStateModel.State.SCANNING) {
+                        delay(FETCH_SCAN_STATE_DELAY_MILLIS)
                     } else {
                         return@flow
                     }

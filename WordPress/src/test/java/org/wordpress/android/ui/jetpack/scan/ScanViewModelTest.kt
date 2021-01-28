@@ -83,7 +83,7 @@ class ScanViewModelTest : BaseUnitTest() {
             )
         }
         whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Complete)
         )
     }
@@ -148,14 +148,14 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given scan starts with success, when scan button is clicked, then scan state is fetched after delay`() = test {
-        whenever(fetchScanStateUseCase.fetchScanState(site = site, startAfterDelay = true))
+        whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
             .thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
         val uiStates = init().uiStates
 
         (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
-        verify(fetchScanStateUseCase).fetchScanState(site = site, startAfterDelay = true)
+        verify(fetchScanStateUseCase).fetchScanState(site = site, startWithDelay = true)
     }
 
     @Test
@@ -163,7 +163,8 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             val observers = init()
 
-            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .last().onClick.invoke()
 
             val fixThreatsDialogAction = observers.navigation.last().peekContent()
             assertThat(fixThreatsDialogAction).isInstanceOf(OpenFixThreatsConfirmationDialog::class.java)
@@ -178,7 +179,8 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(Success(scanStateModelWithFixableThreats)))
             val observers = init()
 
-            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .last().onClick.invoke()
 
             val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
             with(confirmationDialog) {
@@ -246,7 +248,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats are fixed, when threats fix status is checked, then success message is shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
             val observers = init()
@@ -261,7 +263,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no network, when threats fix status is checked, then network error message is shown`() = test {
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.NetworkUnavailable)
         )
         val observers = init()
@@ -274,7 +276,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given server is unavailable, when threats fix status is checked, then error message is shown`() = test {
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.RemoteRequestFailure)
         )
         val observers = init()
@@ -291,7 +293,7 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given threats fixing fails, when threats fix status checked, then fix threats error message shown`() =
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
             )
             val observers = init()
@@ -309,7 +311,7 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(mock())))
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = false))
             )
             val observers = init()
@@ -322,7 +324,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats are fixing, when threats fix status is checked, then an indeterminate progress bar is shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.InProgress(mock()))
             )
             val observers = init()
@@ -339,7 +341,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats not fixing, when threats fix status is checked, then indeterminate progress bar is not shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
             val observers = init()

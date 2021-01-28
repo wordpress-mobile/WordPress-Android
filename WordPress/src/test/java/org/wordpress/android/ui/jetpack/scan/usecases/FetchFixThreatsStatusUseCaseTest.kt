@@ -4,13 +4,17 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_FIX_THREATS_STATUS
 import org.wordpress.android.fluxc.model.scan.threat.FixThreatStatusModel
@@ -26,13 +30,16 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCa
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.NotStarted
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
+
     private lateinit var useCase: FetchFixThreatsStatusUseCase
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var scanStore: ScanStore
 
-    private val delayInMs = 0L
     private val fakeSiteId = 1L
     private val fakeThreatId = 11L
     private val fakeFixThreatsStatusModel = FixThreatStatusModel(fakeThreatId, FixStatus.IN_PROGRESS)
@@ -66,14 +73,14 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when in progress threats fix status is fetched, then polling occurs until in progress status changes`() =
-        test {
+        coroutineScope.runBlockingTest {
             whenever(scanStore.fetchFixThreatsStatus(any()))
                 .thenReturn(storeResultWithInProgressFixStatusModel)
                 .thenReturn(storeResultWithInProgressFixStatusModel)
                 .thenReturn(storeResultWithFixedFixStatusModel)
 
-            val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId), delayInMs)
-                .toList(mutableListOf())
+            val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId)).toList(mutableListOf())
+            advanceTimeBy(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
 
             verify(scanStore, times(3)).fetchFixThreatsStatus(any())
             assertThat(useCaseResult).containsSequence(
