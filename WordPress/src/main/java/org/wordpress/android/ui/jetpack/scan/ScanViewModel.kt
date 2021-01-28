@@ -119,7 +119,6 @@ class ScanViewModel @Inject constructor(
             updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
-                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
                     val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds)
                     if (someOrAllThreatFixed) fetchScanState()
                 }
