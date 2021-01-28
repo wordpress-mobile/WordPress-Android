@@ -1,8 +1,10 @@
 package org.wordpress.android.ui.jetpack.restore.usecases
 
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FAILED
@@ -11,6 +13,7 @@ import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Statu
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.RUNNING
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
@@ -18,12 +21,14 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.Remo
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
+import javax.inject.Named
 
 const val DELAY_MILLIS = 5000L
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun getRestoreStatus(
         site: SiteModel,
@@ -57,7 +62,7 @@ class GetRestoreStatusUseCase @Inject constructor(
 
             delay(DELAY_MILLIS)
         }
-    }
+    }.flowOn(bgDispatcher)
 
     private suspend fun FlowCollector<RestoreRequestState>.isNetworkUnavailable(): Boolean {
         if (!networkUtilsWrapper.isNetworkAvailable()) {

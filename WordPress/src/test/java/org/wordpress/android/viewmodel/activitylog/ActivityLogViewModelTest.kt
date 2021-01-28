@@ -13,7 +13,6 @@ import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Assert.assertEquals
@@ -124,8 +123,7 @@ class ActivityLogViewModelTest {
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
-                restoreFeatureConfig,
-                Dispatchers.Unconfined
+                restoreFeatureConfig
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
