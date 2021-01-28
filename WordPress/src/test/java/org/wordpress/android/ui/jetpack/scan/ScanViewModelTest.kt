@@ -121,6 +121,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `when scan button is clicked, then content updated on scan optimistic start (scanning state updated in db)`() =
         test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
             whenever(startScanUseCase.startScan(any()))
                 .thenReturn(flowOf(ScanningStateUpdatedInDb(fakeScanStateModel)))
             val uiStates = init().uiStates
@@ -156,6 +157,10 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `when fix threats confirmation dialog action is triggered, then fix threats confirmation dialog is shown`() =
         test {
+            val scanStateModelWithFixableThreats = fakeScanStateModel
+                .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+            whenever(fetchScanStateUseCase.fetchScanState(site))
+                .thenReturn(flowOf(Success(scanStateModelWithFixableThreats)))
             val observers = init()
 
             (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
