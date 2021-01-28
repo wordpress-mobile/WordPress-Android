@@ -57,15 +57,15 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         val fixingThreatIds = models.filter { it.status == FixStatus.IN_PROGRESS }.map { it.id }
         val isFixing = fixingThreatIds.isNotEmpty()
         val isFixingComplete = models.filter { it.status == FixStatus.FIXED }.size == fixableThreatIds.size
-        val containsError = models.any { it.error != null }
+        val errors = models.filter { it.error != null }
 
         return when {
             isFixing -> InProgress(fixingThreatIds)
             isFixingComplete -> Complete
             else -> {
                 // TODO ashiagr replace AppLog tag
-                if (containsError) AppLog.e(T.API, models.filter { it.error != null }.toString())
-                Failure.FixFailure
+                if (errors.isNotEmpty()) AppLog.e(T.API, models.filter { it.error != null }.toString())
+                Failure.FixFailure(errors.size == fixableThreatIds.size)
             }
         }
     }
@@ -76,7 +76,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         sealed class Failure : FetchFixThreatsState() {
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
-            object FixFailure : Failure()
+            data class FixFailure(val containsOnlyErrors: Boolean) : Failure()
         }
     }
 }

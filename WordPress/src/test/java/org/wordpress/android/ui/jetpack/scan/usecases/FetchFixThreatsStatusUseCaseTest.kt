@@ -110,18 +110,22 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given result model contains error, when threats fix status is fetched, then FixFailure is returned`() = test {
+    fun `given result models contain error, when threats fix status is fetched, then FixFailure is returned`() = test {
+        val fixThreatsStatusModels = listOf(
+            fakeFixThreatsStatusModel.copy(status = FixStatus.FIXED),
+            fakeFixThreatsStatusModel.copy(status = FixStatus.UNKNOWN, error = "not_found")
+        )
         val storeResultWithErrorFixStatusModel = OnFixThreatsStatusFetched(
             fakeSiteId,
-            listOf(fakeFixThreatsStatusModel.copy(status = FixStatus.UNKNOWN, error = "not_found")),
+            fixThreatsStatusModels,
             FETCH_FIX_THREATS_STATUS
         )
         whenever(scanStore.fetchFixThreatsStatus(any())).thenReturn(storeResultWithErrorFixStatusModel)
 
-        val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId))
+        val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(1L, 2L))
             .toList(mutableListOf())
             .last()
 
-        assertThat(useCaseResult).isEqualTo(Failure.FixFailure)
+        assertThat(useCaseResult).isEqualTo(Failure.FixFailure(containsOnlyErrors = false))
     }
 }
