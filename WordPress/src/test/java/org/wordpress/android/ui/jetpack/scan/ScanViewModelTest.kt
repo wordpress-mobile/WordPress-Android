@@ -110,6 +110,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when scan button is clicked, then start scan is triggered`() = test {
+        whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(ScanningStateUpdatedInDb(fakeScanStateModel)))
         val uiStates = init().uiStates
 
         (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
@@ -187,12 +188,15 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given success response, when fix threats is triggered, then fix started message is shown`() = test {
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Complete)
+        )
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
         val observers = init()
 
         triggerFixThreatsAction(observers)
 
-        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        val snackBarMsg = observers.snackBarMsgs.first().peekContent()
         assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_started_message)))
     }
 
@@ -331,6 +335,9 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
         test {
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Complete)
+            )
             whenever(site.siteId).thenReturn(1L)
             viewModel.start(site)
 
