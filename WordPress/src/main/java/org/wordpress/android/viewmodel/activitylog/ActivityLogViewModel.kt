@@ -283,7 +283,7 @@ class ActivityLogViewModel @Inject constructor(
         if (event.rowsAffected > 0) {
             reloadEvents(
                     done = !event.canLoadMore,
-                    restoreEvent = restoreEvent,
+                    restoreEvent = restoreEvent
             )
             if (!loadingMore) {
                 moveToTop.call()
