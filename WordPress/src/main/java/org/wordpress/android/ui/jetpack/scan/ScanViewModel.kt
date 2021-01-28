@@ -74,9 +74,9 @@ class ScanViewModel @Inject constructor(
         fetchScanState()
     }
 
-    private fun fetchScanState(startAfterDelay: Boolean = false) {
+    private fun fetchScanState(startWithDelay: Boolean = false) {
         launch {
-            fetchScanStateUseCase.fetchScanState(site = site, startAfterDelay = startAfterDelay)
+            fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = startWithDelay)
                 .collect { state ->
                     when (state) {
                         is FetchScanState.Success -> updateUiState(buildContentUiState(state.scanStateModel))
@@ -92,7 +92,7 @@ class ScanViewModel @Inject constructor(
                 .collect { state ->
                     when (state) {
                         is StartScanState.ScanningStateUpdatedInDb -> updateUiState(buildContentUiState(state.model))
-                        is StartScanState.Success -> fetchScanState(startAfterDelay = true)
+                        is StartScanState.Success -> fetchScanState(startWithDelay = true)
                         is StartScanState.Failure -> TODO() // TODO ashiagr to be implemented
                     }
                 }

@@ -132,14 +132,14 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given scan starts with success, when scan button is clicked, then scan state is fetched after delay`() = test {
-        whenever(fetchScanStateUseCase.fetchScanState(site = site, startAfterDelay = true))
+        whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
             .thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
         val uiStates = init().uiStates
 
         (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
-        verify(fetchScanStateUseCase).fetchScanState(site = site, startAfterDelay = true)
+        verify(fetchScanStateUseCase).fetchScanState(site = site, startWithDelay = true)
     }
 
     @Test

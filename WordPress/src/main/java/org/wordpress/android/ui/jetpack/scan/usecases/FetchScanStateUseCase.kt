@@ -27,7 +27,7 @@ class FetchScanStateUseCase @Inject constructor(
         site: SiteModel,
         polling: Boolean = true,
         delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS,
-        startAfterDelay: Boolean = false
+        startWithDelay: Boolean = false
     ): Flow<FetchScanState> = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -35,7 +35,7 @@ class FetchScanStateUseCase @Inject constructor(
                 return@flow
             }
 
-            if (startAfterDelay) {
+            if (startWithDelay) {
                 delay(FETCH_SCAN_STATE_DELAY_MILLIS)
             }
 
