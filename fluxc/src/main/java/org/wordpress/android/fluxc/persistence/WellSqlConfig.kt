@@ -1464,6 +1464,19 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "HAS_ARCHIVES BOOLEAN NOT NULL)"
                     )
                 }
+                133 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCAttributeTermModel")
+                    db.execSQL(
+                            "CREATE TABLE WCAttributeTermModel (" +
+                                    "_id INTEGER PRIMARY KEY, " +
+                                    "LOCAL_SITE_ID INTEGER," +
+                                    "NAME TEXT NOT NULL," +
+                                    "SLUG TEXT, " +
+                                    "DESCRIPTION TEXT, " +
+                                    "COUNT TEXT, " +
+                                    "MENU_ORDER TEXT)"
+                    )
+                }
             }
         }
         db.setTransactionSuccessful()
