@@ -736,7 +736,7 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given restore finished without date, when reloading events, then show restore finished message without date`() {
+    fun `given restore finished without date, when reloading events, then show restore finished msg without date`() {
         val date = null
         initProgressFinishedMocks(date, false)
 
