@@ -25,7 +25,6 @@ class FetchScanStateUseCase @Inject constructor(
 ) {
     suspend fun fetchScanState(
         site: SiteModel,
-        delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS,
         startWithDelay: Boolean = false
     ): Flow<FetchScanState> = flow {
         while (true) {
@@ -47,7 +46,7 @@ class FetchScanStateUseCase @Inject constructor(
                 if (scanStateModel != null) {
                     emit(Success(scanStateModel))
                     if (scanStateModel.state == ScanStateModel.State.SCANNING) {
-                        delay(delayInMs)
+                        delay(FETCH_SCAN_STATE_DELAY_MILLIS)
                     } else {
                         return@flow
                     }
