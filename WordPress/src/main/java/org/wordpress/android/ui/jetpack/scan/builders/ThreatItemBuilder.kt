@@ -79,39 +79,42 @@ class ThreatItemBuilder @Inject constructor() {
                 UiStringRes(R.string.threat_item_sub_header_status_ignored)
             }
             else -> {
-                when (threatModel) {
-                    is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
-
-                    is DatabaseThreatModel -> null
-
-                    is FileThreatModel -> UiStringResWithParams(
-                            R.string.threat_item_sub_header_file_signature,
-                            listOf(UiStringText(threatModel.baseThreatModel.signature))
-                    )
-
-                    is VulnerableExtensionThreatModel -> {
-                        when (threatModel.extension.type) {
-                            ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
-                            ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
-                            ExtensionType.UNKNOWN -> throw IllegalArgumentException(
-                                    "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
-                            )
-                        }
-                    }
-
-                    is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
-                }
+                buildThreatItemDescription(threatModel)
             }
         }
     }
+    fun buildThreatItemDescription(threatModel: ThreatModel): UiString? {
+        return when (threatModel) {
+            is CoreFileModificationThreatModel -> UiStringRes(R.string.threat_item_sub_header_core_file)
 
-    private fun buildThreatItemIcon(threatModel: ThreatModel): Int =
+            is DatabaseThreatModel -> null
+
+            is FileThreatModel -> UiStringResWithParams(
+                    R.string.threat_item_sub_header_file_signature,
+                    listOf(UiStringText(threatModel.baseThreatModel.signature))
+            )
+
+            is VulnerableExtensionThreatModel -> {
+                when (threatModel.extension.type) {
+                    ExtensionType.PLUGIN -> UiStringRes(R.string.threat_item_sub_header_vulnerable_plugin)
+                    ExtensionType.THEME -> UiStringRes(R.string.threat_item_sub_header_vulnerable_theme)
+                    ExtensionType.UNKNOWN -> throw IllegalArgumentException(
+                            "$UNKNOWN_VULNERABLE_EXTENSION_TYPE in ${this::class.java.simpleName}"
+                    )
+                }
+            }
+
+            is GenericThreatModel -> UiStringRes(R.string.threat_item_sub_header_misc_vulnerability)
+        }
+    }
+
+    fun buildThreatItemIcon(threatModel: ThreatModel): Int =
             when (threatModel.baseThreatModel.status) {
                 FIXED -> R.drawable.ic_shield_tick_white
                 IGNORED, UNKNOWN, CURRENT -> R.drawable.ic_notice_outline_white_24dp
             }
 
-    private fun buildThreatItemIconBackground(threatModel: ThreatModel): Int =
+    fun buildThreatItemIconBackground(threatModel: ThreatModel): Int =
             when (threatModel.baseThreatModel.status) {
                 FIXED -> R.drawable.bg_oval_success_50
                 IGNORED -> R.drawable.bg_oval_neutral_30

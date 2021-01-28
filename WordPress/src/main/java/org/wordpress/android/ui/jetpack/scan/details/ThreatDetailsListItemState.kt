@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
 import androidx.annotation.ColorRes
+import androidx.annotation.DrawableRes
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel.ThreatContext.ContextLine
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
@@ -19,6 +20,13 @@ sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackLi
             @ColorRes val normalTextColorRes: Int
         )
     }
+
+    data class ThreatDetailHeaderState(
+        @DrawableRes val icon: Int,
+        @DrawableRes val iconBackground: Int,
+        val header: UiString,
+        val description: UiString
+    ) : ThreatDetailsListItemState(ViewType.THREAT_DETAIL_HEADER)
 
     data class ThreatFileNameState(val fileName: UiString) : ThreatDetailsListItemState(ViewType.THREAT_FILE_NAME)
 }
