@@ -188,7 +188,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given success response, when fix threats is triggered, then fix started message is shown`() = test {
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Complete)
         )
         whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
@@ -240,7 +240,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats are fixed, when threats fix status is checked, then success message is shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
             val observers = init()
@@ -255,7 +255,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given no network, when threats fix status is checked, then network error message is shown`() = test {
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.NetworkUnavailable)
         )
         val observers = init()
@@ -268,7 +268,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     @Test
     fun `given server is unavailable, when threats fix status is checked, then error message is shown`() = test {
-        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.RemoteRequestFailure)
         )
         val observers = init()
@@ -285,7 +285,7 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given a threat not fixed, when threats fix status checked, then some threats not fixed error message shown`() =
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Failure.FixFailure)
             )
             val observers = init()
@@ -301,7 +301,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats are fixing, when threats fix status is checked, then an indeterminate progress bar is shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.InProgress(mock()))
             )
             val observers = init()
@@ -318,7 +318,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given threats not fixing, when threats fix status is checked, then indeterminate progress bar is not shown`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
             val observers = init()
@@ -335,7 +335,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given activity result fix threat status data, when fix status is requested, then fix status is fetched`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
                 flowOf(FetchFixThreatsState.Complete)
             )
             whenever(site.siteId).thenReturn(1L)

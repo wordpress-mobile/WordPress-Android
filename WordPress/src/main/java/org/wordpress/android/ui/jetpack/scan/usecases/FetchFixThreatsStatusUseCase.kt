@@ -19,7 +19,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-private const val FETCH_FIX_THREATS_STATUS_DELAY_MILLIS = 5000L
+const val FETCH_FIX_THREATS_STATUS_DELAY_MILLIS = 5000L
 
 class FetchFixThreatsStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -28,8 +28,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
 ) {
     suspend fun fetchFixThreatsStatus(
         remoteSiteId: Long,
-        fixableThreatIds: List<Long>,
-        delayInMs: Long = FETCH_FIX_THREATS_STATUS_DELAY_MILLIS
+        fixableThreatIds: List<Long>
     ): Flow<FetchFixThreatsState> = flow {
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
@@ -45,7 +44,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
                 val fixState = mapToFixState(result.fixThreatStatusModels, fixableThreatIds)
                 emit(fixState)
                 if (fixState is InProgress) {
-                    delay(delayInMs)
+                    delay(FETCH_FIX_THREATS_STATUS_DELAY_MILLIS)
                 } else {
                     return@flow
                 }
