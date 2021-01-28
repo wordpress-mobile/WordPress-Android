@@ -337,8 +337,8 @@ class RestoreViewModel @Inject constructor(
                                             listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
                                     ),
                                     progressInfoLabel = if (restoreStatus.currentEntry != null) {
-                                            UiStringText("${restoreStatus.currentEntry}") }
-                                        else {
+                                            UiStringText("${restoreStatus.currentEntry}")
+                                        } else {
                                             null
                                         },
                                     progressStateLabel = UiStringText("${restoreStatus.message}"),
