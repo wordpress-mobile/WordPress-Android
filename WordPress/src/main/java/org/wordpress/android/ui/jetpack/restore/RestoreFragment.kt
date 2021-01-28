@@ -24,6 +24,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardSt
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
@@ -86,7 +88,10 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
                 ) as String
                 site to activityId
             }
-            else -> throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")
+            else -> {
+                AppLog.e(T.JETPACK_RESTORE, "Error initializing ${this.javaClass.simpleName}")
+                throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")
+            }
         }
 
         initObservers()
