@@ -3417,8 +3417,6 @@
     <string name="restore_progress_action_button_content_description">@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_progress_current_entry">Restoring your site</string>
-
 
     <string name="restore_complete_page_title">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>
