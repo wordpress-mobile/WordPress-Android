@@ -526,7 +526,7 @@ class ActivityLogViewModel @Inject constructor(
                                 isCompleted = false,
                                 rewindId = state.rewindId,
                                 date = state.date
-                        ),
+                        )
                 )
             }
             is RestoreRequestState.Complete -> if (isRestoreProgressItemShown) {
@@ -565,7 +565,7 @@ class ActivityLogViewModel @Inject constructor(
         val displayProgress: Boolean,
         val isCompleted: Boolean = false,
         val rewindId: String? = null,
-        val date: Date? = null,
+        val date: Date? = null
     )
 
     sealed class FiltersUiState(val visibility: Boolean) {
