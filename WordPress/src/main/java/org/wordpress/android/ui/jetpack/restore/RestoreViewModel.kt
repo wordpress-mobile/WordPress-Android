@@ -341,7 +341,11 @@ class RestoreViewModel @Inject constructor(
                                         } else {
                                             null
                                         },
-                                    progressStateLabel = UiStringText("${restoreStatus.message}"),
+                                    progressStateLabel = if (restoreStatus.message != null) {
+                                        UiStringText("${restoreStatus.message}")
+                                    } else {
+                                        null
+                                    },
                                     isIndeterminate = (restoreStatus.progress ?: 0) <= 0
                             )
                         } else {
