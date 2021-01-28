@@ -97,8 +97,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         }
 
         if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            // only show toggle button for posts with a feedItemId
-            if (post.feedItemId > 0) {
+            if (post.isSeenSupported) {
                 if (readerPostTableWrapper.isPostSeen(post)) {
                     menuItems.add(
                             SecondaryAction(
