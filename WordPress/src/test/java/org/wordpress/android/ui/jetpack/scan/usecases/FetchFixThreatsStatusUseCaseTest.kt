@@ -23,6 +23,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.Complete
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.InProgress
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState.NotStarted
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @InternalCoroutinesApi
@@ -128,4 +129,21 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
 
         assertThat(useCaseResult).isEqualTo(Failure.FixFailure(containsOnlyErrors = false))
     }
+
+    @Test
+    fun `given model contains not started state, when threats fix status is fetched, then NotStarted is returned`() =
+        test {
+            val storeResultWithErrorFixStatusModel = OnFixThreatsStatusFetched(
+                fakeSiteId,
+                listOf(fakeFixThreatsStatusModel.copy(status = FixStatus.NOT_STARTED)),
+                FETCH_FIX_THREATS_STATUS
+            )
+            whenever(scanStore.fetchFixThreatsStatus(any())).thenReturn(storeResultWithErrorFixStatusModel)
+
+            val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(fakeThreatId))
+                .toList(mutableListOf())
+                .last()
+
+            assertThat(useCaseResult).isEqualTo(NotStarted)
+        }
 }

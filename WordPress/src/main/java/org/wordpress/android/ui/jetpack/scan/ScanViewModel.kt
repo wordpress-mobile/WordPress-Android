@@ -145,6 +145,8 @@ class ScanViewModel @Inject constructor(
         ).collect { status ->
             var fixingThreatIds = emptyList<Long>()
             when (status) {
+                is FetchFixThreatsState.NotStarted -> { // Do nothing
+                }
                 is FetchFixThreatsState.InProgress -> {
                     fixingThreatIds = status.threatIds
                 }
