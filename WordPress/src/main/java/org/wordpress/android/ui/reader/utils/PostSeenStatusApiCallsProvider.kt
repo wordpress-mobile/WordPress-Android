@@ -21,7 +21,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
     suspend fun markPostAsSeen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-        val params = SeenStatusToggleReqestParameters.fromReaderPost(post, true)
+        val params = SeenStatusToggleRequestParameters.fromReaderPost(post, true)
 
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, true)
@@ -34,7 +34,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
     }
 
     suspend fun markPostAsUnseen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-        val params = SeenStatusToggleReqestParameters.fromReaderPost(post, false)
+        val params = SeenStatusToggleRequestParameters.fromReaderPost(post, false)
 
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, false)
@@ -62,9 +62,9 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
         data class Failure(val error: String) : SeenStatusToggleCallResult()
     }
 
-    data class SeenStatusToggleReqestParameters(val parameters: JSONObject, val endpoint: String) {
+    data class SeenStatusToggleRequestParameters(val parameters: JSONObject, val endpoint: String) {
         companion object {
-            fun fromReaderPost(post: ReaderPost, askingToMarkAsSeen: Boolean): SeenStatusToggleReqestParameters {
+            fun fromReaderPost(post: ReaderPost, askingToMarkAsSeen: Boolean): SeenStatusToggleRequestParameters {
                 val requestJson = JSONObject()
                 val endpoint: String
 
@@ -92,7 +92,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
 
                 requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
 
-                return SeenStatusToggleReqestParameters(requestJson, endpoint)
+                return SeenStatusToggleRequestParameters(requestJson, endpoint)
             }
         }
     }
