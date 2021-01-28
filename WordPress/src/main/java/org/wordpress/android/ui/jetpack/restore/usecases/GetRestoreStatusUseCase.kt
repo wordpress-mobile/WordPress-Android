@@ -65,20 +65,18 @@ class GetRestoreStatusUseCase @Inject constructor(
     }.flowOn(bgDispatcher)
 
     private suspend fun FlowCollector<RestoreRequestState>.isNetworkAvailable(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        return if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(NetworkUnavailable)
-            return false
-        }
-        return true
+            false
+        } else true
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.fetchActivitiesRewind(site: SiteModel): Boolean {
         val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
-        if (result.isError) {
+        return if (result.isError) {
             emit(RemoteRequestFailure)
-            return true
-        }
-        return false
+            true
+        } else false
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.emitFinished(rewind: Rewind) =
