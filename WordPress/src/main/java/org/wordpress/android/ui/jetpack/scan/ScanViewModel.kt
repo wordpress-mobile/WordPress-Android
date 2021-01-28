@@ -105,7 +105,8 @@ class ScanViewModel @Inject constructor(
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
-                    fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
+                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
+                    if (someOrAllThreatFixed) fetchScanState()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
                     updateActionButtons(isVisible = true)
@@ -119,38 +120,44 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFixThreatsStatus(fixableThreatIds: List<Long>) {
-        launch {
-            @StringRes var messageRes: Int? = null
-            val scanStateModel = requireNotNull(scanStore.getScanStateForSite(site))
-            fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
-                remoteSiteId = site.siteId,
-                fixableThreatIds = fixableThreatIds
-            ).collect { status ->
-                var fixingThreatIds = emptyList<Long>()
-                when (status) {
-                    is FetchFixThreatsState.InProgress -> {
-                        fixingThreatIds = status.threatIds
-                    }
-                    is FetchFixThreatsState.Complete -> {
-                        messageRes = R.string.threat_fix_all_status_success_message
-                        fetchScanState()
-                    }
-                    is FetchFixThreatsState.Failure.NetworkUnavailable -> {
-                        messageRes = R.string.error_generic_network
-                    }
-                    is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
+    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>): Boolean {
+        var someOrAllThreatFixed = false
+
+        @StringRes var messageRes: Int? = null
+        val scanStateModel = requireNotNull(scanStore.getScanStateForSite(site))
+        fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
+            remoteSiteId = site.siteId,
+            fixableThreatIds = fixableThreatIds
+        ).collect { status ->
+            var fixingThreatIds = emptyList<Long>()
+            when (status) {
+                is FetchFixThreatsState.InProgress -> {
+                    fixingThreatIds = status.threatIds
+                }
+                is FetchFixThreatsState.Complete -> {
+                    someOrAllThreatFixed = true
+                    messageRes = R.string.threat_fix_all_status_success_message
+                }
+                is FetchFixThreatsState.Failure.NetworkUnavailable -> {
+                    messageRes = R.string.error_generic_network
+                }
+                is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
+                    messageRes = R.string.threat_fix_all_status_error_message
+                }
+                is FetchFixThreatsState.Failure.FixFailure -> {
+                    if (!status.containsOnlyErrors) {
+                        someOrAllThreatFixed = true
+                    } else {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
-                    is FetchFixThreatsState.Failure.FixFailure -> {
-                        messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
-                    }
                 }
-                updateActionButtons(isVisible = fixingThreatIds.isEmpty())
-                updateFixThreatsStatusProgressBar(scanStateModel, fixingThreatIds)
-                messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
+            updateActionButtons(isVisible = fixingThreatIds.isEmpty())
+            updateFixThreatsStatusProgressBar(scanStateModel, fixingThreatIds)
+            messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
+
+        return someOrAllThreatFixed
     }
 
     private fun onScanButtonClicked() {
@@ -180,7 +187,10 @@ class ScanViewModel @Inject constructor(
     }
 
     fun onFixStateRequested(threatId: Long) {
-        fetchFixThreatsStatus(listOf(threatId))
+        launch {
+            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId))
+            if (isThreatFixed) fetchScanState()
+        }
     }
 
     private fun updateActionButtons(isVisible: Boolean) {

@@ -282,11 +282,11 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given a threat not fixed, when threats fix status checked, then some threats not fixed error message shown`() =
+    fun `given threats fixing fails, when threats fix status checked, then fix threats error message shown`() =
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure)
+                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
             )
             val observers = init()
 
@@ -294,8 +294,23 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
             assertThat(snackBarMsg).isEqualTo(
-                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_some_threats_not_fixed_error_message))
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_error_message))
             )
+        }
+
+    @Test
+    fun `given some threats not fixed, when threats fix status checked, then scan state is re-fetched`() =
+        test {
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(mock())))
+            whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = false))
+            )
+            val observers = init()
+
+            triggerFixThreatsAction(observers)
+
+            verify(fetchScanStateUseCase, times(2)).fetchScanState(site = site)
         }
 
     @Test
