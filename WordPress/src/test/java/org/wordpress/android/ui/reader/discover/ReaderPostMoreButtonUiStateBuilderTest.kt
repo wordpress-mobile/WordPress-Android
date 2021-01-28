@@ -257,7 +257,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `contains seen status toggle action when post has feedItemId`() = test {
+    fun `contains seen status toggle action when posts isSeenSupported is true`() = test {
         // Arrange
         val post = init()
         // Act
@@ -267,9 +267,9 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     }
 
     @Test
-    fun `does not contain seen status toggle action when post has no feedItemId`() = test {
+    fun `does not contain seen status toggle action when posts isSeenSupported is false`() = test {
         // Arrange
-        val post = init(hasFeedItemId = false)
+        val post = init(isSeenSupported = false)
         // Act
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
@@ -280,7 +280,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         isFollowed: Boolean = false,
         isNotificationsEnabled: Boolean = false,
         isFeed: Boolean = false,
-        hasFeedItemId: Boolean = true,
+        isSeenSupported: Boolean = true,
         isSeen: Boolean = false
     ): ReaderPost {
         whenever(readerPostTableWrapper.isPostFollowed(anyOrNull())).thenReturn(isFollowed)
@@ -289,7 +289,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         return ReaderPost().apply {
             this.blogId = 1L
             this.feedId = if (isFeed) 1L else 2L // set blogId == feedId so the post is treated as a feed
-            this.feedItemId = if (hasFeedItemId) 1L else 0L // set blogId == feedId so the post is treated as a feed
+            this.isSeenSupported = isSeenSupported
             this.isSeen = isSeen
         }
     }
