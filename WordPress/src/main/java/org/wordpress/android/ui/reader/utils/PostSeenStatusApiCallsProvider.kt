@@ -21,10 +21,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
     private val contextProvider: ContextProvider
 ) {
     suspend fun markPostAsSeen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-        val requestJson = JSONObject()
-        requestJson.put("feed_id", post.feedId.toString())
-        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
-        requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
+        val params = SeenStatusToggleReqestParameters.fromReaderPost(post, true)
 
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, true)
@@ -33,14 +30,12 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
         val errorListener = ErrorListener { volleyError ->
             cont.resume(Failure(StringUtils.notNullStr(volleyError.message)))
         }
-        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/new", requestJson, null, listener, errorListener)
+        WordPress.getRestClientUtilsV2().post(params.endpoint, params.parameters, null, listener, errorListener)
     }
 
     suspend fun markPostAsUnseen(post: ReaderPost): SeenStatusToggleCallResult = suspendCoroutine { cont ->
-        val requestJson = JSONObject()
-        requestJson.put("feed_id", post.feedId.toString())
-        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
-        requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
+        val params = SeenStatusToggleReqestParameters.fromReaderPost(post, false)
+
         val listener = Listener { responseJson ->
             val result = seenStatusToggleSuccessful(responseJson, false)
             cont.resume(result)
@@ -48,7 +43,7 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
         val errorListener = ErrorListener { volleyError ->
             cont.resume(Failure(StringUtils.notNullStr(volleyError.message)))
         }
-        WordPress.getRestClientUtilsV2().post("/seen-posts/seen/delete", requestJson, null, listener, errorListener)
+        WordPress.getRestClientUtilsV2().post(params.endpoint, params.parameters, null, listener, errorListener)
     }
 
     private fun seenStatusToggleSuccessful(json: JSONObject?, askedToMarkAsSeen: Boolean): SeenStatusToggleCallResult {
@@ -65,5 +60,40 @@ class PostSeenStatusApiCallsProvider @Inject constructor(
     sealed class SeenStatusToggleCallResult {
         data class Success(val isSeen: Boolean) : SeenStatusToggleCallResult()
         data class Failure(val error: String) : SeenStatusToggleCallResult()
+    }
+
+    data class SeenStatusToggleReqestParameters(val parameters: JSONObject, val endpoint: String) {
+        companion object {
+            fun fromReaderPost(post: ReaderPost, askingToMarkAsSeen: Boolean): SeenStatusToggleReqestParameters {
+                val requestJson = JSONObject()
+                val endpoint: String
+
+                if (askingToMarkAsSeen) {
+                    endpoint = if (post.isExternal) {
+                        requestJson.put("feed_id", post.feedId.toString())
+                        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
+                        "/seen-posts/seen/new"
+                    } else {
+                        requestJson.put("blog_id", post.blogId.toString())
+                        requestJson.put("post_ids", JSONArray(arrayListOf(post.postId)))
+                        "/seen-posts/seen/blog/new"
+                    }
+                } else {
+                    endpoint = if (post.isExternal) {
+                        requestJson.put("feed_id", post.feedId.toString())
+                        requestJson.put("feed_item_ids", JSONArray(arrayListOf(post.feedItemId)))
+                        "/seen-posts/seen/delete"
+                    } else {
+                        requestJson.put("blog_id", post.blogId.toString())
+                        requestJson.put("post_ids", JSONArray(arrayListOf(post.postId)))
+                        "/seen-posts/seen/blog/delete"
+                    }
+                }
+
+                requestJson.put("source", ANDROID_READER_SOURCE_PARAMETER_VALUE)
+
+                return SeenStatusToggleReqestParameters(requestJson, endpoint)
+            }
+        }
     }
 }
