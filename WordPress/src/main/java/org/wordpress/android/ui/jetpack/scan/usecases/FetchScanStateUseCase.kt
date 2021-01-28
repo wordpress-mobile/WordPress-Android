@@ -3,7 +3,6 @@ package org.wordpress.android.ui.jetpack.scan.usecases
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
@@ -29,30 +28,29 @@ class FetchScanStateUseCase @Inject constructor(
         polling: Boolean = true,
         delayInMs: Long = FETCH_SCAN_STATE_DELAY_MILLIS
     ): Flow<FetchScanState> = flow {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(Failure.NetworkUnavailable)
-            return@flow
-        }
+        while (true) {
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(Failure.NetworkUnavailable)
+                return@flow
+            }
 
-        val result = scanStore.fetchScanState(FetchScanStatePayload(site))
-        if (result.isError) {
-            emit(Failure.RemoteRequestFailure)
-            return@flow
-        } else {
-            val scanStateModel = scanStore.getScanStateForSite(site)
-            if (scanStateModel != null) {
-                emit(Success(scanStateModel))
-                if (polling && scanStateModel.state == ScanStateModel.State.SCANNING) {
-                    fetchScanState(site = site, polling = true).collect {
-                        emit(it)
-                        delay(delayInMs)
-                    }
-                } else {
-                    return@flow
-                }
-            } else {
+            val result = scanStore.fetchScanState(FetchScanStatePayload(site))
+            if (result.isError) {
                 emit(Failure.RemoteRequestFailure)
                 return@flow
+            } else {
+                val scanStateModel = scanStore.getScanStateForSite(site)
+                if (scanStateModel != null) {
+                    emit(Success(scanStateModel))
+                    if (polling && scanStateModel.state == ScanStateModel.State.SCANNING) {
+                        delay(delayInMs)
+                    } else {
+                        return@flow
+                    }
+                } else {
+                    emit(Failure.RemoteRequestFailure)
+                    return@flow
+                }
             }
         }
     }.flowOn(bgDispatcher)
