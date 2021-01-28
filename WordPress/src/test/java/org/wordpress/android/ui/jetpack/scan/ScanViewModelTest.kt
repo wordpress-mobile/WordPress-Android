@@ -83,6 +83,9 @@ class ScanViewModelTest : BaseUnitTest() {
             )
         }
         whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Complete)
+        )
     }
 
     @Test
@@ -95,9 +98,6 @@ class ScanViewModelTest : BaseUnitTest() {
     @Test
     fun `given fixable threats present in db, when vm starts, fetch fix threats status is triggered`() =
         test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Complete)
-            )
             val scanStateModelWithFixableThreats = fakeScanStateModel
                 .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
             whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
