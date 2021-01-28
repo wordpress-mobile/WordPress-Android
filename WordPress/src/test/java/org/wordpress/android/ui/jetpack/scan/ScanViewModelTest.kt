@@ -93,6 +93,21 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given fixable threats present in db, when vm starts, fetch fix threats status is triggered`() =
+        test {
+            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any(), any())).thenReturn(
+                flowOf(FetchFixThreatsState.Complete)
+            )
+            val scanStateModelWithFixableThreats = fakeScanStateModel
+                .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
+
+            viewModel.start(site)
+
+            verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any(), any())
+        }
+
+    @Test
     fun `when scan state is fetched successfully, then ui is updated with content`() = test {
         val uiStates = init().uiStates
 
