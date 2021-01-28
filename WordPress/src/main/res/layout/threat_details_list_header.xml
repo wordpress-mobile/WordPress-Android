@@ -20,7 +20,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header"
-        style="@style/Jetpack.Header"
+        style="@style/Scan.ThreatDetails.Header"
         app:layout_constraintBottom_toTopOf="@+id/description"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
@@ -31,7 +31,7 @@
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/description"
-        style="@style/Jetpack.Description"
+        style="@style/Scan.ThreatDetails.Description"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/header"
         app:layout_constraintTop_toBottomOf="@+id/header"

@@ -89,4 +89,6 @@
     <style name="Scan.ThreatDetails.Icon" parent="Scan.Threat.Icon">
         <item name="android:layout_marginStart">0dp</item>
     </style>
+    <style name="Scan.ThreatDetails.Header" parent="Jetpack.Header"/>
+    <style name="Scan.ThreatDetails.Description" parent="Jetpack.Description"/>
 </resources>
