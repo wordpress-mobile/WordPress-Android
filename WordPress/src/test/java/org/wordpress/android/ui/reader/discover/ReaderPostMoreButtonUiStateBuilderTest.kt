@@ -22,6 +22,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_PREVIEW
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -34,13 +35,17 @@ class ReaderPostMoreButtonUiStateBuilderTest {
     @Mock lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock lateinit var mSeenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig
 
     @Before
     fun setUp() = test {
+        whenever(mSeenUnseenWithCounterFeatureConfig.isEnabled()).thenReturn(true)
+
         builder = ReaderPostMoreButtonUiStateBuilder(
                 readerPostTableWrapper,
                 readerBlogTableWrapper,
                 readerUtilsWrapper,
+                mSeenUnseenWithCounterFeatureConfig,
                 TEST_DISPATCHER
         )
     }
@@ -247,16 +252,67 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.REPORT_POST }).isNull()
     }
 
+    @Test
+    fun `contains mark as seen when post is unseen`() = test {
+        // Arrange
+        val post = init(isSeen = false)
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
+                    it.label == UiStringRes(R.string.reader_menu_mark_as_seen)
+        }).isNotNull
+    }
+
+    @Test
+    fun `contains mark as unseen action when post is seen`() = test {
+        // Arrange
+        val post = init(isSeen = true)
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find {
+            it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
+                    it.label == UiStringRes(R.string.reader_menu_mark_as_unseen)
+        }).isNotNull
+    }
+
+    @Test
+    fun `contains seen status toggle action when post has feedItemId`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS }).isNotNull
+    }
+
+    @Test
+    fun `does not contain seen status toggle action when post has no feedItemId`() = test {
+        // Arrange
+        val post = init(hasFeedItemId = false)
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, TAG_FOLLOWED, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS }).isNull()
+    }
+
     private fun init(
         isFollowed: Boolean = false,
         isNotificationsEnabled: Boolean = false,
-        isFeed: Boolean = false
+        isFeed: Boolean = false,
+        hasFeedItemId: Boolean = true,
+        isSeen: Boolean = false
     ): ReaderPost {
         whenever(readerPostTableWrapper.isPostFollowed(anyOrNull())).thenReturn(isFollowed)
+        whenever(readerPostTableWrapper.isPostSeen(anyOrNull())).thenReturn(isSeen)
         whenever(readerBlogTableWrapper.isNotificationsEnabled(anyLong())).thenReturn(isNotificationsEnabled)
         return ReaderPost().apply {
             this.blogId = 1L
             this.feedId = if (isFeed) 1L else 2L // set blogId == feedId so the post is treated as a feed
+            this.feedItemId = if (hasFeedItemId) 1L else 0L // set blogId == feedId so the post is treated as a feed
+            this.isSeen = isSeen
         }
     }
 }

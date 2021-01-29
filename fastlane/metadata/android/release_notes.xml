@@ -1,186 +1,64 @@
-<ar>
-16.4:
-ما الجديد:
-
-محرِّر المكوِّنات: يمكنك الآن إدراج مكوِّن الملف الذي يقوم بوضع زر تنزيل للملفات مثل المستندات. عالجنا أيضًا مشكلات في مكوِّنات العناوين والمعرض.
-
-قائمة المقالات: يمكنك الآن نسخ مقالة باستخدام الزر "تكرار" الموجود في قائمة مقالات مدونتك.
-
-موقعي: أصلحنا أيضًا العطل الذي يحدث أثناء تحرير عنوان موقعك.
-
-</ar>
-<de-DE>
-16.4:
-Neuerungen:
-
-Block-Editor: Du kannst jetzt einen Dateiblock einfügen, der einen Download-Button für Dateien wie Dokumente bereitstellt. Außerdem haben wir Probleme beim Überschrifts- und Galerieblock behoben.
-
-Beitragsliste: Du kannst einen Beitrag jetzt mit dem Button „Duplizieren“ in deiner Blogbeitragsliste kopieren.
-
-Meine Website: Wir haben auch einen Absturz behoben, der beim Bearbeiten des Websitetitels auftrat.
-
-</de-DE>
 <en-US>
-16.4:
-What’s New:
+16.5:
+Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons. We also addressed an issue in text-based blocks with custom font size.
 
-Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.
+Activity Log: Track your site activity with filters that sort by date or type.
 
-Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.
+Site Pages: Copy a page with the Duplicate button.
 
-My Site: We also fixed a crash that occurred while editing your site title.
 
 </en-US>
-<es-ES>
-16.4:
-Novedades:
-
-Editor de bloques: Ahora puedes insertar un bloque de archivo, que pone un botón de descarga para archivos como documentos. También hemos resuelto problemas con los bloques de encabezado y galería.
-
-Lista de entradas: Ahora puedes copiar una entrada con el botón de «Duplicar» en la lista de tus entradas de blog.
-
-Mi sitio: También hemos corregido una caída que ocurría mientras editabas el título de tu sitio.
-
-</es-ES>
-<fr-CA>
-16.4 :
-Nouveautés :
-
-Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
-
-Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
-
-Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
-
-</fr-CA>
-<fr-FR>
-16.4 :
-Nouveautés :
-
-Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
-
-Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
-
-Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
-
-</fr-FR>
-<iw-IL>
-16.4:
-מה חדש:
-
-עורך הבלוקים: כעת אפשר להוסיף בלוק קובץ שממקם כפתור 'הורדה' למסמכים ששמורים כקבצים. בנוסף, טיפלנו בכמה בעיות בבלוקים 'כותרת' ו'גלריה'.
-
-רשימת פוסטים: כעת אפשר להעתיק פוסט עם הכפתור 'שכפול' ברשימת הפוסטים בבלוג שלך.
-
-האתר שלי: תיקנו גם קריסה שאירעה במהלך העריכה של שם האתר.
-
-</iw-IL>
-<id>
-16,4:
-Yang Baru:
-
-Editor Blok: Kini Anda dapat memasukkan Blok File, yang menyediakan tombol unduh untuk berbagai file seperti dokumen. Kami juga telah memperbaiki kesalahan yang ada pada blok Judul dan Galeri.
-
-Daftar Pos: Dengan tombol “Duplikat”, Anda sekarang dapat menyalin sebuah pos di daftar Pos Blog.
-
-Situs Saya: Kami juga telah memperbaiki crash yang terjadi ketika menyunting judul situs Anda.
-
-</id>
-<it-IT>
-16.4:
-Novità:
-
-Editor a blocchi: ora puoi inserire un blocco file che colloca un pulsante di scaricamento per file come documenti.  Abbiamo anche risolto i problemi relativi ai blocchi Titolo e Galleria.
-
-Elenco di articoli: ora puoi copiare un articolo nel tuo elenco di articoli del blog con il pulsante "Duplica".
-
-Il mio sito: abbiamo anche risolto un arresto anomalo che si verificava durante la modifica del titolo del sito.
-
-</it-IT>
-<ja-JP>
-16.4:
-最新情報 :
-
-ブロックエディター : ドキュメントなどのファイルのダウンロードボタンを配置するファイルブロックを挿入できるようになりました。 また、Heading ブロックと Gallery ブロックの問題に対応しました。
-
-投稿リスト : ブログ投稿リストの 「複製」 ボタンを使用して投稿をコピーできるようになりました。
-
-参加サイト : サイトタイトルの編集中に発生するクラッシュを修正しました。
-
-</ja-JP>
 <ko-KR>
-16.4:
-새소식:
+16.5:
+블록: P2용 교차 글 지원, 컬럼 블록에서 전체 넓이와 넓은 정렬을 지원, 이미지 블록에서 링크 고르는 기능, 그리고 위/아래 버튼을 길게 눌러 블록이 이동하는 기능을 추가했습니다.
 
-블록 편집기: 이 문서와 같은 파일을 배치할 수 있는 파일 블록을 삽입할 수 있습니다. 헤딩과 갤러리 블록의 문제도 해결했습니다.
+활동 기록: 날짜나 유형으로 정렬하는 필터로 사이트 활동을 추적하세요.
 
-글 목록: 이제 블로그 글 목록의 “복제” 버튼으로 글을 복사할 수 있습니다.
+사이트 패이지: 복제 버튼으로 패이지를 복사하세요.
 
-내 사이트: 사이트 제목을 편집하는 동안 일어나는 충돌도 고쳤습니다.
 
 </ko-KR>
-<nl-NL>
-16.4:
-Wat is er nieuw:
-
-Blok-editor: je kan nu een bestandsblok invoegen, welke een downloadknop plaatst voor bestanden zoals documenten. We hebben ook problemen met de blokken heading en galerij aangepakt.
-
-Berichtenlijst: je kan nu een bericht kopiëren met de knop "Dupliceren" in je lijst met blogberichten.
-
-Mijn site: we hebben ook een crash verholpen die optrad tijdens het bewerken van je sitetitel.
-
-</nl-NL>
 <ru-RU>
-16.4:
-Что нового:
+16.5:
+Блоки: Добавлена поддержка кросс-постинга в P2, поддержка полной ширины и широкого выравнивания в блоке столбцов, возможность выбирать ссылку в блоке изображений и возможность перемещать блок, долгим нажатием кнопок вверх / вниз. Исправлена проблема блока текст с пользовательским шрифтом.
 
-Редактор блоков: теперь вы можете вставить блок файлов, который помещает кнопку загрузки для файлов, таких как документы. Мы также решили проблемы с блоками "Заголовок" и "Галерея".
+Журнал активности: отслеживайте активность на сайте с помощью фильтров, которые сортируются по дате или типу.
 
-Список записей: теперь вы можете скопировать запись с помощью кнопки «Дублировать» в списке записей блога.
-
-Мой сайт: мы также исправили сбой, который мог произойти при редактировании заголовка вашего сайта.
+Страницы сайта: копируйте страницу с помощью кнопки «Дублировать».
 </ru-RU>
-<sv-SE>
-16.4:
-Nyheter:
 
-Blockredigeraren: Nu kan du infoga ett filblock som visar en nedladdningsknapp för t.ex. dokumentfiler. Vi har även löst problem med rubrik- och galleriblock.
+<es-ES>
+16.5:
+Bloques: Hemos añadido compatibilidad para entradas cruzadas para P2, compatibilidad de alineación de ancho completo y amplia en el bloque de columnas, la capacidad de elegir un enlace en el bloque de imagen y la capacidad de mover un bloque manteniendo pulsados los botones arriba/abajo. 
 
-Inläggslistan: Nu går det att kopiera ett inlägg med knappen ”duplicera” i inläggslistan för din blogg.
+Registro de actividad: Rastrea la actividad de tu sitio con filtros que ordenan por fecha o por tipo.
 
-Min webbplats: När du redigerade webbplatsrubriken kunde appen krascha. Nu är det löst.
+Páginas del sitio: Copia una página con el botón «Duplicar».
+</es-ES>
 
-</sv-SE>
-<tr-TR>
-16.4:
-Yenilikler:
+<sv-SV>
+16.5:
+Block: Vi har lagt till stöd för korspublicering via P2, stöd för fullbred och bred justering i kolumnblocket, möjlighet att välja länk i bildblocket och att flytta ett block inom en sida med långt tryck på knapparna upp/ned. Dessutom har vi åtgärdat ett problem med anpassad textstorlek i textbaserade block.
 
-Blok Düzenleyici: Artık, belgeler gibi dosyalar için indirme düğmesi yerleştiren bir Dosya bloğu ekleyebilirsiniz. Başlık ve Galeri bloklarıyla ilgili sorunları da giderdik.
+Aktivitetslogg: Följ händelserna på din webbplats med filter för sortering på datum eller aktivitetstyp.
 
-Gönderi Listesi: Artık Blog Gönderileri listenizdeki "Çoğalt" düğmesiyle bir gönderiyi kopyalayabilirsiniz
+Sidor på webbplatsen: Skapa kopia av en sida med dupliceringsknappen.
+</sv-SV>
 
-Sitem: Site başlığınızı düzenlerken meydana gelen bir kilitlenme durumunu da düzelttik.
+<nl-NL>
+16.5:
+Blokken: we hebben cross-bericht-ondersteuning toegevoegd voor P2, ondersteuning voor volledige en brede uitlijning in het Kolommen blok, de mogelijkheid om een link te kiezen in het afbeelding-blok en de mogelijkheid om een blok te verplaatsen door lang op de knoppen omhoog/omlaag te drukken. 
 
-</tr-TR>
-<zh-CN>
-16.4：
-新增功能：
+Activiteitenlog: houd je site activiteit bij met filters die op datum of type sorteren.
 
-区块编辑器：您现在可以插入文件区块，在此区块中为文档等文件添加下载按钮。 我们还解决了标题区块和画廊区块的问题。
+Sitepagina's: kopieer een pagina met de knop Dupliceren.
+</nl-NL>
 
-文章列表：您现在可以使用博文列表中的“复制”按钮来复制文章。
+<it-IT>
+16.5:
+Editor a blocchi: Abbiamo aggiunto il support per il cross-post nei P2, la possibilità di selezionare un link nel blocco immagine, e la possibilità di muovere un blocco premendo a lungo sui bottoni su/giù. 
 
-我的站点：我们还修复了在编辑站点标题时发生崩溃的问题。
+Activity Log: Ora puoi ordinare l'attività del tuo sito per data e tipo.
 
-</zh-CN>
-<zh-TW>
-16.4：
-新功能：
-
-區塊編輯器：你現在可以插入檔案區塊，內含文件等檔案的下載按鈕。 我們也解決了標題和圖庫區塊的問題。
-
-文章清單：你現在可以使用「網誌文章」清單的「複製」按鈕複製文章。
-
-我的網站：我們也修正了編輯網站標題時發生的當機問題。
-
-</zh-TW>
+Site Pages: Copia una pagina con il bottone Duplica.
+</it-IT>

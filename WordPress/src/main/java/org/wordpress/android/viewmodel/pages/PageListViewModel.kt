@@ -1,5 +1,6 @@
 package org.wordpress.android.viewmodel.pages
 
+import android.content.Context
 import androidx.annotation.ColorRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,6 +21,8 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.MediaStore.MediaPayload
 import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
+import org.wordpress.android.fluxc.store.QuickStartStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
@@ -32,9 +35,11 @@ import org.wordpress.android.ui.pages.PageItem.ScheduledPage
 import org.wordpress.android.ui.pages.PageItem.TrashedPage
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -60,16 +65,17 @@ class PageListViewModel @Inject constructor(
     private val dispatcher: Dispatcher,
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
+    private val quickStartStore: QuickStartStore,
     @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
         Triple(it, isSitePhotonCapable, isSitePrivateAt)
     }
-
+    private val _quickStartEvent: MutableLiveData<QuickStartEvent?> = MutableLiveData()
+    val quickStartEvent: LiveData<QuickStartEvent?> = _quickStartEvent
     private val _scrollToPosition = SingleLiveEvent<Int>()
     val scrollToPosition: LiveData<Int> = _scrollToPosition
-
     private var retryScrollToPage: LocalId? = null
     private var isStarted: Boolean = false
     private lateinit var listType: PageListType
@@ -148,14 +154,40 @@ class PageListViewModel @Inject constructor(
         dispatcher.unregister(this)
     }
 
-    fun onMenuAction(action: Action, pageItem: Page): Boolean {
+    fun onMenuAction(action: Action, pageItem: Page, context: Context): Boolean {
+        completeEditHomePageTour(pageItem, context)
         return pagesViewModel.onMenuAction(action, pageItem)
     }
 
-    fun onItemTapped(pageItem: Page) {
+    fun onItemTapped(pageItem: Page, context: Context) {
+        completeEditHomePageTour(pageItem, context)
+        _quickStartEvent.postValue(null)
         if (pageItem.tapActionEnabled) {
             pagesViewModel.onItemTapped(pageItem)
         }
+    }
+
+    private fun completeEditHomePageTour(pageItem: Page, context: Context) {
+        if (isHomepage(pageItem)) {
+            QuickStartUtils.completeTaskAndRemindNextOne(
+                    quickStartStore,
+                    EDIT_HOMEPAGE,
+                    dispatcher,
+                    pagesViewModel.site,
+                    _quickStartEvent.value,
+                    context
+            )
+        }
+    }
+
+    fun onQuickStartEvent(event: QuickStartEvent) {
+        if (event.task == EDIT_HOMEPAGE) {
+            _quickStartEvent.postValue(event)
+        }
+    }
+
+    private fun isHomepage(pageItem: Page): Boolean {
+        return pageItem.remoteId == pagesViewModel.site.pageOnFront
     }
 
     fun onEmptyListNewPageButtonTapped() {
@@ -300,7 +332,8 @@ class PageListViewModel @Inject constructor(
                             progressBarUiState = itemUiStateData.progressBarUiState,
                             showOverlay = itemUiStateData.showOverlay,
                             author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                null else it.post.authorDisplayName
+                                null else it.post.authorDisplayName,
+                            showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                     )
                 }
     }
@@ -332,7 +365,8 @@ class PageListViewModel @Inject constructor(
                                         progressBarUiState = itemUiStateData.progressBarUiState,
                                         showOverlay = itemUiStateData.showOverlay,
                                         author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                                            null else it.post.authorDisplayName
+                                            null else it.post.authorDisplayName,
+                                        showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
                                 )
                             }
                 }
@@ -363,7 +397,8 @@ class PageListViewModel @Inject constructor(
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
                     author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName
+                        null else it.post.authorDisplayName,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
             )
         }
     }
@@ -392,7 +427,8 @@ class PageListViewModel @Inject constructor(
                     progressBarUiState = itemUiStateData.progressBarUiState,
                     showOverlay = itemUiStateData.showOverlay,
                     author = if (pagesViewModel.authorUIState.value?.authorFilterSelection == ME)
-                        null else it.post.authorDisplayName
+                        null else it.post.authorDisplayName,
+                    showQuickStartFocusPoint = itemUiStateData.showQuickStartFocusPoint
             )
         }
     }
@@ -458,7 +494,16 @@ class PageListViewModel @Inject constructor(
             pageModel.isPostsPage -> R.drawable.ic_posts_16dp
             else -> null
         }
-        return ItemUiStateData(labels, labelColor, progressBarUiState, showOverlay, actions, subtitle, icon)
+        val showQuickStartFocusPoint: Boolean = pageModel.isHomepage &&
+                _quickStartEvent.value?.task == EDIT_HOMEPAGE
+        return ItemUiStateData(labels,
+                labelColor,
+                progressBarUiState,
+                showOverlay,
+                actions,
+                subtitle,
+                icon,
+                showQuickStartFocusPoint)
     }
 
     private data class ItemUiStateData(
@@ -468,6 +513,7 @@ class PageListViewModel @Inject constructor(
         val showOverlay: Boolean,
         val actions: Set<Action>,
         val subtitle: Int? = null,
-        val icon: Int? = null
+        val icon: Int? = null,
+        val showQuickStartFocusPoint: Boolean = false
     )
 }

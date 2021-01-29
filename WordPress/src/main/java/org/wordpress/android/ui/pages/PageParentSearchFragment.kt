@@ -13,20 +13,25 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.pages_list_fragment.*
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.modules.UI_SCOPE
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.viewmodel.pages.PageParentSearchViewModel
 import org.wordpress.android.viewmodel.pages.PageParentViewModel
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import javax.inject.Inject
-import javax.inject.Named
+import kotlin.coroutines.CoroutineContext
 
-class PageParentSearchFragment : Fragment() {
+class PageParentSearchFragment : Fragment(), CoroutineScope {
+    protected var job: Job = Job()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job
+
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: PageParentSearchViewModel
-    @field:[Inject Named(UI_SCOPE)] lateinit var uiScope: CoroutineScope
     private var linearLayoutManager: LinearLayoutManager? = null
 
     private val listStateKey = "list_state"
@@ -93,11 +98,16 @@ class PageParentSearchFragment : Fragment() {
         val adapter: PageParentSearchAdapter
         if (recyclerView.adapter == null) {
             adapter = PageParentSearchAdapter(
-                    { page -> viewModel.onParentSelected(page) }, uiScope)
+                    { page -> viewModel.onParentSelected(page) }, this)
             recyclerView.adapter = adapter
         } else {
             adapter = recyclerView.adapter as PageParentSearchAdapter
         }
         adapter.update(pages)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        job.cancel()
     }
 }

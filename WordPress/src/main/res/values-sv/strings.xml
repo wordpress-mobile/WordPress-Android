@@ -1,11 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-12 20:40:27+0000
+Translation-Revision-Date: 2021-01-26 10:32:13+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="restore_complete_failed_description">Vi lyckades inte återställa din webbplats. Försök igen senare.</string>
+    <string name="restore_complete_failed_title">Återställning misslyckades</string>
+    <string name="restore_complete_visit_site_action_button">Besök webbplats</string>
+    <string name="restore_warning_header">Varning</string>
+    <string name="restore_details_action_button">Återställ webbplats</string>
+    <string name="restore_details_header">Återställ webbplats</string>
+    <string name="restore">Återställ</string>
+    <string name="backup_download_complete_failed_title">Nedladdning misslyckades</string>
+    <string name="web_preview_tablet">Surfplatta</string>
+    <string name="web_preview_mobile">Mobil</string>
+    <string name="quick_start_card_menu_remove">Visa inte igen</string>
+    <string name="quick_start_card_menu_hide">Dölj</string>
+    <string name="quick_start_dialog_review_pages_title">Granska webbplatsens sidor</string>
+    <string name="quick_start_dialog_edit_homepage_title">Redigera din startsida</string>
+    <string name="scan_history_menu_title">Historik</string>
+    <string name="scan_history">Skanningshistorik</string>
+    <string name="gutenberg_native_move_block_position">Ändra blockets position</string>
+    <string name="gutenberg_native_move_to_bottom">Flytta längst ned</string>
     <string name="jetpack_icon_content_description">ikon</string>
     <string name="label_control_upload">Ladda upp</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Knapp för delning av länk</string>
@@ -41,11 +59,11 @@ Language: sv_SE
     <string name="threat_fix_fixable_delete">Jetpack Scan kommer att ta bort den berörda filen eller katalogen.</string>
     <string name="threat_fix_fixable_update">Jetpack Scan kommer att uppdatera till en nyare version (%s).</string>
     <string name="threat_get_free_estimate">Få ett gratis kostnadsförslag</string>
-    <string name="suggestion_selection_needed">\"Börja skriva för att filtrera listan med förslag.\"</string>
-    <string name="suggestion_none">\"Inga förslag för %s tillgängliga.\"</string>
-    <string name="suggestion_problem">\"Det gick inte att läsa in förslagen.\"</string>
-    <string name="suggestion_no_matching">\"Matchande %s saknas.\"</string>
     <string name="suggestion_xpost">korspublicera</string>
+    <string name="suggestion_selection_needed">Börja skriva för att filtrera listan med förslag.</string>
+    <string name="suggestion_none">Inga förslag för %s tillgängliga.</string>
+    <string name="suggestion_problem">Det gick inte att läsa in förslagen.</string>
+    <string name="suggestion_no_matching">Matchande %s saknas.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan kommer att ersätta den berörda filen eller katalogen.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan kan inte korrigera detta hot automatiskt.\n        Vi föreslår att du manuellt hanterar detta hot: Se till att WordPress, ditt tema och alla dina tillägg är uppdaterade till den senaste versionen och att du tar bort den felaktiga programkoden, temat eller tillägget från webbplatsen. \n \n\n        Om du behöver mer hjälp för att avhjälpa detta hot rekommenderar vi &lt;b>Codeable&lt;/b>, en tillförlitlig marknadsplats för väl kontrollerade WordPress-experter.\n        De har valt ut en grupp säkerhetsexperter som kan hjälpa till med projekt av denna typ. Deras priser ligger i området 70 – 120 USD/timme och du kan be om ett gratis kostnadsförslag utan några förpliktelser.\n    </string>
     <string name="threat_fix_fixed_header">Hur åtgärdade Jetpack det?</string>
@@ -55,7 +73,6 @@ Language: sv_SE
     <string name="threat_problem_header">Vad var problemet?</string>
     <string name="threat_fix_current_not_fixable_header">Löser hotet</string>
     <string name="threat_details_icon">Ikon för detaljinformation om hot</string>
-    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Sårbarhet hittades i tillägg</string>
     <string name="threat_item_sub_header_core_file">Sårbarhet hittades i WordPress</string>
     <string name="threat_item_sub_header_vulnerable_theme">Sårbarhet hittades i tema</string>
@@ -67,7 +84,6 @@ Language: sv_SE
     <string name="threat_item_sub_header_file_signature">Hot hittat %s</string>
     <string name="threat_details">Uppgifter om hot</string>
     <string name="threats_found">Hot hittat</string>
-    <string name="threats_fix_all">Åtgärda allt</string>
     <string name="scan_this_site">denna webbplats</string>
     <string name="threat_item_header_threat_found">Hot hittat</string>
     <string name="scan_in_few_seconds">om några sekunder</string>
@@ -80,7 +96,6 @@ Language: sv_SE
     <string name="threat_item_header_infected_core_file">%s: infekterad fil i WordPress-kärnan</string>
     <string name="scan_now">Skanna nu</string>
     <string name="scan_again">Skanna igen</string>
-    <string name="scan_scanning_title">Förbereder att skanna</string>
     <string name="scan_idle_threats_found_title">Din webbplats kan vara i riskzonen</string>
     <string name="scan_idle_no_threats_found_title">Oroa dig inte för någonting</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">Aktivitetstypsfiler (%s typer valda)</string>
@@ -135,9 +150,9 @@ Language: sv_SE
     <string name="reader_follow_comments_get_status_error">Ett fel inträffade när prenumerationsstatusen för inlägget skulle hämtas</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Det gick inte att prenumerera på kommentarer till detta inlägg</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Det gick inte att avsluta prenumerationen på kommentarer till detta inlägg</string>
-    <string name="reader_btn_follow_comments">Följ konversation</string>
-    <string name="reader_btn_following_comments">Följer konversation</string>
     <string name="my_site_btn_jetpack_settings">Inställningar för Jetpack</string>
+    <string name="reader_btn_follow_comments">Följ konversation via e-post</string>
+    <string name="reader_btn_following_comments">Följer konversation via e-post</string>
     <string name="activity_log_activity_type_filter_clear">Rensa</string>
     <string name="activity_log_activity_type_filter_apply">Utför</string>
     <string name="reader_follow_comments_null_response">Inget svar har tagits emot</string>
@@ -245,9 +260,9 @@ Language: sv_SE
     <string name="gutenberg_native_search_or_type_url">Sök eller skriv URL</string>
     <string name="gutenberg_native_select_item">Välj objekt</string>
     <string name="gutenberg_native_add_this_telephone_link">Länka till detta telefonnummer</string>
-    <string name="suggestion_no_connection">”Internetförbindelse saknas.\nFörslag är inte tillgängliga.”</string>
     <string name="gutenberg_native_add_this_email_link">Länka till denna e-postadress</string>
     <string name="gutenberg_native_add_this_link">Lägg till denna länk</string>
+    <string name="suggestion_no_connection">Internetförbindelse saknas.\nFörslag är inte tillgängliga.</string>
     <string name="mlp_selected_description">%s valt</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="toast_capture_operation_permission_needed">För att kunna spela in video måste du ge appen tillstånd att spela in ljud</string>
@@ -274,7 +289,6 @@ Language: sv_SE
     <string name="create_page_fab_tooltip">Skapa en sida</string>
     <string name="create_post_fab_tooltip">Skapa ett inlägg</string>
     <string name="reader_discover_interests_header">Du kanske gillar</string>
-    <string name="contact_fragment_title">\@string/contact_support</string>
     <string name="dialog_insufficient_device_storage_error_ok_button">Visa lagring</string>
     <string name="toast_story_page_not_found">Hittade ingen bild för berättelsen</string>
     <string name="toast_capture_operation_in_progress">En åtgärd pågår. Försök igen</string>
@@ -439,8 +453,8 @@ Language: sv_SE
     <string name="update_now">Uppdatera nu</string>
     <string name="status_and_visibility">Status och synlighet</string>
     <string name="ccpa_privacy_notice_header">Integritetsnotis för användare i Kalifornien</string>
-    <string name="gutenberg_native_try_a_starter_layout">Prova någon av grundlayouterna</string>
     <string name="gutenberg_native_open_block_actions_menu">Öppna menyn för blockåtgärder</string>
+    <string name="gutenberg_native_move_to_top">Flytta till toppen</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Dubbeltryck för att öppna åtgärdsbladet med tillgängliga alternativ</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Dubbeltryck för att öppna det nedre arket med tillgänliga alternativ</string>
     <string name="site_settings_select_page">Välj sida</string>
@@ -451,7 +465,7 @@ Language: sv_SE
     <string name="site_settings_posts_page">Inläggssida</string>
     <string name="pages_set_as_posts_page">Ställ in som inläggssida</string>
     <string name="site_settings_classic_blog">Klassisk blogg</string>
-    <string name="suggestion_invalid">”%s är inte en giltig %s”</string>
+    <string name="suggestion_invalid">%s är inte ett giltigt %s</string>
     <string name="site_settings_accept_homepage">Acceptera</string>
     <string name="site_settings_homepage_settings">Inställningar för startsida</string>
     <string name="site_settings_homepage_settings_description">Välj mellan en startsida som visar dina senaste inlägg (klassisk blogg) och en fast/statisk sida.</string>
@@ -467,7 +481,6 @@ Language: sv_SE
     <string name="page_posts_page_successfully_updated">Inställningarna för sida med blogginlägg har uppdaterats</string>
     <string name="page_posts_page_update_failed">Uppdateringen av inläggssidan misslyckades</string>
     <string name="gutenberg_native_select_a_color">Välj en färg</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">Välkommen till vår nya blogg</string>
     <string name="reader_empty_followed_blogs_description">Om du följer några webbplatser kan du se deras innehåll här</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dubbeltryck för att gå till färginställningarna</string>
     <string name="crop">beskär</string>
@@ -500,7 +513,6 @@ Language: sv_SE
     <string name="gutenberg_native_move_block_left">Flytta blocket åt vänster</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dubbeltryck för att flytta blocket åt höger</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dubbeltryck för att flytta blocket åt vänster</string>
-    <string name="gutenberg_native_blog">Blogg</string>
     <string name="new_site_creation_creating_site_loading_4">Skapar adminpanel</string>
     <string name="new_site_creation_creating_site_loading_3">Konfigurerar temat</string>
     <string name="new_site_creation_creating_site_loading_2">Lägger till olika webbplatsfunktioner</string>
@@ -556,51 +568,15 @@ Language: sv_SE
     <string name="app_theme_light">Ljust</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du har nyligen gjort ändringar i denna sida utan att spara. Välj vilken version du vill använda:\n\n</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Vi erbjuder en rad tjänster som hjälper dig att uppnå dina mål. Vet du inte vad du behöver, eller undrar du hur mycket det kostar? Vi förklarar gärna mer om våra tjänster och berättar om våra priser. Hör av dig till oss här nedan.</string>
-    <string name="gutenberg_native_what_people_say">Så här säger andra personer</string>
-    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Vi är ett litet team med proffsiga specialister och täcker många olika områden och erfarenheter. Vi älskar vårt jobb och arbetar därför passionerat. Vi ser fram emot att arbeta även med dig.</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Dina besökare vill veta mer om vem som står bakom webbplatsen. Här kan du berätta om dig själv, din webbplats, ditt företag eller om vad som helst. Med hjälp av recensionerna nedan kan du citera andra, som berättar om samma sak med sina egna ord.</string>
-    <string name="gutenberg_native_walt_disney">Walt Disney</string>
-    <string name="gutenberg_native_want_to_work_with_us">Vill du arbeta hos oss?</string>
     <string name="gutenberg_native_warning_message">Varningsmeddelande</string>
-    <string name="gutenberg_native_position_or_job_title">Titel</string>
-    <string name="gutenberg_native_project_name">Projektnamn</string>
-    <string name="gutenberg_native_sally_smith">Sally Smith</string>
-    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
-    <string name="gutenberg_native_services">Tjänster</string>
     <string name="gutenberg_native_show_post_content">Visa inläggsinnehåll</string>
-    <string name="gutenberg_native_strategy">Strategi</string>
     <string name="gutenberg_native_success_message">Framgångsmeddelande</string>
-    <string name="gutenberg_native_team">Team</string>
-    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">För att komma igång måste man sluta prata och börja göra något.</string>
-    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Detta är exempelinnehåll som medföljer mallen för att visa upp dess olika funktioner. Ta bort innehållet eller ersätt det med din egen text och dina egna mediafiler.</string>
-    <string name="gutenberg_native_usa">USA</string>
-    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Låt oss prata 👋 Hör görna av dig med hjälp av nedanstående kontaktuppgifter eller skicka ett meddelande med hjälp av formuläret.</string>
     <string name="gutenberg_native_link_to">Länk till</string>
-    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Min portfölj demonstrerar olika projekt jag skapat under min karriär. Mina kontaktuppgifter finns här nedan. Hör av dig.</string>
     <string name="gutenberg_native_only_show_excerpt">Visa endast utdrag</string>
-    <string name="gutenberg_native_portfolio">Portfölj</string>
     <string name="gutenberg_native_link_settings">Länkinställningar</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Låt oss skapa något tillsammans!</string>
-    <string name="gutenberg_native_let_s_build_something_together">Låt oss skapa något tillsammans!</string>
-    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
-    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Skicka e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
     <string name="gutenberg_native_excerpt_length_words">Utdragets längd (antal ord)</string>
-    <string name="gutenberg_native_get_in_touch">Hör av dig</string>
-    <string name="gutenberg_native_inspiration">Inspiration</string>
-    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Harry, det är dina val som visar vilka vi egentligen är, i långt högre grad än våra förmågor.</string>
-    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt inte över att det är slut. Le för att du var med om det.</string>
-    <string name="gutenberg_native_city_10100">Staden, 10100</string>
     <string name="gutenberg_native_customize">ANPASSA</string>
-    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">En beskrivning av projektet och dess slutresultat.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">En kort biografi med din personliga berättelse, största framgångar eller intressant information.</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">En kort beskrivning av de tjänster du erbjuder.</string>
     <string name="gutenberg_native_add_paragraph_block">Lägg till ett block med ett textstycke</string>
-    <string name="gutenberg_native_555_555_1234">+1-(555)555–1234</string>
-    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Skapa ett inlägg</string>
     <string name="post_list_tab_trashed_posts">Borttagna</string>
     <string name="post_list_tab_scheduled_posts">Tidsinställda</string>
@@ -633,13 +609,11 @@ Language: sv_SE
     <string name="gutenberg_native_add_to_beginning">Lägg till först</string>
     <string name="gutenberg_native_add_to_end">Lägg till sist</string>
     <string name="gutenberg_native_replace_current_block">Ersätt aktuellt block</string>
-    <string name="gutenberg_native_template_preview">Förhandsgranska mall</string>
     <string name="reader_filter_empty_tags_action">Lägg till ett ämne</string>
     <string name="reader_filter_empty_tags_list">Du kan följa inlägg om ett specifikt ämne genom att lägga till ett ämne</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="reader_filter_main_title">Följer</string>
     <string name="gutenberg_native_add_a_shortcode">Lägg till kortkod …</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">Dubbeltryck för att välja layout</string>
     <string name="gutenberg_native_edit_video">Redigera video</string>
     <string name="gutenberg_native_video_caption_s">Beskrivning för video. %s</string>
     <string name="stats_bar_chart_accessibility_overlapping_entry">  &amp; %1$d %2$s</string>
@@ -709,6 +683,7 @@ Language: sv_SE
     <string name="gutenberg_native_title">Rubrik:</string>
     <string name="gutenberg_native_translate">Översätt</string>
     <string name="gutenberg_native_ungroup">Lös upp grupp</string>
+    <string name="gutenberg_native_unsupported">Stöds ej</string>
     <string name="gutenberg_native_reset_block">Återställ block</string>
     <string name="gutenberg_native_s_block_empty">Block av typen %s. Tomt</string>
     <string name="gutenberg_native_s_block_this_block_has_invalid_content">Block av typen %s. Detta block har ogiltigt innehåll</string>
@@ -1055,25 +1030,18 @@ Language: sv_SE
     <string name="quick_start_dialog_upload_icon_title">Ladda upp en webbplats-ikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dina besökare kommer att se din ikon i sin webbläsare. Lägg till en anpassad ikon för att skapa ett finputsat och professionellt utseende. </string>
     <string name="quick_start_dialog_explore_plans_message_short">Tryck på %1$spaket%2$s för att se ditt nuvarande paket och andra paket du kan välja</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Tryck på %1$sskapa sida%2$s för att lägga till en ny sida.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tryck på %1$sstatistik%2$s för att kolla hur det går för din webbplats.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Tryck på %1$sdin webbplats-ikon%2$s för att ladda upp en ny</string>
     <string name="quick_start_dialog_publish_post_message">Skriv och publicera ditt första inlägg.</string>
     <string name="quick_start_dialog_need_help_message">Vi hjälper dig att gå igenom grunderna för hur du bygger din webbplats och får den att växa.</string>
     <string name="quick_start_dialog_migration_title">Vi har gjort några ändringar i din checklista.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Tryck på %1$ssidor%2$s för att fortsätta.</string>
     <string name="quick_start_dialog_migration_message">Vi har lagt till nya åtgärder för att hjälpa dig vidga din läsekrets.</string>
     <string name="quick_start_dialog_explore_plans_title">Undersök olika paket</string>
     <string name="quick_start_dialog_explore_plans_message">Läs om verktygen för marknadsföring och sökoptimering i våra betalda paket.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktivera delning av inlägg</string>
     <string name="quick_start_dialog_enable_sharing_message">Dela automatiskt dina nya inlägg i dina olika konton i sociala media.</string>
-    <string name="quick_start_dialog_customize_site_message">Finjustera typsnitt, lägg till bilder m.m.</string>
-    <string name="quick_start_dialog_create_page_title">Skapa en ny sida</string>
-    <string name="quick_start_dialog_create_page_message">Lägg till en sida med viktig information – sidan ”Om oss”  är en utmärkt början.</string>
     <string name="quick_start_dialog_check_stats_title">Kontrollera statistiken för din webbplats</string>
     <string name="quick_start_dialog_check_stats_message">Håll dig informerad om hur det går för din webbplats.</string>
-    <string name="quick_start_dialog_browse_themes_title">Leta bland teman</string>
-    <string name="quick_start_dialog_browse_themes_message">Utforska dussintal layoutalternativ för att hitta det som passar dig perfekt.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Om du tar bort resten av stegen kommer detta att dölja alla informativa rundvandringar på denna webbplats. Denna åtgärd går inte att ångra.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Ta bort resten av stegen</string>
     <string name="quick_start_remove_next_steps_menu_title">Ta bort detta</string>
@@ -1259,20 +1227,14 @@ Language: sv_SE
     <string name="quick_start_dialog_need_help_button_neutral">Aldrig</string>
     <string name="quick_start_dialog_need_help_button_negative">Nej</string>
     <string name="quick_start_dialog_follow_sites_title">Följ andra webbplatser</string>
-    <string name="quick_start_dialog_customize_site_title">Anpassa din webbplats</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Tryck på %1$s Sök %2$s för att leta efter webbplatser med liknande intressen</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Tryck på %1$s Läsaren %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Tryck på %1$s Teman %2$s för att fortsätta</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Tryck på %1$s Anpassa %2$s för att börja anpassa din webbplats</string>
     <string name="quick_start_dialog_follow_sites_message">Hitta webbplatser som inspirerar dig och följ dem för att få uppdateringar när de publicerar.</string>
     <string name="quick_start_button_negative">Inte nu</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
-    <string name="quick_start_dialog_choose_theme_title">Välj ett tema</string>
     <string name="my_site_create_new_site_title">Du har inga webbplatser</string>
-    <string name="quick_start_dialog_choose_theme_message">Bläddra bland alla teman för att hitta det som passar dig perfekt.</string>
     <string name="quick_start_button_positive">Kör</string>
     <string name="content_description_more">Mera</string>
-    <string name="quick_start_dialog_browse_themes_message_short">Tryck på %1$steman%2$s för att upptäcka nya teman</string>
     <string name="reader_empty_followed_tags_title">Inga följda ämnen</string>
     <string name="reader_empty_followed_tags_subtitle">Lägg till ämnen här för att hitta inlägg om dina favoritämnen</string>
     <string name="jetpack">Jetpack</string>

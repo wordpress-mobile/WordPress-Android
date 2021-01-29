@@ -1025,7 +1025,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
 
                 setSite(data);
-                showQuickStartDialog();
+                if (getMySiteFragment() != null) {
+                    showQuickStartDialog();
+                } else {
+                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
+                }
                 mPrivateAtomicCookie.clearCookie();
                 break;
             case RequestCodes.ADD_ACCOUNT:
@@ -1065,6 +1069,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     if (data != null && data.getIntExtra(ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
                         showQuickStartDialog();
                     }
+                } else {
+                    passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 }
                 break;
             case RequestCodes.SITE_SETTINGS:

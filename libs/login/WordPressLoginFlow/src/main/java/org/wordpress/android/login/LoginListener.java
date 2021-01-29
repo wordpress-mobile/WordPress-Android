@@ -7,6 +7,7 @@ import androidx.annotation.Nullable;
 
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 
 import java.util.ArrayList;
 
@@ -59,6 +60,7 @@ public interface LoginListener {
     void handleSslCertificateError(MemorizingTrustManager memorizingTrustManager, SelfSignedSSLCallback callback);
     void helpSiteAddress(String url);
     void helpFindingSiteAddress(String username, SiteStore siteStore);
+    void handleSiteAddressError(ConnectSiteInfoPayload siteInfo);
 
     // Login username password callbacks
     void saveCredentialsInSmartLock(@Nullable String username, @Nullable String password,

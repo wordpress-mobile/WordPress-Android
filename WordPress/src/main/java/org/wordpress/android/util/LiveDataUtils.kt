@@ -67,16 +67,17 @@ fun <T, U, V> mergeAsyncNotNull(
     scope: CoroutineScope,
     sourceA: LiveData<T>,
     sourceB: LiveData<U>,
+    distinct: Boolean = true,
     merger: suspend (T, U) -> V
 ): LiveData<V> {
     val mediator = MediatorLiveData<Pair<T?, U?>>()
     mediator.addSource(sourceA) {
-        if (mediator.value?.first != it) {
+        if (!distinct || mediator.value?.first != it) {
             mediator.value = it to mediator.value?.second
         }
     }
     mediator.addSource(sourceB) {
-        if (mediator.value?.second != it) {
+        if (!distinct || mediator.value?.second != it) {
             mediator.value = mediator.value?.first to it
         }
     }
@@ -107,21 +108,17 @@ fun <T, U, V> merge(sourceA: LiveData<T>, sourceB: LiveData<U>, merger: (T?, U?)
 }
 
 /**
- * Merges two LiveData sources using a given function. The function returns an object of a new type.
- * @param sourceA first source
- * @param sourceB second source
+ * Merges LiveData sources using a given function. The function returns an object of a new type.
+ * @param sources all source
  * @return new data source
  */
-fun <T> merge(sourceA: LiveData<T>?, sourceB: LiveData<T>?): MediatorLiveData<T> {
+fun <T> merge(vararg sources: LiveData<T>?): MediatorLiveData<T> {
     val mediator = MediatorLiveData<T>()
-    if (sourceA != null) {
-        mediator.addSource(sourceA) {
-            mediator.value = it
-        }
-    }
-    if (sourceB != null) {
-        mediator.addSource(sourceB) {
-            mediator.value = it
+    for (source in sources) {
+        if (source != null) {
+            mediator.addSource(source) {
+                mediator.value = it
+            }
         }
     }
     return mediator

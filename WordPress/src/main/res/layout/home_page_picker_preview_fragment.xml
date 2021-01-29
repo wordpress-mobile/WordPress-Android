@@ -37,16 +37,42 @@
                 style="@style/ModalLayoutPickerHeader"
                 android:layout_marginEnd="@dimen/margin_medium"
                 android:text="@string/mlp_preview_page" />
+
+            <ImageButton
+                android:id="@+id/previewTypeSelectorButton"
+                style="@style/WebPreviewNavbarButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center|end"
+                android:layout_marginEnd="@dimen/margin_extra_large"
+                android:contentDescription="@string/preview_type_desc"
+                android:src="@drawable/ic_devices_white_24dp" />
         </FrameLayout>
 
     </FrameLayout>
 
-    <org.wordpress.android.widgets.NestedWebView
-        android:id="@+id/webView"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_marginBottom="@dimen/negative_margin_medium"
-        android:layout_weight="1" />
+        android:layout_weight="1">
+
+        <org.wordpress.android.widgets.NestedWebView
+            android:id="@+id/webView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@+id/desktopPreviewHint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:background="@drawable/preview_mode_indicator_background"
+            android:padding="@dimen/margin_medium"
+            android:text="@string/web_preview_desktop"
+            android:textColor="?attr/colorOnPrimarySurface"
+            android:visibility="gone" />
+    </FrameLayout>
 
     <org.wordpress.android.ui.ActionableEmptyView
         android:id="@+id/errorView"

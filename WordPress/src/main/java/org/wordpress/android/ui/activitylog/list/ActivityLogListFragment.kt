@@ -129,7 +129,7 @@ class ActivityLogListFragment : Fragment() {
     }
 
     fun onRewindConfirmed(activityId: String) {
-        viewModel.onRewindConfirmed(activityId)
+        viewModel.onRestoreConfirmed(activityId)
     }
 
     private fun setupObservers() {

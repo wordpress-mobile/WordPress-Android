@@ -13,8 +13,6 @@ class JetpackDescriptionViewHolder(
 ) : JetpackViewHolder(R.layout.jetpack_list_description_item, parent) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val descriptionState = itemUiState as DescriptionState
-        with(uiHelpers) {
-            description.text = getTextOfUiString(itemView.context, descriptionState.text)
-        }
+        uiHelpers.setTextOrHide(description, descriptionState.text)
     }
 }
