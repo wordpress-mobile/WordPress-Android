@@ -286,11 +286,7 @@ class RestoreViewModel @Inject constructor(
                 handleRestoreRequestError(GenericFailureMsg)
             }
             is Success -> {
-                restoreState = restoreState.copy(
-                        rewindId = result.rewindId,
-                        restoreId = result.restoreId
-                )
-                wizardManager.showNextStep()
+                handleRestoreRequestSuccess(result)
             }
             is OtherRequestRunning -> {
                 handleRestoreRequestError(OtherRequestRunningMsg)
@@ -299,6 +295,14 @@ class RestoreViewModel @Inject constructor(
                 throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
             }
         }
+    }
+
+    private fun handleRestoreRequestSuccess(result: Success) {
+        restoreState = restoreState.copy(
+                rewindId = result.rewindId,
+                restoreId = result.restoreId
+        )
+        wizardManager.showNextStep()
     }
 
     private fun handleRestoreRequestError(snackbarMessageHolder: SnackbarMessageHolder) {
