@@ -149,7 +149,12 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun constructProgressEvent() = if (restoreState.restoreId != null) {
-        Event(RestoreInProgress(restoreState.restoreId as Long))
+        Event(
+                RestoreInProgress(
+                        restoreState.rewindId as String,
+                        restoreState.restoreId as Long
+                )
+        )
     } else {
         Event(RestoreCanceled)
     }
@@ -417,7 +422,12 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(RestoreInProgress(restoreState.restoreId as Long))
+        _wizardFinishedObservable.value = Event(
+                RestoreInProgress(
+                        restoreState.rewindId as String,
+                        restoreState.restoreId as Long
+                )
+        )
     }
 
     private fun onVisitSiteClick() {
@@ -444,7 +454,10 @@ class RestoreViewModel @Inject constructor(
         object RestoreCanceled : RestoreWizardState()
 
         @Parcelize
-        data class RestoreInProgress(val restoreId: Long) : RestoreWizardState()
+        data class RestoreInProgress(
+            val rewindId: String,
+            val restoreId: Long
+        ) : RestoreWizardState()
 
         @Parcelize
         object RestoreCompleted : RestoreWizardState()
