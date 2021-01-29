@@ -144,7 +144,7 @@ class ActivityLogListFragment : Fragment() {
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
             uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
-            if (uiState is FiltersShown) { updateFilters(uiState) }
+            if (uiState is FiltersShown) updateFilters(uiState)
         })
 
         viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
@@ -190,12 +190,14 @@ class ActivityLogListFragment : Fragment() {
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            BACKUP_DOWNLOAD_REQUEST_CODE)
+                            BACKUP_DOWNLOAD_REQUEST_CODE
+                    )
                     is ShowRestore -> ActivityLauncher.showRestoreForResult(
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            RESTORE_REQUEST_CODE)
+                            RESTORE_REQUEST_CODE
+                    )
                     is ShowRewindDialog -> displayRewindDialog(event)
                 }
             }
@@ -205,11 +207,13 @@ class ActivityLogListFragment : Fragment() {
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
-            dialog.initialize(it,
+            dialog.initialize(
+                    it,
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
                     getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel))
+                    getString(R.string.cancel)
+            )
             dialog.show(requireFragmentManager(), it)
         }
     }
