@@ -36,7 +36,7 @@ class GetRestoreStatusUseCase @Inject constructor(
     ) = flow {
         if (restoreId == null) {
             if (!isNetworkAvailable()) return@flow
-            if (!isFetchActivitiesRewindSuccessful(site)) return@flow
+            if (!fetchActivitiesRewind(site)) return@flow
         }
         while (true) {
             if (!isNetworkAvailable()) return@flow
@@ -58,7 +58,7 @@ class GetRestoreStatusUseCase @Inject constructor(
                 }
             }
 
-            if (!isFetchActivitiesRewindSuccessful(site)) return@flow
+            if (!fetchActivitiesRewind(site)) return@flow
 
             delay(DELAY_MILLIS)
         }
@@ -71,7 +71,7 @@ class GetRestoreStatusUseCase @Inject constructor(
         } else true
     }
 
-    private suspend fun FlowCollector<RestoreRequestState>.isFetchActivitiesRewindSuccessful(site: SiteModel): Boolean {
+    private suspend fun FlowCollector<RestoreRequestState>.fetchActivitiesRewind(site: SiteModel): Boolean {
         val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
         return if (result.isError) {
             emit(RemoteRequestFailure)
