@@ -89,7 +89,7 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
                 site to activityId
             }
             else -> {
-                AppLog.e(T.JETPACK_RESTORE, "Error initializing ${this.javaClass.simpleName}")
+                AppLog.e(T.JETPACK_REWIND, "Error initializing ${this.javaClass.simpleName}")
                 throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")
             }
         }

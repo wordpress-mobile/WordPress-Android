@@ -90,7 +90,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
                 site to activityId
             }
             else -> {
-                AppLog.e(T.JETPACK_BACKUP_DOWNLOAD, "Error initializing ${this.javaClass.simpleName}")
+                AppLog.e(T.JETPACK_BACKUP, "Error initializing ${this.javaClass.simpleName}")
                 throw Throwable("Couldn't initialize ${this.javaClass.simpleName} view model")
             }
         }
