@@ -131,6 +131,10 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onRestoreConfirmed(activityId)
     }
 
+    fun onQueryRestoreStatus(rewindId: String, restoreId: Long) {
+        viewModel.onQueryRestoreStatus(rewindId, restoreId)
+    }
+
     private fun setupObservers() {
         viewModel.events.observe(viewLifecycleOwner, {
             reloadEvents(it ?: emptyList())

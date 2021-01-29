@@ -9,6 +9,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
+import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
@@ -64,6 +66,12 @@ class ActivityLogListActivity : LocaleAwareActivity(),
             data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
                 passRewindConfirmation(it)
             }
+        } else if (requestCode == RequestCodes.RESTORE) {
+            val rewindId = data?.getStringExtra(KEY_RESTORE_REWIND_ID)
+            val restoreId = data?.getLongExtra(KEY_RESTORE_RESTORE_ID, 0)
+            if (rewindId != null && restoreId != null) {
+                passQueryRestoreStatus(rewindId, restoreId)
+            }
         }
     }
 
@@ -79,6 +87,13 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
             fragment.onRewindConfirmed(rewindId)
+        }
+    }
+
+    private fun passQueryRestoreStatus(rewindId: String, restoreId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is ActivityLogListFragment) {
+            fragment.onQueryRestoreStatus(rewindId, restoreId)
         }
     }
 }
