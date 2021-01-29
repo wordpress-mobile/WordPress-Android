@@ -28,6 +28,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+const val KEY_RESTORE_REWIND_ID = "key_restore_rewind_id"
 const val KEY_RESTORE_RESTORE_ID = "key_restore_restore_id"
 
 class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
@@ -117,12 +118,13 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         viewModel.wizardFinishedObservable.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 val intent = Intent()
-                val (restoreCreated, restoreId) = when (this) {
+                val (restoreCreated, ids) = when (this) {
                     is RestoreCanceled -> Pair(false, null)
-                    is RestoreInProgress -> Pair(true, restoreId)
+                    is RestoreInProgress -> Pair(true, Pair(rewindId, restoreId))
                     is RestoreCompleted -> Pair(true, null)
                 }
-                intent.putExtra(KEY_RESTORE_RESTORE_ID, restoreId)
+                intent.putExtra(KEY_RESTORE_REWIND_ID, ids?.first)
+                intent.putExtra(KEY_RESTORE_RESTORE_ID, ids?.second)
                 requireActivity().setResult(
                         if (restoreCreated) RESULT_OK else RESULT_CANCELED,
                         intent
