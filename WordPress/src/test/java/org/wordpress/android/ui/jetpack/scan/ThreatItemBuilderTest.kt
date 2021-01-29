@@ -45,7 +45,7 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     fun `builds threat sub header correctly for fixed threat`() {
         // Arrange
         val expectedSubHeader = UiStringResWithParams(
-            R.string.threat_item_sub_header_status_fixed,
+            R.string.threat_item_sub_header_status_fixed_on,
             listOf(UiStringText(TEST_FIXED_ON_DATE))
         )
         val threatModel = GenericThreatModel(ThreatTestData.baseThreatModel.copy(status = FIXED))

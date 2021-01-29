@@ -19,6 +19,7 @@ data class GutenbergPropsBuilder(
     private val editorTheme: Bundle?
 ) : Parcelable {
     fun build(activity: Activity, isHtmlModeEnabled: Boolean) = GutenbergProps(
+            enableContactInfoBlock = false,
             enableMediaFilesCollectionBlocks = enableMediaFilesCollectionBlocks,
             enableMentions = enableMentions,
             enableXPosts = enableXPosts,
