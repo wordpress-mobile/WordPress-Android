@@ -42,7 +42,6 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
-private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
 
 /**
  * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
@@ -190,7 +189,7 @@ class ActivityLogListFragment : Fragment() {
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            BACKUP_DOWNLOAD_REQUEST_CODE
+                            RequestCodes.BACKUP_DOWNLOAD
                     )
                     is ShowRestore -> ActivityLauncher.showRestoreForResult(
                             requireActivity(),
