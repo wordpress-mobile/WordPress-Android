@@ -4,7 +4,6 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -19,7 +18,6 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
@@ -34,8 +32,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
-import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.ListItemAction.ACTIVITY_LOG
 import org.wordpress.android.ui.mysite.ListItemAction.ADMIN
 import org.wordpress.android.ui.mysite.ListItemAction.COMMENTS
@@ -100,8 +96,6 @@ import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
-import org.wordpress.android.util.config.BackupScreenFeatureConfig
-import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.viewmodel.ContextProvider
 
 @RunWith(MockitoJUnitRunner::class)
@@ -232,13 +226,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         doAnswer {
             siteInfoBlock = siteInfoBlock.copy(
-                    onTitleClick = ListItemInteraction.create { (it.getArgument(2) as (SiteModel) -> Unit).invoke(site) },
-                    onIconClick = ListItemInteraction.create { (it.getArgument(3) as (SiteModel) -> Unit).invoke(site) },
-                    onUrlClick = ListItemInteraction.create { (it.getArgument(4) as (SiteModel) -> Unit).invoke(site) },
+                    onTitleClick = ListItemInteraction.create { (it.getArgument(2) as () -> Unit).invoke() },
+                    onIconClick = ListItemInteraction.create { (it.getArgument(3) as () -> Unit).invoke() },
+                    onUrlClick = ListItemInteraction.create { (it.getArgument(4) as () -> Unit).invoke() },
                     onSwitchSiteClick = ListItemInteraction.create {
-                        (it.getArgument(5) as (SiteModel) -> Unit).invoke(
-                                site
-                        )
+                        (it.getArgument(5) as () -> Unit).invoke()
                     }
             )
             siteInfoBlock

@@ -176,16 +176,16 @@ class MySiteViewModel
             )
             siteItems.add(
                     QuickActionsBlock(
-                            ListItemInteraction.create(site, this::quickActionStatsClick),
-                            ListItemInteraction.create(site, this::quickActionPagesClick),
-                            ListItemInteraction.create(site, this::quickActionPostsClick),
-                            ListItemInteraction.create(site, this::quickActionMediaClick),
+                            ListItemInteraction.create(this::quickActionStatsClick),
+                            ListItemInteraction.create(this::quickActionPagesClick),
+                            ListItemInteraction.create(this::quickActionPostsClick),
+                            ListItemInteraction.create(this::quickActionMediaClick),
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages
                     )
             )
             if (isDomainCreditAvailable) {
                 analyticsTrackerWrapper.track(DOMAIN_CREDIT_PROMPT_SHOWN)
-                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(site, this::domainRegistrationClick)))
+                siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
 
             siteItems.addAll(quickStartModel?.categories?.map {
@@ -246,7 +246,8 @@ class MySiteViewModel
         quickStartRepository.setActiveTask(task)
     }
 
-    private fun titleClick(selectedSite: SiteModel) {
+    private fun titleClick() {
+        val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
@@ -268,7 +269,8 @@ class MySiteViewModel
         }
     }
 
-    private fun iconClick(site: SiteModel) {
+    private fun iconClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
         quickStartRepository.completeTask(UPLOAD_SITE_ICON)
         val hasIcon = site.iconUrl != null
@@ -294,35 +296,42 @@ class MySiteViewModel
         }
     }
 
-    private fun urlClick(site: SiteModel) {
+    private fun urlClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onNavigation.value = Event(OpenSite(site))
     }
 
-    private fun switchSiteClick(site: SiteModel) {
+    private fun switchSiteClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         _onNavigation.value = Event(OpenSitePicker(site))
     }
 
-    private fun quickActionStatsClick(site: SiteModel) {
+    private fun quickActionStatsClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
-    private fun quickActionPagesClick(site: SiteModel) {
+    private fun quickActionPagesClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
         _onNavigation.value = Event(OpenPages(site))
     }
 
-    private fun quickActionPostsClick(site: SiteModel) {
+    private fun quickActionPostsClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_POSTS_TAPPED)
         _onNavigation.value = Event(OpenPosts(site))
     }
 
-    private fun quickActionMediaClick(site: SiteModel) {
+    private fun quickActionMediaClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_MEDIA_TAPPED)
         _onNavigation.value = Event(OpenMedia(site))
     }
 
-    private fun domainRegistrationClick(site: SiteModel) {
+    private fun domainRegistrationClick() {
+        val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(DOMAIN_CREDIT_REDEMPTION_TAPPED, site)
         _onNavigation.value = Event(OpenDomainRegistration(site))
     }
