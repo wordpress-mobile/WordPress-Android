@@ -16,10 +16,8 @@ import org.wordpress.android.ui.plans.isDomainCreditAvailable
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
-import javax.inject.Singleton
 import kotlin.coroutines.resume
 
-@Singleton
 class DomainRegistrationHandler
 @Inject constructor(
     private val dispatcher: Dispatcher,

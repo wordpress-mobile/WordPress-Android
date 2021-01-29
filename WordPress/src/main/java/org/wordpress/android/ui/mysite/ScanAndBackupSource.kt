@@ -6,9 +6,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import javax.inject.Inject
-import javax.inject.Singleton
 
-@Singleton
 class ScanAndBackupSource
 @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
