@@ -14,6 +14,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.buildSpannableLabel
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -21,11 +22,14 @@ import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 import javax.inject.Inject
 
 @Reusable
-class BackupDownloadStateListItemBuilder @Inject constructor() {
+class BackupDownloadStateListItemBuilder @Inject constructor(
+    private val resourceProvider: ResourceProvider
+) {
     fun buildDetailsListStateItems(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
@@ -50,6 +54,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
             CheckboxState(
                     availableItemType = it.availableItemType,
                     label = UiStringRes(it.labelResId),
+                    labelSpannable = buildSpannableLabel(resourceProvider, it.labelResId, it.labelHintResId),
                     checked = true,
                     onClick = { onCheckboxItemClicked(it.availableItemType) }
             )

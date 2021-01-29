@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.common
 
+import android.text.SpannableString
 import android.view.View
 import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
@@ -38,6 +39,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
     data class CheckboxState(
         val availableItemType: JetpackAvailableItemType,
         val label: UiString,
+        val labelSpannable: SpannableString? = null,
         val checked: Boolean = false,
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)
