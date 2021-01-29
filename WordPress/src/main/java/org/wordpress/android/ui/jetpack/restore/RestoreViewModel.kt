@@ -250,10 +250,13 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildOptionsSelected(items: List<JetpackListItemState>): List<Pair<Int, Boolean>> {
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
-        return listOf(Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
+        return listOf(
+                Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
                 Pair(PLUGINS.id, checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true),
-                Pair(MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                        ?: true),
+                Pair(
+                        MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                        ?: true
+                ),
                 Pair(SQLS.id, checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true),
                 Pair(ROOTS.id, checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true),
                 Pair(CONTENTS.id, checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true)
@@ -261,17 +264,17 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun buildRewindRequestTypes(optionsSelected: List<Pair<Int, Boolean>>?) =
-        RewindRequestTypes(
-                themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
-                plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
-                        ?: true,
-                uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
-                        ?: true,
-                sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
-                roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
-                contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
-                        ?: true
-        )
+            RewindRequestTypes(
+                    themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
+                    plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
+                            ?: true,
+                    uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
+                            ?: true,
+                    sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
+                    roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
+                    contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
+                            ?: true
+            )
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
