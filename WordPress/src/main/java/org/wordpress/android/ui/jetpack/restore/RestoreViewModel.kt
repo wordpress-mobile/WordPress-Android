@@ -326,40 +326,42 @@ class RestoreViewModel @Inject constructor(
         when (restoreStatus) {
             is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.NetworkUnavailable) }
             is RemoteRequestFailure -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
-            is Progress -> {
-                (_uiState.value as? ProgressState)?.let { content ->
-                    val updatedList = content.items.map { contentState ->
-                        if (contentState.type == ViewType.PROGRESS) {
-                            contentState as JetpackListItemState.ProgressState
-                            contentState.copy(
-                                    progress = restoreStatus.progress ?: 0,
-                                    progressLabel = UiStringResWithParams(
-                                            R.string.restore_progress_label,
-                                            listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
-                                    ),
-                                    progressInfoLabel = if (restoreStatus.currentEntry != null) {
-                                            UiStringText("${restoreStatus.currentEntry}")
-                                        } else {
-                                            null
-                                        },
-                                    progressStateLabel = if (restoreStatus.message != null) {
-                                        UiStringText("${restoreStatus.message}")
-                                    } else {
-                                        null
-                                    },
-                                    isIndeterminate = (restoreStatus.progress ?: 0) <= 0
-                            )
-                        } else {
-                            contentState
-                        }
-                    }
-                    _uiState.postValue(content.copy(items = updatedList))
-                }
-            }
+            is Progress -> { transitionToProgress(restoreStatus) }
             is Complete -> { wizardManager.showNextStep() }
             else -> {
                 throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
             }
+        }
+    }
+
+    private fun transitionToProgress(restoreStatus: Progress) {
+        (_uiState.value as? ProgressState)?.let { content ->
+            val updatedList = content.items.map { contentState ->
+                if (contentState.type == ViewType.PROGRESS) {
+                    contentState as JetpackListItemState.ProgressState
+                    contentState.copy(
+                            progress = restoreStatus.progress ?: 0,
+                            progressLabel = UiStringResWithParams(
+                                    R.string.restore_progress_label,
+                                    listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
+                            ),
+                            progressInfoLabel = if (restoreStatus.currentEntry != null) {
+                                UiStringText("${restoreStatus.currentEntry}")
+                            } else {
+                                null
+                            },
+                            progressStateLabel = if (restoreStatus.message != null) {
+                                UiStringText("${restoreStatus.message}")
+                            } else {
+                                null
+                            },
+                            isIndeterminate = (restoreStatus.progress ?: 0) <= 0
+                    )
+                } else {
+                    contentState
+                }
+            }
+            _uiState.postValue(content.copy(items = updatedList))
         }
     }
 
