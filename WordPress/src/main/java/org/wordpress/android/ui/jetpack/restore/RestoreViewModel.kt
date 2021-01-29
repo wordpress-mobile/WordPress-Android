@@ -11,12 +11,10 @@ import androidx.lifecycle.Observer
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -93,8 +91,7 @@ class RestoreViewModel @Inject constructor(
     private val stateListItemBuilder: RestoreStateListItemBuilder,
     private val postRestoreUseCase: PostRestoreUseCase,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -317,7 +314,7 @@ class RestoreViewModel @Inject constructor(
     private fun queryStatus() {
         launch {
             getRestoreStatusUseCase.getRestoreStatus(site, restoreState.restoreId as Long)
-                    .flowOn(bgDispatcher).collect { state -> handleQueryStatus(state) }
+                    .collect { state -> handleQueryStatus(state) }
         }
     }
 
