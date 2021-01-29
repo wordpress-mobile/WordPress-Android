@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 133
+        return 134
     }
 
     override fun getDbName(): String {
@@ -1463,6 +1463,13 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "ORDER_BY TEXT, " +
                                     "HAS_ARCHIVES BOOLEAN NOT NULL)"
                     )
+                }
+                133 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD ADDRESS TEXT")
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD ADDRESS2 TEXT")
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD CITY TEXT")
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD POSTAL_CODE TEXT")
+                    db.execSQL("ALTER TABLE WCSettingsModel ADD STATE_CODE TEXT")
                 }
             }
         }
