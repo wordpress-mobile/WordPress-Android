@@ -45,15 +45,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun initRecyclerView() {
+        recycler_view.itemAnimator = null
+        recycler_view.addItemDecoration(
+            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
+        )
         initAdapter()
     }
 
     private fun initAdapter() {
         recycler_view.adapter = ScanAdapter(imageManager, uiHelpers)
-        recycler_view.itemAnimator = null
-        recycler_view.addItemDecoration(
-            HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
-        )
     }
 
     private fun initViewModel(site: SiteModel) {
