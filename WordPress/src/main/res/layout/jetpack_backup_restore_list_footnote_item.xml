@@ -7,8 +7,9 @@
     android:layout_height="wrap_content">
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/additional_information"
-        style="@style/Jetpack.Backup.ListItem.AdditionalInformation"
+        android:id="@+id/footnote"
+        style="@style/Jetpack.Backup.ListItem.Footnote"
+        android:layout_marginTop="13dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
