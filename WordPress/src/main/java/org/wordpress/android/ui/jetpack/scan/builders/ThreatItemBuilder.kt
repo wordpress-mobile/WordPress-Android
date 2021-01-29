@@ -79,7 +79,7 @@ class ThreatItemBuilder @Inject constructor(
         return when (threatModel.baseThreatModel.status) {
             FIXED -> {
                 UiStringResWithParams(
-                    R.string.threat_item_sub_header_status_fixed,
+                    R.string.threat_item_sub_header_status_fixed_on,
                     listOf(getDateString(threatModel.baseThreatModel.fixedOn))
                 )
             }
