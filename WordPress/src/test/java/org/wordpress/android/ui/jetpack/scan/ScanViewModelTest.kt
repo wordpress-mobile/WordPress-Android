@@ -104,7 +104,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             viewModel.start(site)
 
-            verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any(), any())
+            verify(fetchFixThreatsStatusUseCase).fetchFixThreatsStatus(any(), any())
         }
 
     @Test
