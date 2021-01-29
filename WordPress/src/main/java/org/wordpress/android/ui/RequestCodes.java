@@ -28,6 +28,7 @@ public class RequestCodes {
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
+    public static final int RESTORE = 1720;
     public static final int PAGE_PARENT = 1800;
     public static final int HISTORY_DETAIL = 1900;
 
