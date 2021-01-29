@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -75,7 +75,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                         titleRes = R.string.backup_download_progress_action_button,
                         contentDescRes = R.string.backup_download_progress_action_button_content_description,
                         onClick = onNotifyMeClick),
-                buildAdditionalInformationState(R.string.backup_download_progress_additional_info)
+                buildFootnoteState(R.string.backup_download_progress_footnote)
         )
     }
 
@@ -102,7 +102,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                         isSecondary = true,
                         iconRes = R.drawable.ic_share_white_24dp,
                         onClick = onShareLinkClick),
-                buildAdditionalInformationState(R.string.backup_download_complete_info)
+                buildFootnoteState(R.string.backup_download_complete_info)
         )
     }
 
@@ -159,7 +159,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
     private fun buildSubHeaderState() =
             SubHeaderState(text = UiStringRes(R.string.backup_download_details_choose_items_header))
 
-    private fun buildAdditionalInformationState(@StringRes textRes: Int) = AdditionalInformationState(
+    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
     )
 
