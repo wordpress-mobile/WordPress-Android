@@ -140,11 +140,11 @@ class RestoreViewModel @Inject constructor(
 
     fun onBackPressed() {
         when (wizardManager.currentStep) {
-            DETAILS.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
-            WARNING.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
-            PROGRESS.id -> { _wizardFinishedObservable.value = constructProgressEvent() }
-            COMPLETE.id -> { _wizardFinishedObservable.value = Event(RestoreCompleted) }
-            ERROR.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
+            DETAILS.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
+            WARNING.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
+            PROGRESS.id -> _wizardFinishedObservable.value = constructProgressEvent()
+            COMPLETE.id -> _wizardFinishedObservable.value = Event(RestoreCompleted)
+            ERROR.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
         }
     }
 
@@ -231,11 +231,7 @@ class RestoreViewModel @Inject constructor(
             WARNING -> buildWarning()
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
-            ERROR -> buildError(
-                    RestoreErrorTypes.fromInt(
-                            target.wizardState.errorType ?: GenericFailure.id
-                    )
-            )
+            ERROR -> buildError(RestoreErrorTypes.fromInt(target.wizardState.errorType ?: GenericFailure.id))
         }
     }
 
@@ -279,21 +275,11 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
-            is NetworkUnavailable -> {
-                handleRestoreRequestError(NetworkUnavailableMsg)
-            }
-            is RemoteRequestFailure -> {
-                handleRestoreRequestError(GenericFailureMsg)
-            }
-            is Success -> {
-                handleRestoreRequestSuccess(result)
-            }
-            is OtherRequestRunning -> {
-                handleRestoreRequestError(OtherRequestRunningMsg)
-            }
-            else -> {
-                throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
-            }
+            is NetworkUnavailable -> handleRestoreRequestError(NetworkUnavailableMsg)
+            is RemoteRequestFailure -> handleRestoreRequestError(GenericFailureMsg)
+            is Success -> handleRestoreRequestSuccess(result)
+            is OtherRequestRunning -> handleRestoreRequestError(OtherRequestRunningMsg)
+            else -> throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
         }
     }
 
@@ -324,13 +310,11 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
         when (restoreStatus) {
-            is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.NetworkUnavailable) }
-            is RemoteRequestFailure -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
-            is Progress -> { transitionToProgress(restoreStatus) }
-            is Complete -> { wizardManager.showNextStep() }
-            else -> {
-                throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
-            }
+            is NetworkUnavailable -> transitionToError(RestoreErrorTypes.NetworkUnavailable)
+            is RemoteRequestFailure -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            is Progress -> transitionToProgress(restoreStatus)
+            is Complete -> wizardManager.showNextStep()
+            else -> throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
         }
     }
 
