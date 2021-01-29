@@ -142,16 +142,16 @@ class RestoreViewModel @Inject constructor(
         when (wizardManager.currentStep) {
             DETAILS.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
             WARNING.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
-            PROGRESS.id -> {
-                _wizardFinishedObservable.value = if (restoreState.restoreId != null) {
-                    Event(RestoreInProgress(restoreState.restoreId as Long))
-                } else {
-                    Event(RestoreCanceled)
-                }
-            }
+            PROGRESS.id -> { _wizardFinishedObservable.value = constructProgressEvent() }
             COMPLETE.id -> { _wizardFinishedObservable.value = Event(RestoreCompleted) }
             ERROR.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
         }
+    }
+
+    private fun constructProgressEvent() = if (restoreState.restoreId != null) {
+        Event(RestoreInProgress(restoreState.restoreId as Long))
+    } else {
+        Event(RestoreCanceled)
     }
 
     fun writeToBundle(outState: Bundle) {
