@@ -62,15 +62,18 @@ class ActivityLogListActivity : LocaleAwareActivity(),
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.ACTIVITY_LOG_DETAIL) {
-            data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
-                passRewindConfirmation(it)
+        when (requestCode) {
+            RequestCodes.ACTIVITY_LOG_DETAIL -> {
+                data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
+                    passRewindConfirmation(it)
+                }
             }
-        } else if (requestCode == RequestCodes.RESTORE) {
-            val rewindId = data?.getStringExtra(KEY_RESTORE_REWIND_ID)
-            val restoreId = data?.getLongExtra(KEY_RESTORE_RESTORE_ID, 0)
-            if (rewindId != null && restoreId != null) {
-                passQueryRestoreStatus(rewindId, restoreId)
+            RequestCodes.RESTORE -> {
+                val rewindId = data?.getStringExtra(KEY_RESTORE_REWIND_ID)
+                val restoreId = data?.getLongExtra(KEY_RESTORE_RESTORE_ID, 0)
+                if (rewindId != null && restoreId != null) {
+                    passQueryRestoreStatus(rewindId, restoreId)
+                }
             }
         }
     }
