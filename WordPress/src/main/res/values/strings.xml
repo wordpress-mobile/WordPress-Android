@@ -1105,7 +1105,7 @@
     <string name="threat_item_sub_header_file_signature">Threat found %s</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
-    <string name="threat_item_sub_header_status_fixed">Threat fixed on %s</string>
+    <string name="threat_item_sub_header_status_fixed_on">Threat fixed on %s</string>
     <string name="threat_item_sub_header_status_ignored">Threat ignored</string>
 
     <!-- threat details -->
