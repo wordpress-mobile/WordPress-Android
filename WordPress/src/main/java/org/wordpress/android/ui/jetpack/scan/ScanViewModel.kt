@@ -15,7 +15,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
-import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
@@ -59,10 +58,12 @@ class ScanViewModel @Inject constructor(
     val navigationEvents: LiveData<Event<ScanNavigationEvents>> = _navigationEvents
 
     private val fixableThreatIds
-        get() = (_uiState.value as? Content)?.items?.filterIsInstance(ThreatItemState::class.java)
-            ?.filter { it.isFixable }
-            ?.map { it.threatId } ?: listOf()
+        get() = scanStateModel?.threats
+            ?.filter { it.baseThreatModel.fixable != null }
+            ?.map { it.baseThreatModel.id }
+            ?: emptyList()
 
+    private var scanStateModel: ScanStateModel? = null
     lateinit var site: SiteModel
 
     fun start(site: SiteModel) {
@@ -71,7 +72,18 @@ class ScanViewModel @Inject constructor(
         }
         isStarted = true
         this.site = site
-        fetchScanState()
+        init()
+    }
+
+    private fun init() {
+        launch {
+            scanStateModel = scanStore.getScanStateForSite(this@ScanViewModel.site)
+            scanStateModel?.let {
+                updateUiState(buildContentUiState(it))
+                if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds)
+            }
+            fetchScanState()
+        }
     }
 
     private fun fetchScanState(startWithDelay: Boolean = false) {
@@ -79,7 +91,10 @@ class ScanViewModel @Inject constructor(
             fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = startWithDelay)
                 .collect { state ->
                     when (state) {
-                        is FetchScanState.Success -> updateUiState(buildContentUiState(state.scanStateModel))
+                        is FetchScanState.Success -> {
+                            scanStateModel = state.scanStateModel
+                            updateUiState(buildContentUiState(state.scanStateModel))
+                        }
                         is FetchScanState.Failure -> TODO() // TODO ashiagr to be implemented
                     }
                 }
@@ -104,8 +119,8 @@ class ScanViewModel @Inject constructor(
             updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
-                    updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_started_message))
-                    fetchFixThreatsStatus(fixableThreatIds = fixableThreatIds)
+                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds)
+                    if (someOrAllThreatFixed) fetchScanState()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
                     updateActionButtons(isVisible = true)
@@ -119,38 +134,45 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun fetchFixThreatsStatus(fixableThreatIds: List<Long>) {
-        launch {
-            @StringRes var messageRes: Int? = null
-            val scanStateModel = requireNotNull(scanStore.getScanStateForSite(site))
-            fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
-                remoteSiteId = site.siteId,
-                fixableThreatIds = fixableThreatIds
-            ).collect { status ->
-                var fixingThreatIds = emptyList<Long>()
-                when (status) {
-                    is FetchFixThreatsState.InProgress -> {
-                        fixingThreatIds = status.threatIds
-                    }
-                    is FetchFixThreatsState.Complete -> {
-                        messageRes = R.string.threat_fix_all_status_success_message
-                        fetchScanState()
-                    }
-                    is FetchFixThreatsState.Failure.NetworkUnavailable -> {
-                        messageRes = R.string.error_generic_network
-                    }
-                    is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
+    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>): Boolean {
+        var someOrAllThreatFixed = false
+
+        @StringRes var messageRes: Int? = null
+        fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(
+            remoteSiteId = site.siteId,
+            fixableThreatIds = fixableThreatIds
+        ).collect { status ->
+            var fixingThreatIds = emptyList<Long>()
+            when (status) {
+                is FetchFixThreatsState.NotStarted -> { // Do nothing
+                }
+                is FetchFixThreatsState.InProgress -> {
+                    fixingThreatIds = status.threatIds
+                }
+                is FetchFixThreatsState.Complete -> {
+                    someOrAllThreatFixed = true
+                    messageRes = R.string.threat_fix_all_status_success_message
+                }
+                is FetchFixThreatsState.Failure.NetworkUnavailable -> {
+                    messageRes = R.string.error_generic_network
+                }
+                is FetchFixThreatsState.Failure.RemoteRequestFailure -> {
+                    messageRes = R.string.threat_fix_all_status_error_message
+                }
+                is FetchFixThreatsState.Failure.FixFailure -> {
+                    if (!status.containsOnlyErrors) {
+                        someOrAllThreatFixed = true
+                    } else {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
-                    is FetchFixThreatsState.Failure.FixFailure -> {
-                        messageRes = R.string.threat_fix_all_status_some_threats_not_fixed_error_message
-                    }
                 }
-                updateActionButtons(isVisible = fixingThreatIds.isEmpty())
-                updateFixThreatsStatusProgressBar(scanStateModel, fixingThreatIds)
-                messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
             }
+            updateActionButtons(isVisible = fixingThreatIds.isEmpty())
+            updateFixThreatsStatusProgressBar(fixingThreatIds)
+            messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
+
+        return someOrAllThreatFixed
     }
 
     private fun onScanButtonClicked() {
@@ -180,7 +202,10 @@ class ScanViewModel @Inject constructor(
     }
 
     fun onFixStateRequested(threatId: Long) {
-        fetchFixThreatsStatus(listOf(threatId))
+        launch {
+            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId))
+            if (isThreatFixed) fetchScanState()
+        }
     }
 
     private fun updateActionButtons(isVisible: Boolean) {
@@ -196,17 +221,14 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun updateFixThreatsStatusProgressBar(
-        scanStateModel: ScanStateModel,
-        fixingThreatIds: List<Long>
-    ) {
+    private fun updateFixThreatsStatusProgressBar(fixingThreatIds: List<Long>) {
         (_uiState.value as? Content)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ProgressState && contentItem.isIndeterminate) {
                     contentItem.copy(
                         isVisible = fixingThreatIds.isNotEmpty(),
                         progressInfoLabel = scanStateListItemsBuilder.buildFixThreatsProgressInfoLabel(
-                            threats = scanStateModel.threats ?: emptyList(),
+                            threats = scanStateModel?.threats ?: emptyList(),
                             fixingThreatIds = fixingThreatIds
                         )
                     )
