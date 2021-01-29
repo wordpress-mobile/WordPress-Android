@@ -14,11 +14,12 @@ import org.mockito.Mock
 import org.mockito.Mockito.clearInvocations
 import org.mockito.Mockito.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
@@ -55,6 +56,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
@@ -66,6 +68,8 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
+    @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -95,7 +99,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder()
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -106,6 +110,22 @@ class RestoreViewModelTest : BaseUnitTest() {
                 TEST_DISPATCHER
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
+                .thenReturn("themes")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_plugins, null))
+                .thenReturn("plugins")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
+                .thenReturn("uploads")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint))
+                .thenReturn("roots")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint))
+                .thenReturn("contents")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
+                .thenReturn("sqls")
     }
 
     @Test
@@ -317,7 +337,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.error_network_connection))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.error_network_connection))
     }
 
     @Test
@@ -333,7 +353,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.rewind_generic_failure))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.rewind_generic_failure))
     }
 
     @Test
@@ -349,7 +369,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.rewind_another_process_running))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.rewind_another_process_running))
     }
 
     private fun startViewModel(savedInstanceState: Bundle? = null) {
@@ -381,7 +401,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 wizardFinishedObserver,
                 snackbarMsgs,
                 navigationEvents,
-                uiStates)
+                uiStates
+        )
     }
 
     private data class Observers(
