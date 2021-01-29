@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.recycler_view
 import org.wordpress.android.R
-import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -70,7 +69,7 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
         recycler_view.itemAnimator = null
         recycler_view.addItemDecoration(
-                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
+                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(R.dimen.margin_extra_large))
         )
     }
 
