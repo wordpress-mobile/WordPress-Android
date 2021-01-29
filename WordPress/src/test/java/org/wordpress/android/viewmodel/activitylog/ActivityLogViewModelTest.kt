@@ -980,6 +980,84 @@ class ActivityLogViewModelTest {
         assertEquals(snackbarMessages.firstOrNull(), RESTORE_STARTED)
     }
 
+    /* QUERY RESTORE STATUS */
+
+    @Test
+    fun `when query restore statues, then trigger get restore status`() = test {
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        verify(getRestoreStatusUseCase).getRestoreStatus(site, RESTORE_ID)
+    }
+
+    @Test
+    fun `given status is a progress, when query restore status, then reload events for progress`() = test {
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
+        initProgressMocks()
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayProgress = true,
+                        progressWithDate = true,
+                        emptyList = false,
+                        rewindDisabled = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is a complete, when query restore status, then request events update for complete`() = test {
+        val progress = RestoreRequestState.Progress(REWIND_ID, 50)
+        val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
+                .thenReturn(flow { emit(progress); emit(complete) })
+        initProgressMocks()
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayProgress = false,
+                        progressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = false,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is something else, when query restore status, then do not trigger anything`() = test {
+        val success = RestoreRequestState.Success(REWIND_ID, REWIND_ID, RESTORE_ID)
+        whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(success) })
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertNull(viewModel.events.value)
+    }
+
+    @Test
+    fun `when query restore status, then show restore started message`() {
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        whenever(resourceProvider.getString(eq(R.string.activity_log_rewind_started_snackbar_message), any(), any()))
+                .thenReturn(RESTORE_STARTED)
+
+        viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
+
+        assertEquals(snackbarMessages.firstOrNull(), RESTORE_STARTED)
+    }
+
     /* PRIVATE */
 
     private fun firstActivity() = activity()
