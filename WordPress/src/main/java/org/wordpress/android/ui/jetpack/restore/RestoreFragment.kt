@@ -125,11 +125,10 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
                 }
                 intent.putExtra(KEY_RESTORE_REWIND_ID, ids?.first)
                 intent.putExtra(KEY_RESTORE_RESTORE_ID, ids?.second)
-                requireActivity().setResult(
-                        if (restoreCreated) RESULT_OK else RESULT_CANCELED,
-                        intent
-                )
-                requireActivity().finish()
+                requireActivity().let { activity ->
+                    activity.setResult(if (restoreCreated) RESULT_OK else RESULT_CANCELED, intent)
+                    activity.finish()
+                }
             }
         })
     }
