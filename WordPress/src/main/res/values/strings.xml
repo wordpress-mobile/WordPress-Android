@@ -142,6 +142,7 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="pick_audio">Select audio</string>
     <string name="pick_media">Add image or video</string>
     <string name="pick_file">Add file</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
@@ -1104,7 +1105,7 @@
     <string name="threat_item_sub_header_file_signature">Threat found %s</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
-    <string name="threat_item_sub_header_status_fixed">Threat fixed on %s</string>
+    <string name="threat_item_sub_header_status_fixed_on">Threat fixed on %s</string>
     <string name="threat_item_sub_header_status_ignored">Threat ignored</string>
 
     <!-- threat details -->
@@ -1141,11 +1142,9 @@
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
-    <string name="threat_fix_all_started_message">We\'re hard at work fixing these threats in the background. Please check back shortly.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Not all threats could be fixed. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -2478,6 +2477,7 @@
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_choose_file">Choose from device</string>
+    <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
@@ -2488,6 +2488,7 @@
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
