@@ -4,14 +4,17 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ScanAction.FETCH_SCAN_STATE
 import org.wordpress.android.fluxc.model.SiteModel
@@ -24,8 +27,12 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
 import org.wordpress.android.util.NetworkUtilsWrapper
 
+@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class FetchScanStateUseCaseTest : BaseUnitTest() {
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
+
     private lateinit var useCase: FetchScanStateUseCase
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateModel: ScanStateModel
@@ -49,7 +56,9 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given site, when scan state is fetched, then Success is returned on success`() = testWithSuccessResponse {
+    fun `given site, when scan state is fetched, then Success is returned on success`() = test {
+        whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
+
         val result = useCase.fetchScanState(site).toList(mutableListOf())
 
         assertThat(result).contains(FetchScanState.Success(scanStateModel))
@@ -67,7 +76,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until IDLE state is returned on success`() =
-        testWithSuccessResponse {
+        coroutineScope.runBlockingTest {
+            whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
             val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
             val scanStateModels = listOf(
                 scanStateScanningModel,
@@ -79,7 +89,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
                 .thenReturn(scanStateModels[1])
                 .thenReturn(scanStateModels[2])
 
-            val result = useCase.fetchScanState(site = site, delayInMs = 0).toList(mutableListOf())
+            val result = useCase.fetchScanState(site = site).toList(mutableListOf())
+            advanceTimeBy(FETCH_SCAN_STATE_DELAY_MILLIS)
 
             verify(scanStore, times(scanStateModels.size)).fetchScanState(any())
             assertThat(result).containsSequence(scanStateModels.map { FetchScanState.Success(it) })
@@ -87,7 +98,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `when SCANNING scan state is fetched, then polling occurs until error is returned on failure`() =
-        test {
+        coroutineScope.runBlockingTest {
             val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
             val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
             whenever(scanStore.getScanStateForSite(any())).thenReturn(scanStateScanningModel)
@@ -96,7 +107,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
                 OnScanStateFetched(scanStateError, FETCH_SCAN_STATE)
             )
 
-            val result = useCase.fetchScanState(site = site, delayInMs = 0).toList(mutableListOf())
+            val result = useCase.fetchScanState(site = site).toList(mutableListOf())
+            advanceTimeBy(FETCH_SCAN_STATE_DELAY_MILLIS)
 
             verify(scanStore, times(2)).fetchScanState(any())
             assertThat(result).containsSequence(
@@ -104,11 +116,4 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
                 FetchScanState.Failure.RemoteRequestFailure
             )
         }
-
-    private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
-        test {
-            whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
-            block()
-        }
-    }
 }
