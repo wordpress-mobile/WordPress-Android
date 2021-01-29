@@ -11,7 +11,6 @@ import kotlinx.coroutines.flow.filter
 import kotlinx.coroutines.flow.flatMapMerge
 import kotlinx.coroutines.flow.flattenMerge
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,7 +35,8 @@ class MySiteStateProvider(
         if (siteId != null) {
             mySiteSources.map { it.buildSource(siteId).distinctUntilChanged() }
         } else {
-            mySiteSources.filterIsInstance(SiteIndependentSource::class.java).map { it.buildSource().distinctUntilChanged() }
+            mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
+                    .map { it.buildSource().distinctUntilChanged() }
         }.asFlow().flattenMerge()
     }.let { partialStates ->
         flow {

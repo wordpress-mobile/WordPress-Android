@@ -2,16 +2,9 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.map
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
 import javax.inject.Inject
 import javax.inject.Singleton

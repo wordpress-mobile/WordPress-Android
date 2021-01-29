@@ -42,7 +42,8 @@ class DomainRegistrationHandler
                 }
                 continuation = null
                 if (event.isError) {
-                    appLogWrapper.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message)
+                    val message = "An error occurred while fetching plans : " + event.error.message
+                    appLogWrapper.e(DOMAIN_REGISTRATION, message)
                 } else if (siteId == event.site.id) {
                     emit(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
                 }
