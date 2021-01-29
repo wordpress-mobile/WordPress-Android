@@ -70,7 +70,7 @@ class ActivityLogListActivity : LocaleAwareActivity(),
 
     private fun onActivityResultForActivityLogDetails(data: Intent?) {
         data?.getStringExtra(ACTIVITY_LOG_REWIND_ID_KEY)?.let {
-            passRewindConfirmation(it)
+            passRestoreConfirmation(it)
         }
     }
 
@@ -83,17 +83,17 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     }
 
     override fun onPositiveClicked(instanceTag: String) {
-        passRewindConfirmation(instanceTag)
+        passRestoreConfirmation(instanceTag)
     }
 
     override fun onNegativeClicked(instanceTag: String) {
         // Unused
     }
 
-    private fun passRewindConfirmation(rewindId: String) {
+    private fun passRestoreConfirmation(rewindId: String) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
-            fragment.onRewindConfirmed(rewindId)
+            fragment.onRestoreConfirmed(rewindId)
         }
     }
 

@@ -127,7 +127,7 @@ class ActivityLogListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    fun onRewindConfirmed(activityId: String) {
+    fun onRestoreConfirmed(activityId: String) {
         viewModel.onRestoreConfirmed(activityId)
     }
 
