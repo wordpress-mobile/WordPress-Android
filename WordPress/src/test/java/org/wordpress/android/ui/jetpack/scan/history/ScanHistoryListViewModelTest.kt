@@ -61,7 +61,7 @@ class ScanHistoryListViewModelTest {
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
         whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull())).thenAnswer {
-            ThreatItemState(1L, true, mock(), mock(), 0, 0) {
+            ThreatItemState(1L, true, mock(), mock(), 0, 0, 0) {
                 it.getArgument<(Long) -> Unit>(ON_ITEM_CLICKED_PARAM_POSITION)(1L)
             }
         }
