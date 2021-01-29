@@ -94,12 +94,6 @@
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
     </style>
 
-    <style name="Jetpack.ListItem.Checkbox.Label2" parent="Jetpack.TextView">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody1</item>
-    </style>
-
     <!-- Backup Styles -->
     <style name="Jetpack.Backup.ListItem.Footnote" parent="Jetpack.TextView">
         <item name="android:layout_width">wrap_content</item>
