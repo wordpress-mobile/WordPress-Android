@@ -15,6 +15,7 @@ import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 
@@ -33,24 +34,23 @@ class MySiteStateProvider(
     @FlowPreview
     val state: Flow<MySiteUiState> = selectedSiteRepository.siteSelected.asFlow().flatMapMerge { siteId ->
         if (siteId != null) {
-            mySiteSources.map { it.buildSource(siteId).distinctUntilChanged() }.asFlow().flattenMerge()
+            mySiteSources.map { it.buildSource(siteId).distinctUntilChanged() }
         } else {
-            flowOf()
-        }
+            mySiteSources.filterIsInstance(SiteIndependentSource::class.java).map { it.buildSource().distinctUntilChanged() }
+        }.asFlow().flattenMerge()
     }.let { partialStates ->
-                flow {
-                    var accumulator = MySiteUiState()
-                    emit(accumulator)
-                    withContext(mainDispatcher) {
-                        partialStates.collect { partialState ->
-                            if (partialState != null) {
-                                accumulator = accumulator.update(partialState)
-                                emit(accumulator)
-                            }
-                        }
+        flow {
+            var accumulator = MySiteUiState()
+            withContext(mainDispatcher) {
+                partialStates.collect { partialState ->
+                    if (partialState != null) {
+                        accumulator = accumulator.update(partialState)
+                        emit(accumulator)
                     }
                 }
-            }.distinctUntilChanged()
+            }
+        }
+    }.distinctUntilChanged()
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {

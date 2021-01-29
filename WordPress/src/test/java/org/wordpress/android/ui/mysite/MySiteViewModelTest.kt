@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
 import com.nhaarman.mockitokotlin2.eq
+import com.nhaarman.mockitokotlin2.isNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
@@ -153,6 +154,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
         whenever(domainRegistrationHandler.buildSource(any())).thenReturn(isDomainCreditAvailable)
         whenever(scanAndBackupSource.buildSource(any())).thenReturn(jetpackCapabilities)
+        whenever(currentAvatarSource.buildSource()).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(quickStartRepository.buildSource(any())).thenReturn(quickStartUpdate)
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
@@ -256,7 +258,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model is empty with no selected site`() {
-        onSiteChange.postValue(null)
+        onSiteSelected.value = null
+        currentAvatar.value = CurrentAvatarUrl("")
 
         assertThat(uiModels).hasSize(1)
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
@@ -266,7 +269,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -484,18 +487,12 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `account avatar url initial value is empty`() {
-        assertThat(uiModels).hasSize(1)
-        assertThat(uiModels.last().accountAvatarUrl).isEmpty()
-    }
-
-    @Test
     fun `account avatar url value is emitted and updated from the source`() {
         initSelectedSite()
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(5)
+        assertThat(uiModels).hasSize(4)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
