@@ -5,7 +5,10 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.BulletState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -46,7 +49,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                         titleRes = R.string.backup_download_details_action_button,
                         contentDescRes = R.string.backup_download_details_action_button_content_description,
                         onClick = onCreateDownloadClick),
-                buildSubHeaderState()
+                buildSubHeaderState(R.string.backup_download_details_choose_items_header)
         )
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
@@ -110,12 +113,41 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         )
     }
 
-    fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
+    fun buildErrorListStateErrorItems(errorType: BackupDownloadErrorTypes, onDoneClick: () -> Unit) = (
+        if (errorType == RemoteRequestFailure) buildStatusErrorListStateItems(onDoneClick)
+        else buildGenericErrorListStateItems(onDoneClick)
+    )
+
+    private fun buildStatusErrorListStateItems(onDoneClick: () -> Unit) = listOf(
+            buildHeaderState(R.string.backup_download_status_failure_heading),
+            buildBulletState(
+                    R.drawable.ic_query_builder_white_24dp,
+                    R.string.backup_download_status_bullet_clock_icon_content_desc,
+                    R.color.yellow_30,
+                    R.string.backup_download_status_failure_bullet1),
+            buildBulletState(
+                    R.drawable.ic_gridicons_checkmark_circle,
+                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+                    R.color.success_50,
+                    R.string.backup_download_status_failure_bullet2),
+            buildBulletState(
+                    R.drawable.ic_gridicons_checkmark_circle,
+                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+                    R.color.success_50,
+                    R.string.backup_download_status_failure_bullet3),
+            buildActionButtonState(
+                    titleRes = R.string.restore_complete_failed_action_button,
+                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+                    onClick = onDoneClick)
+    )
+
+    private fun buildGenericErrorListStateItems(onDoneClick: () -> Unit) = listOf(
             buildIconState(
-                    R.drawable.ic_notice_white_24dp,
+                    R.drawable.ic_cloud_off_white_24dp,
                     R.string.backup_download_complete_failed_icon_content_description,
                     R.color.error_50),
-            buildDescriptionState(R.string.backup_download_complete_failed_description),
+            buildHeaderState(R.string.backup_download_complete_failed_description),
+            buildSubHeaderState(R.string.request_failed_message),
             buildActionButtonState(
                     titleRes = R.string.backup_download_complete_failed_action_button,
                     contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
@@ -144,8 +176,6 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             )
     )
 
-    private fun buildDescriptionState(@StringRes descRes: Int) = DescriptionState(UiStringRes(descRes))
-
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
@@ -160,8 +190,8 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         onClick = onClick
     )
 
-    private fun buildSubHeaderState() =
-            SubHeaderState(text = UiStringRes(R.string.backup_download_details_choose_items_header))
+    private fun buildSubHeaderState(@StringRes textResId: Int) =
+            SubHeaderState(text = UiStringRes(textResId))
 
     private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
@@ -173,5 +203,17 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                     R.string.backup_download_progress_label,
                     listOf(UiStringText(progress.toString()))
             )
+    )
+
+    private fun buildBulletState(
+        @DrawableRes iconRes: Int,
+        @StringRes contentDescRes: Int,
+        @ColorRes colorRes: Int,
+        @StringRes labelRes: Int
+    ) = BulletState(
+            icon = iconRes,
+            contentDescription = UiStringRes(contentDescRes),
+            colorResId = colorRes,
+            label = UiStringRes(labelRes)
     )
 }
