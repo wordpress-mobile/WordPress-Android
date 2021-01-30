@@ -429,6 +429,9 @@
     <dimen name="jetpack_icon_size">32dp</dimen>
     <dimen name="jetpack_icon_margin">0dp</dimen>
 
+    <!-- jetpack backup restore -->
+    <dimen name="jetpack_backup_restore_bullet_icon_size">24dp</dimen>
+
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
     <dimen name="scan_icon_size">48dp</dimen>
