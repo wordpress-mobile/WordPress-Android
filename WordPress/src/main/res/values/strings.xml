@@ -3392,7 +3392,6 @@
     <string name="backup_download_complete_failed_action_button">Done</string>
     <string name="backup_download_complete_failed_action_button_content_description">Done button</string>
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
-    <string name="backup_download_please_try_again_later">Cloud with X icon</string>
 
     <string name="jetpack_icon_content_description">icon</string>
     <string name="label_control_upload">Upload</string>
