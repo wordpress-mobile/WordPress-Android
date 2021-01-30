@@ -24,6 +24,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 const val DELAY_MILLIS = 5000L
+const val MAX_RETRY = 3
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -34,32 +35,33 @@ class GetRestoreStatusUseCase @Inject constructor(
         site: SiteModel,
         restoreId: Long? = null
     ) = flow {
-        if (restoreId == null) {
-            if (!isNetworkAvailable()) return@flow
-            if (!fetchActivitiesRewind(site)) return@flow
-        }
+        var retryAttempts = 0
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
-            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-            if (rewind != null &&
-                    (restoreId == null || rewind.restoreId == restoreId)) {
-                when (rewind.status) {
-                    FINISHED -> {
-                        emitFinished(rewind)
-                        return@flow
+            if (!fetchActivitiesRewind(site)) {
+                if (retryAttempts++ >= MAX_RETRY) {
+                    emit(RemoteRequestFailure)
+                    return@flow
+                }
+            } else {
+                val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+                if (rewind != null &&
+                        (restoreId == null || rewind.restoreId == restoreId)) {
+                    when (rewind.status) {
+                        FINISHED -> {
+                            emitFinished(rewind)
+                            return@flow
+                        }
+                        FAILED -> {
+                            emitFailure()
+                            return@flow
+                        }
+                        RUNNING -> emitProgress(rewind)
+                        QUEUED -> emitProgress(rewind)
                     }
-                    FAILED -> {
-                        emitFailure()
-                        return@flow
-                    }
-                    RUNNING -> emitProgress(rewind)
-                    QUEUED -> emitProgress(rewind)
                 }
             }
-
-            if (!fetchActivitiesRewind(site)) return@flow
-
             delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
@@ -71,12 +73,9 @@ class GetRestoreStatusUseCase @Inject constructor(
         } else true
     }
 
-    private suspend fun FlowCollector<RestoreRequestState>.fetchActivitiesRewind(site: SiteModel): Boolean {
+    private suspend fun fetchActivitiesRewind(site: SiteModel): Boolean {
         val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
-        return if (result.isError) {
-            emit(RemoteRequestFailure)
-            false
-        } else true
+        return result.isError
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.emitFinished(rewind: Rewind) =
