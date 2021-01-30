@@ -353,7 +353,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.rewind_generic_failure))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.restore_generic_failure))
     }
 
     @Test
@@ -369,7 +369,7 @@ class RestoreViewModelTest : BaseUnitTest() {
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.rewind_another_process_running))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.restore_another_process_running))
     }
 
     private fun startViewModel(savedInstanceState: Bundle? = null) {
