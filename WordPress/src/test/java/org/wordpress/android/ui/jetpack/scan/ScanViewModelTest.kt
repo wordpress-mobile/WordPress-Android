@@ -24,7 +24,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
@@ -112,14 +112,14 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `when scan state is fetched successfully, then ui is updated with content`() = test {
         val uiStates = init().uiStates
 
-        assertThat(uiStates.last()).isInstanceOf(Content::class.java)
+        assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
     }
 
     @Test
     fun `when threat item is clicked, then app navigates to threat details`() = test {
         val observers = init()
 
-        (observers.uiStates.last() as Content).items.filterIsInstance<ThreatItemState>().first().onClick.invoke()
+        (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ThreatItemState>().first().onClick.invoke()
 
         assertThat(observers.navigation.last().peekContent()).isInstanceOf(ShowThreatDetails::class.java)
     }
@@ -129,7 +129,7 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(ScanningStateUpdatedInDb(fakeScanStateModel)))
         val uiStates = init().uiStates
 
-        (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+        (uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
         verify(startScanUseCase).startScan(site)
     }
@@ -142,9 +142,9 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(ScanningStateUpdatedInDb(fakeScanStateModel)))
             val uiStates = init().uiStates
 
-            (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+            (uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
-            assertThat(uiStates.filterIsInstance<Content>()).size().isEqualTo(2)
+            assertThat(uiStates.filterIsInstance<ContentUiState>()).size().isEqualTo(2)
         }
 
     @Test
@@ -154,7 +154,7 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))
         val uiStates = init().uiStates
 
-        (uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+        (uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
         verify(fetchScanStateUseCase).fetchScanState(site = site, startWithDelay = true)
     }
@@ -164,7 +164,7 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             val observers = init()
 
-            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+            (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>()
                 .last().onClick.invoke()
 
             val fixThreatsDialogAction = observers.navigation.last().peekContent()
@@ -180,7 +180,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 .thenReturn(flowOf(Success(scanStateModelWithFixableThreats)))
             val observers = init()
 
-            (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+            (observers.uiStates.last() as ContentUiState).items.filterIsInstance<ActionButtonState>()
                 .last().onClick.invoke()
 
             val confirmationDialog = observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog
@@ -229,7 +229,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             triggerFixThreatsAction(observers)
 
-            val contentItems = (observers.uiStates.last() as Content).items
+            val contentItems = (observers.uiStates.last() as ContentUiState).items
             val disabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { !it.isEnabled }
             assertThat(disabledActionButtons.size).isEqualTo(2)
         }
@@ -241,7 +241,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
         triggerFixThreatsAction(observers)
 
-        val contentItems = (observers.uiStates.last() as Content).items
+        val contentItems = (observers.uiStates.last() as ContentUiState).items
         val enabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { it.isEnabled }
         assertThat(enabledActionButtons.size).isEqualTo(2)
     }
@@ -332,7 +332,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             fetchFixThreatsStatus(observers)
 
-            val indeterminateProgressBars = (observers.uiStates.last() as Content).items
+            val indeterminateProgressBars = (observers.uiStates.last() as ContentUiState).items
                 .filterIsInstance<ProgressState>()
                 .filter { it.isIndeterminate && it.isVisible }
 
@@ -349,7 +349,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             fetchFixThreatsStatus(observers)
 
-            val indeterminateProgressBars = (observers.uiStates.last() as Content).items
+            val indeterminateProgressBars = (observers.uiStates.last() as ContentUiState).items
                 .filterIsInstance<ProgressState>()
                 .filter { it.isIndeterminate && it.isVisible }
 
@@ -393,7 +393,8 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     private fun triggerFixThreatsAction(observers: Observers) {
-        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
+        (observers.uiStates.last() as ContentUiState)
+            .items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
     }
 

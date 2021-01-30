@@ -17,7 +17,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButton
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
@@ -209,7 +209,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun updateActionButtons(isVisible: Boolean) {
-        (_uiState.value as? Content)?.let { content ->
+        (_uiState.value as? ContentUiState)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ActionButtonState) {
                     contentItem.copy(isVisible = isVisible)
@@ -222,7 +222,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun updateFixThreatsStatusProgressBar(fixingThreatIds: List<Long>) {
-        (_uiState.value as? Content)?.let { content ->
+        (_uiState.value as? ContentUiState)?.let { content ->
             val updatesContentItems = content.items.map { contentItem ->
                 if (contentItem is ProgressState && contentItem.isIndeterminate) {
                     contentItem.copy(
@@ -248,11 +248,11 @@ class ScanViewModel @Inject constructor(
         _navigationEvents.value = Event(navigationEvent)
     }
 
-    private fun updateUiState(contentState: Content) {
-        _uiState.value = contentState
+    private fun updateUiState(state: UiState) {
+        _uiState.value = state
     }
 
-    private fun buildContentUiState(model: ScanStateModel) = Content(
+    private fun buildContentUiState(model: ScanStateModel) = ContentUiState(
         scanStateListItemsBuilder.buildScanStateListItems(
             model,
             site,
@@ -263,6 +263,6 @@ class ScanViewModel @Inject constructor(
     )
 
     sealed class UiState { // TODO: ashiagr add states for loading, error as needed
-        data class Content(val items: List<JetpackListItemState>) : UiState()
+        data class ContentUiState(val items: List<JetpackListItemState>) : UiState()
     }
 }

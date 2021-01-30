@@ -16,7 +16,7 @@ import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
-import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
@@ -67,8 +67,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         viewModel.uiState.observe(
             viewLifecycleOwner,
             { uiState ->
-                if (uiState is Content) {
-                    refreshContentScreen(uiState)
+                if (uiState is ContentUiState) {
+                    updateContentLayout(uiState)
                 }
             }
         )
@@ -91,8 +91,8 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         )
     }
 
-    private fun refreshContentScreen(content: Content) {
-        ((recycler_view.adapter) as ScanAdapter).update(content.items)
+    private fun updateContentLayout(state: ContentUiState) {
+        ((recycler_view.adapter) as ScanAdapter).update(state.items)
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
