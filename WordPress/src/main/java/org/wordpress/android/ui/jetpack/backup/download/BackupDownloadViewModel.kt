@@ -206,7 +206,8 @@ class BackupDownloadViewModel @Inject constructor(
     private fun buildError(errorType: BackupDownloadErrorTypes) {
         _uiState.value = ErrorState(
                 errorType = errorType,
-                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                items = stateListItemBuilder.buildErrorListStateErrorItems(
+                        errorType = errorType,
                         onDoneClick = this@BackupDownloadViewModel::onDoneClick
                 ))
     }

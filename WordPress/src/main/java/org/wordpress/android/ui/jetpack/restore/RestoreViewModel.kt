@@ -217,7 +217,8 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildError(errorType: RestoreErrorTypes) {
         _uiState.value = ErrorState(
-                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                items = stateListItemBuilder.buildErrorListStateErrorItems(
+                        errorType = errorType,
                         onDoneClick = this@RestoreViewModel::onDoneClick
                 ),
                 errorType = errorType
@@ -442,8 +443,9 @@ class RestoreViewModel @Inject constructor(
 
     companion object {
         private val NetworkUnavailableMsg = SnackbarMessageHolder(UiStringRes(R.string.error_network_connection))
-        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.rewind_generic_failure))
-        private val OtherRequestRunningMsg = SnackbarMessageHolder(UiStringRes(R.string.rewind_another_process_running))
+        private val GenericFailureMsg = SnackbarMessageHolder(UiStringRes(R.string.restore_generic_failure))
+        private val OtherRequestRunningMsg =
+                SnackbarMessageHolder(UiStringRes(R.string.restore_another_process_running))
     }
 
     sealed class RestoreWizardState : Parcelable {
