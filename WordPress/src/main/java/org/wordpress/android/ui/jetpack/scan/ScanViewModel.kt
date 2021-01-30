@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
@@ -18,6 +19,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressStat
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
@@ -81,7 +83,7 @@ class ScanViewModel @Inject constructor(
             scanStateModel?.let {
                 updateUiState(buildContentUiState(it))
                 if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds)
-            }
+            } ?: updateUiState(FullScreenLoadingUiState)
             fetchScanState()
         }
     }
@@ -262,7 +264,12 @@ class ScanViewModel @Inject constructor(
         )
     )
 
-    sealed class UiState { // TODO: ashiagr add states for loading, error as needed
+    sealed class UiState {
+        object FullScreenLoadingUiState : UiState() {
+            @DrawableRes val image = R.drawable.img_illustration_empty_results_216dp
+            val title = UiStringRes(R.string.scan_loading_title)
+        }
+
         data class ContentUiState(val items: List<JetpackListItemState>) : UiState()
     }
 }

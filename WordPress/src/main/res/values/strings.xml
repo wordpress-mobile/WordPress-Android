@@ -1061,6 +1061,8 @@
     <string name="scan_history">Scan History</string>
     <string name="scan_history_menu_title">History</string>
 
+    <string name="scan_loading_title">Loading scan</string>
+
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
     <string name="scan_again">Scan again</string>

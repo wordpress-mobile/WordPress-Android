@@ -17,6 +17,7 @@ import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
@@ -67,8 +68,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         viewModel.uiState.observe(
             viewLifecycleOwner,
             { uiState ->
-                if (uiState is ContentUiState) {
-                    updateContentLayout(uiState)
+                when (uiState) {
+                    is ContentUiState -> updateContentLayout(uiState)
+                    is FullScreenLoadingUiState -> updateFullScreenLoadingLayout(uiState)
                 }
             }
         )
@@ -89,6 +91,11 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 }
             }
         )
+    }
+
+    private fun updateFullScreenLoadingLayout(state: FullScreenLoadingUiState) {
+        uiHelpers.setTextOrHide(actionable_empty_view.title, state.title)
+        actionable_empty_view.image.setImageResource(state.image)
     }
 
     private fun updateContentLayout(state: ContentUiState) {

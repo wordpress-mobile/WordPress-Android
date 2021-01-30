@@ -25,6 +25,7 @@ import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreats
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
@@ -87,6 +88,18 @@ class ScanViewModelTest : BaseUnitTest() {
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Complete)
         )
+    }
+
+    @Test
+    fun `given last scan state not present in db, when vm starts, then loading scan state is displayed`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        val uiStates = init().uiStates
+
+        val state = uiStates.first() as FullScreenLoadingUiState
+        with(state) {
+            assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
+            assertThat(title).isEqualTo(UiStringRes(R.string.scan_loading_title))
+        }
     }
 
     @Test
