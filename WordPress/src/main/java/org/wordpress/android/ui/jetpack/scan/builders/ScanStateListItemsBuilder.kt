@@ -130,7 +130,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanProgress = ProgressState(
             progress = progress,
             progressLabel = UiStringResWithParams(
-                R.string.backup_download_progress_label, // TODO ashiagr replace label
+                R.string.scan_progress_label,
                 listOf(UiStringText(progress.toString()))
             )
         )

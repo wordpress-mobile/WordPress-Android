@@ -1086,6 +1086,7 @@
     <string name="scan_in_hours_ago">%s hours ago</string>
     <string name="scan_in_minutes_ago">%s minutes ago</string>
     <string name="scan_in_few_seconds">in a few seconds</string>
+    <string name="scan_progress_label" translatable="false">%1$s%%</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
