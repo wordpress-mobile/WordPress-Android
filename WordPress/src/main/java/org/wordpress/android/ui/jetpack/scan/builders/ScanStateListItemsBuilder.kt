@@ -55,7 +55,8 @@ class ScanStateListItemsBuilder @Inject constructor(
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
             ScanStateModel.State.SCANNING -> buildScanningStateItems(progress)
-            ScanStateModel.State.PROVISIONING, ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
+            ScanStateModel.State.PROVISIONING -> buildProvisioningStateItems()
+            ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
                 buildScanningStateItems(progress) // TODO: ashiagr filter out invalid states
         }
     }
@@ -138,6 +139,19 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
+
+        return items
+    }
+
+    private fun buildProvisioningStateItems(): List<JetpackListItemState> {
+        val items = mutableListOf<JetpackListItemState>()
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_5)
+        val scanHeader = HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
+        val scanDescription = DescriptionState(UiStringRes(R.string.scan_provisioning_description))
+
+        items.add(scanIcon)
+        items.add(scanHeader)
+        items.add(scanDescription)
 
         return items
     }
