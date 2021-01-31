@@ -1062,6 +1062,10 @@
     <string name="scan_history_menu_title">History</string>
 
     <string name="scan_loading_title">Loading scan</string>
+    <string name="scan_no_network_title" translatable="false">@string/no_network_title</string>
+    <string name="scan_no_network_subtitle" translatable="false">@string/no_network_message</string>
+    <string name="scan_request_failed_title" translatable="false">@string/error</string>
+    <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
 
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>

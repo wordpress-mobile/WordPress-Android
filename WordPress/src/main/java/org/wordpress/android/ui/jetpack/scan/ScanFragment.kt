@@ -14,9 +14,12 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
@@ -70,7 +73,11 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
             { uiState ->
                 when (uiState) {
                     is ContentUiState -> updateContentLayout(uiState)
+
                     is FullScreenLoadingUiState -> updateFullScreenLoadingLayout(uiState)
+
+                    is ErrorUiState.NoConnection,
+                    is ErrorUiState.GenericRequestFailed -> updateErrorLayout(uiState as ErrorUiState)
                 }
             }
         )
@@ -83,10 +90,13 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 it.applyIfNotHandled {
                     when (this) {
                         is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(this)
+
                         is ShowThreatDetails -> ActivityLauncher.viewThreatDetailsForResult(
                             this@ScanFragment,
                             threatId
                         )
+                        is ShowContactSupport ->
+                            ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, this.site, null)
                     }
                 }
             }
@@ -100,6 +110,14 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
     private fun updateContentLayout(state: ContentUiState) {
         ((recycler_view.adapter) as ScanAdapter).update(state.items)
+    }
+
+    private fun updateErrorLayout(state: ErrorUiState) {
+        uiHelpers.setTextOrHide(actionable_empty_view.title, state.title)
+        uiHelpers.setTextOrHide(actionable_empty_view.subtitle, state.subtitle)
+        uiHelpers.setTextOrHide(actionable_empty_view.button, state.buttonText)
+        actionable_empty_view.image.setImageResource(state.image)
+        actionable_empty_view.button.setOnClickListener { state.action.invoke() }
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {

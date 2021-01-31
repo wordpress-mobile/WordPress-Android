@@ -17,8 +17,10 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
@@ -97,7 +99,16 @@ class ScanViewModel @Inject constructor(
                             scanStateModel = state.scanStateModel
                             updateUiState(buildContentUiState(state.scanStateModel))
                         }
-                        is FetchScanState.Failure -> TODO() // TODO ashiagr to be implemented
+
+                        is FetchScanState.Failure.NetworkUnavailable ->
+                            scanStateModel
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
+                                ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+
+                        is FetchScanState.Failure.RemoteRequestFailure ->
+                            scanStateModel
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
+                                ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
                     }
                 }
         }
@@ -175,6 +186,14 @@ class ScanViewModel @Inject constructor(
         }
 
         return someOrAllThreatFixed
+    }
+
+    private fun onRetryClicked() {
+        fetchScanState()
+    }
+
+    private fun onContactSupportClicked() {
+        updateNavigationEvent(ShowContactSupport(site))
     }
 
     private fun onScanButtonClicked() {
@@ -271,5 +290,27 @@ class ScanViewModel @Inject constructor(
         }
 
         data class ContentUiState(val items: List<JetpackListItemState>) : UiState()
+
+        sealed class ErrorUiState : UiState() {
+            abstract val image: Int
+            abstract val title: UiString
+            abstract val subtitle: UiString
+            abstract val buttonText: UiString
+            abstract val action: (() -> Unit)
+
+            data class NoConnection(override val action: () -> Unit) : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
+                override val title = UiStringRes(R.string.scan_no_network_title)
+                override val subtitle = UiStringRes(R.string.scan_no_network_subtitle)
+                override val buttonText = UiStringRes(R.string.retry)
+            }
+
+            data class GenericRequestFailed(override val action: () -> Unit) : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
+                override val title = UiStringRes(R.string.scan_request_failed_title)
+                override val subtitle = UiStringRes(R.string.scan_request_failed_subtitle)
+                override val buttonText = UiStringRes(R.string.contact_support)
+            }
+        }
     }
 }
