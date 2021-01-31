@@ -238,6 +238,24 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    @Test
+    fun `builds empty list for unknown scan state model`() {
+        val scanStateModelInUnknownState = scanStateModelWithNoThreats.copy(state = State.UNKNOWN)
+
+        val scanStateItems = buildScanStateItems(scanStateModelInUnknownState)
+
+        assertThat(scanStateItems).isEmpty()
+    }
+
+    @Test
+    fun `builds empty list for unavailable scan state model`() {
+        val scanStateModelInUnAvailableState = scanStateModelWithNoThreats.copy(state = State.UNAVAILABLE)
+
+        val scanStateItems = buildScanStateItems(scanStateModelInUnAvailableState)
+
+        assertThat(scanStateItems).isEmpty()
+    }
+
     private fun buildScanStateItems(
         model: ScanStateModel
     ) = builder.buildScanStateListItems(
