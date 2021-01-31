@@ -22,14 +22,17 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButton
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
+import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ContentUiState
+import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.builders.ScanStateListItemsBuilder
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchFixThreatsStatusUseCase.FetchFixThreatsState
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThreatsState
@@ -122,11 +125,86 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when scan state is fetched successfully, then ui is updated with content`() = test {
+    fun `given no network, when scan state fetched over empty scan state, then no network ui state is shown`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val uiStates = init().uiStates
+
+        val error = uiStates.last() as ErrorUiState
+        with(error) {
+            assertThat(this).isInstanceOf(ErrorUiState.NoConnection::class.java)
+            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+            assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
+            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
+            assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+        }
+    }
+
+    @Test
+    fun `given no network, when scan state fetched over last scan state, then no network msg is shown`() = test {
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val observers = init()
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+    }
+
+    @Test
+    fun `given fetch scan fails, when scan state fetched over empty scan state, then request failed ui state shown`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
+            val uiStates = init().uiStates
+
+            val state = uiStates.last() as ErrorUiState
+            with(state) {
+                assertThat(this).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
+                assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+                assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
+                assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
+                assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))
+            }
+        }
+
+    @Test
+    fun `given fetch scan state fails, when scan state fetched over last scan state, then request failed msg shown`() =
+        test {
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
+            val observers = init()
+
+            val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+            assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.request_failed_message)))
+        }
+
+    @Test
+    fun `given fetch scan state succeeds, when scan state is fetched, then ui is updated with content`() = test {
         val uiStates = init().uiStates
 
         assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
     }
+
+    @Test
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+        val uiStates = init().uiStates
+
+        (uiStates.last() as ErrorUiState).action.invoke()
+
+        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+    }
+
+    @Test
+    fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
+            val observers = init()
+
+            (observers.uiStates.last() as ErrorUiState).action.invoke()
+
+            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
+        }
 
     @Test
     fun `when threat item is clicked, then app navigates to threat details`() = test {
