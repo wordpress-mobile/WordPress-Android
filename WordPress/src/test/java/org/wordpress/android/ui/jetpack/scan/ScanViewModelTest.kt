@@ -177,10 +177,34 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given fetch scan state succeeds, when scan state is fetched, then ui is updated with content`() = test {
-        val uiStates = init().uiStates
+    fun `given fetch scan state succeeds with valid state, when scan state is fetched, then ui updated with content`() =
+        test {
+            val uiStates = init().uiStates
 
-        assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
+            assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
+        }
+
+    @Test
+    fun `given fetch scan state succeeds with invalid state, when scan state is fetched, then error ui is shown`() =
+        test {
+            whenever(fetchScanStateUseCase.fetchScanState(site))
+                .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
+
+            val uiStates = init().uiStates
+
+            val errorState = uiStates.last() as ErrorUiState
+            assertThat(errorState).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given invalid scan state error ui, when contact support is clicked, then contact support is shown`() = test {
+        whenever(fetchScanStateUseCase.fetchScanState(site))
+            .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
+        val observers = init()
+
+        (observers.uiStates.last() as ErrorUiState).action.invoke()
+
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
     }
 
     @Test
