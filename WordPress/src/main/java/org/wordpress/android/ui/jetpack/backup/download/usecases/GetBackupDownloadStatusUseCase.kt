@@ -34,7 +34,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP,"$tag Exceeded 3 retries while fetching status")
+                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
                 }
