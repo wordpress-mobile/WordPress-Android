@@ -22,6 +22,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore
 ) {
+    val tag = javaClass.simpleName
     suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
         var retryAttempts = 0
         while (true) {
@@ -33,8 +34,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.e(T.JETPACK_BACKUP,
-                            "GetBackupDownloadStatusUseCase: Exceeded 3 retries while fetching status")
+                    AppLog.d(T.JETPACK_BACKUP,"$tag Exceeded 3 retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
                 }
