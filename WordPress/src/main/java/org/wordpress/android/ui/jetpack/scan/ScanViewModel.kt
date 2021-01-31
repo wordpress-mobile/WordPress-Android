@@ -100,7 +100,7 @@ class ScanViewModel @Inject constructor(
                             scanStateModel = state.scanStateModel
                             updateUiState(buildContentUiState(state.scanStateModel))
                             if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
-                                updateUiState(ErrorUiState.StartScanRequestFailed(::onContactSupportClicked))
+                                updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
                             }
                         }
 
@@ -132,7 +132,7 @@ class ScanViewModel @Inject constructor(
 
                         is StartScanState.Failure.RemoteRequestFailure -> {
                             updateUiState(ContentUiState(emptyList()))
-                            updateUiState(ErrorUiState.StartScanRequestFailed(::onContactSupportClicked))
+                            updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
                         }
                     }
                 }
@@ -324,7 +324,7 @@ class ScanViewModel @Inject constructor(
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
 
-            data class StartScanRequestFailed(override val action: () -> Unit) : ErrorUiState() {
+            data class ScanRequestFailed(override val action: () -> Unit) : ErrorUiState() {
                 @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
                 override val title = UiStringRes(R.string.scan_start_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)

@@ -260,7 +260,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
         val errorState = observers.uiStates.last() as ErrorUiState
         with(errorState) {
-            assertThat(this).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
+            assertThat(this).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
             assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
             assertThat(title).isEqualTo(UiStringRes(R.string.scan_start_request_failed_title))
             assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_start_request_failed_subtitle))
@@ -269,7 +269,7 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given start scan request failed error state, when contact support is clicked, then contact support shown`() =
+    fun `given scan request failed error state, when contact support is clicked, then contact support shown`() =
         test {
             whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
             val observers = init()
