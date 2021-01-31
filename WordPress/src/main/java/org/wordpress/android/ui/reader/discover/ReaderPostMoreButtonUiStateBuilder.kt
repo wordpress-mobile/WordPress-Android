@@ -44,7 +44,9 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
-        if (readerPostTableWrapper.isPostFollowed(post)) {
+        val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
+
+        if (isPostFollowed) {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
@@ -148,16 +150,19 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                 )
         )
 
-        menuItems.add(
-                SecondaryAction(
-                        type = BLOCK_SITE,
-                        label = UiStringRes(R.string.reader_menu_block_blog),
-                        labelColor = R.attr.colorOnSurface,
-                        iconRes = R.drawable.ic_block_white_24dp,
-                        iconColor = R.attr.wpColorOnSurfaceMedium,
-                        onClicked = onButtonClicked
-                )
-        )
+        if (!isPostFollowed) {
+            menuItems.add(
+                    SecondaryAction(
+                            type = BLOCK_SITE,
+                            label = UiStringRes(R.string.reader_menu_block_blog),
+                            labelColor = R.attr.colorOnSurface,
+                            iconRes = R.drawable.ic_block_white_24dp,
+                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            onClicked = onButtonClicked
+                    )
+            )
+        }
+
         menuItems.add(
                 SecondaryAction(
                         type = REPORT_POST,
