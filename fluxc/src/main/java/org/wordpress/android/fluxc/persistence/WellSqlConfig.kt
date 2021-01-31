@@ -1467,9 +1467,11 @@ open class WellSqlConfig : DefaultWellConfig {
                 133 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCAttributeTermModel")
                     db.execSQL("ALTER TABLE WCProductAttributeModel ADD TERMS TEXT")
+                    db.execSQL("ALTER TABLE WCProductAttributeModel ADD REMOTE_ID INTEGER")
                     db.execSQL(
                             "CREATE TABLE WCAttributeTermModel (" +
                                     "_id INTEGER PRIMARY KEY, " +
+                                    "REMOTE_ID INTEGER," +
                                     "LOCAL_SITE_ID INTEGER," +
                                     "ATTRIBUTE_ID INTEGER," +
                                     "NAME TEXT NOT NULL," +
