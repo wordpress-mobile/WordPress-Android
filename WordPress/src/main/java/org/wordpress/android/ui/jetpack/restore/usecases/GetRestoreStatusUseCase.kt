@@ -19,6 +19,8 @@ import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
@@ -31,6 +33,7 @@ class GetRestoreStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private val tag = this@GetRestoreStatusUseCase.javaClass.simpleName
     suspend fun getRestoreStatus(
         site: SiteModel,
         restoreId: Long? = null
@@ -41,6 +44,7 @@ class GetRestoreStatusUseCase @Inject constructor(
 
             if (!fetchActivitiesRewind(site)) {
                 if (retryAttempts++ >= MAX_RETRY) {
+                    AppLog.e(T.JETPACK_BACKUP,"$tag: Exceeded 3 retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
                 }
