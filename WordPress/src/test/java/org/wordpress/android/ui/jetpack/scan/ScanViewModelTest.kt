@@ -239,7 +239,50 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given scan starts with success, when scan button is clicked, then scan state is fetched after delay`() = test {
+    fun `given no network, when scan button is clicked, then no network msg is shown`() = test {
+        whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.NetworkUnavailable))
+        val observers = init()
+
+        (observers.uiStates.last() as ContentUiState)
+            .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+        val snackBarMsg = observers.snackBarMsgs.last().peekContent()
+        assertThat(snackBarMsg).isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_generic_network)))
+    }
+
+    @Test
+    fun `given scan start request fails, when scan button is clicked, then request failed state is shown`() = test {
+        whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
+        val observers = init()
+
+        (observers.uiStates.last() as ContentUiState)
+            .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+        val errorState = observers.uiStates.last() as ErrorUiState
+        with(errorState) {
+            assertThat(this).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
+            assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
+            assertThat(title).isEqualTo(UiStringRes(R.string.scan_start_request_failed_title))
+            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_start_request_failed_subtitle))
+            assertThat(buttonText).isEqualTo(UiStringRes(R.string.contact_support))
+        }
+    }
+
+    @Test
+    fun `given start scan request failed error state, when contact support is clicked, then contact support shown`() =
+        test {
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
+            val observers = init()
+
+            (observers.uiStates.last() as ContentUiState)
+                .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+            (observers.uiStates.last() as ErrorUiState).action.invoke()
+
+            assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
+        }
+
+    @Test
+    fun `given scan start succeeds, when scan button is clicked, then scan state is fetched after delay`() = test {
         whenever(fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = true))
             .thenReturn(flowOf(Success(fakeScanStateModel)))
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Success))

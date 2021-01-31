@@ -120,8 +120,16 @@ class ScanViewModel @Inject constructor(
                 .collect { state ->
                     when (state) {
                         is StartScanState.ScanningStateUpdatedInDb -> updateUiState(buildContentUiState(state.model))
+
                         is StartScanState.Success -> fetchScanState(startWithDelay = true)
-                        is StartScanState.Failure -> TODO() // TODO ashiagr to be implemented
+
+                        is StartScanState.Failure.NetworkUnavailable ->
+                            updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
+
+                        is StartScanState.Failure.RemoteRequestFailure -> {
+                            updateUiState(ContentUiState(emptyList()))
+                            updateUiState(ErrorUiState.StartScanRequestFailed(::onContactSupportClicked))
+                        }
                     }
                 }
         }
@@ -309,6 +317,13 @@ class ScanViewModel @Inject constructor(
                 @DrawableRes override val image = R.drawable.img_illustration_cloud_off_152dp
                 override val title = UiStringRes(R.string.scan_request_failed_title)
                 override val subtitle = UiStringRes(R.string.scan_request_failed_subtitle)
+                override val buttonText = UiStringRes(R.string.contact_support)
+            }
+
+            data class StartScanRequestFailed(override val action: () -> Unit) : ErrorUiState() {
+                @DrawableRes override val image = R.drawable.img_illustration_empty_results_216dp
+                override val title = UiStringRes(R.string.scan_start_request_failed_title)
+                override val subtitle = UiStringRes(R.string.scan_start_request_failed_subtitle)
                 override val buttonText = UiStringRes(R.string.contact_support)
             }
         }
