@@ -969,6 +969,45 @@ class ActivityLogViewModelTest {
         assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
     }
 
+    /* RELOAD EVENTS - RESTORE AND BACKUP DOWNLOAD */
+
+    @Test
+    fun `given restore and backup progress items, when reloading events, then both items are visible`() {
+        val displayRestoreProgressItem = true
+        val displayRestoreProgressWithDate = true
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = true
+        initRestoreProgressMocks(displayRestoreProgressWithDate)
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                restoreEvent = RestoreEvent(
+                        displayProgress = displayRestoreProgressItem,
+                        rewindId = REWIND_ID
+                ),
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        rewindId = REWIND_ID
+                )
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayRestoreProgressItem || displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
     /* RELOAD EVENTS - DONE */
 
     @Test
@@ -1311,8 +1350,10 @@ class ActivityLogViewModelTest {
         withFooter: Boolean = false
     ): List<ActivityLogListItem> {
         val list = mutableListOf<ActivityLogListItem>()
-        if (displayRestoreProgress) {
+        if (displayRestoreProgress || displayBackupProgress) {
             list.add(ActivityLogListItem.Header(NOW))
+        }
+        if (displayRestoreProgress) {
             if (restoreProgressWithDate) {
                 list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME, RESTORE))
             } else {
@@ -1320,7 +1361,6 @@ class ActivityLogViewModelTest {
             }
         }
         if (displayBackupProgress) {
-            list.add(ActivityLogListItem.Header(NOW))
             if (backupProgressWithDate) {
                 list.add(ActivityLogListItem.Progress(BACKING_UP_CURRENTLY, BACKING_UP_DATE_TIME, BACKUP_DOWNLOAD))
             } else {
