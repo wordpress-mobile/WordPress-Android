@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -233,7 +234,7 @@ class MySiteViewModel
             scrollToQuickStartTaskIfNecessary(
                     quickStartModel?.activeTask,
                     siteItems.indexOfFirst { it.activeQuickStartItem })
-            State.SiteSelected(siteItems)
+            State.SiteSelected(siteItems, quickStartModel?.activeTask == PUBLISH_POST)
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
             val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
@@ -575,7 +576,7 @@ class MySiteViewModel
     )
 
     sealed class State {
-        data class SiteSelected(val items: List<MySiteItem>) : State()
+        data class SiteSelected(val items: List<MySiteItem>, val showFabFocusPoint: Boolean = false) : State()
         data class NoSites(val shouldShowImage: Boolean) : State()
     }
 

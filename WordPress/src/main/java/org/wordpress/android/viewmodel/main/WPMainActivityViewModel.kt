@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -16,12 +17,14 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -36,6 +39,8 @@ class WPMainActivityViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
+    private val quickStartRepository: QuickStartRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -128,7 +133,11 @@ class WPMainActivityViewModel @Inject constructor(
         _showQuickStarInBottomSheet.value?.let { showQuickStart ->
             if (showQuickStart) {
                 if (actionType == CREATE_NEW_POST) {
-                    _completeBottomSheetQuickStartTask.call()
+                    if (mySiteImprovementsFeatureConfig.isEnabled()) {
+                        quickStartRepository.completeTask(PUBLISH_POST)
+                    } else {
+                        _completeBottomSheetQuickStartTask.call()
+                    }
                 }
                 _showQuickStarInBottomSheet.postValue(false)
             }
@@ -152,7 +161,9 @@ class WPMainActivityViewModel @Inject constructor(
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
-        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
+        val quickStartFromImprovedMySiteFragment = mySiteImprovementsFeatureConfig.isEnabled() &&
+                quickStartRepository.shouldShowPublishPostQuickStartTask()
+        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
 
         if (shouldShowStories(site)) {
             loadMainActions(site)

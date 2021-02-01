@@ -26,6 +26,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -50,6 +51,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -234,14 +236,24 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `model is contains header of selected site`() {
+    fun `model contains header of selected site`() {
         onSiteChange.postValue(site)
 
         assertThat(uiModels).hasSize(3)
-        assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
+        val state = uiModels.last().state as SiteSelected
+        assertThat(state.showFabFocusPoint).isFalse()
 
         assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
+    }
+
+    @Test
+    fun `model shows focus point on FAB when active task is publish post`() {
+        onSiteChange.postValue(site)
+        quickStartModel.value = QuickStartModel(PUBLISH_POST)
+
+        val state = uiModels.last().state as SiteSelected
+        assertThat(state.showFabFocusPoint).isTrue()
     }
 
     @Test
@@ -947,7 +959,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findSiteInfoBlock() =
             getLastItems().find { it is SiteInfoBlock } as SiteInfoBlock?
 
-    private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
+    private fun getLastItems() = (uiModels.last().state as SiteSelected).items
 
     private fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         val argument = when (action) {

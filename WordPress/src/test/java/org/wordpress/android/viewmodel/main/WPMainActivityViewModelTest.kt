@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -16,11 +17,13 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
+import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementItem
@@ -28,6 +31,7 @@ import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
 
 @RunWith(MockitoJUnitRunner::class)
@@ -41,6 +45,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     @Mock lateinit var buildConfigWrapper: BuildConfigWrapper
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
+    @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
+    @Mock lateinit var quickStartRepository: QuickStartRepository
 
     private val featureAnnouncement = FeatureAnnouncement(
             "14.7",
@@ -71,6 +77,8 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
                 appPrefsWrapper,
                 analyticsTrackerWrapper,
                 wpStoriesFeatureConfig,
+                mySiteImprovementsFeatureConfig,
+                quickStartRepository,
                 NoDelayCoroutineDispatcher()
         )
         viewModel.onFeatureAnnouncementRequested.observeForever(
@@ -81,6 +89,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         )
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
+        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(false)
     }
 
     @Test
@@ -205,10 +214,25 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
         verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
+        verifyZeroInteractions(quickStartRepository)
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
         )
+    }
+
+    @Test
+    fun `CREATE_NEW_POST action sets task as done in QuickStartRepository when my site improvements turned on`() {
+        whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(true)
+        startViewModelWithDefaultParameters()
+        viewModel.onFabClicked(site = initSite(hasFullAccessToContent = true), shouldShowQuickStartFocusPoint = true)
+
+        val action = viewModel.mainActions.value?.first { it.actionType == CREATE_NEW_POST } as CreateAction
+        assertThat(action).isNotNull
+        action.onClickAction?.invoke(CREATE_NEW_POST)
+
+        verify(quickStartRepository).completeTask(PUBLISH_POST)
+        verifyZeroInteractions(onQuickStartCompletedEventObserver)
     }
 
     @Test

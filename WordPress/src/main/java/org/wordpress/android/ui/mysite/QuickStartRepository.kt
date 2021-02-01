@@ -14,6 +14,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -35,8 +36,10 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
+@Singleton
 class QuickStartRepository
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
@@ -141,6 +144,10 @@ class QuickStartRepository
 
     fun clear() {
         job.cancel()
+    }
+
+    fun shouldShowPublishPostQuickStartTask(): Boolean {
+        return activeTask.value == PUBLISH_POST
     }
 
     data class QuickStartModel(

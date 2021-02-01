@@ -426,7 +426,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
             switch (createAction) {
                 case CREATE_NEW_POST:
                     // complete quick start task outside of QS process
-                    if (getSelectedSite() != null) {
+                    if (getSelectedSite() != null && !mMySiteImprovementsFeatureConfig.isEnabled()) {
                         QuickStartUtils.completeTaskAndRemindNextOne(
                                 mQuickStartStore,
                                 QuickStartTask.PUBLISH_POST,
