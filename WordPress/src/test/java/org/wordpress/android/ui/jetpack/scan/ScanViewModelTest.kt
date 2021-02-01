@@ -392,6 +392,34 @@ class ScanViewModelTest : BaseUnitTest() {
             verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
         }
 
+    @Test
+    fun `given FixFailure(onlyErrors=true) returned, when fetch fix status invoked by user, then snackbar is shown`()
+    = test {
+        val messages = init().snackBarMsgs
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+        )
+
+        viewModel.onFixStateRequested(threatId = 11L)
+
+        assertThat(messages.isNotEmpty()).isTrue
+    }
+
+    @Test
+    fun `given FixFailure(onlyErrors=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`()
+        = test {
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+        )
+        val scanStateModelWithFixableThreats = fakeScanStateModel
+            .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
+
+        val messages = init().snackBarMsgs
+
+        assertThat(messages.isEmpty()).isTrue
+    }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
         (observers.navigation.last().peekContent() as OpenFixThreatsConfirmationDialog).okButtonAction.invoke()
