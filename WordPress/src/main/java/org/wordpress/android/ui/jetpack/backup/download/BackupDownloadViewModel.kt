@@ -264,13 +264,13 @@ class BackupDownloadViewModel @Inject constructor(
         when (result) {
             is NetworkUnavailable -> _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
             is RemoteRequestFailure -> _snackbarEvents.postValue(Event(GenericFailureMsg))
-            is Success -> handleRestoreRequestSuccess(result)
+            is Success -> handleBackupDownloadRequestSuccess(result)
             is OtherRequestRunning -> _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
             else -> Unit // Do nothing
         }
     }
 
-    private fun handleRestoreRequestSuccess(result: Success) {
+    private fun handleBackupDownloadRequestSuccess(result: Success) {
         backupDownloadState = backupDownloadState.copy(
                 rewindId = result.rewindId,
                 downloadId = result.downloadId,
