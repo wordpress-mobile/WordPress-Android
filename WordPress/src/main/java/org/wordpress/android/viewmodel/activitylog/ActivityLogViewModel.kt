@@ -156,7 +156,7 @@ class ActivityLogViewModel @Inject constructor(
         this.site = site
         this.rewindableOnly = rewindableOnly
 
-        reloadEvents(true, currentRestoreEvent)
+        reloadEvents(true)
         requestEventsUpdate(false)
 
         showFiltersIfSupported()
@@ -165,7 +165,7 @@ class ActivityLogViewModel @Inject constructor(
     @VisibleForTesting
     fun reloadEvents(
         done: Boolean = isDone,
-        restoreEvent: RestoreEvent
+        restoreEvent: RestoreEvent = currentRestoreEvent
     ) {
         currentRestoreEvent = restoreEvent
         val eventList = activityLogStore.getActivityLogForSite(

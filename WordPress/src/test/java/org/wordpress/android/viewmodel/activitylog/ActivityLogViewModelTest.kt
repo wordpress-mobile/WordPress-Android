@@ -759,10 +759,7 @@ class ActivityLogViewModelTest {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
         val done = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(false)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
@@ -783,10 +780,7 @@ class ActivityLogViewModelTest {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(false)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
@@ -807,10 +801,7 @@ class ActivityLogViewModelTest {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
         val done = true
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(false)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
@@ -831,10 +822,7 @@ class ActivityLogViewModelTest {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(false)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
@@ -856,10 +844,7 @@ class ActivityLogViewModelTest {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(false)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
