@@ -127,6 +127,11 @@ class ActivityLogViewModel @Inject constructor(
             it is ActivityLogListItem.Progress &&
                     it.progressType == ActivityLogListItem.Progress.Type.RESTORE
         } != null
+    private val isBackupDownloadProgressItemShown: Boolean
+        get() = events.value?.find {
+            it is ActivityLogListItem.Progress &&
+                    it.progressType == ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+        } != null
 
     private val isDone: Boolean
         get() = eventListStatus.value == ActivityLogListStatus.DONE

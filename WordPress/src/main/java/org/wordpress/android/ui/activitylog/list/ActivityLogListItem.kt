@@ -70,7 +70,8 @@ sealed class ActivityLogListItem(val type: ViewType) {
         val progressType: Type
     ) : ActivityLogListItem(PROGRESS) {
         enum class Type {
-            RESTORE
+            RESTORE,
+            BACKUP_DOWNLOAD
         }
     }
 
