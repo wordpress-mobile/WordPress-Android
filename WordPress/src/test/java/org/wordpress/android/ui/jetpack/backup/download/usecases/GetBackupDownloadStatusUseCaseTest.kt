@@ -51,6 +51,15 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given no network without download id, when backup status triggers, then return network unavailable`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat(result).contains(Failure.NetworkUnavailable)
+    }
+
+    @Test
     fun `given no network with download id, when backup status triggers, then return network unavailable`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
@@ -58,6 +67,23 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
         assertThat(result).contains(Failure.NetworkUnavailable)
     }
+
+    @Test
+    fun `given failure without download id, when backup status triggers, then return remote request failure`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.fetchBackupDownloadState(any()))
+                        .thenReturn(
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                )
+                        )
+
+                val result = useCase.getBackupDownloadStatus(site, null).toList()
+                advanceTimeBy(DELAY_MILLIS)
+
+                assertThat(result).contains(RemoteRequestFailure)
+            }
 
     @Test
     fun `given failure with download id, when backup status triggers, then return remote request failure`() =
@@ -76,12 +102,30 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             }
 
     @Test
+    fun `given success without download id, when backup status triggers, then return complete`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat(result).contains(completeStatus)
+    }
+
+    @Test
     fun `given success with download id, when backup status triggers, then return complete`() = test {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
         assertThat(result).contains(completeStatus)
+    }
+
+    @Test
+    fun `given status model is null without download id, when backup status triggers, then return empty`() = test {
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
+
+        val result = useCase.getBackupDownloadStatus(site, null).toList()
+
+        assertThat(result).contains(Empty)
     }
 
     @Test
@@ -92,6 +136,21 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
         assertThat(result).contains(Empty)
     }
+
+    @Test
+    fun `given download in process without download id, when backup status triggers, then return progress`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                        .thenReturn(inProgressModel)
+                        .thenReturn(statusModel)
+                whenever(activityLogStore.fetchBackupDownloadState(any()))
+                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+
+                val result = useCase.getBackupDownloadStatus(site, null).toList()
+                advanceTimeBy(DELAY_MILLIS)
+
+                assertThat(result).contains(progressStatus, completeStatus)
+            }
 
     @Test
     fun `given download in process with download id, when backup status triggers, then return progress`() =
