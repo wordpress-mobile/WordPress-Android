@@ -18,11 +18,9 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressStat
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -31,18 +29,23 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val threatItemBuilder: ThreatItemBuilder,
-    private val uiHelpers: UiHelpers,
-    private val contextProvider: ContextProvider
+    private val threatItemBuilder: ThreatItemBuilder
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
         site: SiteModel,
+        fixingThreatIds: List<Long>,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
-        return when (model.state) {
+        return if (fixingThreatIds.isNotEmpty()) {
+            buildThreatsFixingStateItems(
+                threats = model.threats,
+                site = site,
+                fixingThreatIds = fixingThreatIds
+            )
+        } else when (model.state) {
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
                     buildThreatsFoundStateItems(
@@ -58,6 +61,39 @@ class ScanStateListItemsBuilder @Inject constructor(
             ScanStateModel.State.PROVISIONING -> buildProvisioningStateItems()
             ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN -> emptyList()
         }
+    }
+
+    private fun buildThreatsFixingStateItems(
+        threats: List<ThreatModel>?,
+        site: SiteModel,
+        fixingThreatIds: List<Long>
+    ): List<JetpackListItemState> {
+        val items = mutableListOf<JetpackListItemState>()
+
+        val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
+        val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
+        val scanDescription = buildThreatsFoundDescription(site, fixingThreatIds.size) // TODO ashiagr replace label
+        val scanProgress = ProgressState(
+            isIndeterminate = true,
+            isVisible = fixingThreatIds.isNotEmpty()
+        )
+
+        items.add(scanIcon)
+        items.add(scanHeader)
+        items.add(scanDescription)
+        items.add(scanProgress)
+
+        // TODO ashiagr fix threats display logic
+        threats?.takeIf { it.isNotEmpty() && fixingThreatIds.isNotEmpty() }?.let {
+            items.add(ThreatsHeaderItemState())
+            items.addAll(
+                threats.filter { it.baseThreatModel.id in fixingThreatIds }.map { threat ->
+                    threatItemBuilder.buildThreatItem(threat)
+                }
+            )
+        }
+
+        return items
     }
 
     private fun buildThreatsFoundStateItems(
@@ -225,21 +261,6 @@ class ScanStateListItemsBuilder @Inject constructor(
                 )
         )
     )
-
-    fun buildFixThreatsProgressInfoLabel(
-        threats: List<ThreatModel>,
-        fixingThreatIds: List<Long>
-    ): UiStringText? {
-        val progressInfoLabel = threats
-            .filter { it.baseThreatModel.id in fixingThreatIds }
-            .joinToString(",") {
-                uiHelpers.getTextOfUiString(
-                    contextProvider.getContext(),
-                    threatItemBuilder.buildThreatItemHeader(it)
-                )
-            }
-        return progressInfoLabel.takeIf { it.isNotEmpty() }?.let { UiStringText(it) }
-    }
 
     companion object {
         private const val ONE_MINUTE = 60 * 1000L

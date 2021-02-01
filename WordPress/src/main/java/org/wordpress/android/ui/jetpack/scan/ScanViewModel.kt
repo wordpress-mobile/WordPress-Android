@@ -15,8 +15,6 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
@@ -141,18 +139,15 @@ class ScanViewModel @Inject constructor(
 
     private fun fixAllThreats() {
         launch {
-            updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
                     val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds)
                     if (someOrAllThreatFixed) fetchScanState()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
-                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
-                    updateActionButtons(isVisible = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_all_error_message))
                 }
             }
@@ -192,8 +187,10 @@ class ScanViewModel @Inject constructor(
                     }
                 }
             }
-            updateActionButtons(isVisible = fixingThreatIds.isEmpty())
-            updateFixThreatsStatusProgressBar(fixingThreatIds)
+            updateUiState(
+                buildContentUiState(model = requireNotNull(scanStateModel), fixingThreatIds = fixingThreatIds)
+            )
+
             messageRes?.let { updateSnackbarMessageEvent(UiStringRes(it)) }
         }
 
@@ -241,38 +238,6 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun updateActionButtons(isVisible: Boolean) {
-        (_uiState.value as? ContentUiState)?.let { content ->
-            val updatesContentItems = content.items.map { contentItem ->
-                if (contentItem is ActionButtonState) {
-                    contentItem.copy(isVisible = isVisible)
-                } else {
-                    contentItem
-                }
-            }
-            updateUiState(content.copy(items = updatesContentItems))
-        }
-    }
-
-    private fun updateFixThreatsStatusProgressBar(fixingThreatIds: List<Long>) {
-        (_uiState.value as? ContentUiState)?.let { content ->
-            val updatesContentItems = content.items.map { contentItem ->
-                if (contentItem is ProgressState && contentItem.isIndeterminate) {
-                    contentItem.copy(
-                        isVisible = fixingThreatIds.isNotEmpty(),
-                        progressInfoLabel = scanStateListItemsBuilder.buildFixThreatsProgressInfoLabel(
-                            threats = scanStateModel?.threats ?: emptyList(),
-                            fixingThreatIds = fixingThreatIds
-                        )
-                    )
-                } else {
-                    contentItem
-                }
-            }
-            updateUiState(content.copy(items = updatesContentItems))
-        }
-    }
-
     private fun updateSnackbarMessageEvent(message: UiString) {
         _snackbarEvents.value = Event(SnackbarMessageHolder(message))
     }
@@ -285,13 +250,17 @@ class ScanViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(model: ScanStateModel) = ContentUiState(
+    private fun buildContentUiState(
+        model: ScanStateModel,
+        fixingThreatIds: List<Long> = emptyList()
+    ) = ContentUiState(
         scanStateListItemsBuilder.buildScanStateListItems(
-            model,
-            site,
-            this@ScanViewModel::onScanButtonClicked,
-            this@ScanViewModel::onFixAllButtonClicked,
-            this@ScanViewModel::onThreatItemClicked
+            model = model,
+            site = site,
+            fixingThreatIds = fixingThreatIds,
+            onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
+            onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
+            onThreatItemClicked = this@ScanViewModel::onThreatItemClicked
         )
     )
 

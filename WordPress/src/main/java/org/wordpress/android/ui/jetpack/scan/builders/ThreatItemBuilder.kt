@@ -26,7 +26,7 @@ import javax.inject.Inject
 class ThreatItemBuilder @Inject constructor(
     private val dateFormatWrapper: DateFormatWrapper
 ) {
-    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: (threatId: Long) -> Unit) =
+    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((threatId: Long) -> Unit)? = null) =
         ThreatItemState(
             threatId = threatModel.baseThreatModel.id,
             isFixable = threatModel.baseThreatModel.fixable != null,
@@ -35,7 +35,7 @@ class ThreatItemBuilder @Inject constructor(
             subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
             icon = buildThreatItemIcon(threatModel),
             iconBackground = buildThreatItemIconBackground(threatModel),
-            onClick = { onThreatItemClicked(threatModel.baseThreatModel.id) }
+            onClick = { onThreatItemClicked?.let { onThreatItemClicked(threatModel.baseThreatModel.id) } }
         )
 
     fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
