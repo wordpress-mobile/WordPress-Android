@@ -68,11 +68,10 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     }.flowOn(bgDispatcher)
 
     private suspend fun FlowCollector<BackupDownloadRequestState>.isNetworkAvailable(): Boolean {
-        if (!networkUtilsWrapper.isNetworkAvailable()) {
+        return if (!networkUtilsWrapper.isNetworkAvailable()) {
             emit(NetworkUnavailable)
-            return false
-        }
-        return true
+            false
+        } else true
     }
 
     private suspend fun FlowCollector<BackupDownloadRequestState>.emitCompleteElseProgress(
