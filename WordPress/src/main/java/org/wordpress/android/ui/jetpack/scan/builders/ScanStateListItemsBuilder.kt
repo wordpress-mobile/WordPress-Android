@@ -7,6 +7,7 @@ import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -53,7 +54,7 @@ class ScanStateListItemsBuilder @Inject constructor(
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
-            ScanStateModel.State.SCANNING -> buildScanningStateItems(model.currentStatus?.progress ?: 0)
+            ScanStateModel.State.SCANNING -> buildScanningStateItems(model.mostRecentStatus, model.currentStatus)
             ScanStateModel.State.PROVISIONING -> buildProvisioningStateItems()
             ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN -> emptyList()
         }
@@ -118,13 +119,22 @@ class ScanStateListItemsBuilder @Inject constructor(
         return items
     }
 
-    private fun buildScanningStateItems(progress: Int): List<JetpackListItemState> {
+    private fun buildScanningStateItems(
+        mostRecentStatus: ScanProgressStatus?,
+        currentProgress: ScanProgressStatus?
+    ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
         // TODO: ashiagr replace icon with stroke, using direct icon (color = null) causing issues with dynamic tinting
+        val progress = currentProgress?.progress ?: 0
         val scanIcon = buildScanIcon(R.drawable.ic_shield_white, R.color.jetpack_green_5)
         val scanTitleRes = if (progress == 0) R.string.scan_preparing_to_scan_title else R.string.scan_scanning_title
         val scanHeader = HeaderState(UiStringRes(scanTitleRes))
-        val scanDescription = DescriptionState(UiStringRes(R.string.scan_scanning_description))
+        val descriptionRes = if (mostRecentStatus?.isInitial == true) {
+            R.string.scan_scanning_is_initial_description
+        } else {
+            R.string.scan_scanning_description
+        }
+        val scanDescription = DescriptionState(UiStringRes(descriptionRes))
         val scanProgress = ProgressState(
             progress = progress,
             progressLabel = UiStringResWithParams(
