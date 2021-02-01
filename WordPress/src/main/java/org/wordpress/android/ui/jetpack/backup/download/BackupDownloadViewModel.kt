@@ -265,11 +265,7 @@ class BackupDownloadViewModel @Inject constructor(
                 _snackbarEvents.postValue(Event(GenericFailureMsg))
             }
             is Success -> {
-                backupDownloadState = backupDownloadState.copy(
-                        rewindId = result.rewindId,
-                        downloadId = result.downloadId,
-                        published = extractPublishedDate())
-                wizardManager.showNextStep()
+                handleRestoreRequestSuccess(result)
             }
             is OtherRequestRunning -> {
                 _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
@@ -277,6 +273,15 @@ class BackupDownloadViewModel @Inject constructor(
             else -> {
             } // no op
         }
+    }
+
+    private fun handleRestoreRequestSuccess(result: Success) {
+        backupDownloadState = backupDownloadState.copy(
+                rewindId = result.rewindId,
+                downloadId = result.downloadId,
+                published = extractPublishedDate()
+        )
+        wizardManager.showNextStep()
     }
 
     private fun extractPublishedDate(): Date {
