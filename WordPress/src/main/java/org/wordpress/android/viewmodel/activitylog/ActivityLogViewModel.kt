@@ -554,6 +554,10 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
+    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+        // TODO: Continue here...
+    }
+
     data class ShowDateRangePicker(val initialSelection: DateRange?)
     data class ShowActivityTypePicker(
         val siteId: RemoteId,
