@@ -131,11 +131,10 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
                 }
                 intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
                 intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, ids?.second)
-                requireActivity().setResult(
-                        if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED,
-                        intent
-                )
-                requireActivity().finish()
+                requireActivity().let { activity ->
+                    activity.setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
+                    activity.finish()
+                }
             }
         })
     }
