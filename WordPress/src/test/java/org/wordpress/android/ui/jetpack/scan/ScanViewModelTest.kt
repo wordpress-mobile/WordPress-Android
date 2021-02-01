@@ -94,7 +94,16 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given last scan state not present in db, when vm starts, then loading scan state is displayed`() = test {
+    fun `given last scan state not present in db, when vm starts, then app reaches full screen loading scan state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            val uiStates = init().uiStates
+
+            assertThat(uiStates.first()).isInstanceOf(FullScreenLoadingUiState::class.java)
+        }
+
+    @Test
+    fun `given full screen loading scan state, when vm starts, then full screen loading scan ui is displayed`() = test {
         whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
         val uiStates = init().uiStates
 
@@ -125,20 +134,30 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given no network, when scan state fetched over empty scan state, then no network ui state is shown`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-        val uiStates = init().uiStates
+    fun `given no network, when scan state fetched over empty scan state, then app reaches no connection state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
 
-        val error = uiStates.last() as ErrorUiState
-        with(error) {
-            assertThat(this).isInstanceOf(ErrorUiState.NoConnection::class.java)
-            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
-            assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
-            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
-            assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+            assertThat(uiStates.last()).isInstanceOf(ErrorUiState.NoConnection::class.java)
         }
-    }
+
+    @Test
+    fun `given no connection state, when scan state fetched over empty scan state, then no network ui is shown`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
+
+            val error = uiStates.last() as ErrorUiState
+            with(error) {
+                assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+                assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
+                assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
+                assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+            }
+        }
 
     @Test
     fun `given no network, when scan state fetched over last scan state, then no network msg is shown`() = test {
@@ -150,7 +169,17 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fetch scan fails, when scan state fetched over empty scan state, then request failed ui state shown`() =
+    fun `given fetch scan fails, when scan state fetched over empty scan state, then app reaches failed ui state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
+            val uiStates = init().uiStates
+
+            assertThat(uiStates.last()).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given request failed ui state, when scan state fetched over empty scan state, then request failed ui shown`() =
         test {
             whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
@@ -158,7 +187,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val state = uiStates.last() as ErrorUiState
             with(state) {
-                assertThat(this).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
                 assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
                 assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
                 assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
@@ -251,7 +279,19 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given scan start request fails, when scan button is clicked, then request failed state is shown`() = test {
+    fun `given scan start request fails, when scan button is clicked, then app reaches scan request failed state`() =
+        test {
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
+            val observers = init()
+
+            (observers.uiStates.last() as ContentUiState)
+                .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given scan request failed state, when scan button is clicked, then request failed ui is shown`() = test {
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
         val observers = init()
 
@@ -260,7 +300,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
         val errorState = observers.uiStates.last() as ErrorUiState
         with(errorState) {
-            assertThat(this).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
             assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
             assertThat(title).isEqualTo(UiStringRes(R.string.scan_start_request_failed_title))
             assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_start_request_failed_subtitle))
