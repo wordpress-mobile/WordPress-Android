@@ -79,7 +79,7 @@ class GetRestoreStatusUseCase @Inject constructor(
 
     private suspend fun fetchActivitiesRewind(site: SiteModel): Boolean {
         val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
-        return result.isError
+        return !result.isError
     }
 
     private suspend fun FlowCollector<RestoreRequestState>.emitFinished(rewind: Rewind) =
