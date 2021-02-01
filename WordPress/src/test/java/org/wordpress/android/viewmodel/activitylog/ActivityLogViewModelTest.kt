@@ -752,24 +752,25 @@ class ActivityLogViewModelTest {
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
     }
 
+    /* RELOAD EVENTS - DONE */
+
     @Test
     fun `given not done and the event list is empty, when reloading events, then the loading item is not visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
         val done = false
-        val displayProgressItem = false
 
         viewModel.reloadEvents(
                 done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(false)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayRestoreProgress = displayProgressItem,
+                        displayRestoreProgress = false,
                         restoreProgressWithDate = false,
                         emptyList = true,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -781,20 +782,19 @@ class ActivityLogViewModelTest {
     fun `given not done and the event list is not empty, when reloading events, then the loading item is visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = false
-        val displayProgressItem = false
 
         viewModel.reloadEvents(
                 done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(false)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayRestoreProgress = displayProgressItem,
+                        displayRestoreProgress = false,
                         restoreProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -806,20 +806,19 @@ class ActivityLogViewModelTest {
     fun `given done and the event list is empty, when reloading events, then the loading item is not visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
         val done = true
-        val displayProgressItem = false
 
         viewModel.reloadEvents(
                 done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(false)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayRestoreProgress = displayProgressItem,
+                        displayRestoreProgress = false,
                         restoreProgressWithDate = false,
                         emptyList = true,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -831,20 +830,19 @@ class ActivityLogViewModelTest {
     fun `given done and the event list is not empty, when reloading events, then the loading item is not visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
-        val displayProgressItem = false
 
         viewModel.reloadEvents(
                 done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(false)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayRestoreProgress = displayProgressItem,
+                        displayRestoreProgress = false,
                         restoreProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -857,20 +855,19 @@ class ActivityLogViewModelTest {
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
-        val displayProgressItem = false
 
         viewModel.reloadEvents(
                 done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(false)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayRestoreProgress = displayProgressItem,
+                        displayRestoreProgress = false,
                         restoreProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = true
