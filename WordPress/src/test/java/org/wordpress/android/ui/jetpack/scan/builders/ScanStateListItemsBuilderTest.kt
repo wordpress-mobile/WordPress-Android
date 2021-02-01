@@ -18,9 +18,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
-import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -38,8 +36,6 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
-    @Mock private lateinit var uiHelpers: UiHelpers
-    @Mock private lateinit var contextProvider: ContextProvider
 
 //    private val baseThreatModel = BaseThreatModel(
 //        id = 1L,
@@ -59,9 +55,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             dateProvider,
             htmlMessageUtils,
             resourceProvider,
-            threatItemBuilder,
-            uiHelpers,
-            contextProvider
+            threatItemBuilder
         )
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
@@ -283,6 +277,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     ) = builder.buildScanStateListItems(
         model = model,
         site = site,
+        fixingThreatIds = emptyList(),
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
         onThreatItemClicked = mock()
