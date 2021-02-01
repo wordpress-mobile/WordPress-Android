@@ -8,7 +8,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
@@ -212,7 +211,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 colorResId = R.color.jetpack_green_5,
                 sizeResId = R.dimen.scan_icon_size,
                 marginResId = R.dimen.scan_icon_margin,
-                contentDescription = UiStringRes(string.scan_state_icon)
+                contentDescription = UiStringRes(R.string.scan_state_icon)
             )
         )
     }
@@ -224,7 +223,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-            HeaderState(UiStringRes(string.scan_preparing_to_scan_title))
+            HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
         )
     }
 
