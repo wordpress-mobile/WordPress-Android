@@ -172,7 +172,8 @@ class HelpActivity : LocaleAwareActivity() {
         SITE_CREATION_SEGMENTS("origin:site-create-site-segments"),
         SITE_CREATION_VERTICALS("origin:site-create-site-verticals"),
         SITE_CREATION_DOMAINS("origin:site-create-domains"),
-        SITE_CREATION_SITE_INFO("origin:site-create-site-info");
+        SITE_CREATION_SITE_INFO("origin:site-create-site-info"),
+        SCAN_SCREEN_HELP("origin:scan-screen-help");
 
         override fun toString(): String {
             return stringValue

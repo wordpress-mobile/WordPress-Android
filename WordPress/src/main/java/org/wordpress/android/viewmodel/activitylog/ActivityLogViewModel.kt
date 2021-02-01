@@ -497,6 +497,11 @@ class ActivityLogViewModel @Inject constructor(
         showRestoreStartedMessage(rewindId)
     }
 
+    fun onQueryRestoreStatus(rewindId: String, restoreId: Long) {
+        queryRestoreStatus(restoreId)
+        showRestoreStartedMessage(rewindId)
+    }
+
     private fun handleRestoreRequest(state: RestoreRequestState) {
         when (state) {
             is RestoreRequestState.Success -> state.restoreId?.let { queryRestoreStatus(it) }

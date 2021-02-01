@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.jetpack.scan
+package org.wordpress.android.ui.jetpack.scan.builders
 
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
@@ -17,7 +17,11 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FI
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
 import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
+import org.wordpress.android.ui.jetpack.scan.TEST_FILE_NAME
+import org.wordpress.android.ui.jetpack.scan.TEST_SIGNATURE
+import org.wordpress.android.ui.jetpack.scan.TEST_VULNERABLE_THREAT_SLUG
+import org.wordpress.android.ui.jetpack.scan.TEST_VULNERABLE_THREAT_VERSION
+import org.wordpress.android.ui.jetpack.scan.ThreatTestData
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
@@ -141,7 +145,9 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_vulnerable_plugin,
-            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(TEST_VULNERABLE_THREAT_VERSION))
+            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(
+                    TEST_VULNERABLE_THREAT_VERSION
+            ))
         )
         // Act
         val threatItem = buildThreatItem(ThreatTestData.vulnerableExtensionThreatModel)
@@ -164,7 +170,9 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         // Arrange
         val expectedHeader = UiStringResWithParams(
             R.string.threat_item_header_vulnerable_theme,
-            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(TEST_VULNERABLE_THREAT_VERSION))
+            listOf(UiStringText(TEST_VULNERABLE_THREAT_SLUG), UiStringText(
+                    TEST_VULNERABLE_THREAT_VERSION
+            ))
         )
         // Act
         val threatItem = buildThreatItem(
