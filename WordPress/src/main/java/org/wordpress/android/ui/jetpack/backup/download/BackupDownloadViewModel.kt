@@ -280,10 +280,8 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun queryStatus() {
         launch {
-            getBackupDownloadStatusUseCase.getBackupDownloadStatus(
-                    site,
-                    backupDownloadState.downloadId as Long
-            ).collect { state -> handleQueryStatus(state) }
+            getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
+                    .collect { state -> handleQueryStatus(state) }
         }
     }
 
