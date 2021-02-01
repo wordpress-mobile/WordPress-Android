@@ -144,15 +144,17 @@ class BackupDownloadViewModel @Inject constructor(
     fun onBackPressed() {
         when (wizardManager.currentStep) {
             DETAILS.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
-            PROGRESS.id -> {
-                _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
-                    Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
-                } else {
-                    Event(BackupDownloadCanceled)
-                }
-            }
+            PROGRESS.id -> { constructProgressEvent() }
             COMPLETE.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCompleted) }
             ERROR.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
+        }
+    }
+
+    private fun constructProgressEvent() {
+        _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
+            Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
+        } else {
+            Event(BackupDownloadCanceled)
         }
     }
 
