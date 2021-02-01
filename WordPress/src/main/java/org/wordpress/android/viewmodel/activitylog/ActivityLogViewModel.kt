@@ -180,14 +180,14 @@ class ActivityLogViewModel @Inject constructor(
         var moveToTop = false
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         val withBackupDownloadProgressItem = backupDownloadEvent.displayProgress && !backupDownloadEvent.isCompleted
-        if (withRestoreProgressItem) {
+        if (withRestoreProgressItem || withBackupDownloadProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
+        }
+        if (withRestoreProgressItem) {
             items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.published))
         }
         if (withBackupDownloadProgressItem) {
-            items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
             items.add(getBackupDownloadProgressItem(backupDownloadEvent.rewindId, backupDownloadEvent.published))
         }
         eventList.forEach { model ->
