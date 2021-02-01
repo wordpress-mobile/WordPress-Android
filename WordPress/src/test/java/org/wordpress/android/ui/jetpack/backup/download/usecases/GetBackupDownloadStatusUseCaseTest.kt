@@ -53,7 +53,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     fun `given no network, then NetworkUnavailable is returned`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
         assertThat(result).contains(Failure.NetworkUnavailable)
     }
@@ -64,7 +64,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                 OnBackupDownloadStatusFetched(BackupDownloadStatusError(GENERIC_ERROR), FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
         advanceTimeBy(DELAY_MILLIS)
 
         assertThat(result).contains(RemoteRequestFailure)
@@ -74,7 +74,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     fun `given success, then Complete is returned`() = testWithSuccessResponse {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
         assertThat(result).contains(completeStatus)
     }
@@ -83,7 +83,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     fun `given status model is null, then Empty is returned`() = testWithSuccessResponse {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
 
         assertThat(result).contains(Empty)
     }
@@ -97,7 +97,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                 OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
         )
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList(mutableListOf())
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
         advanceTimeBy(DELAY_MILLIS)
 
         assertThat(result).contains(progressStatus, completeStatus)
