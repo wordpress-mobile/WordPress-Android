@@ -13,13 +13,11 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.Content
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
