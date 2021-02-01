@@ -4,15 +4,15 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
@@ -21,11 +21,11 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
@@ -143,10 +143,10 @@ class BackupDownloadViewModel @Inject constructor(
 
     fun onBackPressed() {
         when (wizardManager.currentStep) {
-            DETAILS.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
-            PROGRESS.id -> { constructProgressEvent() }
-            COMPLETE.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCompleted) }
-            ERROR.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
+            DETAILS.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
+            PROGRESS.id -> constructProgressEvent()
+            COMPLETE.id -> _wizardFinishedObservable.value = Event(BackupDownloadCompleted)
+            ERROR.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
         }
     }
 
@@ -258,20 +258,11 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleBackupDownloadRequestResult(result: BackupDownloadRequestState) {
         when (result) {
-            is NetworkUnavailable -> {
-                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
-            }
-            is RemoteRequestFailure -> {
-                _snackbarEvents.postValue(Event(GenericFailureMsg))
-            }
-            is Success -> {
-                handleRestoreRequestSuccess(result)
-            }
-            is OtherRequestRunning -> {
-                _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
-            }
-            else -> {
-            } // no op
+            is NetworkUnavailable -> _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+            is RemoteRequestFailure -> _snackbarEvents.postValue(Event(GenericFailureMsg))
+            is Success -> handleRestoreRequestSuccess(result)
+            is OtherRequestRunning -> _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            else -> Unit // Do nothing
         }
     }
 
@@ -299,23 +290,12 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
-            is NetworkUnavailable -> {
-                transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
-            }
-            is RemoteRequestFailure -> {
-                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
-            }
-            is Progress -> {
-                transitionToProgress(state)
-            }
-            is Complete -> {
-                transitionToComplete(state)
-            }
-            is Empty -> {
-                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
-            }
-            else -> {
-            } // no op
+            is NetworkUnavailable -> transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
+            is RemoteRequestFailure -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            is Progress -> transitionToProgress(state)
+            is Complete -> transitionToComplete(state)
+            is Empty -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            else -> Unit // Do nothing
         }
     }
 
