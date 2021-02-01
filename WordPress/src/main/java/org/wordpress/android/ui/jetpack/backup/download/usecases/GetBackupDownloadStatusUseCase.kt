@@ -6,6 +6,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
 import org.wordpress.android.modules.BG_THREAD
@@ -59,13 +60,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     return@flow
                 }
                 if (downloadId == null || status.downloadId == downloadId) {
-                    val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
-                    if (status.progress == null) {
-                        emit(Complete(status.rewindId, status.downloadId, status.url, published))
-                        return@flow
-                    } else {
-                        emit(Progress(status.rewindId, status.progress, published))
-                    }
+                    if (emitCompleteElseProgress(status)) return@flow
                 }
                 delay(DELAY_MILLIS)
             }
@@ -78,5 +73,18 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             return false
         }
         return true
+    }
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.emitCompleteElseProgress(
+        status: BackupDownloadStatusModel
+    ): Boolean {
+        val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
+        return if (status.progress == null) {
+            emit(Complete(status.rewindId, status.downloadId, status.url, published))
+            true
+        } else {
+            emit(Progress(status.rewindId, status.progress, published))
+            false
+        }
     }
 }
