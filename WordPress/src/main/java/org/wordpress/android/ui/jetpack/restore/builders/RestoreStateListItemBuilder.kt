@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -40,9 +40,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.restore_details_header),
                 buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.restore_details_action_button,
-                        R.string.restore_details_action_button_content_description,
-                        onCreateDownloadClick),
+                        titleRes = R.string.restore_details_action_button,
+                        contentDescRes = R.string.restore_details_action_button_content_description,
+                        onClick = onCreateDownloadClick),
                 buildSubHeaderState()
         )
 
@@ -70,18 +70,20 @@ class RestoreStateListItemBuilder @Inject constructor() {
             buildHeaderState(R.string.restore_warning_header),
             buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
             buildActionButtonState(
-                    R.string.restore_warning_action_button,
-                    R.string.restore_warning_action_button_content_description,
-                    onConfirmRestoreClick),
+                    titleRes = R.string.restore_warning_action_button,
+                    contentDescRes = R.string.restore_warning_action_button_content_description,
+                    onClick = onConfirmRestoreClick),
             buildActionButtonState(
-                    R.string.cancel,
-                    R.string.cancel,
-                    onCancelClick)
+                    titleRes = R.string.cancel,
+                    contentDescRes = R.string.cancel,
+                    isSecondary = true,
+                    onClick = onCancelClick)
     )
 
     fun buildProgressListStateItems(
         progress: Int = 0,
         published: Date,
+        isIndeterminate: Boolean = false,
         onNotifyMeClick: () -> Unit
     ): List<JetpackListItemState> {
         return mutableListOf(
@@ -91,12 +93,12 @@ class RestoreStateListItemBuilder @Inject constructor() {
                         R.color.success_50),
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
-                buildProgressState(progress),
+                buildProgressState(progress, isIndeterminate),
                 buildActionButtonState(
-                        R.string.restore_progress_action_button,
-                        R.string.restore_progress_action_button_content_description,
-                        onNotifyMeClick),
-                buildAdditionalInformationState(R.string.restore_progress_additional_info)
+                        titleRes = R.string.restore_progress_action_button,
+                        contentDescRes = R.string.restore_progress_action_button_content_description,
+                        onClick = onNotifyMeClick),
+                buildFootnoteState(R.string.restore_progress_footnote)
         )
     }
 
@@ -113,13 +115,14 @@ class RestoreStateListItemBuilder @Inject constructor() {
                 buildHeaderState(R.string.restore_complete_header),
                 buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
                 buildActionButtonState(
-                        R.string.restore_complete_done_action_button,
-                        R.string.restore_complete_done_button_content_description,
-                        onDoneClick),
+                        titleRes = R.string.restore_complete_done_action_button,
+                        contentDescRes = R.string.restore_complete_done_button_content_description,
+                        onClick = onDoneClick),
                 buildActionButtonState(
-                        R.string.restore_complete_visit_site_action_button,
-                        R.string.restore_complete_visit_site_button_content_description,
-                        onVisitSiteClick)
+                        titleRes = R.string.restore_complete_visit_site_action_button,
+                        contentDescRes = R.string.restore_complete_visit_site_button_content_description,
+                        isSecondary = true,
+                        onClick = onVisitSiteClick)
         )
     }
 
@@ -130,9 +133,9 @@ class RestoreStateListItemBuilder @Inject constructor() {
                     R.color.error_50),
             buildDescriptionState(R.string.restore_complete_failed_description),
             buildActionButtonState(
-                    R.string.restore_complete_failed_action_button,
-                    R.string.restore_complete_failed_action_button_content_description,
-                    onDoneClick)
+                    titleRes = R.string.restore_complete_failed_action_button,
+                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+                    onClick = onDoneClick)
     )
 
     private fun buildIconState(
@@ -162,22 +165,25 @@ class RestoreStateListItemBuilder @Inject constructor() {
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
+        isSecondary: Boolean = false,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
+        isSecondary = isSecondary,
         onClick = onClick
     )
 
     private fun buildSubHeaderState() =
             SubHeaderState(text = UiStringRes(R.string.restore_details_choose_items_header))
 
-    private fun buildAdditionalInformationState(@StringRes textRes: Int) = AdditionalInformationState(
+    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
     )
 
-    private fun buildProgressState(progress: Int) = ProgressState(
+    private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
             progress = progress,
+            isIndeterminate = isIndeterminate,
             progressLabel = UiStringResWithParams(
                     R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
             )

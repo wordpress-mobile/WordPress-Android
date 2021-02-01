@@ -386,7 +386,8 @@ public class MediaGridFragment extends Fragment implements MediaGridAdapterCallb
         } else if (mBrowserType.isSingleImagePicker()) {
             mediaList = mMediaStore.getSiteImages(mSite);
         } else if (mBrowserType.canFilter() || mBrowserType.canOnlyDoInitialFilter() || mBrowserType
-                .isSingleFilePicker()) {
+                .isSingleFilePicker() || mBrowserType
+                           .isSingleAudioFilePicker()) {
             mediaList = getMediaList();
         } else {
             List<MediaModel> allMedia = mMediaStore.getAllSiteMedia(mSite);

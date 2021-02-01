@@ -1,21 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-19 22:00:15+0000
+Translation-Revision-Date: 2021-01-26 17:26:05+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="gutenberg_native_move_to_bottom">تحريك للأسفل</string>
+    <string name="gutenberg_native_move_block_position">تحريك موضع المكوّن</string>
     <string name="label_control_upload">رفع</string>
     <string name="jetpack_icon_content_description">أيقونة</string>
+    <string name="backup_download_complete_info">أرسلنا إليك أيضًا رابطًا إلى ملفك عبر البريد الإلكتروني.</string>
+    <string name="backup_download_complete_download_share_action_button_content_description">زر رابط المشاركة</string>
+    <string name="backup_download_complete_download_action_button_content_description">زر التنزيل</string>
+    <string name="backup_download_complete_icon_content_description">الأيقونة الجاهزة للنسخ الاحتياطي قابلة للتنزيل</string>
     <string name="backup_download_complete_download_share_action_button">رابط المشاركة</string>
     <string name="backup_download_complete_download_action_button">تنزيل</string>
+    <string name="backup_download_complete_description_with_two_parameters">أنشأنا نسخة احتياطية من موقعك بنجاح من %1$s %2$s.</string>
     <string name="backup_download_complete_header">أصبحت نسختك الاحتياطية متاحة للتنزيل الآن</string>
     <string name="backup_download_complete_page_title">نسختك الاحتياطية</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_additional_info">لا داعي للانتظار هنا. سنُخطرك عندما تكون نسختك الاحتياطية جاهزة</string>
+    <string name="backup_download_progress_action_button_content_description">حسنًا، زر أبلغني</string>
+    <string name="backup_download_progress_icon_content_description">جاري إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>
+    <string name="backup_download_progress_action_button">حسنًا، أبلغني!</string>
+    <string name="backup_download_progress_description_with_two_parameters">سُننشئ نسخة احتياطية قابلة للتنزيل من موقعك من %1$s %2$s.</string>
+    <string name="backup_download_progress_header">إنشاء نسخة احتياطية قابلة للتنزيل من موقعك في الوقت الحالي</string>
+    <string name="backup_download_progress_page_title">تنزيل النسخة الاحتياطية</string>
+    <string name="backup_download_another_download_running">هناك عملية تنزيل قيد التشغيل.</string>
+    <string name="backup_download_generic_failure">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
+    <string name="backup_download_details_action_button_content_description">إنشاء زر نسخة احتياطية قابلة للتنزيل</string>
+    <string name="backup_download_details_description_with_two_parameters">تمثِّل ⁦%1$s %2$s⁩ النقطة المُحدَّدة لإنشاء نسخة احتياطية قابلة للتنزيل.</string>
+    <string name="gutenberg_native_image_link_url">رابط الصورة URL</string>
+    <string name="pages_item_date_author_subtitle">%1$s · %2$s ·</string>
+    <string name="pages_item_date_author">%1$s · %2$s</string>
+    <string name="pages_item_date_subtitle">%1$s ·</string>
+    <string name="suggestion_xpost">النشر المتعدد</string>
+    <string name="suggestion_user">مستخدم</string>
     <string name="threat_get_free_estimate">احصل على عرض سعر مجاني</string>
     <string name="threat_ignore">تجاهل التهديد</string>
     <string name="threat_fix">إصلاح التهديد</string>
+    <string name="threat_fix_fixable_default">سيحل فحص Jetpack مشكلة التهديد.</string>
+    <string name="threat_fix_fixable_edit">سيقوم Jetpack Scan بتحرير الملف أو الدليل المتضرر.</string>
+    <string name="threat_fix_fixable_update">سيقوم فحص Jetpack بالتحديث إلى إصدار أحدث (%s).</string>
+    <string name="threat_fix_fixable_delete">سيحذف فحص Jetpack الملف أو الدليل المتضرر.</string>
+    <string name="threat_fix_fixable_replace">سيستبدل فحص Jetpack الملف أو الدليل المتضرر.</string>
+    <string name="threat_fix_current_not_fixable_description">يتعذر على \"فحص Jetpack\" إصلاح هذا التهديد تلقائيًا.\n نقترح عليك إصلاح التهديد يدويًا: تأكَّد من تحديث ووردبريس، وقالبك، وجميع إضافاتك، وقم بإزالة الشفرة أو القالب أو الإضافة المزعجة من موقعك. \n \n\n إذا كنت بحاجة إلى مزيد من المساعدة لإصلاح هذا التهديد، فإننا نوصي بـ &lt;b>Codeable&lt;/b>، وهو سوق مستقلة موثوق بها لخبراء ووردبريس الذين تم فحصهم بدقة.\n لقد حدَّدوا مجموعة مختارة من خبراء الأمن للمساعدة على هذه المشروعات. تتراوح الأسعار بين 70 دولارًا و120 دولارًا في الساعة، ويمكنك الحصول على تقدير مجاني من دون التزام بالتعيين.</string>
+    <string name="threat_fix_current_not_fixable_header">إصلاح التهديد</string>
     <string name="threat_fix_fixed_header">كيف أصلح Jetpack هذا الأمر؟</string>
     <string name="threat_fix_default_header">كيف سنقوم بإصلاحه؟</string>
     <string name="threat_file_description">تم العثور على تهديد في الملف:</string>
@@ -23,21 +54,41 @@ Language: ar
     <string name="threat_problem_header">ما المشكلة؟</string>
     <string name="threat_details_icon">أيقونة تفاصيل التهديد</string>
     <string name="threat_details">تفاصيل التهديد</string>
+    <string name="threat_item_sub_header_vulnerable_theme">تم العثور على ثغرة أمنية في قالب</string>
+    <string name="threat_item_sub_header_vulnerable_plugin">تم العثور على ثغرة أمنية في إضافة</string>
+    <string name="threat_item_sub_header_file_signature">تم العثور على تهديد %s</string>
+    <string name="threat_item_sub_header_core_file">تم العثور على ثغرة أمنية في ووردبريس</string>
+    <string name="threat_item_sub_header_misc_vulnerability">ثغرات أمنية متنوعة</string>
+    <string name="threat_item_header_vulnerable_theme">القالب المعرض للاختراق: %s (النسخة %s)</string>
+    <string name="threat_item_header_vulnerable_plugin">الإضافة المعرضة للاختراق: %s (النسخة %s)</string>
+    <string name="threat_item_header_file_malicious_code_pattern">%s: نمط شفرة برمجية ضارة</string>
+    <string name="threat_item_header_database_threat">تهديدات قاعدة البيانات %s</string>
+    <string name="threat_item_header_infected_core_file">%s: ملف أساسي (core file) مصاب</string>
+    <string name="threat_item_header_threat_found">تم العثور على تهديد</string>
+    <string name="threats_found">تم العثور على تهديدات</string>
     <string name="scan_in_few_seconds">في بضع ثوانٍ</string>
     <string name="scan_in_minutes_ago">قبل %s دقيقة</string>
     <string name="scan_in_hours_ago">قبل %s ساعة</string>
     <string name="scan_this_site">هذا الموقع</string>
+    <string name="scan_idle_threats_found_description">عثر الفحص على %s من التهديدات المحتملة في %s. يرجى مراجعتها أدناه واتخاذ الإجراءات. نتواجد هنا لتقديم المساعدة إليك إذا كنت بحاجة إلينا.</string>
+    <string name="scan_idle_last_scan_description">تم تشغيل Jetpack scan آخر مرة في %s وكل شيء على ما يُرام. %s</string>
+    <string name="scan_idle_manual_scan_description">قم بتشغيل فحص يدوي الآن، وانتظر Jetpack حتى يقوم بفحص موقعك لاحقًا اليوم.</string>
+    <string name="scan_scanning_description">مرحبًا بك في Jetpack Scan، سنلقي نظرة أولية على موقعك الآن وستكون النتائج بين يديك قريبًا.\n\n \n سنرسل إليك تنبيهًا بمجرد انتهاء الفحص. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
     <string name="scan_idle_threats_found_title">قد يكون موقعك معرَّضًا للخطر</string>
     <string name="scan_idle_no_threats_found_title">لا داعي للقلق تجاه أي شيء</string>
-    <string name="scan_scanning_title">الإعداد للفحص</string>
     <string name="scan_again">إعادة الفحص مرة أخرى</string>
     <string name="scan_now">الفحص الآن</string>
     <string name="scan_state_icon">أيقونة حالة الفحص</string>
     <string name="backup">النسخ الاحتياطي</string>
+    <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">عامل تصفية نوع النشاط (تم تحديد %s من الأنواع)</string>
+    <string name="activity_log_activity_type_filter_single_item_selected_content_description">%s (عرض %s من العناصر)</string>
+    <string name="activity_log_activity_type_filter_no_item_selected_content_description">عامل تصفية نوع النشاط</string>
     <string name="activity_log_activity_type_empty_subtitle">لم تُسجّل أي أنشطة في مدى التاريخ المحدد.</string>
     <string name="activity_log_activity_type_empty_title">لا توجد أنشطة متاحة</string>
     <string name="activity_log_activity_type_error_subtitle">يرجى التحقق من اتصالك بالإنترنت وإعادة المحاولة.</string>
     <string name="activity_log_activity_type_error_title">لا يوجد اتصال</string>
+    <string name="activity_log_activity_type_filter_active_label">نوع النشاط (%s)</string>
+    <string name="activity_log_date_range_filter_label_content_description">عامل تصفية نطاق التاريخ</string>
     <string name="activity_log_active_filter_empty_subtitle">حاول ضبط مدى التاريخ أو مرشحات نوع النشاط</string>
     <string name="activity_log_active_filter_empty_title">لم يتم العثور على أحداث متطابقة</string>
     <string name="rewind">استعادة</string>
@@ -76,8 +127,6 @@ Language: ar
     <string name="new_site_creation_domain_header_title">اختيار نطاق</string>
     <string name="my_site_btn_jetpack_settings">إعدادات Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_following_comments">متابعة المحادثة</string>
-    <string name="reader_btn_follow_comments">تابع المحادثة</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">لا يمكن إلغاء الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_could_not_subscribe_error">لا يمكن الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_get_status_error">خطأ في جلب حالة الاشتراك للمقالة</string>
@@ -191,7 +240,6 @@ Language: ar
     <string name="gutenberg_native_add_this_telephone_link">أضف رابط الهاتف هذا</string>
     <string name="gutenberg_native_add_this_link">إضافة هذا الرابط</string>
     <string name="gutenberg_native_add_this_email_link">إضافة رابط البريد الإلكتروني هذا</string>
-    <string name="suggestion_no_connection">\"لا يوجد اتصال بالإنترنت.\nالاقتراحات غير متوفرة.\"</string>
     <string name="typeface_label_shrikhand">عريض</string>
     <string name="typeface_label_space_mono">عصري</string>
     <string name="typeface_label_pacifico">مرح</string>
@@ -216,7 +264,6 @@ Language: ar
     <string name="create_post_story_fab_tooltip">إنشاء مقالة أو قصة</string>
     <string name="create_page_fab_tooltip">إنشاء صفحة</string>
     <string name="create_post_fab_tooltip">إنشاء مقالة</string>
-    <string name="contact_fragment_title">\@string/contact_support</string>
     <string name="reader_discover_interests_header">قد ترغب في</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">إخفاء</string>
     <string name="gutenberg_native_video_caption_empty">تسمية الفيديو. فارغ</string>
@@ -383,14 +430,13 @@ Language: ar
     <string name="ccpa_privacy_notice_header">إشعار الخصوصية الخاص بالمستخدمين في كاليفورنيا</string>
     <string name="status_and_visibility">الحالة والظهور</string>
     <string name="update_now">قم بالتحديث الآن</string>
-    <string name="gutenberg_native_try_a_starter_layout">تجربة تخطيط بدء العمل</string>
     <string name="gutenberg_native_open_block_actions_menu">فتح قائمة إجراءات المكوِّن</string>
+    <string name="gutenberg_native_move_to_top">تحريك للأعلى</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">النقر المزدوج لفتح الورقة السفلية التي تحتوي على خيارات متوافرة</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">النقر المزدوج لفتح ورقة الإجراءات التي تحتوي على خيارات متوافرة</string>
     <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
     <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
-    <string name="suggestion_invalid">\"%s ليس %s صالح\"</string>
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_posts_page">صفحة المقالات</string>
     <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
@@ -410,7 +456,6 @@ Language: ar
     <string name="page_homepage_successfully_updated">تم تحديث الصفحة الرئيسية بنجاح</string>
     <string name="page_cannot_set_posts_page">لتعيين صفحة المقالات، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
     <string name="page_cannot_set_homepage">لتعيين صفحة رئيسية، قم بتمكين \"الصفحة الرئيسية الثابتة\" في إعدادات الموقع</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">مرحبًا بك في مدونتنا الجديدة</string>
     <string name="gutenberg_native_select_a_color">تحديد لون</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">الضغط ضغطًا مزدوجًا للانتقال إلى إعدادات الألوان</string>
     <string name="reader_empty_followed_blogs_description">عندما تتابع المواقع، سترى محتواها هنا</string>
@@ -444,7 +489,6 @@ Language: ar
     <string name="gutenberg_native_move_block_left">نقل المكوِّن إلى اليسار</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">الضغط المزدوج لنقل المكوِّن إلى اليمين</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">الضغط المزدوج لنقل المكوِّن إلى اليسار</string>
-    <string name="gutenberg_native_blog">المدوّنة</string>
     <string name="new_site_creation_creating_site_loading_4">إنشاء لوحة التحكم</string>
     <string name="new_site_creation_creating_site_loading_3">إعداد القالب</string>
     <string name="new_site_creation_creating_site_loading_2">إضافة ميزات الموقع</string>
@@ -500,51 +544,15 @@ Language: ar
     <string name="app_theme_light">فاتح</string>
     <string name="app_theme">المظهر</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">لقد أجريت مؤخرًا تغييرات على هذه الصفحة ولكن لم نحفظها. اختيار إصدار لتحميله:\n</string>
-    <string name="gutenberg_native_what_people_say">ماذا يقول الناس</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">نوفِّر مجموعة من الخدمات لمساعدتك على تحقيق النتائج التي تسعى إليها. ألستَ متأكِّدًا مما تحتاج إليه؟، أو كم تبلغ تكلفته؟ يمكننا توضيح الخدمات المناسبة لك، وإبلاغك بالمزيد عن الرسوم التي نطلبها. ابق على اتصال من خلال المعلومات الواردة ادناه.</string>
-    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">نحن فريق صغير من الاحترافيين الموهوبين الذين يتمتعون بمجموعة كبيرة من المهارات والخبرات. نحب ما نفعله ونقوم به بشغف. نتطلع إلى العمل معك.</string>
     <string name="gutenberg_native_warning_message">رسالة التحذير</string>
-    <string name="gutenberg_native_want_to_work_with_us">ترغب بالعمل معنا؟</string>
-    <string name="gutenberg_native_walt_disney">والت ديزني</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">سيرغب الزائرون في معرفة الموجودين على الجانب الآخر من الصفحة. استخدم هذه المساحة للكتابة عن نفسك أو موقعك أو شركتك أو أي شيء تريده. استعن بالتوصيات الواردة أدناه للاقتباس من الآخرين الذين يتحدثون حول الأمر نفسه بأسلوبهم الخاص.</string>
-    <string name="gutenberg_native_usa">USA</string>
-    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">هذا هو محتوى النموذج المُضمَّن مع القالب لتوضيح ميزاته. يمكنك إزالته أو استبدال كلماتك ووسائطك الخاصة به.</string>
-    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">طريقة البدء هي التوقف عن الحديث والبدء في القيام به.</string>
-    <string name="gutenberg_native_team">الفريق</string>
     <string name="gutenberg_native_success_message">رسالة النجاح</string>
-    <string name="gutenberg_native_strategy">الإستراتيجية</string>
     <string name="gutenberg_native_show_post_content">إظهار محتوى المقالة</string>
-    <string name="gutenberg_native_services">الخدمات</string>
-    <string name="gutenberg_native_samuel_the_dog">القطّ فروزن</string>
-    <string name="gutenberg_native_sally_smith">سالي سميث</string>
-    <string name="gutenberg_native_project_name">اسم المشروع</string>
-    <string name="gutenberg_native_position_or_job_title">المنصب أو المسمى الوظيفي</string>
-    <string name="gutenberg_native_portfolio">معرض أعمال</string>
     <string name="gutenberg_native_only_show_excerpt">إظهار المقتطف فقط</string>
-    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">يعرض معرض أعمالي المشاريع المختلفة التي تم إنشاؤها طوال مسيرتي المهنية. شاهد معلومات الاتصال الخاصة بي أدناه لنبق على تواصل.</string>
     <string name="gutenberg_native_link_to">رابط لـ</string>
     <string name="gutenberg_native_link_settings">إعدادات الرابط</string>
-    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">فلنتحدث 👋 لا تتردد في التواصل باستخدام معلومات الاتصال أدناه، أو إرسال رسالة باستخدام النموذج.</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">دعونا نبني شيئًا معًا!</string>
-    <string name="gutenberg_native_let_s_build_something_together">دعونا نبني شيئًا معًا!</string>
-    <string name="gutenberg_native_juan_p_rez">خوان بيريز</string>
-    <string name="gutenberg_native_j_k_rowling">ج.ك. رولينج</string>
-    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">هاري، إن اختياراتنا هي التي تظهر ما نحن عليه بالفعل، أكثر بكثير من قدراتنا.</string>
-    <string name="gutenberg_native_inspiration">الإلهام</string>
-    <string name="gutenberg_native_get_in_touch">ابق على اتصال</string>
     <string name="gutenberg_native_excerpt_length_words">طول المقتطف (كلمات)</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">راسلني عبر البريد: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">لا تبكي لأنه انتهى، ابتسم لأنه حدث.</string>
     <string name="gutenberg_native_customize">تخصيص</string>
-    <string name="gutenberg_native_city_10100">المدينة، 10100</string>
     <string name="gutenberg_native_add_paragraph_block">إضافة مكوّن فقرة</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">وصف موجز للخدمات التي تقدمها.</string>
-    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">سيرة ذاتية قصيرة مع التاريخ الشخصي والإنجازات الرئيسية، أو حقيقة مثيرة للاهتمام.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">وصف المشروع والأعمال المقدَّمة.</string>
-    <string name="gutenberg_native_555_555_1234">+96692000000</string>
-    <string name="gutenberg_native_10_street_road">شارع 10 العام</string>
     <string name="create_post_page_fab_tooltip_contributors">إنشاء مقالة</string>
     <string name="post_list_tab_trashed_posts">محذوف</string>
     <string name="post_list_tab_scheduled_posts">مجدول</string>
@@ -570,7 +578,6 @@ Language: ar
     <string name="reader_filter_self_hosted_empty_sites_tags_action">تسجيل الدخول إلى WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواضيع التي تتابعها</string>
     <string name="reader_filter_self_hosted_empty_sites_list">تسجيل الدخول إلى WordPress.com للاطلاع على أحدث المقالات من المواقع التي تتابعها</string>
-    <string name="gutenberg_native_template_preview">معاينة القالب</string>
     <string name="gutenberg_native_replace_current_block">استبدال المكوِّن الحالي</string>
     <string name="gutenberg_native_add_to_end">إضافة إلى النهاية</string>
     <string name="gutenberg_native_add_to_beginning">إضافة إلى البداية</string>
@@ -584,7 +591,6 @@ Language: ar
     <string name="reader_filter_cta">عامل التصفية</string>
     <string name="gutenberg_native_video_caption_s">تسمية الفيديو. %s</string>
     <string name="gutenberg_native_edit_video">تحرير الفيديو</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">انقر نقرًا مزدوجًا لتحديد المخطط</string>
     <string name="gutenberg_native_add_a_shortcode">إضافة كود قصير…</string>
     <string name="post_list_author">كاتب المقالة</string>
     <string name="fab_create_desc">إنشاء مقالة</string>
@@ -999,8 +1005,6 @@ Language: ar
     <string name="quick_start_dialog_upload_icon_title">رفع أيقونة للموقع</string>
     <string name="quick_start_dialog_upload_icon_message">سيرى زائروك أيقونتك في متصفحهم. أضف أيقونة مخصصة للحصول على مظهر جذّاب واحترافي.</string>
     <string name="quick_start_dialog_explore_plans_message_short">أنقر على %1$s الخطة %2$s لمشاهدة خطتك الحالية والخطط الأخرى المتاحة</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">أنقر على %1$s إضافة صفحة %2$s لإنشاء صفحة جديدة.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">انقر على ⁦%1$s⁩ الصفحات ⁦%2$s⁩ للمتابعة.</string>
     <string name="quick_start_dialog_check_stats_message_short">أنقر على %1$s الإحصائيات %2$s لمشاهدة مستوى أداء موقعك.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">أنقر على %1$s أيقونة موقعك %2$s لرفع أيقونة جديدة</string>
     <string name="quick_start_dialog_publish_post_message">قم بنشر مسودّة مقالتك الأولى.</string>
@@ -1011,13 +1015,8 @@ Language: ar
     <string name="quick_start_dialog_explore_plans_message">معرفة المزيد عن أدوات التسويق وتحسين محركات البحث SEO في خططنا المدفوعة.</string>
     <string name="quick_start_dialog_enable_sharing_title">تمكين مشاركة المقالة</string>
     <string name="quick_start_dialog_enable_sharing_message">شارك المقالات الجديدة تلقائيًّا على حساباتك على وسائل التواصل الاجتماعي.</string>
-    <string name="quick_start_dialog_customize_site_message">ضبط الخطوط، إضافة صور، والمزيد.</string>
-    <string name="quick_start_dialog_create_page_title">إنشاء صفحة جديدة</string>
-    <string name="quick_start_dialog_create_page_message">أضف صفحة للمحتوى الأساسي — تعتبر صفحة \"حول\" بداية رائعة.</string>
     <string name="quick_start_dialog_check_stats_title">التحقّق من إحصاءات موقعك</string>
     <string name="quick_start_dialog_check_stats_message">واكب التحديثات لأداء موقعك.</string>
-    <string name="quick_start_dialog_browse_themes_title">تصفّح القوالب</string>
-    <string name="quick_start_dialog_browse_themes_message">استكشف العشرات من خيارات التنسيق واعثر على لياقتك المثالية.</string>
     <string name="quick_start_dialog_remove_next_steps_message">ستؤدي إزالة الخطوات التالية إلى إخفاء جميع الجولات على هذا الموقع. لا يمكن التراجع عن هذا الإجراء.</string>
     <string name="quick_start_dialog_remove_next_steps_title">إزالة الخطوات التالية</string>
     <string name="quick_start_remove_next_steps_menu_title">إزالة هذا</string>
@@ -1206,12 +1205,6 @@ Language: ar
     <string name="quick_start_dialog_follow_sites_message_short_search">انقر على %1$sبحث%2$s للبحث عن مواقع ذات اهتمامات مماثلة</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">انقر على %1$sالقاريء%2$s للمتابعة</string>
     <string name="quick_start_dialog_follow_sites_message">يمكنك العثور على المواقع التي تلهمك، ومتابعتها للحصول على التحديثات عندما تقوم بالنشر.</string>
-    <string name="quick_start_dialog_customize_site_title">تخصيص موقعك</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">انقر على %1$sالقوالب%2$s للمتابعة</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">انقر على %1$sتخصيص%2$s للبدء في تخصيص موقعك</string>
-    <string name="quick_start_dialog_choose_theme_title">اختيار قالب</string>
-    <string name="quick_start_dialog_browse_themes_message_short">أنقر على %1$s القوالب %2$s لاكتشاف قوالب جديدة</string>
-    <string name="quick_start_dialog_choose_theme_message">تصفّح جميع قوالبنا للعثور على ما يناسبك.</string>
     <string name="quick_start_button_positive">انتقال</string>
     <string name="quick_start_button_negative_short">إلغاء</string>
     <string name="quick_start_button_negative">ليس الآن</string>
