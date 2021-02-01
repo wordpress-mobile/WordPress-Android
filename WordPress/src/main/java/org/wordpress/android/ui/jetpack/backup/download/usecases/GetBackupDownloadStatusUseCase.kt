@@ -27,7 +27,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
 ) {
     suspend fun getBackupDownloadStatus(
         site: SiteModel,
-        downloadId: Long
+        downloadId: Long? = null
     ) = flow {
         var retryAttempts = 0
         while (true) {
