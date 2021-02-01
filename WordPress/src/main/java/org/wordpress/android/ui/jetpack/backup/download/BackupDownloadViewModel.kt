@@ -306,23 +306,7 @@ class BackupDownloadViewModel @Inject constructor(
                 transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             is Progress -> {
-                (_uiState.value as? ProgressState)?.let { content ->
-                    val updatedList = content.items.map { contentState ->
-                        if (contentState.type == ViewType.PROGRESS) {
-                            contentState as JetpackListItemState.ProgressState
-                            contentState.copy(
-                                    progress = state.progress ?: 0,
-                                    progressLabel = UiStringResWithParams(
-                                            string.backup_download_progress_label,
-                                            listOf(UiStringText(state.progress?.toString() ?: "0"))
-                                    )
-                            )
-                        } else {
-                            contentState
-                        }
-                    }
-                    _uiState.postValue(content.copy(items = updatedList))
-                }
+                transitionToProgress(state)
             }
             is Complete -> {
                 backupDownloadState = backupDownloadState.copy(url = state.url)
@@ -333,6 +317,26 @@ class BackupDownloadViewModel @Inject constructor(
             }
             else -> {
             } // no op
+        }
+    }
+
+    private fun transitionToProgress(state: Progress) {
+        (_uiState.value as? ProgressState)?.let { content ->
+            val updatedList = content.items.map { contentState ->
+                if (contentState.type == ViewType.PROGRESS) {
+                    contentState as JetpackListItemState.ProgressState
+                    contentState.copy(
+                            progress = state.progress ?: 0,
+                            progressLabel = UiStringResWithParams(
+                                    string.backup_download_progress_label,
+                                    listOf(UiStringText(state.progress?.toString() ?: "0"))
+                            )
+                    )
+                } else {
+                    contentState
+                }
+            }
+            _uiState.postValue(content.copy(items = updatedList))
         }
     }
 
