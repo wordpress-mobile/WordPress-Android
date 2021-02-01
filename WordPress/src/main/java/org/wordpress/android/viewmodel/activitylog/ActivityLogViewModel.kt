@@ -179,15 +179,21 @@ class ActivityLogViewModel @Inject constructor(
         val items = mutableListOf<ActivityLogListItem>()
         var moveToTop = false
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
+        val withBackupDownloadProgressItem = backupDownloadEvent.displayProgress && !backupDownloadEvent.isCompleted
         if (withRestoreProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
-            items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.published))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
+            items.add(getRestoreProgressItem(restoreEvent.rewindId, restoreEvent.published))
+        }
+        if (withBackupDownloadProgressItem) {
+            items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
+            moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
+            items.add(getBackupDownloadProgressItem(backupDownloadEvent.rewindId, backupDownloadEvent.published))
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
                     model,
-                    withRestoreProgressItem,
+                    withRestoreProgressItem || withBackupDownloadProgressItem,
                     backupDownloadFeatureConfig.isEnabled(),
                     restoreFeatureConfig.isEnabled()
             )
@@ -209,8 +215,12 @@ class ActivityLogViewModel @Inject constructor(
             _moveToTop.call()
         }
         if (restoreEvent.isCompleted) {
-            showRewindFinishedMessage(restoreEvent.rewindId, restoreEvent.published)
+            showRestoreFinishedMessage(restoreEvent.rewindId, restoreEvent.published)
             currentRestoreEvent = RestoreEvent(false)
+        }
+        if (backupDownloadEvent.isCompleted) {
+            showBackupDownloadFinishedMessage(backupDownloadEvent.rewindId, backupDownloadEvent.published)
+            currentBackupDownloadEvent = BackupDownloadEvent(false)
         }
     }
 
@@ -233,7 +243,25 @@ class ActivityLogViewModel @Inject constructor(
         )
     }
 
-    private fun showRewindFinishedMessage(rewindId: String?, published: Date?) {
+    private fun getBackupDownloadProgressItem(rewindId: String?, published: Date?): ActivityLogListItem.Progress {
+        val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        return rewindDate?.let {
+            ActivityLogListItem.Progress(
+                    resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
+                    resourceProvider.getString(
+                            R.string.activity_log_currently_backing_up_message,
+                            rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
+                    ),
+                    ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+            )
+        } ?: ActivityLogListItem.Progress(
+                resourceProvider.getString(R.string.activity_log_currently_backing_up_title),
+                resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates),
+                ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+        )
+    }
+
+    private fun showRestoreFinishedMessage(rewindId: String?, published: Date?) {
         val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         if (rewindDate != null) {
             _showSnackbarMessage.value =
@@ -245,6 +273,21 @@ class ActivityLogViewModel @Inject constructor(
         } else {
             _showSnackbarMessage.value =
                     resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates)
+        }
+    }
+
+    private fun showBackupDownloadFinishedMessage(rewindId: String?, published: Date?) {
+        val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        if (rewindDate != null) {
+            _showSnackbarMessage.value =
+                    resourceProvider.getString(
+                            R.string.activity_log_backup_finished_snackbar_message,
+                            rewindDate.toFormattedDateString(),
+                            rewindDate.toFormattedTimeString()
+                    )
+        } else {
+            _showSnackbarMessage.value =
+                    resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates)
         }
     }
 
