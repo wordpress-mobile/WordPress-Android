@@ -1024,6 +1024,9 @@
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
+    <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
