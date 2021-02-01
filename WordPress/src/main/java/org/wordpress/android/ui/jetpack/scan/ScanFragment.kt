@@ -71,10 +71,15 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         viewModel.uiState.observe(
             viewLifecycleOwner,
             { uiState ->
+                uiHelpers.updateVisibility(progress_bar, uiState.loadingVisible)
+                uiHelpers.updateVisibility(recycler_view, uiState.contentVisible)
+                uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisible)
+
                 when (uiState) {
                     is ContentUiState -> updateContentLayout(uiState)
 
-                    is FullScreenLoadingUiState -> updateFullScreenLoadingLayout(uiState)
+                    is FullScreenLoadingUiState -> { // Do Nothing
+                    }
 
                     is ErrorUiState.NoConnection,
                     is ErrorUiState.GenericRequestFailed,
@@ -102,11 +107,6 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 }
             }
         )
-    }
-
-    private fun updateFullScreenLoadingLayout(state: FullScreenLoadingUiState) {
-        uiHelpers.setTextOrHide(actionable_empty_view.title, state.title)
-        actionable_empty_view.image.setImageResource(state.image)
     }
 
     private fun updateContentLayout(state: ContentUiState) {

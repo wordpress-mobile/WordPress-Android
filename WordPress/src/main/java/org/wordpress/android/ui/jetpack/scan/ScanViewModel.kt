@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -41,6 +42,8 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+const val RETRY_DELAY = 300L
 
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
@@ -86,13 +89,16 @@ class ScanViewModel @Inject constructor(
             scanStateModel?.let {
                 updateUiState(buildContentUiState(it))
                 if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds)
-            } ?: updateUiState(FullScreenLoadingUiState)
+            }
             fetchScanState()
         }
     }
 
-    private fun fetchScanState(startWithDelay: Boolean = false) {
+    private fun fetchScanState(startWithDelay: Boolean = false, isRetry: Boolean = false) {
         launch {
+            if (scanStateModel == null) updateUiState(FullScreenLoadingUiState)
+            if (isRetry) delay(RETRY_DELAY)
+
             fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = startWithDelay)
                 .collect { state ->
                     when (state) {
@@ -201,7 +207,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onRetryClicked() {
-        fetchScanState()
+        fetchScanState(isRetry = true)
     }
 
     private fun onContactSupportClicked() {
@@ -295,15 +301,16 @@ class ScanViewModel @Inject constructor(
         )
     )
 
-    sealed class UiState {
-        object FullScreenLoadingUiState : UiState() {
-            @DrawableRes val image = R.drawable.img_illustration_empty_results_216dp
-            val title = UiStringRes(R.string.scan_loading_title)
-        }
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val contentVisible: Boolean = false,
+        val errorVisible: Boolean = false
+    ) {
+        object FullScreenLoadingUiState : UiState(loadingVisible = true)
 
-        data class ContentUiState(val items: List<JetpackListItemState>) : UiState()
+        data class ContentUiState(val items: List<JetpackListItemState>) : UiState(contentVisible = true)
 
-        sealed class ErrorUiState : UiState() {
+        sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val image: Int
             abstract val title: UiString
             abstract val subtitle: UiString
