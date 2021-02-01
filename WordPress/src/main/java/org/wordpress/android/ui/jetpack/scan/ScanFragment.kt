@@ -83,7 +83,7 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
 
                     is ErrorUiState.NoConnection,
                     is ErrorUiState.GenericRequestFailed,
-                    is ErrorUiState.StartScanRequestFailed -> updateErrorLayout(uiState as ErrorUiState)
+                    is ErrorUiState.ScanRequestFailed -> updateErrorLayout(uiState as ErrorUiState)
                 }
             }
         )

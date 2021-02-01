@@ -201,10 +201,34 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given fetch scan state succeeds, when scan state is fetched, then ui is updated with content`() = test {
-        val uiStates = init().uiStates
+    fun `given fetch scan state succeeds with valid state, when scan state is fetched, then ui updated with content`() =
+        test {
+            val uiStates = init().uiStates
 
-        assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
+            assertThat(uiStates.last()).isInstanceOf(ContentUiState::class.java)
+        }
+
+    @Test
+    fun `given fetch scan state succeeds with invalid state, when scan state is fetched, then error ui is shown`() =
+        test {
+            whenever(fetchScanStateUseCase.fetchScanState(site))
+                .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
+
+            val uiStates = init().uiStates
+
+            val errorState = uiStates.last() as ErrorUiState
+            assertThat(errorState).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given invalid scan state error ui, when contact support is clicked, then contact support is shown`() = test {
+        whenever(fetchScanStateUseCase.fetchScanState(site))
+            .thenReturn(flowOf(Success(fakeScanStateModel.copy(state = ScanStateModel.State.UNKNOWN))))
+        val observers = init()
+
+        (observers.uiStates.last() as ErrorUiState).action.invoke()
+
+        assertThat(observers.navigation.last().peekContent()).isEqualTo(ShowContactSupport(site))
     }
 
     @Test
@@ -285,7 +309,7 @@ class ScanViewModelTest : BaseUnitTest() {
             (observers.uiStates.last() as ContentUiState)
                 .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
-            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
+            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
         }
 
     @Test
@@ -306,7 +330,7 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given start scan request failed error state, when contact support is clicked, then contact support shown`() =
+    fun `given scan request failed error state, when contact support is clicked, then contact support shown`() =
         test {
             whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
             val observers = init()
