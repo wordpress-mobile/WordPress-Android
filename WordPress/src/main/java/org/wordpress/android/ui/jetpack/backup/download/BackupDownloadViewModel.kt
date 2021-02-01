@@ -202,7 +202,8 @@ class BackupDownloadViewModel @Inject constructor(
                         published = backupDownloadState.published as Date,
                         onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
                         onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
-                ), type = StateType.COMPLETE)
+                ), type = StateType.COMPLETE
+        )
     }
 
     private fun buildError(errorType: BackupDownloadErrorTypes) {
@@ -210,7 +211,8 @@ class BackupDownloadViewModel @Inject constructor(
                 errorType = errorType,
                 items = stateListItemBuilder.buildCompleteListStateErrorItems(
                         onDoneClick = this@BackupDownloadViewModel::onDoneClick
-                ))
+                )
+        )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
