@@ -2,6 +2,7 @@
 
 16.7
 -----
+* [*] Reader: show post menu for posts in Blog Preview and Search results [https://github.com/wordpress-mobile/WordPress-Android/pull/13897]
 * [**] Site Creation: Enables dot blog subdomains for each site design. [https://github.com/wordpress-mobile/WordPress-Android/pull/13917]
 
 16.6
