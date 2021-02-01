@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
@@ -55,6 +56,7 @@ import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.BackupDownloadEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.RestoreEvent
@@ -78,8 +80,17 @@ private const val RESTORING_NO_DATE = "Restore in progress"
 private const val RESTORED_DATE_TIME = "Your site has been successfully restored\nRestored to date time"
 private const val RESTORED_NO_DATE = "Your site has been successfully restored"
 
+private const val BACKUP_STARTED = "Your site is being backed up\nBacking up from date time"
+private const val BACKING_UP_CURRENTLY = "Creating downloadable backup"
+private const val BACKING_UP_DATE_TIME = "Backing up site from date time"
+private const val BACKING_UP_NO_DATE = "Backing up site"
+private const val BACKED_UP_DATE_TIME = "Your site has been successfully backed up\nBacked up from date time"
+private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
+
 private const val REWIND_ID = "rewindId"
 private const val RESTORE_ID = 123456789L
+private const val DOWNLOAD_URL = "downloadUrl"
+private const val DOWNLOAD_ID = 987654321L
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -585,6 +596,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = displayRestoreProgressItem,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
@@ -608,6 +621,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = displayRestoreProgressItem,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
@@ -645,6 +660,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = displayRestoreProgressItem,
                         restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
@@ -670,6 +687,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = displayRestoreProgressItem,
                         restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
@@ -695,6 +714,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = displayRestoreProgressItem,
                         restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
@@ -766,6 +787,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = false,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = true,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -787,6 +810,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = false,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -808,6 +833,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = false,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = true,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -829,6 +856,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = false,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -851,6 +880,8 @@ class ActivityLogViewModelTest {
                 expectedActivityList(
                         displayRestoreProgress = false,
                         restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -1075,6 +1106,8 @@ class ActivityLogViewModelTest {
     private fun expectedActivityList(
         displayRestoreProgress: Boolean = false,
         restoreProgressWithDate: Boolean = false,
+        displayBackupProgress: Boolean = false,
+        backupProgressWithDate: Boolean = false,
         emptyList: Boolean = false,
         rewindDisabled: Boolean = true,
         isLastPageAndFreeSite: Boolean = false,
@@ -1088,6 +1121,14 @@ class ActivityLogViewModelTest {
                 list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME, RESTORE))
             } else {
                 list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE, RESTORE))
+            }
+        }
+        if (displayBackupProgress) {
+            list.add(ActivityLogListItem.Header(NOW))
+            if (backupProgressWithDate) {
+                list.add(ActivityLogListItem.Progress(BACKING_UP_CURRENTLY, BACKING_UP_DATE_TIME, BACKUP_DOWNLOAD))
+            } else {
+                list.add(ActivityLogListItem.Progress(BACKING_UP_CURRENTLY, BACKING_UP_NO_DATE, BACKUP_DOWNLOAD))
             }
         }
         if (!emptyList) {
@@ -1174,6 +1215,22 @@ class ActivityLogViewModelTest {
         }
     }
 
+    private fun initBackupProgressMocks(displayProgressWithDate: Boolean = true) {
+        if (displayProgressWithDate) {
+            whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        }
+        whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
+        whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_title))
+                .thenReturn(BACKING_UP_CURRENTLY)
+        if (displayProgressWithDate) {
+            whenever(resourceProvider.getString(eq(R.string.activity_log_currently_backing_up_message), any(), any()))
+                    .thenReturn(BACKING_UP_DATE_TIME)
+        } else {
+            whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates))
+                    .thenReturn(BACKING_UP_NO_DATE)
+        }
+    }
+
     private fun initRestoreProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
         initRestoreProgressMocks(displayProgressWithDate)
         viewModel.reloadEvents(
@@ -1191,6 +1248,26 @@ class ActivityLogViewModelTest {
         } else {
             whenever(resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates))
                     .thenReturn(RESTORED_NO_DATE)
+        }
+    }
+
+    private fun initBackupProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
+        initBackupProgressMocks(displayProgressWithDate)
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+        )
+        if (date != null) {
+            whenever(
+                    resourceProvider.getString(
+                            eq(R.string.activity_log_backup_finished_snackbar_message),
+                            any(),
+                            any()
+                    )
+            ).thenReturn(BACKED_UP_DATE_TIME)
+        } else {
+            whenever(resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates))
+                    .thenReturn(BACKED_UP_NO_DATE)
         }
     }
 }
