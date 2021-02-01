@@ -11,12 +11,10 @@ import androidx.lifecycle.Observer
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
@@ -92,8 +90,7 @@ class BackupDownloadViewModel @Inject constructor(
     private val stateListItemBuilder: BackupDownloadStateListItemBuilder,
     private val postBackupDownloadUseCase: PostBackupDownloadUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -286,7 +283,7 @@ class BackupDownloadViewModel @Inject constructor(
             getBackupDownloadStatusUseCase.getBackupDownloadStatus(
                     site,
                     backupDownloadState.downloadId as Long
-            ).flowOn(bgDispatcher).collect { state -> handleQueryStatus(state) }
+            ).collect { state -> handleQueryStatus(state) }
         }
     }
 

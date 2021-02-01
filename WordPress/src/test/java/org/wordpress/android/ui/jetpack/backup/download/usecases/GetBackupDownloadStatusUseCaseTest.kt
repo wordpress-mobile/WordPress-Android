@@ -4,6 +4,7 @@ import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
 import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
@@ -13,22 +14,24 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.MainCoroutineScopeRule
+import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
-import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
-import org.wordpress.android.test
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure
-import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
+import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
 
+@InternalCoroutinesApi
 @ExperimentalCoroutinesApi
 class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private lateinit var useCase: GetBackupDownloadStatusUseCase
@@ -42,7 +45,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Before
     fun setup() {
-        useCase = GetBackupDownloadStatusUseCase(networkUtilsWrapper, activityLogStore)
+        useCase = GetBackupDownloadStatusUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
     }
 
@@ -115,14 +118,14 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val progress = 50
 
     private val statusModel = BackupDownloadStatusModel(
-        downloadId = downloadId,
-        rewindId = rewindId,
-        backupPoint = Date(1609690147756),
-        startedAt = Date(1609690147756),
-        progress = null,
-        downloadCount = 0,
-        validUntil = Date(1609690147756),
-        url = url
+            downloadId = downloadId,
+            rewindId = rewindId,
+            backupPoint = Date(1609690147756),
+            startedAt = Date(1609690147756),
+            progress = null,
+            downloadCount = 0,
+            validUntil = Date(1609690147756),
+            url = url
     )
 
     private val inProgressModel = BackupDownloadStatusModel(
