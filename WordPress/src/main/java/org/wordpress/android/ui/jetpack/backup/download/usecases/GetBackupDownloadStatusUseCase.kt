@@ -63,11 +63,12 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     return@flow
                 }
                 if (downloadId == null || status.downloadId == downloadId) {
+                    val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
                     if (status.progress == null) {
-                        emit(Complete(status.rewindId, status.downloadId, status.url))
+                        emit(Complete(status.rewindId, status.downloadId, status.url, published))
                         return@flow
                     } else {
-                        emit(Progress(status.rewindId, status.progress))
+                        emit(Progress(status.rewindId, status.progress, published))
                     }
                 }
                 delay(DELAY_MILLIS)

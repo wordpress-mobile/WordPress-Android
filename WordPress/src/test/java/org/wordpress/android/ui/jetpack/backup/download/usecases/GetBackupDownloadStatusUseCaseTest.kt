@@ -16,6 +16,7 @@ import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
@@ -48,6 +49,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(activityLogStore.fetchBackupDownloadState(any()))
                 .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+        whenever(activityLogStore.getActivityLogItemByRewindId(rewindId)).thenReturn(activityLogModel)
     }
 
     @Test
@@ -171,6 +173,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val url = "www.wordpress.com"
     private val downloadId = 100L
     private val progress = 50
+    private val published = Date()
 
     private val statusModel = BackupDownloadStatusModel(
             downloadId = downloadId,
@@ -194,6 +197,20 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             url = url
     )
 
-    private val completeStatus = Complete(rewindId, downloadId, url)
-    private val progressStatus = Progress(rewindId, progress)
+    private val activityLogModel = ActivityLogModel(
+            activityID = "activityID",
+            summary = "summary",
+            content = null,
+            name = null,
+            type = null,
+            gridicon = null,
+            status = null,
+            rewindable = null,
+            rewindID = null,
+            published = published,
+            actor = null
+    )
+
+    private val completeStatus = Complete(rewindId, downloadId, url, published)
+    private val progressStatus = Progress(rewindId, progress, published)
 }
