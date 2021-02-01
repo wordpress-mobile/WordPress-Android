@@ -41,7 +41,6 @@ class ScanStateListItemsBuilder @Inject constructor(
         onFixAllButtonClicked: () -> Unit,
         onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
-        val progress = model.currentStatus?.progress ?: 0
         return when (model.state) {
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
@@ -54,10 +53,9 @@ class ScanStateListItemsBuilder @Inject constructor(
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
-            ScanStateModel.State.SCANNING -> buildScanningStateItems(progress)
+            ScanStateModel.State.SCANNING -> buildScanningStateItems(model.currentStatus?.progress ?: 0)
             ScanStateModel.State.PROVISIONING -> buildProvisioningStateItems()
-            ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN ->
-                buildScanningStateItems(progress) // TODO: ashiagr filter out invalid states
+            ScanStateModel.State.UNAVAILABLE, ScanStateModel.State.UNKNOWN -> emptyList()
         }
     }
 
