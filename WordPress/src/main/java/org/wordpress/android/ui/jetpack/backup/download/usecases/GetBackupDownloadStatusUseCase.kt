@@ -25,7 +25,10 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
+    suspend fun getBackupDownloadStatus(
+        site: SiteModel,
+        downloadId: Long
+    ) = flow {
         var retryAttempts = 0
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
