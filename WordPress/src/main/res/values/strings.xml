@@ -1027,6 +1027,9 @@
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
+    <string name="activity_log_currently_backing_up_title">Creating downloadable backup</string>
+    <string name="activity_log_currently_backing_up_message">Backing up site from %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Backing up site</string>
     <string name="activity_log_rewind_site">Restore Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
