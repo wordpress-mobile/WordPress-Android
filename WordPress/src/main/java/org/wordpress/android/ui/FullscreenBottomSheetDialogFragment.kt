@@ -31,6 +31,7 @@ abstract class FullscreenBottomSheetDialogFragment : BottomSheetDialogFragment()
                 setupFullHeight(it)
                 behaviour.skipCollapsed = true
                 behaviour.state = BottomSheetBehavior.STATE_EXPANDED
+                behaviour.peekHeight = resources.displayMetrics.heightPixels / 2
             }
         }
     }
