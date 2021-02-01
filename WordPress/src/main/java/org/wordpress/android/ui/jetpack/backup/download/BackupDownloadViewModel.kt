@@ -294,7 +294,7 @@ class BackupDownloadViewModel @Inject constructor(
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
             is NetworkUnavailable -> {
-                transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             is RemoteRequestFailure -> {
                 transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
