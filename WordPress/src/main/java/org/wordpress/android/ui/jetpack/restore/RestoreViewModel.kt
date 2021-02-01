@@ -140,18 +140,23 @@ class RestoreViewModel @Inject constructor(
 
     fun onBackPressed() {
         when (wizardManager.currentStep) {
-            DETAILS.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
-            WARNING.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
-            PROGRESS.id -> {
-                _wizardFinishedObservable.value = if (restoreState.restoreId != null) {
-                    Event(RestoreInProgress(restoreState.restoreId as Long))
-                } else {
-                    Event(RestoreCanceled)
-                }
-            }
-            COMPLETE.id -> { _wizardFinishedObservable.value = Event(RestoreCompleted) }
-            ERROR.id -> { _wizardFinishedObservable.value = Event(RestoreCanceled) }
+            DETAILS.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
+            WARNING.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
+            PROGRESS.id -> _wizardFinishedObservable.value = constructProgressEvent()
+            COMPLETE.id -> _wizardFinishedObservable.value = Event(RestoreCompleted)
+            ERROR.id -> _wizardFinishedObservable.value = Event(RestoreCanceled)
         }
+    }
+
+    private fun constructProgressEvent() = if (restoreState.restoreId != null) {
+        Event(
+                RestoreInProgress(
+                        restoreState.rewindId as String,
+                        restoreState.restoreId as Long
+                )
+        )
+    } else {
+        Event(RestoreCanceled)
     }
 
     fun writeToBundle(outState: Bundle) {
@@ -232,11 +237,7 @@ class RestoreViewModel @Inject constructor(
             WARNING -> buildWarning()
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
-            ERROR -> buildError(
-                    RestoreErrorTypes.fromInt(
-                            target.wizardState.errorType ?: GenericFailure.id
-                    )
-            )
+            ERROR -> buildError(RestoreErrorTypes.fromInt(target.wizardState.errorType ?: GenericFailure.id))
         }
     }
 
@@ -255,10 +256,13 @@ class RestoreViewModel @Inject constructor(
 
     private fun buildOptionsSelected(items: List<JetpackListItemState>): List<Pair<Int, Boolean>> {
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
-        return listOf(Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
+        return listOf(
+                Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
                 Pair(PLUGINS.id, checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true),
-                Pair(MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                        ?: true),
+                Pair(
+                        MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                        ?: true
+                ),
                 Pair(SQLS.id, checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true),
                 Pair(ROOTS.id, checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true),
                 Pair(CONTENTS.id, checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true)
@@ -266,40 +270,34 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun buildRewindRequestTypes(optionsSelected: List<Pair<Int, Boolean>>?) =
-        RewindRequestTypes(
-                themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
-                plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
-                        ?: true,
-                uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
-                        ?: true,
-                sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
-                roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
-                contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
-                        ?: true
-        )
+            RewindRequestTypes(
+                    themes = optionsSelected?.firstOrNull { it.first == THEMES.id }?.second ?: true,
+                    plugins = optionsSelected?.firstOrNull { it.first == PLUGINS.id }?.second
+                            ?: true,
+                    uploads = optionsSelected?.firstOrNull { it.first == MEDIA_UPLOADS.id }?.second
+                            ?: true,
+                    sqls = optionsSelected?.firstOrNull { it.first == SQLS.id }?.second ?: true,
+                    roots = optionsSelected?.firstOrNull { it.first == ROOTS.id }?.second ?: true,
+                    contents = optionsSelected?.firstOrNull { it.first == CONTENTS.id }?.second
+                            ?: true
+            )
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
-            is NetworkUnavailable -> {
-                handleRestoreRequestError(NetworkUnavailableMsg)
-            }
-            is RemoteRequestFailure -> {
-                handleRestoreRequestError(GenericFailureMsg)
-            }
-            is Success -> {
-                restoreState = restoreState.copy(
-                        rewindId = result.rewindId,
-                        restoreId = result.restoreId
-                )
-                wizardManager.showNextStep()
-            }
-            is OtherRequestRunning -> {
-                handleRestoreRequestError(OtherRequestRunningMsg)
-            }
-            else -> {
-                throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
-            }
+            is NetworkUnavailable -> handleRestoreRequestError(NetworkUnavailableMsg)
+            is RemoteRequestFailure -> handleRestoreRequestError(GenericFailureMsg)
+            is Success -> handleRestoreRequestSuccess(result)
+            is OtherRequestRunning -> handleRestoreRequestError(OtherRequestRunningMsg)
+            else -> throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
         }
+    }
+
+    private fun handleRestoreRequestSuccess(result: Success) {
+        restoreState = restoreState.copy(
+                rewindId = result.rewindId,
+                restoreId = result.restoreId
+        )
+        wizardManager.showNextStep()
     }
 
     private fun handleRestoreRequestError(snackbarMessageHolder: SnackbarMessageHolder) {
@@ -321,42 +319,42 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
         when (restoreStatus) {
-            is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
-            is RemoteRequestFailure -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
-            is Progress -> {
-                (_uiState.value as? ProgressState)?.let { content ->
-                    val updatedList = content.items.map { contentState ->
-                        if (contentState.type == ViewType.PROGRESS) {
-                            contentState as JetpackListItemState.ProgressState
-                            contentState.copy(
-                                    progress = restoreStatus.progress ?: 0,
-                                    progressLabel = UiStringResWithParams(
-                                            R.string.restore_progress_label,
-                                            listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
-                                    ),
-                                    progressInfoLabel = if (restoreStatus.currentEntry != null) {
-                                            UiStringText("${restoreStatus.currentEntry}")
-                                        } else {
-                                            null
-                                        },
-                                    progressStateLabel = if (restoreStatus.message != null) {
-                                        UiStringText("${restoreStatus.message}")
-                                    } else {
-                                        null
-                                    },
-                                    isIndeterminate = (restoreStatus.progress ?: 0) <= 0
-                            )
-                        } else {
-                            contentState
-                        }
-                    }
-                    _uiState.postValue(content.copy(items = updatedList))
+            is NetworkUnavailable -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            is RemoteRequestFailure -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            is Progress -> transitionToProgress(restoreStatus)
+            is Complete -> wizardManager.showNextStep()
+            else -> throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
+        }
+    }
+
+    private fun transitionToProgress(restoreStatus: Progress) {
+        (_uiState.value as? ProgressState)?.let { content ->
+            val updatedList = content.items.map { contentState ->
+                if (contentState.type == ViewType.PROGRESS) {
+                    contentState as JetpackListItemState.ProgressState
+                    contentState.copy(
+                            progress = restoreStatus.progress ?: 0,
+                            progressLabel = UiStringResWithParams(
+                                    R.string.restore_progress_label,
+                                    listOf(UiStringText(restoreStatus.progress?.toString() ?: "0"))
+                            ),
+                            progressInfoLabel = if (restoreStatus.currentEntry != null) {
+                                UiStringText("${restoreStatus.currentEntry}")
+                            } else {
+                                null
+                            },
+                            progressStateLabel = if (restoreStatus.message != null) {
+                                UiStringText("${restoreStatus.message}")
+                            } else {
+                                null
+                            },
+                            isIndeterminate = (restoreStatus.progress ?: 0) <= 0
+                    )
+                } else {
+                    contentState
                 }
             }
-            is Complete -> { wizardManager.showNextStep() }
-            else -> {
-                throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
-            }
+            _uiState.postValue(content.copy(items = updatedList))
         }
     }
 
@@ -425,7 +423,12 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(RestoreInProgress(restoreState.restoreId as Long))
+        _wizardFinishedObservable.value = Event(
+                RestoreInProgress(
+                        restoreState.rewindId as String,
+                        restoreState.restoreId as Long
+                )
+        )
     }
 
     private fun onVisitSiteClick() {
@@ -453,7 +456,10 @@ class RestoreViewModel @Inject constructor(
         object RestoreCanceled : RestoreWizardState()
 
         @Parcelize
-        data class RestoreInProgress(val restoreId: Long) : RestoreWizardState()
+        data class RestoreInProgress(
+            val rewindId: String,
+            val restoreId: Long
+        ) : RestoreWizardState()
 
         @Parcelize
         object RestoreCompleted : RestoreWizardState()
