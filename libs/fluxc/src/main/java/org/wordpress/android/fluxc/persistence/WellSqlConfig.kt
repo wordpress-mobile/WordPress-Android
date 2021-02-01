@@ -1484,8 +1484,8 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "NAME TEXT NOT NULL," +
                                     "SLUG TEXT, " +
                                     "DESCRIPTION TEXT, " +
-                                    "COUNT TEXT, " +
-                                    "MENU_ORDER TEXT)"
+                                    "COUNT INTEGER, " +
+                                    "MENU_ORDER INTEGER)"
                     )
                 }
             }
