@@ -51,7 +51,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network, then NetworkUnavailable is returned`() = test {
+    fun `given no network with download id, when backup status triggers, then return network unavailable`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
@@ -60,19 +60,23 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given failure, then RemoteRequestFailure is returned`() = coroutineScope.runBlockingTest {
-        whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
-                OnBackupDownloadStatusFetched(BackupDownloadStatusError(GENERIC_ERROR), FETCH_BACKUP_DOWNLOAD_STATE)
-        )
+    fun `given failure with download id, when backup status triggers, then return remote request failure`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
+                        OnBackupDownloadStatusFetched(
+                                BackupDownloadStatusError(GENERIC_ERROR),
+                                FETCH_BACKUP_DOWNLOAD_STATE
+                        )
+                )
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
-        advanceTimeBy(DELAY_MILLIS)
+                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+                advanceTimeBy(DELAY_MILLIS)
 
-        assertThat(result).contains(RemoteRequestFailure)
-    }
+                assertThat(result).contains(RemoteRequestFailure)
+            }
 
     @Test
-    fun `given success, then Complete is returned`() = test {
+    fun `given success with download id, when backup status triggers, then return complete`() = test {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
@@ -81,7 +85,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given status model is null, then Empty is returned`() = test {
+    fun `given status model is null with download id, when backup status triggers, then return empty`() = test {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
@@ -90,19 +94,19 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given download in process, then Progress is returned`() = coroutineScope.runBlockingTest {
-        whenever(activityLogStore.getBackupDownloadStatusForSite(site))
-                .thenReturn(inProgressModel)
-                .thenReturn(statusModel)
-        whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
-                OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
-        )
+    fun `given download in process with download id, when backup status triggers, then return progress`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                        .thenReturn(inProgressModel)
+                        .thenReturn(statusModel)
+                whenever(activityLogStore.fetchBackupDownloadState(any()))
+                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
-        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
-        advanceTimeBy(DELAY_MILLIS)
+                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+                advanceTimeBy(DELAY_MILLIS)
 
-        assertThat(result).contains(progressStatus, completeStatus)
-    }
+                assertThat(result).contains(progressStatus, completeStatus)
+            }
 
     private val rewindId = "rewindId"
     private val url = "www.wordpress.com"
