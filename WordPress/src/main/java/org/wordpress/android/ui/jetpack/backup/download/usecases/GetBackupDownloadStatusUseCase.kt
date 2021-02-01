@@ -49,7 +49,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     return@flow
                 }
                 if (status.downloadId == downloadId) {
-                    if (status.progress == null && downloadId == status.downloadId) {
+                    if (status.progress == null) {
                         emit(Complete(status.rewindId, status.downloadId, status.url))
                         return@flow
                     } else {
