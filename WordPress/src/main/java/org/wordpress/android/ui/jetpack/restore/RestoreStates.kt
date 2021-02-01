@@ -5,16 +5,17 @@ import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
-import org.wordpress.android.ui.jetpack.restore.StateType.DETAILS
-import org.wordpress.android.ui.jetpack.restore.StateType.WARNING
-import org.wordpress.android.ui.jetpack.restore.StateType.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.StateType.COMPLETE
+import org.wordpress.android.ui.jetpack.restore.StateType.DETAILS
 import org.wordpress.android.ui.jetpack.restore.StateType.ERROR
+import org.wordpress.android.ui.jetpack.restore.StateType.PROGRESS
+import org.wordpress.android.ui.jetpack.restore.StateType.WARNING
 import org.wordpress.android.ui.jetpack.restore.ToolbarState.CompleteToolbarState
 import org.wordpress.android.ui.jetpack.restore.ToolbarState.DetailsToolbarState
 import org.wordpress.android.ui.jetpack.restore.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.restore.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.restore.ToolbarState.WarningToolbarState
+import java.util.Date
 
 abstract class RestoreUiState(open val type: StateType) {
     abstract val items: List<JetpackListItemState>
@@ -103,10 +104,15 @@ sealed class RestoreRequestState {
         val rewindId: String,
         val progress: Int?,
         val message: String? = null,
-        val currentEntry: String? = null
+        val currentEntry: String? = null,
+        val published: Date? = null
     ) : RestoreRequestState()
 
-    data class Complete(val rewindId: String, val restoreId: Long) : RestoreRequestState()
+    data class Complete(
+        val rewindId: String,
+        val restoreId: Long,
+        val published: Date? = null
+    ) : RestoreRequestState()
 
     sealed class Failure : RestoreRequestState() {
         object NetworkUnavailable : Failure()

@@ -69,6 +69,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SN
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
@@ -248,7 +249,7 @@ class MySiteFragment : Fragment(),
     override fun onResume() {
         super.onResume()
         updateSiteSettingsIfNecessary()
-
+        completeQuickStartStepsIfNeeded()
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
@@ -285,6 +286,18 @@ class MySiteFragment : Fragment(),
         }
     }
 
+    private fun completeQuickStartStepsIfNeeded() {
+        selectedSite?.let {
+            if (it.showOnFront == ShowOnFront.POSTS.value) {
+                completeTaskAndRemindNextOne(quickStartStore,
+                        EDIT_HOMEPAGE,
+                        dispatcher,
+                        it,
+                        null,
+                        requireContext())
+            }
+        }
+    }
     private fun showQuickStartNoticeIfNecessary() {
         if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return

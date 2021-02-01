@@ -28,6 +28,8 @@ public class RequestCodes {
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
+    public static final int BACKUP_DOWNLOAD = 1710;
+    public static final int RESTORE = 1720;
     public static final int PAGE_PARENT = 1800;
     public static final int HISTORY_DETAIL = 1900;
 
@@ -37,6 +39,7 @@ public class RequestCodes {
     public static final int VIDEO_LIBRARY = 2200;
     public static final int MEDIA_LIBRARY = 2210;
     public static final int FILE_LIBRARY = 2220;
+    public static final int AUDIO_LIBRARY = 2230;
     public static final int TAKE_VIDEO = 2300;
     public static final int CROP_PHOTO = 2400;
     public static final int PICTURE_LIBRARY_OR_CAPTURE = 2500;

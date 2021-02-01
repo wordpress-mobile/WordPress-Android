@@ -37,10 +37,6 @@ Language: ko_KR
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">교차글</string>
     <string name="suggestion_user">사용자</string>
-    <string name="suggestion_no_matching">“일치하는 %s이(가) 없습니다.”</string>
-    <string name="suggestion_problem">“권장을 로드하는 중에 문제가 있었습니다.”</string>
-    <string name="suggestion_none">“사용할 수 있는 %s 권장이 없습니다.”</string>
-    <string name="suggestion_selection_needed">“필터할 권장 목록을 입력하기 바랍니다.”</string>
     <string name="threat_get_free_estimate">무료 견적 얻기</string>
     <string name="threat_ignore">위협 무시하기</string>
     <string name="threat_fix">위협 고치기</string>
@@ -51,7 +47,6 @@ Language: ko_KR
     <string name="threat_fix_fixable_replace">젯팩 검사하기는 영향이 있는 파일이나 디렉터리를 교체할 것입니다.</string>
     <string name="threat_fix_current_not_fixable_description">젯팩 검사하기가 이 위협을 자동으로 고칠 수 없습니다.\n        그 위협을 직접 해결하기를 권장합니다: 워드프레스, 테마, 그리고 모든 플러그인이 최신인지 확인하고, 사이트에서 문제일 수 있는 코드, 테마, 또는 플러그인을 제거하세요. \n \n\n        이 위협을 해결하는데 도움이 필요하면, 고도로 검증한 워드프레스 전문가의 신뢰할 수 있는 프리랜서 시장인&lt;b>코더블&lt;/b>을 권장합니다.\n        이 프로젝트를 도울 수 있는 보안 전문가의 그룹을 선별했습니다. 가격대는 시간당 70–120 달러이고, 고요할 의무 없이 무료로 견적을 확인할 수 있습니다.\n    </string>
     <string name="threat_fix_current_not_fixable_header">위협 해결하는 중</string>
-    <string name="threat_fix_current_fixable_header">\@string/threat_fix_default_header</string>
     <string name="threat_fix_fixed_header">젯팩을 어떻게 고쳤을까요?</string>
     <string name="threat_fix_default_header">어떻게 고칠까요?</string>
     <string name="threat_file_description">파일에서 발견한  위협:</string>
@@ -71,7 +66,6 @@ Language: ko_KR
     <string name="threat_item_header_infected_core_file">%s: 감염 코어 파일</string>
     <string name="threat_item_header_threat_found">위협을 찾았습니다</string>
     <string name="threats_found">위협을 찾았습니다</string>
-    <string name="threats_fix_all">모두 고치기</string>
     <string name="scan_in_few_seconds">몇 초 안에</string>
     <string name="scan_in_minutes_ago">%s분 전</string>
     <string name="scan_in_hours_ago">%s시간 전</string>
@@ -82,7 +76,6 @@ Language: ko_KR
     <string name="scan_scanning_description">젯팩 검사하기에 오신 것을 환영합니다. 먼저 사이트를 살펴보는 중이고 곧 결과를 보일 것입니다\n\n        \n 검사를 완료하면 알림을 보낼 것입니다. 그 사이에 사이트를 평소와 같이 편하게 이용하세요. 언제든 진행을 확인할 수 있습니다.</string>
     <string name="scan_idle_threats_found_title">사이트가 위험할 수 있습니다</string>
     <string name="scan_idle_no_threats_found_title">걱정하지 마세요</string>
-    <string name="scan_scanning_title">검사할 준비하는 중</string>
     <string name="scan_again">다시 검사하기</string>
     <string name="scan_now">지금 검사하기</string>
     <string name="scan_state_icon">상태 검사하기 아이콘</string>
@@ -134,8 +127,6 @@ Language: ko_KR
     <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
     <string name="my_site_btn_jetpack_settings">젯팩 설정</string>
     <string name="my_site_header_jetpack">젯팩</string>
-    <string name="reader_btn_following_comments">대화 팔로우 중</string>
-    <string name="reader_btn_follow_comments">대화 팔로우하기</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">이 글에 대한 댓글을 구독 해제할 수 없습니다</string>
     <string name="reader_follow_comments_could_not_subscribe_error">이 글에 대한 댓글을 구독할 수 없습니다</string>
     <string name="reader_follow_comments_get_status_error">글에 대한 구독상태를 가져오는데 오류가 있습니다</string>
@@ -249,7 +240,6 @@ Language: ko_KR
     <string name="gutenberg_native_add_this_telephone_link">이 전화 링크 추가하기</string>
     <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
     <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
-    <string name="suggestion_no_connection">“인터넷 연결이 없습니다.\n제안을 사용할 수 없습니다.”</string>
     <string name="typeface_label_shrikhand">굵게</string>
     <string name="typeface_label_space_mono">모던</string>
     <string name="typeface_label_pacifico">발랄</string>
@@ -274,7 +264,6 @@ Language: ko_KR
     <string name="create_post_story_fab_tooltip">글 또는 스토리 만들기</string>
     <string name="create_page_fab_tooltip">페이지 만들기</string>
     <string name="create_post_fab_tooltip">글 만들기</string>
-    <string name="contact_fragment_title">\@string/contact_support</string>
     <string name="reader_discover_interests_header">좋아할 수도 있습니다</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">숨기기</string>
     <string name="gutenberg_native_video_caption_empty">비디오 캡션입니다. 비었습니다</string>
@@ -441,7 +430,6 @@ Language: ko_KR
     <string name="ccpa_privacy_notice_header">캘리포니아 사용자를 위한 개인정보보호 고지</string>
     <string name="status_and_visibility">상태 &amp; 가시성</string>
     <string name="update_now">지금 업데이트하기</string>
-    <string name="gutenberg_native_try_a_starter_layout">스타터 레이아웃 시도하기</string>
     <string name="gutenberg_native_open_block_actions_menu">블록 동작 메뉴 열기</string>
     <string name="gutenberg_native_move_to_top">위로 이동하기</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">두 번 눌러 사용 가능한 선택지가 있는 하단 시트 열기</string>
@@ -449,7 +437,6 @@ Language: ko_KR
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
     <string name="pages_set_as_posts_page">글 페이지로 설정</string>
     <string name="pages_set_as_homepage">홈페이지로 설정</string>
-    <string name="suggestion_invalid">“%s(은)는 유효한 %s이(가) 아닙니다”</string>
     <string name="site_settings_select_page">페이지 선택</string>
     <string name="site_settings_posts_page">글 페이지</string>
     <string name="site_settings_static_homepage">정적 홈페이지</string>
@@ -469,7 +456,6 @@ Language: ko_KR
     <string name="page_homepage_successfully_updated">홈페이지를 성공적으로 업데이트하였습니다</string>
     <string name="page_cannot_set_posts_page">사이트 설정에서 글 페이지를 “정적 홈페이지” 활성화로 설정하기</string>
     <string name="page_cannot_set_homepage">사이트 설정에서 홈페이지를 “정적 홈페이지” 활성화로 설정하기</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">새 블로그에 오신 것을 환영합니다.</string>
     <string name="gutenberg_native_select_a_color">색상 선택</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">색상 설정으로 이동하려면 두 번 탭하세요.</string>
     <string name="reader_empty_followed_blogs_description">사이트를 팔로우하면 여기에 해당 콘텐츠가 표시됩니다.</string>
@@ -503,7 +489,6 @@ Language: ko_KR
     <string name="gutenberg_native_move_block_left">블록 왼쪽으로 움직이기</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">블록을 오른쪽으로 움직이려면 두 번 탭</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">블록을 왼쪽으로 움직이려면 두 번 탭</string>
-    <string name="gutenberg_native_blog">블로그</string>
     <string name="new_site_creation_creating_site_loading_4">알림판을 만드는 중</string>
     <string name="new_site_creation_creating_site_loading_3">테마를 설정 중</string>
     <string name="new_site_creation_creating_site_loading_2">사이트 기능 추가 중</string>
@@ -559,51 +544,15 @@ Language: ko_KR
     <string name="app_theme_light">밝음</string>
     <string name="app_theme">외관</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">최근 이 페이지를 변경했지만 저장하지 않았습니다. 불러올 버전을 선택하세요:\n</string>
-    <string name="gutenberg_native_what_people_say">추천의 말</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">회원님이 원하는 결과를 얻을 수 있도록 다양한 서비스를 제공합니다. 필요한 서비스가 무엇인지, 아니면 비용이 얼마인지 잘 모르시겠나요? 어떤 서비스가 적합한지 설명하고 비용에 대해 자세히 알려드릴 수 있습니다. 아래로 문의하세요.</string>
-    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">다양한 기술과 경험을 갖춘 재능 있는 전문가로 이루어진 소규모 팀입니다. 일을 사랑하며 열정적으로 일합니다. 회원님을 기다리고 있겠습니다.</string>
     <string name="gutenberg_native_warning_message">경고 메시지</string>
-    <string name="gutenberg_native_want_to_work_with_us">함께 하고 싶으신가요?</string>
-    <string name="gutenberg_native_walt_disney">월트 디즈니</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">방문자는 페이지를 만든 사람에 관해 알고 싶어 합니다. 이 공간에 회원님 자신이나 회원님의 사이트, 비즈니스에 관한 소개나 원하는 내용을 기록하세요. 아래의 추천 글을 사용하여 같은 내용을 자신만의 언어로 이야기하는 다른 사람의 글을 인용하세요.</string>
-    <string name="gutenberg_native_usa">미국</string>
-    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">다음은 샘플 콘텐츠이며, 기능을 설명하는 템플릿도 포함되어 있습니다. 이 콘텐츠를 제거하거나 자신만의 언어와 미디어로 바꾸세요.</string>
-    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">시작하려면 말을 그치고 행동으로 옮겨야 한다.</string>
-    <string name="gutenberg_native_team">팀</string>
     <string name="gutenberg_native_success_message">성공 메시지</string>
-    <string name="gutenberg_native_strategy">전략</string>
     <string name="gutenberg_native_show_post_content">글 콘텐츠 보기</string>
-    <string name="gutenberg_native_services">서비스</string>
-    <string name="gutenberg_native_samuel_the_dog">강아지 사무엘</string>
-    <string name="gutenberg_native_sally_smith">샐리 스미스</string>
-    <string name="gutenberg_native_project_name">프로젝트 이름</string>
-    <string name="gutenberg_native_position_or_job_title">직위 또는 직급</string>
-    <string name="gutenberg_native_portfolio">포트폴리오</string>
     <string name="gutenberg_native_only_show_excerpt">요악문만 표시</string>
-    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">제 포트폴리오에 경력을 쌓으면서 작업한 다양한 프로젝트가 나와 있습니다. 아래에서 연락처를 확인하고 연락해주세요.</string>
     <string name="gutenberg_native_link_to">링크</string>
     <string name="gutenberg_native_link_settings">링크 설정</string>
-    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">상담하기. 👋 아래의 연락처 정보로 문의하거나 양식을 사용하여 메시지를 보내세요.</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">함께 만들어 보세요!</string>
-    <string name="gutenberg_native_let_s_build_something_together">함께 만들어 보세요!</string>
-    <string name="gutenberg_native_juan_p_rez">후안 페레스</string>
-    <string name="gutenberg_native_j_k_rowling">J.K. 롤링</string>
-    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">해리야, 우리가 진짜 누군지 보여주는 건 우리 능력들보다는 우리의 선택이야.</string>
-    <string name="gutenberg_native_inspiration">영감</string>
-    <string name="gutenberg_native_get_in_touch">문의하기</string>
     <string name="gutenberg_native_excerpt_length_words">요약문 길이(단어)</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">이메일: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_dr_seuss">닥터 수스</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">끝났다고 울지 말고, 지나간 추억을 떠올리며 미소지어라.</string>
     <string name="gutenberg_native_customize">사용자 정의</string>
-    <string name="gutenberg_native_city_10100">City, 10100</string>
     <string name="gutenberg_native_add_paragraph_block">단락 블록 추가</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">제공하는 서비스에 대한 간단한 설명입니다.</string>
-    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">개인사, 주요 성취, 흥미로운 점을 담은 간단한 소개입니다.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">프로젝트와 작품에 대한 설명이 표시됩니다.</string>
-    <string name="gutenberg_native_555_555_1234">(555) 555–1234</string>
-    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">게시물 작성</string>
     <string name="post_list_tab_trashed_posts">삭제된</string>
     <string name="post_list_tab_scheduled_posts">예약됨</string>
@@ -629,7 +578,6 @@ Language: ko_KR
     <string name="reader_filter_self_hosted_empty_sites_tags_action">워드프레스닷컴에 로그인</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">워드프레스닷컴에 로그인하여 팔로우하는 토픽의 최신 글을 확인하세요</string>
     <string name="reader_filter_self_hosted_empty_sites_list">워드프레스닷컴에 로그인하여 내가 팔로우하는 사이트의 최신 글을 확인하세요.</string>
-    <string name="gutenberg_native_template_preview">템플릿 미리보기</string>
     <string name="gutenberg_native_replace_current_block">현재 블록 대체하기</string>
     <string name="gutenberg_native_add_to_end">끝에 추가하기</string>
     <string name="gutenberg_native_add_to_beginning">처음에 추가하기</string>
@@ -643,7 +591,6 @@ Language: ko_KR
     <string name="reader_filter_cta">필터</string>
     <string name="gutenberg_native_video_caption_s">비디오 캡션. %s</string>
     <string name="gutenberg_native_edit_video">비디오 편집</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">레이아웃을 선택하려면 두 번 탭하세요.</string>
     <string name="gutenberg_native_add_a_shortcode">쇼트코드 추가…</string>
     <string name="post_list_author">작성자</string>
     <string name="fab_create_desc">게시물 작성</string>
@@ -1058,8 +1005,6 @@ Language: ko_KR
     <string name="quick_start_dialog_upload_icon_title">사이트 아이콘 업로드</string>
     <string name="quick_start_dialog_upload_icon_message">방문자의 브라우저에 아이콘이 표시됩니다. 깔끔하고 전문적인 모양을 만들려면 사용자 정의 아이콘을 추가하세요.</string>
     <string name="quick_start_dialog_explore_plans_message_short">현재 요금제 및 사용 가능한 다른 요금제를 보려면 %1$s요금제%2$s를 탭합니다.</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">새 페이지를 만들려면 %1$s페이지 추가%2$s를 탭합니다.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">계속하려면 %1$s사이트 페이지%2$s를 탭합니다.</string>
     <string name="quick_start_dialog_check_stats_message_short">사이트 성능을 확인하려면 %1$s통계%2$s를 탭합니다.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">새로 업로드하려면 %1$s사이트 아이콘%2$s을 탭합니다.</string>
     <string name="quick_start_dialog_publish_post_message">임시글을 작성하여 첫 번째 글을 게시하세요.</string>
@@ -1070,13 +1015,8 @@ Language: ko_KR
     <string name="quick_start_dialog_explore_plans_message">유료 요금제의 마케팅 및 SEO 도구에 대해 알아보세요.</string>
     <string name="quick_start_dialog_enable_sharing_title">글 공유 설정</string>
     <string name="quick_start_dialog_enable_sharing_message">새 글을 소셜 미디어 계정에 자동으로 공유합니다.</string>
-    <string name="quick_start_dialog_customize_site_message">글꼴을 조정하고 이미지를 추가하는 등의 작업을 하세요.</string>
-    <string name="quick_start_dialog_create_page_title">새 페이지 생성</string>
-    <string name="quick_start_dialog_create_page_message">주요 콘텐츠용 페이지 추가 - “정보” 페이지에서 시작하는 것이 좋습니다.</string>
     <string name="quick_start_dialog_check_stats_title">사이트 통계 확인</string>
     <string name="quick_start_dialog_check_stats_message">사이트 성능을 최신 상태로 유지합니다.</string>
-    <string name="quick_start_dialog_browse_themes_title">테마 찾아보기</string>
-    <string name="quick_start_dialog_browse_themes_message">다양한 레이아웃 옵션을 살펴보고 가장 적합한 테마를 찾으세요.</string>
     <string name="quick_start_dialog_remove_next_steps_message">다음 단계를 제거하면 이 사이트의 모든 둘러보기가 숨겨집니다. 이 작업은 되돌릴 수 없습니다.</string>
     <string name="quick_start_dialog_remove_next_steps_title">다음 단계 제거</string>
     <string name="quick_start_remove_next_steps_menu_title">제거</string>
@@ -1265,12 +1205,6 @@ Language: ko_KR
     <string name="quick_start_dialog_follow_sites_message_short_search">%1$s 검색 %2$s을 탭하여 관심사가 비슷한 사이트 찾기</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">%1$s 리더 %2$s를 탭하여 계속하기</string>
     <string name="quick_start_dialog_follow_sites_message">도움을 받은 사이트를 찾은 다음 업데이트가 게시될 때 받을 수 있도록 팔로우하세요.</string>
-    <string name="quick_start_dialog_customize_site_title">사이트 사용자 정의</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">%1$s 테마 %2$s를 탭하여 계속하기</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">%1$s 사용자 정의 %2$s를 탭하여 사이트 개인화 시작</string>
-    <string name="quick_start_dialog_choose_theme_title">테마 선택</string>
-    <string name="quick_start_dialog_browse_themes_message_short">%1$s 테마 %2$s를 탭하여 새 테마 검색하기</string>
-    <string name="quick_start_dialog_choose_theme_message">모든 테마를 검색하여 어울리는 것을 찾으세요.</string>
     <string name="quick_start_button_positive">이동</string>
     <string name="quick_start_button_negative_short">취소</string>
     <string name="quick_start_button_negative">지금 안 함</string>

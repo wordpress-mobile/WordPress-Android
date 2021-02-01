@@ -142,6 +142,7 @@
     <string name="wp_media_title">WordPress media</string>
     <string name="pick_photo">Select photo</string>
     <string name="pick_video">Select video</string>
+    <string name="pick_audio">Select audio</string>
     <string name="pick_media">Add image or video</string>
     <string name="pick_file">Add file</string>
     <string name="capture_or_pick_photo">Capture or select photo</string>
@@ -1060,6 +1061,13 @@
     <string name="scan_history">Scan History</string>
     <string name="scan_history_menu_title">History</string>
 
+    <string name="scan_no_network_title" translatable="false">@string/no_network_title</string>
+    <string name="scan_no_network_subtitle" translatable="false">@string/no_network_message</string>
+    <string name="scan_request_failed_title">Something went wrong</string>
+    <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
+    <string name="scan_start_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
+
     <string name="scan_state_icon">Scan state icon</string>
     <string name="scan_now">Scan now</string>
     <string name="scan_again">Scan again</string>
@@ -1067,8 +1075,9 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
-    <string name="scan_scanning_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the result will be with you soon.\n
-        \n We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal. you can check the progress at anytime.</string>
+    <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
+    <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
     <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
@@ -1076,14 +1085,15 @@
     <string name="scan_in_hours_ago">%s hours ago</string>
     <string name="scan_in_minutes_ago">%s minutes ago</string>
     <string name="scan_in_few_seconds">in a few seconds</string>
+    <string name="scan_progress_label" translatable="false">%1$s%%</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
     <string name="scan_history_fixed_threats_tab">Fixed</string>
     <string name="scan_history_no_threats_found">No items found</string>
     <string name="scan_history_ignored_threats_tab">Ignored</string>
-    <string name="scan_history_no_connection">@string/no_network_message</string>
-    <string name="scan_history_request_failed">@string/request_failed_message</string>
+    <string name="scan_history_no_connection" translatable="false">@string/no_network_message</string>
+    <string name="scan_history_request_failed" translatable="false">@string/request_failed_message</string>
 
     <!-- threats -->
     <string name="threats_fix_num_of_threats">Fix %s threats</string>
@@ -1104,15 +1114,16 @@
     <string name="threat_item_sub_header_file_signature">Threat found %s</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerability found in plugin</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerability found in theme</string>
-    <string name="threat_item_sub_header_status_fixed">Threat fixed</string>
+    <string name="threat_item_sub_header_status_fixed_on">Threat fixed on %s</string>
     <string name="threat_item_sub_header_status_ignored">Threat ignored</string>
 
     <!-- threat details -->
     <string name="threat_details">Threat Details</string>
-    <string name="threat_details_icon">Threat details icon</string>
     <string name="threat_problem_header">What was the problem?</string>
+    <string name="threat_found_header">Found</string>
     <string name="threat_technical_details_header">The technical details</string>
     <string name="threat_file_description">Threat found in file:</string>
+    <string name="threat_status_fixed">Fixed</string>
     <!-- threat fix -->
     <string name="threat_fix_default_header">How will we fix it?</string>
     <string name="threat_fix_fixed_header">How did Jetpack fix it?</string>
@@ -1140,11 +1151,9 @@
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
-    <string name="threat_fix_all_started_message">We\'re hard at work fixing these threats in the background. Please check back shortly.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Not all threats could be fixed. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->
     <string name="stats_timeframe_today">Today</string>
@@ -2477,6 +2486,7 @@
     <string name="photo_picker_choose_photo">Choose photo from device</string>
     <string name="photo_picker_choose_video">Choose video from device</string>
     <string name="photo_picker_choose_file">Choose from device</string>
+    <string name="photo_picker_choose_audio">Choose audio from device</string>
     <string name="photo_picker_capture_photo">Take photo</string>
     <string name="photo_picker_capture_video">Take video</string>
     <string name="photo_picker_stock_media">Choose from Free Photo Library</string>
@@ -2487,6 +2497,7 @@
     <string name="photo_picker_soft_ask_permissions_denied">%1$s was denied access to your photos. To fix this, edit your permissions and turn on %2$s.</string>
     <string name="photo_picker_use_photo">Use this photo</string>
     <string name="photo_picker_use_video">Use this video</string>
+    <string name="photo_picker_use_audio">Use this audio</string>
     <string name="photo_picker_use_media">Use this media</string>
     <string name="photo_picker_use_gif">Use this GIF</string>
     <string name="photo_picker_image_thumbnail_content_description">Image Thumbnail</string>
@@ -3363,7 +3374,7 @@
     <string name="backup_download_progress_action_button">OK, notify me!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
-    <string name="backup_download_progress_additional_info">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
@@ -3393,7 +3404,7 @@
 
     <!-- Jetpack restore -->
     <string name="restore">Restore</string>
-    <string name="restore_details_page_title">@string/restore</string>
+    <string name="restore_details_page_title" translatable="false">@string/restore</string>
     <string name="restore_details_choose_items_header">Choose the items to restore:</string>
     <string name="restore_details_header">Restore Site</string>
     <string name="restore_details_description_with_two_parameters">%1$s %2$s is the selected point for your restore.</string>
@@ -3401,7 +3412,7 @@
     <string name="restore_details_icon_content_description">Restore icon</string>
     <string name="restore_details_action_button_content_description">Restore site button</string>
 
-    <string name="restore_warning_page_title">@string/restore</string>
+    <string name="restore_warning_page_title" translatable="false">@string/restore</string>
     <string name="restore_warning_header">Warning</string>
     <string name="restore_warning_description_with_two_parameters">Are you sure you want to rewind your site back to %1$s at %2$s?
         This will remove all content and options created or changed since then.</string>
@@ -3409,19 +3420,19 @@
     <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
     <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
 
-    <string name="restore_progress_page_title">@string/restore</string>
+    <string name="restore_progress_page_title" translatable="false">@string/restore</string>
     <string name="restore_progress_header">Currently restoring site</string>
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
-    <string name="restore_progress_action_button">@string/backup_download_progress_action_button</string>
+    <string name="restore_progress_action_button" translatable="false">@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
-    <string name="restore_progress_action_button_content_description">@string/backup_download_progress_action_button_content_description</string>
-    <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
+    <string name="restore_progress_action_button_content_description" translatable="false">@string/backup_download_progress_action_button_content_description</string>
+    <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
 
-    <string name="restore_complete_page_title">@string/restore</string>
+    <string name="restore_complete_page_title" translatable="false">@string/restore</string>
     <string name="restore_complete_header">Your site has been restored</string>
     <string name="restore_complete_description_with_two_parameters">All of your selected items are now restored back to %1$s %2$s.</string>
-    <string name="restore_complete_done_action_button">@string/label_done_button</string>
+    <string name="restore_complete_done_action_button" translatable="false">@string/label_done_button</string>
     <string name="restore_complete_visit_site_action_button">Visit site</string>
     <string name="restore_complete_icon_content_description">Restore icon</string>
     <string name="restore_complete_done_button_content_description">Done button</string>
@@ -3429,11 +3440,11 @@
 
     <string name="restore_complete_failed_title">Restore failed</string>
     <string name="restore_complete_failed_description">We couldn\'t restore your site. Please try again later.</string>
-    <string name="restore_complete_failed_action_button">@string/label_done_button</string>
+    <string name="restore_complete_failed_action_button" translatable="false">@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Done button</string>
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
 
-    <string name="rewind_generic_failure">@string/backup_download_generic_failure</string>
+    <string name="rewind_generic_failure" translatable="false">@string/backup_download_generic_failure</string>
     <string name="rewind_another_process_running">There is another restore running.</string>
 
 </resources>

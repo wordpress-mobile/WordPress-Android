@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import androidx.annotation.AttrRes
 import androidx.annotation.DrawableRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -17,6 +18,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         val isFixable: Boolean = true,
         val header: UiString,
         val subHeader: UiString?,
+        @AttrRes val subHeaderColor: Int,
         @DrawableRes val icon: Int,
         @DrawableRes val iconBackground: Int,
         val onClick: () -> Unit
