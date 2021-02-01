@@ -2,12 +2,14 @@ package org.wordpress.android.ui.jetpack.backup.download.usecases
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
@@ -32,10 +34,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
         var retryAttempts = 0
         if (downloadId == null) {
             retryAttempts = -1
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NetworkUnavailable)
-                return@flow
-            }
+            if (!isNetworkAvailable()) return@flow
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 if (retryAttempts++ >= MAX_RETRY) {
@@ -45,10 +44,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             }
         }
         while (true) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NetworkUnavailable)
-                return@flow
-            }
+            if (!isNetworkAvailable()) return@flow
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
@@ -75,4 +71,12 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             }
         }
     }.flowOn(bgDispatcher)
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.isNetworkAvailable(): Boolean {
+        if (!networkUtilsWrapper.isNetworkAvailable()) {
+            emit(NetworkUnavailable)
+            return false
+        }
+        return true
+    }
 }
