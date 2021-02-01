@@ -10,6 +10,7 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
+import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -21,6 +22,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
+import java.util.Date
 
 // private const val DUMMY_CURRENT_TIME = 10000000L
 // private const val ONE_MINUTE = 60 * 1000L
@@ -64,10 +66,6 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
 //        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
-    }
-
-    @Test
-    fun dummyTest() {
     }
 
     /*@Test
@@ -254,6 +252,30 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInUnAvailableState)
 
         assertThat(scanStateItems).isEmpty()
+    }
+
+    @Test
+    fun `builds initial scanning description for scanning scan state model with no initial recent scan`() {
+        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
+        )
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
+        )
+    }
+
+    @Test
+    fun `builds scanning description for scanning scan state model with past recent scan`() {
+        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
+        )
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_scanning_description))
+        )
     }
 
     private fun buildScanStateItems(
