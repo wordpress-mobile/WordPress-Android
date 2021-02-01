@@ -524,6 +524,15 @@
         <item name="android:gravity">center_vertical</item>
     </style>
 
+    <style name="UpdatedMySiteListRowIcon">
+        <item name="tint">?attr/wpColorOnSurfaceMedium</item>
+        <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_height">@dimen/my_site_list_row_icon_size</item>
+        <item name="android:layout_alignParentStart">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
+    </style>
+
     <style name="MySiteListRowAlertIcon">
         <item name="tint">?attr/wpColorWarningLight</item>
         <item name="android:layout_width">@dimen/my_site_list_row_icon_size</item>
@@ -548,6 +557,16 @@
         <item name="android:paddingTop">@dimen/margin_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:paddingEnd">0dp</item>
+    </style>
+
+    <style name="UpdatedMySiteListRowTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <style name="MySiteListRowDescription">
