@@ -321,7 +321,7 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
         when (restoreStatus) {
-            is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.NetworkUnavailable) }
+            is NetworkUnavailable -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
             is RemoteRequestFailure -> { transitionToError(RestoreErrorTypes.RemoteRequestFailure) }
             is Progress -> {
                 (_uiState.value as? ProgressState)?.let { content ->
