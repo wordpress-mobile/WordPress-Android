@@ -103,7 +103,6 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
