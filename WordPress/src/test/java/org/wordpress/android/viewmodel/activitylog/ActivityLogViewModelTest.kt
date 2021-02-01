@@ -773,6 +773,202 @@ class ActivityLogViewModelTest {
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
     }
 
+    /* RELOAD EVENTS - BACKUP DOWNLOAD */
+
+    @Test
+    fun `given no backup progress item, when reloading events, then the menu items are visible`() {
+        val displayBackupProgressItem = false
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given no backup progress item, when reloading events, then item is not visible`() {
+        val displayBackupProgressItem = false
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given no backup progress item, when reloading events, then move to top is not triggered`() {
+        val displayBackupProgressItem = false
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertTrue(moveToTopEvents.isEmpty())
+    }
+
+    @Test
+    fun `given backup progress item, when reloading events, then the menu items are not visible`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = false
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item with date, when reloading events, then item is visible with date`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = true
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        rewindId = REWIND_ID
+                )
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item without date, when reloading events, then item is visible without date`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = false
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item, when reloading events, then move to top is triggered`() {
+        initBackupProgressMocks()
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+        )
+
+        assertTrue(moveToTopEvents.isNotEmpty())
+    }
+
+    @Test
+    fun `given backup finished with date, when reloading events, then show backup finished message with date`() {
+        val date = activity().published
+        initBackupProgressFinishedMocks(date, true)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        published = date
+                )
+        )
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_DATE_TIME)
+    }
+
+    @Test
+    fun `given backup finished without date, when reloading events, then show backup finished msg without date`() {
+        val date = null
+        initBackupProgressFinishedMocks(date, false)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        published = date
+                )
+        )
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
+    }
+
     /* RELOAD EVENTS - DONE */
 
     @Test
