@@ -128,24 +128,21 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.SHOW_THREAT_DETAILS) {
-            data?.let {
-                val threatId = it.getLongExtra(ThreatDetailsFragment.REQUEST_FIX_STATE, 0L)
-                val messageRes = it.getIntExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, 0)
-                if (threatId > 0L) {
-                    viewModel.onFixStateRequested(threatId)
-                } else if (messageRes > 0) {
-                    viewModel.onScanStateRequestedWithMessage(messageRes)
-                }
-            }
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    fun onNewIntent(intent: Intent?) {
+        intent?.let {
+            val threatId = intent.getLongExtra(ScanActivity.REQUEST_FIX_STATE, 0L)
+            val messageRes = intent.getIntExtra(ScanActivity.REQUEST_SCAN_STATE, 0)
+            if (threatId > 0L) {
+                viewModel.onFixStateRequested(threatId)
+            } else if (messageRes > 0) {
+                viewModel.onScanStateRequestedWithMessage(messageRes)
+            }
+        }
     }
 
     companion object {

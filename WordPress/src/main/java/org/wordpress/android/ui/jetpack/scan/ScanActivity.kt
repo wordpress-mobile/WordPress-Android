@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
@@ -11,6 +12,12 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 
 class ScanActivity : AppCompatActivity() {
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        (supportFragmentManager.findFragmentById(R.id.fragment_container_view) as? ScanFragment)?.let {
+            it.onNewIntent(intent)
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -37,5 +44,10 @@ class ScanActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.scan_menu, menu)
         return true
+    }
+
+    companion object {
+        const val REQUEST_SCAN_STATE = "request_scan_state"
+        const val REQUEST_FIX_STATE = "request_fix_state"
     }
 }

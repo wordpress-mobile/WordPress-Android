@@ -74,15 +74,14 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                         is OpenThreatActionDialog -> showThreatActionDialog(this)
 
                         is ShowUpdatedScanStateWithMessage -> {
-                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, this.messageRes)
-                            activity?.setResult(Activity.RESULT_OK, intent)
-                            activity?.finish()
+                            val site = requireNotNull(requireActivity().intent.extras)
+                                .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestScanState(requireActivity(), site, this.messageRes)
                         }
-
                         is ShowUpdatedFixState -> {
-                            val intent = Intent().putExtra(REQUEST_FIX_STATE, this.threatId)
-                            activity?.setResult(Activity.RESULT_OK, intent)
-                            activity?.finish()
+                            val site = requireNotNull(requireActivity().intent.extras)
+                                .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestFixState(requireActivity(), site, this.threatId)
                         }
                     }
                 }
