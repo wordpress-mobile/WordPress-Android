@@ -19,6 +19,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -64,6 +65,7 @@ class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val postRestoreUseCase: PostRestoreUseCase,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
+    private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,

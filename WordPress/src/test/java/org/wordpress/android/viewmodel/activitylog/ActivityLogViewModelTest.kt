@@ -42,6 +42,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Ty
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
+import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -100,6 +102,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
+    @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
@@ -129,6 +132,7 @@ class ActivityLogViewModelTest {
                 store,
                 postRestoreUseCase,
                 getRestoreStatusUseCase,
+                getBackupDownloadStatusUseCase,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupDownloadFeatureConfig,
@@ -1305,6 +1309,90 @@ class ActivityLogViewModelTest {
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORE_STARTED)
+    }
+
+    /* QUERY BACKUP DOWNLOAD STATUS */
+
+    @Test
+    fun `when query backup status, then trigger get backup download status`() = test {
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        verify(getBackupDownloadStatusUseCase).getBackupDownloadStatus(site, DOWNLOAD_ID)
+    }
+
+    @Test
+    fun `given status is a progress, when query backup status, then reload events for progress`() = test {
+        val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(progress) })
+        initBackupProgressMocks()
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = true,
+                        backupProgressWithDate = true,
+                        emptyList = false,
+                        rewindDisabled = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is a complete, when query backup status, then request events update for complete`() = test {
+        val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
+        val complete = BackupDownloadRequestState.Complete(REWIND_ID, DOWNLOAD_ID, DOWNLOAD_URL)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(progress); emit(complete) })
+        initBackupProgressMocks()
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = false,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is something else, when query backup status, then do not trigger anything`() = test {
+        val success = BackupDownloadRequestState.Success(REWIND_ID, REWIND_ID, DOWNLOAD_ID)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(success) })
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertNull(viewModel.events.value)
+    }
+
+    @Test
+    fun `when query backup status, then show backup download started message`() {
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        whenever(resourceProvider.getString(eq(R.string.activity_log_backup_started_snackbar_message), any(), any()))
+                .thenReturn(BACKUP_STARTED)
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKUP_STARTED)
     }
 
     /* PRIVATE */
