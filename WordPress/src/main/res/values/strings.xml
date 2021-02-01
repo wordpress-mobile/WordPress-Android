@@ -3365,7 +3365,7 @@
     <string name="backup_download_progress_action_button">OK, notify me!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
-    <string name="backup_download_progress_additional_info">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
@@ -3417,7 +3417,7 @@
     <string name="restore_progress_action_button" translatable="false">@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_action_button_content_description" translatable="false">@string/backup_download_progress_action_button_content_description</string>
-    <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
+    <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
