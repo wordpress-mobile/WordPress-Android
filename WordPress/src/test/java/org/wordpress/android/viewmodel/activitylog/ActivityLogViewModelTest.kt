@@ -75,7 +75,7 @@ private const val RESTORE_STARTED = "Your site is being restored\nRestoring to d
 private const val RESTORING_CURRENTLY = "Currently restoring your site"
 private const val RESTORING_DATE_TIME = "Restoring to date time"
 private const val RESTORING_NO_DATE = "Restore in progress"
-private const val RESTORED_DATE_TIME = "Your site has been successfully restored\\nRestored to date time"
+private const val RESTORED_DATE_TIME = "Your site has been successfully restored\nRestored to date time"
 private const val RESTORED_NO_DATE = "Your site has been successfully restored"
 
 private const val REWIND_ID = "rewindId"
