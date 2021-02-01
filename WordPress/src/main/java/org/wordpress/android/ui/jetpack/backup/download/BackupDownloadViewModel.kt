@@ -149,7 +149,12 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun constructProgressEvent() {
         _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
-            Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
+            Event(
+                    BackupDownloadInProgress(
+                            backupDownloadState.rewindId as String,
+                            backupDownloadState.downloadId as Long
+                    )
+            )
         } else {
             Event(BackupDownloadCanceled)
         }
@@ -367,7 +372,12 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
+        _wizardFinishedObservable.value = Event(
+                BackupDownloadInProgress(
+                        backupDownloadState.rewindId as String,
+                        backupDownloadState.downloadId as Long
+                )
+        )
     }
 
     private fun onDownloadFileClick() {
@@ -400,7 +410,10 @@ class BackupDownloadViewModel @Inject constructor(
         object BackupDownloadCanceled : BackupDownloadWizardState()
 
         @Parcelize
-        data class BackupDownloadInProgress(val downloadId: Long) : BackupDownloadWizardState()
+        data class BackupDownloadInProgress(
+            val rewindId: String,
+            val downloadId: Long
+        ) : BackupDownloadWizardState()
 
         @Parcelize
         object BackupDownloadCompleted : BackupDownloadWizardState()
