@@ -17,7 +17,8 @@ class SiteItemsBuilder
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,
         isBackupAvailable: Boolean = false,
-        isScanAvailable: Boolean = false
+        isScanAvailable: Boolean = false,
+        showViewSiteFocusPoint: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, onClick),
@@ -60,7 +61,8 @@ class SiteItemsBuilder
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick)
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick),
+                        showFocusPoint = showViewSiteFocusPoint
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(site, onClick)
         )
