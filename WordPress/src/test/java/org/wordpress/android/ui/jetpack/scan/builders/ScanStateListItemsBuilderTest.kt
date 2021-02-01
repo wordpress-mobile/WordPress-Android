@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 // private const val ONE_MINUTE = 60 * 1000L
 // private const val ONE_HOUR = 60 * ONE_MINUTE
 
+// TODO ashiagr tweak existing tests
 @InternalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
     private lateinit var builder: ScanStateListItemsBuilder
