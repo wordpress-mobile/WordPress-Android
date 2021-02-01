@@ -309,7 +309,7 @@ class ScanViewModelTest : BaseUnitTest() {
             (observers.uiStates.last() as ContentUiState)
                 .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
 
-            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.StartScanRequestFailed::class.java)
+            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
         }
 
     @Test
