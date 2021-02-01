@@ -146,6 +146,7 @@ class ActivityLogViewModel @Inject constructor(
     var rewindableOnly: Boolean = false
 
     private var currentRestoreEvent = RestoreEvent(false)
+    private var currentBackupDownloadEvent = BackupDownloadEvent(false)
 
     fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
@@ -165,9 +166,11 @@ class ActivityLogViewModel @Inject constructor(
     @VisibleForTesting
     fun reloadEvents(
         done: Boolean = isDone,
-        restoreEvent: RestoreEvent = currentRestoreEvent
+        restoreEvent: RestoreEvent = currentRestoreEvent,
+        backupDownloadEvent: BackupDownloadEvent = currentBackupDownloadEvent
     ) {
         currentRestoreEvent = restoreEvent
+        currentBackupDownloadEvent = backupDownloadEvent
         val eventList = activityLogStore.getActivityLogForSite(
                 site = site,
                 ascending = false,
@@ -576,6 +579,13 @@ class ActivityLogViewModel @Inject constructor(
     )
 
     data class RestoreEvent(
+        val displayProgress: Boolean,
+        val isCompleted: Boolean = false,
+        val rewindId: String? = null,
+        val published: Date? = null
+    )
+
+    data class BackupDownloadEvent(
         val displayProgress: Boolean,
         val isCompleted: Boolean = false,
         val rewindId: String? = null,
