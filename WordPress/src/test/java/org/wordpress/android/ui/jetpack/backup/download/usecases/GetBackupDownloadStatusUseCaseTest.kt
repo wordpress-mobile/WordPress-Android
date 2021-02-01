@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack.backup.download.usecases
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
@@ -44,9 +43,11 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     @Before
-    fun setup() {
+    fun setup() = test {
         useCase = GetBackupDownloadStatusUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
+        whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
     }
 
     @Test
@@ -71,7 +72,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given success, then Complete is returned`() = testWithSuccessResponse {
+    fun `given success, then Complete is returned`() = test {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(statusModel)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
@@ -80,7 +81,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given status model is null, then Empty is returned`() = testWithSuccessResponse {
+    fun `given status model is null, then Empty is returned`() = test {
         whenever(activityLogStore.getBackupDownloadStatusForSite(site)).thenReturn(null)
 
         val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
@@ -101,15 +102,6 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
         advanceTimeBy(DELAY_MILLIS)
 
         assertThat(result).contains(progressStatus, completeStatus)
-    }
-
-    private fun <T> testWithSuccessResponse(block: suspend CoroutineScope.() -> T) {
-        coroutineScope.runBlockingTest {
-            whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
-                    OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE)
-            )
-            block()
-        }
     }
 
     private val rewindId = "rewindId"
