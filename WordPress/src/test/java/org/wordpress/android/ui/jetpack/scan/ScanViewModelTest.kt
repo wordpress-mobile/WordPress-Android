@@ -5,13 +5,17 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,8 +53,12 @@ private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 2
 private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 4
 
+@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
+
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
@@ -94,25 +102,13 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given last scan state not present in db, when vm starts, then app reaches full screen loading scan state`() =
+    fun `given last scan state not present in db, when vm starts, then app displays full screen loading scan state`() =
         test {
             whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
             val uiStates = init().uiStates
 
             assertThat(uiStates.first()).isInstanceOf(FullScreenLoadingUiState::class.java)
         }
-
-    @Test
-    fun `given full screen loading scan state, when vm starts, then full screen loading scan ui is displayed`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        val uiStates = init().uiStates
-
-        val state = uiStates.first() as FullScreenLoadingUiState
-        with(state) {
-            assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
-            assertThat(title).isEqualTo(UiStringRes(R.string.scan_loading_title))
-        }
-    }
 
     @Test
     fun `when vm starts, fetch scan state is triggered`() = test {
@@ -212,15 +208,17 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-        val uiStates = init().uiStates
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() =
+        coroutineScope.runBlockingTest {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
 
-        (uiStates.last() as ErrorUiState).action.invoke()
+            (uiStates.last() as ErrorUiState).action.invoke()
+            advanceTimeBy(RETRY_DELAY)
 
-        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
-    }
+            verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+        }
 
     @Test
     fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =
