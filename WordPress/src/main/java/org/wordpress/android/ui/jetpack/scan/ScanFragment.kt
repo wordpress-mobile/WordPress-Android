@@ -80,8 +80,9 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                 it.applyIfNotHandled {
                     when (this) {
                         is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(this)
-                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetailsForResult(
+                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
                             this@ScanFragment,
+                            siteModel,
                             threatId
                         )
                     }

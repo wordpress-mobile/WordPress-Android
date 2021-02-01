@@ -193,7 +193,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onThreatItemClicked(threatId: Long) {
-        _navigationEvents.value = Event(ShowThreatDetails(threatId))
+        _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
     }
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {

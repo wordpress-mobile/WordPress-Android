@@ -2,10 +2,11 @@ package org.wordpress.android.ui.jetpack.scan
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.utils.UiString
 
 sealed class ScanNavigationEvents {
-    data class ShowThreatDetails(val threatId: Long) : ScanNavigationEvents()
+    data class ShowThreatDetails(val siteModel: SiteModel, val threatId: Long) : ScanNavigationEvents()
 
     class OpenFixThreatsConfirmationDialog(
         val title: UiString,

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -651,15 +652,10 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewThreatDetailsForResult(@NonNull Fragment fragment, @NonNull Long threatId) {
+    public static void viewThreatDetails(@NonNull Fragment fragment, SiteModel site, @NonNull Long threatId) {
         Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
         intent.putExtra(ARG_THREAT_ID, threatId);
-        fragment.startActivityForResult(intent, RequestCodes.SHOW_THREAT_DETAILS);
-    }
-
-    public static void viewThreatDetails(@NonNull Fragment fragment, @NonNull Long threatId) {
-        Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
-        intent.putExtra(ARG_THREAT_ID, threatId);
+        intent.putExtra(WordPress.SITE, site);
         fragment.startActivity(intent);
     }
 

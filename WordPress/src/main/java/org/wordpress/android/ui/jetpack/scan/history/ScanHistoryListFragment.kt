@@ -70,7 +70,7 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
         })
         viewModel.navigation.observe(viewLifecycleOwner, { event ->
             event.applyIfNotHandled {
-                ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, threatId)
+                ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, siteModel, threatId)
             }
         })
     }
