@@ -30,6 +30,20 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
         downloadId: Long? = null
     ) = flow {
         var retryAttempts = 0
+        if (downloadId == null) {
+            retryAttempts = -1
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                emit(NetworkUnavailable)
+                return@flow
+            }
+            val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
+            if (result.isError) {
+                if (retryAttempts++ >= MAX_RETRY) {
+                    emit(RemoteRequestFailure)
+                    return@flow
+                }
+            }
+        }
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(NetworkUnavailable)
@@ -48,7 +62,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     emit(Empty)
                     return@flow
                 }
-                if (status.downloadId == downloadId) {
+                if (downloadId == null || status.downloadId == downloadId) {
                     if (status.progress == null) {
                         emit(Complete(status.rewindId, status.downloadId, status.url))
                         return@flow
