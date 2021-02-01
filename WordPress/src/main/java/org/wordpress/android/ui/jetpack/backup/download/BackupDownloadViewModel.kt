@@ -309,8 +309,7 @@ class BackupDownloadViewModel @Inject constructor(
                 transitionToProgress(state)
             }
             is Complete -> {
-                backupDownloadState = backupDownloadState.copy(url = state.url)
-                wizardManager.showNextStep()
+                transitionToComplete(state)
             }
             is Empty -> {
                 transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
@@ -338,6 +337,11 @@ class BackupDownloadViewModel @Inject constructor(
             }
             _uiState.postValue(content.copy(items = updatedList))
         }
+    }
+
+    private fun transitionToComplete(state: Complete) {
+        backupDownloadState = backupDownloadState.copy(url = state.url)
+        wizardManager.showNextStep()
     }
 
     private fun clearOldBackupDownloadState(wizardStep: BackupDownloadStep) {
