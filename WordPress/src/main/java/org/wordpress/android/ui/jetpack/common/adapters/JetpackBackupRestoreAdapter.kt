@@ -24,10 +24,6 @@ class JetpackBackupRestoreAdapter(
 ) : RecyclerView.Adapter<JetpackViewHolder>() {
     private val items = mutableListOf<JetpackListItemState>()
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
