@@ -1,25 +1,24 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.asFlow
+import androidx.lifecycle.asLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.switchMap
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.distinctUntilChanged
-import kotlinx.coroutines.flow.filter
-import kotlinx.coroutines.flow.flatMapMerge
-import kotlinx.coroutines.flow.flattenMerge
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.withContext
-import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
+import org.wordpress.android.util.filter
+import org.wordpress.android.util.map
+import javax.inject.Named
 
 class MySiteStateProvider(
-    private val mainDispatcher: CoroutineDispatcher,
+    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
     vararg sources: MySiteSource<*>
 ) {
@@ -30,43 +29,40 @@ class MySiteStateProvider(
         addAll(sources)
     }
 
-    @FlowPreview
-    val state: Flow<MySiteUiState> = selectedSiteRepository.siteSelected.asFlow().flatMapMerge { siteId ->
-        if (siteId != null) {
-            mySiteSources.map { it.buildSource(siteId).distinctUntilChanged() }
+    val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
+        val result = MediatorLiveData<MySiteUiState>()
+        val currentSources = if (siteId != null) {
+            mySiteSources.map { source -> source.buildSource(siteId).distinctUntilChanged().asLiveData(bgDispatcher) }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { it.buildSource().distinctUntilChanged() }
-        }.asFlow().flattenMerge()
-    }.let { partialStates ->
-        flow {
-            var accumulator = MySiteUiState()
-            withContext(mainDispatcher) {
-                partialStates.collect { partialState ->
-                    if (partialState != null) {
-                        accumulator = accumulator.update(partialState)
-                        emit(accumulator)
-                    }
+                    .map { source -> source.buildSource().distinctUntilChanged().asLiveData(bgDispatcher) }
+        }
+        result.value = MySiteUiState()
+        for (newSource in currentSources) {
+            result.addSource(newSource) { partialState ->
+                if (partialState != null) {
+                    result.value = (result.value ?: MySiteUiState()).update(partialState)
                 }
             }
         }
+        result
     }.distinctUntilChanged()
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {
                 override fun buildSource(siteId: Int): Flow<SelectedSite?> {
-                    val nullableFlow: Flow<SiteModel?> = selectedSiteRepository.selectedSiteChange.asFlow()
-                    return nullableFlow
+                    return selectedSiteRepository.selectedSiteChange
                             .filter { it == null || it.id == siteId }
-                            .map { SelectedSite(it) }
+                            .map { SelectedSite(it) }.asFlow()
                 }
             }
 
     private fun siteIconProgressSource(): MySiteSource<ShowSiteIconProgressBar> =
             object : MySiteSource<ShowSiteIconProgressBar> {
-                override fun buildSource(siteId: Int): Flow<ShowSiteIconProgressBar?> {
-                    val nullableFlow: Flow<Boolean?> = selectedSiteRepository.showSiteIconProgressBar.asFlow()
-                    return nullableFlow.map { ShowSiteIconProgressBar(it == true) }
+                override fun buildSource(siteId: Int): Flow<ShowSiteIconProgressBar> {
+                    return selectedSiteRepository.showSiteIconProgressBar.map { ShowSiteIconProgressBar(it == true) }
+                            .asFlow()
+                            .distinctUntilChanged()
                 }
             }
 }

@@ -6,9 +6,7 @@ import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asLiveData
 import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
@@ -142,15 +140,15 @@ class MySiteViewModel
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    @FlowPreview
+
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            mainDispatcher,
+            bgDispatcher,
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,
             domainRegistrationHandler,
             scanAndBackupSource
-    ).state.asLiveData(coroutineContext).map { (
+    ).state.map { (
             currentAvatarUrl,
             site,
             showSiteIconProgressBar,

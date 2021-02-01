@@ -261,7 +261,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model is contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(3)
+        assertThat(uiModels).hasSize(4)
         assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -484,7 +484,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels).hasSize(5)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
