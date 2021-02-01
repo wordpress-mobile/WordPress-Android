@@ -123,7 +123,10 @@ class ActivityLogViewModel @Inject constructor(
         get() = _navigationEvents
 
     private val isRestoreProgressItemShown: Boolean
-        get() = events.value?.find { it is ActivityLogListItem.Progress } != null
+        get() = events.value?.find {
+            it is ActivityLogListItem.Progress &&
+                    it.progressType == ActivityLogListItem.Progress.Type.RESTORE
+        } != null
 
     private val isDone: Boolean
         get() = eventListStatus.value == ActivityLogListStatus.DONE
@@ -212,11 +215,13 @@ class ActivityLogViewModel @Inject constructor(
                             R.string.activity_log_currently_restoring_message,
                             rewindDate.toFormattedDateString(),
                             rewindDate.toFormattedTimeString()
-                    )
+                    ),
+                    ActivityLogListItem.Progress.Type.RESTORE
             )
         } ?: ActivityLogListItem.Progress(
                 resourceProvider.getString(R.string.activity_log_currently_restoring_title),
-                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates)
+                resourceProvider.getString(R.string.activity_log_currently_restoring_message_no_dates),
+                ActivityLogListItem.Progress.Type.RESTORE
         )
     }
 

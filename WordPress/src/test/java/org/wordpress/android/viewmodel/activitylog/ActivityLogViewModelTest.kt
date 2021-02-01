@@ -38,6 +38,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
@@ -1102,9 +1103,9 @@ class ActivityLogViewModelTest {
         if (displayProgress) {
             list.add(ActivityLogListItem.Header(NOW))
             if (progressWithDate) {
-                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME))
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME, RESTORE))
             } else {
-                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE))
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE, RESTORE))
             }
         }
         if (!emptyList) {
