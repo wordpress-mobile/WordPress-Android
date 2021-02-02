@@ -1956,7 +1956,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
                 return "reader_mark_as_unseen";
-                // todo annmarie here
             case JETPACK_RESTORE_OPENED:
                 return "jetpack_restore_opened";
             case JETPACK_RESTORE_CONFIRMED:
