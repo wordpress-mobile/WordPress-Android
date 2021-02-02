@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -39,6 +40,8 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
+
+const val RETRY_DELAY = 300L
 
 class ScanViewModel @Inject constructor(
     private val scanStateListItemsBuilder: ScanStateListItemsBuilder,
@@ -83,14 +86,17 @@ class ScanViewModel @Inject constructor(
             scanStateModel = scanStore.getScanStateForSite(this@ScanViewModel.site)
             scanStateModel?.let {
                 updateUiState(buildContentUiState(it))
-                if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds)
-            } ?: updateUiState(FullScreenLoadingUiState)
+                if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = false)
+            }
             fetchScanState()
         }
     }
 
-    private fun fetchScanState(startWithDelay: Boolean = false) {
+    private fun fetchScanState(startWithDelay: Boolean = false, isRetry: Boolean = false) {
         launch {
+            if (scanStateModel == null) updateUiState(FullScreenLoadingUiState)
+            if (isRetry) delay(RETRY_DELAY)
+
             fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = startWithDelay)
                 .collect { state ->
                     when (state) {
@@ -141,7 +147,7 @@ class ScanViewModel @Inject constructor(
         launch {
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
-                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds)
+                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = true)
                     if (someOrAllThreatFixed) fetchScanState()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
@@ -154,7 +160,7 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>): Boolean {
+    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>, isInvokedByUser: Boolean): Boolean {
         var someOrAllThreatFixed = false
 
         @StringRes var messageRes: Int? = null
@@ -182,7 +188,7 @@ class ScanViewModel @Inject constructor(
                 is FetchFixThreatsState.Failure.FixFailure -> {
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
-                    } else {
+                    } else if (isInvokedByUser) {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                 }
@@ -198,7 +204,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onRetryClicked() {
-        fetchScanState()
+        fetchScanState(isRetry = true)
     }
 
     private fun onContactSupportClicked() {
@@ -223,7 +229,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onThreatItemClicked(threatId: Long) {
-        _navigationEvents.value = Event(ShowThreatDetails(threatId))
+        _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
     }
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
@@ -233,7 +239,7 @@ class ScanViewModel @Inject constructor(
 
     fun onFixStateRequested(threatId: Long) {
         launch {
-            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId))
+            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId), isInvokedByUser = true)
             if (isThreatFixed) fetchScanState()
         }
     }
@@ -264,15 +270,16 @@ class ScanViewModel @Inject constructor(
         )
     )
 
-    sealed class UiState {
-        object FullScreenLoadingUiState : UiState() {
-            @DrawableRes val image = R.drawable.img_illustration_empty_results_216dp
-            val title = UiStringRes(R.string.scan_loading_title)
-        }
+    sealed class UiState(
+        val loadingVisible: Boolean = false,
+        val contentVisible: Boolean = false,
+        val errorVisible: Boolean = false
+    ) {
+        object FullScreenLoadingUiState : UiState(loadingVisible = true)
 
-        data class ContentUiState(val items: List<JetpackListItemState>) : UiState()
+        data class ContentUiState(val items: List<JetpackListItemState>) : UiState(contentVisible = true)
 
-        sealed class ErrorUiState : UiState() {
+        sealed class ErrorUiState : UiState(errorVisible = true) {
             abstract val image: Int
             abstract val title: UiString
             abstract val subtitle: UiString

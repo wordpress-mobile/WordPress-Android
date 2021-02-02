@@ -254,7 +254,9 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
         )
+
         val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
         )
@@ -266,7 +268,9 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
         )
+
         val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_description))
         )

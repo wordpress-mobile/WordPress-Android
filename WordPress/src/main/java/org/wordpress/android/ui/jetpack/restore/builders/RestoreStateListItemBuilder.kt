@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -98,7 +98,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
                         titleRes = R.string.restore_progress_action_button,
                         contentDescRes = R.string.restore_progress_action_button_content_description,
                         onClick = onNotifyMeClick),
-                buildAdditionalInformationState(R.string.restore_progress_additional_info)
+                buildFootnoteState(R.string.restore_progress_footnote)
         )
     }
 
@@ -177,7 +177,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
     private fun buildSubHeaderState() =
             SubHeaderState(text = UiStringRes(R.string.restore_details_choose_items_header))
 
-    private fun buildAdditionalInformationState(@StringRes textRes: Int) = AdditionalInformationState(
+    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
     )
 

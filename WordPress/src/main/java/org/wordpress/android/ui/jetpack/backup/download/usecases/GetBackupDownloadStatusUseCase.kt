@@ -1,36 +1,48 @@
 package org.wordpress.android.ui.jetpack.backup.download.usecases
 
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOn
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
-import kotlinx.coroutines.delay
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
+import javax.inject.Named
 
 const val DELAY_MILLIS = 5000L
 const val MAX_RETRY = 3
 
 class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val activityLogStore: ActivityLogStore
+    private val activityLogStore: ActivityLogStore,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
-    suspend fun getBackupDownloadStatus(site: SiteModel, downloadId: Long) = flow {
+    suspend fun getBackupDownloadStatus(
+        site: SiteModel,
+        downloadId: Long? = null
+    ) = flow {
+        val tag = javaClass.simpleName
         var retryAttempts = 0
         while (true) {
-            if (!networkUtilsWrapper.isNetworkAvailable()) {
-                emit(NetworkUnavailable)
-                return@flow
-            }
+            if (!isNetworkAvailable()) return@flow
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 if (retryAttempts++ >= MAX_RETRY) {
+                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
                 }
@@ -40,16 +52,31 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
                     emit(Empty)
                     return@flow
                 }
-                if (status.downloadId == downloadId) {
-                    if (status.progress == null && downloadId == status.downloadId) {
-                        emit(Complete(status.rewindId, status.downloadId, status.url))
-                        return@flow
-                    } else {
-                        emit(Progress(status.rewindId, status.progress))
-                    }
+                if (downloadId == null || status.downloadId == downloadId) {
+                    if (emitCompleteElseProgress(status)) return@flow
                 }
                 delay(DELAY_MILLIS)
             }
+        }
+    }.flowOn(bgDispatcher)
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.isNetworkAvailable(): Boolean {
+        return if (!networkUtilsWrapper.isNetworkAvailable()) {
+            emit(NetworkUnavailable)
+            false
+        } else true
+    }
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.emitCompleteElseProgress(
+        status: BackupDownloadStatusModel
+    ): Boolean {
+        val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
+        return if (status.progress == null) {
+            emit(Complete(status.rewindId, status.downloadId, status.url, published))
+            true
+        } else {
+            emit(Progress(status.rewindId, status.progress, published))
+            false
         }
     }
 }

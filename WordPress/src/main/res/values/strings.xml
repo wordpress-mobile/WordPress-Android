@@ -1024,9 +1024,15 @@
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
+    <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
+    <string name="activity_log_currently_backing_up_title">Creating downloadable backup</string>
+    <string name="activity_log_currently_backing_up_message">Backing up site from %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Backing up site</string>
     <string name="activity_log_rewind_site">Restore Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
@@ -1061,10 +1067,9 @@
     <string name="scan_history">Scan History</string>
     <string name="scan_history_menu_title">History</string>
 
-    <string name="scan_loading_title">Loading scan</string>
     <string name="scan_no_network_title" translatable="false">@string/no_network_title</string>
     <string name="scan_no_network_subtitle" translatable="false">@string/no_network_message</string>
-    <string name="scan_request_failed_title" translatable="false">Something went wrong</string>
+    <string name="scan_request_failed_title">Something went wrong</string>
     <string name="scan_request_failed_subtitle" translatable="false">@string/request_failed_message</string>
     <string name="scan_start_request_failed_title" translatable="false">@string/scan_request_failed_title</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan couldn\'t complete a scan of your site. Please check to see if your site is down – if it\'s not, try again. If it is, or if Jetpack Scan is still having problems, contact our support team.</string>
@@ -3377,7 +3382,7 @@
     <string name="backup_download_progress_action_button">OK, notify me!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
-    <string name="backup_download_progress_additional_info">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
@@ -3429,7 +3434,7 @@
     <string name="restore_progress_action_button" translatable="false">@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
     <string name="restore_progress_action_button_content_description" translatable="false">@string/backup_download_progress_action_button_content_description</string>
-    <string name="restore_progress_additional_info">No need to wait around. We\'ll notify you when your site has been restored.</string>
+    <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
 
     <string name="restore_complete_page_title" translatable="false">@string/restore</string>
