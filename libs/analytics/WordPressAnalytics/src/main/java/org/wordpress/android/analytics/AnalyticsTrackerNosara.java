@@ -20,6 +20,7 @@ public class AnalyticsTrackerNosara extends Tracker {
     @SuppressWarnings("checkstyle:RegexpSingleline")
     private static final String WPCOM_USER = "dotcom_user";
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
+    private static final String APP_SCHEME = "app_scheme";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
@@ -567,6 +568,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
+            properties.put(APP_SCHEME, metadata.getAppScheme());
             // Only add the editor information if it was set before.
             // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
             if (metadata.isGutenbergEnabledVariableSet()) {
