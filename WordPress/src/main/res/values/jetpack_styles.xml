@@ -84,7 +84,7 @@
     </style>
 
     <!-- Backup Styles -->
-    <style name="Jetpack.Backup.ListItem.AdditionalInformation" parent="Jetpack.TextView">
+    <style name="Jetpack.Backup.ListItem.Footnote" parent="Jetpack.TextView">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:gravity">start</item>

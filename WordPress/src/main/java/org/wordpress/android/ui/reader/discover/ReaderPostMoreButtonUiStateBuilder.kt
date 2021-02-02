@@ -8,8 +8,6 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
@@ -34,21 +32,21 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
 ) {
     suspend fun buildMoreMenuItems(
         post: ReaderPost,
-        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
         return withContext(bgDispatcher) {
-            buildMoreMenuItemsBlocking(post, postListType, onButtonClicked)
+            buildMoreMenuItemsBlocking(post, onButtonClicked)
         }
     }
 
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
-        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
-        if (readerPostTableWrapper.isPostFollowed(post)) {
+        val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
+
+        if (isPostFollowed) {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
@@ -152,7 +150,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                 )
         )
 
-        if (postListType == TAG_FOLLOWED) {
+        if (!isPostFollowed) {
             menuItems.add(
                     SecondaryAction(
                             type = BLOCK_SITE,
@@ -163,17 +161,18 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             onClicked = onButtonClicked
                     )
             )
-            menuItems.add(
-                    SecondaryAction(
-                            type = REPORT_POST,
-                            label = UiStringRes(R.string.reader_menu_report_post),
-                            labelColor = R.attr.colorOnSurface,
-                            iconRes = R.drawable.ic_block_white_24dp,
-                            iconColor = R.attr.wpColorOnSurfaceMedium,
-                            onClicked = onButtonClicked
-                    )
-            )
         }
+
+        menuItems.add(
+                SecondaryAction(
+                        type = REPORT_POST,
+                        label = UiStringRes(R.string.reader_menu_report_post),
+                        labelColor = R.attr.colorOnSurface,
+                        iconRes = R.drawable.ic_block_white_24dp,
+                        iconColor = R.attr.wpColorOnSurfaceMedium,
+                        onClicked = onButtonClicked
+                )
+        )
         return menuItems
     }
 }

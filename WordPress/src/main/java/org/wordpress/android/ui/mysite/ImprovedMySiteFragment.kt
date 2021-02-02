@@ -178,6 +178,11 @@ class ImprovedMySiteFragment : Fragment(),
                 }
             }
         })
+        viewModel.onScrollTo.observe(viewLifecycleOwner, {
+            it?.applyIfNotHandled {
+                (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this.second, 0)
+            }
+        })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
                 dialogViewModel.showDialog(requireActivity().supportFragmentManager,
