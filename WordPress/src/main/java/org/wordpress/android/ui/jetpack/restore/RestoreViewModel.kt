@@ -60,6 +60,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
 import org.wordpress.android.util.wizard.WizardState
+import org.wordpress.android.util.wizard.WizardStep
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
@@ -73,13 +74,12 @@ const val KEY_RESTORE_STATE = "key_restore_state"
 @Parcelize
 @SuppressLint("ParcelCreator")
 data class RestoreState(
-    val siteId: Long? = null,
-    val activityId: String? = null,
     val rewindId: String? = null,
     val optionsSelected: List<Pair<Int, Boolean>>? = null,
     val restoreId: Long? = null,
     val published: Date? = null,
-    val errorType: Int? = null
+    val errorType: Int? = null,
+    val shouldInitProgress: Boolean = true
 ) : WizardState, Parcelable
 
 typealias NavigationTarget = WizardNavigationTarget<RestoreStep, RestoreState>
@@ -206,7 +206,19 @@ class RestoreViewModel @Inject constructor(
                 ),
                 type = StateType.PROGRESS
         )
-        queryStatus()
+        if (restoreState.shouldInitProgress) {
+            restoreState = restoreState.copy(shouldInitProgress = false)
+            launch {
+                val result = postRestoreUseCase.postRestoreRequest(
+                        restoreState.rewindId as String,
+                        site,
+                        buildRewindRequestTypes(restoreState.optionsSelected)
+                )
+                handleRestoreRequestResult(result)
+            }
+        } else {
+            queryRestoreStatus()
+        }
     }
 
     private fun buildComplete() {
@@ -297,20 +309,29 @@ class RestoreViewModel @Inject constructor(
                 rewindId = result.rewindId,
                 restoreId = result.restoreId
         )
-        wizardManager.showNextStep()
+        queryRestoreStatus()
     }
 
     private fun handleRestoreRequestError(snackbarMessageHolder: SnackbarMessageHolder) {
         _snackbarEvents.postValue((Event(snackbarMessageHolder)))
-        wizardManager.onBackPressed()
+        resetWizardIndex(DETAILS)
         showStep(NavigationTarget(DETAILS, restoreState))
+    }
+
+    private fun resetWizardIndex(targetStep: WizardStep) {
+        val currentIndex = wizardManager.currentStep
+        val targetIndex = wizardManager.stepPosition(targetStep)
+
+        for (i in currentIndex downTo targetIndex) {
+            wizardManager.onBackPressed()
+        }
     }
 
     private fun extractPublishedDate(): Date {
         return (_uiState.value as? DetailsState)?.activityLogModel?.published as Date
     }
 
-    private fun queryStatus() {
+    private fun queryRestoreStatus() {
         launch {
             getRestoreStatusUseCase.getRestoreStatus(site, restoreState.restoreId as Long)
                     .collect { state -> handleQueryStatus(state) }
@@ -365,7 +386,8 @@ class RestoreViewModel @Inject constructor(
                     restoreId = null,
                     errorType = null,
                     optionsSelected = null,
-                    published = null
+                    published = null,
+                    shouldInitProgress = true
             )
         }
     }
@@ -396,7 +418,8 @@ class RestoreViewModel @Inject constructor(
             restoreState = restoreState.copy(
                     rewindId = rewindId,
                     optionsSelected = optionsSelected,
-                    published = extractPublishedDate()
+                    published = extractPublishedDate(),
+                    shouldInitProgress = true
             )
             wizardManager.showNextStep()
         }
@@ -406,14 +429,7 @@ class RestoreViewModel @Inject constructor(
         if (restoreState.rewindId == null) {
             transitionToError(GenericFailure)
         } else {
-            launch {
-                val result = postRestoreUseCase.postRestoreRequest(
-                        restoreState.rewindId as String,
-                        site,
-                        buildRewindRequestTypes(restoreState.optionsSelected)
-                )
-                handleRestoreRequestResult(result)
-            }
+            wizardManager.showNextStep()
         }
     }
 
