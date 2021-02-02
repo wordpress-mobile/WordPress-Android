@@ -177,7 +177,11 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        metadata.setAppScheme(BuildConfig.FLAVOR.toString());
+        if (BuildConfig.BUILD_TYPE == "debug") {
+            metadata.setAppScheme(BuildConfig.BUILD_TYPE);
+        } else {
+            metadata.setAppScheme(BuildConfig.FLAVOR);
+        }
         if (siteStore.hasSite()) {
             metadata.setGutenbergEnabled(isGutenbergEnabledOnAnySite(siteStore.getSites()));
         }
