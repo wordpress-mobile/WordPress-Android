@@ -81,6 +81,7 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -212,6 +213,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject QuickStartRepository mQuickStartRepository;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -902,12 +904,22 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
-        if (getMySiteFragment() != null) {
-            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-            hideQuickStartSnackBar();
-            if (pageType == PageType.READER && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+
+        if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+            if (pageType == PageType.READER) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
+            }
+        } else {
+            if (getMySiteFragment() != null) {
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                hideQuickStartSnackBar();
+                if (pageType == PageType.READER && getMySiteFragment()
+                        .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+                    // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                    getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                }
             }
         }
 
@@ -1576,6 +1588,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override protected void onPause() {
         super.onPause();
         hideQuickStartSnackBar();
+
         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
     }
 }
