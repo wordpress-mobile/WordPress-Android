@@ -133,7 +133,7 @@ class PageListFragment : ViewPagerFragment() {
         val adapter: PageListAdapter
         if (recyclerView.adapter == null) {
             adapter = PageListAdapter(
-                    { action, page -> viewModel.onMenuAction(action, page) },
+                    { action, page -> viewModel.onMenuAction(action, page, requireContext()) },
                     { page -> viewModel.onItemTapped(page, requireContext()) },
                     { viewModel.onEmptyListNewPageButtonTapped() },
                     isSitePhotonCapable,

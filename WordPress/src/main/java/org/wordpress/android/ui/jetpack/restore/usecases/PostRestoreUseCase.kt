@@ -28,7 +28,7 @@ class PostRestoreUseCase @Inject constructor(
     suspend fun postRestoreRequest(
         rewindId: String,
         site: SiteModel,
-        types: RewindRequestTypes
+        types: RewindRequestTypes? = null
     ): RestoreRequestState = withContext(ioDispatcher) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return@withContext NetworkUnavailable

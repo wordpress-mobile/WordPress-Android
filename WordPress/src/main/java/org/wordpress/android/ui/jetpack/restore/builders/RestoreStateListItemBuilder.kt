@@ -5,7 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
-import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.AdditionalInformationState
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -83,6 +83,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
     fun buildProgressListStateItems(
         progress: Int = 0,
         published: Date,
+        isIndeterminate: Boolean = false,
         onNotifyMeClick: () -> Unit
     ): List<JetpackListItemState> {
         return mutableListOf(
@@ -92,12 +93,12 @@ class RestoreStateListItemBuilder @Inject constructor() {
                         R.color.success_50),
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
-                buildProgressState(progress),
+                buildProgressState(progress, isIndeterminate),
                 buildActionButtonState(
                         titleRes = R.string.restore_progress_action_button,
                         contentDescRes = R.string.restore_progress_action_button_content_description,
                         onClick = onNotifyMeClick),
-                buildAdditionalInformationState(R.string.restore_progress_additional_info)
+                buildFootnoteState(R.string.restore_progress_footnote)
         )
     }
 
@@ -176,12 +177,13 @@ class RestoreStateListItemBuilder @Inject constructor() {
     private fun buildSubHeaderState() =
             SubHeaderState(text = UiStringRes(R.string.restore_details_choose_items_header))
 
-    private fun buildAdditionalInformationState(@StringRes textRes: Int) = AdditionalInformationState(
+    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
     )
 
-    private fun buildProgressState(progress: Int) = ProgressState(
+    private fun buildProgressState(progress: Int, isIndeterminate: Boolean = false) = ProgressState(
             progress = progress,
+            isIndeterminate = isIndeterminate,
             progressLabel = UiStringResWithParams(
                     R.string.restore_progress_label, listOf(UiStringText(progress.toString()))
             )

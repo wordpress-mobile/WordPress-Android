@@ -2,6 +2,7 @@ package org.wordpress.android.ui.photopicker
 
 import android.app.Activity
 import android.content.Intent
+import androidx.annotation.StringRes
 import androidx.fragment.app.Fragment
 import org.wordpress.android.R
 import org.wordpress.android.R.string
@@ -184,8 +185,33 @@ class MediaPickerLauncher @Inject constructor(
     }
 
     fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
+        showFilePicker(
+                activity,
+                canMultiselect,
+                mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
+                RequestCodes.FILE_LIBRARY,
+                string.photo_picker_choose_file
+        )
+    }
+
+    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
+        showFilePicker(
+                activity,
+                canMultiselect,
+                mutableSetOf(AUDIO),
+                RequestCodes.AUDIO_LIBRARY,
+                string.photo_picker_choose_audio
+        )
+    }
+
+    private fun showFilePicker(
+        activity: Activity,
+        canMultiselect: Boolean = false,
+        allowedTypes: Set<MediaType>,
+        requestCode: Int,
+        @StringRes title: Int
+    ) {
         if (consolidatedMediaPickerFeatureConfig.isEnabled()) {
-            val allowedTypes = mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT)
             val mediaPickerSetup = MediaPickerSetup(
                     primaryDataSource = DEVICE,
                     availableDataSources = setOf(),
@@ -197,7 +223,7 @@ class MediaPickerLauncher @Inject constructor(
                     editingEnabled = true,
                     queueResults = false,
                     defaultSearchView = false,
-                    title = R.string.photo_picker_choose_file
+                    title = title
             )
             val intent = MediaPickerActivity.buildIntent(
                     activity,
@@ -205,10 +231,10 @@ class MediaPickerLauncher @Inject constructor(
             )
             activity.startActivityForResult(
                     intent,
-                    RequestCodes.FILE_LIBRARY
+                    requestCode
             )
         } else {
-            WPMediaUtils.launchFileLibrary(activity, canMultiselect)
+            WPMediaUtils.launchFileLibrary(activity, canMultiselect, requestCode)
         }
     }
 

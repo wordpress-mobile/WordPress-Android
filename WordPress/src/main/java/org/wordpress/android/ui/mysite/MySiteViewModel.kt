@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -132,7 +133,9 @@ class MySiteViewModel
     private val _onQuickStartMenuShown = MutableLiveData<Event<String>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
+    private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
 
+    val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
@@ -198,9 +201,14 @@ class MySiteViewModel
                             site,
                             this::onItemClick,
                             backupAvailable,
-                            scanAvailable
+                            scanAvailable,
+                            quickStartModel?.activeTask == QuickStartTask.VIEW_SITE,
+                            quickStartModel?.activeTask == ENABLE_POST_SHARING
                     )
             )
+            scrollToQuickStartTaskIfNecessary(
+                    quickStartModel?.activeTask,
+                    siteItems.indexOfFirst { it.activeQuickStartItem })
             State.SiteSelected(siteItems)
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
@@ -208,6 +216,17 @@ class MySiteViewModel
             State.NoSites(shouldShowImage)
         }
         UiModel(currentAvatarUrl.orEmpty(), state)
+    }
+
+    private fun scrollToQuickStartTaskIfNecessary(
+        quickStartTask: QuickStartTask?,
+        position: Int
+    ) {
+        if (quickStartTask == null) {
+            _scrollToQuickStartTask.postValue(null)
+        } else if (_scrollToQuickStartTask.value?.peekContent()?.first != quickStartTask && position >= 0) {
+            _scrollToQuickStartTask.postValue(Event(quickStartTask to position))
+        }
     }
 
     private fun onItemClick(action: ListItemAction) {
@@ -221,14 +240,20 @@ class MySiteViewModel
                 PAGES -> OpenPages(site)
                 ADMIN -> OpenAdmin(site)
                 PEOPLE -> OpenPeople(site)
-                SHARING -> OpenSharing(site)
+                SHARING -> {
+                    quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+                    OpenSharing(site)
+                }
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
                 STATS -> getStatsNavigationActionForSite(site)
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
-                VIEW_SITE -> OpenSite(site)
+                VIEW_SITE -> {
+                    quickStartRepository.completeTask(QuickStartTask.VIEW_SITE)
+                    OpenSite(site)
+                }
                 JETPACK_SETTINGS -> OpenJetpackSettings(site)
             }
             _onNavigation.postValue(Event(navigationAction))

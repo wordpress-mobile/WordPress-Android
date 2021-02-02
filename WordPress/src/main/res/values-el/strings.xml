@@ -169,14 +169,11 @@ Language: el_GR
     <string name="quick_start_dialog_need_help_button_positive">Αποδοχή</string>
     <string name="quick_start_dialog_need_help_button_neutral">Ποτέ</string>
     <string name="quick_start_dialog_follow_sites_title">Ακολουθήστε άλλους ιστότοπους</string>
-    <string name="quick_start_dialog_customize_site_title">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_dialog_follow_sites_message">Βρείτε ιστοτόπους που σας ενδιαφέρουν και ακολουθήστε τους ώστε να λαμβάνετε ενημερώσεις όταν δημοσιεύουν.</string>
     <string name="quick_start_button_negative_short">Άκυρο</string>
     <string name="quick_start_button_positive">Μετάβαση</string>
-    <string name="quick_start_dialog_choose_theme_title">Επιλέξτε θέμα εμφάνισης</string>
     <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
-    <string name="quick_start_dialog_choose_theme_message">Περιηγηθείτε σε όλα μας τα θέματα για να βρείτε το ιδανικό για εσάς.</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
