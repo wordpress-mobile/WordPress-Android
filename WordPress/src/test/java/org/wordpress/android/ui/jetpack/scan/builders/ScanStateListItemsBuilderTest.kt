@@ -1,10 +1,13 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -13,7 +16,10 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
+import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.reader.utils.DateProvider
@@ -36,18 +42,19 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock private lateinit var onHelpClickedMock: () -> Unit
 
-//    private val baseThreatModel = BaseThreatModel(
-//        id = 1L,
-//        signature = "",
-//        description = "",
-//        status = ThreatModel.ThreatStatus.CURRENT,
-//        firstDetected = Date(0)
-//    )
-//    private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
-//    private val threats = listOf(threat)
+    private val baseThreatModel = BaseThreatModel(
+        id = 1L,
+        signature = "",
+        description = "",
+        status = ThreatModel.ThreatStatus.CURRENT,
+        firstDetected = Date(0)
+    )
+    private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
+    private val threats = listOf(threat)
     private val scanStateModelWithNoThreats = ScanStateModel(state = IDLE)
-//    private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
+    private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
 
     @Before
     fun setUp() {
@@ -57,7 +64,6 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             resourceProvider,
             threatItemBuilder
         )
-//        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
 //        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
@@ -192,6 +198,20 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }*/
 
     @Test
+    fun `builds clickable text info in description for scan state model with threats`() {
+        val clickableText = "clickable text"
+        val descriptionWithClickableText = "description with $clickableText"
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
+            .thenReturn(descriptionWithClickableText)
+        whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
+
+        val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+
+        val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
+        assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(ClickableTextInfo(17, 31, onHelpClickedMock))
+    }
+
+    @Test
     fun `builds shield icon with green color for provisioning scan state model`() {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
 
@@ -280,6 +300,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         fixingThreatIds = emptyList(),
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
-        onThreatItemClicked = mock()
+        onThreatItemClicked = mock(),
+        onHelpClicked = onHelpClickedMock
     )
 }
