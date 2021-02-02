@@ -99,6 +99,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -147,7 +148,7 @@ class MySiteViewModel
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
     val onExternalQuickStartFocusPointVisibilityChange = quickStartRepository.activeTask
-            .map { getExternalFocusPointInfo(it) }
+            .mapNullable { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
             .map { Event(it) } as LiveData<Event<List<ExternalFocusPointInfo>>>
 
