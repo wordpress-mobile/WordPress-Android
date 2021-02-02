@@ -16,11 +16,11 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
-import org.wordpress.android.util.AppLog
-import org.wordpress.android.util.AppLog.T
 
 const val DELAY_MILLIS = 5000L
 const val MAX_RETRY = 3
@@ -36,18 +36,6 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     ) = flow {
         val tag = javaClass.simpleName
         var retryAttempts = 0
-        if (downloadId == null) {
-            retryAttempts = -1
-            if (!isNetworkAvailable()) return@flow
-            val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
-            if (result.isError) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                }
-            }
-        }
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
