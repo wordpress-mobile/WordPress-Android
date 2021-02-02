@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -29,7 +30,8 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val threatItemBuilder: ThreatItemBuilder
+    private val threatItemBuilder: ThreatItemBuilder,
+    private val scanStore: ScanStore
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
@@ -40,10 +42,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onThreatItemClicked: (threatId: Long) -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
-            buildThreatsFixingStateItems(
-                threats = model.threats,
-                fixingThreatIds = fixingThreatIds
-            )
+            buildThreatsFixingStateItems(fixingThreatIds)
         } else when (model.state) {
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
@@ -62,10 +61,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         }
     }
 
-    private fun buildThreatsFixingStateItems(
-        threats: List<ThreatModel>?,
-        fixingThreatIds: List<Long>
-    ): List<JetpackListItemState> {
+    private fun buildThreatsFixingStateItems(fixingThreatIds: List<Long>): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
@@ -78,14 +74,14 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanDescription)
         items.add(scanProgress)
 
-        threats?.takeIf { it.isNotEmpty() && fixingThreatIds.isNotEmpty() }?.let {
-            items.add(ThreatsHeaderItemState())
-            items.addAll(
-                threats.filter { it.baseThreatModel.id in fixingThreatIds }.map { threat ->
+        items.add(ThreatsHeaderItemState())
+        items.addAll(
+            fixingThreatIds.mapNotNull { threatId ->
+                scanStore.getThreatModelByThreatId(threatId)?.let { threat ->
                     threatItemBuilder.buildThreatItem(threat)
                 }
-            )
-        }
+            }
+        )
 
         return items
     }

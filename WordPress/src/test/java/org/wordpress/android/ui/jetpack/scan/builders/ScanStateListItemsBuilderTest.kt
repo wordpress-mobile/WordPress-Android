@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -16,6 +17,7 @@ import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
@@ -41,6 +43,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock private lateinit var scanStore: ScanStore
 
     private val baseThreatModel = BaseThreatModel(
         id = 1L,
@@ -60,7 +63,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             dateProvider,
             htmlMessageUtils,
             resourceProvider,
-            threatItemBuilder
+            threatItemBuilder,
+            scanStore
         )
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
@@ -256,6 +260,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     fun `builds fixing threat items for fixing threats state`() {
         val threatItemState = mock<ThreatItemState>()
         whenever(threatItemBuilder.buildThreatItem(threat)).thenReturn(threatItemState)
+        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threat)
 
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
