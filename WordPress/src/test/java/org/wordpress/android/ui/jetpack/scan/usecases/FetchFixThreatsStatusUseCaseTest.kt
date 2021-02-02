@@ -153,4 +153,24 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
 
             assertThat(useCaseResult).isEqualTo(NotStarted)
         }
+
+    @Test
+    fun `given all threats NOT_FIXED, when status is fetched, then FixFailure(containsOnly = true) returned`() = test {
+        val fixThreatsStatusModels = listOf(
+            fakeFixThreatsStatusModel.copy(status = FixStatus.NOT_FIXED),
+            fakeFixThreatsStatusModel.copy(status = FixStatus.NOT_FIXED)
+        )
+        val storeResultWithErrorFixStatusModel = OnFixThreatsStatusFetched(
+            fakeSiteId,
+            fixThreatsStatusModels,
+            FETCH_FIX_THREATS_STATUS
+        )
+        whenever(scanStore.fetchFixThreatsStatus(any())).thenReturn(storeResultWithErrorFixStatusModel)
+
+        val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(1L, 2L))
+            .toList(mutableListOf())
+            .last()
+
+        assertThat(useCaseResult).isEqualTo(Failure.FixFailure(containsOnlyErrors = true))
+    }
 }
