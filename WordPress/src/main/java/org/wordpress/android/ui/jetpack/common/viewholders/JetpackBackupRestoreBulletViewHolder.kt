@@ -26,10 +26,11 @@ class JetpackBackupRestoreBulletViewHolder(
             height = size
         }
 
-        with(icon.layoutParams as MarginLayoutParams) {
-            val margin = resources.getDimensionPixelSize(state.marginResId)
-            topMargin = margin
-            bottomMargin = margin
+        state.itemBottomMarginResId?.let {
+            with(itemView.layoutParams as MarginLayoutParams) {
+                val margin = resources.getDimensionPixelSize(it)
+                bottomMargin = margin
+            }
         }
 
         if (state.colorResId == null) {
