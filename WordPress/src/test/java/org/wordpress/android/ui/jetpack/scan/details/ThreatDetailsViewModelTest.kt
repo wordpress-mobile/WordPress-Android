@@ -293,22 +293,27 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     private fun createDummyThreatDetailsListItems(
-        onFixThreatItemClicked: () -> Unit,
-        onIgnoreThreatItemClicked: () -> Unit
-    ) = listOf(
-        ActionButtonState(
-            text = fakeUiStringText,
-            contentDescription = fakeUiStringText,
-            isSecondary = false,
-            onClick = onFixThreatItemClicked
-        ),
-        ActionButtonState(
-            text = fakeUiStringText,
-            contentDescription = fakeUiStringText,
-            isSecondary = true,
-            onClick = onIgnoreThreatItemClicked
+        primaryAction: () -> Unit,
+        secondaryAction: (() -> Unit)? = null
+    ): List<ActionButtonState> {
+        val list = mutableListOf(
+                ActionButtonState(
+                        text = fakeUiStringText,
+                        contentDescription = fakeUiStringText,
+                        isSecondary = false,
+                        onClick = primaryAction
+                )
         )
-    )
+        secondaryAction?.let {
+            list.add(ActionButtonState(
+                    text = fakeUiStringText,
+                    contentDescription = fakeUiStringText,
+                    isSecondary = true,
+                    onClick = secondaryAction
+            ))
+        }
+        return list
+    }
 
     private fun init(): Observers {
         val uiStates = mutableListOf<UiState>()
