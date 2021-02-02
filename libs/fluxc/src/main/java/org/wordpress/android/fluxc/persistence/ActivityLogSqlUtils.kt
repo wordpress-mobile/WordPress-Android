@@ -100,7 +100,7 @@ class ActivityLogSqlUtils
         return WellSql
                 .delete(RewindStatusBuilder::class.java)
                 .where()
-                .equals(ActivityLogTable.LOCAL_SITE_ID, site.id)
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
                 .endWhere()
                 .execute()
     }
@@ -109,7 +109,7 @@ class ActivityLogSqlUtils
         return WellSql
                 .delete(BackupDownloadStatusBuilder::class.java)
                 .where()
-                .equals(ActivityLogTable.LOCAL_SITE_ID, site.id)
+                .equals(BackupDownloadStatusTable.LOCAL_SITE_ID, site.id)
                 .endWhere()
                 .execute()
     }
