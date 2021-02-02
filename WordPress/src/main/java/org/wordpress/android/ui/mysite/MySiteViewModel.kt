@@ -334,6 +334,7 @@ class MySiteViewModel
     private fun quickActionStatsClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
+        quickStartRepository.completeTask(CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
