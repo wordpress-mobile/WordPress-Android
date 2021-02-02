@@ -583,28 +583,36 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun handleRestoreStatus(state: RestoreRequestState) {
         when (state) {
-            is RestoreRequestState.Progress -> if (!isRestoreProgressItemShown) {
-                reloadEvents(
-                        restoreEvent = RestoreEvent(
-                                displayProgress = true,
-                                isCompleted = false,
-                                rewindId = state.rewindId,
-                                published = state.published
-                        )
-                )
-            }
-            is RestoreRequestState.Complete -> if (isRestoreProgressItemShown) {
-                requestEventsUpdate(
-                        loadMore = false,
-                        restoreEvent = RestoreEvent(
-                                displayProgress = false,
-                                isCompleted = true,
-                                rewindId = state.rewindId,
-                                published = state.published
-                        )
-                )
-            }
+            is RestoreRequestState.Progress -> handleRestoreStatusForProgress(state)
+            is RestoreRequestState.Complete -> handleRestoreStatusForComplete(state)
             else -> Unit // Do nothing
+        }
+    }
+
+    private fun handleRestoreStatusForProgress(state: RestoreRequestState.Progress) {
+        if (!isRestoreProgressItemShown) {
+            reloadEvents(
+                    restoreEvent = RestoreEvent(
+                            displayProgress = true,
+                            isCompleted = false,
+                            rewindId = state.rewindId,
+                            published = state.published
+                    )
+            )
+        }
+    }
+
+    private fun handleRestoreStatusForComplete(state: RestoreRequestState.Complete) {
+        if (isRestoreProgressItemShown) {
+            requestEventsUpdate(
+                    loadMore = false,
+                    restoreEvent = RestoreEvent(
+                            displayProgress = false,
+                            isCompleted = true,
+                            rewindId = state.rewindId,
+                            published = state.published
+                    )
+            )
         }
     }
 
@@ -633,28 +641,36 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun handleBackupDownloadStatus(state: BackupDownloadRequestState) {
         when (state) {
-            is BackupDownloadRequestState.Progress -> if (!isBackupDownloadProgressItemShown) {
-                reloadEvents(
-                        backupDownloadEvent = BackupDownloadEvent(
-                                displayProgress = true,
-                                isCompleted = false,
-                                rewindId = state.rewindId,
-                                published = state.published
-                        )
-                )
-            }
-            is BackupDownloadRequestState.Complete -> if (isBackupDownloadProgressItemShown) {
-                requestEventsUpdate(
-                        loadMore = false,
-                        backupDownloadEvent = BackupDownloadEvent(
-                                displayProgress = false,
-                                isCompleted = true,
-                                rewindId = state.rewindId,
-                                published = state.published
-                        )
-                )
-            }
+            is BackupDownloadRequestState.Progress -> handleBackupDownloadStatusForProgress(state)
+            is BackupDownloadRequestState.Complete -> handleBackupDownloadStatusForComplete(state)
             else -> Unit // Do nothing
+        }
+    }
+
+    private fun handleBackupDownloadStatusForProgress(state: BackupDownloadRequestState.Progress) {
+        if (!isBackupDownloadProgressItemShown) {
+            reloadEvents(
+                    backupDownloadEvent = BackupDownloadEvent(
+                            displayProgress = true,
+                            isCompleted = false,
+                            rewindId = state.rewindId,
+                            published = state.published
+                    )
+            )
+        }
+    }
+
+    private fun handleBackupDownloadStatusForComplete(state: BackupDownloadRequestState.Complete) {
+        if (isBackupDownloadProgressItemShown) {
+            requestEventsUpdate(
+                    loadMore = false,
+                    backupDownloadEvent = BackupDownloadEvent(
+                            displayProgress = false,
+                            isCompleted = true,
+                            rewindId = state.rewindId,
+                            published = state.published
+                    )
+            )
         }
     }
 
