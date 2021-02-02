@@ -211,7 +211,7 @@ class MySiteViewModel
             scrollToQuickStartTaskIfNecessary(
                     activeTask,
                     siteItems.indexOfFirst { it.activeQuickStartItem })
-            State.SiteSelected(siteItems, quickStartModel?.activeTask == PUBLISH_POST)
+            State.SiteSelected(siteItems)
         } else {
             // Hide actionable empty view image when screen height is under 600 pixels.
             val shouldShowImage = displayUtilsWrapper.getDisplayPixelHeight() >= 600
@@ -519,7 +519,7 @@ class MySiteViewModel
     )
 
     sealed class State {
-        data class SiteSelected(val items: List<MySiteItem>, val showFabFocusPoint: Boolean = false) : State()
+        data class SiteSelected(val items: List<MySiteItem>) : State()
         data class NoSites(val shouldShowImage: Boolean) : State()
     }
 

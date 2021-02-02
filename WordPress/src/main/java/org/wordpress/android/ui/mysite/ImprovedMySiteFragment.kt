@@ -172,17 +172,12 @@ class ImprovedMySiteFragment : Fragment(),
 
         recycler_view.adapter = adapter
 
-        var isShowingFocusPoint = false
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
                 when (val state = uiModel.state) {
                     is State.SiteSelected -> {
                         loadData(state.items)
-                        if (isShowingFocusPoint != state.showFabFocusPoint) {
-                            showFabFocusPoint(state.showFabFocusPoint)
-                            isShowingFocusPoint = state.showFabFocusPoint
-                        }
                     }
                     is State.NoSites -> loadEmptyView(state.shouldShowImage)
                 }
@@ -438,22 +433,6 @@ class ImprovedMySiteFragment : Fragment(),
         recycler_view.setVisible(false)
         actionable_empty_view.setVisible(true)
         actionable_empty_view.image.setVisible(shouldShowEmptyViewImage)
-    }
-
-    private fun showFabFocusPoint(shouldShowFabFocusPoint: Boolean) {
-        if (shouldShowFabFocusPoint) {
-            val horizontalOffset = resources.getDimensionPixelOffset(
-                    R.dimen.quick_start_focus_point_my_site_right_offset
-            )
-            val focusPointSize = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
-            val activity = requireActivity()
-            QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                    activity.fab_container, activity.fab_button, horizontalOffset,
-                    (activity.fab_button.height - focusPointSize) / 2
-            )
-        } else {
-            removeQuickStartFocusPoint(requireActivity().fab_container)
-        }
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {

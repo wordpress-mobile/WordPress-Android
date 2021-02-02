@@ -13,6 +13,7 @@ import android.text.TextUtils;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -228,6 +229,26 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean onActivityBackPressed();
     }
 
+    private Runnable mShowFabFocusPoint = new Runnable() {
+        @Override public void run() {
+            if (isFinishing()) {
+                return;
+            }
+            boolean focusPointVisible =
+                    findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point) != null;
+            if (!focusPointVisible) {
+                int horizontalOffset = getResources().getDimensionPixelOffset(
+                        R.dimen.quick_start_focus_point_my_site_right_offset
+                );
+                int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        findViewById(R.id.fab_container), mFloatingActionButton, horizontalOffset,
+                        (mFloatingActionButton.getHeight() - focusPointSize) / 2
+                );
+            }
+        }
+    };
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         ProfilingUtils.split("WPMainActivity.onCreate");
@@ -420,6 +441,24 @@ public class WPMainActivity extends LocaleAwareActivity implements
             } else {
                 mFloatingActionButton.hide();
             }
+
+            if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+                if (fabUiState.isFocusPointVisible()) {
+                    mHandler.postDelayed(mShowFabFocusPoint, 200);
+                } else if (!fabUiState.isFocusPointVisible()) {
+                    mHandler.removeCallbacks(mShowFabFocusPoint);
+                    mHandler.post(() -> {
+                        View focusPointView =
+                                findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point);
+                        if (focusPointView != null) {
+                            ViewParent directParent = focusPointView.getParent();
+                            if (directParent instanceof ViewGroup) {
+                                ((ViewGroup) directParent).removeView(focusPointView);
+                            }
+                        }
+                    });
+                }
+            }
         });
 
         mViewModel.getCreateAction().observe(this, createAction -> {
@@ -453,7 +492,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mViewModel.getCompleteBottomSheetQuickStartTask().observe(this, event -> {
-             // complete quick start task during QS process and remind of a next one
+            // complete quick start task during QS process and remind of a next one
             if (getSelectedSite() != null) {
                 QuickStartUtils.completeTaskAndRemindNextOne(
                         mQuickStartStore,
@@ -1052,7 +1091,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
-                            && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs.getSelectedSite();
+                                                 && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs
+                            .getSelectedSite();
 
                     if (!isSameSiteSelected) {
                         QuickStartUtils.cancelQuickStartReminder(this);

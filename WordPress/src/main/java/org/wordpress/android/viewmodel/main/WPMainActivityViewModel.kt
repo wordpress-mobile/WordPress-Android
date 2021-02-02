@@ -46,7 +46,17 @@ class WPMainActivityViewModel @Inject constructor(
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
-    val fabUiState: LiveData<MainFabUiState> = _fabUiState
+    val fabUiState: LiveData<MainFabUiState> = merge(
+            _fabUiState,
+            quickStartRepository.activeTask
+    ) { fabUiState, activeTask ->
+        val isFocusPointVisible = activeTask == PUBLISH_POST && fabUiState?.isFabVisible == true
+        if (isFocusPointVisible != fabUiState?.isFocusPointVisible) {
+            fabUiState?.copy(isFocusPointVisible = isFocusPointVisible)
+        } else {
+            fabUiState
+        }
+    }
 
     private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
 
@@ -94,33 +104,41 @@ class WPMainActivityViewModel @Inject constructor(
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(CreateAction(
-                actionType = NO_ACTION,
-                iconRes = 0,
-                labelRes = R.string.my_site_bottom_sheet_title,
-                onClickAction = null
-        ))
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_POST,
-                iconRes = R.drawable.ic_posts_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_post,
-                onClickAction = ::onCreateActionClicked
-        ))
+        actionsList.add(
+                CreateAction(
+                        actionType = NO_ACTION,
+                        iconRes = 0,
+                        labelRes = R.string.my_site_bottom_sheet_title,
+                        onClickAction = null
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_POST,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
+                        onClickAction = ::onCreateActionClicked
+                )
+        )
         if (hasFullAccessToContent(site)) {
-            actionsList.add(CreateAction(
-                    actionType = CREATE_NEW_PAGE,
-                    iconRes = R.drawable.ic_pages_white_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_page,
-                    onClickAction = ::onCreateActionClicked
-            ))
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_PAGE,
+                            iconRes = R.drawable.ic_pages_white_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_page,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
         }
         if (shouldShowStories(site)) {
-            actionsList.add(CreateAction(
-                    actionType = CREATE_NEW_STORY,
-                    iconRes = R.drawable.ic_story_icon_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_story,
-                    onClickAction = ::onCreateActionClicked
-            ))
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_STORY,
+                            iconRes = R.drawable.ic_story_icon_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_story,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
         }
 
         _mainActions.postValue(actionsList)

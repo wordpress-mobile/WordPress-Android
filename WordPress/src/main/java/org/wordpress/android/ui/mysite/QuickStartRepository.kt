@@ -63,9 +63,10 @@ class QuickStartRepository
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
             .associateBy { it.task }
     private val refresh = MutableLiveData<Boolean?>()
-    private val activeTask = MutableLiveData<QuickStartTask?>()
+    private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+    val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -77,14 +78,14 @@ class QuickStartRepository
     override fun buildSource(siteId: Int) = flow {
         emit(QuickStartUpdate())
         refresh.asFlow().map {
-            if (quickStartUtils.isQuickStartInProgress(siteId)) {
+            if (quickStartUtils.isQuickStartInProgress(siteId) || true) {
                 val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
                 val growCategory = buildQuickStartCategory(siteId, GROW)
                 listOfNotNull(customizeCategory, growCategory)
             } else {
                 listOf()
             }
-        }.combine(activeTask.asFlow().onStart { emit(null) }) { categories, activeTask ->
+        }.combine(_activeTask.asFlow().onStart { emit(null) }) { categories, activeTask ->
             QuickStartUpdate(activeTask, categories)
         }.collect { emit(it) }
     }
@@ -101,7 +102,7 @@ class QuickStartRepository
     }
 
     fun setActiveTask(task: QuickStartTask) {
-        activeTask.postValue(task)
+        _activeTask.postValue(task)
         val shortQuickStartMessage =
                 if (task == UPDATE_SITE_TITLE) {
                     HtmlCompat.fromHtml(
@@ -130,7 +131,7 @@ class QuickStartRepository
 //                return
 //            }
             if (task != activeTask.value) return
-            activeTask.value = null
+            _activeTask.value = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
@@ -146,7 +147,7 @@ class QuickStartRepository
 
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
-        activeTask.value = null
+        _activeTask.value = null
         eventBus.postSticky(QuickStartEvent(task))
     }
 
