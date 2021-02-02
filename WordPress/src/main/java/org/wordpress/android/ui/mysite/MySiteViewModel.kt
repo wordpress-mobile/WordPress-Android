@@ -136,6 +136,7 @@ class MySiteViewModel
     private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
 
     val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
+    val onFollowSiteQuickStartFocusPointVisibilityChange = quickStartRepository.onFollowSiteQuickStartFocusPointVisibilityChange
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>

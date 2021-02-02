@@ -73,6 +73,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -183,6 +184,11 @@ class ImprovedMySiteFragment : Fragment(),
                 (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this.second, 0)
             }
         })
+        viewModel.onFollowSiteQuickStartFocusPointVisibilityChange.observe(viewLifecycleOwner) {
+            it?.applyIfNotHandled {
+                addOrRemoveFollowSiteQuickStartFocusPoint(this)
+            }
+        }
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
                 dialogViewModel.showDialog(requireActivity().supportFragmentManager,
@@ -447,6 +453,27 @@ class ImprovedMySiteFragment : Fragment(),
                         dismissCallback = { _, _ -> holder.onDismissAction() }
                 )
         )
+    }
+
+    private fun addOrRemoveFollowSiteQuickStartFocusPoint(isVisible: Boolean) {
+        val parentView = requireActivity().findViewById<ViewGroup>(R.id.root_view_main)
+        val target = requireActivity().findViewById<View>(R.id.bottom_nav_reader_button)
+        if (parentView != null) {
+            val size = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
+            val horizontalOffset = target.width / 2 - size + resources
+                    .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
+            val verticalOffset = 0
+            if (target != null && isVisible) {
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        parentView,
+                        target,
+                        horizontalOffset,
+                        verticalOffset
+                )
+            } else {
+                QuickStartUtils.removeQuickStartFocusPoint(parentView)
+            }
+        }
     }
 
     companion object {
