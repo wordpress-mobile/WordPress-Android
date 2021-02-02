@@ -261,10 +261,10 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `model contains header of selected site`() {
-        onSiteChange.postValue(site)
+        initSelectedSite()
 
-        assertThat(uiModels).hasSize(3)
-        val state = uiModels.last().state as SiteSelected
+        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
