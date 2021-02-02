@@ -250,7 +250,10 @@ class MySiteViewModel
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
-                STATS -> getStatsNavigationActionForSite(site)
+                STATS -> {
+                    quickStartRepository.completeTask(CHECK_STATS)
+                    getStatsNavigationActionForSite(site)
+                }
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> {
