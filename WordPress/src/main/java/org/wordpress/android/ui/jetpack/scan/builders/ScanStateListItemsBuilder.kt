@@ -42,7 +42,6 @@ class ScanStateListItemsBuilder @Inject constructor(
         return if (fixingThreatIds.isNotEmpty()) {
             buildThreatsFixingStateItems(
                 threats = model.threats,
-                site = site,
                 fixingThreatIds = fixingThreatIds
             )
         } else when (model.state) {
@@ -65,25 +64,20 @@ class ScanStateListItemsBuilder @Inject constructor(
 
     private fun buildThreatsFixingStateItems(
         threats: List<ThreatModel>?,
-        site: SiteModel,
         fixingThreatIds: List<Long>
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
-        val scanDescription = buildThreatsFoundDescription(site, fixingThreatIds.size) // TODO ashiagr replace label
-        val scanProgress = ProgressState(
-            isIndeterminate = true,
-            isVisible = fixingThreatIds.isNotEmpty()
-        )
+        val scanDescription = DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        val scanProgress = ProgressState(isIndeterminate = true, isVisible = fixingThreatIds.isNotEmpty())
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
 
-        // TODO ashiagr fix threats display logic
         threats?.takeIf { it.isNotEmpty() && fixingThreatIds.isNotEmpty() }?.let {
             items.add(ThreatsHeaderItemState())
             items.addAll(
