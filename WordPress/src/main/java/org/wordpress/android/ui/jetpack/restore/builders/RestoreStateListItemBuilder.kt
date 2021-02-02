@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.restore.builders
 
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
@@ -143,7 +144,7 @@ class RestoreStateListItemBuilder @Inject constructor(
             buildBulletState(
                     R.drawable.ic_query_builder_white_24dp,
                     R.string.restore_status_bullet_clock_icon_content_desc,
-                    R.color.yellow_30,
+                    R.color.warning_50,
                     R.string.restore_status_failure_bullet1),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
@@ -154,7 +155,8 @@ class RestoreStateListItemBuilder @Inject constructor(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.restore_status_bullet_checkmark_icon_content_desc,
                     R.color.success_50,
-                    R.string.restore_status_failure_bullet3),
+                    R.string.restore_status_failure_bullet3,
+                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin),
             buildActionButtonState(
                     titleRes = R.string.restore_complete_failed_action_button,
                     contentDescRes = R.string.restore_complete_failed_action_button_content_description,
@@ -167,7 +169,10 @@ class RestoreStateListItemBuilder @Inject constructor(
                     R.string.restore_complete_failed_icon_content_description,
                     R.color.error_50),
             buildHeaderState(R.string.restore_complete_failed_description),
-            buildSubHeaderState(R.string.request_failed_message),
+            buildSubHeaderState(
+                    R.string.request_failed_message,
+                    R.dimen.margin_none,
+                    R.dimen.jetpack_backup_restore_sub_header_bottom_margin),
             buildActionButtonState(
                     titleRes = R.string.restore_complete_failed_action_button,
                     contentDescRes = R.string.restore_complete_failed_action_button_content_description,
@@ -196,8 +201,6 @@ class RestoreStateListItemBuilder @Inject constructor(
             )
     )
 
-    private fun buildDescriptionState(@StringRes descRes: Int) = DescriptionState(UiStringRes(descRes))
-
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
@@ -210,8 +213,14 @@ class RestoreStateListItemBuilder @Inject constructor(
         onClick = onClick
     )
 
-    private fun buildSubHeaderState(@StringRes textResId: Int) =
-            SubHeaderState(text = UiStringRes(textResId))
+    private fun buildSubHeaderState(
+        @StringRes textResId: Int,
+        @DimenRes topMarginResId: Int? = null,
+        @DimenRes bottomMarginResId: Int? = null) =
+            SubHeaderState(
+                    text = UiStringRes(textResId),
+                    itemTopMarginResId = topMarginResId,
+                    itemBottomMarginResId = bottomMarginResId)
 
     private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
@@ -229,11 +238,13 @@ class RestoreStateListItemBuilder @Inject constructor(
         @DrawableRes iconRes: Int,
         @StringRes contentDescRes: Int,
         @ColorRes colorRes: Int,
-        @StringRes labelRes: Int
+        @StringRes labelRes: Int,
+        @DimenRes itemBottomMarginResId: Int? = null
     ) = BulletState(
             icon = iconRes,
             contentDescription = UiStringRes(contentDescRes),
             colorResId = colorRes,
-            label = UiStringRes(labelRes)
+            label = UiStringRes(labelRes),
+            itemBottomMarginResId = itemBottomMarginResId
     )
 }
