@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -98,6 +99,7 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ContextProvider
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var siteInfoBlockBuilder: SiteInfoBlockBuilder

@@ -163,18 +163,19 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `requestNextStepOfTask clears current active task`() {
+    fun `requestNextStepOfTask clears current active task`() = test {
         initQuickStartInProgress()
 
         initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
-        assertThat(models.last().activeTask).isNull()
+        val update = source.take(2).toList().last()
+        assertThat(update.quickStartModel.activeTask).isNull()
     }
 
     @Test
-    fun `requestNextStepOfTask does not proceed if the active task is different`() {
+    fun `requestNextStepOfTask does not proceed if the active task is different`() = test {
         initQuickStartInProgress()
 
         initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
@@ -182,7 +183,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
         verifyZeroInteractions(eventBus)
-        assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
+        val update = source.take(3).toList().last()
+        assertThat(update.quickStartModel.activeTask).isEqualTo(PUBLISH_POST)
     }
 
     private fun initQuickStartInProgress() {
