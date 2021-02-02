@@ -426,6 +426,36 @@ class ActivityLogStoreTest {
         assertEquals(backupDownloadStatusModel, backDownloadStatusFromDb)
     }
 
+    @Test
+    fun storeFetchedEmptyRewindStatusRemoveFromDb() = test {
+        val rewindStatusModel = mock<RewindStatusModel>()
+        val payload = FetchedRewindStatePayload(null, siteModel)
+        whenever(activityLogRestClient.fetchActivityRewind(siteModel)).thenReturn(payload)
+
+        val fetchAction = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteRewindStatus(siteModel)
+        val expectedChangeEvent = ActivityLogStore.OnRewindStatusFetched(ActivityLogAction.FETCH_REWIND_STATE)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
+    @Test
+    fun storeFetchedEmptyBackupDownloadStatusRemoveFromDb() = test {
+        val backupDownloadStatusModel = mock<BackupDownloadStatusModel>()
+        val payload = FetchedBackupDownloadStatePayload(null, siteModel)
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(payload)
+
+        val fetchAction =
+                ActivityLogActionBuilder.newFetchBackupDownloadStateAction(FetchBackupDownloadStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteBackupDownloadStatus(siteModel)
+        val expectedChangeEvent =
+                ActivityLogStore.OnBackupDownloadStatusFetched(ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
+    }
+
     private suspend fun initRestClient(
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
