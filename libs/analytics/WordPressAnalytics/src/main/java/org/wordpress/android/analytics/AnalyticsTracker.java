@@ -726,7 +726,9 @@ public final class AnalyticsTracker {
         COMMENT_BATCH_SPAMMED,
         COMMENT_BATCH_TRASHED,
         COMMENT_BATCH_DELETED,
-        COMMENT_EDITOR_OPENED
+        COMMENT_EDITOR_OPENED,
+        MY_SITE_CREATE_SHEET_SHOWN,
+        MY_SITE_CREATE_SHEET_ACTION_TAPPED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();

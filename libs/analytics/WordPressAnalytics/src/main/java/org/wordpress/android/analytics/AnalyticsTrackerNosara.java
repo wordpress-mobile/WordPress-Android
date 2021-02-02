@@ -1956,6 +1956,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
                 return "reader_mark_as_unseen";
+            case MY_SITE_CREATE_SHEET_SHOWN:
+                return "my_site_create_sheet_shown";
+            case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
+                return "my_site_create_sheet_action_tapped";
         }
         return null;
     }
