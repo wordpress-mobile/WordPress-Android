@@ -23,7 +23,16 @@ abstract class JetpackListItemState(open val type: ViewType) {
     data class HeaderState(val text: UiString, @AttrRes val textColorRes: Int = R.attr.colorOnSurface) :
         JetpackListItemState(ViewType.HEADER)
 
-    data class DescriptionState(val text: UiString?) : JetpackListItemState(ViewType.DESCRIPTION)
+    data class DescriptionState(
+        val text: UiString?,
+        val clickableTextsInfo: List<ClickableTextInfo>? = null
+    ) : JetpackListItemState(ViewType.DESCRIPTION) {
+        data class ClickableTextInfo(
+            val startIndex: Int,
+            val endIndex: Int,
+            val onClick: () -> Unit,
+        )
+    }
 
     data class ActionButtonState(
         val text: UiString,
