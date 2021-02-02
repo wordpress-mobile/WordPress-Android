@@ -158,7 +158,8 @@ class MySiteViewModel
             isDomainCreditAvailable,
             scanAvailable,
             backupAvailable,
-            quickStartModel
+            activeTask,
+    quickStartCategories
     ) ->
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
@@ -170,8 +171,8 @@ class MySiteViewModel
                             this::iconClick,
                             this::urlClick,
                             this::switchSiteClick,
-                            quickStartModel?.activeTask == UPDATE_SITE_TITLE,
-                            quickStartModel?.activeTask == UPLOAD_SITE_ICON
+                            activeTask == UPDATE_SITE_TITLE,
+                            activeTask == UPLOAD_SITE_ICON
                     )
             )
             siteItems.add(
@@ -188,13 +189,13 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
 
-            siteItems.addAll(quickStartModel?.categories?.map {
+            siteItems.addAll(quickStartCategories.map {
                 quickStartItemBuilder.build(
                         it,
                         this::onQuickStartCardMoreClick,
                         this::onQuickStartTaskCardClick
                 )
-            } ?: listOf())
+            })
 
             siteItems.addAll(
                     siteItemsBuilder.buildSiteItems(
@@ -202,12 +203,12 @@ class MySiteViewModel
                             this::onItemClick,
                             backupAvailable,
                             scanAvailable,
-                            quickStartModel?.activeTask == QuickStartTask.VIEW_SITE,
-                            quickStartModel?.activeTask == ENABLE_POST_SHARING
+                            activeTask == QuickStartTask.VIEW_SITE,
+                            activeTask == ENABLE_POST_SHARING
                     )
             )
             scrollToQuickStartTaskIfNecessary(
-                    quickStartModel?.activeTask,
+                    activeTask,
                     siteItems.indexOfFirst { it.activeQuickStartItem })
             State.SiteSelected(siteItems)
         } else {

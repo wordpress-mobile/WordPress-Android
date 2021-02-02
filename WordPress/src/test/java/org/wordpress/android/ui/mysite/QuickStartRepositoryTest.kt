@@ -106,7 +106,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
-        assertThat(source.take(3).toList().last().quickStartModel.activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(source.take(3).toList().last().activeTask).isEqualTo(PUBLISH_POST)
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
     }
 
@@ -134,8 +134,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
         val update = source.take(2).toList().last()
-        assertThat(update.quickStartModel.activeTask).isNull()
-        assertThat(update.quickStartModel.categories).isNotEmpty()
+        assertThat(update.activeTask).isNull()
+        assertThat(update.categories).isNotEmpty()
     }
 
     @Test
@@ -171,7 +171,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
         val update = source.take(2).toList().last()
-        assertThat(update.quickStartModel.activeTask).isNull()
+        assertThat(update.activeTask).isNull()
     }
 
     @Test
@@ -184,7 +184,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         verifyZeroInteractions(eventBus)
         val update = source.take(3).toList().last()
-        assertThat(update.quickStartModel.activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
     }
 
     private fun initQuickStartInProgress() {
@@ -211,7 +211,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     private suspend fun assertModel(elements: Int = 1) {
         val quickStartUpdate = source.take(elements).toList().last()
-        quickStartUpdate.quickStartModel.categories.let { categories ->
+        quickStartUpdate.categories.let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
             assertThat(categories[0].uncompletedTasks).containsExactly(CREATE_SITE_TUTORIAL)

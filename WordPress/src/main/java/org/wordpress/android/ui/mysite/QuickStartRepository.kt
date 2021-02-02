@@ -27,7 +27,6 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
@@ -73,7 +72,7 @@ class QuickStartRepository
                     .mapNotNull { detailsMap[it] })
 
     override fun buildSource(siteId: Int) = flow {
-        emit(QuickStartUpdate(QuickStartModel()))
+        emit(QuickStartUpdate())
         refresh.asFlow().map {
             if (quickStartUtils.isQuickStartInProgress(siteId)) {
                 val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
@@ -83,7 +82,7 @@ class QuickStartRepository
                 listOf()
             }
         }.combine(activeTask.asFlow().onStart { emit(null) }) { categories, activeTask ->
-            QuickStartUpdate(QuickStartModel(activeTask, categories))
+            QuickStartUpdate(activeTask, categories)
         }.collect { emit(it) }
     }
 
@@ -152,14 +151,9 @@ class QuickStartRepository
         job.cancel()
     }
 
-    data class QuickStartModel(
-        val activeTask: QuickStartTask? = null,
-        val categories: List<QuickStartCategory> = listOf()
-    ) {
-        data class QuickStartCategory(
-            val taskType: QuickStartTaskType,
-            val uncompletedTasks: List<QuickStartTaskDetails>,
-            val completedTasks: List<QuickStartTaskDetails>
-        )
-    }
+    data class QuickStartCategory(
+        val taskType: QuickStartTaskType,
+        val uncompletedTasks: List<QuickStartTaskDetails>,
+        val completedTasks: List<QuickStartTaskDetails>
+    )
 }

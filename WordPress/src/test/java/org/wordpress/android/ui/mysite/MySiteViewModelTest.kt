@@ -63,7 +63,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -140,7 +139,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val isDomainCreditAvailable = MutableStateFlow(DomainCreditAvailable(false))
     private val jetpackCapabilities = MutableStateFlow(JetpackCapabilities(false, false))
     private val currentAvatar = MutableStateFlow(CurrentAvatarUrl(""))
-    private val quickStartUpdate = MutableStateFlow(QuickStartUpdate(QuickStartModel(null, listOf())))
+    private val quickStartUpdate = MutableStateFlow(QuickStartUpdate())
 
     @InternalCoroutinesApi
     @Before
@@ -451,7 +450,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteInfoBlock.copy(showTitleFocusPoint = true)
         )
 
-        quickStartUpdate.value = QuickStartUpdate(QuickStartModel(UPDATE_SITE_TITLE, listOf()))
+        quickStartUpdate.value = QuickStartUpdate(UPDATE_SITE_TITLE, listOf())
 
         assertThat(findSiteInfoBlock()!!.showTitleFocusPoint).isTrue()
     }
@@ -475,7 +474,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 siteInfoBlock.copy(showIconFocusPoint = true)
         )
 
-        quickStartUpdate.value = QuickStartUpdate(QuickStartModel(UPLOAD_SITE_ICON, listOf()))
+        quickStartUpdate.value = QuickStartUpdate(UPLOAD_SITE_ICON, listOf())
 
         assertThat(findSiteInfoBlock()!!.showIconFocusPoint).isTrue()
     }
