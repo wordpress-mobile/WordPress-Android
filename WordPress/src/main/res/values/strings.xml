@@ -3386,9 +3386,12 @@
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
-    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
-    <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
-    <string name="backup_item_sqls">Site database (SQL)</string>
+    <string name="backup_item_roots">WordPress root</string>
+    <string name="backup_item_roots_hint">(includes wp-config.php and any non WordPress files)</string>
+    <string name="backup_item_contents">WP-content directory</string>
+    <string name="backup_item_content_hint">(excludes themes, plugins, and uploads)</string>
+    <string name="backup_item_sqls">Site database</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
 
     <string name="backup_download_complete_page_title">Your Backup</string>
     <string name="backup_download_complete_header">Your backup is now available for download</string>

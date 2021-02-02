@@ -36,6 +36,7 @@ import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ProgressToo
 import org.wordpress.android.ui.jetpack.backup.download.builders.BackupDownloadStateListItemBuilder
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownloadUseCase
+import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
@@ -45,6 +46,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.wizard.WizardManager
 import org.wordpress.android.util.wizard.WizardNavigationTarget
+import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Date
 
@@ -57,6 +59,8 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var backupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var postBackupDownloadUseCase: PostBackupDownloadUseCase
+    @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: BackupDownloadStateListItemBuilder
 
@@ -83,7 +87,7 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
             Unit
         }
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = BackupDownloadStateListItemBuilder()
+        stateListItemBuilder = BackupDownloadStateListItemBuilder(checkboxSpannableLabel)
         viewModel = BackupDownloadViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -98,6 +102,22 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 .thenReturn(postBackupDownloadSuccess)
         whenever(backupDownloadStatusUseCase.getBackupDownloadStatus(anyOrNull(), anyOrNull()))
                 .thenReturn(flow { emit(getStatusProgress) })
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
+                .thenReturn("themes")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_plugins, null))
+                .thenReturn("plugins")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
+                .thenReturn("uploads")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint))
+                .thenReturn("roots")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint))
+                .thenReturn("contents")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
+                .thenReturn("sqls")
     }
 
     @Test

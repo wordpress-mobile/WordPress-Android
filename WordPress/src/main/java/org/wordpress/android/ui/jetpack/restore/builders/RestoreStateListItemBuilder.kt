@@ -5,6 +5,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -25,7 +26,9 @@ import java.util.Date
 import javax.inject.Inject
 
 @Reusable
-class RestoreStateListItemBuilder @Inject constructor() {
+class RestoreStateListItemBuilder @Inject constructor(
+    private val checkboxSpannableLabel: CheckboxSpannableLabel
+) {
     fun buildDetailsListStateItems(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
@@ -50,6 +53,7 @@ class RestoreStateListItemBuilder @Inject constructor() {
             CheckboxState(
                     availableItemType = it.availableItemType,
                     label = UiStringRes(it.labelResId),
+                    labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
                     checked = true,
                     onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
