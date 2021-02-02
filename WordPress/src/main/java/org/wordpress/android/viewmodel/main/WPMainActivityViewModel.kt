@@ -180,7 +180,7 @@ class WPMainActivityViewModel @Inject constructor(
         setMainFabUiState(true, site)
 
         val quickStartFromImprovedMySiteFragment = mySiteImprovementsFeatureConfig.isEnabled() &&
-                quickStartRepository.shouldShowPublishPostQuickStartTask()
+                quickStartRepository.activeTask.value == PUBLISH_POST
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
 
         if (shouldShowStories(site)) {

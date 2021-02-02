@@ -155,10 +155,6 @@ class QuickStartRepository
         job.cancel()
     }
 
-    fun shouldShowPublishPostQuickStartTask(): Boolean {
-        return activeTask.value == PUBLISH_POST
-    }
-
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
         val uncompletedTasks: List<QuickStartTaskDetails>,
