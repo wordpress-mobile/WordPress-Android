@@ -281,6 +281,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                             }
                             break;
+                        case SCAN:
+                            activity.showScanActivityForSite(clickedSpan.getSiteId());
+                            break;
                         case STAT:
                         case FOLLOW:
                             // We can open native stats if the site is a wpcom or Jetpack sites

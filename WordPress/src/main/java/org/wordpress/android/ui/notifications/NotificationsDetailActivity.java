@@ -428,6 +428,18 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
+     public void showScanActivityForSite(long siteId) {
+         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
+         if (site == null) {
+             // One way the site can be null: new site created, receive a notification from this site,
+             // but the site list is not yet updated in the app.
+             ToastUtils.showToast(this, R.string.blog_not_found);
+             return;
+         }
+
+        ActivityLauncher.viewScan(this, site);
+    }
+
     public void showStatsActivityForSite(long siteId, FormattableRangeType rangeType) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
         if (site == null) {
