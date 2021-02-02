@@ -77,7 +77,7 @@ class ScanHistoryListViewModel @Inject constructor(
             threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
 
     private fun onItemClicked(threatId: Long) {
-        _navigation.value = Event(ShowThreatDetails(threatId))
+        _navigation.value = Event(ShowThreatDetails(site, threatId))
     }
 
     private fun mapTabTypeToThreatStatuses(tabType: ScanHistoryTabType): List<ThreatStatus> =
