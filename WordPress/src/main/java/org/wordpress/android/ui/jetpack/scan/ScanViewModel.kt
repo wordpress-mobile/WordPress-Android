@@ -162,7 +162,7 @@ class ScanViewModel @Inject constructor(
                 is FetchFixThreatsState.Failure.FixFailure -> {
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
-                    } else if(isInvokedByUser) {
+                    } else if (isInvokedByUser) {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                 }

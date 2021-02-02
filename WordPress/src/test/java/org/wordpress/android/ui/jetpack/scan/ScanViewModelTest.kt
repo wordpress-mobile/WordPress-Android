@@ -393,8 +393,8 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given FixFailure(onlyErrors=true) returned, when fetch fix status invoked by user, then snackbar is shown`()
-    = test {
+    fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
+            test {
         val messages = init().snackBarMsgs
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
@@ -406,8 +406,8 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given FixFailure(onlyErrors=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`()
-        = test {
+    fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
+            test {
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
         )
