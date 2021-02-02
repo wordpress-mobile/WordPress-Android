@@ -17,12 +17,17 @@ class SelectedSiteRepository
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
     private val _selectedSiteChange = MutableLiveData<SiteModel>()
+    private val _siteSelected = MutableLiveData<Int>()
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel>
+    val siteSelected = _siteSelected as LiveData<Int?>
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
     fun updateSite(selectedSite: SiteModel?) {
         if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
             showSiteIconProgressBar(false)
+        }
+        if (selectedSite?.id != _siteSelected.value) {
+            _siteSelected.value = selectedSite?.id
         }
         _selectedSiteChange.value = selectedSite
     }

@@ -1,11 +1,13 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.count
+import kotlinx.coroutines.flow.single
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -18,99 +20,69 @@ import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.fluxc.store.SiteStore.PlansError
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType
 import org.wordpress.android.fluxc.store.SiteStore.PlansErrorType.GENERIC_ERROR
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.plans.PlansConstants.PREMIUM_PLAN_ID
 import org.wordpress.android.util.SiteUtilsWrapper
 
 class DomainRegistrationHandlerTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var appLogWrapper: AppLogWrapper
     @Mock lateinit var siteUtils: SiteUtilsWrapper
-    @Mock lateinit var site: SiteModel
-    private lateinit var isDomainCreditAvailableEvents: MutableList<Boolean>
+    private val siteId = 1
+    private val site = SiteModel()
+    private lateinit var source: Flow<DomainCreditAvailable>
     private lateinit var handler: DomainRegistrationHandler
-    private val onSiteChange = MutableLiveData<SiteModel>()
 
     @Before
     fun setUp() {
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
-        whenever(selectedSiteRepository.getSelectedSite()).thenAnswer { onSiteChange.value }
-
-        isDomainCreditAvailableEvents = mutableListOf()
-        handler = DomainRegistrationHandler(dispatcher, selectedSiteRepository, siteUtils)
-        handler.isDomainCreditAvailable.observeForever { isDomainCreditAvailableEvents.add(it) }
+        handler = DomainRegistrationHandler(dispatcher, selectedSiteRepository, appLogWrapper, siteUtils)
+        site.id = siteId
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        source = handler.buildSource(siteId)
     }
 
     @Test
-    fun `when site is null, don't emit value and don't fetch`() {
-        onSiteChange.postValue(null)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(0)
-
-        verify(dispatcher, never()).dispatch(any())
-    }
-
-    @Test
-    fun `when site is free, emit false and don't fetch`() {
+    fun `when site is free, emit false and don't fetch`() = test {
         setupSite(site = site, isFree = true, hasCustomDomain = false)
 
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(1)
-        assertThat(isDomainCreditAvailableEvents.last()).isFalse
+        assertThat(source.single().isDomainCreditAvailable).isFalse
 
         verify(dispatcher, never()).dispatch(any())
     }
 
     @Test
-    fun `when site has custom domain, emit false and don't fetch`() {
-        setupSite(site = site, isFree = true, hasCustomDomain = false)
+    fun `when site has custom domain, emit false and don't fetch`() = test {
+        setupSite(site = site, isFree = false, hasCustomDomain = true)
 
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(1)
-        assertThat(isDomainCreditAvailableEvents.last()).isFalse
+        assertThat(source.single().isDomainCreditAvailable).isFalse
 
         verify(dispatcher, never()).dispatch(any())
     }
 
     @Test
-    fun `when site is not free and doesn't have custom domain, don't emit value and start fetch`() {
-        setupSite(site = site, isFree = false, hasCustomDomain = false)
+    fun `when fetched site has a plan with credits, start to fetch and emit true`() = test {
+        setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
 
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(0)
+        assertThat(source.single().isDomainCreditAvailable).isTrue
 
         verify(dispatcher, times(1)).dispatch(any())
     }
 
     @Test
-    fun `when fetched site has a plan with credits, emit true`() {
-        setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
-
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(1)
-        assertThat(isDomainCreditAvailableEvents.last()).isTrue
-    }
-
-    @Test
-    fun `when fetched site doesn't have a plan with credits, emit false`() {
+    fun `when fetched site doesn't have a plan with credits, start to fetch and emit false`() = test {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = false))
 
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(1)
-        assertThat(isDomainCreditAvailableEvents.last()).isFalse
+        assertThat(source.single().isDomainCreditAvailable).isFalse
     }
 
     @Test
-    fun `when fetched site is different from currently selected site, don't emit value`() {
+    fun `when fetched site is different from currently selected site, don't emit value`() = test {
         val selectedSite = SiteModel().apply { id = 1 }
 
         setupSite(site = selectedSite, currentPlan = buildPlan(hasDomainCredit = false))
-
-        onSiteChange.postValue(selectedSite)
 
         val fetchedSite = SiteModel().apply { id = 2 }
 
@@ -118,17 +90,14 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
             handler.onPlansFetched(event)
         }
 
-        assertThat(isDomainCreditAvailableEvents).hasSize(1)
-        assertThat(isDomainCreditAvailableEvents.last()).isFalse
+        assertThat(source.single().isDomainCreditAvailable).isFalse
     }
 
     @Test
-    fun `when fetch fails, don't emit value`() {
+    fun `when fetch fails, don't emit value`() = test {
         setupSite(site = site, error = GENERIC_ERROR)
 
-        onSiteChange.postValue(site)
-
-        assertThat(isDomainCreditAvailableEvents).hasSize(0)
+        assertThat(source.count()).isEqualTo(0)
     }
 
     private fun setupSite(

@@ -1,13 +1,15 @@
 package org.wordpress.android.ui.mysite
 
 import android.text.SpannableString
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.take
+import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -23,7 +25,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
+import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
@@ -47,16 +50,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var eventBus: EventBusWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
-    private lateinit var selectedSite: MutableLiveData<SiteModel>
-    private lateinit var models: MutableList<QuickStartModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
+    private lateinit var source: Flow<QuickStartUpdate>
     private val siteId = 1
 
     @InternalCoroutinesApi
     @Before
-    fun setUp() {
-        selectedSite = MutableLiveData()
-        whenever(selectedSiteRepository.selectedSiteChange).thenReturn(selectedSite)
+    fun setUp() = test {
         quickStartRepository = QuickStartRepository(
                 TEST_DISPATCHER,
                 quickStartStore,
@@ -67,8 +67,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 dispatcher,
                 eventBus
         )
-        models = mutableListOf()
-        quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
         snackbars = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
@@ -76,34 +74,31 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         }
         site = SiteModel()
         site.id = siteId
+        source = quickStartRepository.buildSource(siteId)
     }
 
     @Test
-    fun `model is empty when not started`() {
-        assertEmptyModel()
-    }
-
-    @Test
-    fun `refresh loads model`() {
+    fun `refresh loads model`() = test {
         initStore()
+
         quickStartRepository.refreshIfNecessary()
 
-        assertModel()
+        assertModel(2)
     }
 
     @Test
-    fun `start marks CREATE_SITE as done and loads model`() {
+    fun `start marks CREATE_SITE as done and loads model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
         quickStartRepository.startQuickStart()
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
-        assertModel()
+        assertModel(2)
     }
 
     @Test
-    fun `sets active task and shows sylized snackbar when not UPDATE_SITE_TITLE`() {
+    fun `sets active task and shows stylized snackbar when not UPDATE_SITE_TITLE`() = test {
         initStore()
         quickStartRepository.refreshIfNecessary()
 
@@ -111,7 +106,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
-        assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(source.take(3).toList().last().activeTask).isEqualTo(PUBLISH_POST)
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
     }
 
@@ -127,26 +122,27 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `completeTask marks current active task as done and refreshes model`() {
+    fun `completeTask marks current active task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
         val task = PUBLISH_POST
-        assertThat(models).isEmpty()
+
         initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(task)
 
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
-        assertThat(models.last().activeTask).isNull()
-        assertThat(models.last().categories).isNotEmpty()
+        val update = source.take(2).toList().last()
+        assertThat(update.activeTask).isNull()
+        assertThat(update.categories).isNotEmpty()
     }
 
     @Test
-    fun `completeTask does not marks active task as done if it is different`() {
+    fun `completeTask does not marks active task as done if it is different`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
-        assertThat(models).isEmpty()
+
         initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
@@ -167,18 +163,19 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `requestNextStepOfTask clears current active task`() {
+    fun `requestNextStepOfTask clears current active task`() = test {
         initQuickStartInProgress()
 
         initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
-        assertThat(models.last().activeTask).isNull()
+        val update = source.take(2).toList().last()
+        assertThat(update.activeTask).isNull()
     }
 
     @Test
-    fun `requestNextStepOfTask does not proceed if the active task is different`() {
+    fun `requestNextStepOfTask does not proceed if the active task is different`() = test {
         initQuickStartInProgress()
 
         initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
@@ -186,7 +183,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
         verifyZeroInteractions(eventBus)
-        assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
+        val update = source.take(3).toList().last()
+        assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
     }
 
     private fun initQuickStartInProgress() {
@@ -195,8 +193,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     private fun initStore() {
-        selectedSite.value = site
-        whenever(quickStartUtils.isQuickStartInProgress(site)).thenReturn(true)
+        whenever(quickStartUtils.isQuickStartInProgress(site.id)).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(
                 listOf(
@@ -212,9 +209,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
     }
 
-    private fun assertModel() {
-        assertThat(models).hasSize(1)
-        models.last().categories.let { categories ->
+    private suspend fun assertModel(elements: Int = 1) {
+        val quickStartUpdate = source.take(elements).toList().last()
+        quickStartUpdate.categories.let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)
             assertThat(categories[0].uncompletedTasks).containsExactly(CREATE_SITE_TUTORIAL)
@@ -223,9 +220,5 @@ class QuickStartRepositoryTest : BaseUnitTest() {
             assertThat(categories[1].uncompletedTasks).containsExactly(SHARE_SITE_TUTORIAL)
             assertThat(categories[1].completedTasks).containsExactly(PUBLISH_POST_TUTORIAL)
         }
-    }
-
-    private fun assertEmptyModel() {
-        models.isEmpty()
     }
 }
