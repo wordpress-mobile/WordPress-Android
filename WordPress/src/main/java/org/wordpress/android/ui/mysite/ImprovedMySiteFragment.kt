@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
-import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -74,8 +73,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.QuickStartUtils
-import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info

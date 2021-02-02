@@ -28,7 +28,6 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
-import org.wordpress.android.ui.mediapicker.MediaPickerViewModel.FabUiModel
 import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncement
