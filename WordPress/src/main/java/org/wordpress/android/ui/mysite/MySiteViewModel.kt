@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
@@ -84,9 +85,11 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -125,7 +128,8 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
-    private val currentAvatarSource: CurrentAvatarSource
+    private val currentAvatarSource: CurrentAvatarSource,
+    private val eventBusWrapper: EventBusWrapper
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -159,7 +163,7 @@ class MySiteViewModel
             scanAvailable,
             backupAvailable,
             activeTask,
-    quickStartCategories
+            quickStartCategories
     ) ->
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
@@ -178,10 +182,11 @@ class MySiteViewModel
             siteItems.add(
                     QuickActionsBlock(
                             ListItemInteraction.create(this::quickActionStatsClick),
-                            ListItemInteraction.create(this::quickActionPagesClick),
+                            ListItemInteraction.create(activeTask, this::quickActionPagesClick),
                             ListItemInteraction.create(this::quickActionPostsClick),
                             ListItemInteraction.create(this::quickActionMediaClick),
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages
+                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                            activeTask == EDIT_HOMEPAGE
                     )
             )
             if (isDomainCreditAvailable) {
@@ -335,9 +340,12 @@ class MySiteViewModel
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
-    private fun quickActionPagesClick() {
+    private fun quickActionPagesClick(activeTask: QuickStartTask?) {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
+        if (activeTask == EDIT_HOMEPAGE) {
+            eventBusWrapper.postSticky(QuickStartEvent(activeTask))
+        }
         _onNavigation.value = Event(OpenPages(site))
     }
 
