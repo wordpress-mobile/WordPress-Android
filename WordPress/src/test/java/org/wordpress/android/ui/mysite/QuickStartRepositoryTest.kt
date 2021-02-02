@@ -25,12 +25,14 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -42,6 +44,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
+    @Mock lateinit var eventBus: EventBusWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var selectedSite: MutableLiveData<SiteModel>
@@ -61,7 +64,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 selectedSiteRepository,
                 resourceProvider,
                 analyticsTrackerWrapper,
-                dispatcher
+                dispatcher,
+                eventBus
         )
         models = mutableListOf()
         quickStartRepository.quickStartModel.observeForever { if (it != null) models.add(it) }
@@ -149,6 +153,40 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
 
         verifyZeroInteractions(quickStartStore)
+    }
+
+    @Test
+    fun `requestNextStepOfTask emits quick start event`() {
+        initQuickStartInProgress()
+
+        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
+        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
+        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+
+        verify(eventBus).postSticky(QuickStartEvent(ENABLE_POST_SHARING))
+    }
+
+    @Test
+    fun `requestNextStepOfTask clears current active task`() {
+        initQuickStartInProgress()
+
+        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
+        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
+        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+
+        assertThat(models.last().activeTask).isNull()
+    }
+
+    @Test
+    fun `requestNextStepOfTask does not proceed if the active task is different`() {
+        initQuickStartInProgress()
+
+        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
+        quickStartRepository.setActiveTask(PUBLISH_POST)
+        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+
+        verifyZeroInteractions(eventBus)
+        assertThat(models.last().activeTask).isEqualTo(PUBLISH_POST)
     }
 
     private fun initQuickStartInProgress() {
