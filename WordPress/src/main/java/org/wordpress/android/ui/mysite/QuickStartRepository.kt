@@ -39,8 +39,10 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 import javax.inject.Named
+import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
+@Singleton
 class QuickStartRepository
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
