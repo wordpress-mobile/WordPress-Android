@@ -103,16 +103,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
-        val scanProgress = ProgressState(
-            progressStateLabel = UiStringRes(R.string.threat_fixing),
-            isIndeterminate = true,
-            isVisible = false
-        )
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
-        items.add(scanProgress)
 
         val fixableThreats = threats.filter { it.baseThreatModel.fixable != null }
         buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
