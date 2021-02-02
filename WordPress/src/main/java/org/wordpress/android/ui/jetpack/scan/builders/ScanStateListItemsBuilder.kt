@@ -12,6 +12,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
@@ -37,13 +38,15 @@ class ScanStateListItemsBuilder @Inject constructor(
         fixingThreatIds: List<Long>,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatId: Long) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit,
+        onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
             buildThreatsFixingStateItems(
                 threats = model.threats,
                 site = site,
-                fixingThreatIds = fixingThreatIds
+                fixingThreatIds = fixingThreatIds,
+                onHelpClicked = onHelpClicked
             )
         } else when (model.state) {
             ScanStateModel.State.IDLE -> {
@@ -53,7 +56,8 @@ class ScanStateListItemsBuilder @Inject constructor(
                         site,
                         onScanButtonClicked,
                         onFixAllButtonClicked,
-                        onThreatItemClicked
+                        onThreatItemClicked,
+                        onHelpClicked
                     )
                 } ?: buildThreatsNotFoundStateItems(model, onScanButtonClicked)
             }
@@ -66,13 +70,15 @@ class ScanStateListItemsBuilder @Inject constructor(
     private fun buildThreatsFixingStateItems(
         threats: List<ThreatModel>?,
         site: SiteModel,
-        fixingThreatIds: List<Long>
+        fixingThreatIds: List<Long>,
+        onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
-        val scanDescription = buildThreatsFoundDescription(site, fixingThreatIds.size) // TODO ashiagr replace label
+        // TODO ashiagr replace label
+        val scanDescription = buildThreatsFoundDescription(site, fixingThreatIds.size, onHelpClicked)
         val scanProgress = ProgressState(
             isIndeterminate = true,
             isVisible = fixingThreatIds.isNotEmpty()
@@ -101,13 +107,14 @@ class ScanStateListItemsBuilder @Inject constructor(
         site: SiteModel,
         onScanButtonClicked: () -> Unit,
         onFixAllButtonClicked: () -> Unit,
-        onThreatItemClicked: (threatId: Long) -> Unit
+        onThreatItemClicked: (threatId: Long) -> Unit,
+        onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
-        val scanDescription = buildThreatsFoundDescription(site, threats.size)
+        val scanDescription = buildThreatsFoundDescription(site, threats.size, onHelpClicked)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
         val scanProgress = ProgressState(
             progressStateLabel = UiStringRes(R.string.threat_fixing),
@@ -251,16 +258,28 @@ class ScanStateListItemsBuilder @Inject constructor(
         )
     }
 
-    private fun buildThreatsFoundDescription(site: SiteModel, threatsCount: Int) = DescriptionState(
-        UiStringText(
-            htmlMessageUtils
-                .getHtmlMessageFromStringFormatResId(
-                    R.string.scan_idle_threats_found_description,
-                    "<b>$threatsCount</b>",
-                    "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
-                )
+    private fun buildThreatsFoundDescription(
+        site: SiteModel,
+        threatsCount: Int,
+        onHelpClicked: () -> Unit
+    ): DescriptionState {
+        val descriptionText = htmlMessageUtils
+            .getHtmlMessageFromStringFormatResId(
+                R.string.scan_idle_threats_found_description,
+                "<b>$threatsCount</b>",
+                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
+            )
+
+        val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
+        val startIndex = descriptionText.indexOf(clickableText)
+        val endIndex = startIndex + clickableText.length
+        val clickableTextInfo = listOf(ClickableTextInfo(startIndex, endIndex, onHelpClicked))
+
+        return DescriptionState(
+            text = UiStringText(descriptionText),
+            clickableTextsInfo = clickableTextInfo
         )
-    )
+    }
 
     companion object {
         private const val ONE_MINUTE = 60 * 1000L

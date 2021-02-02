@@ -260,7 +260,8 @@ class ScanViewModel @Inject constructor(
             fixingThreatIds = fixingThreatIds,
             onScanButtonClicked = this@ScanViewModel::onScanButtonClicked,
             onFixAllButtonClicked = this@ScanViewModel::onFixAllButtonClicked,
-            onThreatItemClicked = this@ScanViewModel::onThreatItemClicked
+            onThreatItemClicked = this@ScanViewModel::onThreatItemClicked,
+            onHelpClicked = this@ScanViewModel::onContactSupportClicked
         )
     )
 
