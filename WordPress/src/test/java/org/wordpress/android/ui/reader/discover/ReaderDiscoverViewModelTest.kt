@@ -134,7 +134,7 @@ class ReaderDiscoverViewModelTest {
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
-        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn(mock())
+        whenever(menuUiStateBuilder.buildMoreMenuItems(anyOrNull(), anyOrNull())).thenReturn(mock())
         whenever(
                 uiStateBuilder.mapPostToUiState(
                         anyOrNull(), anyBoolean(), anyInt(), anyInt(), anyOrNull(), anyOrNull(),

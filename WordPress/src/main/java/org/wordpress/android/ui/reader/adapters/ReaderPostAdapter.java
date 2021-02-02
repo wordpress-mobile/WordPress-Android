@@ -476,7 +476,7 @@ public class ReaderPostAdapter extends RecyclerView.Adapter<RecyclerView.ViewHol
                         onPostHeaderClicked,
                         onTagItemClicked,
                         showMoreMenu ? mReaderPostMoreButtonUiStateBuilder
-                                .buildMoreMenuItemsBlocking(post, postListType, onButtonClicked) : null
+                                .buildMoreMenuItemsBlocking(post, onButtonClicked) : null
                 );
         holder.onBind(uiState);
     }

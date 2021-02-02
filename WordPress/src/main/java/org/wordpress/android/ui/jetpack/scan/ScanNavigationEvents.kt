@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpack.scan
 
 import androidx.annotation.StringRes
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.utils.UiString
 
 sealed class ScanNavigationEvents {
@@ -15,4 +16,6 @@ sealed class ScanNavigationEvents {
         @StringRes val positiveButtonLabel: Int = R.string.dialog_button_ok
         @StringRes val negativeButtonLabel: Int = R.string.dialog_button_cancel
     }
+
+    data class ShowContactSupport(val site: SiteModel) : ScanNavigationEvents()
 }

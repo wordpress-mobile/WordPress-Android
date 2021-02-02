@@ -865,7 +865,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site = eq(site),
                 onClick = any(),
                 isBackupAvailable = any(),
-                isScanAvailable = eq(false)
+                isScanAvailable = eq(false),
+                showViewSiteFocusPoint = any()
         )
     }
 
@@ -900,7 +901,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 site = eq(site),
                 onClick = any(),
                 isBackupAvailable = eq(true),
-                isScanAvailable = any()
+                isScanAvailable = any(),
+                showViewSiteFocusPoint = any()
         )
     }
 
