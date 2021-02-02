@@ -173,9 +173,7 @@ class ImprovedMySiteFragment : Fragment(),
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
                 when (val state = uiModel.state) {
-                    is State.SiteSelected -> {
-                        loadData(state.items)
-                    }
+                    is State.SiteSelected -> loadData(state.items)
                     is State.NoSites -> loadEmptyView(state.shouldShowImage)
                 }
             }
