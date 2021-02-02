@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.ScanScreenFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -75,6 +76,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Inject ImageManager mImageManager;
     @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+    @Inject ScanScreenFeatureConfig mScanScreenFeatureConfig;
 
     public NotificationsDetailListFragment() {
     }
@@ -282,7 +284,13 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             }
                             break;
                         case SCAN:
-                            activity.showScanActivityForSite(clickedSpan.getSiteId());
+                            if (mScanScreenFeatureConfig.isEnabled()) {
+                                activity.showScanActivityForSite(clickedSpan.getSiteId());
+                            } else {
+                                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                                }
+                            }
                             break;
                         case STAT:
                         case FOLLOW:
