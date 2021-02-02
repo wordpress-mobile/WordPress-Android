@@ -95,7 +95,6 @@ class BackupDownloadViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postBackupDownloadUseCase,
                 backupDownloadStatusUseCase,
-                TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)

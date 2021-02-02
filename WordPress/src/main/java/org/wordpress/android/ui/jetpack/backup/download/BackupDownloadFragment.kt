@@ -30,6 +30,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
+const val KEY_BACKUP_DOWNLOAD_REWIND_ID = "key_backup_download_rewind_id"
 const val KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID = "key_backup_download_download_id"
 
 class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
@@ -125,17 +126,17 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel.wizardFinishedObservable.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 val intent = Intent()
-                val (backupDownloadCreated, downloadId) = when (this) {
+                val (backupDownloadCreated, ids) = when (this) {
                     is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress -> Pair(true, downloadId)
+                    is BackupDownloadInProgress -> Pair(true, Pair(rewindId, downloadId))
                     is BackupDownloadCompleted -> Pair(true, null)
                 }
-                intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, downloadId)
-                requireActivity().setResult(
-                        if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED,
-                        intent
-                )
-                requireActivity().finish()
+                intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
+                intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, ids?.second)
+                requireActivity().let { activity ->
+                    activity.setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
+                    activity.finish()
+                }
             }
         })
     }

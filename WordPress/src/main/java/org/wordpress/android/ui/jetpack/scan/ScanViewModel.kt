@@ -88,7 +88,7 @@ class ScanViewModel @Inject constructor(
             scanStateModel = scanStore.getScanStateForSite(this@ScanViewModel.site)
             scanStateModel?.let {
                 updateUiState(buildContentUiState(it))
-                if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds)
+                if (fixableThreatIds.isNotEmpty()) fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = false)
             }
             fetchScanState()
         }
@@ -150,7 +150,7 @@ class ScanViewModel @Inject constructor(
             updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
                 is FixThreatsState.Success -> {
-                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds)
+                    val someOrAllThreatFixed = fetchFixThreatsStatus(fixableThreatIds, isInvokedByUser = true)
                     if (someOrAllThreatFixed) fetchScanState()
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
@@ -165,7 +165,7 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>): Boolean {
+    private suspend fun fetchFixThreatsStatus(fixableThreatIds: List<Long>, isInvokedByUser: Boolean): Boolean {
         var someOrAllThreatFixed = false
 
         @StringRes var messageRes: Int? = null
@@ -193,7 +193,7 @@ class ScanViewModel @Inject constructor(
                 is FetchFixThreatsState.Failure.FixFailure -> {
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
-                    } else {
+                    } else if (isInvokedByUser) {
                         messageRes = R.string.threat_fix_all_status_error_message
                     }
                 }
@@ -232,7 +232,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onThreatItemClicked(threatId: Long) {
-        _navigationEvents.value = Event(ShowThreatDetails(threatId))
+        _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
     }
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
@@ -242,7 +242,7 @@ class ScanViewModel @Inject constructor(
 
     fun onFixStateRequested(threatId: Long) {
         launch {
-            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId))
+            val isThreatFixed = fetchFixThreatsStatus(listOf(threatId), isInvokedByUser = true)
             if (isThreatFixed) fetchScanState()
         }
     }

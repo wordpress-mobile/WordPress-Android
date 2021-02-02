@@ -18,7 +18,8 @@ class SiteItemsBuilder
         onClick: (ListItemAction) -> Unit,
         isBackupAvailable: Boolean = false,
         isScanAvailable: Boolean = false,
-        showViewSiteFocusPoint: Boolean = false
+        showViewSiteFocusPoint: Boolean = false,
+        showEnablePostSharingFocusPoint: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
                 siteListItemBuilder.buildPlanItemIfAvailable(site, onClick),
@@ -54,7 +55,7 @@ class SiteItemsBuilder
                 siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(site),
                 siteListItemBuilder.buildPeopleItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildPluginItemIfAvailable(site, onClick),
-                siteListItemBuilder.buildShareItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildShareItemIfAvailable(site, onClick, showEnablePostSharingFocusPoint),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_external)),
                 ListItem(
