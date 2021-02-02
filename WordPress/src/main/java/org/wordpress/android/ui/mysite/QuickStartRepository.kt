@@ -23,9 +23,11 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -45,7 +47,8 @@ class QuickStartRepository
     private val selectedSiteRepository: SelectedSiteRepository,
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-    private val dispatcher: Dispatcher
+    private val dispatcher: Dispatcher,
+    private val eventBus: EventBusWrapper
 ) : CoroutineScope {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -137,6 +140,12 @@ class QuickStartRepository
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             }
         }
+    }
+
+    fun requestNextStepOfTask(task: QuickStartTask) {
+        if (task != activeTask.value) return
+        activeTask.value = null
+        eventBus.postSticky(QuickStartEvent(task))
     }
 
     fun clear() {
