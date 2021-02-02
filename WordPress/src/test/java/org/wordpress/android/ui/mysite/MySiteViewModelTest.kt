@@ -30,6 +30,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -578,6 +579,15 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `quick action stats click completes CHECK_STATS task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        verify(quickStartRepository).completeTask(CHECK_STATS)
+    }
+
+    @Test
     fun `quick action pages click opens pages screen`() {
         initSelectedSite()
 
@@ -723,6 +733,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(STATS)
 
         assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click completes CHECK_STATS task`() {
+        invokeItemClickAction(STATS)
+
+        verify(quickStartRepository).completeTask(CHECK_STATS)
     }
 
     @Test
