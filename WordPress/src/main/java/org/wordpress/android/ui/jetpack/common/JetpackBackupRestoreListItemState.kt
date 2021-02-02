@@ -10,8 +10,8 @@ sealed class JetpackBackupRestoreListItemState(override val type: ViewType) : Je
     data class SubHeaderState(
         val text: UiString,
         @DimenRes val itemTopMarginResId: Int? = null,
-        @DimenRes val itemBottomMarginResId: Int? = null) :
-            JetpackBackupRestoreListItemState(ViewType.BACKUP_RESTORE_SUB_HEADER)
+        @DimenRes val itemBottomMarginResId: Int? = null
+    ) : JetpackBackupRestoreListItemState(ViewType.BACKUP_RESTORE_SUB_HEADER)
 
     data class FootnoteState(val text: UiString) :
             JetpackListItemState(ViewType.BACKUP_RESTORE_FOOTNOTE)

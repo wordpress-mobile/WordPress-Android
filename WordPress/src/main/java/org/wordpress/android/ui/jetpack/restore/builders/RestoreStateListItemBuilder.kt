@@ -216,8 +216,8 @@ class RestoreStateListItemBuilder @Inject constructor(
     private fun buildSubHeaderState(
         @StringRes textResId: Int,
         @DimenRes topMarginResId: Int? = null,
-        @DimenRes bottomMarginResId: Int? = null) =
-            SubHeaderState(
+        @DimenRes bottomMarginResId: Int? = null
+    ) = SubHeaderState(
                     text = UiStringRes(textResId),
                     itemTopMarginResId = topMarginResId,
                     itemBottomMarginResId = bottomMarginResId)
