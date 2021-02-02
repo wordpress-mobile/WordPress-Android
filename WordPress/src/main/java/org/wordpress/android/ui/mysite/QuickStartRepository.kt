@@ -71,8 +71,8 @@ class QuickStartRepository
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
-    val onFollowSiteQuickStartFocusPointVisibilityChange: LiveData<Event<Boolean>> = activeTask
-            .map { it == FOLLOW_SITE }
+    val onExternalFocusPointVisibilityChange: LiveData<Event<List<ExternalFocusPointInfo>>> = activeTask
+            .map { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
             .map { Event(it) }
 
@@ -129,6 +129,12 @@ class QuickStartRepository
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
     }
 
+    private fun getExternalFocusPointInfo(task: QuickStartTask?): List<ExternalFocusPointInfo> {
+        // For now, we only do this for the FOLLOW_SITE task.
+        val followSitesTaskFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
+        return listOf(followSitesTaskFocusPointInfo)
+    }
+
     fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
@@ -167,5 +173,10 @@ class QuickStartRepository
         val taskType: QuickStartTaskType,
         val uncompletedTasks: List<QuickStartTaskDetails>,
         val completedTasks: List<QuickStartTaskDetails>
+    )
+
+    data class ExternalFocusPointInfo(
+        val task: QuickStartTask,
+        val isVisible: Boolean
     )
 }
