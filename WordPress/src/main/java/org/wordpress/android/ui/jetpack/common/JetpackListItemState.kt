@@ -30,7 +30,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
         data class ClickableTextInfo(
             val startIndex: Int,
             val endIndex: Int,
-            val onClick: () -> Unit,
+            val onClick: () -> Unit
         )
     }
 
