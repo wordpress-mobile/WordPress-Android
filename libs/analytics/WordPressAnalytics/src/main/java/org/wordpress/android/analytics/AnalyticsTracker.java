@@ -729,6 +729,8 @@ public final class AnalyticsTracker {
         COMMENT_EDITOR_OPENED,
         MY_SITE_CREATE_SHEET_SHOWN,
         MY_SITE_CREATE_SHEET_ACTION_TAPPED,
+        POST_LIST_CREATE_SHEET_SHOWN,
+        POST_LIST_CREATE_SHEET_ACTION_TAPPED,
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
