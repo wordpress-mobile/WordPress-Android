@@ -37,9 +37,12 @@ sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) 
         uiHelpers.setTextOrHide(this, buttonState.text)
         isEnabled = buttonState.isEnabled
         setOnClickListener { buttonState.onClick.invoke() }
+
         buttonState.iconRes?.let {
             iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
             icon = context.getDrawable(it)
+            val resources = itemView.context.resources
+            iconSize = resources.getDimensionPixelSize(R.dimen.jetpack_button_icon_size)
         }
     }
 
