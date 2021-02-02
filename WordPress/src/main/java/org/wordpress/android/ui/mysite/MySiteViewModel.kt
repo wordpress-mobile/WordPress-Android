@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -26,6 +27,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -137,7 +139,6 @@ class MySiteViewModel
     private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
 
     val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
-    val onExternalQuickStartFocusPointVisibilityChange = quickStartRepository.onExternalFocusPointVisibilityChange
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
@@ -145,6 +146,10 @@ class MySiteViewModel
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
+    val onExternalQuickStartFocusPointVisibilityChange = quickStartRepository.activeTask
+            .map { getExternalFocusPointInfo(it) }
+            .distinctUntilChanged()
+            .map { Event(it) }
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             bgDispatcher,
@@ -512,6 +517,12 @@ class MySiteViewModel
 
     fun startQuickStart() {
         quickStartRepository.startQuickStart()
+    }
+
+    private fun getExternalFocusPointInfo(task: QuickStartTask?): List<ExternalFocusPointInfo> {
+        // For now, we only do this for the FOLLOW_SITE task.
+        val followSitesTaskFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
+        return listOf(followSitesTaskFocusPointInfo)
     }
 
     data class UiModel(
