@@ -848,7 +848,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onClick = any(),
                 isBackupAvailable = eq(false),
                 isScanAvailable = any(),
-                showViewSiteFocusPoint = eq(false)
+                showViewSiteFocusPoint = eq(false),
+                showEnablePostSharingFocusPoint = any()
         )
     }
 
@@ -866,7 +867,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onClick = any(),
                 isBackupAvailable = any(),
                 isScanAvailable = eq(false),
-                showViewSiteFocusPoint = any()
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any()
         )
     }
 
@@ -884,7 +886,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onClick = any(),
                 isBackupAvailable = any(),
                 isScanAvailable = eq(true),
-                showViewSiteFocusPoint = eq(false)
+                showViewSiteFocusPoint = eq(false),
+                showEnablePostSharingFocusPoint = any()
         )
     }
 
@@ -902,7 +905,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 onClick = any(),
                 isBackupAvailable = eq(true),
                 isScanAvailable = any(),
-                showViewSiteFocusPoint = any()
+                showViewSiteFocusPoint = any(),
+                showEnablePostSharingFocusPoint = any()
         )
     }
 
@@ -983,7 +987,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any())
 
         onSiteChange.postValue(site)
 
