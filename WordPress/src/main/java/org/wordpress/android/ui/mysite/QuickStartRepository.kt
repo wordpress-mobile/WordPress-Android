@@ -78,7 +78,7 @@ class QuickStartRepository
     override fun buildSource(siteId: Int) = flow {
         emit(QuickStartUpdate())
         refresh.asFlow().map {
-            if (quickStartUtils.isQuickStartInProgress(siteId) || true) {
+            if (quickStartUtils.isQuickStartInProgress(siteId)) {
                 val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
                 val growCategory = buildQuickStartCategory(siteId, GROW)
                 listOfNotNull(customizeCategory, growCategory)
