@@ -344,14 +344,25 @@ public class PostUtils {
     }
 
     public static boolean isPublishDateInThePast(String dateCreated, Date currentDate) {
-        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
+        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
+        return isPublishDateInThePast(dateCreated, currentDate, 30);
+    }
 
+    /**
+     * Checks if the post publish date is in the past
+     *
+     * @param dateCreated date created
+     * @param currentDate current date
+     * @param threshold   threshold in minutes
+     * @return true if the post was published in the past
+     */
+    public static boolean isPublishDateInThePast(String dateCreated, Date currentDate, int threshold) {
+        Date pubDate = DateTimeUtils.dateFromIso8601(dateCreated);
         Calendar cal = Calendar.getInstance();
         cal.setTime(currentDate);
-        // just use half an hour before now as a threshold to make sure this is backdated, to avoid false positives
-        cal.add(Calendar.MINUTE, -30);
-        Date halfHourBack = cal.getTime();
-        return pubDate != null && pubDate.before(halfHourBack);
+        cal.add(Calendar.MINUTE, -threshold);
+        Date timeThreshold = cal.getTime();
+        return pubDate != null && pubDate.before(timeThreshold);
     }
 
     // Only drafts should have the option to publish immediately to avoid user confusion

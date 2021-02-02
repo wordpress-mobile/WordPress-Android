@@ -50,6 +50,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -510,10 +511,14 @@ public class UploadUtils {
                     case PUBLISHED:
                         snackbarButtonRes = R.string.button_view;
 
+                        // If the post was published in the last minute we consider that this is a first time publish
+                        boolean isFirstTimePublish =
+                                !PostUtils.isPublishDateInThePast(post.getDateCreated(), new Date(), 1);
+
                         if (post.isPage()) {
-                            snackbarMessageRes = R.string.page_published;
+                            snackbarMessageRes = isFirstTimePublish ? R.string.page_published : R.string.page_updated;
                         } else if (userCanPublish) {
-                            snackbarMessageRes = R.string.post_published;
+                            snackbarMessageRes = isFirstTimePublish ? R.string.post_published : R.string.post_updated;
                         } else {
                             snackbarMessageRes = R.string.post_submitted;
                         }
