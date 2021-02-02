@@ -28,6 +28,8 @@ public class RequestCodes {
     public static final int SMART_LOCK_READ = 1500;
     public static final int NOTIFICATION_SETTINGS = 1600;
     public static final int ACTIVITY_LOG_DETAIL = 1700;
+    public static final int BACKUP_DOWNLOAD = 1710;
+    public static final int RESTORE = 1720;
     public static final int PAGE_PARENT = 1800;
     public static final int HISTORY_DETAIL = 1900;
 
@@ -67,7 +69,4 @@ public class RequestCodes {
     // Story creator
     public static final int CREATE_STORY = 8000;
     public static final int EDIT_STORY = 8001;
-
-    // Scan
-    public static final int SHOW_THREAT_DETAILS = 9000;
 }

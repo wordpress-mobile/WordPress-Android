@@ -2,7 +2,6 @@ package org.wordpress.android.util
 
 import android.text.Spannable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -13,8 +12,8 @@ class QuickStartUtilsWrapper
     private val quickStartStore: QuickStartStore,
     private val resourceProvider: ResourceProvider
 ) {
-    fun isQuickStartInProgress(site: SiteModel): Boolean {
-        return QuickStartUtils.isQuickStartInProgress(quickStartStore, site.id)
+    fun isQuickStartInProgress(siteId: Int): Boolean {
+        return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteId)
     }
 
     @JvmOverloads
