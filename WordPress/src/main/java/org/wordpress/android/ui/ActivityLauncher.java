@@ -1399,7 +1399,11 @@ public class ActivityLauncher {
     }
 
     public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
-                                                   int resultCode) {
+                                                   int resultCode, String source) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("source", source);
+        AnalyticsTracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_OPENED, properties);
+
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
@@ -1420,7 +1424,11 @@ public class ActivityLauncher {
     }
 
     public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
-                                                   int resultCode) {
+                                                   int resultCode, String source) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put("source", source);
+        AnalyticsTracker.track(Stat.JETPACK_RESTORE_OPENED, properties);
+
         Intent intent = new Intent(activity, RestoreActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_RESTORE_ACTIVITY_ID_KEY, activityId);
