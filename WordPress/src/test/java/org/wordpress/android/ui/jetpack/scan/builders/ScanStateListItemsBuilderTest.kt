@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.builders
 
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -12,10 +13,14 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
+import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -37,17 +42,17 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
 
-//    private val baseThreatModel = BaseThreatModel(
-//        id = 1L,
-//        signature = "",
-//        description = "",
-//        status = ThreatModel.ThreatStatus.CURRENT,
-//        firstDetected = Date(0)
-//    )
-//    private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
-//    private val threats = listOf(threat)
-    private val scanStateModelWithNoThreats = ScanStateModel(state = IDLE)
-//    private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
+    private val baseThreatModel = BaseThreatModel(
+        id = 1L,
+        signature = "",
+        description = "",
+        status = ThreatStatus.CURRENT,
+        firstDetected = Date(0)
+    )
+    private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
+    private val threats = listOf(threat)
+    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE)
+    private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
 
     @Before
     fun setUp() {
@@ -191,6 +196,77 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
     }*/
 
+    /* FIXING THREATS STATE */
+
+    @Test
+    fun `builds shield warning icon with error color for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+            IconState(
+                icon = R.drawable.ic_shield_warning_white,
+                colorResId = R.color.error,
+                sizeResId = R.dimen.scan_icon_size,
+                marginResId = R.dimen.scan_icon_margin,
+                contentDescription = UiStringRes(R.string.scan_state_icon)
+            )
+        )
+    }
+
+    @Test
+    fun `builds header for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
+        )
+    }
+
+    @Test
+    fun `builds fixing threats description for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        )
+    }
+
+    @Test
+    fun `builds progress bar for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
+            ProgressState(isIndeterminate = true, isVisible = true)
+        )
+    }
+
+    @Test
+    fun `builds fixing threat items for fixing threats state`() {
+        val threatItemState = mock<ThreatItemState>()
+        whenever(threatItemBuilder.buildThreatItem(threat)).thenReturn(threatItemState)
+
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first()).isEqualTo(threatItemState)
+    }
+
+    /* PROVISIONING STATE */
+
     @Test
     fun `builds shield icon with green color for provisioning scan state model`() {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
@@ -230,6 +306,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    /* INVALID STATES */
+
     @Test
     fun `builds empty list for unknown scan state model`() {
         val scanStateModelInUnknownState = scanStateModelWithNoThreats.copy(state = State.UNKNOWN)
@@ -247,6 +325,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
         assertThat(scanStateItems).isEmpty()
     }
+
+    /* SCANNING STATE */
 
     @Test
     fun `builds initial scanning description for scanning scan state model with no initial recent scan`() {
@@ -277,11 +357,12 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     private fun buildScanStateItems(
-        model: ScanStateModel
+        model: ScanStateModel,
+        fixingThreatIds: List<Long> = emptyList()
     ) = builder.buildScanStateListItems(
         model = model,
         site = site,
-        fixingThreatIds = emptyList(),
+        fixingThreatIds = fixingThreatIds,
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
         onThreatItemClicked = mock()
