@@ -149,7 +149,7 @@ class MySiteViewModel
     val onExternalQuickStartFocusPointVisibilityChange = quickStartRepository.activeTask
             .map { getExternalFocusPointInfo(it) }
             .distinctUntilChanged()
-            .map { Event(it) }
+            .map { Event(it) } as LiveData<Event<List<ExternalFocusPointInfo>>>
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             bgDispatcher,
