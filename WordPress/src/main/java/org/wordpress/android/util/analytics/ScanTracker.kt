@@ -21,12 +21,13 @@ class ScanTracker @Inject constructor(
     }
 
     fun trackOnScanHistoryTabSelected(tab: ScanHistoryViewModel.ScanHistoryTabType) {
-        val props = mapOf("filter" to
-                when (tab) {
+        val props = mapOf(
+                "filter" to when (tab) {
                     ScanHistoryViewModel.ScanHistoryTabType.ALL -> ""
                     ScanHistoryViewModel.ScanHistoryTabType.FIXED -> "fixed"
                     ScanHistoryViewModel.ScanHistoryTabType.IGNORED -> "ignored"
-                })
+                }
+        )
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_HISTORY_FILTER, props)
     }
 

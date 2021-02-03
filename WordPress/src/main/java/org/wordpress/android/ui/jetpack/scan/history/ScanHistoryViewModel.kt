@@ -29,6 +29,7 @@ import javax.inject.Inject
 import javax.inject.Named
 
 private const val RETRY_DELAY = 300L
+
 class ScanHistoryViewModel @Inject constructor(
     private val scanStore: ScanStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -96,6 +97,7 @@ class ScanHistoryViewModel @Inject constructor(
             abstract val title: UiString
             abstract val img: Int
             abstract val retry: () -> Unit
+
             data class NoConnection(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_no_connection)
                 @DrawableRes override val img: Int = R.drawable.img_illustration_cloud_off_152dp
