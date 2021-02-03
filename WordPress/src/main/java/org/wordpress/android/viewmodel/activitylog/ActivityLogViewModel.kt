@@ -527,7 +527,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onClearDateRangeFilterClicked() {
-        activityLogTracker.trackDateRangeFilterCleared()
+        activityLogTracker.trackDateRangeFilterCleared(rewindableOnly)
         currentDateRangeFilter = null
         refreshFiltersUiState()
         requestEventsUpdate(false)

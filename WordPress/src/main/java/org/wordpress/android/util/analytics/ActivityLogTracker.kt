@@ -27,7 +27,7 @@ class ActivityLogTracker @Inject constructor(
         val start = dateRange?.first
         val end = dateRange?.second
         if (start == null || end == null) {
-            trackDateRangeFilterCleared()
+            trackDateRangeFilterCleared(rewindableOnly)
         } else {
             val map = mutableMapOf<String, Any>()
             // Number of selected days
@@ -42,8 +42,12 @@ class ActivityLogTracker @Inject constructor(
         }
     }
 
-    fun trackDateRangeFilterCleared() {
-        tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+    fun trackDateRangeFilterCleared(rewindableOnly: Boolean) {
+        if (rewindableOnly) {
+            tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_RESET)
+        } else {
+            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+        }
     }
 
     fun trackActivityTypeFilterButtonClicked() {

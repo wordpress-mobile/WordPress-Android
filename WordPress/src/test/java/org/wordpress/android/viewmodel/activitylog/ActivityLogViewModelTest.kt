@@ -559,6 +559,13 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun dateRangeTrackDateRangeFilterClearedEventFired() {
+        viewModel.onClearDateRangeFilterClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterCleared(rewindableOnly)
+    }
+
+    @Test
     fun verifyActivityLogEmptyScreenTextsWhenFiltersAreEmpty() {
         viewModel.onClearDateRangeFilterClicked()
         viewModel.onClearActivityTypeFilterClicked()
