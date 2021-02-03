@@ -13,6 +13,7 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
@@ -510,20 +511,16 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun trackRestoreConfirmed() {
-        val properties: MutableMap<String, String?> = HashMap()
-        val propertiesSetup: MutableMap<String, Boolean> = HashMap()
         val types = buildRewindRequestTypes(restoreState.optionsSelected)
-        propertiesSetup["themes"] = types.themes
-        propertiesSetup["plugins"] = types.plugins
-        propertiesSetup["uploads"] = types.uploads
-        propertiesSetup["sqls"] = types.sqls
-        propertiesSetup["roots"] = types.roots
-        propertiesSetup["contents"] = types.contents
-        val gson = Gson()
-        val asJson = gson.toJson(propertiesSetup)
-
-        properties["restore_types"] = asJson.toString()
-        AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, properties)
+        val propertiesSetup = mapOf(
+                "themes" to types.themes,
+                "plugins" to types.plugins,
+                "uploads" to types.uploads,
+                "sqls" to types.sqls,
+                "roots" to types.roots,
+                "contents" to types.contents)
+        val map = mapOf("restore_types" to JSONObject(propertiesSetup))
+        AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, map)
     }
 
     private fun trackError(cause: String) {
