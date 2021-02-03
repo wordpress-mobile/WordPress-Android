@@ -89,7 +89,6 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Pos
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper

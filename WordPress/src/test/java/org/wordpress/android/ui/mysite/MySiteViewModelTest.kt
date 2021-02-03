@@ -8,7 +8,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
-import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -90,13 +89,11 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
-import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.FluxCUtilsWrapper
 import org.wordpress.android.util.MediaUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
