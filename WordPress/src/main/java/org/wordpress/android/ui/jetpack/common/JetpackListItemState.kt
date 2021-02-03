@@ -38,6 +38,7 @@ abstract class JetpackListItemState(open val type: ViewType) {
     data class CheckboxState(
         val availableItemType: JetpackAvailableItemType,
         val label: UiString,
+        val labelSpannable: CharSequence? = null,
         val checked: Boolean = false,
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)
