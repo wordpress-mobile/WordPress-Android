@@ -37,7 +37,6 @@ class MySiteStateProvider(
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
                     .map { source -> source.buildSource().distinctUntilChanged().asLiveData(bgDispatcher) }
         }
-        result.value = MySiteUiState()
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
                 if (partialState != null) {
