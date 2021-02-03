@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
 import kotlinx.android.synthetic.main.fullscreen_error_with_retry.*
 import kotlinx.android.synthetic.main.scan_history_fragment.*
@@ -27,14 +28,26 @@ class ScanHistoryFragment : Fragment(R.layout.scan_history_fragment), Scrollable
     @Inject lateinit var localeManagerWrapper: LocaleManagerWrapper
     private lateinit var viewModel: ScanHistoryViewModel
 
+    private val viewPagerCallback = object : ViewPager2.OnPageChangeCallback() {
+        override fun onPageSelected(position: Int) {
+            super.onPageSelected(position)
+            viewModel.onTabSelected(position)
+        }
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initDagger()
+        initViewPager()
         initViewModel(getSite(savedInstanceState))
     }
 
     private fun initDagger() {
         (requireActivity().application as WordPress).component()?.inject(this)
+    }
+
+    private fun initViewPager() {
+        view_pager.registerOnPageChangeCallback(viewPagerCallback)
     }
 
     private fun initViewModel(site: SiteModel) {
