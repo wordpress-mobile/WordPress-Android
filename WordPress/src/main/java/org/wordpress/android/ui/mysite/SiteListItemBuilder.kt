@@ -75,7 +75,11 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildPlanItemIfAvailable(site: SiteModel, showFocusPoint: Boolean, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildPlanItemIfAvailable(
+        site: SiteModel,
+        showFocusPoint: Boolean,
+        onClick: (ListItemAction) -> Unit
+    ): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
                 site.hasCapabilityManageOptions &&
