@@ -59,17 +59,17 @@
         <item name="android:gravity">start</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAlignment">viewStart</item>
+        <item name="android:padding">@dimen/margin_medium</item>
     </style>
     <style name="Scan.ThreatDetails.ContextLine.LineNumber" parent="Scan.ThreatDetails.ContextLine">
+        <item name="android:layout_width">48dp</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
         <item name="android:background">@color/gray_20</item>
-        <item name="android:padding">@dimen/margin_small_medium</item>
-        <item name="android:paddingStart">@dimen/margin_medium_large</item>
+        <item name="android:textAlignment">viewEnd</item>
     </style>
     <style name="Scan.ThreatDetails.ContextLine.Content" parent="Scan.ThreatDetails.ContextLine">
         <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
         <item name="android:background">@color/gray_5</item>
-        <item name="android:padding">@dimen/margin_small_medium</item>
     </style>
 
     <!--Threat Details - FileName-->
