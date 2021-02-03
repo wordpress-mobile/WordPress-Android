@@ -71,6 +71,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun fixThreat() {
+        scanTracker.trackOnFixThreatConfirmed(threatModel.baseThreatModel.signature)
         viewModelScope.launch {
             val threatId = threatModel.baseThreatModel.id
             updateThreatActionButtons(isEnabled = false)
@@ -112,6 +113,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onFixThreatButtonClicked() {
+        scanTracker.trackOnFixThreatButtonClicked(threatModel.baseThreatModel.signature)
         val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
         updateNavigationEvent(
             OpenThreatActionDialog(

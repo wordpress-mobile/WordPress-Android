@@ -60,6 +60,20 @@ class ScanTracker @Inject constructor(
         )
     }
 
+    fun trackOnFixThreatButtonClicked(signature: String) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_SCAN_FIX_THREAT_DIALOG_OPEN,
+                mapOf("threat_signature" to signature)
+        )
+    }
+
+    fun trackOnFixThreatConfirmed(signature: String) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_FIX_TAPPED,
+                mapOf("threat_signature" to signature)
+        )
+    }
+
     enum class OnThreatItemClickSource(val section: String) {
         HISTORY("history"), SCANNER("scanner")
     }
