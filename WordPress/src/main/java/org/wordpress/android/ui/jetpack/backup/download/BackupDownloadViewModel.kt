@@ -19,6 +19,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -418,6 +419,7 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onShareLinkClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(ShareLink(it))) }
     }
 
