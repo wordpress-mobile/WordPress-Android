@@ -428,7 +428,6 @@ class ActivityLogStoreTest {
 
     @Test
     fun storeFetchedEmptyRewindStatusRemoveFromDb() = test {
-        val rewindStatusModel = mock<RewindStatusModel>()
         val payload = FetchedRewindStatePayload(null, siteModel)
         whenever(activityLogRestClient.fetchActivityRewind(siteModel)).thenReturn(payload)
 
@@ -442,7 +441,6 @@ class ActivityLogStoreTest {
 
     @Test
     fun storeFetchedEmptyBackupDownloadStatusRemoveFromDb() = test {
-        val backupDownloadStatusModel = mock<BackupDownloadStatusModel>()
         val payload = FetchedBackupDownloadStatePayload(null, siteModel)
         whenever(activityLogRestClient.fetchBackupDownloadState(siteModel)).thenReturn(payload)
 
