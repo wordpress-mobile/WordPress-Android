@@ -217,6 +217,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onScanButtonClicked() {
+        scanTracker.trackOnScanButtonClicked()
         startScan()
     }
 
