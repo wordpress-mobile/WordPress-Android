@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.util.filter
@@ -30,7 +31,12 @@ class MySiteStateProvider(
     }
 
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
-        val result = MediatorLiveData<MySiteUiState>()
+        data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
+            fun update(partialState: PartialState): SiteIdToState {
+                return this.copy(state = state.update(partialState))
+            }
+        }
+        val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteId != null) {
             mySiteSources.map { source -> source.buildSource(siteId).distinctUntilChanged().asLiveData(bgDispatcher) }
         } else {
@@ -40,11 +46,11 @@ class MySiteStateProvider(
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
                 if (partialState != null) {
-                    result.value = (result.value ?: MySiteUiState()).update(partialState)
+                    result.value = (result.value ?: SiteIdToState(siteId)).update(partialState)
                 }
             }
         }
-        result
+        result.filter { it.siteId == null || it.state.site != null }.map { it.state }
     }.distinctUntilChanged()
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =

@@ -160,7 +160,7 @@ class MySiteViewModel
             scanAvailable,
             backupAvailable,
             activeTask,
-    quickStartCategories
+            quickStartCategories
     ) ->
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
