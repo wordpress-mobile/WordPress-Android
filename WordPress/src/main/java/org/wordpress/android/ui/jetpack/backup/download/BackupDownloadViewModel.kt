@@ -17,6 +17,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
@@ -412,6 +413,7 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onDownloadFileClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(DownloadFile(it))) }
     }
 
