@@ -32,9 +32,6 @@ import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import javax.inject.Named
-
-private const val DELAY_MILLIS = 2000L
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
@@ -44,8 +41,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val scanTracker: ScanTracker,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val scanTracker: ScanTracker
 ) : ViewModel() {
     private lateinit var site: SiteModel
     private lateinit var threatModel: ThreatModel
