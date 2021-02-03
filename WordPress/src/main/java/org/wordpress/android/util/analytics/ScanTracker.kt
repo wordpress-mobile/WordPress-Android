@@ -12,9 +12,9 @@ import javax.inject.Named
 
 @Reusable
 class ScanTracker @Inject constructor(
-        private val scanStore: ScanStore,
-        private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
-        @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val scanStore: ScanStore,
+    private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
+    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     fun trackOnGetFreeEstimateButtonClicked() {
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_CODEABLE_ESTIMATE_TAPPED)

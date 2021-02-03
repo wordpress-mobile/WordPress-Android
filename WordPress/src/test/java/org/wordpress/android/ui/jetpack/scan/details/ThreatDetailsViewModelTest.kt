@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -71,8 +70,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             builder,
             htmlMessageUtils,
             resourceProvider,
-            scanTracker,
-            TEST_DISPATCHER
+            scanTracker
         )
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
