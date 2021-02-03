@@ -25,7 +25,10 @@
     <style name="Scan.Threat.Icon" parent="">
         <item name="android:layout_width">@dimen/scan_threat_item_icon_size</item>
         <item name="android:layout_height">@dimen/scan_threat_item_icon_size</item>
-        <item name="android:layout_margin">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_large</item>
         <item name="android:importantForAccessibility">no</item>
         <item name="android:padding">@dimen/margin_medium</item>
     </style>
@@ -61,12 +64,14 @@
         <item name="android:textAlignment">viewStart</item>
         <item name="android:padding">@dimen/margin_medium</item>
     </style>
+
     <style name="Scan.ThreatDetails.ContextLine.LineNumber" parent="Scan.ThreatDetails.ContextLine">
         <item name="android:layout_width">48dp</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
         <item name="android:background">@color/gray_20</item>
         <item name="android:textAlignment">viewEnd</item>
     </style>
+
     <style name="Scan.ThreatDetails.ContextLine.Content" parent="Scan.ThreatDetails.ContextLine">
         <item name="android:layout_marginBottom">@dimen/margin_extra_extra_small</item>
         <item name="android:background">@color/gray_5</item>
