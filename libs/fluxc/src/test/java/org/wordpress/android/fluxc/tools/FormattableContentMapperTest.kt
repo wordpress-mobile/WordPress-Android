@@ -47,6 +47,17 @@ class FormattableContentMapperTest {
             "                0,\n" +
             "                9\n" +
             "              ]\n" +
+            "            }\n," +
+                        "{\n" +
+            "              \"email\": \"user@automattic.com\",\n" +
+            "              \"url\": \"$url\",\n" +
+            "              \"id\": 1999,\n" +
+            "              \"site_id\": 123,\n" +
+            "              \"type\": \"scan\",\n" +
+            "              \"indices\": [\n" +
+            "                10,\n" +
+            "                15\n" +
+            "              ]\n" +
             "            }\n" +
             "          ],\n" +
             "          \"media\": [\n" +
@@ -138,7 +149,7 @@ class FormattableContentMapperTest {
     fun mapsNotificationBodyToRichFormattableContent() {
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
         assertEquals("This site was created by Author", formattableContent.text)
-        assertEquals(1, formattableContent.ranges!!.size)
+        assertEquals(2, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
             assertEquals(FormattableRangeType.USER, this.rangeType())
             assertEquals(123, this.siteId)
@@ -146,6 +157,12 @@ class FormattableContentMapperTest {
             assertEquals(url, this.url)
             assertEquals(listOf(0, 9), this.indices)
         }
+    }
+
+    @Test
+    fun mapsScanTypeToScanFormattableRangeType() {
+        val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
+        assertEquals(FormattableRangeType.SCAN, formattableContent.ranges!![1].rangeType())
     }
 
     @Test
