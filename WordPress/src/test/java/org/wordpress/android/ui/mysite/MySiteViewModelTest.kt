@@ -60,6 +60,7 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabil
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
+import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
 import org.wordpress.android.ui.mysite.MySiteViewModel.UiModel
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.ICON_CLICK
@@ -264,11 +265,11 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `model is contains header of selected site`() {
+    fun `model contains header of selected site`() {
         initSelectedSite()
 
         assertThat(uiModels).hasSize(4)
-        assertThat(uiModels.last().state).isInstanceOf(State.SiteSelected::class.java)
+        assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
         assertThat(getLastItems().first()).isInstanceOf(SiteInfoBlock::class.java)
@@ -919,7 +920,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private fun findSiteInfoBlock() =
             getLastItems().find { it is SiteInfoBlock } as SiteInfoBlock?
 
-    private fun getLastItems() = (uiModels.last().state as State.SiteSelected).items
+    private fun getLastItems() = (uiModels.last().state as SiteSelected).items
 
     private suspend fun invokeSiteInfoBlockAction(action: SiteInfoBlockAction) {
         onSiteChange.value = site
