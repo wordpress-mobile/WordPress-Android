@@ -26,6 +26,11 @@
             app:theme="@style/WordPress.ActionBar"
             app:layout_scrollFlags="scroll|enterAlways"/>
 
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:background="?attr/wpColorSurfaceSecondary"/>
+
     </com.google.android.material.appbar.AppBarLayout>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

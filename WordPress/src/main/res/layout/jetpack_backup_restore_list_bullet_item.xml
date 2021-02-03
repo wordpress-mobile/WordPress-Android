@@ -5,29 +5,29 @@
     android:background="?attr/selectableItemBackground"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:focusable="true"
     android:paddingStart="0dp"
     android:paddingEnd="@dimen/margin_medium"
     android:paddingTop="@dimen/margin_medium"
     android:paddingBottom="@dimen/margin_medium">
 
-    <com.google.android.material.checkbox.MaterialCheckBox
-        android:id="@+id/checkbox"
-        style="@style/Jetpack.ListItem.Checkbox"
-        android:clickable="false"
-        android:focusable="false"
+    <ImageView
+        style="@style/Jetpack.ListItem.Bullet.Icon"
+        android:id="@+id/icon"
+        android:contentDescription="@string/jetpack_icon_content_description"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/checkbox_label"
+        app:layout_constraintEnd_toStartOf="@+id/bullet_label"
         app:layout_constraintHorizontal_chainStyle="packed"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_get_app_white_24dp" />
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/checkbox_label"
-        style="@style/Jetpack.ListItem.Checkbox.Label"
+        android:id="@+id/bullet_label"
+        style="@style/Jetpack.ListItem.Bullet.Label"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/checkbox"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintStart_toEndOf="@id/icon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="This is a bullet point"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

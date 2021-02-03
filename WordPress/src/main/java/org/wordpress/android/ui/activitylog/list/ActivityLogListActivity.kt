@@ -9,6 +9,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
+import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWIND_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.posts.BasicFragmentDialog
@@ -65,6 +67,7 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         when (requestCode) {
             RequestCodes.ACTIVITY_LOG_DETAIL -> onActivityResultForActivityLogDetails(data)
             RequestCodes.RESTORE -> onActivityResultForRestore(data)
+            RequestCodes.BACKUP_DOWNLOAD -> onActivityResultForBackupDownload(data)
         }
     }
 
@@ -79,6 +82,14 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         val restoreId = data?.getLongExtra(KEY_RESTORE_RESTORE_ID, 0)
         if (rewindId != null && restoreId != null) {
             passQueryRestoreStatus(rewindId, restoreId)
+        }
+    }
+
+    private fun onActivityResultForBackupDownload(data: Intent?) {
+        val rewindId = data?.getStringExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID)
+        val downloadId = data?.getLongExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, 0)
+        if (rewindId != null && downloadId != null) {
+            passQueryBackupDownloadStatus(rewindId, downloadId)
         }
     }
 
@@ -101,6 +112,13 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
             fragment.onQueryRestoreStatus(rewindId, restoreId)
+        }
+    }
+
+    private fun passQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+        val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
+        if (fragment is ActivityLogListFragment) {
+            fragment.onQueryBackupDownloadStatus(rewindId, downloadId)
         }
     }
 }

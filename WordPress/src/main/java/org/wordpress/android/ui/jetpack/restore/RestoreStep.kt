@@ -17,7 +17,7 @@ enum class RestoreStep(val id: Int) : WizardStep {
             else -> throw IllegalArgumentException("RestoreStep not recognized: \$input")
         }
 
-        fun indexForErrorTransition(): Int = PROGRESS.id
+        fun indexForErrorTransition(): Int = COMPLETE.id
     }
 }
 
