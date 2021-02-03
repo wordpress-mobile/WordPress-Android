@@ -9,11 +9,10 @@ import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
+import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
@@ -22,6 +21,7 @@ import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSit
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCanceled
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreCompleted
 import org.wordpress.android.ui.jetpack.restore.RestoreViewModel.RestoreWizardState.RestoreInProgress
+import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
@@ -44,7 +44,6 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
 
         initDagger()
         initBackPressHandler()
-        initRecyclerView()
         initAdapter()
         initViewModel(savedInstanceState)
     }
@@ -69,13 +68,12 @@ class RestoreFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
         viewModel.onBackPressed()
     }
 
-    private fun initRecyclerView() {
-        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        initAdapter()
-    }
-
     private fun initAdapter() {
         recycler_view.adapter = JetpackBackupRestoreAdapter(imageManager, uiHelpers)
+        recycler_view.itemAnimator = null
+        recycler_view.addItemDecoration(
+                HorizontalMarginItemDecoration(resources.getDimensionPixelSize(dimen.margin_extra_large))
+        )
     }
 
     private fun initViewModel(savedInstanceState: Bundle?) {

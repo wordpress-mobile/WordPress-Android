@@ -66,8 +66,14 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
     data class Progress(
         val title: String,
-        val description: String
-    ) : ActivityLogListItem(PROGRESS)
+        val description: String,
+        val progressType: Type
+    ) : ActivityLogListItem(PROGRESS) {
+        enum class Type {
+            RESTORE,
+            BACKUP_DOWNLOAD
+        }
+    }
 
     data class Header(val text: String) : ActivityLogListItem(HEADER)
 

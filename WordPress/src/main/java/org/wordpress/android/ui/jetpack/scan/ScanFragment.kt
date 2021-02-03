@@ -13,7 +13,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.accounts.HelpActivity.Origin.SCAN_SCREEN_HELP
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.OpenFixThreatsConfirmationDialog
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowContactSupport
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel.UiState.FullScreenLoadingUiState
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.jetpack.scan.adapters.ScanAdapter
-import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -97,10 +95,12 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
                     when (this) {
                         is OpenFixThreatsConfirmationDialog -> showFixThreatsConfirmationDialog(this)
 
-                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetailsForResult(
+                        is ShowThreatDetails -> ActivityLauncher.viewThreatDetails(
                             this@ScanFragment,
+                            siteModel,
                             threatId
                         )
+
                         is ShowContactSupport ->
                             ActivityLauncher.viewHelpAndSupport(requireContext(), SCAN_SCREEN_HELP, this.site, null)
                     }
@@ -154,24 +154,21 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
         }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == RequestCodes.SHOW_THREAT_DETAILS) {
-            data?.let {
-                val threatId = it.getLongExtra(ThreatDetailsFragment.REQUEST_FIX_STATE, 0L)
-                val messageRes = it.getIntExtra(ThreatDetailsFragment.REQUEST_SCAN_STATE, 0)
-                if (threatId > 0L) {
-                    viewModel.onFixStateRequested(threatId)
-                } else if (messageRes > 0) {
-                    viewModel.onScanStateRequestedWithMessage(messageRes)
-                }
-            }
-        }
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, viewModel.site)
         super.onSaveInstanceState(outState)
+    }
+
+    fun onNewIntent(intent: Intent?) {
+        intent?.let {
+            val threatId = intent.getLongExtra(ScanActivity.REQUEST_FIX_STATE, 0L)
+            val messageRes = intent.getIntExtra(ScanActivity.REQUEST_SCAN_STATE, 0)
+            if (threatId > 0L) {
+                viewModel.onFixStateRequested(threatId)
+            } else if (messageRes > 0) {
+                viewModel.onScanStateRequestedWithMessage(messageRes)
+            }
+        }
     }
 
     companion object {

@@ -16,4 +16,5 @@ enum class ViewType(val id: Int) {
     THREAT_FILE_NAME(12),
     BACKUP_RESTORE_FOOTNOTE(13),
     PROGRESS(14),
+    BACKUP_RESTORE_BULLET(15)
 }

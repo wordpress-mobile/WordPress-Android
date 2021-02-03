@@ -1,43 +1,57 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
+import kotlinx.coroutines.CancellableContinuation
+import kotlinx.coroutines.CancellationException
+import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.suspendCancellableCoroutine
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
+import org.wordpress.android.fluxc.utils.AppLogWrapper
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.plans.isDomainCreditAvailable
-import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.DOMAIN_REGISTRATION
 import org.wordpress.android.util.SiteUtilsWrapper
 import javax.inject.Inject
+import kotlin.coroutines.resume
 
 class DomainRegistrationHandler
 @Inject constructor(
     private val dispatcher: Dispatcher,
     private val selectedSiteRepository: SelectedSiteRepository,
+    private val appLogWrapper: AppLogWrapper,
     private val siteUtils: SiteUtilsWrapper
-) {
-    private val _sitePlansFetched = MutableLiveData<OnPlansFetched>()
-    val isDomainCreditAvailable: LiveData<Boolean> = MediatorLiveData<Boolean>().apply {
-        addSource(selectedSiteRepository.selectedSiteChange) {
-            it?.let { site ->
-                if (shouldFetchPlans(site)) {
-                    fetchPlans(site)
-                } else {
-                    postValue(false)
-                }
-            }
+) : MySiteSource<DomainCreditAvailable> {
+    private var continuation: CancellableContinuation<OnPlansFetched>? = null
+
+    override fun buildSource(siteId: Int) = flow {
+        continuation?.cancel()
+        continuation = null
+        val site = selectedSiteRepository.getSelectedSite()
+        if (site == null || site.id != siteId) {
+            return@flow
         }
-        addSource(_sitePlansFetched) { event ->
-            if (event.isError) {
-                AppLog.e(DOMAIN_REGISTRATION, "An error occurred while fetching plans : " + event.error.message)
-            } else if (selectedSiteRepository.getSelectedSite()?.id == event.site.id) {
-                postValue(isDomainCreditAvailable(event.plans))
+        if (shouldFetchPlans(site)) {
+            try {
+                val event = suspendCancellableCoroutine<OnPlansFetched> { cancellableContinuation ->
+                    continuation = cancellableContinuation
+                    fetchPlans(site)
+                }
+                continuation = null
+                if (event.isError) {
+                    val message = "An error occurred while fetching plans : " + event.error.message
+                    appLogWrapper.e(DOMAIN_REGISTRATION, message)
+                } else if (siteId == event.site.id) {
+                    emit(DomainCreditAvailable(isDomainCreditAvailable(event.plans)))
+                }
+            } catch (e: CancellationException) {
+                emit(DomainCreditAvailable(false))
             }
+        } else {
+            emit(DomainCreditAvailable(false))
         }
     }
 
@@ -54,5 +68,5 @@ class DomainRegistrationHandler
     private fun fetchPlans(site: SiteModel) = dispatcher.dispatch(SiteActionBuilder.newFetchPlansAction(site))
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onPlansFetched(event: OnPlansFetched) = _sitePlansFetched.postValue(event)
+    fun onPlansFetched(event: OnPlansFetched) = continuation?.resume(event)
 }
