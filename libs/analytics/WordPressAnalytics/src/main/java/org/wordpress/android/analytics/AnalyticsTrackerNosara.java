@@ -23,7 +23,7 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private TracksClient mNosaraClient;
+    private final TracksClient mNosaraClient;
 
     public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
         super(context);
