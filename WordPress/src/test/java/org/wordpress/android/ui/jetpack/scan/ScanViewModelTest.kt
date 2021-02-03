@@ -47,6 +47,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 
 private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 2
@@ -66,6 +67,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
     @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
     @Mock private lateinit var scanStore: ScanStore
+    @Mock private lateinit var scanTracker: ScanTracker
 
     private lateinit var viewModel: ScanViewModel
 
@@ -85,6 +87,7 @@ class ScanViewModelTest : BaseUnitTest() {
             fixThreatsUseCase,
             fetchFixThreatsStatusUseCase,
             scanStore,
+            scanTracker,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))

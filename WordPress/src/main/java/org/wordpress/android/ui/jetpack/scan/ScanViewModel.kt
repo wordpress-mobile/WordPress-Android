@@ -38,6 +38,7 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -52,6 +53,7 @@ class ScanViewModel @Inject constructor(
     private val fixThreatsUseCase: FixThreatsUseCase,
     private val fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase,
     private val scanStore: ScanStore,
+    private val scanTracker: ScanTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -232,7 +234,10 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onThreatItemClicked(threatId: Long) {
-        _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
+        launch {
+            scanTracker.trackOnThreatItemClicked(threatId, ScanTracker.OnThreatItemClickSource.SCANNER)
+            _navigationEvents.value = Event(ShowThreatDetails(site, threatId))
+        }
     }
 
     fun onScanStateRequestedWithMessage(@StringRes messageRes: Int) {
