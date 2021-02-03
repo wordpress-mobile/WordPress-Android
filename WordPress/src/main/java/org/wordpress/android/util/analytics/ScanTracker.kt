@@ -6,6 +6,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -15,6 +16,16 @@ class ScanTracker @Inject constructor(
         private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    fun trackOnScanHistoryTabSelected(tab: ScanHistoryViewModel.ScanHistoryTabType) {
+        val props = mapOf("filter" to
+                when (tab) {
+                    ScanHistoryViewModel.ScanHistoryTabType.ALL -> ""
+                    ScanHistoryViewModel.ScanHistoryTabType.FIXED -> "fixed"
+                    ScanHistoryViewModel.ScanHistoryTabType.IGNORED -> "ignored"
+                })
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_HISTORY_FILTER, props)
+    }
+
     suspend fun trackOnThreatItemClicked(threatId: Long, source: OnThreatItemClickSource) {
         withContext(bgDispatcher) {
             scanStore.getThreatModelByThreatId(threatId)?.let {

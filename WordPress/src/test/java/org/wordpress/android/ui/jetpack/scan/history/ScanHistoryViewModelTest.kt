@@ -27,7 +27,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState.NoConnection
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiState.ErrorUiState.RequestFailed
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.ScanTracker
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -37,7 +37,7 @@ class ScanHistoryViewModelTest {
 
     @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var networkUtilsWrapper: NetworkUtilsWrapper
-    @Mock private lateinit var trackerWrapper: AnalyticsTrackerWrapper
+    @Mock private lateinit var scanTracker: ScanTracker
 
     private val site: SiteModel = SiteModel()
 
@@ -45,7 +45,7 @@ class ScanHistoryViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ScanHistoryViewModel(scanStore, networkUtilsWrapper, trackerWrapper, TEST_DISPATCHER)
+        viewModel = ScanHistoryViewModel(scanStore, networkUtilsWrapper, scanTracker, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(OnScanHistoryFetched(1L, mock()))
         whenever(scanStore.getScanHistoryForSite(anyOrNull())).thenReturn(listOf(mock()))

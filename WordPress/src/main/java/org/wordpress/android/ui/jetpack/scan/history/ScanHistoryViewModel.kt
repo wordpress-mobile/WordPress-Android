@@ -9,7 +9,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.store.ScanStore
@@ -24,7 +23,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
-import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
@@ -33,7 +32,7 @@ private const val RETRY_DELAY = 300L
 class ScanHistoryViewModel @Inject constructor(
     private val scanStore: ScanStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
-    private val trackerWrapper: AnalyticsTrackerWrapper,
+    private val scanTracker: ScanTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -77,13 +76,7 @@ class ScanHistoryViewModel @Inject constructor(
     }
 
     fun onTabSelected(position: Int) {
-        val props = mapOf("filter" to
-                when (ContentUiState.tabs[position].type) {
-                    ALL -> ""
-                    FIXED -> "fixed"
-                    IGNORED -> "ignored"
-                })
-        trackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_HISTORY_FILTER, props)
+        scanTracker.trackOnScanHistoryTabSelected(ContentUiState.tabs[position].type)
     }
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
