@@ -71,7 +71,7 @@ class ActivityLogTracker @Inject constructor(
     }
 
     fun trackRestoreStarted(rewindId: String, site: SiteModel, rewindableOnly: Boolean) {
-        val properties = mapOf("rewind_id" to rewindId)
+        val properties = mutableMapOf("rewind_id" to rewindId as Any)
         if (rewindableOnly) {
             AnalyticsUtils.trackWithSiteDetails(Stat.JETPACK_BACKUP_REWIND_STARTED, site, properties)
         } else {
