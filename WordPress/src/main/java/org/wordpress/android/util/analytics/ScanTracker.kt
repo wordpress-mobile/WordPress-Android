@@ -82,6 +82,10 @@ class ScanTracker @Inject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ALL_THREATS_FIX_TAPPED)
     }
 
+    fun trackOnContectSupportClicked() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ERROR_CONTACT_TAPPED)
+    }
+
     enum class OnThreatItemClickSource(val section: String) {
         HISTORY("history"), SCANNER("scanner")
     }
