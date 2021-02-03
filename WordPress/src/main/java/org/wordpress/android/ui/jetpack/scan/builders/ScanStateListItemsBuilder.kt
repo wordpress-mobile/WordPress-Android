@@ -17,6 +17,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -31,6 +32,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
     private val threatItemBuilder: ThreatItemBuilder,
+    private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder,
     private val scanStore: ScanStore
 ) {
     fun buildScanStateListItems(
@@ -77,7 +79,13 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.addAll(
             fixingThreatIds.mapNotNull { threatId ->
                 scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
-                    threatItemBuilder.buildThreatItem(threatModel).copy(isFixing = true)
+                    val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
+                        isFixing = true,
+                        subHeader = threatDetailsListItemsBuilder.buildFixableThreatDescription(
+                            requireNotNull(threatModel.baseThreatModel.fixable)
+                        ).text
+                    )
+                    threatItem
                 }
             }
         )

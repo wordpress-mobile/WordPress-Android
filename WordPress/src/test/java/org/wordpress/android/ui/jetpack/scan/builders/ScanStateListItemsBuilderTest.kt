@@ -23,9 +23,12 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ThreatTestData
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -43,6 +46,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var scanStore: ScanStore
 
     private val baseThreatModel = BaseThreatModel(
@@ -64,6 +68,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             htmlMessageUtils,
             resourceProvider,
             threatItemBuilder,
+            threatDetailsListItemsBuilder,
             scanStore
         )
 //        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
@@ -257,17 +262,37 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds fixing threat items for fixing threats state`() {
-        val threatItemState = mock<ThreatItemState>()
-        whenever(threatItemBuilder.buildThreatItem(threat)).thenReturn(threatItemState)
-        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threat)
+    fun `builds threat items for fixing threats state`() {
+        val threatModel = ThreatTestData.fixableThreatInCurrentStatus
+        val threatItemState = createDummyThreatItemState(threatModel)
+        whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
+        whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(mock())
+        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
 
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
             fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
-        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first()).isEqualTo(threatItemState)
+        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `builds fixable description as sub header for fixing threats state threat item`() {
+        val threatModel = ThreatTestData.fixableThreatInCurrentStatus
+        val threatItemState = createDummyThreatItemState(threatModel)
+        val subHeader = DescriptionState(UiStringText("sub header"))
+        whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
+        whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(subHeader)
+        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
+
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threatModel.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first().subHeader)
+            .isEqualTo(subHeader.text)
     }
 
     /* PROVISIONING STATE */
@@ -371,5 +396,15 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
         onThreatItemClicked = mock()
+    )
+
+    private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
+        threatId = threatModel.baseThreatModel.id,
+        header = UiStringText(""),
+        subHeader = UiStringText(""),
+        subHeaderColor = 0,
+        icon = 0,
+        iconBackground = 0,
+        onClick = {}
     )
 }
