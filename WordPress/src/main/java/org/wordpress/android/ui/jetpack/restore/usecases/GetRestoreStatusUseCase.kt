@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayloa
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
@@ -50,8 +51,11 @@ class GetRestoreStatusUseCase @Inject constructor(
                 }
             } else {
                 val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-                if (rewind != null &&
-                        (restoreId == null || rewind.restoreId == restoreId)) {
+                if (rewind == null) {
+                    emit(Empty)
+                    return@flow
+                }
+                if (restoreId == null || rewind.restoreId == restoreId) {
                     when (rewind.status) {
                         FINISHED -> {
                             emitFinished(rewind)
