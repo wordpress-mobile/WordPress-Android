@@ -13,7 +13,11 @@ class JetpackCheckboxViewHolder(
 ) : JetpackViewHolder(R.layout.jetpack_list_checkbox_item, parent) {
     override fun onBind(itemUiState: JetpackListItemState) {
         val checkboxState = itemUiState as CheckboxState
-        uiHelpers.setTextOrHide(checkbox_label, checkboxState.label)
+        if (checkboxState.labelSpannable == null) {
+            uiHelpers.setTextOrHide(checkbox_label, checkboxState.label)
+        } else {
+            checkbox_label.text = checkboxState.labelSpannable
+        }
         checkbox.isChecked = checkboxState.checked
         item_container.setOnClickListener { checkboxState.onClick.invoke() }
     }

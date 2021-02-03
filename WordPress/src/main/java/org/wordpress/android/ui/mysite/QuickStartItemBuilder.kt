@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
