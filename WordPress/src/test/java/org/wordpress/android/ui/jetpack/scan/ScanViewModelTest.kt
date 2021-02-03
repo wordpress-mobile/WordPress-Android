@@ -88,7 +88,7 @@ class ScanViewModelTest : BaseUnitTest() {
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
-        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any()))
+        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any()))
             .thenAnswer {
                 createDummyScanStateListItems(
                     it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),

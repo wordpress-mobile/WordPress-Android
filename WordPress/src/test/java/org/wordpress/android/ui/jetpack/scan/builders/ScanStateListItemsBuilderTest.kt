@@ -7,6 +7,7 @@ import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
@@ -19,6 +20,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
@@ -44,6 +46,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
     @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var scanStore: ScanStore
+    @Mock private lateinit var onHelpClickedMock: () -> Unit
 
     private val baseThreatModel = BaseThreatModel(
         id = 1L,
@@ -159,6 +162,22 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             .isEqualTo(subHeader.text)
     }
 
+    /* IDLE - THREATS FOUND STATE */
+
+    @Test
+    fun `builds clickable text info in description for scan state model with threats`() {
+        val clickableText = "clickable text"
+        val descriptionWithClickableText = "description with $clickableText"
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any()))
+            .thenReturn(descriptionWithClickableText)
+        whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn(clickableText)
+
+        val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+
+        val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
+        assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(ClickableTextInfo(17, 31, onHelpClickedMock))
+    }
+
     /* PROVISIONING STATE */
 
     @Test
@@ -259,7 +278,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         fixingThreatIds = fixingThreatIds,
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
-        onThreatItemClicked = mock()
+        onThreatItemClicked = mock(),
+        onHelpClicked = onHelpClickedMock
     )
 
     private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
