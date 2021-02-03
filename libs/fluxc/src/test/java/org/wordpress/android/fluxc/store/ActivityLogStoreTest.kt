@@ -426,6 +426,29 @@ class ActivityLogStoreTest {
         assertEquals(backupDownloadStatusModel, backDownloadStatusFromDb)
     }
 
+    @Test
+    fun storeFetchedEmptyRewindStatusRemoveFromDb() = test {
+        whenever(activityLogRestClient.fetchActivityRewind(siteModel))
+                .thenReturn(FetchedRewindStatePayload(null, siteModel))
+
+        val fetchAction = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteRewindStatus(siteModel)
+    }
+
+    @Test
+    fun storeFetchedEmptyBackupDownloadStatusRemoveFromDb() = test {
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel))
+                .thenReturn(FetchedBackupDownloadStatePayload(null, siteModel))
+
+        val fetchAction =
+                ActivityLogActionBuilder.newFetchBackupDownloadStateAction(FetchBackupDownloadStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteBackupDownloadStatus(siteModel)
+    }
+
     private suspend fun initRestClient(
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
