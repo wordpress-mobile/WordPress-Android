@@ -441,12 +441,7 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(
-                RestoreInProgress(
-                        restoreState.rewindId as String,
-                        restoreState.restoreId as Long
-                )
-        )
+        _wizardFinishedObservable.value = constructProgressEvent()
     }
 
     private fun onVisitSiteClick() {
