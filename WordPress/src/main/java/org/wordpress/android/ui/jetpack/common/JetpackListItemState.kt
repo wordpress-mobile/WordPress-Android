@@ -31,12 +31,14 @@ abstract class JetpackListItemState(open val type: ViewType) {
         val isSecondary: Boolean = false,
         val isEnabled: Boolean = true,
         val isVisible: Boolean = true,
+        @DrawableRes val iconRes: Int? = null,
         val onClick: () -> Unit
     ) : JetpackListItemState(if (isSecondary) ViewType.SECONDARY_ACTION_BUTTON else ViewType.PRIMARY_ACTION_BUTTON)
 
     data class CheckboxState(
         val availableItemType: JetpackAvailableItemType,
         val label: UiString,
+        val labelSpannable: CharSequence? = null,
         val checked: Boolean = false,
         val onClick: (() -> Unit)
     ) : JetpackListItemState(ViewType.CHECKBOX)

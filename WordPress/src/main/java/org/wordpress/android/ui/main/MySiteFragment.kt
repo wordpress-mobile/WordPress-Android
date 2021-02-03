@@ -35,7 +35,6 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -69,8 +68,8 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_TASK_DI
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SNACKBAR_MANAGE_TAPPED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
-import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
@@ -250,12 +249,11 @@ class MySiteFragment : Fragment(),
     override fun onResume() {
         super.onResume()
         updateSiteSettingsIfNecessary()
-
+        completeQuickStartStepsIfNeeded()
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
-            updateBackupMenuVisibility()
-            updateScanMenuVisibility()
+            updateScanAndBackupVisibility(site)
 
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -276,22 +274,30 @@ class MySiteFragment : Fragment(),
         showQuickStartNoticeIfNecessary()
     }
 
-    private fun updateBackupMenuVisibility() {
-        row_backup.setVisible(backupScreenFeatureConfig.isEnabled())
-    }
-
-    private fun updateScanMenuVisibility() {
-        uiScope.launch {
-            val show = withContext(bgDispatcher) {
-                scanScreenFeatureConfig.isEnabled() && selectedSite?.siteId?.let { siteId ->
-                    jetpackCapabilitiesUseCase.getOrFetchJetpackCapabilities(siteId)
-                            .find { it == SCAN } != null
-                } ?: false
+    private fun updateScanAndBackupVisibility(site: SiteModel) {
+        row_scan.setVisible(false)
+        row_backup.setVisible(false)
+        if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
+            uiScope.launch {
+                val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
+                row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan)
+                row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
             }
-            row_scan.setVisible(show)
         }
     }
 
+    private fun completeQuickStartStepsIfNeeded() {
+        selectedSite?.let {
+            if (it.showOnFront == ShowOnFront.POSTS.value) {
+                completeTaskAndRemindNextOne(quickStartStore,
+                        EDIT_HOMEPAGE,
+                        dispatcher,
+                        it,
+                        null,
+                        requireContext())
+            }
+        }
+    }
     private fun showQuickStartNoticeIfNecessary() {
         if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return

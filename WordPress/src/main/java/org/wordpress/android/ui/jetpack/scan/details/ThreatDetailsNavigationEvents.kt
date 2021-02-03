@@ -17,4 +17,8 @@ sealed class ThreatDetailsNavigationEvents {
     data class ShowUpdatedScanStateWithMessage(@StringRes val messageRes: Int) : ThreatDetailsNavigationEvents()
 
     data class ShowUpdatedFixState(val threatId: Long) : ThreatDetailsNavigationEvents()
+
+    object ShowGetFreeEstimate : ThreatDetailsNavigationEvents() {
+        const val url = "https://codeable.io/partners/jetpack-scan/"
+    }
 }

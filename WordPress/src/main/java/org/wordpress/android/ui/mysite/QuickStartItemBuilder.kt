@@ -21,7 +21,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -100,16 +100,16 @@ class QuickStartItemBuilder
             UPDATE_SITE_TITLE -> R.drawable.img_illustration_quick_start_task_set_site_title
             UPLOAD_SITE_ICON -> R.drawable.img_illustration_quick_start_task_edit_site_icon
             VIEW_SITE -> R.drawable.img_illustration_quick_start_task_visit_your_site
-            // Replace with an actual drawable or change the tasks
-            ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_review_site_pages
-            CREATE_SITE,
-            PUBLISH_POST,
-            FOLLOW_SITE,
-            CHECK_STATS,
-            EDIT_HOMEPAGE,
-            REVIEW_PAGES,
+            ENABLE_POST_SHARING -> R.drawable.img_illustration_quick_start_task_enable_post_sharing
+            PUBLISH_POST -> R.drawable.img_illustration_quick_start_task_publish_post
+            FOLLOW_SITE -> R.drawable.img_illustration_quick_start_task_follow_other_sites
+            CHECK_STATS -> R.drawable.img_illustration_quick_start_task_check_site_stats
+            EDIT_HOMEPAGE -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
+            REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
+            // Replace with an actual drawable or change the tasks, and then remove the placeholders
+            CREATE_SITE -> R.drawable.bg_quick_start_customize_task_illustration_placeholder
             QuickStartTask.UNKNOWN,
-            EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_visit_your_site
+            EXPLORE_PLANS -> R.drawable.bg_quick_start_grow_task_illustration_placeholder
         }
     }
 }

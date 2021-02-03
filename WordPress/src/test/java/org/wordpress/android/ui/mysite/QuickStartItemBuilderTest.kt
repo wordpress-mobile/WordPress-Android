@@ -6,15 +6,15 @@ import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
-import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartModel.QuickStartCategory
-import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
+import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.UPDATE_SITE_TITLE
+import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.VIEW_SITE_TUTORIAL
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
@@ -63,20 +63,20 @@ class QuickStartItemBuilderTest {
 
     @Test
     fun `builds 1 completed and 1 uncompleted task with 50 progress`() {
-        val quickStartCategory = QuickStartCategory(CUSTOMIZE, listOf(CREATE_SITE_TUTORIAL), listOf(UPDATE_SITE_TITLE))
+        val quickStartCategory = QuickStartCategory(CUSTOMIZE, listOf(VIEW_SITE_TUTORIAL), listOf(UPDATE_SITE_TITLE))
 
         val quickStartCard = builder.build(quickStartCategory, { }, onQuickStartTaskCardClick)
 
         assertThat(quickStartCard.progress).isEqualTo(50)
         assertThat(quickStartCard.taskCards).containsExactly(
                 QuickStartTaskCard(
-                        CREATE_SITE,
-                        UiStringRes(CREATE_SITE_TUTORIAL.titleResId),
-                        UiStringRes(CREATE_SITE_TUTORIAL.subtitleResId),
+                        VIEW_SITE,
+                        UiStringRes(VIEW_SITE_TUTORIAL.titleResId),
+                        UiStringRes(VIEW_SITE_TUTORIAL.subtitleResId),
                         R.drawable.img_illustration_quick_start_task_visit_your_site,
                         R.color.green_20,
                         false,
-                        ListItemInteraction.create(CREATE_SITE, onQuickStartTaskCardClick)
+                        ListItemInteraction.create(VIEW_SITE, onQuickStartTaskCardClick)
                 ),
                 QuickStartTaskCard(
                         QuickStartTask.UPDATE_SITE_TITLE,
@@ -102,7 +102,7 @@ class QuickStartItemBuilderTest {
                         PUBLISH_POST,
                         UiStringRes(PUBLISH_POST_TUTORIAL.titleResId),
                         UiStringRes(PUBLISH_POST_TUTORIAL.subtitleResId),
-                        R.drawable.img_illustration_quick_start_task_visit_your_site,
+                        R.drawable.img_illustration_quick_start_task_publish_post,
                         R.color.orange_40,
                         false,
                         ListItemInteraction.create(PUBLISH_POST, onQuickStartTaskCardClick)

@@ -81,6 +81,7 @@ class ReaderPostListViewModel @Inject constructor(
     }
 
     private fun init() {
+        readerPostCardActionsHandler.initScope(this)
         _navigationEvents.addSource(readerPostCardActionsHandler.navigationEvents) { event ->
             val target = event.peekContent()
             if (target is ShowSitePickerForResult) {

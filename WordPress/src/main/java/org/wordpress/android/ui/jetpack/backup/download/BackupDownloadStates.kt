@@ -13,6 +13,7 @@ import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.DetailsTool
 import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ErrorToolbarState
 import org.wordpress.android.ui.jetpack.backup.download.ToolbarState.ProgressToolbarState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
+import java.util.Date
 
 abstract class BackupDownloadUiState(open val type: StateType) {
     abstract val items: List<JetpackListItemState>
@@ -84,9 +85,21 @@ sealed class BackupDownloadRequestState {
         val rewindId: String,
         val downloadId: Long?
     ) : BackupDownloadRequestState()
-    data class Progress(val rewindId: String, val progress: Int?) : BackupDownloadRequestState()
-    data class Complete(val rewindId: String, val downloadId: Long, val url: String?) :
-            BackupDownloadRequestState()
+
+    data class Progress(
+        val rewindId: String,
+        val progress: Int?,
+        val published: Date? = null
+    ) : BackupDownloadRequestState()
+
+    data class Complete(
+        val rewindId: String,
+        val downloadId: Long,
+        val url: String?,
+        val published: Date? = null
+    ) : BackupDownloadRequestState()
+
+    object Empty : BackupDownloadRequestState()
     sealed class Failure : BackupDownloadRequestState() {
         object NetworkUnavailable : Failure()
         object RemoteRequestFailure : Failure()
