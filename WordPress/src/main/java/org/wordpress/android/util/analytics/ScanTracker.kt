@@ -16,6 +16,10 @@ class ScanTracker @Inject constructor(
         private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
         @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    fun trackOnGetFreeEstimateButtonClicked() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_CODEABLE_ESTIMATE_TAPPED)
+    }
+
     fun trackOnScanHistoryTabSelected(tab: ScanHistoryViewModel.ScanHistoryTabType) {
         val props = mapOf("filter" to
                 when (tab) {

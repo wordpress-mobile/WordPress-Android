@@ -28,6 +28,7 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -43,6 +44,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
+    private val scanTracker: ScanTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) : ViewModel() {
     private lateinit var site: SiteModel
@@ -143,6 +145,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onGetFreeEstimateButtonClicked() {
+        scanTracker.trackOnGetFreeEstimateButtonClicked()
         updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
     }
 
