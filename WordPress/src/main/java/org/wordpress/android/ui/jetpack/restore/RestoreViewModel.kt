@@ -17,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -486,6 +487,7 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
+        AnalyticsTracker.track(JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED)
         _wizardFinishedObservable.value = Event(
                 RestoreInProgress(
                         restoreState.rewindId as String,

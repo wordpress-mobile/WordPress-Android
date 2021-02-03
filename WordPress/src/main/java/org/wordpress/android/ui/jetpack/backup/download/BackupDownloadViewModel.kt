@@ -17,6 +17,7 @@ import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -401,6 +402,7 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED)
         _wizardFinishedObservable.value = Event(
                 BackupDownloadInProgress(
                         backupDownloadState.rewindId as String,
