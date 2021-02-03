@@ -38,6 +38,7 @@ import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
 private const val ON_FIX_THREAT_BUTTON_CLICKED_PARAM_POSITION = 1
+private const val ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION = 2
 private const val ON_IGNORE_THREAT_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val TEST_SITE_NAME = "test site name"
 
@@ -129,6 +130,22 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
                 assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)
             }
         }
+
+    @Test
+    fun `when get free estimate button is clicked, then ShowGetFreeEstimate event is triggered`() = test {
+        whenever(builder.buildThreatDetailsListItems(any(), any(), any(), any())).thenAnswer {
+            createDummyThreatDetailsListItems(
+                    it.getArgument(ON_GET_FREE_ESTIMATE_BUTTON_CLICKED_PARAM_POSITION)
+            )
+        }
+        val observers = init()
+
+        (observers.uiStates.last() as Content).items.filterIsInstance<ActionButtonState>()
+                .first().onClick.invoke()
+
+        assertThat(observers.navigation.last().peekContent())
+                .isInstanceOf(ThreatDetailsNavigationEvents.ShowGetFreeEstimate::class.java)
+    }
 
     @Test
     fun `given server unavailable, when fix threat action is triggered, then fix threat error msg is shown`() =
@@ -293,22 +310,27 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     }
 
     private fun createDummyThreatDetailsListItems(
-        onFixThreatItemClicked: () -> Unit,
-        onIgnoreThreatItemClicked: () -> Unit
-    ) = listOf(
-        ActionButtonState(
-            text = fakeUiStringText,
-            contentDescription = fakeUiStringText,
-            isSecondary = false,
-            onClick = onFixThreatItemClicked
-        ),
-        ActionButtonState(
-            text = fakeUiStringText,
-            contentDescription = fakeUiStringText,
-            isSecondary = true,
-            onClick = onIgnoreThreatItemClicked
+        primaryAction: () -> Unit,
+        secondaryAction: (() -> Unit)? = null
+    ): List<ActionButtonState> {
+        val list = mutableListOf(
+                ActionButtonState(
+                        text = fakeUiStringText,
+                        contentDescription = fakeUiStringText,
+                        isSecondary = false,
+                        onClick = primaryAction
+                )
         )
-    )
+        secondaryAction?.let {
+            list.add(ActionButtonState(
+                    text = fakeUiStringText,
+                    contentDescription = fakeUiStringText,
+                    isSecondary = true,
+                    onClick = secondaryAction
+            ))
+        }
+        return list
+    }
 
     private fun init(): Observers {
         val uiStates = mutableListOf<UiState>()
