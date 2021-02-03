@@ -557,6 +557,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onRestoreConfirmed(rewindId: String) {
+        activityLogTracker.trackRestoreStarted(rewindId, site, rewindableOnly)
         viewModelScope.launch { handleRestoreRequest(postRestoreUseCase.postRestoreRequest(rewindId, site)) }
         showRestoreStartedMessage(rewindId)
     }

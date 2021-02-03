@@ -3,6 +3,7 @@ package org.wordpress.android.util.analytics
 import androidx.core.util.Pair
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.util.Date
@@ -55,5 +56,14 @@ class ActivityLogTracker @Inject constructor(
 
     fun trackActivityTypeFilterCleared() {
         tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
+    }
+
+    fun trackRestoreStarted(rewindId: String, site: SiteModel, rewindableOnly: Boolean) {
+        val properties = mapOf("rewind_id" to rewindId)
+        if (rewindableOnly) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.JETPACK_BACKUP_REWIND_STARTED, site, properties)
+        } else {
+            AnalyticsUtils.trackWithSiteDetails(Stat.ACTIVITY_LOG_REWIND_STARTED, site, properties)
+        }
     }
 }

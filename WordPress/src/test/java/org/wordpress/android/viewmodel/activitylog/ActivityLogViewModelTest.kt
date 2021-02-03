@@ -1133,6 +1133,13 @@ class ActivityLogViewModelTest {
     /* RESTORE CONFIRMED */
 
     @Test
+    fun `when restore confirmed, then track restore started event`() = test {
+        viewModel.onRestoreConfirmed(REWIND_ID)
+
+        verify(activityLogTracker).trackRestoreStarted(REWIND_ID, site, rewindableOnly)
+    }
+
+    @Test
     fun `when restore confirmed, then trigger post restore request`() = test {
         viewModel.onRestoreConfirmed(REWIND_ID)
 
