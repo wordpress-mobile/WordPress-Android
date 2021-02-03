@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -639,9 +640,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `plan item click emits OpenPlan navigation event`() {
+    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
         invokeItemClickAction(PLAN)
 
+        verify(quickStartRepository).completeTask(EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(OpenPlan(site))
     }
 
@@ -821,7 +823,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = eq(false),
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -837,7 +840,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = any(),
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -853,7 +857,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = any(),
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -869,7 +874,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = eq(true),
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -936,7 +942,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 
