@@ -86,7 +86,26 @@ class ScanTracker @Inject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ERROR_CONTACT_TAPPED)
     }
 
+    fun trackOnError(action: ErrorAction, cause: ErrorCause) {
+        val props = mapOf("action" to action.value, "cause" to cause.value)
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ERROR, props)
+    }
+
     enum class OnThreatItemClickSource(val section: String) {
         HISTORY("history"), SCANNER("scanner")
+    }
+
+    enum class ErrorAction(val value: String) {
+        FIX_ALL("fix_all"),
+        FIX("fix"),
+        SCAN("scan"),
+        IGNORE("ignore"),
+        FETCH_SCAN_STATE("fetch_scan_state"),
+        FETCH_FIX_THREAT_STATUS("fetch_fix_threat_status"),
+        FETCH_SCAN_HISTORY("fetch_scan_history")
+    }
+
+    enum class ErrorCause(val value: String) {
+        OFFLINE("offline"), REMOTE("remote"), OTHER("other")
     }
 }

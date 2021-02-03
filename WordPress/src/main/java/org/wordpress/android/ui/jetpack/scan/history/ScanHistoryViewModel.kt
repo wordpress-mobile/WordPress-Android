@@ -61,11 +61,13 @@ class ScanHistoryViewModel @Inject constructor(
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 val result = scanStore.fetchScanHistory(FetchScanHistoryPayload(site))
                 if (result.isError) {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.REMOTE)
                     _uiState.value = RequestFailed(this@ScanHistoryViewModel::onRetryClicked)
                 } else {
                     _threats.value = scanStore.getScanHistoryForSite(site)
                 }
             } else {
+                scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.OFFLINE)
                 _uiState.value = NoConnection(this@ScanHistoryViewModel::onRetryClicked)
             }
         }

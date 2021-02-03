@@ -80,10 +80,12 @@ class ThreatDetailsViewModel @Inject constructor(
                     updateNavigationEvent(ShowUpdatedFixState(threatId))
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FIX, ScanTracker.ErrorCause.OFFLINE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FIX, ScanTracker.ErrorCause.REMOTE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_error_message))
                 }
@@ -101,10 +103,12 @@ class ThreatDetailsViewModel @Inject constructor(
                 )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.IGNORE, ScanTracker.ErrorCause.OFFLINE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.IGNORE, ScanTracker.ErrorCause.REMOTE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
                 }
@@ -174,7 +178,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun buildContentUiState(model: ThreatModel) = Content(
         builder.buildThreatDetailsListItems(
             model,
-                this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
             this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
             this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
         )
