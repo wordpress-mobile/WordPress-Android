@@ -19,7 +19,6 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.ViewType
-import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
@@ -395,20 +394,9 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
-        (_uiState.value as? DetailsState)?.let { details ->
-            val updatedList = details.items.map { contentState ->
-                if (contentState.type == CHECKBOX) {
-                    contentState as CheckboxState
-                    if (contentState.availableItemType == itemType) {
-                        contentState.copy(checked = !contentState.checked)
-                    } else {
-                        contentState
-                    }
-                } else {
-                    contentState
-                }
-            }
-            _uiState.postValue(details.copy(items = updatedList))
+        _uiState.value?.let {
+            val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
+            _uiState.postValue(((it as DetailsState).copy(items = updatedItems)))
         }
     }
 
