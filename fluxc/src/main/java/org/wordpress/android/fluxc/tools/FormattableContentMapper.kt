@@ -93,6 +93,7 @@ enum class FormattableRangeType {
     COMMENT,
     USER,
     STAT,
+    SCAN,
     BLOCKQUOTE,
     FOLLOW,
     NOTICON,
@@ -111,6 +112,7 @@ enum class FormattableRangeType {
                 "comment" -> COMMENT
                 "user" -> USER
                 "stat" -> STAT
+                "scan" -> SCAN
                 "blockquote" -> BLOCKQUOTE
                 "follow" -> FOLLOW
                 "noticon" -> NOTICON
