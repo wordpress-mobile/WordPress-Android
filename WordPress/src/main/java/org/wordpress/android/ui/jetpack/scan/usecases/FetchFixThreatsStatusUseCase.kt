@@ -58,7 +58,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         val fixingThreatIds = models.filter { it.status == FixStatus.IN_PROGRESS }.map { it.id }
         val isFixing = fixingThreatIds.isNotEmpty()
         val isFixingComplete = models.filter { it.status == FixStatus.FIXED }.size == fixableThreatIds.size
-        val errors = models.filter { it.error != null }
+        val errors = models.filter { it.error != null || it.status == FixStatus.NOT_FIXED }
 
         return when {
             isFixingNotStarted -> NotStarted

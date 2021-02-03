@@ -5,13 +5,17 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flowOf
+import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
+import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
@@ -49,8 +53,12 @@ private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 3
 private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 4
 private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 5
 
+@ExperimentalCoroutinesApi
 @InternalCoroutinesApi
 class ScanViewModelTest : BaseUnitTest() {
+    @Rule
+    @JvmField val coroutineScope = MainCoroutineScopeRule()
+
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var scanStateItemsBuilder: ScanStateListItemsBuilder
     @Mock private lateinit var fetchScanStateUseCase: FetchScanStateUseCase
@@ -95,16 +103,13 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given last scan state not present in db, when vm starts, then loading scan state is displayed`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        val uiStates = init().uiStates
+    fun `given last scan state not present in db, when vm starts, then app displays full screen loading scan state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            val uiStates = init().uiStates
 
-        val state = uiStates.first() as FullScreenLoadingUiState
-        with(state) {
-            assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
-            assertThat(title).isEqualTo(UiStringRes(R.string.scan_loading_title))
+            assertThat(uiStates.first()).isInstanceOf(FullScreenLoadingUiState::class.java)
         }
-    }
 
     @Test
     fun `when vm starts, fetch scan state is triggered`() = test {
@@ -126,20 +131,30 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given no network, when scan state fetched over empty scan state, then no network ui state is shown`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-        val uiStates = init().uiStates
+    fun `given no network, when scan state fetched over empty scan state, then app reaches no connection state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
 
-        val error = uiStates.last() as ErrorUiState
-        with(error) {
-            assertThat(this).isInstanceOf(ErrorUiState.NoConnection::class.java)
-            assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
-            assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
-            assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
-            assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+            assertThat(uiStates.last()).isInstanceOf(ErrorUiState.NoConnection::class.java)
         }
-    }
+
+    @Test
+    fun `given no connection state, when scan state fetched over empty scan state, then no network ui is shown`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
+
+            val error = uiStates.last() as ErrorUiState
+            with(error) {
+                assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
+                assertThat(title).isEqualTo(UiStringRes(R.string.scan_no_network_title))
+                assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_no_network_subtitle))
+                assertThat(buttonText).isEqualTo(UiStringRes(R.string.retry))
+            }
+        }
 
     @Test
     fun `given no network, when scan state fetched over last scan state, then no network msg is shown`() = test {
@@ -151,7 +166,17 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fetch scan fails, when scan state fetched over empty scan state, then request failed ui state shown`() =
+    fun `given fetch scan fails, when scan state fetched over empty scan state, then app reaches failed ui state`() =
+        test {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
+            val uiStates = init().uiStates
+
+            assertThat(uiStates.last()).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given request failed ui state, when scan state fetched over empty scan state, then request failed ui shown`() =
         test {
             whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.RemoteRequestFailure))
@@ -159,7 +184,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val state = uiStates.last() as ErrorUiState
             with(state) {
-                assertThat(this).isInstanceOf(ErrorUiState.GenericRequestFailed::class.java)
                 assertThat(image).isEqualTo(R.drawable.img_illustration_cloud_off_152dp)
                 assertThat(title).isEqualTo(UiStringRes(R.string.scan_request_failed_title))
                 assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_request_failed_subtitle))
@@ -209,15 +233,17 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() = test {
-        whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
-        whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
-        val uiStates = init().uiStates
+    fun `given no network error ui state, when retry is clicked, then fetch scan state is triggered`() =
+        coroutineScope.runBlockingTest {
+            whenever(scanStore.getScanStateForSite(site)).thenReturn(null)
+            whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Failure.NetworkUnavailable))
+            val uiStates = init().uiStates
 
-        (uiStates.last() as ErrorUiState).action.invoke()
+            (uiStates.last() as ErrorUiState).action.invoke()
+            advanceTimeBy(RETRY_DELAY)
 
-        verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
-    }
+            verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
+        }
 
     @Test
     fun `given request failed error ui state, when contact support is clicked, then contact support screen is shown`() =
@@ -276,7 +302,19 @@ class ScanViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given scan start request fails, when scan button is clicked, then request failed state is shown`() = test {
+    fun `given scan start request fails, when scan button is clicked, then app reaches scan request failed state`() =
+        test {
+            whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
+            val observers = init()
+
+            (observers.uiStates.last() as ContentUiState)
+                .items.filterIsInstance<ActionButtonState>().first().onClick.invoke()
+
+            assertThat(observers.uiStates.last()).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
+        }
+
+    @Test
+    fun `given scan request failed state, when scan button is clicked, then request failed ui is shown`() = test {
         whenever(startScanUseCase.startScan(any())).thenReturn(flowOf(StartScanState.Failure.RemoteRequestFailure))
         val observers = init()
 
@@ -285,7 +323,6 @@ class ScanViewModelTest : BaseUnitTest() {
 
         val errorState = observers.uiStates.last() as ErrorUiState
         with(errorState) {
-            assertThat(this).isInstanceOf(ErrorUiState.ScanRequestFailed::class.java)
             assertThat(image).isEqualTo(R.drawable.img_illustration_empty_results_216dp)
             assertThat(title).isEqualTo(UiStringRes(R.string.scan_start_request_failed_title))
             assertThat(subtitle).isEqualTo(UiStringRes(R.string.scan_start_request_failed_subtitle))
@@ -552,6 +589,34 @@ class ScanViewModelTest : BaseUnitTest() {
             verify(fetchScanStateUseCase, times(2)).fetchScanState(site)
         }
 
+    @Test
+    fun `given FixFailure(onlyErr=true) returned, when fetch fix status invoked by user, then snackbar is shown`() =
+            test {
+        val messages = init().snackBarMsgs
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+        )
+
+        viewModel.onFixStateRequested(threatId = 11L)
+
+        assertThat(messages.isNotEmpty()).isTrue
+    }
+
+    @Test
+    fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
+            test {
+        whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
+            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+        )
+        val scanStateModelWithFixableThreats = fakeScanStateModel
+            .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
+        whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModelWithFixableThreats)
+
+        val messages = init().snackBarMsgs
+
+        assertThat(messages.isEmpty()).isTrue
+    }
+
     private fun triggerFixThreatsAction(observers: Observers) {
         (observers.uiStates.last() as ContentUiState)
             .items.filterIsInstance<ActionButtonState>().last().onClick.invoke()
@@ -588,7 +653,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ),
         ThreatItemState(
             threatId = fakeThreatId,
-            isFixable = true,
+            isFixing = false,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,

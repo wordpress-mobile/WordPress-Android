@@ -11,7 +11,6 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -125,7 +124,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             findPost(it.postId, it.blogId)?.let { post ->
                 val moreMenuItems = if (show) {
                     readerPostMoreButtonUiStateBuilder.buildMoreMenuItemsBlocking(
-                            post, TAG_FOLLOWED, this@ReaderPostDetailViewModel::onButtonClicked
+                            post, this@ReaderPostDetailViewModel::onButtonClicked
                     )
                 } else {
                     null

@@ -131,11 +131,16 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildShareItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildShareItemIfAvailable(
+        site: SiteModel,
+        onClick: (ListItemAction) -> Unit,
+        showFocusPoint: Boolean = false
+    ): ListItem? {
         return if (siteUtilsWrapper.isAccessedViaWPComRest(site)) {
             ListItem(
                     R.drawable.ic_share_white_24dp,
                     UiStringRes(R.string.my_site_btn_sharing),
+                    showFocusPoint = showFocusPoint,
                     onClick = ListItemInteraction.create(ListItemAction.SHARING, onClick)
             )
         } else null

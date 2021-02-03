@@ -15,16 +15,22 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.State
-import org.wordpress.android.fluxc.model.scan.ScanStateModel.State.IDLE
 import org.wordpress.android.fluxc.model.scan.threat.BaseThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
+import org.wordpress.android.ui.jetpack.scan.ThreatTestData
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
@@ -42,18 +48,20 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var threatItemBuilder: ThreatItemBuilder
+    @Mock private lateinit var threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder
+    @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var onHelpClickedMock: () -> Unit
 
     private val baseThreatModel = BaseThreatModel(
         id = 1L,
         signature = "",
         description = "",
-        status = ThreatModel.ThreatStatus.CURRENT,
+        status = ThreatStatus.CURRENT,
         firstDetected = Date(0)
     )
     private val threat = ThreatModel.GenericThreatModel(baseThreatModel)
     private val threats = listOf(threat)
-    private val scanStateModelWithNoThreats = ScanStateModel(state = IDLE)
+    private val scanStateModelWithNoThreats = ScanStateModel(state = State.IDLE)
     private val scanStateModelWithThreats = scanStateModelWithNoThreats.copy(threats = threats)
 
     @Before
@@ -62,8 +70,11 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             dateProvider,
             htmlMessageUtils,
             resourceProvider,
-            threatItemBuilder
+            threatItemBuilder,
+            threatDetailsListItemsBuilder,
+            scanStore
         )
+//        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn(SpannedString(""))
 //        whenever(site.name).thenReturn((""))
 //        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
@@ -197,6 +208,98 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
     }*/
 
+    /* FIXING THREATS STATE */
+
+    @Test
+    fun `builds shield warning icon with error color for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+            IconState(
+                icon = R.drawable.ic_shield_warning_white,
+                colorResId = R.color.error,
+                sizeResId = R.dimen.scan_icon_size,
+                marginResId = R.dimen.scan_icon_margin,
+                contentDescription = UiStringRes(R.string.scan_state_icon)
+            )
+        )
+    }
+
+    @Test
+    fun `builds header for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
+        )
+    }
+
+    @Test
+    fun `builds fixing threats description for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        )
+    }
+
+    @Test
+    fun `builds progress bar for fixing threats state`() {
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
+            ProgressState(isIndeterminate = true, isVisible = true)
+        )
+    }
+
+    @Test
+    fun `builds threat items for fixing threats state`() {
+        val threatModel = ThreatTestData.fixableThreatInCurrentStatus
+        val threatItemState = createDummyThreatItemState(threatModel)
+        whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
+        whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(mock())
+        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
+
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threat.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java)).isNotEmpty
+    }
+
+    @Test
+    fun `builds fixable description as sub header for fixing threats state threat item`() {
+        val threatModel = ThreatTestData.fixableThreatInCurrentStatus
+        val threatItemState = createDummyThreatItemState(threatModel)
+        val subHeader = DescriptionState(UiStringText("sub header"))
+        whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
+        whenever(threatDetailsListItemsBuilder.buildFixableThreatDescription(any())).thenReturn(subHeader)
+        whenever(scanStore.getThreatModelByThreatId(any())).thenReturn(threatModel)
+
+        val scanStateItems = buildScanStateItems(
+            model = scanStateModelWithThreats,
+            fixingThreatIds = listOf(threatModel.baseThreatModel.id)
+        )
+
+        assertThat(scanStateItems.filterIsInstance(ThreatItemState::class.java).first().subHeader)
+            .isEqualTo(subHeader.text)
+    }
+
+    /* IDLE - THREATS FOUND STATE */
+
     @Test
     fun `builds clickable text info in description for scan state model with threats`() {
         val clickableText = "clickable text"
@@ -210,6 +313,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
         assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(ClickableTextInfo(17, 31, onHelpClickedMock))
     }
+
+    /* PROVISIONING STATE */
 
     @Test
     fun `builds shield icon with green color for provisioning scan state model`() {
@@ -250,6 +355,8 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    /* INVALID STATES */
+
     @Test
     fun `builds empty list for unknown scan state model`() {
         val scanStateModelInUnknownState = scanStateModelWithNoThreats.copy(state = State.UNKNOWN)
@@ -268,13 +375,17 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         assertThat(scanStateItems).isEmpty()
     }
 
+    /* SCANNING STATE */
+
     @Test
     fun `builds initial scanning description for scanning scan state model with no initial recent scan`() {
         val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
         )
+
         val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
         )
@@ -286,21 +397,34 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
         )
+
         val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_description))
         )
     }
 
     private fun buildScanStateItems(
-        model: ScanStateModel
+        model: ScanStateModel,
+        fixingThreatIds: List<Long> = emptyList()
     ) = builder.buildScanStateListItems(
         model = model,
         site = site,
-        fixingThreatIds = emptyList(),
+        fixingThreatIds = fixingThreatIds,
         onScanButtonClicked = mock(),
         onFixAllButtonClicked = mock(),
         onThreatItemClicked = mock(),
         onHelpClicked = onHelpClickedMock
+    )
+
+    private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
+        threatId = threatModel.baseThreatModel.id,
+        header = UiStringText(""),
+        subHeader = UiStringText(""),
+        subHeaderColor = 0,
+        icon = 0,
+        iconBackground = 0,
+        onClick = {}
     )
 }

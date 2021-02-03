@@ -9,6 +9,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel
 import org.wordpress.android.fluxc.model.scan.ScanStateModel.ScanProgressStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
+import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
@@ -17,6 +18,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatsHeaderItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuilder
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -30,7 +32,9 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val dateProvider: DateProvider,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    private val threatItemBuilder: ThreatItemBuilder
+    private val threatItemBuilder: ThreatItemBuilder,
+    private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder,
+    private val scanStore: ScanStore
 ) {
     fun buildScanStateListItems(
         model: ScanStateModel,
@@ -42,12 +46,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         onHelpClicked: () -> Unit
     ): List<JetpackListItemState> {
         return if (fixingThreatIds.isNotEmpty()) {
-            buildThreatsFixingStateItems(
-                threats = model.threats,
-                site = site,
-                fixingThreatIds = fixingThreatIds,
-                onHelpClicked = onHelpClicked
-            )
+            buildThreatsFixingStateItems(fixingThreatIds)
         } else when (model.state) {
             ScanStateModel.State.IDLE -> {
                 model.threats?.takeIf { threats -> threats.isNotEmpty() }?.let { threats ->
@@ -67,37 +66,32 @@ class ScanStateListItemsBuilder @Inject constructor(
         }
     }
 
-    private fun buildThreatsFixingStateItems(
-        threats: List<ThreatModel>?,
-        site: SiteModel,
-        fixingThreatIds: List<Long>,
-        onHelpClicked: () -> Unit
-    ): List<JetpackListItemState> {
+    private fun buildThreatsFixingStateItems(fixingThreatIds: List<Long>): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
-        // TODO ashiagr replace label
-        val scanDescription = buildThreatsFoundDescription(site, fixingThreatIds.size, onHelpClicked)
-        val scanProgress = ProgressState(
-            isIndeterminate = true,
-            isVisible = fixingThreatIds.isNotEmpty()
-        )
+        val scanDescription = DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        val scanProgress = ProgressState(isIndeterminate = true, isVisible = fixingThreatIds.isNotEmpty())
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
         items.add(scanProgress)
 
-        // TODO ashiagr fix threats display logic
-        threats?.takeIf { it.isNotEmpty() && fixingThreatIds.isNotEmpty() }?.let {
-            items.add(ThreatsHeaderItemState())
-            items.addAll(
-                threats.filter { it.baseThreatModel.id in fixingThreatIds }.map { threat ->
-                    threatItemBuilder.buildThreatItem(threat)
+        items.addAll(
+            fixingThreatIds.mapNotNull { threatId ->
+                scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
+                    val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
+                        isFixing = true,
+                        subHeader = threatDetailsListItemsBuilder.buildFixableThreatDescription(
+                            requireNotNull(threatModel.baseThreatModel.fixable)
+                        ).text
+                    )
+                    threatItem
                 }
-            )
-        }
+            }
+        )
 
         return items
     }
@@ -116,16 +110,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         val scanHeader = HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
         val scanDescription = buildThreatsFoundDescription(site, threats.size, onHelpClicked)
         val scanButton = buildScanButtonAction(titleRes = R.string.scan_again, onClick = onScanButtonClicked)
-        val scanProgress = ProgressState(
-            progressStateLabel = UiStringRes(R.string.threat_fixing),
-            isIndeterminate = true,
-            isVisible = false
-        )
 
         items.add(scanIcon)
         items.add(scanHeader)
         items.add(scanDescription)
-        items.add(scanProgress)
 
         val fixableThreats = threats.filter { it.baseThreatModel.fixable != null }
         buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
