@@ -22,35 +22,33 @@
 
     <!--Threat List Item-->
     <style name="Scan.Threat.Icon" parent="">
-        <item name="android:layout_width">32dp</item>
-        <item name="android:layout_height">32dp</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_width">@dimen/scan_threat_item_icon_size</item>
+        <item name="android:layout_height">@dimen/scan_threat_item_icon_size</item>
+        <item name="android:layout_margin">@dimen/margin_extra_large</item>
         <item name="android:importantForAccessibility">no</item>
-        <item name="android:padding">@dimen/margin_small_medium</item>
+        <item name="android:padding">@dimen/margin_medium</item>
     </style>
 
     <style name="Scan.Threat.Header" parent="Scan.TextView">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/margin_medium</item>
         <item name="android:layout_marginEnd">@dimen/margin_medium</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">start</item>
         <item name="android:maxLines">2</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
-        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="Scan.Threat.SecondaryHeader" parent="Scan.TextView">
         <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:ellipsize">end</item>
         <item name="android:gravity">start</item>
         <item name="android:singleLine">true</item>
         <item name="android:textAlignment">viewStart</item>
         <item name="android:textAppearance">?attr/textAppearanceCaption</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
     </style>
 
     <!--Threat Details: ContextLine-->
