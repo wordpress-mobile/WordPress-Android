@@ -175,7 +175,12 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
-                ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
+                ActivityLauncher.viewActivityLogDetailForResult(
+                        activity,
+                        viewModel.site,
+                        it.activityId,
+                        viewModel.rewindableOnly
+                )
             }
         })
 
