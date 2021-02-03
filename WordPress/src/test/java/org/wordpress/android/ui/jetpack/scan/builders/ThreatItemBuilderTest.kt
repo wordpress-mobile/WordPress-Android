@@ -201,6 +201,20 @@ class ThreatItemBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `displays loading for threat in fixing state`() {
+        val threatItem = buildThreatItem(threatModel = ThreatTestData.genericThreatModel, isFixing = true)
+
+        assertThat(threatItem.isLoadingVisible).isTrue
+    }
+
+    @Test
+    fun `displays icon for threat not in fixing state`() {
+        val threatItem = buildThreatItem(threatModel = ThreatTestData.genericThreatModel, isFixing = false)
+
+        assertThat(threatItem.isIconVisible).isTrue
+    }
+
+    @Test
     fun `onThreatItemClicked listener is correctly assigned to ThreatItem's onClick`() = test {
         val onThreatItemClicked: (Long) -> Unit = mock()
         val threatItem = buildThreatItem(ThreatTestData.genericThreatModel, onThreatItemClicked)
@@ -267,9 +281,13 @@ class ThreatItemBuilderTest : BaseUnitTest() {
         assertThat(threatItem.subHeaderColor).isEqualTo(R.attr.colorOnSurface)
     }
 
-    private fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((Long) -> Unit) = mock()) =
-        builder.buildThreatItem(
-            threatModel = threatModel,
-            onThreatItemClicked = onThreatItemClicked
-        )
+    private fun buildThreatItem(
+        threatModel: ThreatModel,
+        onThreatItemClicked: ((Long) -> Unit) = mock(),
+        isFixing: Boolean = false
+    ) = builder.buildThreatItem(
+        threatModel = threatModel,
+        isFixing = isFixing,
+        onThreatItemClicked = onThreatItemClicked
+    )
 }
