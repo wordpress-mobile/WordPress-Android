@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -74,6 +75,9 @@ import javax.inject.Named
 const val KEY_RESTORE_ACTIVITY_ID_KEY = "key_restore_activity_id_key"
 const val KEY_RESTORE_CURRENT_STEP = "key_restore_current_step"
 const val KEY_RESTORE_STATE = "key_restore_state"
+private const val TRACKING_ERROR_CAUSE_OFFLINE = "offline"
+private const val TRACKING_ERROR_CAUSE_REMOTE = "remote"
+private const val TRACKING_ERROR_CAUSE_OTHER = "other"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -184,6 +188,7 @@ class RestoreViewModel @Inject constructor(
                         type = StateType.DETAILS
                 )
             } else {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(GenericFailure)
             }
         }
@@ -320,10 +325,19 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
-            is NetworkUnavailable -> handleRestoreRequestError(NetworkUnavailableMsg)
-            is RemoteRequestFailure -> handleRestoreRequestError(GenericFailureMsg)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                handleRestoreRequestError(NetworkUnavailableMsg)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                handleRestoreRequestError(GenericFailureMsg)
+            }
             is Success -> handleRestoreRequestSuccess(result)
-            is OtherRequestRunning -> handleRestoreRequestError(OtherRequestRunningMsg)
+            is OtherRequestRunning -> {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
+                handleRestoreRequestError(OtherRequestRunningMsg)
+            }
             else -> throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
         }
     }
@@ -364,8 +378,14 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
         when (restoreStatus) {
-            is NetworkUnavailable -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
-            is RemoteRequestFailure -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            }
             is Progress -> transitionToProgress(restoreStatus)
             is Complete -> wizardManager.showNextStep()
             else -> throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
@@ -437,6 +457,7 @@ class RestoreViewModel @Inject constructor(
     private fun onRestoreSiteClick() {
         val (rewindId, optionsSelected) = getParams()
         if (rewindId == null) {
+            trackError(TRACKING_ERROR_CAUSE_OTHER)
             transitionToError(GenericFailure)
         } else {
             restoreState = restoreState.copy(
@@ -451,6 +472,7 @@ class RestoreViewModel @Inject constructor(
 
     private fun onConfirmRestoreClick() {
         if (restoreState.rewindId == null) {
+            trackError(TRACKING_ERROR_CAUSE_OTHER)
             transitionToError(GenericFailure)
         } else {
             trackRestoreConfirmed()
@@ -500,6 +522,12 @@ class RestoreViewModel @Inject constructor(
 
         properties["restore_types"] = asJson.toString()
         AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, properties)
+    }
+
+    private fun trackError(cause: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties["cause"] = cause
+        AnalyticsTracker.track(JETPACK_RESTORE_ERROR, properties)
     }
 
     companion object {

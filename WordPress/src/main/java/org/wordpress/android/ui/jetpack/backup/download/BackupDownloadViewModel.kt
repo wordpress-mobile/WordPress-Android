@@ -16,6 +16,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -72,6 +73,9 @@ import javax.inject.Named
 const val KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY = "key_backup_download_activity_id_key"
 const val KEY_BACKUP_DOWNLOAD_CURRENT_STEP = "key_backup_download_current_step"
 const val KEY_BACKUP_DOWNLOAD_STATE = "key_backup_download_state"
+private const val TRACKING_ERROR_CAUSE_OFFLINE = "offline"
+private const val TRACKING_ERROR_CAUSE_REMOTE = "remote"
+private const val TRACKING_ERROR_CAUSE_OTHER = "other"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -185,6 +189,7 @@ class BackupDownloadViewModel @Inject constructor(
                         type = StateType.DETAILS
                 )
             } else {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(BackupDownloadErrorTypes.GenericFailure)
             }
         }
@@ -267,10 +272,19 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleBackupDownloadRequestResult(result: BackupDownloadRequestState) {
         when (result) {
-            is NetworkUnavailable -> _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
-            is RemoteRequestFailure -> _snackbarEvents.postValue(Event(GenericFailureMsg))
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                _snackbarEvents.postValue(Event(GenericFailureMsg))
+            }
             is Success -> handleBackupDownloadRequestSuccess(result)
-            is OtherRequestRunning -> _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            is OtherRequestRunning -> {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
+                _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            }
             else -> Unit // Do nothing
         }
     }
@@ -297,11 +311,20 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
-            is NetworkUnavailable -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
-            is RemoteRequestFailure -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
             is Progress -> transitionToProgress(state)
             is Complete -> transitionToComplete(state)
-            is Empty -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            is Empty -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
             else -> Unit // Do nothing
         }
     }
@@ -417,6 +440,12 @@ class BackupDownloadViewModel @Inject constructor(
 
         properties["restore_types"] = asJson.toString()
         AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, properties)
+    }
+
+    private fun trackError(cause: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties["cause"] = cause
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_ERROR, properties)
     }
 
     companion object {
