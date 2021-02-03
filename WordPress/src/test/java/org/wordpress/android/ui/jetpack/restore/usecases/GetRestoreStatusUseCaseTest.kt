@@ -242,7 +242,16 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given get status model is null, when restore status triggers, then return empty`() = test {
+    fun `given get status model is null without restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+
+        val result = useCase.getRestoreStatus(site, null).toList()
+
+        assertThat(result).contains(RestoreRequestState.Empty)
+    }
+
+    @Test
+    fun `given get status model is null with restoreId, when restore status triggers, then return empty`() = test {
         whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
 
         val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
