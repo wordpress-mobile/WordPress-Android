@@ -26,17 +26,20 @@ import javax.inject.Inject
 class ThreatItemBuilder @Inject constructor(
     private val dateFormatWrapper: DateFormatWrapper
 ) {
-    fun buildThreatItem(threatModel: ThreatModel, onThreatItemClicked: ((threatId: Long) -> Unit)? = null) =
-        ThreatItemState(
-            threatId = threatModel.baseThreatModel.id,
-            isFixable = threatModel.baseThreatModel.fixable != null,
-            header = buildThreatItemHeader(threatModel),
-            subHeader = buildThreatItemSubHeader(threatModel),
-            subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
-            icon = buildThreatItemIcon(threatModel),
-            iconBackground = buildThreatItemIconBackground(threatModel),
-            onClick = { onThreatItemClicked?.let { onThreatItemClicked(threatModel.baseThreatModel.id) } }
-        )
+    fun buildThreatItem(
+        threatModel: ThreatModel,
+        onThreatItemClicked: ((threatId: Long) -> Unit)? = null,
+        isFixing: Boolean = false
+    ) = ThreatItemState(
+        threatId = threatModel.baseThreatModel.id,
+        isFixing = isFixing,
+        header = buildThreatItemHeader(threatModel),
+        subHeader = buildThreatItemSubHeader(threatModel),
+        subHeaderColor = buildThreatItemSubHeaderColor(threatModel),
+        icon = buildThreatItemIcon(threatModel),
+        iconBackground = buildThreatItemIconBackground(threatModel),
+        onClick = { onThreatItemClicked?.let { onThreatItemClicked(threatModel.baseThreatModel.id) } }
+    )
 
     fun buildThreatItemHeader(threatModel: ThreatModel) = when (threatModel) {
         is CoreFileModificationThreatModel -> UiStringResWithParams(

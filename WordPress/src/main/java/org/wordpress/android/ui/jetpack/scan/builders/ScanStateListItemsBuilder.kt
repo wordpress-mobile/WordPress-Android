@@ -76,8 +76,8 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         items.addAll(
             fixingThreatIds.mapNotNull { threatId ->
-                scanStore.getThreatModelByThreatId(threatId)?.let { threat ->
-                    threatItemBuilder.buildThreatItem(threat)
+                scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
+                    threatItemBuilder.buildThreatItem(threatModel).copy(isFixing = true)
                 }
             }
         )

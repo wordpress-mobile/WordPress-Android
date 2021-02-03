@@ -653,7 +653,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ),
         ThreatItemState(
             threatId = fakeThreatId,
-            isFixable = true,
+            isFixing = false,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,
