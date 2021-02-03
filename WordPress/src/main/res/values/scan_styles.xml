@@ -14,9 +14,10 @@
         <item name="android:layout_marginBottom">@dimen/margin_large</item>
         <item name="android:clickable">false</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textAllCaps">true</item>
+        <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
+        <item name="android:alpha">@dimen/material_emphasis_medium</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <!--Threat List Item-->
