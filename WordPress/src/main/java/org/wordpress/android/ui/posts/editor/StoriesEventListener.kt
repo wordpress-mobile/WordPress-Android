@@ -119,12 +119,6 @@ class StoriesEventListener @Inject constructor(
         // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
         // within a story block in this post: we will only replace items for which a local-keyed frame has
         // been created before, which can only happen when using the Story Creator.
-        // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
-        // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
-        // mediaId.
-        // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
-        // within a story block in this post: we will only replace items for which a local-keyed frame has
-        // been created before, which can only happen when using the Story Creator.
         storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
                 mediaModel.getId(),
                 mediaModel.getMediaId(),
