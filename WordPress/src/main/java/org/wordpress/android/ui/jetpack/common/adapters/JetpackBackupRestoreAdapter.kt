@@ -4,9 +4,10 @@ import android.view.ViewGroup
 import androidx.annotation.MainThread
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreAdditionalInformationViewHolder
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreFootnoteViewHolder
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.ViewType
+import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreBulletViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackBackupRestoreSubHeaderViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackButtonViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackCheckboxViewHolder
@@ -24,10 +25,6 @@ class JetpackBackupRestoreAdapter(
 ) : RecyclerView.Adapter<JetpackViewHolder>() {
     private val items = mutableListOf<JetpackListItemState>()
 
-    init {
-        setHasStableIds(true)
-    }
-
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -40,12 +37,12 @@ class JetpackBackupRestoreAdapter(
             ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
             ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_RESTORE_ADDITIONAL_INFORMATION.id ->
-                JetpackBackupRestoreAdditionalInformationViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(uiHelpers, parent)
             ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
                     uiHelpers,
                     parent
             )
+            ViewType.BACKUP_RESTORE_BULLET.id -> JetpackBackupRestoreBulletViewHolder(imageManager, uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

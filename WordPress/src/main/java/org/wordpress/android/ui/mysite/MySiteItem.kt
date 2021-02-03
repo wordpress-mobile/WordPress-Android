@@ -12,7 +12,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
-sealed class MySiteItem(val type: Type) {
+sealed class MySiteItem(val type: Type, val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
@@ -32,7 +32,7 @@ sealed class MySiteItem(val type: Type) {
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteItem(SITE_INFO_BLOCK) {
+    ) : MySiteItem(SITE_INFO_BLOCK, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()
@@ -44,8 +44,9 @@ sealed class MySiteItem(val type: Type) {
         val onPagesClick: ListItemInteraction,
         val onPostsClick: ListItemInteraction,
         val onMediaClick: ListItemInteraction,
-        val showPages: Boolean = true
-    ) : MySiteItem(QUICK_ACTIONS_BLOCK)
+        val showPages: Boolean = true,
+        val showStatsFocusPoint: Boolean = false
+    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
@@ -75,6 +76,7 @@ sealed class MySiteItem(val type: Type) {
         val primaryText: UiString,
         @DrawableRes val secondaryIcon: Int? = null,
         val secondaryText: UiString? = null,
+        val showFocusPoint: Boolean = false,
         val onClick: ListItemInteraction
-    ) : MySiteItem(LIST_ITEM)
+    ) : MySiteItem(LIST_ITEM, activeQuickStartItem = showFocusPoint)
 }

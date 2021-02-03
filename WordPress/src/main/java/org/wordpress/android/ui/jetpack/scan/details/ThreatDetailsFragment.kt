@@ -1,7 +1,5 @@
 package org.wordpress.android.ui.jetpack.scan.details
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
@@ -12,6 +10,8 @@ import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.threat_details_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.jetpack.scan.ScanFragment.Companion.ARG_THREAT_ID
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.ShowUpdatedFixState
@@ -22,6 +22,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
+import java.lang.RuntimeException
 import javax.inject.Inject
 
 class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
@@ -73,15 +74,17 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                         is OpenThreatActionDialog -> showThreatActionDialog(this)
 
                         is ShowUpdatedScanStateWithMessage -> {
-                            val intent = Intent().putExtra(REQUEST_SCAN_STATE, this.messageRes)
-                            activity?.setResult(Activity.RESULT_OK, intent)
-                            activity?.finish()
+                            val site = requireNotNull(requireActivity().intent.extras)
+                                .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestScanState(requireActivity(), site, this.messageRes)
                         }
-
                         is ShowUpdatedFixState -> {
-                            val intent = Intent().putExtra(REQUEST_FIX_STATE, this.threatId)
-                            activity?.setResult(Activity.RESULT_OK, intent)
-                            activity?.finish()
+                            val site = requireNotNull(requireActivity().intent.extras)
+                                .getSerializable(WordPress.SITE) as SiteModel
+                            ActivityLauncher.viewScanRequestFixState(requireActivity(), site, this.threatId)
+                        }
+                        is ThreatDetailsNavigationEvents.ShowGetFreeEstimate -> {
+                            ActivityLauncher.openUrlExternal(context, this.url)
                         }
                     }
                 }
@@ -113,13 +116,15 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
         threatActionDialog?.show()
     }
 
+    override fun onActivityCreated(savedInstanceState: Bundle?) {
+        super.onActivityCreated(savedInstanceState)
+        if (requireActivity().intent.extras?.containsKey(WordPress.SITE) != true) {
+            throw RuntimeException("ThreatDetailsFragment - missing siteModel extras.")
+        }
+    }
+
     override fun onPause() {
         super.onPause()
         threatActionDialog?.dismiss()
-    }
-
-    companion object {
-        const val REQUEST_SCAN_STATE = "request_scan_state"
-        const val REQUEST_FIX_STATE = "request_fix_state"
     }
 }

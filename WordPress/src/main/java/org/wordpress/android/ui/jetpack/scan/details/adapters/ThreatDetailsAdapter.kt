@@ -11,6 +11,7 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHold
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatContextLinesViewHolder
+import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatDetailHeaderViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders.ThreatFileNameViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -28,6 +29,7 @@ class ThreatDetailsAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): JetpackViewHolder {
         return when (viewType) {
             ViewType.ICON.id -> JetpackIconViewHolder(imageManager, parent)
+            ViewType.THREAT_DETAIL_HEADER.id -> ThreatDetailHeaderViewHolder(uiHelpers, parent)
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.THREAT_FILE_NAME.id -> ThreatFileNameViewHolder(uiHelpers, parent)

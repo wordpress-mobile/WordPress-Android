@@ -2,9 +2,9 @@ package org.wordpress.android.ui.jetpack.common.viewholders
 
 import android.view.ViewGroup
 import android.view.ViewGroup.LayoutParams
-import android.widget.Button
 import androidx.annotation.LayoutRes
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.google.android.material.button.MaterialButton
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -32,11 +32,18 @@ sealed class JetpackButtonViewHolder(@LayoutRes layout: Int, parent: ViewGroup) 
         }
     }
 
-    internal fun Button.updateState(buttonState: ActionButtonState, uiHelpers: UiHelpers) {
+    internal fun MaterialButton.updateState(buttonState: ActionButtonState, uiHelpers: UiHelpers) {
         updateItemViewVisibility(buttonState.isVisible)
         uiHelpers.setTextOrHide(this, buttonState.text)
         isEnabled = buttonState.isEnabled
         setOnClickListener { buttonState.onClick.invoke() }
+
+        buttonState.iconRes?.let {
+            iconGravity = MaterialButton.ICON_GRAVITY_TEXT_START
+            icon = context.getDrawable(it)
+            val resources = itemView.context.resources
+            iconSize = resources.getDimensionPixelSize(R.dimen.jetpack_button_icon_size)
+        }
     }
 
     private fun updateItemViewVisibility(isVisible: Boolean) {

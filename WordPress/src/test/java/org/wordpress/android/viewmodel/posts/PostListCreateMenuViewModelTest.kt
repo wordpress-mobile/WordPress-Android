@@ -15,17 +15,19 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PO
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_STORY
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
 
 class PostListCreateMenuViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: PostListCreateMenuViewModel
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var wpStoriesFeatureConfig: WPStoriesFeatureConfig
     @Mock lateinit var site: SiteModel
 
     @Before
     fun setUp() {
-        viewModel = PostListCreateMenuViewModel(appPrefsWrapper, wpStoriesFeatureConfig)
+        viewModel = PostListCreateMenuViewModel(appPrefsWrapper, analyticsTrackerWrapper, wpStoriesFeatureConfig)
     }
 
     @Test

@@ -172,7 +172,6 @@ class HomePagePickerViewModelTest {
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(defaultTemplateSlug)
-        assertThat(captor.value.segmentId).isNull()
     }
 
     @Test
@@ -184,7 +183,6 @@ class HomePagePickerViewModelTest {
         val captor = ArgumentCaptor.forClass(DesignSelectionAction::class.java)
         verify(onDesignActionObserver).onChanged(captor.capture())
         assertThat(captor.value.template).isEqualTo(mockedDesignSlug)
-        assertThat(captor.value.segmentId).isEqualTo(mockedDesignSegmentId)
     }
 
     @Test

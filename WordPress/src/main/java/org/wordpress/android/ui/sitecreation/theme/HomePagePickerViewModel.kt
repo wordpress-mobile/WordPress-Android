@@ -75,9 +75,9 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
     val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
 
-    sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
-        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
-        class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    sealed class DesignSelectionAction(val template: String) {
+        object Skip : DesignSelectionAction(defaultTemplateSlug)
+        class Choose(template: String) : DesignSelectionAction(template)
     }
 
     sealed class DesignPreviewAction {
@@ -205,7 +205,7 @@ class HomePagePickerViewModel @Inject constructor(
             layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
                 val template = layout.slug!!
                 analyticsTracker.trackSiteDesignSelected(template)
-                _onDesignActionPressed.value = DesignSelectionAction.Choose(template, layout.segmentId)
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
                 return
             }
         }

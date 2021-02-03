@@ -10,6 +10,7 @@ import android.text.TextUtils;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.StringRes;
 import androidx.core.app.TaskStackBuilder;
 import androidx.fragment.app.Fragment;
 
@@ -638,6 +639,31 @@ public class ActivityLauncher {
         }
         Intent intent = new Intent(activity, ScanActivity.class);
         intent.putExtra(WordPress.SITE, site);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        activity.startActivity(intent);
+    }
+
+    public static void viewScanRequestScanState(Activity activity, SiteModel site, @StringRes int messageRes) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ScanActivity.REQUEST_SCAN_STATE, messageRes);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        activity.startActivity(intent);
+    }
+
+    public static void viewScanRequestFixState(Activity activity, SiteModel site, long threatId) {
+        if (site == null) {
+            ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
+            return;
+        }
+        Intent intent = new Intent(activity, ScanActivity.class);
+        intent.putExtra(WordPress.SITE, site);
+        intent.putExtra(ScanActivity.REQUEST_FIX_STATE, threatId);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         activity.startActivity(intent);
     }
 
@@ -651,15 +677,10 @@ public class ActivityLauncher {
         activity.startActivity(intent);
     }
 
-    public static void viewThreatDetailsForResult(@NonNull Fragment fragment, @NonNull Long threatId) {
+    public static void viewThreatDetails(@NonNull Fragment fragment, SiteModel site, @NonNull Long threatId) {
         Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
         intent.putExtra(ARG_THREAT_ID, threatId);
-        fragment.startActivityForResult(intent, RequestCodes.SHOW_THREAT_DETAILS);
-    }
-
-    public static void viewThreatDetails(@NonNull Fragment fragment, @NonNull Long threatId) {
-        Intent intent = new Intent(fragment.getContext(), ThreatDetailsActivity.class);
-        intent.putExtra(ARG_THREAT_ID, threatId);
+        intent.putExtra(WordPress.SITE, site);
         fragment.startActivity(intent);
     }
 

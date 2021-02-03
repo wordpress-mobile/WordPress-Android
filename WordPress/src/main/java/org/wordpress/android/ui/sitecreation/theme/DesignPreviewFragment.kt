@@ -30,6 +30,7 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.skip
 import javax.inject.Inject
 
 /**
@@ -109,7 +110,8 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
-        viewModel.previewMode.observe(viewLifecycleOwner, Observer { load() })
+        // We're skipping the first emitted value since it derives from the view model initialization (`start` method)
+        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, Observer { load() })
 
         viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, Observer {
             previewModeSelectorPopup.show(viewModel)

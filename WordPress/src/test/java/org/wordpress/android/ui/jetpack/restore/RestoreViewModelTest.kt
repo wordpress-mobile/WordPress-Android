@@ -6,7 +6,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.argThat
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -14,11 +14,13 @@ import org.mockito.Mock
 import org.mockito.Mockito.clearInvocations
 import org.mockito.Mockito.verify
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.R.string
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel
+import org.wordpress.android.fluxc.model.activity.RewindStatusModel.Rewind.Status.FINISHED
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
@@ -29,7 +31,8 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.THEMES
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
-import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Success
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.COMPLETE
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.DETAILS
 import org.wordpress.android.ui.jetpack.restore.RestoreStep.ERROR
@@ -66,6 +69,7 @@ class RestoreViewModelTest : BaseUnitTest() {
     @Mock private lateinit var getActivityLogItemUseCase: GetActivityLogItemUseCase
     @Mock private lateinit var restoreStatusUseCase: GetRestoreStatusUseCase
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
+    @Mock private lateinit var checkboxSpannableLabel: CheckboxSpannableLabel
     private lateinit var availableItemsProvider: JetpackAvailableItemsProvider
     private lateinit var stateListItemBuilder: RestoreStateListItemBuilder
 
@@ -75,10 +79,8 @@ class RestoreViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: RestoreViewModel
 
     private val restoreState = RestoreState(
-            activityId = "activityId",
             rewindId = "rewindId",
             restoreId = 100L,
-            siteId = 200L,
             optionsSelected = listOf(
                     Pair(THEMES.id, true),
                     Pair(PLUGINS.id, true),
@@ -87,7 +89,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                     Pair(ROOTS.id, true),
                     Pair(CONTENTS.id, true)
             ),
-            published = Date(1609690147756)
+            published = Date(1609690147756),
+            shouldInitProgress = true
     )
 
     @Before
@@ -95,7 +98,7 @@ class RestoreViewModelTest : BaseUnitTest() {
         whenever(wizardManager.navigatorLiveData).thenReturn(wizardManagerNavigatorLiveData)
 
         availableItemsProvider = JetpackAvailableItemsProvider()
-        stateListItemBuilder = RestoreStateListItemBuilder()
+        stateListItemBuilder = RestoreStateListItemBuilder(checkboxSpannableLabel)
         viewModel = RestoreViewModel(
                 wizardManager,
                 availableItemsProvider,
@@ -103,10 +106,25 @@ class RestoreViewModelTest : BaseUnitTest() {
                 stateListItemBuilder,
                 postRestoreUseCase,
                 restoreStatusUseCase,
-                TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(getActivityLogItemUseCase.get(anyOrNull())).thenReturn(fakeActivityLogModel)
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_themes, null))
+                .thenReturn("themes")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_plugins, null))
+                .thenReturn("plugins")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_media_uploads, null))
+                .thenReturn("uploads")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_roots,
+                R.string.backup_item_roots_hint))
+                .thenReturn("roots")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(
+                R.string.backup_item_contents,
+                R.string.backup_item_content_hint))
+                .thenReturn("contents")
+        whenever(checkboxSpannableLabel.buildSpannableLabel(R.string.backup_item_sqls, R.string.backup_item_sqls_hint))
+                .thenReturn("sqls")
     }
 
     @Test
@@ -254,8 +272,10 @@ class RestoreViewModelTest : BaseUnitTest() {
         val uiStates = initObservers().uiStates
         clearInvocations(wizardManager)
 
+        whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
+                .thenReturn(postSuccess)
         whenever(restoreStatusUseCase.getRestoreStatus(anyOrNull(), anyOrNull()))
-                .thenReturn(flow { emit(Progress("rewindId", 0, "nothing", "nothing")) })
+                .thenReturn(flowOf(Complete("Id", 100L, Date(1609690147756))))
 
         startViewModelForStep(PROGRESS)
 
@@ -306,51 +326,51 @@ class RestoreViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given warning step, when no network connection, then a snackbar message is shown`() = test {
+    fun `given progress step, when no network connection, then a snackbar message is shown`() = test {
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreNetworkError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
 
-        startViewModelForStep(WARNING)
-        viewModel.showStep(WizardNavigationTarget(WARNING, restoreState))
+        startViewModelForStep(PROGRESS)
+        viewModel.showStep(WizardNavigationTarget(PROGRESS, restoreState))
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.error_network_connection))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.error_network_connection))
     }
 
     @Test
-    fun `given warning step, when no remote request fails, then a snackbar message is shown`() = test {
+    fun `given progress step, when remote request fails, then a snackbar message is shown`() = test {
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(postRestoreRemoteRequestError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
 
-        startViewModelForStep(WARNING)
-        viewModel.showStep(WizardNavigationTarget(WARNING, restoreState))
+        startViewModelForStep(PROGRESS)
+        viewModel.showStep(WizardNavigationTarget(PROGRESS, restoreState))
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.rewind_generic_failure))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.restore_generic_failure))
     }
 
     @Test
-    fun `given warning step, when another request is running, then a snackbar message is shown`() = test {
+    fun `given progress step, when another request is running, then a snackbar message is shown`() = test {
         whenever(postRestoreUseCase.postRestoreRequest(anyOrNull(), anyOrNull(), anyOrNull()))
                 .thenReturn(otherRequestRunningError)
 
         val uiStates = initObservers().uiStates
         val msgs = initObservers().snackbarMessages
 
-        startViewModelForStep(WARNING)
-        viewModel.showStep(WizardNavigationTarget(WARNING, restoreState))
+        startViewModelForStep(PROGRESS)
+        viewModel.showStep(WizardNavigationTarget(PROGRESS, restoreState))
 
         ((uiStates.last().items).first { it is ActionButtonState } as ActionButtonState).onClick.invoke()
 
-        assertThat(msgs.last().message).isEqualTo(UiStringRes(string.rewind_another_process_running))
+        assertThat(msgs.last().message).isEqualTo(UiStringRes(R.string.restore_another_process_running))
     }
 
     private fun startViewModel(savedInstanceState: Bundle? = null) {
@@ -382,7 +402,8 @@ class RestoreViewModelTest : BaseUnitTest() {
                 wizardFinishedObserver,
                 snackbarMsgs,
                 navigationEvents,
-                uiStates)
+                uiStates
+        )
     }
 
     private data class Observers(
@@ -408,4 +429,6 @@ class RestoreViewModelTest : BaseUnitTest() {
     private val postRestoreNetworkError = RestoreRequestState.Failure.NetworkUnavailable
     private val postRestoreRemoteRequestError = RestoreRequestState.Failure.RemoteRequestFailure
     private val otherRequestRunningError = RestoreRequestState.Failure.OtherRequestRunning
+    private val postSuccess = Success(rewindId = "rewindId", requestRewindId = "rewindId", restoreId = 1L)
+    private val getFinished = FINISHED
 }

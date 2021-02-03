@@ -792,6 +792,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_photo_added";
             case EDITOR_ADDED_FILE_VIA_LIBRARY:
                 return "editor_file_added";
+            case EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY:
+                return "editor_audio_file_added";
             case MEDIA_PHOTO_OPTIMIZED:
                 return "media_photo_optimized";
             case MEDIA_PHOTO_OPTIMIZE_ERROR:
@@ -1960,6 +1962,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
                 return "reader_mark_as_unseen";
+            case MY_SITE_CREATE_SHEET_SHOWN:
+                return "my_site_create_sheet_shown";
+            case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
+                return "my_site_create_sheet_action_tapped";
+            case POST_LIST_CREATE_SHEET_SHOWN:
+                return "post_list_create_sheet_shown";
+            case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
+                return "post_list_create_sheet_action_tapped";
         }
         return null;
     }
