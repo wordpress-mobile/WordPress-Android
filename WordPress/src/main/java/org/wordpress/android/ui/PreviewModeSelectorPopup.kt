@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.theme
+package org.wordpress.android.ui
 
 import android.content.Context
 import android.graphics.drawable.ColorDrawable
@@ -29,13 +29,13 @@ class PreviewModeSelectorPopup(val context: Context, val button: View) : ListPop
 
     fun show(handler: PreviewModeHandler) {
         button.post(Runnable {
-            setAdapter(PreviewModeMenuAdapter(context, handler.getPreviewMode()))
+            setAdapter(PreviewModeMenuAdapter(context, handler.selectedPreviewMode()))
             setOnItemClickListener { parent, _, position, _ ->
                 dismiss()
                 val adapter = parent.adapter as PreviewModeMenuAdapter
                 val selected = adapter.getItem(position)
-                if (selected !== handler.getPreviewMode()) {
-                    handler.setPreviewMode(selected)
+                if (selected !== handler.selectedPreviewMode()) {
+                    handler.onPreviewModeChanged(selected)
                 }
             }
             show()
