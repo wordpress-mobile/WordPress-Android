@@ -85,7 +85,6 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Dismissed
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Negative
 import org.wordpress.android.ui.posts.BasicDialogViewModel.DialogInteraction.Positive
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -128,8 +127,7 @@ class MySiteViewModel
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
-    private val currentAvatarSource: CurrentAvatarSource,
-    private val eventBusWrapper: EventBusWrapper
+    private val currentAvatarSource: CurrentAvatarSource
 ) : ScopedViewModel(mainDispatcher) {
     private val _onSnackbarMessage = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onTechInputDialogShown = MutableLiveData<Event<TextInputDialogModel>>()
@@ -182,7 +180,7 @@ class MySiteViewModel
             siteItems.add(
                     QuickActionsBlock(
                             ListItemInteraction.create(this::quickActionStatsClick),
-                            ListItemInteraction.create(activeTask, this::quickActionPagesClick),
+                            ListItemInteraction.create(this::quickActionPagesClick),
                             ListItemInteraction.create(this::quickActionPostsClick),
                             ListItemInteraction.create(this::quickActionMediaClick),
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages,
@@ -340,12 +338,10 @@ class MySiteViewModel
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
-    private fun quickActionPagesClick(activeTask: QuickStartTask?) {
+    private fun quickActionPagesClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
-        if (activeTask == EDIT_HOMEPAGE) {
-            eventBusWrapper.postSticky(QuickStartEvent(activeTask))
-        }
+        quickStartRepository.requestNextStepOfTask(EDIT_HOMEPAGE)
         _onNavigation.value = Event(OpenPages(site))
     }
 

@@ -123,7 +123,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
-    @Mock lateinit var eventBusWrapper: EventBusWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -180,8 +179,7 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartItemBuilder,
-                currentAvatarSource,
-                eventBusWrapper
+                currentAvatarSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -584,24 +582,13 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen and emits event when active task is EDIT_HOMEPAGE`() {
+    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
         quickStartUpdate.value = QuickStartUpdate(EDIT_HOMEPAGE, listOf())
         initSelectedSite()
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
-        verify(eventBusWrapper).postSticky(QuickStartEvent(EDIT_HOMEPAGE))
-        assertThat(navigationActions).containsOnly(OpenPages(site))
-    }
-
-    @Test
-    fun `quick action pages click opens pages screen and does not emit any event when active task not present`() {
-        quickStartUpdate.value = QuickStartUpdate(null, listOf())
-        initSelectedSite()
-
-        findQuickActionsBlock()?.onPagesClick?.click()
-
-        verifyZeroInteractions(eventBusWrapper)
+        verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
