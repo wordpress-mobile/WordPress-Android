@@ -344,7 +344,8 @@ public class ReaderPostRenderer {
               // force font style
         sbHtml.append(" body.reader-full-post__story-content { font-family: 'Noto Serif', serif; font-weight: 400; ")
               .append("font-size: 16px; margin: 0px; padding: 0px; }")
-              .append(" p, div, li { line-height: 1.6em; font-size: 100%; }")
+              .append(" p, div, li { line-height: 1.6em; font-size: 100%; color: var(--color-text) !important; }")
+              .append(" .has-inline-color { color: var(--color-text) !important; }")
               .append(" body, p, div { max-width: 100% !important; word-wrap: break-word; }")
               // set line-height, font-size but not for .tiled-gallery divs when rendering as tiled
               // gallery as those will be handled with the .tiled-gallery rules bellow.
