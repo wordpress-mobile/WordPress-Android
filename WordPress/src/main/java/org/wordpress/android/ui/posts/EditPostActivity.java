@@ -3288,7 +3288,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     @Override
     public void onReplaceStoryEditedBlockActionSent() {
-        // when a replaceBlock signal has been sent, it uses the DeferredEventemitter so we have to wait for
+        // when a replaceBlock signal has been sent, it uses the DeferredEventEmitter so we have to wait for
         // the block replacement to be completed before we can start throwing block-related events at it
         // otherwise these events will miss their target
         mStoriesEventListener.pauseListening();
