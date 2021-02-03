@@ -416,6 +416,16 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun dateRangeTrackDateRangeFilterSelectedEventFired() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        val dateRange = Pair(10L, 20L)
+
+        viewModel.onDateRangeSelected(dateRange)
+
+        verify(activityLogTracker).trackDateRangeFilterSelected(dateRange, rewindableOnly)
+    }
+
+    @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)

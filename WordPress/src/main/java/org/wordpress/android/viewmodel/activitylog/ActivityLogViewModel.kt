@@ -520,7 +520,7 @@ class ActivityLogViewModel @Inject constructor(
             // adjust time of the end of the date range to 23:59:59
             Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
         }
-        activityLogTracker.trackDateRangeFilterSelected(dateRange)
+        activityLogTracker.trackDateRangeFilterSelected(dateRange, rewindableOnly)
         currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)

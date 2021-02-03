@@ -23,7 +23,7 @@ class ActivityLogTracker @Inject constructor(
         }
     }
 
-    fun trackDateRangeFilterSelected(dateRange: Pair<Long, Long>?) {
+    fun trackDateRangeFilterSelected(dateRange: Pair<Long, Long>?, rewindableOnly: Boolean) {
         val start = dateRange?.first
         val end = dateRange?.second
         if (start == null || end == null) {
@@ -34,7 +34,11 @@ class ActivityLogTracker @Inject constructor(
             map["duration"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date(end)) + 1
             // Distance from the startDate to today (in days)
             map["distance"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date())
-            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            if (rewindableOnly) {
+                tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            } else {
+                tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            }
         }
     }
 

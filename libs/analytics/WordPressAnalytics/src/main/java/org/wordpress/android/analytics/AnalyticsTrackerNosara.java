@@ -1682,6 +1682,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_backup_rewind_started";
             case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
                 return "jetpack_backup_filterbar_range_button_tapped";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "jetpack_backup_filterbar_select_range";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:
