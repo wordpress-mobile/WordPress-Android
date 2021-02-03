@@ -8,11 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.gson.Gson
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -64,6 +67,7 @@ import org.wordpress.android.util.wizard.WizardStep
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -249,7 +253,11 @@ class RestoreViewModel @Inject constructor(
             WARNING -> buildWarning()
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
-            ERROR -> buildError(RestoreErrorTypes.fromInt(target.wizardState.errorType ?: GenericFailure.id))
+            ERROR -> buildError(
+                    RestoreErrorTypes.fromInt(
+                            target.wizardState.errorType ?: GenericFailure.id
+                    )
+            )
         }
     }
 
@@ -269,15 +277,31 @@ class RestoreViewModel @Inject constructor(
     private fun buildOptionsSelected(items: List<JetpackListItemState>): List<Pair<Int, Boolean>> {
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
         return listOf(
-                Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
-                Pair(PLUGINS.id, checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true),
                 Pair(
-                        MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                        ?: true
+                        THEMES.id,
+                        checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true
                 ),
-                Pair(SQLS.id, checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true),
-                Pair(ROOTS.id, checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true),
-                Pair(CONTENTS.id, checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true)
+                Pair(
+                        PLUGINS.id,
+                        checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true
+                ),
+                Pair(
+                        MEDIA_UPLOADS.id,
+                        checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                                ?: true
+                ),
+                Pair(
+                        SQLS.id,
+                        checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true
+                ),
+                Pair(
+                        ROOTS.id,
+                        checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true
+                ),
+                Pair(
+                        CONTENTS.id,
+                        checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true
+                )
         )
     }
 
@@ -429,6 +453,7 @@ class RestoreViewModel @Inject constructor(
         if (restoreState.rewindId == null) {
             transitionToError(GenericFailure)
         } else {
+            trackRestoreConfirmed()
             wizardManager.showNextStep()
         }
     }
@@ -458,6 +483,23 @@ class RestoreViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
+    }
+
+    private fun trackRestoreConfirmed() {
+        val properties: MutableMap<String, String?> = HashMap()
+        val propertiesSetup: MutableMap<String, Boolean> = HashMap()
+        val types = buildRewindRequestTypes(restoreState.optionsSelected)
+        propertiesSetup["themes"] = types.themes
+        propertiesSetup["plugins"] = types.plugins
+        propertiesSetup["uploads"] = types.uploads
+        propertiesSetup["sqls"] = types.sqls
+        propertiesSetup["roots"] = types.roots
+        propertiesSetup["contents"] = types.contents
+        val gson = Gson()
+        val asJson = gson.toJson(propertiesSetup)
+
+        properties["restore_types"] = asJson.toString()
+        AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, properties)
     }
 
     companion object {

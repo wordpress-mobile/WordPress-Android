@@ -8,11 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import com.google.gson.Gson
 import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -62,6 +65,7 @@ import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -361,6 +365,7 @@ class BackupDownloadViewModel @Inject constructor(
         if (rewindId == null) {
             transitionToError(BackupDownloadErrorTypes.GenericFailure)
         } else {
+            trackBackupDownloadConfirmed(types)
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(
                         rewindId,
@@ -396,6 +401,22 @@ class BackupDownloadViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
+    }
+
+    private fun trackBackupDownloadConfirmed(types: BackupDownloadRequestTypes) {
+        val properties: MutableMap<String, String?> = HashMap()
+        val propertiesSetup: MutableMap<String, Boolean> = HashMap()
+        propertiesSetup["themes"] = types.themes
+        propertiesSetup["plugins"] = types.plugins
+        propertiesSetup["uploads"] = types.uploads
+        propertiesSetup["sqls"] = types.sqls
+        propertiesSetup["roots"] = types.roots
+        propertiesSetup["contents"] = types.contents
+        val gson = Gson()
+        val asJson = gson.toJson(propertiesSetup)
+
+        properties["restore_types"] = asJson.toString()
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, properties)
     }
 
     companion object {
