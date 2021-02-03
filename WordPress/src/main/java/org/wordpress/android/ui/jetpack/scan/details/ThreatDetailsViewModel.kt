@@ -5,12 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
@@ -93,6 +91,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun ignoreThreat() {
+        scanTracker.trackOnIgnoreThreatConfirmed(threatModel.baseThreatModel.signature)
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
@@ -104,7 +103,6 @@ class ThreatDetailsViewModel @Inject constructor(
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
-
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
@@ -125,6 +123,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onIgnoreThreatButtonClicked() {
+        scanTracker.trackOnIgnoreThreatButtonClicked(threatModel.baseThreatModel.signature)
         updateNavigationEvent(
             OpenThreatActionDialog(
                 title = UiStringRes(R.string.threat_ignore),

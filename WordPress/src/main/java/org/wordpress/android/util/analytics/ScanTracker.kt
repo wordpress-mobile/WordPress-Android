@@ -46,6 +46,20 @@ class ScanTracker @Inject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_RUN_TAPPED)
     }
 
+    fun trackOnIgnoreThreatButtonClicked(signature: String) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_SCAN_IGNORE_THREAT_DIALOG_OPEN,
+                mapOf("threat_signature" to signature)
+        )
+    }
+
+    fun trackOnIgnoreThreatConfirmed(signature: String) {
+        analyticsTrackerWrapper.track(
+                AnalyticsTracker.Stat.JETPACK_SCAN_THREAT_IGNORE_TAPPED,
+                mapOf("threat_signature" to signature)
+        )
+    }
+
     enum class OnThreatItemClickSource(val section: String) {
         HISTORY("history"), SCANNER("scanner")
     }
