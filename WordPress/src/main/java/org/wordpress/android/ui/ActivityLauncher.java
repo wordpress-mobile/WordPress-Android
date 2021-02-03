@@ -614,7 +614,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.JETPACK_BACKUP_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, true);

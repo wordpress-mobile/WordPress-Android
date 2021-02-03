@@ -1676,6 +1676,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activitylog_filterbar_reset_range";
             case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
                 return "activitylog_filterbar_reset_type";
+            case JETPACK_BACKUP_LIST_OPENED:
+                return "jetpack_backup_list_opened";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:
