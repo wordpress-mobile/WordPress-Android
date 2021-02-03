@@ -473,6 +473,13 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun dateRangeTrackDateRangeFilterButtonClickedEventFired() {
+        viewModel.dateRangePickerClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterButtonClicked(rewindableOnly)
+    }
+
+    @Test
     fun dateRangeEndTimestampGetsAdjustedToEndOfDay() {
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
 

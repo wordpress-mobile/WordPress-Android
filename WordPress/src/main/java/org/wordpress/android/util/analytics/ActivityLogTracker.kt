@@ -15,8 +15,12 @@ class ActivityLogTracker @Inject constructor(
     private val tracker: AnalyticsTrackerWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    fun trackDateRangeFilterButtonClicked() {
-        tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+    fun trackDateRangeFilterButtonClicked(rewindableOnly: Boolean) {
+        if (rewindableOnly) {
+            tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+        } else {
+            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+        }
     }
 
     fun trackDateRangeFilterSelected(dateRange: Pair<Long, Long>?) {

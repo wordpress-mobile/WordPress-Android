@@ -511,7 +511,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun dateRangePickerClicked() {
-        activityLogTracker.trackDateRangeFilterButtonClicked()
+        activityLogTracker.trackDateRangeFilterButtonClicked(rewindableOnly)
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
