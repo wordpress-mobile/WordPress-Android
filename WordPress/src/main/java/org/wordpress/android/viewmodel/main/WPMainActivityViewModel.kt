@@ -27,6 +27,7 @@ import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
+import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -122,6 +123,8 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     private fun onCreateActionClicked(actionType: ActionType) {
+        val properties = mapOf("action" to actionType.name.toLowerCase(Locale.ROOT))
+        analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_ACTION_TAPPED, properties)
         _isBottomSheetShowing.postValue(Event(false))
         _createAction.postValue(actionType)
 
@@ -154,26 +157,20 @@ class WPMainActivityViewModel @Inject constructor(
 
         _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
 
-        if (shouldShowStories(site)) {
+        if (shouldShowStories(site) || hasFullAccessToContent(site)) {
+            // The user has at least two create options available for this site (pages and/or story posts),
+            // so we should show a bottom sheet.
+            // Creation options added in the future should also be weighed here.
+
+            // Reload main actions, since the first time this is initialized the SiteModel may not contain the
+            // latest info.
             loadMainActions(site)
+
+            analyticsTracker.track(Stat.MY_SITE_CREATE_SHEET_SHOWN)
             _isBottomSheetShowing.value = Event(true)
         } else {
-            // NOTE: this whole piece of code and comment below to be removed when we remove the feature flag.
-            // Also note: This comment below and code as is is in `develop` at the time of writing the feature
-            // flag, so bringing it all back in. See https://github.com/wordpress-mobile/WordPress-Android/pull/11930
-            // ----------------------
-            // Currently this bottom sheet has only 2 options.
-            // We should evaluate to re-introduce the bottom sheet also for users without full access to content
-            // if user has at least 2 options (eventually filtering the content not accessible like pages in this case)
-            // See p5T066-1cA-p2/#comment-4463
-            if (hasFullAccessToContent(site)) {
-                // reload main actions given the first time this is initialized, the SiteModel may not contain the
-                // latest info
-                loadMainActions(site)
-                _isBottomSheetShowing.value = Event(true)
-            } else {
-                _createAction.postValue(CREATE_NEW_POST)
-            }
+            // User only has one option - creating a post. Skip the bottom sheet and go straight to that action.
+            _createAction.postValue(CREATE_NEW_POST)
         }
     }
 

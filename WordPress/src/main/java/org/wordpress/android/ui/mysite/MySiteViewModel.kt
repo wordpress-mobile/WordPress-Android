@@ -25,6 +25,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
@@ -184,6 +185,7 @@ class MySiteViewModel
                             ListItemInteraction.create(this::quickActionPostsClick),
                             ListItemInteraction.create(this::quickActionMediaClick),
                             site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                            activeTask == CHECK_STATS,
                             activeTask == EDIT_HOMEPAGE
                     )
             )
@@ -251,7 +253,10 @@ class MySiteViewModel
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
-                STATS -> getStatsNavigationActionForSite(site)
+                STATS -> {
+                    quickStartRepository.completeTask(CHECK_STATS)
+                    getStatsNavigationActionForSite(site)
+                }
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> {
@@ -335,6 +340,7 @@ class MySiteViewModel
     private fun quickActionStatsClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
+        quickStartRepository.completeTask(CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 

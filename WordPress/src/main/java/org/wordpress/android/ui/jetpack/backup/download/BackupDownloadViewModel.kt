@@ -211,7 +211,8 @@ class BackupDownloadViewModel @Inject constructor(
     private fun buildError(errorType: BackupDownloadErrorTypes) {
         _uiState.value = ErrorState(
                 errorType = errorType,
-                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                items = stateListItemBuilder.buildErrorListStateErrorItems(
+                        errorType = errorType,
                         onDoneClick = this@BackupDownloadViewModel::onDoneClick
                 )
         )
@@ -292,7 +293,7 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
-            is NetworkUnavailable -> transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
+            is NetworkUnavailable -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             is RemoteRequestFailure -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             is Progress -> transitionToProgress(state)
             is Complete -> transitionToComplete(state)

@@ -3367,7 +3367,7 @@
     <string name="backup_download_details_page_title">Download Backup</string>
     <string name="backup_download_details_header">Create downloadable backup</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
-    <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
+    <string name="backup_download_details_choose_items_header">Items included in this download</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
@@ -3377,18 +3377,21 @@
     <string name="backup_download_progress_page_title">Download Backup</string>
     <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
-    <string name="backup_download_progress_action_button">OK, notify me!</string>
+    <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
-    <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
+    <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
-    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
-    <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
-    <string name="backup_item_sqls">Site database (SQL)</string>
+    <string name="backup_item_roots">WordPress root</string>
+    <string name="backup_item_roots_hint">(includes wp-config.php and any non WordPress files)</string>
+    <string name="backup_item_contents">WP-content directory</string>
+    <string name="backup_item_content_hint">(excludes themes, plugins, and uploads)</string>
+    <string name="backup_item_sqls">Site database</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
 
     <string name="backup_download_complete_page_title">Your Backup</string>
     <string name="backup_download_complete_header">Your backup is now available for download</string>
@@ -3400,7 +3403,7 @@
     <string name="backup_download_complete_download_share_action_button_content_description">Share link button</string>
     <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
     <string name="backup_download_complete_failed_title">Download failed</string>
-    <string name="backup_download_complete_failed_description">We couldn\'t create your backup. Please try again later.</string>
+    <string name="backup_download_complete_failed_description">We couldn\'t create your backup</string>
     <string name="backup_download_complete_failed_action_button">Done</string>
     <string name="backup_download_complete_failed_action_button_content_description">Done button</string>
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
@@ -3420,9 +3423,9 @@
 
     <string name="restore_warning_page_title" translatable="false">@string/restore</string>
     <string name="restore_warning_header">Warning</string>
-    <string name="restore_warning_description_with_two_parameters">Are you sure you want to rewind your site back to %1$s at %2$s?
-        This will remove all content and options created or changed since then.</string>
-    <string name="restore_warning_action_button">Confirm restore site</string>
+    <string name="restore_warning_description_with_two_parameters">Are you sure you want to revert your site back to %1$s at %2$s?
+        Anything you changed since then will be lost.</string>
+    <string name="restore_warning_action_button">Confirm</string>
     <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
     <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
 
@@ -3445,12 +3448,25 @@
     <string name="restore_complete_visit_site_button_content_description">Visit site button</string>
 
     <string name="restore_complete_failed_title">Restore failed</string>
-    <string name="restore_complete_failed_description">We couldn\'t restore your site. Please try again later.</string>
+    <string name="restore_complete_failed_description">We couldn\'t restore your site</string>
     <string name="restore_complete_failed_action_button" translatable="false">@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Done button</string>
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
 
-    <string name="rewind_generic_failure" translatable="false">@string/backup_download_generic_failure</string>
-    <string name="rewind_another_process_running">There is another restore running.</string>
+    <string name="restore_generic_failure" translatable="false">@string/backup_download_generic_failure</string>
+    <string name="restore_another_process_running">There is another restore running.</string>
+    <string name="restore_status_failure_heading">Hmm, we couldn\'t find your restore status</string>
+    <string name="restore_status_failure_bullet1">We couldn\'t find the status to say how long your restore will take.</string>
+    <string name="restore_status_failure_bullet2">We\'ll still attempt to restore your site.</string>
+    <string name="restore_status_failure_bullet3">We\’ll notify you when its done.</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">Clock icon</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Checkmark icon</string>
+
+    <string name="backup_download_status_failure_heading">Hmm, we couldn\'t find your downloadable backup status</string>
+    <string name="backup_download_status_failure_bullet1">We couldn\'t find the status to say how long your downloadable backup will take.</string>
+    <string name="backup_download_status_failure_bullet2">We\'ll still attempt to create your downloadable backup file.</string>
+    <string name="backup_download_status_failure_bullet3" translatable="false">@string/restore_status_failure_bullet3</string>
+    <string name="backup_download_status_bullet_clock_icon_content_desc" translatable="false">@string/restore_status_bullet_clock_icon_content_desc</string>
+    <string name="backup_download_status_bullet_checkmark_icon_content_desc" translatable="false">@string/restore_status_bullet_checkmark_icon_content_desc</string>
 
 </resources>

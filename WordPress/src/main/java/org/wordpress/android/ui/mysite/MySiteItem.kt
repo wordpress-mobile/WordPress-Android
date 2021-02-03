@@ -45,8 +45,9 @@ sealed class MySiteItem(val type: Type, val activeQuickStartItem: Boolean = fals
         val onPostsClick: ListItemInteraction,
         val onMediaClick: ListItemInteraction,
         val showPages: Boolean = true,
+        val showStatsFocusPoint: Boolean = false,
         val showPagesFocusPoint: Boolean = false
-    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showPagesFocusPoint)
+    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
