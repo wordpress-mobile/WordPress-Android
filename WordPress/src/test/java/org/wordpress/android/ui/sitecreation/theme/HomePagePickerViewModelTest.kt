@@ -215,7 +215,7 @@ class HomePagePickerViewModelTest {
     @Test
     fun `when the changes the preview mode the thumbnails or preview change`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailModeChanged(PreviewMode.DESKTOP)
+        viewModel.onPreviewModeChanged(PreviewMode.DESKTOP)
         val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
         verify(previewModeObserver, times(2)).onChanged(captor.capture())
         assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.DESKTOP)

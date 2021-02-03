@@ -27,6 +27,7 @@ import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
 import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.util.skip
 import javax.inject.Inject
 
 /**
@@ -88,7 +89,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                     webView.setVisible(true)
                     errorView.setVisible(false)
                     desktopPreviewHint.setText(
-                            when (viewModel.getPreviewMode()) {
+                            when (viewModel.selectedPreviewMode()) {
                                 MOBILE -> R.string.web_preview_mobile
                                 TABLET -> R.string.web_preview_tablet
                                 DESKTOP -> R.string.web_preview_desktop
@@ -105,7 +106,8 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
-        viewModel.previewMode.observe(viewLifecycleOwner, Observer { load() })
+        // We're skipping the first emitted value since it derives from the view model initialization (`start` method)
+        viewModel.previewMode.skip(1).observe(viewLifecycleOwner, Observer { load() })
 
         viewModel.onPreviewModeButtonPressed.observe(viewLifecycleOwner, Observer {
             previewModeSelectorPopup.show(viewModel)
@@ -125,7 +127,7 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
                 super.onPageFinished(view, url)
                 val widthScript = context?.getString(
                         R.string.web_preview_width_script,
-                        viewModel.getPreviewMode().previewWidth
+                        viewModel.selectedPreviewMode().previewWidth
                 )
                 if (widthScript != null) {
                     view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
