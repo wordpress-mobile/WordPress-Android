@@ -1382,12 +1382,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_background_service_updated";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED:
                 return "enhanced_site_creation_site_design_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_thumbnail_mode_button_tapped";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED:
                 return "enhanced_site_creation_site_design_selected";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED:
                 return "enhanced_site_creation_site_design_skipped";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED:
                 return "enhanced_site_creation_site_design_preview_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_preview_mode_button_tapped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED:
+                return "enhanced_site_creation_site_design_preview_mode_changed";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING:
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
@@ -1976,6 +1982,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_backup_download_file_download_tapped";
             case JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED:
                 return "jetpack_backup_download_share_link_tapped";
+            case MY_SITE_CREATE_SHEET_SHOWN:
+                return "my_site_create_sheet_shown";
+            case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
+                return "my_site_create_sheet_action_tapped";
+            case POST_LIST_CREATE_SHEET_SHOWN:
+                return "post_list_create_sheet_shown";
+            case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
+                return "post_list_create_sheet_action_tapped";
         }
         return null;
     }
