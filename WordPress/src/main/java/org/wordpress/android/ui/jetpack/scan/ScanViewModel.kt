@@ -148,6 +148,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun fixAllThreats() {
+        scanTracker.trackOnFixAllThreatsConfirmed()
         launch {
             updateActionButtons(isVisible = false)
             when (fixThreatsUseCase.fixThreats(remoteSiteId = site.siteId, fixableThreatIds = fixableThreatIds)) {
@@ -222,6 +223,7 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onFixAllButtonClicked() {
+        scanTracker.trackOnFixAllThreatsButtonClicked()
         updateNavigationEvent(
             OpenFixThreatsConfirmationDialog(
                 title = UiStringRes(R.string.threat_fix_all_warning_title),

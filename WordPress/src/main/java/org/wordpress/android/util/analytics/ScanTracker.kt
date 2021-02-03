@@ -74,6 +74,14 @@ class ScanTracker @Inject constructor(
         )
     }
 
+    fun trackOnFixAllThreatsButtonClicked() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ALL_THREATS_OPEN)
+    }
+
+    fun trackOnFixAllThreatsConfirmed() {
+        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ALL_THREATS_FIX_TAPPED)
+    }
+
     enum class OnThreatItemClickSource(val section: String) {
         HISTORY("history"), SCANNER("scanner")
     }
