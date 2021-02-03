@@ -160,7 +160,7 @@ class WPMainActivityViewModel @Inject constructor(
         if (shouldShowStories(site) || hasFullAccessToContent(site)) {
             // The user has at least two create options available for this site (pages and/or story posts),
             // so we should show a bottom sheet.
-            // Future creation options added in the future should also be weighed here.
+            // Creation options added in the future should also be weighed here.
 
             // Reload main actions, since the first time this is initialized the SiteModel may not contain the
             // latest info.
