@@ -15,12 +15,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.valueOf
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewMode.valueOf
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
