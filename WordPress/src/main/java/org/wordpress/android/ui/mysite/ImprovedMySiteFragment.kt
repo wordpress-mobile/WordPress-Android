@@ -77,7 +77,6 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.ToastUtils.showToast
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -287,8 +286,7 @@ class ImprovedMySiteFragment : Fragment(),
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
         quickStartMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
-            // TODO Handle Quick Start menu interaction
-            it?.getContentIfNotHandled()?.let { interaction -> showToast(context, interaction.toString()) }
+            it?.getContentIfNotHandled()?.let { interaction -> viewModel.onQuickStartMenuInteraction(interaction) }
         })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->

@@ -51,6 +51,9 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction.Hide
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -367,7 +370,7 @@ class MySiteViewModel
 
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
-        quickStartRepository.refreshIfNecessary()
+        quickStartRepository.refresh()
         currentAvatarSource.refresh()
     }
 
@@ -516,6 +519,14 @@ class MySiteViewModel
 
     fun startQuickStart() {
         quickStartRepository.startQuickStart()
+    }
+
+    fun onQuickStartMenuInteraction(interaction: QuickStartMenuInteraction) {
+        when(interaction) {
+            is QuickStartMenuInteraction.Remove,
+            is Pin -> TODO()
+            is Hide -> quickStartRepository.hideCategory(interaction.id)
+        }
     }
 
     data class UiModel(
