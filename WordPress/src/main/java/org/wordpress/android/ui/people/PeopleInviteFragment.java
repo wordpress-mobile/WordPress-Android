@@ -5,25 +5,26 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputLayout;
+import com.google.android.material.textview.MaterialTextView;
+
+import org.jetbrains.annotations.NotNull;
 import org.wordpress.android.R;
 import org.wordpress.android.WordPress;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -31,25 +32,26 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.people.WPEditTextWithChipsOutlined.ItemValidationState;
+import org.wordpress.android.ui.people.WPEditTextWithChipsOutlined.ItemsManagerInterface;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
-import org.wordpress.android.util.ContextExtensionsKt;
-import org.wordpress.android.util.EditTextUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
-import org.wordpress.android.widgets.MultiUsernameEditText;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.inject.Inject;
+
+import static com.google.android.material.textfield.TextInputLayout.END_ICON_DROPDOWN_MENU;
+import static com.google.android.material.textfield.TextInputLayout.END_ICON_NONE;
 
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
@@ -57,15 +59,14 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private static final String FLAG_SUCCESS = "SUCCESS";
     private static final String KEY_USERNAMES = "usernames";
     private static final String KEY_SELECTED_ROLE = "selected-role";
-    private static final int MAX_NUMBER_OF_INVITEES = 10;
-    private static final String[] USERNAME_DELIMITERS = {" ", ","};
-    private final Map<String, ViewGroup> mUsernameButtons = new LinkedHashMap<>();
+
+    private ArrayList<String> mUsernames = new ArrayList<>();
     private final HashMap<String, String> mUsernameResults = new HashMap<>();
     private final Map<String, View> mUsernameErrorViews = new Hashtable<>();
-    private ArrayList<String> mUsernames = new ArrayList<>();
-    private ViewGroup mUsernamesContainer;
-    private MultiUsernameEditText mUsernameEditText;
-    private TextView mRoleTextView;
+
+    private WPEditTextWithChipsOutlined mUsernamesEmails;
+    private AutoCompleteTextView mRoleTextView;
+    private TextInputLayout mRoleContainer;
     private EditText mCustomMessageEditText;
 
     private List<RoleModel> mInviteRoles;
@@ -75,10 +76,6 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
-
-    private int mNormalUsernameColor;
-    private int mAddedUsernameColor;
-    private int mErrorUsernameColor;
 
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -116,11 +113,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
         if (mCurrentRole != null) {
             outState.putString(KEY_SELECTED_ROLE, mCurrentRole);
         }
-        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernameButtons.keySet()));
+        outState.putStringArrayList(KEY_USERNAMES, new ArrayList<>(mUsernamesEmails.getChipsStrings()));
     }
 
     @Override
@@ -159,137 +155,71 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         if (actionBar != null) {
             actionBar.setHomeButtonEnabled(true);
             actionBar.setDisplayHomeAsUpEnabled(true);
-            actionBar.setTitle(R.string.people);
+            actionBar.setTitle(R.string.invite_people);
         }
-
-        mNormalUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorOnSurface);
-        mAddedUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.colorPrimary);
-        mErrorUsernameColor = ContextExtensionsKt.getColorResIdFromAttribute(getActivity(), R.attr.wpColorError);
 
         return rootView;
     }
 
-    @Override
-    public void onViewCreated(View view, Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
+    @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
 
-        mUsernamesContainer = (ViewGroup) view.findViewById(R.id.usernames);
-        mUsernamesContainer.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                EditTextUtils.showSoftInput(mUsernameEditText);
-            }
-        });
+        mUsernamesEmails = getView().findViewById(R.id.user_names_emails);
+        mRoleContainer = getView().findViewById(R.id.role_container);
+        mRoleTextView = getView().findViewById(R.id.role);
+        mCustomMessageEditText = (EditText) getView().findViewById(R.id.message);
 
         if (TextUtils.isEmpty(mCurrentRole)) {
             mCurrentRole = getDefaultRole();
         }
 
-        mUsernameEditText = (MultiUsernameEditText) view.findViewById(R.id.invite_usernames);
+        mUsernamesEmails.setItemsManager(new ItemsManagerInterface() {
+            @Override public void onRemoveItem(@NotNull String item) {
+                removeUsername(item);
+            }
 
-        // handle key preses from hardware keyboard
-        mUsernameEditText.setOnKeyListener(new View.OnKeyListener() {
-            @Override
-            public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                return keyEvent.getKeyCode() == KeyEvent.KEYCODE_DEL
-                       && keyEvent.getAction() == KeyEvent.ACTION_DOWN
-                       && removeLastEnteredUsername();
+            @Override public void onAddItem(@NotNull String item) {
+                addUsername(item, null);
             }
         });
 
-        mUsernameEditText.setOnBackspacePressedListener(new MultiUsernameEditText.OnBackspacePressedListener() {
-            @Override
-            public boolean onBackspacePressed() {
-                return removeLastEnteredUsername();
-            }
-        });
-
-        mUsernameEditText.addTextChangedListener(new TextWatcher() {
-            private boolean mShouldIgnoreChanges = false;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (mShouldIgnoreChanges) { // used to avoid double call after calling setText from this method
-                    return;
-                }
-
-                mShouldIgnoreChanges = true;
-                if (mUsernameButtons.size() >= MAX_NUMBER_OF_INVITEES && !TextUtils.isEmpty(s)) {
-                    resetEditTextContent(mUsernameEditText);
-                } else if (endsWithDelimiter(mUsernameEditText.getText().toString())) {
-                    addUsername(mUsernameEditText, null);
-                }
-                mShouldIgnoreChanges = false;
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-        mUsernameEditText.setOnEditorActionListener(new TextView.OnEditorActionListener() {
-            @Override
-            public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if (actionId == EditorInfo.IME_ACTION_DONE || (event != null && event.getKeyCode() == KeyEvent
-                        .KEYCODE_ENTER)) {
-                    addUsername(mUsernameEditText, null);
-                    return true;
-                } else {
-                    return false;
-                }
-            }
-        });
-
-        mUsernameEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (!hasFocus && mUsernameEditText.getText().toString().length() > 0) {
-                    addUsername(mUsernameEditText, null);
-                }
-            }
-        });
-
-
-        // if mUsernameButtons is not empty, this means fragment retained itself
-        // if mUsernameButtons is empty, but we have manually retained usernames, this means that fragment was destroyed
+        // if mUsernamesEmails is not empty, this means fragment retained itself
+        // if mUsernamesEmails is empty, but we have manually retained usernames, this means that fragment was destroyed
         // and we need to recreate manually added views and revalidate usernames
-        if (!mUsernameButtons.isEmpty()) {
+        if (mUsernamesEmails.hasChips()) {
             mUsernameErrorViews.clear();
-            populateUsernameButtons(new ArrayList<>(mUsernameButtons.keySet()));
+            populateUsernameChips(new ArrayList<>(mUsernamesEmails.getChipsStrings()));
         } else if (!mUsernames.isEmpty()) {
-            populateUsernameButtons(new ArrayList<>(mUsernames));
+            populateUsernameChips(new ArrayList<>(mUsernames));
         }
 
-        mRoleTextView = (TextView) view.findViewById(R.id.role);
-        refreshRoleTextView();
-        ImageView imgRoleInfo = (ImageView) view.findViewById(R.id.imgRoleInfo);
-        imgRoleInfo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION);
-            }
-        });
+        mRoleTextView.setShowSoftInputOnFocus(false);
+        mRoleTextView.setInputType(EditorInfo.TYPE_NULL);
+        mRoleTextView.setKeyListener(null);
+		refreshRoleTextView();
 
         if (mInviteRoles.size() > 1) {
-            view.findViewById(R.id.role_container).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite);
-                }
-            });
+            mRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
+            mRoleTextView.setOnClickListener(v -> RoleSelectDialogFragment.show(PeopleInviteFragment.this, 0, mSite));
+            mRoleTextView.setFocusable(true);
+            mRoleTextView.setFocusableInTouchMode(true);
         } else {
-            // Don't show drop-down arrow or role selector if there's only one role available
-            mRoleTextView.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+            mRoleContainer.setEndIconMode(END_ICON_NONE);
+            mRoleTextView.setOnClickListener(null);
+            mRoleTextView.setFocusable(false);
+            mRoleTextView.setFocusableInTouchMode(false);
         }
 
-        final int maxChars = getResources().getInteger(R.integer.invite_message_char_limit);
-        final TextView remainingCharsTextView = (TextView) view.findViewById(R.id.message_remaining);
+        mRoleContainer.setEndIconOnClickListener(null);
+        mRoleContainer.setEndIconCheckable(false);
 
-        mCustomMessageEditText = (EditText) view.findViewById(R.id.message);
+        //refreshRoleTextView();
+
+        MaterialTextView moreInfo = (MaterialTextView) getView().findViewById(R.id.learn_more);
+        moreInfo.setOnClickListener(
+                v -> ActivityLauncher.openUrlExternal(v.getContext(), URL_USER_ROLES_DOCUMENTATION)
+        );
+
         mCustomMessageEditText.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -298,46 +228,15 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 mCustomMessage = mCustomMessageEditText.getText().toString();
-                updateRemainingCharsView(remainingCharsTextView, mCustomMessage, maxChars);
             }
 
             @Override
             public void afterTextChanged(Editable s) {
             }
         });
-        updateRemainingCharsView(remainingCharsTextView, mCustomMessage, maxChars);
+
         // important for accessibility - talkback
         getActivity().setTitle(R.string.invite_people);
-    }
-
-    private boolean endsWithDelimiter(String string) {
-        if (TextUtils.isEmpty(string)) {
-            return false;
-        }
-
-        for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (string.endsWith(usernameDelimiter)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    private String removeDelimiterFromUsername(String username) {
-        if (TextUtils.isEmpty(username)) {
-            return username;
-        }
-
-        String trimmedUsername = username.trim();
-
-        for (String usernameDelimiter : USERNAME_DELIMITERS) {
-            if (trimmedUsername.endsWith(usernameDelimiter)) {
-                return trimmedUsername.substring(0, trimmedUsername.length() - usernameDelimiter.length());
-            }
-        }
-
-        return trimmedUsername;
     }
 
     private void resetEditTextContent(EditText editText) {
@@ -353,110 +252,41 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         return mInviteRoles.get(0).getName();
     }
 
-    private void updateRemainingCharsView(TextView remainingCharsTextView, String currentString, int limit) {
-        remainingCharsTextView.setText(StringUtils.getQuantityString(getActivity(),
-                R.string.invite_message_remaining_zero,
-                R.string.invite_message_remaining_one,
-                R.string.invite_message_remaining_other,
-                limit - (currentString == null ? 0
-                        : currentString.length())));
-    }
-
-    private void populateUsernameButtons(Collection<String> usernames) {
+    private void populateUsernameChips(Collection<String> usernames) {
         if (usernames != null && usernames.size() > 0) {
-            for (String username : usernames) {
-                mUsernameButtons.put(username, buttonizeUsername(username));
-            }
-
             validateAndStyleUsername(usernames, null);
         }
     }
 
-    private ViewGroup buttonizeUsername(final String username) {
-        if (!isAdded()) {
-            return null;
-        }
-
-        final ViewGroup usernameButton = (ViewGroup) LayoutInflater.from(
-                getActivity()).inflate(R.layout.invite_username_button, mUsernamesContainer, false);
-        final TextView usernameTextView = (TextView) usernameButton.findViewById(R.id.username);
-        usernameTextView.setText(username);
-
-        mUsernamesContainer.addView(usernameButton, mUsernamesContainer.getChildCount() - 1);
-
-        final ImageButton delete = (ImageButton) usernameButton.findViewById(R.id.username_delete);
-        delete.setContentDescription(getString(R.string.invite_user_delete_desc, username));
-        delete.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                removeUsername(username);
-            }
-        });
-
-        return usernameButton;
-    }
-
-    private void addUsername(EditText editText, ValidationEndListener validationEndListener) {
-        String username = removeDelimiterFromUsername(editText.getText().toString());
-        resetEditTextContent(editText);
-
-        if (username.isEmpty() || mUsernameButtons.keySet().contains(username)) {
+    private void addUsername(@NotNull String username, ValidationEndListener validationEndListener) {
+        if (username.isEmpty() || mUsernamesEmails.containsChip(username)) {
             if (validationEndListener != null) {
                 validationEndListener.onValidationEnd();
             }
             return;
         }
-
-        final ViewGroup usernameButton = buttonizeUsername(username);
-
-        mUsernameButtons.put(username, usernameButton);
-
         validateAndStyleUsername(Collections.singletonList(username), validationEndListener);
     }
 
     private void removeUsername(String username) {
-        final ViewGroup usernamesView = (ViewGroup) getView().findViewById(R.id.usernames);
-
-        ViewGroup removedButton = mUsernameButtons.remove(username);
         mUsernameResults.remove(username);
-        usernamesView.removeView(removedButton);
-
+        mUsernamesEmails.removeChip(username);
         updateUsernameError(username, null);
     }
 
     private boolean isUserInInvitees(String username) {
-        return mUsernameButtons.get(username) != null;
-    }
-
-    /**
-     * Deletes the last entered username.
-     *
-     * @return true if the username was deleted
-     */
-    private boolean removeLastEnteredUsername() {
-        if (!TextUtils.isEmpty(mUsernameEditText.getText())) {
-            return false;
-        }
-
-        // try and remove the last entered username
-        List<String> list = new ArrayList<>(mUsernameButtons.keySet());
-        if (!list.isEmpty()) {
-            String username = list.get(list.size() - 1);
-            removeUsername(username);
-            return true;
-        }
-        return false;
+        return mUsernamesEmails.containsChip(username);
     }
 
     @Override
     public void onRoleSelected(RoleModel newRole) {
         setRole(newRole.getName());
 
-        if (!mUsernameButtons.keySet().isEmpty()) {
+        if (mUsernamesEmails.hasChips()) {
             // clear the username results list and let the 'validate' routine do the updates
             mUsernameResults.clear();
 
-            validateAndStyleUsername(mUsernameButtons.keySet(), null);
+            validateAndStyleUsername(mUsernamesEmails.getChipsStrings(), null);
         }
     }
 
@@ -476,10 +306,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         for (String username : usernames) {
             if (mUsernameResults.containsKey(username)) {
                 String resultMessage = mUsernameResults.get(username);
-                styleButton(username, resultMessage);
+                styleChip(username, resultMessage);
                 updateUsernameError(username, resultMessage);
             } else {
-                styleButton(username, null);
+                styleChip(username, null);
                 updateUsernameError(username, null);
 
                 usernamesToCheck.add(username);
@@ -506,7 +336,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                                     getValidationErrorString(username, validationResult);
                             mUsernameResults.put(username, usernameResultString);
 
-                            styleButton(username, usernameResultString);
+                            styleChip(username, usernameResultString);
                             updateUsernameError(username, usernameResultString);
                         }
 
@@ -529,15 +359,15 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void styleButton(String username, @Nullable String validationResultMessage) {
+    private void styleChip(String username, @Nullable String validationResultMessage) {
         if (!isAdded()) {
             return;
         }
 
-        TextView textView = mUsernameButtons.get(username).findViewById(R.id.username);
-        textView.setTextColor(ContextCompat.getColor(getActivity(),
-                validationResultMessage == null ? mNormalUsernameColor
-                        : (validationResultMessage.equals(FLAG_SUCCESS) ? mAddedUsernameColor : mErrorUsernameColor)));
+        ItemValidationState resultState = validationResultMessage == null ? ItemValidationState.NEUTRAL
+                : (validationResultMessage.equals(FLAG_SUCCESS) ? ItemValidationState.VALIDATED : ItemValidationState.VALIDATED_WITH_ERRORS);
+
+        mUsernamesEmails.addOrUpdateChip(username, resultState);
     }
 
     private
@@ -601,7 +431,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             removeUsername(username);
         }
 
-        if (mUsernameButtons.size() == 0) {
+        if (!mUsernamesEmails.hasChips()) {
             setRole(getDefaultRole());
             resetEditTextContent(mCustomMessageEditText);
         }
@@ -620,8 +450,10 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         enableSendButton(false);
 
-        if (mUsernameEditText.getText().toString().length() > 0) {
-            addUsername(mUsernameEditText, new ValidationEndListener() {
+        String lastMinuteUser = mUsernamesEmails.getTextIfAvaliableOrNull();
+
+        if (lastMinuteUser != null) {
+            addUsername(lastMinuteUser, new ValidationEndListener() {
                 @Override
                 public void onValidationEnd() {
                     if (!checkAndSend()) {
@@ -650,7 +482,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             return false;
         }
 
-        if (mUsernameButtons.size() == 0) {
+        if (!mUsernamesEmails.hasChips()) {
             ToastUtils.showToast(getActivity(), R.string.invite_error_no_usernames);
             return false;
         }
@@ -676,7 +508,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         long wpcomBlogId = mSite.getSiteId();
         PeopleUtils.sendInvitations(
-                new ArrayList<>(mUsernameButtons.keySet()), mCurrentRole, mCustomMessage, wpcomBlogId,
+                new ArrayList<>(mUsernamesEmails.getChipsStrings()), mCurrentRole, mCustomMessage, wpcomBlogId,
                 new PeopleUtils.InvitationsSendCallback() {
                     @Override
                     public void onSent(List<String> succeededUsernames, Map<String, String> failedUsernameErrors) {
@@ -696,7 +528,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                                         username, errorMessage));
                             }
 
-                            populateUsernameButtons(failedUsernameErrors.keySet());
+                            populateUsernameChips(failedUsernameErrors.keySet());
 
                             ToastUtils.showToast(getActivity(), succeededUsernames.isEmpty()
                                     ? R.string.invite_error_sending
@@ -727,16 +559,6 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mInviteOperationInProgress = !enable;
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
-        }
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // we need to remove focus listener when view is destroyed (ex. orientation change) to prevent mUsernameEditText
-        // content from being converted to username
-        if (mUsernameEditText != null) {
-            mUsernameEditText.setOnFocusChangeListener(null);
         }
     }
 
