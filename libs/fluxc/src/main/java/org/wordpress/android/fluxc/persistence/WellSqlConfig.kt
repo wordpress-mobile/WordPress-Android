@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 135
+        return 136
     }
 
     override fun getDbName(): String {
@@ -1487,6 +1487,9 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "COUNT INTEGER, " +
                                     "MENU_ORDER INTEGER)"
                     )
+                }
+                135 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("ALTER TABLE WCProductAttributeModel RENAME TO WCGlobalAttributeModel")
                 }
             }
         }
