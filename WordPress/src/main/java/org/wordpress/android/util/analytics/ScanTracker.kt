@@ -103,6 +103,6 @@ class ScanTracker @Inject constructor(
     }
 
     enum class ErrorCause(val value: String) {
-        OFFLINE("offline"), REMOTE("remote"), OTHER("other")
+        OFFLINE("offline"), REMOTE("remote"), ALL_THREATS_NOT_FIXED("all_threats_not_fixed"), OTHER("other")
     }
 }

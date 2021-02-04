@@ -208,7 +208,11 @@ class ScanViewModel @Inject constructor(
                     messageRes = R.string.threat_fix_all_status_error_message
                 }
                 is FetchFixThreatsState.Failure.FixFailure -> {
-                    scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.OTHER)
+                    if (status.mightBeMissingCredentials) {
+                        scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.ALL_THREATS_NOT_FIXED)
+                    } else {
+                        scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.OTHER)
+                    }
                     if (!status.containsOnlyErrors) {
                         someOrAllThreatFixed = true
                     } else if (isInvokedByUser) {
