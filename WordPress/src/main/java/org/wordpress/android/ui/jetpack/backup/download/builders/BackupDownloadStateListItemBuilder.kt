@@ -151,10 +151,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                     R.string.backup_download_complete_failed_icon_content_description,
                     R.color.error),
             buildHeaderState(R.string.backup_download_complete_failed_description),
-            buildSubHeaderState(
-                    R.string.request_failed_message,
-                    R.dimen.margin_none,
-                    R.dimen.jetpack_backup_restore_sub_header_bottom_margin),
+            buildDescriptionState(descRes = R.string.request_failed_message),
             buildActionButtonState(
                     titleRes = R.string.backup_download_complete_failed_action_button,
                     contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
@@ -173,14 +170,18 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
 
     private fun buildHeaderState(@StringRes titleRes: Int) = HeaderState(UiStringRes(titleRes))
 
-    private fun buildDescriptionState(published: Date, @StringRes descRes: Int) = DescriptionState(
-            UiStringResWithParams(
-                    descRes,
-                    listOf(
-                            UiStringText(published.toFormattedDateString()),
-                            UiStringText(published.toFormattedTimeString())
-                    )
-            )
+    private fun buildDescriptionState(published: Date? = null, @StringRes descRes: Int) = DescriptionState(
+            if (published != null) {
+                UiStringResWithParams(
+                        descRes,
+                        listOf(
+                                UiStringText(published.toFormattedDateString()),
+                                UiStringText(published.toFormattedTimeString())
+                        )
+                )
+            } else {
+                UiStringRes(descRes)
+            }
     )
 
     private fun buildActionButtonState(
