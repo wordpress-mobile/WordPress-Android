@@ -177,11 +177,8 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        if (BuildConfig.DEBUG) {
-            metadata.setAppScheme("debug");
-        } else {
-            metadata.setAppScheme(BuildConfig.FLAVOR);
-        }
+        String scheme = BuildConfig.DEBUG ? "debug" : BuildConfig.FLAVOR;
+        metadata.setAppScheme(scheme);
         if (siteStore.hasSite()) {
             metadata.setGutenbergEnabled(isGutenbergEnabledOnAnySite(siteStore.getSites()));
         }
