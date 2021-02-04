@@ -9,19 +9,10 @@
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/header_text"
         style="@style/Scan.Threats.Header"
-        app:layout_constraintBottom_toTopOf="@id/divider"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/threats_found" />
-
-    <View
-        android:id="@+id/divider"
-        android:layout_width="0dp"
-        android:layout_height="@dimen/list_divider_height"
-        android:background="?android:attr/listDivider"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

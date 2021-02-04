@@ -6,18 +6,16 @@
 
     <!--Threats List Header-->
     <style name="Scan.Threats.Header" parent="Scan.TextView">
-        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
-        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
-        <item name="android:layout_marginBottom">@dimen/margin_large</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:clickable">false</item>
         <item name="android:gravity">center_vertical</item>
-        <item name="android:textStyle">bold</item>
         <item name="android:textAlignment">viewStart</item>
-        <item name="android:alpha">@dimen/material_emphasis_medium</item>
-        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
+        <item name="android:textAppearance">?attr/textAppearanceBody2</item>
     </style>
 
     <!--Threat List Item-->
