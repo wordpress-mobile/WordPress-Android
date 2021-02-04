@@ -493,7 +493,12 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = true,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
@@ -511,7 +516,12 @@ class ScanViewModelTest : BaseUnitTest() {
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(mock())))
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = false))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = false,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
@@ -595,7 +605,12 @@ class ScanViewModelTest : BaseUnitTest() {
             test {
         val messages = init().snackBarMsgs
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
 
         viewModel.onFixStateRequested(threatId = 11L)
@@ -607,7 +622,12 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
             test {
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
         val scanStateModelWithFixableThreats = fakeScanStateModel
             .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
