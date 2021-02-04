@@ -245,4 +245,13 @@
         <attr name="badgeHorizontalOffset" format="dimension" />
         <attr name="badgeVerticalOffset" format="dimension" />
     </declare-styleable>
+
+    <!--
+    WPEditTextWithChipsOutlined
+    -->
+    <declare-styleable name="WPEditTextWithChipsOutlined">
+        <attr name="wpHint" format="reference"/>
+        <attr name="wpChipifyEnabled" format="boolean"/>
+        <attr name="wpMaxNumberChips" format="integer" />
+    </declare-styleable>
 </resources>
