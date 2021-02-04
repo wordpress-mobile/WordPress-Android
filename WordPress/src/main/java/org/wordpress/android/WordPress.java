@@ -115,6 +115,7 @@ import org.wordpress.android.util.UploadWorkerKt;
 import org.wordpress.android.util.VolleyUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.experiments.ExPlat;
 import org.wordpress.android.util.config.AppConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -181,6 +182,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
+    @Inject ExPlat mExPlat;
     @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
@@ -859,6 +861,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
         mAppConfig.refresh();
+        mExPlat.refresh();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
