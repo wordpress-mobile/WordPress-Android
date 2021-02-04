@@ -34,7 +34,7 @@ class SiteListItemBuilder
         ) || site.isJetpackConnected
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
-                    R.drawable.ic_history_alt_white_24dp,
+                    R.drawable.ic_gridicons_clipboard_24dp,
                     UiStringRes(R.string.activity),
                     onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
             )

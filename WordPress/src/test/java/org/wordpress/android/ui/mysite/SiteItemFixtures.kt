@@ -37,7 +37,7 @@ val STATS_ITEM = ListItem(
         onClick = ListItemInteraction.create(ListItemAction.STATS, SITE_ITEM_ACTION)
 )
 val ACTIVITY_ITEM = ListItem(
-        R.drawable.ic_history_alt_white_24dp,
+        R.drawable.ic_gridicons_clipboard_24dp,
         UiStringRes(R.string.activity),
         onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, SITE_ITEM_ACTION)
 )
