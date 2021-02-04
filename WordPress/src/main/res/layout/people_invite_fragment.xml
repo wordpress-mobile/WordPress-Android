@@ -43,7 +43,7 @@
                     android:id="@+id/usernames_container"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/people_default_margin_top"
+                    android:layout_marginTop="@dimen/margin_large"
                     android:layout_marginBottom="@dimen/margin_extra_large"
                     android:animateLayoutChanges="true"
                     android:orientation="vertical">
@@ -104,6 +104,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:text="@string/people_learn_more_about_roles"
+                        android:contentDescription="@string/people_invite_role_info_desc"
                         android:paddingTop="@dimen/margin_extra_small"
                         android:paddingBottom="@dimen/margin_extra_small"
                         android:paddingStart="@dimen/margin_large"
