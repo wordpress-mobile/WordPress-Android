@@ -972,6 +972,7 @@ public class ReaderPostPagerActivity extends LocaleAwareActivity {
                     this,
                     findViewById(R.id.coordinator),
                     event.isError(),
+                    event.isFirstTimePublish,
                     event.post,
                     null,
                     site);

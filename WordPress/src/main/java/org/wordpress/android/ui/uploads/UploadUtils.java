@@ -457,6 +457,7 @@ public class UploadUtils {
 
     public static void onPostUploadedSnackbarHandler(final Activity activity, View snackbarAttachView,
                                                      boolean isError,
+                                                     boolean isFirstTimePublish,
                                                      final PostModel post,
                                                      final String errorMessage,
                                                      final SiteModel site, final Dispatcher dispatcher,
