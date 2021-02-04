@@ -21,7 +21,6 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
 import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
-import org.wordpress.android.ui.jetpack.common.ViewType.PRIMARY_ACTION_BUTTON
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -237,26 +236,20 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         uiState: BackupDownloadUiState,
         itemType: JetpackAvailableItemType
     ): List<JetpackListItemState> {
-        var checkedCount = 0
-        val updateCheckboxes = uiState.items.map { state ->
+        val updatedCheckboxes = uiState.items.map { state ->
                 if (state.type == CHECKBOX) {
                     state as CheckboxState
                     if (state.availableItemType == itemType) {
-                        if (!state.checked) {
-                            checkedCount++
-                        }
                         state.copy(checked = !state.checked)
                     } else {
-                        if (state.checked) {
-                            checkedCount++
-                        }
                         state
                     }
                 } else {
                     state
                 }
         }
-        return updateDetailsActionButtonState(updateCheckboxes, checkedCount > 0)
+        val atLeastOneChecked = updatedCheckboxes.filterIsInstance<CheckboxState>().find { it.checked } != null
+        return updateDetailsActionButtonState(updatedCheckboxes, atLeastOneChecked)
     }
 
     private fun updateDetailsActionButtonState(
@@ -264,8 +257,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         enableActionButton: Boolean
     ): List<JetpackListItemState> {
         return details.map { state ->
-            if (state.type == PRIMARY_ACTION_BUTTON) {
-                state as ActionButtonState
+            if (state is ActionButtonState) {
                 state.copy(isEnabled = enableActionButton)
             } else {
                 state

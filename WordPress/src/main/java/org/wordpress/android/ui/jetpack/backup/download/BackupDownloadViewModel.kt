@@ -338,9 +338,9 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
-        _uiState.value?.let {
+        (_uiState.value as? DetailsState)?.let {
             val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
-            _uiState.postValue((it as DetailsState).copy(items = updatedItems))
+            _uiState.postValue(it.copy(items = updatedItems))
         }
     }
 
