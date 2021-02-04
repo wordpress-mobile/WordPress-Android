@@ -49,6 +49,8 @@
 /connect/normalize-address
 /connect/packages
 
+/connect/account/settings
+
 /leaderboards
 
 /data/countries
