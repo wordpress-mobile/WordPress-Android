@@ -1998,6 +1998,26 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
                 return "reader_mark_as_unseen";
+            case JETPACK_RESTORE_OPENED:
+                return "jetpack_restore_opened";
+            case JETPACK_RESTORE_CONFIRMED:
+                return "jetpack_restore_confirmed";
+            case JETPACK_RESTORE_ERROR:
+                return "jetpack_restore_error";
+            case JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED:
+                return "jetpack_restore_notify_me_button_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_OPENED:
+                return "jetpack_backup_download_opened";
+            case JETPACK_BACKUP_DOWNLOAD_CONFIRMED:
+                return "jetpack_backup_download_confirmed";
+            case JETPACK_BACKUP_DOWNLOAD_ERROR:
+                return "jetpack_backup_download_error";
+            case JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED:
+                return "jetpack_backup_download_notify_me_button_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED:
+                return "jetpack_backup_download_share_link_tapped";
             case MY_SITE_CREATE_SHEET_SHOWN:
                 return "my_site_create_sheet_shown";
             case MY_SITE_CREATE_SHEET_ACTION_TAPPED:

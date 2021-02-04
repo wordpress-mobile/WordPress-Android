@@ -1081,12 +1081,15 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_fixing_threats_title">Fixing Threats</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description">We\'re hard at work fixing these threats in the background. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
-    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_idle_with_threats_description">The scan found %1s potential threats on %2s. Please review them below and take action. We\'re %3$s if you need us.</string>
+    <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hours ago</string>
     <string name="scan_in_minutes_ago">%s minutes ago</string>
@@ -2698,7 +2701,7 @@
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
