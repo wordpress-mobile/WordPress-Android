@@ -8,6 +8,7 @@ import dagger.Reusable
 import org.wordpress.android.R
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState
 import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.BulletState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
@@ -19,6 +20,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -229,4 +231,37 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             label = UiStringRes(labelRes),
             itemBottomMarginResId = itemBottomMarginResId
     )
+
+    fun updateCheckboxes(
+        uiState: BackupDownloadUiState,
+        itemType: JetpackAvailableItemType
+    ): List<JetpackListItemState> {
+        val updatedCheckboxes = uiState.items.map { state ->
+                if (state.type == CHECKBOX) {
+                    state as CheckboxState
+                    if (state.availableItemType == itemType) {
+                        state.copy(checked = !state.checked)
+                    } else {
+                        state
+                    }
+                } else {
+                    state
+                }
+        }
+        val atLeastOneChecked = updatedCheckboxes.filterIsInstance<CheckboxState>().find { it.checked } != null
+        return updateDetailsActionButtonState(updatedCheckboxes, atLeastOneChecked)
+    }
+
+    private fun updateDetailsActionButtonState(
+        details: List<JetpackListItemState>,
+        enableActionButton: Boolean
+    ): List<JetpackListItemState> {
+        return details.map { state ->
+            if (state is ActionButtonState) {
+                state.copy(isEnabled = enableActionButton)
+            } else {
+                state
+            }
+        }
+    }
 }
