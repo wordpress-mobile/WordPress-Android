@@ -247,21 +247,29 @@ class ScanStateListItemsBuilder @Inject constructor(
         threatsCount: Int,
         onHelpClicked: () -> Unit
     ): DescriptionState {
+        val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
+
         val descriptionText = htmlMessageUtils
             .getHtmlMessageFromStringFormatResId(
-                R.string.scan_idle_threats_found_description,
+                R.string.scan_idle_with_threats_description,
                 "<b>$threatsCount</b>",
-                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>"
+                "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+                clickableText
             )
 
-        val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
-        val startIndex = descriptionText.indexOf(clickableText)
-        val endIndex = startIndex + clickableText.length
-        val clickableTextInfo = listOf(ClickableTextInfo(startIndex, endIndex, onHelpClicked))
+        val clickableTextStartIndex = descriptionText.indexOf(clickableText)
+        val clickableTextEndIndex = clickableTextStartIndex + clickableText.length
+        val clickableTextsInfo = listOf(
+            ClickableTextInfo(
+                startIndex = clickableTextStartIndex,
+                endIndex = clickableTextEndIndex,
+                onClick = onHelpClicked
+            )
+        )
 
         return DescriptionState(
             text = UiStringText(descriptionText),
-            clickableTextsInfo = clickableTextInfo
+            clickableTextsInfo = clickableTextsInfo
         )
     }
 
