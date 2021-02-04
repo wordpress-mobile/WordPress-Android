@@ -32,6 +32,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -591,12 +592,21 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
-        quickStartUpdate.value = QuickStartUpdate(EDIT_HOMEPAGE, listOf())
         initSelectedSite()
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
         verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
