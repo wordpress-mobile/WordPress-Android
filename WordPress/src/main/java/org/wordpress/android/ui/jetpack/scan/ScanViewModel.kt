@@ -229,7 +229,6 @@ class ScanViewModel @Inject constructor(
     }
 
     private fun onContactSupportClicked() {
-        scanTracker.trackOnContectSupportClicked()
         updateNavigationEvent(ShowContactSupport(site))
     }
 

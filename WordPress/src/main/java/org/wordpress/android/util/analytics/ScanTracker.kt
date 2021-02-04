@@ -83,10 +83,6 @@ class ScanTracker @Inject constructor(
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ALL_THREATS_FIX_TAPPED)
     }
 
-    fun trackOnContectSupportClicked() {
-        analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ERROR_CONTACT_TAPPED)
-    }
-
     fun trackOnError(action: ErrorAction, cause: ErrorCause) {
         val props = mapOf("action" to action.value, "cause" to cause.value)
         analyticsTrackerWrapper.track(AnalyticsTracker.Stat.JETPACK_SCAN_ERROR, props)

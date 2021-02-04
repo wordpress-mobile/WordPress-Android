@@ -1700,8 +1700,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_scan_allthreats_open";
             case JETPACK_SCAN_ALL_THREATS_FIX_TAPPED:
                 return "jetpack_scan_allthreats_fix_tapped";
-            case JETPACK_SCAN_ERROR_CONTACT_TAPPED:
-                return "jetpack_scan_error_contact_tapped";
             case JETPACK_SCAN_ERROR:
                 return "jetpack_scan_error";
             case SUPPORT_HELP_CENTER_VIEWED:
