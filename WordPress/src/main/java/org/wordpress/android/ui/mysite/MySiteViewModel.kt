@@ -243,7 +243,10 @@ class MySiteViewModel
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)
-                PAGES -> OpenPages(site)
+                PAGES -> {
+                    quickStartRepository.completeTask(REVIEW_PAGES)
+                    OpenPages(site)
+                }
                 ADMIN -> OpenAdmin(site)
                 PEOPLE -> OpenPeople(site)
                 SHARING -> {

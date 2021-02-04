@@ -669,6 +669,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(PAGES)
 
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(OpenPages(site))
     }
 
