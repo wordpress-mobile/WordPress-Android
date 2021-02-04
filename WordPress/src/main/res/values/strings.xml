@@ -2239,10 +2239,6 @@
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
     <string name="invite_message_title">Custom message</string>
-    <string name="invite_message_remaining_zero">0 characters remaining</string>
-    <string name="invite_message_remaining_one">1 character remaining</string>
-    <string name="invite_message_remaining_other">%d characters remaining</string>
-    <string name="invite_message_info">(Optional) You can enter a custom message of up to 500 characters that will be included in the invitation to the user(s).</string>
     <string name="invite_message_usernames_limit">Invite up to 10 email addresses and/or WordPress.com usernames. Those needing a username will be sent instructions on how to create one.</string>
     <string name="invite_error_no_usernames">Please add at least one username</string>
     <string name="invite_error_invalid_usernames_one">Cannot send: A username or email is invalid</string>
