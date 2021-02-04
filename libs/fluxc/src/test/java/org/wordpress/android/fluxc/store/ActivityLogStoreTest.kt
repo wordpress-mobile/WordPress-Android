@@ -164,7 +164,7 @@ class ActivityLogStoreTest {
         val rowsAffected = 1
         val activityModels = listOf<ActivityLogModel>(mock())
 
-        val action = initRestClient(activityModels, rowsAffected, totalItems = 100)
+        val action = initRestClient(activityModels, rowsAffected, totalItems = 500)
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
 
         activityLogStore.onAction(action)
@@ -467,6 +467,6 @@ class ActivityLogStoreTest {
 
     companion object {
         private const val OFFSET = 0
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE = 100
     }
 }
