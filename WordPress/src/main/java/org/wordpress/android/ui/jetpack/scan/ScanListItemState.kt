@@ -15,7 +15,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
 
     data class ThreatItemState(
         val threatId: Long,
-        val isFixable: Boolean = true,
+        val isFixing: Boolean = false,
         val header: UiString,
         val subHeader: UiString?,
         @AttrRes val subHeaderColor: Int,
@@ -26,6 +26,8 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         ViewType.THREAT_ITEM
     ) {
         override fun longId() = threatId.hashCode().toLong()
+        val isLoadingVisible = isFixing
+        val isIconVisible = !isFixing
     }
 
     object ThreatItemLoadingSkeletonState : ScanListItemState(ViewType.THREAT_ITEM_LOADING_SKELETON)
