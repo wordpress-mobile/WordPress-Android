@@ -1105,7 +1105,7 @@
     <string name="scan_history_request_failed" translatable="false">@string/request_failed_message</string>
 
     <!-- threats -->
-    <string name="threats_fix_num_of_threats">Fix %s threats</string>
+    <string name="threats_fix_all">Fix All</string>
     <string name="threats_found">Threats found</string>
     <string name="threat_fixing">Fixing threat</string>
 

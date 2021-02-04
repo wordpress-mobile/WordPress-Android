@@ -438,6 +438,7 @@
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
     <dimen name="scan_icon_size">48dp</dimen>
     <dimen name="scan_icon_margin">16dp</dimen>
+    <dimen name="scan_threat_item_icon_size">40dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
