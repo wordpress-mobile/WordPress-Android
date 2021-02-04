@@ -255,7 +255,7 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val descriptionText = htmlMessageUtils
             .getHtmlMessageFromStringFormatResId(
-                R.string.scan_idle_threats_found_description,
+                R.string.scan_idle_with_threats_description,
                 "<b>$threatsCount</b>",
                 "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
                 clickableText
