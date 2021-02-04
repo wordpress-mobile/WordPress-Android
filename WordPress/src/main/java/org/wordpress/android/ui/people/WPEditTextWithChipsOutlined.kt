@@ -34,6 +34,7 @@ import kotlinx.android.synthetic.main.stats_block_list_item.view.*
 import kotlinx.android.synthetic.main.wp_edit_text_with_chips_outlined.view.*
 import org.wordpress.android.R
 import org.wordpress.android.util.RtlUtils
+import org.wordpress.android.util.getColorResIdFromAttribute
 import java.util.LinkedHashMap
 
 /**
@@ -110,21 +111,15 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         VALIDATED_WITH_ERRORS(R.attr.wpColorError);
 
         @ColorInt fun colorFromState(context: Context): Int {
-            return ContextCompat.getColor(context,
-                    TypedValue().let {
-                        context.theme.resolveAttribute(this.colorAttr, it, true)
-                        it.resourceId
-                    })
+            val color = context.getColorResIdFromAttribute(this.colorAttr)
+
+            return ContextCompat.getColor(context, color)
         }
 
         companion object {
             fun stateFromColor(context: Context, color: Int): ItemValidationState {
                 return values().first { value ->
-                    ContextCompat.getColor(context,
-                            TypedValue().let { typedValue ->
-                                context.theme.resolveAttribute(value.colorAttr, typedValue, true)
-                                typedValue.resourceId
-                            }) == color
+                    context.getColorResIdFromAttribute(value.colorAttr) == color
                 }
             }
         }
