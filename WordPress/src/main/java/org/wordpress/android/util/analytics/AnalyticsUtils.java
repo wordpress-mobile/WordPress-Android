@@ -178,7 +178,7 @@ public class AnalyticsUtils {
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
         if (BuildConfig.DEBUG) {
-            metadata.setAppScheme(BuildConfig.BUILD_TYPE);
+            metadata.setAppScheme("debug");
         } else {
             metadata.setAppScheme(BuildConfig.FLAVOR);
         }
