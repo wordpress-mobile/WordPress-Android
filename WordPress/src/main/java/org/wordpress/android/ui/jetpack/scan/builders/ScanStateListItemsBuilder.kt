@@ -81,6 +81,7 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         items.addAll(
             fixingThreatIds.mapNotNull { threatId ->
+                items.add(ThreatsHeaderItemState())
                 scanStore.getThreatModelByThreatId(threatId)?.let { threatModel ->
                     val threatItem = threatItemBuilder.buildThreatItem(threatModel).copy(
                         isFixing = true,
@@ -116,7 +117,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         items.add(scanDescription)
 
         val fixableThreats = threats.filter { it.baseThreatModel.fixable != null }
-        buildFixAllButtonAction(onFixAllButtonClicked, fixableThreats.size).takeIf { fixableThreats.isNotEmpty() }
+        buildFixAllButtonAction(onFixAllButtonClicked).takeIf { fixableThreats.isNotEmpty() }
             ?.let { items.add(it) }
 
         items.add(scanButton)
@@ -211,13 +212,9 @@ class ScanStateListItemsBuilder @Inject constructor(
     )
 
     private fun buildFixAllButtonAction(
-        onFixAllButtonClicked: () -> Unit,
-        fixableThreatsCount: Int
+        onFixAllButtonClicked: () -> Unit
     ): ActionButtonState {
-        val title = UiStringResWithParams(
-            R.string.threats_fix_num_of_threats,
-            listOf(UiStringText("$fixableThreatsCount"))
-        )
+        val title = UiStringRes(R.string.threats_fix_all)
         return ActionButtonState(
             text = title,
             onClick = onFixAllButtonClicked,
