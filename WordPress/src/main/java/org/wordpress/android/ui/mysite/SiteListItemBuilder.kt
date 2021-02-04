@@ -54,7 +54,7 @@ class SiteListItemBuilder
     fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
         return if (scanScreenFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
-                    R.drawable.ic_scan_alt_white_24dp,
+                    R.drawable.ic_baseline_security_24dp,
                     UiStringRes(R.string.scan),
                     onClick = ListItemInteraction.create(ListItemAction.SCAN, onClick)
             )

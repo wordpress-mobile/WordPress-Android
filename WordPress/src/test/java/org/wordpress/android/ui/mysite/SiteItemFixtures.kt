@@ -47,7 +47,7 @@ val BACKUP_ITEM = ListItem(
         onClick = ListItemInteraction.create(ListItemAction.BACKUP, SITE_ITEM_ACTION)
 )
 val SCAN_ITEM = ListItem(
-        R.drawable.ic_scan_alt_white_24dp,
+        R.drawable.ic_baseline_security_24dp,
         UiStringRes(R.string.scan),
         onClick = ListItemInteraction.create(ListItemAction.SCAN, SITE_ITEM_ACTION)
 )

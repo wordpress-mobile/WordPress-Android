@@ -473,7 +473,7 @@
                             android:id="@+id/my_site_scan_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_scan_alt_white_24dp" />
+                            android:src="@drawable/ic_baseline_security_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_scan_text_view"
