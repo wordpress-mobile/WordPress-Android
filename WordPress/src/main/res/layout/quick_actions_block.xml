@@ -97,5 +97,17 @@
             style="@style/MySiteQuickActionButtonLabel"
             android:layout_below="@+id/quick_action_pages_button"
             android:text="@string/pages" />
+
+        <org.wordpress.android.widgets.QuickStartFocusPoint
+            android:id="@+id/quick_start_pages_focus_point"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical|center"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="@string/quick_start_focus_point_description"
+            android:elevation="@dimen/quick_start_focus_point_elevation"
+            app:size="small"
+            tools:ignore="RtlSymmetry" />
     </RelativeLayout>
 </LinearLayout>
