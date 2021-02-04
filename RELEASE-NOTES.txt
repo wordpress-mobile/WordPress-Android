@@ -5,6 +5,7 @@
 * [*] Adds tablet mode in site and post/page previews [https://github.com/wordpress-mobile/WordPress-Android/pull/13787]
 * [*] Reader: show post menu for posts in Blog Preview and Search results [https://github.com/wordpress-mobile/WordPress-Android/pull/13897]
 * [**] Site Creation: Enables dot blog subdomains for each site design. [https://github.com/wordpress-mobile/WordPress-Android/pull/13917]
+* [*] Reader: render all colored text using a single color. [https://github.com/wordpress-mobile/WordPress-Android/pull/13958]
 
 16.6
 -----
