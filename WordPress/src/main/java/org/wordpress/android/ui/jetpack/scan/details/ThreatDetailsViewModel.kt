@@ -142,7 +142,8 @@ class ThreatDetailsViewModel @Inject constructor(
         )
     }
 
-    private fun onGetFreeEstimateButtonClicked() { // TODO ashiagr to be implemented
+    private fun onGetFreeEstimateButtonClicked() {
+        updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
     }
 
     private fun updateThreatActionButtons(isEnabled: Boolean) {
@@ -173,7 +174,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun buildContentUiState(model: ThreatModel) = Content(
         builder.buildThreatDetailsListItems(
             model,
-            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+                this@ThreatDetailsViewModel::onFixThreatButtonClicked,
             this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
             this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
         )

@@ -31,6 +31,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes.GenericFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
@@ -344,7 +345,8 @@ class RestoreViewModel @Inject constructor(
             is RemoteRequestFailure -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
             is Progress -> transitionToProgress(restoreStatus)
             is Complete -> wizardManager.showNextStep()
-            else -> throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
+            is Empty -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            else -> Unit // Do nothing
         }
     }
 
@@ -439,12 +441,7 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(
-                RestoreInProgress(
-                        restoreState.rewindId as String,
-                        restoreState.restoreId as Long
-                )
-        )
+        _wizardFinishedObservable.value = constructProgressEvent()
     }
 
     private fun onVisitSiteClick() {
