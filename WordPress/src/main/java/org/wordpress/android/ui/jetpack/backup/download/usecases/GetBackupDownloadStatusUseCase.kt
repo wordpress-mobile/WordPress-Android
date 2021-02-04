@@ -22,7 +22,7 @@ import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
 
-const val DELAY_MILLIS = 5000L
+const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
 
 class GetBackupDownloadStatusUseCase @Inject constructor(

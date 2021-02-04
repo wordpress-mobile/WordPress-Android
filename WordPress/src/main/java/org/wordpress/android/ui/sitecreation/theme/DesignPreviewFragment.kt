@@ -3,6 +3,8 @@ package org.wordpress.android.ui.sitecreation.theme
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.view.Gravity.CENTER_HORIZONTAL
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,21 +12,22 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.FrameLayout.LayoutParams
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
-import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.backButton
-import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.previewTypeSelectorButton
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Error
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loaded
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.PreviewUiState.Loading
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.DESKTOP
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.MOBILE
-import org.wordpress.android.ui.sitecreation.theme.PreviewMode.TABLET
 import org.wordpress.android.util.AniUtils
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.skip
@@ -35,6 +38,7 @@ import javax.inject.Inject
  */
 class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
+    @Inject lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     private lateinit var viewModel: HomePagePickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
@@ -125,12 +129,14 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
         webView.webViewClient = object : WebViewClient() {
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
-                val widthScript = context?.getString(
-                        R.string.web_preview_width_script,
-                        viewModel.selectedPreviewMode().previewWidth
-                )
+                if (view == null) return
+                val width = viewModel.selectedPreviewMode().previewWidth
+                setWebViewWidth(view, width)
+                val widthScript = context?.getString(R.string.web_preview_width_script, width)
                 if (widthScript != null) {
-                    view?.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
+                    Handler().postDelayed({
+                        view.evaluateJavascript(widthScript) { viewModel.onPreviewLoaded(template) }
+                    }, 250)
                 }
             }
 
@@ -152,4 +158,14 @@ class DesignPreviewFragment : FullscreenBottomSheetDialogFragment() {
     override fun closeModal() = viewModel.onDismissPreview()
 
     private fun load() = viewModel.onPreviewLoading(template)
+
+    private fun setWebViewWidth(view: View, previewWidth: Int) {
+        if (!displayUtilsWrapper.isTablet()) return
+        view.layoutParams = if (viewModel.selectedPreviewMode() === MOBILE) {
+            val width = previewWidth * resources.displayMetrics.density.toInt()
+            LayoutParams(width, LayoutParams.MATCH_PARENT).apply { gravity = CENTER_HORIZONTAL }
+        } else {
+            LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT)
+        }
+    }
 }

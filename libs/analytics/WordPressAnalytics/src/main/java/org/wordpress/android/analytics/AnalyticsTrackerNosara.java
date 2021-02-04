@@ -23,7 +23,7 @@ public class AnalyticsTrackerNosara extends Tracker {
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private TracksClient mNosaraClient;
+    private final TracksClient mNosaraClient;
 
     public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
         super(context);
@@ -1676,6 +1676,16 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activitylog_filterbar_reset_range";
             case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
                 return "activitylog_filterbar_reset_type";
+            case JETPACK_BACKUP_LIST_OPENED:
+                return "jetpack_backup_list_opened";
+            case JETPACK_BACKUP_REWIND_STARTED:
+                return "jetpack_backup_rewind_started";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "jetpack_backup_filterbar_range_button_tapped";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "jetpack_backup_filterbar_select_range";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_RESET:
+                return "jetpack_backup_filterbar_reset_range";
             case JETPACK_SCAN_ACCESSED:
                 return "jetpack_scan_accessed";
             case JETPACK_SCAN_HISTORY_ACCESSED:
