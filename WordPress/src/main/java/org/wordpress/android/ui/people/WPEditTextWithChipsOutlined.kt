@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.people
 
-
 import android.animation.Animator
 import android.content.Context
 import android.content.res.ColorStateList
@@ -15,7 +14,6 @@ import android.util.AttributeSet
 import android.util.TypedValue
 import android.view.KeyEvent
 import android.view.View
-import android.view.View.OnKeyListener
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView.OnEditorActionListener
 import androidx.annotation.AttrRes
@@ -61,9 +59,10 @@ import java.util.LinkedHashMap
  */
 
 class WPEditTextWithChipsOutlined @JvmOverloads constructor(
-    context: Context, attrs: AttributeSet? = null, defStyleAttr: Int = 0
+    context: Context,
+    attrs: AttributeSet? = null,
+    defStyleAttr: Int = 0
 ) : ConstraintLayout(context, attrs, defStyleAttr) {
-
     private enum class HelperTextState {
         HINT_VISIBLE,
         LABEL_VISIBLE
@@ -153,7 +152,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                 maxChips = stylesAttributes.getInteger(
                         R.styleable.WPEditTextWithChipsOutlined_wpMaxNumberChips, 0
                 )
-
             } finally {
                 stylesAttributes.recycle()
             }
@@ -342,8 +340,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
             // handle key preses from hardware keyboard
             editor.setOnKeyListener { _, _, keyEvent ->
-                keyEvent.keyCode == KeyEvent.KEYCODE_DEL
-                        && keyEvent.action == KeyEvent.ACTION_DOWN && removeLastEnteredItem()
+                keyEvent.keyCode == KeyEvent.KEYCODE_DEL &&
+                        keyEvent.action == KeyEvent.ACTION_DOWN && removeLastEnteredItem()
             }
         }
     }
@@ -361,7 +359,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
             editor.setText("")
 
             itemsManager?.onAddItem(cleanedItem) ?: chipify(cleanedItem, ItemValidationState.NEUTRAL)
-
         }
     }
 
@@ -425,7 +422,9 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun throwExceptionIfChipifyNotEnabled() {
-        if (!chipifyEnabled) throw IllegalArgumentException("Please set chipifyEnabled to true in order to use chips feature")
+        if (!chipifyEnabled) throw IllegalArgumentException(
+                "Please set chipifyEnabled to true in order to use chips feature"
+        )
     }
 
     // This should be fast enough for our use case, so we get fresh data always
@@ -511,8 +510,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     label.visibility = View.VISIBLE
                 }
             }
-
-
         } else {
             helperTextState = HelperTextState.HINT_VISIBLE
 
@@ -560,17 +557,13 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                             }
 
                             override fun onAnimationEnd(animation: Animator?) {
-
                             }
 
                             override fun onAnimationCancel(animation: Animator?) {
-
                             }
 
                             override fun onAnimationRepeat(animation: Animator?) {
-
                             }
-
                         }).start()
             }
             HelperTextState.LABEL_VISIBLE -> {
@@ -592,23 +585,18 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                                 setLabelColor(label, colorSurface, outlineColorAlphaFocused)
                                 label.visibility = View.VISIBLE
                                 hint.visibility = View.VISIBLE
-
                             }
 
                             override fun onAnimationEnd(animation: Animator?) {
                                 hint.visibility = View.INVISIBLE
                                 setLabelColor(label, outlineColorFocused, outlineColorAlphaFocused)
-
                             }
 
                             override fun onAnimationCancel(animation: Animator?) {
-
                             }
 
                             override fun onAnimationRepeat(animation: Animator?) {
-
                             }
-
                         }).start()
             }
         }
@@ -647,8 +635,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
         return savedState
     }
-
-
 
     override fun onRestoreInstanceState(state: Parcelable?) {
         if (state !is SavedState) {

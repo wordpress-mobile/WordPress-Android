@@ -196,7 +196,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mRoleTextView.setShowSoftInputOnFocus(false);
         mRoleTextView.setInputType(EditorInfo.TYPE_NULL);
         mRoleTextView.setKeyListener(null);
-		refreshRoleTextView();
+        refreshRoleTextView();
 
         if (mInviteRoles.size() > 1) {
             mRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
@@ -212,8 +212,6 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         mRoleContainer.setEndIconOnClickListener(null);
         mRoleContainer.setEndIconCheckable(false);
-
-        //refreshRoleTextView();
 
         MaterialTextView moreInfo = (MaterialTextView) getView().findViewById(R.id.learn_more);
         moreInfo.setOnClickListener(
@@ -365,7 +363,9 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
 
         ItemValidationState resultState = validationResultMessage == null ? ItemValidationState.NEUTRAL
-                : (validationResultMessage.equals(FLAG_SUCCESS) ? ItemValidationState.VALIDATED : ItemValidationState.VALIDATED_WITH_ERRORS);
+                : (validationResultMessage.equals(FLAG_SUCCESS)
+                        ? ItemValidationState.VALIDATED
+                        : ItemValidationState.VALIDATED_WITH_ERRORS);
 
         mUsernamesEmails.addOrUpdateChip(username, resultState);
     }
