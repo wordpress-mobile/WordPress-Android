@@ -30,8 +30,8 @@ class ExPlat
         experimentStore.clearCachedAssignments()
     }
 
-    internal fun getVariation(experiment: String, shouldFetchIfStale: Boolean) =
-            getAssignments(shouldFetchIfStale).getVariationForExperiment(experiment)
+    internal fun getVariation(experiment: Experiment, shouldFetchIfStale: Boolean) =
+            getAssignments(shouldFetchIfStale).getVariationForExperiment(experiment.name)
 
     private fun getAssignments(shouldFetchIfStale: Boolean): Assignments {
         val cachedAssignments = experimentStore.getCachedAssignments() ?: Assignments()
