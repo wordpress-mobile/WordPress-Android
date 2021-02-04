@@ -127,6 +127,7 @@ import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
+import org.wordpress.android.util.experiments.BiasAAExperiment;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -212,6 +213,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject BiasAAExperiment mBiasAAExperiment;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -977,7 +979,8 @@ public class WPMainActivity extends LocaleAwareActivity implements
             case READER:
                 ActivityId.trackLastActivity(ActivityId.READER);
                 if (trackAnalytics) {
-                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED);
+                    AnalyticsTracker.track(AnalyticsTracker.Stat.READER_ACCESSED,
+                            mBiasAAExperiment.getEventProperties());
                 }
                 break;
             case NOTIFS:
