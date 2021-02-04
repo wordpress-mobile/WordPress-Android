@@ -16,5 +16,7 @@ class QuickActionsViewHolder(parent: ViewGroup) : MySiteItemViewHolder(parent, R
         val pagesVisibility = if (item.showPages) View.VISIBLE else View.GONE
         quick_action_pages_container.visibility = pagesVisibility
         middle_quick_action_spacing.visibility = pagesVisibility
+
+        quick_start_stats_focus_point.setVisibleOrGone(item.showStatsFocusPoint)
     }
 }

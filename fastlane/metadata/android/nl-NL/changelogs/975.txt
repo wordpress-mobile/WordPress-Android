@@ -1,9 +1,0 @@
-16.4:
-Wat is er nieuw:
-
-Blok-editor: je kan nu een bestandsblok invoegen, welke een downloadknop plaatst voor bestanden zoals documenten. We hebben ook problemen met de blokken heading en galerij aangepakt.
-
-Berichtenlijst: je kan nu een bericht kopiëren met de knop "Dupliceren" in je lijst met blogberichten.
-
-Mijn site: we hebben ook een crash verholpen die optrad tijdens het bewerken van je sitetitel.
-

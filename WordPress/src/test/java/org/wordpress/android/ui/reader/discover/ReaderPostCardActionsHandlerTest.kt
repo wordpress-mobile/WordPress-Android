@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.reader.discover
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -20,6 +22,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.TEST_SCOPE
+import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.AccountStore.AddOrDeleteSubscriptionPayload.SubscriptionAction
 import org.wordpress.android.models.ReaderPost
@@ -35,10 +38,10 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowNoSitesToReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostDetail
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
@@ -61,8 +64,12 @@ import org.wordpress.android.ui.reader.repository.usecases.PostLikeUseCase.PostL
 import org.wordpress.android.ui.reader.repository.usecases.UndoBlockBlogUseCase
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.Success
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchSiteUseCase.FetchSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderPostBookmarkUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSeenStatusToggleUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.NoNetwork
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.Failed.RequestFailed
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
@@ -86,14 +93,17 @@ class ReaderPostCardActionsHandlerTest {
     @Mock private lateinit var blockBlogUseCase: BlockBlogUseCase
     @Mock private lateinit var likeUseCase: PostLikeUseCase
     @Mock private lateinit var siteNotificationsUseCase: ReaderSiteNotificationsUseCase
+    @Mock private lateinit var seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase
     @Mock private lateinit var undoBlockBlogUseCase: UndoBlockBlogUseCase
+    @Mock private lateinit var fetchSiteUseCase: ReaderFetchSiteUseCase
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock private lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
     @Mock private lateinit var dispatcher: Dispatcher
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
 
     @Before
-    fun setUp() {
+    fun setUp() = test {
         actionHandler = ReaderPostCardActionsHandler(
                 analyticsTrackerWrapper,
                 reblogUseCase,
@@ -103,17 +113,20 @@ class ReaderPostCardActionsHandlerTest {
                 likeUseCase,
                 siteNotificationsUseCase,
                 undoBlockBlogUseCase,
+                fetchSiteUseCase,
                 appPrefsWrapper,
                 dispatcher,
                 resourceProvider,
                 htmlMessageUtils,
                 mock(),
-                TEST_DISPATCHER,
-                TEST_SCOPE,
-                TEST_SCOPE
+                seenStatusToggleUseCase,
+                readerBlogTableWrapper,
+                TEST_DISPATCHER
         )
+        actionHandler.initScope(TEST_SCOPE)
         whenever(appPrefsWrapper.shouldShowBookmarksSavedLocallyDialog()).thenReturn(false)
         whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), anyOrNull())).thenReturn(mock())
+        whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(mock())
     }
 
     /** BOOKMARK ACTION begin **/
@@ -304,6 +317,61 @@ class ReaderPostCardActionsHandlerTest {
         // Assert
         assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
     }
+
+    @Test
+    fun `given site present in db, when follow action is requested, follow site is triggered`() = test {
+        // Arrange
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(FollowSiteState.Success))
+
+        // Act
+        actionHandler.onAction(dummyReaderPostModel(), FOLLOW, false)
+
+        // Assert
+        verify(followUseCase, times(1)).toggleFollow(any())
+    }
+
+    @Test
+    fun `given site not present in db, when follow action is requested, fetch site is triggered`() = test {
+        // Arrange
+        whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(FollowSiteState.Success))
+
+        // Act
+        actionHandler.onAction(dummyReaderPostModel(), FOLLOW, false)
+
+        // Assert
+        verify(fetchSiteUseCase, times(1)).fetchSite(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `given fetch site request fails, when follow action is requested, error snackbar is shown`() = test {
+        // Arrange
+        whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
+                .thenReturn(FetchSiteState.Failed.RequestFailed)
+        val observedValues = startObserving()
+
+        // Act
+        actionHandler.onAction(dummyReaderPostModel(), FOLLOW, false)
+
+        // Assert
+        assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+    }
+
+    @Test
+    fun `given fetch site request succeeds, when follow action is requested, follow site is triggered`() = test {
+        // Arrange
+        whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
+        whenever(followUseCase.toggleFollow(anyOrNull())).thenReturn(flowOf(FollowSiteState.Success))
+
+        // Act
+        actionHandler.onAction(dummyReaderPostModel(), FOLLOW, false)
+
+        // Assert
+        verify(followUseCase, times(1)).toggleFollow(any())
+    }
     /** FOLLOW ACTION end **/
 
     /** SITE NOTIFICATIONS ACTION Begin **/
@@ -359,6 +427,64 @@ class ReaderPostCardActionsHandlerTest {
         // Assert
         assertThat(observedValues.snackbarMsgs).isEmpty()
     }
+
+    @Test
+    fun `given site present in db, when site notifications action is requested, toggle notifications is triggered`() =
+        test {
+            // Arrange
+            whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
+
+            // Act
+            actionHandler.onAction(dummyReaderPostModel(), SITE_NOTIFICATIONS, false)
+
+            // Assert
+            verify(siteNotificationsUseCase, times(1)).toggleNotification(any())
+        }
+
+    @Test
+    fun `given site not present in db, when site notifications action is requested, fetch site is triggered`() = test {
+        // Arrange
+        whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+        whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
+        whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
+
+        // Act
+        actionHandler.onAction(dummyReaderPostModel(), SITE_NOTIFICATIONS, false)
+
+        // Assert
+        verify(fetchSiteUseCase, times(1)).fetchSite(any(), any(), anyOrNull())
+    }
+
+    @Test
+    fun `given fetch site request fails, when site notifications action is requested, error snackbar is shown`() =
+        test {
+            // Arrange
+            whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull()))
+                    .thenReturn(FetchSiteState.Failed.RequestFailed)
+            val observedValues = startObserving()
+
+            // Act
+            actionHandler.onAction(dummyReaderPostModel(), SITE_NOTIFICATIONS, false)
+
+            // Assert
+            assertThat(observedValues.snackbarMsgs.size).isEqualTo(1)
+        }
+
+    @Test
+    fun `given fetch site request succeeds, when site notifications is requested, toggle notifications is triggered`() =
+        test {
+            // Arrange
+            whenever(readerBlogTableWrapper.getReaderBlog(any(), any())).thenReturn(null)
+            whenever(fetchSiteUseCase.fetchSite(any(), any(), anyOrNull())).thenReturn(FetchSiteState.Success)
+            whenever(siteNotificationsUseCase.toggleNotification(anyLong())).thenReturn(SiteNotificationState.Success)
+
+            // Act
+            actionHandler.onAction(dummyReaderPostModel(), SITE_NOTIFICATIONS, false)
+
+            // Assert
+            verify(siteNotificationsUseCase, times(1)).toggleNotification(any())
+        }
     /** SITE NOTIFICATIONS ACTION end **/
 
     /** SHARE ACTION Begin **/

@@ -15,9 +15,14 @@ import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesignModel
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewMode.valueOf
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -30,6 +35,7 @@ const val defaultTemplateSlug = "default"
 private const val ERROR_CONTEXT = "design"
 private const val FETCHED_LAYOUTS = "FETCHED_LAYOUTS"
 private const val SELECTED_LAYOUT = "SELECTED_LAYOUT"
+private const val PREVIEW_MODE = "PREVIEW_MODE"
 
 class HomePagePickerViewModel @Inject constructor(
     private val networkUtils: NetworkUtilsWrapper,
@@ -38,7 +44,7 @@ class HomePagePickerViewModel @Inject constructor(
     private val analyticsTracker: SiteCreationTracker,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ViewModel(), CoroutineScope {
+) : ViewModel(), CoroutineScope, PreviewModeHandler {
     private val fetchHomePageLayoutsJob = Job()
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
@@ -60,9 +66,18 @@ class HomePagePickerViewModel @Inject constructor(
     private val _onBackButtonPressed = SingleLiveEvent<Unit>()
     val onBackButtonPressed: LiveData<Unit> = _onBackButtonPressed
 
-    sealed class DesignSelectionAction(val template: String, val segmentId: Long?) {
-        object Skip : DesignSelectionAction(defaultTemplateSlug, null)
-        class Choose(template: String, segmentId: Long?) : DesignSelectionAction(template, segmentId)
+    private val _previewMode = SingleLiveEvent<PreviewMode>()
+    val previewMode: LiveData<PreviewMode> = _previewMode
+
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
+    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
+    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
+
+    sealed class DesignSelectionAction(val template: String) {
+        object Skip : DesignSelectionAction(defaultTemplateSlug)
+        class Choose(template: String) : DesignSelectionAction(template)
     }
 
     sealed class DesignPreviewAction {
@@ -74,20 +89,26 @@ class HomePagePickerViewModel @Inject constructor(
         dispatcher.register(fetchHomePageLayoutsUseCase)
     }
 
+    override fun selectedPreviewMode() = previewMode.value ?: MOBILE
+
     override fun onCleared() {
         super.onCleared()
         fetchHomePageLayoutsJob.cancel()
         dispatcher.unregister(fetchHomePageLayoutsUseCase)
     }
 
-    fun start() {
+    fun start(isTablet: Boolean = false) {
+        if (_previewMode.value == null) {
+            _previewMode.value = if (isTablet) TABLET else MOBILE
+        }
         if (uiState.value !is UiState.Content) {
-            analyticsTracker.trackSiteDesignViewed()
+            analyticsTracker.trackSiteDesignViewed(selectedPreviewMode().key)
             fetchLayouts()
         }
     }
 
     private fun fetchLayouts() {
+        if (_uiState.value === UiState.Loading) return
         updateUiState(UiState.Loading)
         launch {
             val event = fetchHomePageLayoutsUseCase.fetchStarterDesigns()
@@ -110,7 +131,11 @@ class HomePagePickerViewModel @Inject constructor(
                 LayoutGridItemUiState(
                         slug = it.slug!!,
                         title = it.title ?: "",
-                        preview = it.screenshot!!,
+                        preview = when (_previewMode.value) {
+                            MOBILE -> it.mobileScreenshot!!
+                            TABLET -> it.tabletScreenshot!!
+                            else -> it.screenshot!!
+                        },
                         selected = it.slug == state.selectedLayoutSlug,
                         onItemTapped = { onLayoutTapped(layoutSlug = it.slug!!) },
                         onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug!!) }
@@ -137,7 +162,7 @@ class HomePagePickerViewModel @Inject constructor(
                 it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
             }?.let { layout ->
                 val template = layout.slug!!
-                analyticsTracker.trackSiteDesignPreviewViewed(template)
+                analyticsTracker.trackSiteDesignPreviewViewed(template, selectedPreviewMode().key)
                 _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
                 return
             }
@@ -158,7 +183,7 @@ class HomePagePickerViewModel @Inject constructor(
     fun onPreviewLoading(template: String) {
         if (networkUtils.isNetworkAvailable()) {
             _previewState.value = PreviewUiState.Loading
-            analyticsTracker.trackSiteDesignPreviewLoading(template)
+            analyticsTracker.trackSiteDesignPreviewLoading(template, selectedPreviewMode().key)
         } else {
             _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
             analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, "Preview error")
@@ -167,7 +192,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onPreviewLoaded(template: String) {
         _previewState.value = PreviewUiState.Loaded
-        analyticsTracker.trackSiteDesignPreviewLoaded(template)
+        analyticsTracker.trackSiteDesignPreviewLoaded(template, selectedPreviewMode().key)
     }
 
     fun onPreviewError() {
@@ -180,7 +205,7 @@ class HomePagePickerViewModel @Inject constructor(
             layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
                 val template = layout.slug!!
                 analyticsTracker.trackSiteDesignSelected(template)
-                _onDesignActionPressed.value = DesignSelectionAction.Choose(template, layout.segmentId)
+                _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
                 return
             }
         }
@@ -197,6 +222,16 @@ class HomePagePickerViewModel @Inject constructor(
         _onBackButtonPressed.call()
     }
 
+    fun onThumbnailModePressed() {
+        analyticsTracker.trackSiteDesignThumbnailModeTapped(selectedPreviewMode().key)
+        _onThumbnailModeButtonPressed.call()
+    }
+
+    fun onPreviewModePressed() {
+        analyticsTracker.trackSiteDesignPreviewModeTapped(selectedPreviewMode().key)
+        _onPreviewModeButtonPressed.call()
+    }
+
     fun onRetryClicked() {
         if (networkUtils.isNetworkAvailable()) {
             fetchLayouts()
@@ -210,6 +245,7 @@ class HomePagePickerViewModel @Inject constructor(
         if (savedInstanceState == null) return
         val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
+        val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         if (layouts == null || layouts.isEmpty()) {
             fetchLayouts()
             return
@@ -217,6 +253,7 @@ class HomePagePickerViewModel @Inject constructor(
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         updateUiState(state.copy(selectedLayoutSlug = selected))
         this.layouts = layouts
+        _previewMode.value = valueOf(previewMode)
         loadLayouts()
     }
 
@@ -224,6 +261,7 @@ class HomePagePickerViewModel @Inject constructor(
         (uiState.value as? UiState.Content)?.let {
             outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
+            outState.putString(PREVIEW_MODE, _previewMode.value?.name ?: MOBILE.name)
         }
     }
 
@@ -244,6 +282,16 @@ class HomePagePickerViewModel @Inject constructor(
                 updateUiState(state.copy(selectedLayoutSlug = layoutSlug, isToolbarVisible = true))
             }
             loadLayouts()
+        }
+    }
+
+    override fun onPreviewModeChanged(mode: PreviewMode) {
+        if (_previewMode.value !== mode) {
+            analyticsTracker.trackSiteDesignPreviewModeChanged(mode.key)
+            _previewMode.value = mode
+            if (uiState.value is UiState.Content) {
+                loadLayouts()
+            }
         }
     }
 

@@ -13,12 +13,14 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.test
 import org.wordpress.android.ui.WPWebViewUsageCategory
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewMode.DESKTOP
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.helpers.ConnectionStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DEFAULT
-import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewMode.DESKTOP
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.PreviewModeSelectorStatus
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState
 import org.wordpress.android.viewmodel.wpwebview.WPWebViewViewModel.WebPreviewUiState.WebPreviewContentUiState
@@ -34,12 +36,13 @@ class WPWebViewViewModelTest {
     @Mock private lateinit var connectionStatus: LiveData<ConnectionStatus>
     @Mock private lateinit var networkUtils: NetworkUtilsWrapper
     @Mock private lateinit var uiStateObserver: Observer<WebPreviewUiState>
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
 
     private lateinit var viewModel: WPWebViewViewModel
 
     @Before
     fun setUp() {
-        viewModel = WPWebViewViewModel(networkUtils, connectionStatus)
+        viewModel = WPWebViewViewModel(displayUtilsWrapper, networkUtils, connectionStatus)
         viewModel.uiState.observeForever(uiStateObserver)
         whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
     }
@@ -80,17 +83,35 @@ class WPWebViewViewModelTest {
     }
 
     @Test
-    fun `initially navigation is not enabled and preview mode is set to default and disabled`() {
+    fun `on mobile initially navigation is not enabled and preview mode is set to mobile and disabled`() {
+        whenever(displayUtilsWrapper.isTablet()).thenReturn(false)
+
         viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
         assertThat(viewModel.navbarUiState.value).isNotNull()
         assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
         assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
-        assertThat(viewModel.navbarUiState.value!!.desktopPreviewHintVisible).isFalse()
-        assertThat(viewModel.previewMode.value).isEqualTo(DEFAULT)
+        assertThat(viewModel.navbarUiState.value!!.previewModeHintVisible).isFalse()
+        assertThat(viewModel.previewMode.value).isEqualTo(MOBILE)
         assertThat(viewModel.previewModeSelector.value).isNotNull()
         assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
         assertThat(viewModel.previewModeSelector.value!!.isEnabled).isFalse()
-        assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(DEFAULT)
+        assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(MOBILE)
+    }
+
+    @Test
+    fun `on tablet initially navigation is not enabled and preview mode is set to tablet and disabled`() {
+        whenever(displayUtilsWrapper.isTablet()).thenReturn(true)
+
+        viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
+        assertThat(viewModel.navbarUiState.value).isNotNull()
+        assertThat(viewModel.navbarUiState.value!!.backNavigationEnabled).isFalse()
+        assertThat(viewModel.navbarUiState.value!!.forwardNavigationEnabled).isFalse()
+        assertThat(viewModel.navbarUiState.value!!.previewModeHintVisible).isFalse()
+        assertThat(viewModel.previewMode.value).isEqualTo(TABLET)
+        assertThat(viewModel.previewModeSelector.value).isNotNull()
+        assertThat(viewModel.previewModeSelector.value!!.isVisible).isFalse()
+        assertThat(viewModel.previewModeSelector.value!!.isEnabled).isFalse()
+        assertThat(viewModel.previewModeSelector.value!!.selectedPreviewMode).isEqualTo(TABLET)
     }
 
     @Test
@@ -202,6 +223,8 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selected preview mode is reflected in preview mode selector`() {
+        whenever(displayUtilsWrapper.isTablet()).thenReturn(false)
+
         viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         var previewModeSelectorStatus: PreviewModeSelectorStatus? = null
@@ -211,7 +234,7 @@ class WPWebViewViewModelTest {
 
         assertThat(previewModeSelectorStatus).isNotNull()
         assertThat(previewModeSelectorStatus!!.isVisible).isFalse()
-        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(DEFAULT)
+        assertThat(previewModeSelectorStatus!!.selectedPreviewMode).isEqualTo(MOBILE)
 
         viewModel.selectPreviewMode(DESKTOP)
         viewModel.togglePreviewModeSelectorVisibility(true)
@@ -234,6 +257,8 @@ class WPWebViewViewModelTest {
 
     @Test
     fun `selecting a preview mode changes it if it's not already selected`() {
+        whenever(displayUtilsWrapper.isTablet()).thenReturn(false)
+
         viewModel.start(WPWebViewUsageCategory.WEBVIEW_STANDARD)
 
         val selectedPreviewModes: ArrayList<PreviewMode> = ArrayList()
@@ -243,11 +268,11 @@ class WPWebViewViewModelTest {
 
         // initial state
         assertThat(selectedPreviewModes.size).isEqualTo(1)
-        assertThat(selectedPreviewModes[0]).isEqualTo(DEFAULT)
+        assertThat(selectedPreviewModes[0]).isEqualTo(MOBILE)
 
-        viewModel.selectPreviewMode(DEFAULT)
+        viewModel.selectPreviewMode(MOBILE)
         assertThat(selectedPreviewModes.size).isEqualTo(1)
-        assertThat(selectedPreviewModes[0]).isEqualTo(DEFAULT)
+        assertThat(selectedPreviewModes[0]).isEqualTo(MOBILE)
 
         viewModel.selectPreviewMode(DESKTOP)
         assertThat(selectedPreviewModes.size).isEqualTo(2)
@@ -260,7 +285,7 @@ class WPWebViewViewModelTest {
 
         var isDesktopPreviewModeHintVisible = false
         viewModel.navbarUiState.observeForever {
-            isDesktopPreviewModeHintVisible = it.desktopPreviewHintVisible
+            isDesktopPreviewModeHintVisible = it.previewModeHintVisible
         }
 
         assertThat(isDesktopPreviewModeHintVisible).isFalse()
@@ -268,7 +293,7 @@ class WPWebViewViewModelTest {
         viewModel.selectPreviewMode(DESKTOP)
         assertThat(isDesktopPreviewModeHintVisible).isTrue()
 
-        viewModel.selectPreviewMode(DEFAULT)
+        viewModel.selectPreviewMode(MOBILE)
         assertThat(isDesktopPreviewModeHintVisible).isFalse()
     }
 

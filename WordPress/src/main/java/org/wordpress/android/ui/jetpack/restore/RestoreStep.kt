@@ -5,7 +5,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 enum class RestoreStep(val id: Int) : WizardStep {
-    DETAILS(0), WARNING(1), PROGRESS(2), COMPLETE(3);
+    DETAILS(0), WARNING(1), PROGRESS(2), COMPLETE(3), ERROR(4);
 
     companion object {
         fun fromString(input: String): RestoreStep = when (input) {
@@ -13,10 +13,11 @@ enum class RestoreStep(val id: Int) : WizardStep {
             "restore_warning" -> WARNING
             "restore_progress" -> PROGRESS
             "restore_complete" -> COMPLETE
+            "restore_error" -> ERROR
             else -> throw IllegalArgumentException("RestoreStep not recognized: \$input")
         }
 
-        fun indexForErrorTransition(): Int = PROGRESS.id
+        fun indexForErrorTransition(): Int = COMPLETE.id
     }
 }
 
@@ -26,6 +27,7 @@ class RestoreStepsProvider @Inject constructor() {
             RestoreStep.fromString("restore_details"),
             RestoreStep.fromString("restore_warning"),
             RestoreStep.fromString("restore_progress"),
-            RestoreStep.fromString("restore_complete")
+            RestoreStep.fromString("restore_complete"),
+            RestoreStep.fromString("restore_error")
     )
 }

@@ -26,6 +26,8 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DateTimeUtils
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.ImageUtils
+import org.wordpress.android.util.QuickStartUtils
+import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
 import org.wordpress.android.util.capitalizeWithLocaleWithoutLint
 import org.wordpress.android.util.currentLocale
 import org.wordpress.android.util.getDrawableFromAttribute
@@ -98,7 +100,10 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(labels, page.labels.isNotEmpty())
 
-                itemView.setOnClickListener { onItemTapped(page) }
+                itemView.setOnClickListener {
+                    QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                    onItemTapped(page)
+                }
 
                 pageMore.setOnClickListener { view -> moreClick(page, view) }
                 pageMore.visibility =
@@ -109,6 +114,21 @@ sealed class PageItemViewHolder(internal val parent: ViewGroup, @LayoutRes layou
 
                 uiHelper.updateVisibility(disabledOverlay, page.showOverlay)
                 updateProgressBarState(page.progressBarUiState)
+
+                // Clean up focus tip if there
+                QuickStartUtils.removeQuickStartFocusPoint(pageItemContainer)
+                if (page.showQuickStartFocusPoint) {
+                    pageItemContainer.post {
+                        val horizontalOffset = pageItemContainer.width / 2
+                        val verticalOffset = (pageItemContainer.height)
+                        addQuickStartFocusPointAboveTheView(
+                                pageItemContainer,
+                                pageMore,
+                                horizontalOffset,
+                                -verticalOffset
+                        )
+                    }
+                }
             }
         }
 

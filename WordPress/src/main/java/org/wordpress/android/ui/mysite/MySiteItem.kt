@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
@@ -10,9 +11,8 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
-import kotlin.math.roundToInt
 
-sealed class MySiteItem(val type: Type) {
+sealed class MySiteItem(val type: Type, val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
@@ -26,11 +26,13 @@ sealed class MySiteItem(val type: Type) {
         val title: String,
         val url: String,
         val iconState: IconState,
+        val showTitleFocusPoint: Boolean,
+        val showIconFocusPoint: Boolean,
         val onTitleClick: ListItemInteraction? = null,
         val onIconClick: ListItemInteraction,
         val onUrlClick: ListItemInteraction,
         val onSwitchSiteClick: ListItemInteraction
-    ) : MySiteItem(SITE_INFO_BLOCK) {
+    ) : MySiteItem(SITE_INFO_BLOCK, activeQuickStartItem = showTitleFocusPoint || showIconFocusPoint) {
         sealed class IconState {
             object Progress : IconState()
             data class Visible(val url: String? = null) : IconState()
@@ -42,26 +44,28 @@ sealed class MySiteItem(val type: Type) {
         val onPagesClick: ListItemInteraction,
         val onPostsClick: ListItemInteraction,
         val onMediaClick: ListItemInteraction,
-        val showPages: Boolean = true
-    ) : MySiteItem(QUICK_ACTIONS_BLOCK)
+        val showPages: Boolean = true,
+        val showStatsFocusPoint: Boolean = false
+    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
     data class QuickStartCard(
         val id: String,
-        val title: String,
-        val tasks: List<DummyTask>,
+        val title: UiString,
+        val taskCards: List<QuickStartTaskCard>,
         @ColorRes val accentColor: Int,
+        val progress: Int,
         val onMoreClick: ListItemInteraction? = null
     ) : MySiteItem(QUICK_START_CARD) {
-        val doneTasks = tasks.filter { it.done }
-        val progress = if (tasks.isNotEmpty()) ((doneTasks.size / tasks.size.toFloat()) * 100).roundToInt() else 0
-
-        data class DummyTask(
-            val id: String,
-            val title: String,
-            val description: String = "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris ac erat.",
-            val done: Boolean = false
+        data class QuickStartTaskCard(
+            val quickStartTask: QuickStartTask,
+            val title: UiString,
+            val description: UiString,
+            @DrawableRes val illustration: Int,
+            @ColorRes val accentColor: Int,
+            val done: Boolean = false,
+            val onClick: ListItemInteraction
         )
     }
 
@@ -72,6 +76,7 @@ sealed class MySiteItem(val type: Type) {
         val primaryText: UiString,
         @DrawableRes val secondaryIcon: Int? = null,
         val secondaryText: UiString? = null,
+        val showFocusPoint: Boolean = false,
         val onClick: ListItemInteraction
-    ) : MySiteItem(LIST_ITEM)
+    ) : MySiteItem(LIST_ITEM, activeQuickStartItem = showFocusPoint)
 }

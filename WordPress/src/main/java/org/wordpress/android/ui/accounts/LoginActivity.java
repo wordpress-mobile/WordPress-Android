@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.network.MemorizingTrustManager;
 import org.wordpress.android.fluxc.store.AccountStore.AuthEmailPayloadScheme;
 import org.wordpress.android.fluxc.store.SiteStore;
+import org.wordpress.android.fluxc.store.SiteStore.ConnectSiteInfoPayload;
 import org.wordpress.android.login.AuthOptions;
 import org.wordpress.android.login.GoogleFragment;
 import org.wordpress.android.login.GoogleFragment.GoogleListener;
@@ -973,6 +974,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void loginViaSiteCredentials(String inputSiteAddress) {
+        // Not used in WordPress app
+    }
+
+    @Override
+    public void handleSiteAddressError(ConnectSiteInfoPayload siteInfo) {
         // Not used in WordPress app
     }
 }

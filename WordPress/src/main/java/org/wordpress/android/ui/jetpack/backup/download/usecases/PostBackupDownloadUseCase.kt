@@ -27,7 +27,7 @@ class PostBackupDownloadUseCase @Inject constructor(
         types: BackupDownloadRequestTypes
     ): BackupDownloadRequestState = withContext(ioDispatcher) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
-            NetworkUnavailable
+            return@withContext NetworkUnavailable
         }
 
         val result = activityLogStore.backupDownload(BackupDownloadPayload(site, rewindId, types))

@@ -13,6 +13,23 @@
         style="@style/Scan.Threat.Icon"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/icon_group"
+        app:layout_constraintStart_toStartOf="@id/icon_group"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ProgressBar
+        android:id="@+id/loading"
+        style="@style/Scan.Threat.Icon"
+        android:importantForAccessibility="no"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/icon_group"
+        app:layout_constraintStart_toStartOf="@id/icon_group"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@id/icon_group"
+        style="@style/Scan.Threat.Icon"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/threat_header"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -24,7 +41,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toEndOf="@+id/threat_icon"
+        app:layout_constraintStart_toEndOf="@+id/icon_group"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="@string/threat_item_header_vulnerable_plugin" />
 
@@ -32,6 +49,7 @@
         android:id="@+id/threat_sub_header"
         style="@style/Scan.Threat.SecondaryHeader"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/threat_header"
         app:layout_constraintStart_toStartOf="@+id/threat_header"
         app:layout_constraintTop_toBottomOf="@+id/threat_header"
         tools:text="@string/threat_item_sub_header_vulnerable_plugin" />

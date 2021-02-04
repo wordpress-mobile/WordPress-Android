@@ -8,17 +8,17 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
-import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SHARE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SITE_NOTIFICATIONS
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.TOGGLE_SEEN_STATUS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.VISIT_SITE
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -27,25 +27,26 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
     private val readerBlogTableWrapper: ReaderBlogTableWrapper,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
+    private val seenUnseenWithCounterFeatureConfig: SeenUnseenWithCounterFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     suspend fun buildMoreMenuItems(
         post: ReaderPost,
-        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): List<SecondaryAction> {
         return withContext(bgDispatcher) {
-            buildMoreMenuItemsBlocking(post, postListType, onButtonClicked)
+            buildMoreMenuItemsBlocking(post, onButtonClicked)
         }
     }
 
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
-        postListType: ReaderPostListType,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): MutableList<SecondaryAction> {
         val menuItems = mutableListOf<SecondaryAction>()
-        if (readerPostTableWrapper.isPostFollowed(post)) {
+        val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
+
+        if (isPostFollowed) {
             menuItems.add(
                     SecondaryAction(
                             type = FOLLOW,
@@ -97,6 +98,37 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
             )
         }
 
+        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
+            // only show toggle button for posts with a feedItemId
+            if (post.feedItemId > 0) {
+                if (readerPostTableWrapper.isPostSeen(post)) {
+                    menuItems.add(
+                            SecondaryAction(
+                                    type = TOGGLE_SEEN_STATUS,
+                                    label = UiStringRes(R.string.reader_menu_mark_as_unseen),
+                                    labelColor = R.attr.colorOnSurface,
+                                    iconRes = R.drawable.ic_not_visible_white_24dp,
+                                    iconColor = R.attr.wpColorOnSurfaceMedium,
+                                    isSelected = false,
+                                    onClicked = onButtonClicked
+                            )
+                    )
+                } else {
+                    menuItems.add(
+                            SecondaryAction(
+                                    type = TOGGLE_SEEN_STATUS,
+                                    label = UiStringRes(R.string.reader_menu_mark_as_seen),
+                                    labelColor = R.attr.colorOnSurface,
+                                    iconRes = R.drawable.ic_visible_white_24dp,
+                                    iconColor = R.attr.wpColorOnSurfaceMedium,
+                                    isSelected = false,
+                                    onClicked = onButtonClicked
+                            )
+                    )
+                }
+            }
+        }
+
         menuItems.add(
                 SecondaryAction(
                         type = SHARE,
@@ -118,7 +150,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                 )
         )
 
-        if (postListType == TAG_FOLLOWED) {
+        if (!isPostFollowed) {
             menuItems.add(
                     SecondaryAction(
                             type = BLOCK_SITE,
@@ -129,17 +161,18 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                             onClicked = onButtonClicked
                     )
             )
-            menuItems.add(
-                    SecondaryAction(
-                            type = REPORT_POST,
-                            label = UiStringRes(R.string.reader_menu_report_post),
-                            labelColor = R.attr.colorOnSurface,
-                            iconRes = R.drawable.ic_block_white_24dp,
-                            iconColor = R.attr.wpColorOnSurfaceMedium,
-                            onClicked = onButtonClicked
-                    )
-            )
         }
+
+        menuItems.add(
+                SecondaryAction(
+                        type = REPORT_POST,
+                        label = UiStringRes(R.string.reader_menu_report_post),
+                        labelColor = R.attr.colorOnSurface,
+                        iconRes = R.drawable.ic_block_white_24dp,
+                        iconColor = R.attr.wpColorOnSurfaceMedium,
+                        onClicked = onButtonClicked
+                )
+        )
         return menuItems
     }
 }
