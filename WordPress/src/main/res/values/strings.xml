@@ -2698,7 +2698,7 @@
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
