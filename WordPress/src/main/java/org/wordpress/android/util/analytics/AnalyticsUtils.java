@@ -177,7 +177,7 @@ public class AnalyticsUtils {
         metadata.setNumBlogs(siteStore.getSitesCount());
         metadata.setUsername(accountStore.getAccount().getUserName());
         metadata.setEmail(accountStore.getAccount().getEmail());
-        if (BuildConfig.BUILD_TYPE == "debug") {
+        if (BuildConfig.DEBUG) {
             metadata.setAppScheme(BuildConfig.BUILD_TYPE);
         } else {
             metadata.setAppScheme(BuildConfig.FLAVOR);
