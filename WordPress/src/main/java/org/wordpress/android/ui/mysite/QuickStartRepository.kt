@@ -7,18 +7,16 @@ import androidx.lifecycle.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
+import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -36,6 +34,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -74,19 +73,23 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(siteId: Int) = flow {
-        emit(QuickStartUpdate())
-        refresh.asFlow().map {
-            if (quickStartUtils.isQuickStartInProgress(siteId)) {
+    override fun buildSource(siteId: Int): Flow<QuickStartUpdate> {
+        _activeTask.value = null
+        if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
+                !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
+            quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
+            refresh.postValue(true)
+        }
+        return merge(refresh, activeTask) { _, activeTask ->
+            val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
                 val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
                 val growCategory = buildQuickStartCategory(siteId, GROW)
                 listOfNotNull(customizeCategory, growCategory)
             } else {
                 listOf()
             }
-        }.combine(_activeTask.asFlow().onStart { emit(null) }) { categories, activeTask ->
             QuickStartUpdate(activeTask, categories)
-        }.collect { emit(it) }
+        }.asFlow()
     }
 
     fun startQuickStart() {
