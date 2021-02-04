@@ -85,7 +85,7 @@ class QuickStartRepository
     override fun buildSource(siteId: Int) = flow {
         emit(QuickStartUpdate())
         quickStartTaskTypes.asFlow().map { types ->
-            if (quickStartUtils.isQuickStartInProgress(siteId) || true) {
+            if (quickStartUtils.isQuickStartInProgress(siteId)) {
                 types.map { buildQuickStartCategory(siteId, it) }
             } else {
                 listOf()
