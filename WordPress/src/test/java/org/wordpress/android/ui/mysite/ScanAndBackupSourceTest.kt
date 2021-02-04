@@ -35,6 +35,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 jetpackCapabilitiesUseCase
         )
         whenever(site.id).thenReturn(siteId)
+        whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(false)
     }
 
     @Test
@@ -128,6 +130,20 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     }
 
     @Test
+    fun `Scan not visible on atomic sites even when Scan product is available`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                JetpackPurchasedProducts(scan = true, backup = false)
+        )
+        whenever(site.isWPComAtomic).thenReturn(true)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isFalse
+    }
+
+    @Test
     fun `Scan visible on non-wpcom sites when Scan product is available and feature flag enabled`() = test {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
@@ -135,6 +151,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 JetpackPurchasedProducts(scan = true, backup = false)
         )
         whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(false)
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
