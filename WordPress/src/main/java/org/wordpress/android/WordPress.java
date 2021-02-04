@@ -587,6 +587,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             // Analytics resets
             AnalyticsTracker.endSession(false);
             AnalyticsTracker.clearAllData();
+
+            mExPlat.clear();
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
