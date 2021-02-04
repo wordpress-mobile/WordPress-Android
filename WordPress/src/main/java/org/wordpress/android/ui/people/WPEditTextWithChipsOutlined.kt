@@ -119,7 +119,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         companion object {
             fun stateFromColor(context: Context, color: Int): ItemValidationState {
                 return values().first { value ->
-                    context.getColorResIdFromAttribute(value.colorAttr) == color
+                    ContextCompat.getColor(context, context.getColorResIdFromAttribute(value.colorAttr)) == color
                 }
             }
         }
