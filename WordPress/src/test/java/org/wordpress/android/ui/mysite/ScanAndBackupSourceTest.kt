@@ -43,8 +43,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).single()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -53,8 +53,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).single()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -67,8 +67,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isTrue()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isTrue
     }
 
     @Test
@@ -81,8 +81,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isTrue()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isTrue
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -95,8 +95,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isTrue()
-        assertThat(result.scanAvailable).isTrue()
+        assertThat(result.backupAvailable).isTrue
+        assertThat(result.scanAvailable).isTrue
     }
 
     @Test
@@ -109,8 +109,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -124,7 +124,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -138,7 +138,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.scanAvailable).isTrue()
+        assertThat(result.scanAvailable).isTrue
     }
 
     private fun init(scanScreenFeatureEnabled: Boolean = false, backupScreenFeatureEnabled: Boolean = false) {
