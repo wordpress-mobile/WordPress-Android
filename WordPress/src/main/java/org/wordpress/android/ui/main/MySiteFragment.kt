@@ -280,7 +280,7 @@ class MySiteFragment : Fragment(),
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
             uiScope.launch {
                 val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
-                row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan)
+                row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && !site.isWPCom && itemsVisibility.scan)
                 row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
             }
         }

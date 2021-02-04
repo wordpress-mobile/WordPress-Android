@@ -113,6 +113,34 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         assertThat(result.scanAvailable).isFalse()
     }
 
+    @Test
+    fun `Scan not visible on wpcom sites even when Scan product is available`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                JetpackPurchasedProducts(scan = true, backup = false)
+        )
+        whenever(site.isWPCom).thenReturn(true)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isFalse()
+    }
+
+    @Test
+    fun `Scan visible on non-wpcom sites when Scan product is available and feature flag enabled`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                JetpackPurchasedProducts(scan = true, backup = false)
+        )
+        whenever(site.isWPCom).thenReturn(false)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isTrue()
+    }
+
     private fun init(scanScreenFeatureEnabled: Boolean = false, backupScreenFeatureEnabled: Boolean = false) {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         if (scanScreenFeatureEnabled) {

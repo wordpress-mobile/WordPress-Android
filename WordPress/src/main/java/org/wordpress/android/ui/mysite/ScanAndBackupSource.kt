@@ -22,7 +22,7 @@ class ScanAndBackupSource
             val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
             emit(
                     JetpackCapabilities(
-                            scanAvailable = scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan,
+                            scanAvailable = scanScreenFeatureConfig.isEnabled() && !site.isWPCom && itemsVisibility.scan,
                             backupAvailable = backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup
                     )
             )
