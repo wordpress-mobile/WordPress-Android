@@ -45,7 +45,7 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_details_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.restore_details_header),
                 buildDescriptionState(published, R.string.restore_details_description_with_two_parameters),
                 buildActionButtonState(
@@ -76,7 +76,7 @@ class RestoreStateListItemBuilder @Inject constructor(
             buildIconState(
                     R.drawable.ic_notice_white_24dp,
                     R.string.restore_warning_icon_content_description,
-                    R.color.error_50),
+                    R.color.error),
             buildHeaderState(R.string.restore_warning_header),
             buildDescriptionState(published, R.string.restore_warning_description_with_two_parameters),
             buildActionButtonState(
@@ -100,7 +100,7 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_progress_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.restore_progress_header),
                 buildDescriptionState(published, R.string.restore_progress_description_with_two_parameters),
                 buildProgressState(progress, isIndeterminate),
@@ -121,7 +121,7 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_history_white_24dp,
                         R.string.restore_complete_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.restore_complete_header),
                 buildDescriptionState(published, R.string.restore_complete_description_with_two_parameters),
                 buildActionButtonState(
@@ -146,17 +146,17 @@ class RestoreStateListItemBuilder @Inject constructor(
             buildBulletState(
                     R.drawable.ic_query_builder_white_24dp,
                     R.string.restore_status_bullet_clock_icon_content_desc,
-                    R.color.warning_50,
+                    R.color.warning,
                     R.string.restore_status_failure_bullet1),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.restore_status_bullet_checkmark_icon_content_desc,
-                    R.color.success_50,
+                    R.color.success,
                     R.string.restore_status_failure_bullet2),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.restore_status_bullet_checkmark_icon_content_desc,
-                    R.color.success_50,
+                    R.color.success,
                     R.string.restore_status_failure_bullet3,
                     R.dimen.jetpack_backup_restore_last_bullet_bottom_margin),
             buildActionButtonState(
@@ -169,7 +169,7 @@ class RestoreStateListItemBuilder @Inject constructor(
             buildIconState(
                     R.drawable.ic_notice_white_24dp,
                     R.string.restore_complete_failed_icon_content_description,
-                    R.color.error_50),
+                    R.color.error),
             buildHeaderState(R.string.restore_complete_failed_description),
             buildSubHeaderState(
                     R.string.request_failed_message,
