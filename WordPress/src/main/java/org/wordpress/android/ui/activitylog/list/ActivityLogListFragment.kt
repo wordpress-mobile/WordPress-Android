@@ -42,7 +42,8 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
-
+private const val ACTIVITY_LOG_TRACKING_SOURCE = "activity_log"
+private const val BACKUP_TRACKING_SOURCE = "backup"
 /**
  * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
  * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
@@ -197,18 +198,29 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
+                val trackingSource = when {
+                        requireNotNull(
+                            requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)) ->
+                                BACKUP_TRACKING_SOURCE
+                    else -> {
+                        ACTIVITY_LOG_TRACKING_SOURCE
+                    }
+                }
+
                 when (this) {
                     is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            RequestCodes.BACKUP_DOWNLOAD
+                            RequestCodes.BACKUP_DOWNLOAD,
+                            trackingSource
                     )
                     is ShowRestore -> ActivityLauncher.showRestoreForResult(
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            RequestCodes.RESTORE
+                            RequestCodes.RESTORE,
+                            trackingSource
                     )
                     is ShowRewindDialog -> displayRewindDialog(event)
                 }

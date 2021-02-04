@@ -12,7 +12,14 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.modules.UI_THREAD
@@ -62,12 +69,16 @@ import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
 const val KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY = "key_backup_download_activity_id_key"
 const val KEY_BACKUP_DOWNLOAD_CURRENT_STEP = "key_backup_download_current_step"
 const val KEY_BACKUP_DOWNLOAD_STATE = "key_backup_download_state"
+private const val TRACKING_ERROR_CAUSE_OFFLINE = "offline"
+private const val TRACKING_ERROR_CAUSE_REMOTE = "remote"
+private const val TRACKING_ERROR_CAUSE_OTHER = "other"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -181,6 +192,7 @@ class BackupDownloadViewModel @Inject constructor(
                         type = StateType.DETAILS
                 )
             } else {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(BackupDownloadErrorTypes.GenericFailure)
             }
         }
@@ -263,10 +275,19 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleBackupDownloadRequestResult(result: BackupDownloadRequestState) {
         when (result) {
-            is NetworkUnavailable -> _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
-            is RemoteRequestFailure -> _snackbarEvents.postValue(Event(GenericFailureMsg))
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                _snackbarEvents.postValue(Event(GenericFailureMsg))
+            }
             is Success -> handleBackupDownloadRequestSuccess(result)
-            is OtherRequestRunning -> _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            is OtherRequestRunning -> {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
+                _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
+            }
             else -> Unit // Do nothing
         }
     }
@@ -293,11 +314,20 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
-            is NetworkUnavailable -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
-            is RemoteRequestFailure -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
             is Progress -> transitionToProgress(state)
             is Complete -> transitionToComplete(state)
-            is Empty -> transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            is Empty -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
             else -> Unit // Do nothing
         }
     }
@@ -361,6 +391,7 @@ class BackupDownloadViewModel @Inject constructor(
         if (rewindId == null) {
             transitionToError(BackupDownloadErrorTypes.GenericFailure)
         } else {
+            trackBackupDownloadConfirmed(types)
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(
                         rewindId,
@@ -373,6 +404,7 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED)
         _wizardFinishedObservable.value = Event(
                 BackupDownloadInProgress(
                         backupDownloadState.rewindId as String,
@@ -382,10 +414,12 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onDownloadFileClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(DownloadFile(it))) }
     }
 
     private fun onShareLinkClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(ShareLink(it))) }
     }
 
@@ -396,6 +430,24 @@ class BackupDownloadViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
+    }
+
+    private fun trackBackupDownloadConfirmed(types: BackupDownloadRequestTypes) {
+        val propertiesSetup = mapOf(
+                "themes" to types.themes,
+                "plugins" to types.plugins,
+                "uploads" to types.uploads,
+                "sqls" to types.sqls,
+                "roots" to types.roots,
+                "contents" to types.contents)
+        val map = mapOf("restore_types" to JSONObject(propertiesSetup))
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, map)
+    }
+
+    private fun trackError(cause: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties["cause"] = cause
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_ERROR, properties)
     }
 
     companion object {
