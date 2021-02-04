@@ -130,6 +130,10 @@ import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewM
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
 public class ActivityLauncher {
+    public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
+    public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
+    public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
+
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);
@@ -614,16 +618,26 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.JETPACK_BACKUP_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, true);
         activity.startActivity(intent);
     }
 
-    public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
+    public static void viewActivityLogDetailForResult(
+            Activity activity,
+            SiteModel site,
+            String activityId,
+            boolean rewindableOnly
+    ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        if (rewindableOnly) {
+            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, BACKUP_TRACK_EVENT_PROPERTY_VALUE);
+        } else {
+            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+        }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
 
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
