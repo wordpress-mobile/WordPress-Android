@@ -912,6 +912,15 @@ class MySiteViewModelTest : BaseUnitTest() {
         verify(quickStartRepository).hideCategory(id)
     }
 
+    @Test
+    fun `removes quick start menu item in quickStartRepository`() {
+        val id = "id"
+        viewModel.onQuickStartMenuInteraction(QuickStartMenuInteraction.Remove(id))
+
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
+        verify(quickStartRepository).removeCategory(id)
+    }
+
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =

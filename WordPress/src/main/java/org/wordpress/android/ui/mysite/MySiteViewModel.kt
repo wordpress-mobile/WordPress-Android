@@ -21,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -524,7 +525,10 @@ class MySiteViewModel
 
     fun onQuickStartMenuInteraction(interaction: QuickStartMenuInteraction) {
         when (interaction) {
-            is QuickStartMenuInteraction.Remove,
+            is QuickStartMenuInteraction.Remove -> {
+                analyticsTrackerWrapper.track(QUICK_START_REMOVE_CARD_TAPPED)
+                quickStartRepository.removeCategory(interaction.id)
+            }
             is Pin -> TODO()
             is Hide -> {
                 analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
