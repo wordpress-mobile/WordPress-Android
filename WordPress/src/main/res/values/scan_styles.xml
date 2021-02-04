@@ -10,7 +10,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:paddingStart">@dimen/margin_extra_large</item>
         <item name="android:paddingEnd">@dimen/margin_extra_large</item>
-        <item name="android:paddingTop">@dimen/margin_large</item>
+        <item name="android:paddingTop">@dimen/margin_extra_medium_large</item>
         <item name="android:paddingBottom">@dimen/margin_large</item>
         <item name="android:clickable">false</item>
         <item name="android:gravity">center_vertical</item>
