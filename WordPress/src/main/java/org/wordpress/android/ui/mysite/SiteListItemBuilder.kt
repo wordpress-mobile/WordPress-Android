@@ -44,7 +44,7 @@ class SiteListItemBuilder
     fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
         return if (backupScreenFeatureConfig.isEnabled() && isBackupAvailable) {
             ListItem(
-                    R.drawable.ic_backup_alt_white_24dp,
+                    R.drawable.ic_gridicons_cloud_upload_24dp,
                     UiStringRes(R.string.backup),
                     onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
             )

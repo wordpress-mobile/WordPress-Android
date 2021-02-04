@@ -454,7 +454,7 @@
                             android:id="@+id/my_site_backup_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_backup_alt_white_24dp" />
+                            android:src="@drawable/ic_gridicons_cloud_upload_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_backup_text_view"
