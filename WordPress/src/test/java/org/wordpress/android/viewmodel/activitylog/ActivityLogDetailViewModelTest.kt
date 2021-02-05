@@ -21,6 +21,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.util.config.RestoreFeatureConfig
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,6 +32,7 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
+    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -67,7 +69,8 @@ class ActivityLogDetailViewModelTest {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
                 activityLogStore,
-                rewindStatusService
+                rewindStatusService,
+                restoreFeatureConfig
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
     }

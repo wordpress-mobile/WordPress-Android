@@ -10,10 +10,11 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
+import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -26,7 +27,8 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService
+    private val rewindStatusService: RewindStatusService,
+    private val restoreFeatureConfig: RestoreFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
