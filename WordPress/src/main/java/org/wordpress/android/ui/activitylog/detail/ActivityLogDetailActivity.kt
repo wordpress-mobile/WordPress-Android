@@ -40,6 +40,7 @@ class ActivityLogDetailActivity : LocaleAwareActivity(), BasicDialogPositiveClic
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+        // Do nothing.
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
