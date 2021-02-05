@@ -277,7 +277,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
             }
 
             if (chipifyEnabled && !hasFocus && hasText()) {
-                manageAddItemTrigger(editor.text.toString())
+                addItem(editor.text.toString())
             }
         }
 
@@ -294,7 +294,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     mShouldIgnoreChanges = true
 
                     if (s.isNotBlank() && endsWithDelimiter(s.toString())) {
-                        manageAddItemTrigger(s.toString())
+                        addItem(s.toString())
                     }
 
                     mShouldIgnoreChanges = false
@@ -312,7 +312,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                         val item = it.toString()
 
                         if (item.isNotBlank()) {
-                            manageAddItemTrigger(item)
+                            addItem(item)
                         }
                     }
                     return@OnEditorActionListener true
@@ -331,7 +331,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     private fun canAddMoreChips() = flexbox.childCount < maxChips + 1 || maxChips == 0
 
-    private fun manageAddItemTrigger(item: String) {
+    private fun addItem(item: String) {
         if (!canAddMoreChips() && item.isNotBlank()) {
             editor.setText("")
         } else {
@@ -440,7 +440,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun endsWithDelimiter(string: String): Boolean {
-        if (string.isNullOrBlank()) {
+        if (string.isBlank()) {
             return false
         }
         for (usernameDelimiter in ITEM_DELIMITERS) {
@@ -507,8 +507,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     private fun animateViewTo(targetState: HelperTextState) {
-        val duration = 167L // this should be the material design default for the animation
-
         if (isRtl) {
             hint.pivotX = hint.width.toFloat()
             hint.pivotY = 0f
@@ -531,7 +529,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                         .translationY(0f)
                         .scaleX(1f)
                         .scaleY(1f)
-                        .setDuration(duration)
+                        .setDuration(LABEL_ANIMATION_DURATION)
                         .setListener(object : Animator.AnimatorListener {
                             override fun onAnimationStart(animation: Animator?) {
                                 label.visibility = View.INVISIBLE
@@ -561,7 +559,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                         .translationY(label.y - hint.y)
                         .scaleX(label.width.toFloat() / hint.width)
                         .scaleY(label.height.toFloat() / hint.height)
-                        .setDuration(duration)
+                        .setDuration(LABEL_ANIMATION_DURATION)
                         .setListener(object : Animator.AnimatorListener {
                             override fun onAnimationStart(animation: Animator?) {
                                 setLabelColor(label, colorSurface, outlineColorAlphaFocused)
@@ -603,7 +601,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     private fun isEditorFocused() = editor.isFocused
     private fun hasHint() = hintResourceId != 0
 
-    override fun onSaveInstanceState(): Parcelable? {
+    override fun onSaveInstanceState(): Parcelable {
         val savedState = SavedState(super.onSaveInstanceState())
         savedState.isFocused = isEditorFocused()
         savedState.labelState = helperTextState
@@ -614,7 +612,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                     ChipData(v.text.toString(), v.currentTextColor)
                 }
         )
-
         return savedState
     }
 
@@ -710,7 +707,8 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
     }
 
     companion object {
-        private const val MAX_NUMBER_OF_CHIPS_DEFAULT = 10
+        // this duration should be the material design default for the animation
+        private const val LABEL_ANIMATION_DURATION = 167L
         private val ITEM_DELIMITERS = arrayOf(" ", ",")
     }
 }
