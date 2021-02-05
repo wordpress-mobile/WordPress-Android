@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-20 15:27:01+0000
+Translation-Revision-Date: 2021-02-05 15:56:58+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="rewind_another_process_running">실행 중인 다른 복원이 있습니다.</string>
+    <string name="restore_complete_failed_icon_content_description">오류 아이콘</string>
+    <string name="restore_complete_failed_description">사이트를 복원할 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="restore_complete_failed_title">복원 실패</string>
+    <string name="restore_complete_visit_site_button_content_description">사이트 방문 버튼</string>
+    <string name="restore_complete_icon_content_description">복원 아이콘</string>
+    <string name="restore_complete_visit_site_action_button">사이트 방문</string>
+    <string name="restore_complete_description_with_two_parameters">이제 선택한 항목이 모두 %1$s %2$s(으)로 다시 복원되었습니다.</string>
+    <string name="restore_complete_header">사이트가 복원되었습니다.</string>
+    <string name="restore_progress_additional_info">기다리시지 않아도 됩니다. 사이트가 복원되면 알려드립니다.</string>
+    <string name="restore_progress_icon_content_description">사이트 복원 아이콘</string>
+    <string name="restore_progress_description_with_two_parameters">사이트를 %1$s %2$s(으)로 다시 복원하는 중입니다.</string>
+    <string name="restore_progress_header">현재 복원 중인 사이트</string>
+    <string name="restore_warning_action_button_content_description">사이트 복원 확인 버튼</string>
+    <string name="restore_warning_icon_content_description">느낌표가 있는 빨간색 원 이미지</string>
+    <string name="restore_warning_action_button">사이트 복원 확인</string>
+    <string name="restore_warning_description_with_two_parameters">사이트를 %2$s의 %1$s(으)로 되돌리시겠습니까?\n 이렇게 하면 이 날짜 이후로 만들거나 변경한 콘텐츠와 옵션이 모두 제거됩니다.</string>
+    <string name="restore_warning_header">경고</string>
+    <string name="restore_details_action_button_content_description">사이트 복원 버튼</string>
+    <string name="restore_details_icon_content_description">복원 아이콘</string>
+    <string name="restore_details_action_button">사이트 복원</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s이(가) 사이트를 복원을 위해 선택한 시점입니다.</string>
+    <string name="restore_details_header">사이트 복원</string>
+    <string name="restore_details_choose_items_header">복원할 항목 선택:</string>
+    <string name="restore">복원</string>
+    <string name="backup_download_complete_failed_icon_content_description">X로 표시된 구름 아이콘</string>
+    <string name="backup_download_complete_failed_description">백업을 만들 수 없습니다. 나중에 다시 시도하세요.</string>
+    <string name="web_preview_tablet">태블릿</string>
+    <string name="quick_start_card_menu_remove">다시 보지 않음</string>
+    <string name="quick_start_card_menu_pin">이 항목 고정</string>
+    <string name="quick_start_dialog_review_pages_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_review_pages_message">사이트의 페이지를 변경, 추가 또는 제거합니다.</string>
+    <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">홈페이지를 편집하려면 %1$s 홈페이지 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_dialog_edit_homepage_message">사이트의 홈페이지에서 콘텐츠를 변경, 추가 또는 제거합니다.</string>
+    <string name="quick_start_dialog_edit_homepage_title">홈페이지 편집</string>
+    <string name="reader_menu_mark_as_unseen">안 읽음으로 표시</string>
+    <string name="reader_menu_mark_as_seen">읽음으로 표시</string>
+    <string name="error_media_upload_failed_for_reason">미디어 업로드에 실패했습니다.\n%1$s</string>
+    <string name="error_media_not_enough_storage">사용 가능한 사이트 저장 공간 부족</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">이 글의 읽음 상태를 전환할 수 없음</string>
+    <string name="reader_marked_post_as_unseen">안 읽음으로 표시됨</string>
+    <string name="reader_marked_post_as_seen">읽음으로 표시됨</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">일부 위협은 해결할 수 없습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_fix_all_status_error_message">해결 상태를 가져오는 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_fix_all_status_success_message">위협이 해결되었습니다.</string>
+    <string name="threat_fix_all_error_message">위협 해결 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_fix_all_started_message">백그라운드에서 이러한 위협을 해결하기 위해 노력하는 중입니다. 나중에 다시 확인하세요.</string>
+    <string name="threat_fix_all_warning_message">%s개의 활성 위협을 해결할지 확인해 주세요.</string>
+    <string name="threat_fix_all_warning_title">위협 모두 해결</string>
+    <string name="threat_ignore_error_message">위협을 무시하는 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_ignore_success_message">위협이 무시되었습니다.</string>
+    <string name="threat_ignore_warning">안전한 것이 확실하지 않은 한 보안을 무시해서는 안 됩니다. 이 위협 무시를 선택하면 사이트 &lt;b>%s&lt;/b>에서 위협이 유지됩니다.</string>
+    <string name="threat_fix_error_message">위협 해결 중 오류가 발생했습니다. 지원팀에 문의하세요.</string>
+    <string name="threat_item_sub_header_status_ignored">위협 무시됨</string>
+    <string name="threat_item_sub_header_status_fixed">위협 해결됨</string>
+    <string name="threat_fixing">위협 해결 중</string>
+    <string name="threats_fix_num_of_threats">%s개 위협 해결</string>
+    <string name="scan_history_ignored_threats_tab">무시됨</string>
+    <string name="scan_history_no_threats_found">항목을 찾을 수 없음</string>
+    <string name="scan_history_fixed_threats_tab">해결됨</string>
+    <string name="scan_history_all_threats_tab">모두</string>
+    <string name="scan_scanning_title">파일 스캔 중</string>
+    <string name="scan_preparing_to_scan_title">스캔 준비</string>
+    <string name="scan_history_menu_title">내역</string>
+    <string name="scan_history">스캔 내역</string>
+    <string name="backup_active_filter_empty_subtitle">날짜 범위 조정 시도</string>
+    <string name="backup_active_filter_empty_title">일치하는 백업을 찾을 수 없음</string>
+    <string name="backup_empty_subtitle">첫 번째 백업이 24시간 이내에 여기에 표시되고 백업이 완료되면 알림이 수신됩니다.</string>
+    <string name="backup_empty_title">첫 번째 백업이 곧 준비됩니다</string>
+    <string name="request_failed_message">요청 처리 중 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="gutenberg_native_move_to_bottom">아래로 이동하기</string>
     <string name="gutenberg_native_move_block_position">블록 위치 이동하기</string>
     <string name="label_control_upload">업로드하기</string>
@@ -37,6 +109,10 @@ Language: ko_KR
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">교차글</string>
     <string name="suggestion_user">사용자</string>
+    <string name="suggestion_no_matching">일치하는 %s이(가) 없습니다.</string>
+    <string name="suggestion_problem">제안 로드 중 문제가 발생했습니다.</string>
+    <string name="suggestion_none">사용 가능한 %s 제안이 없습니다.</string>
+    <string name="suggestion_selection_needed">제안 목록을 입력하여 필터링하세요.</string>
     <string name="threat_get_free_estimate">무료 견적 얻기</string>
     <string name="threat_ignore">위협 무시하기</string>
     <string name="threat_fix">위협 고치기</string>
@@ -127,6 +203,8 @@ Language: ko_KR
     <string name="new_site_creation_domain_header_title">도메인 선택하기</string>
     <string name="my_site_btn_jetpack_settings">젯팩 설정</string>
     <string name="my_site_header_jetpack">젯팩</string>
+    <string name="reader_btn_following_comments">이메일로 대화 팔로우 중</string>
+    <string name="reader_btn_follow_comments">이메일로 대화 팔로우</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">이 글에 대한 댓글을 구독 해제할 수 없습니다</string>
     <string name="reader_follow_comments_could_not_subscribe_error">이 글에 대한 댓글을 구독할 수 없습니다</string>
     <string name="reader_follow_comments_get_status_error">글에 대한 구독상태를 가져오는데 오류가 있습니다</string>
@@ -240,6 +318,7 @@ Language: ko_KR
     <string name="gutenberg_native_add_this_telephone_link">이 전화 링크 추가하기</string>
     <string name="gutenberg_native_add_this_link">이 링크 추가하기</string>
     <string name="gutenberg_native_add_this_email_link">이 이메일 링크 추가하기</string>
+    <string name="suggestion_no_connection">인터넷에 연결되지 않았습니다.\n제안을 사용할 수 없습니다.</string>
     <string name="typeface_label_shrikhand">굵게</string>
     <string name="typeface_label_space_mono">모던</string>
     <string name="typeface_label_pacifico">발랄</string>
@@ -437,6 +516,7 @@ Language: ko_KR
     <string name="pages_cannot_be_started">지금은 페이지를 열 수 없습니다. 나중에 다시 시도하시기 바랍니다</string>
     <string name="pages_set_as_posts_page">글 페이지로 설정</string>
     <string name="pages_set_as_homepage">홈페이지로 설정</string>
+    <string name="suggestion_invalid">%s은(는) 유효한 %s이(가) 아님</string>
     <string name="site_settings_select_page">페이지 선택</string>
     <string name="site_settings_posts_page">글 페이지</string>
     <string name="site_settings_static_homepage">정적 홈페이지</string>
@@ -650,6 +730,7 @@ Language: ko_KR
     <string name="posts_cannot_be_started">지금 이 글을 열 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="site_cannot_be_loaded">사이트의 데이터를 현재 로드할 수 없습니다. 나중에 다시 시도해 주세요.</string>
     <string name="gutenberg_native_wordpress_media_library">워드프레스 미디어 라이브러리</string>
+    <string name="gutenberg_native_unsupported">지원되지 않음</string>
     <string name="gutenberg_native_ungroup">그룹 해제</string>
     <string name="gutenberg_native_translate">번역</string>
     <string name="gutenberg_native_title">제목:</string>

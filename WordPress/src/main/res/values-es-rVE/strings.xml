@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-20 10:17:32+0000
+Translation-Revision-Date: 2021-01-28 11:00:35+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
@@ -41,6 +41,8 @@ Language: es_VE
     <string name="new_site_creation_domain_header_title">Elige un dominio</string>
     <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Siguiendo la conversación por correo electrónico</string>
+    <string name="reader_btn_follow_comments">Seguir la conversación por correo electrónico</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">No se ha podido anular la suscripción a los comentarios de esta entrada</string>
     <string name="reader_follow_comments_could_not_subscribe_error">No se ha podido crear la suscripción a los comentarios de esta entrada</string>
     <string name="reader_follow_comments_get_status_error">Error al recuperar el estado de suscripción para la entrada</string>
@@ -154,6 +156,7 @@ Language: es_VE
     <string name="gutenberg_native_add_this_telephone_link">Añadir este enlace de teléfono</string>
     <string name="gutenberg_native_add_this_link">Añadir este enlace</string>
     <string name="gutenberg_native_add_this_email_link">Añadir este enlace de correo electrónico</string>
+    <string name="suggestion_no_connection">No hay conexión a Internet.\nNo están disponibles las sugerencias.</string>
     <string name="typeface_label_shrikhand">Negrita</string>
     <string name="typeface_label_space_mono">Moderno</string>
     <string name="typeface_label_pacifico">Alegre</string>
@@ -351,6 +354,7 @@ Language: es_VE
     <string name="pages_cannot_be_started">No podemos abrir las páginas en este momento. Por favor, inténtalo de nuevo más tarde</string>
     <string name="pages_set_as_posts_page">Establecer como página de entradas</string>
     <string name="pages_set_as_homepage">Establecer como página de inicio</string>
+    <string name="suggestion_invalid">%s no es una %s válida</string>
     <string name="site_settings_select_page">Seleccionar la página</string>
     <string name="site_settings_posts_page">Página de entradas</string>
     <string name="site_settings_static_homepage">Página de inicio estática</string>

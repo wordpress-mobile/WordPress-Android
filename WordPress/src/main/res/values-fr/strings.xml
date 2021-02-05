@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-21 18:55:54+0000
+Translation-Revision-Date: 2021-02-05 15:58:37+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
+    <string name="restore_complete_visit_site_button_content_description">Bouton Visiter le site</string>
+    <string name="restore_complete_done_button_content_description">Bouton Terminé</string>
+    <string name="restore_progress_additional_info">Pas besoin d’attendre. Nous vous avertirons lorsque votre site aura été restauré.</string>
+    <string name="restore_progress_icon_content_description">Icône Restaurer le site</string>
+    <string name="restore_progress_description_with_two_parameters">Nous sommes en train de restaurer votre site tel qu’il était le %1$s %2$s.</string>
+    <string name="restore_progress_header">Restauration du site en cours</string>
+    <string name="restore_warning_action_button_content_description">Bouton Confirmer la restauration du site</string>
+    <string name="restore_warning_icon_content_description">Image d’un cercle rouge avec un point d’exclamation</string>
+    <string name="restore_warning_action_button">Confirmer la restauration du site</string>
+    <string name="restore_warning_description_with_two_parameters">Confirmez-vous vouloir rembobiner votre site à la version du %1$s à %2$s ?\n Cela supprimera tout le contenu et les options créés ou modifiés jusqu’à maintenant.</string>
+    <string name="restore_warning_header">Avertissement</string>
+    <string name="restore_details_action_button_content_description">Bouton Restaurer le site</string>
+    <string name="restore_details_icon_content_description">Icône Restaurer</string>
+    <string name="restore_details_action_button">Restaurer le site</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s correspond au point sélectionné pour la restauration.</string>
+    <string name="restore_details_header">Restaurer le site</string>
+    <string name="restore_details_choose_items_header">Choisissez les éléments à restaurer :</string>
+    <string name="restore">Restaurer</string>
+    <string name="backup_download_complete_failed_icon_content_description">Icône de nuage avec le symbole X</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Bouton Terminé</string>
+    <string name="backup_download_complete_failed_action_button">Terminé</string>
+    <string name="backup_download_complete_failed_description">Nous ne pouvons pas créer votre sauvegarde. Veuillez réessayer plus tard.</string>
+    <string name="backup_download_complete_failed_title">Échec du téléchargement</string>
+    <string name="web_preview_tablet">Tablette</string>
+    <string name="web_preview_mobile">Portable</string>
+    <string name="quick_start_card_menu_remove">Ne plus afficher</string>
+    <string name="quick_start_card_menu_hide">Cacher</string>
+    <string name="quick_start_card_menu_pin">Épingler ceci</string>
+    <string name="quick_start_dialog_review_pages_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
+    <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
+    <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">Sélectionnez %1$s Page d’accueil %2$s pour modifier votre page d’accueil.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
+    <string name="quick_start_dialog_edit_homepage_message">Modifiez, ajoutez ou supprimez du contenu depuis la page d\'accueil de votre site.</string>
+    <string name="quick_start_dialog_edit_homepage_title">Modifier la page d\'accueil</string>
+    <string name="reader_menu_mark_as_unseen">Marquer comme non lu</string>
+    <string name="reader_menu_mark_as_seen">Marquer comme lu</string>
+    <string name="error_media_upload_failed_for_reason">Échec de chargement du média.\n%1$s</string>
+    <string name="error_media_not_enough_storage">Espace de stockage disponible sur le site insuffisant.</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Impossible de basculer vers le statut Lu pour cet article</string>
+    <string name="reader_marked_post_as_unseen">Article marqué comme non lu</string>
+    <string name="reader_marked_post_as_seen">Article marqué comme lu</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Toutes les menaces n’ont pas pu être corrigées. Veuillez contacter l’assistance.</string>
+    <string name="threat_fix_all_status_error_message">Erreur lors de la récupération de l’état de la résolution. Veuillez contacter l’assistance.</string>
+    <string name="threat_fix_all_status_success_message">Les menaces ont bien été corrigées.</string>
+    <string name="threat_fix_all_error_message">Erreur lors de la correction de menaces. Veuillez contacter l’assistance.</string>
+    <string name="threat_fix_all_started_message">Nous rencontrons des difficultés à résoudre ces menaces en arrière-plan. Revenez vérifier sous peu.</string>
+    <string name="threat_fix_all_warning_message">Veuillez confirmer que vous souhaitez corriger les %s menaces actives.</string>
+    <string name="threat_fix_all_warning_title">Corriger l’ensemble des menaces</string>
+    <string name="threat_ignore_error_message">Une erreur s’est produite, l’erreur n’a pas pu être ignorée. Veuillez contacter l’assistance.</string>
+    <string name="threat_ignore_success_message">Menace ignorée.</string>
+    <string name="threat_ignore_warning">Vous ne devriez pas ignorer un problème de sécurité, à moins d’avoir la certitude qu’il n’y a aucun danger. Si vous choisissez d’ignorer cette menace, elle restera présente sur votre site &lt;b>%s&lt;/b>.</string>
+    <string name="threat_fix_error_message">Erreur lors de la correction de la menace. Veuillez contacter l’assistance.</string>
+    <string name="threat_item_sub_header_status_ignored">Menace ignorée</string>
+    <string name="threat_item_sub_header_status_fixed">Menace corrigée</string>
+    <string name="threat_fixing">Menace en cours de correction…</string>
+    <string name="threats_fix_num_of_threats">Corriger %s menaces</string>
+    <string name="scan_history_ignored_threats_tab">Ignoré</string>
+    <string name="scan_history_no_threats_found">Aucun élément trouvé</string>
+    <string name="scan_history_fixed_threats_tab">Exact</string>
+    <string name="scan_history_all_threats_tab">Tout</string>
+    <string name="scan_scanning_title">Analyse des fichiers</string>
+    <string name="scan_preparing_to_scan_title">Préparation de l’analyse</string>
+    <string name="scan_history_menu_title">Historique</string>
+    <string name="scan_history">Analyser l’historique</string>
+    <string name="backup_active_filter_empty_subtitle">Essayez d’ajuster la période</string>
+    <string name="backup_active_filter_empty_title">Aucune sauvegarde ne correspond</string>
+    <string name="backup_empty_subtitle">Votre première sauvegarde apparaîtra ici dans les 24 heures et dès qu\'elle sera prête, vous recevrez une notification.</string>
+    <string name="backup_empty_title">Votre première sauvegarde sera bientôt prête.</string>
+    <string name="request_failed_message">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
+    <string name="gutenberg_native_move_to_bottom">Déplacer tout en bas</string>
+    <string name="gutenberg_native_move_block_position">Déplacer la position du bloc</string>
     <string name="label_control_upload">Charger</string>
     <string name="jetpack_icon_content_description">icône</string>
     <string name="backup_download_complete_info">Nous vous avons également envoyé par e-mail un lien vers votre fichier.</string>
@@ -34,6 +106,10 @@ Language: fr
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">partage de contenu</string>
     <string name="suggestion_user">utilisateur</string>
+    <string name="suggestion_no_matching">Aucun(e) %s correspondant(e).</string>
+    <string name="suggestion_problem">Un problème est survenu lors du chargement des suggestions.</string>
+    <string name="suggestion_none">Aucune suggestion %s disponible.</string>
+    <string name="suggestion_selection_needed">Veuillez taper pour filtrer la liste de suggestions.</string>
     <string name="threat_get_free_estimate">Recevoir un devis gratuit</string>
     <string name="threat_ignore">Ignorer la menace</string>
     <string name="threat_fix">Résoudre la menace</string>
@@ -100,6 +176,8 @@ Language: fr
     <string name="new_site_creation_domain_header_title">Choisir un domaine</string>
     <string name="my_site_btn_jetpack_settings">Réglages de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">Suivi de la discussion par e-mail</string>
+    <string name="reader_btn_follow_comments">Suivre la discussion par e-mail</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Impossible de se désabonner des commentaires pour cet article</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Impossible de s’abonner aux commentaires pour cet article</string>
     <string name="reader_follow_comments_get_status_error">Erreur de récupération du statut d’abonnement pour l’article</string>
@@ -213,6 +291,7 @@ Language: fr
     <string name="gutenberg_native_add_this_telephone_link">Lien d’ajout de ce téléphone</string>
     <string name="gutenberg_native_add_this_link">Ajouter ce lien</string>
     <string name="gutenberg_native_add_this_email_link">Lien d’ajout de cet e-mail</string>
+    <string name="suggestion_no_connection">Aucune connexion internet.\nLes suggestions ne sont pas disponibles.</string>
     <string name="typeface_label_shrikhand">Gras</string>
     <string name="typeface_label_space_mono">Moderne</string>
     <string name="typeface_label_pacifico">Ludique</string>
@@ -404,11 +483,13 @@ Language: fr
     <string name="status_and_visibility">État et visibilité</string>
     <string name="update_now">Mettre à jour maintenant</string>
     <string name="gutenberg_native_open_block_actions_menu">Ouvrir le menu d’actions du bloc</string>
+    <string name="gutenberg_native_move_to_top">Déplacer tout en haut</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille du bas avec des options disponibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Appuyer deux fois pour ouvrir la feuille d’action avec des options disponibles</string>
     <string name="pages_cannot_be_started">Impossible d’ouvrir des pages pour le moment. Réessayez ultérieurement.</string>
     <string name="pages_set_as_posts_page">Définir comme page d’articles</string>
     <string name="pages_set_as_homepage">Définir comme page d’accueil</string>
+    <string name="suggestion_invalid">%s n’est pas un(e) %s valide</string>
     <string name="site_settings_select_page">Sélectionner une page</string>
     <string name="site_settings_posts_page">Page des articles</string>
     <string name="site_settings_static_homepage">Page d’accueil statique</string>
@@ -622,6 +703,7 @@ Language: fr
     <string name="posts_cannot_be_started">Nous ne pouvons pas ouvrir les articles pour le moment. Réessayez ultérieurement.</string>
     <string name="site_cannot_be_loaded">Nous ne pouvons pas charger les données de votre site pour le moment. Réessayez ultérieurement.</string>
     <string name="gutenberg_native_wordpress_media_library">Bibliothèque des médias WordPress</string>
+    <string name="gutenberg_native_unsupported">Non pris(e) en charge</string>
     <string name="gutenberg_native_ungroup">Dissocier</string>
     <string name="gutenberg_native_translate">Traduire</string>
     <string name="gutenberg_native_title">Titre :</string>

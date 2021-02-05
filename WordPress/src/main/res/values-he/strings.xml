@@ -1,11 +1,93 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-21 18:56:15+0000
+Translation-Revision-Date: 2021-02-05 17:43:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="rewind_another_process_running">יש שחזור נוסף שפועל כרגע.</string>
+    <string name="restore_complete_failed_icon_content_description">סמל שגיאה</string>
+    <string name="restore_complete_failed_action_button_content_description">כפתור \'בוצע\'</string>
+    <string name="restore_complete_failed_description">לא הצלחנו לשחזר את האתר שלך. יש לנסות שוב מאוחר יותר.</string>
+    <string name="restore_complete_failed_title">השחזור נכשל</string>
+    <string name="restore_complete_visit_site_button_content_description">כפתור \'לבקר באתר\'</string>
+    <string name="restore_complete_done_button_content_description">כפתור \'בוצע\'</string>
+    <string name="restore_complete_icon_content_description">סמל \'שחזור\'</string>
+    <string name="restore_complete_visit_site_action_button">לבקר באתר</string>
+    <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
+    <string name="restore_complete_header">האתר שלך שוחזר</string>
+    <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_progress_additional_info">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
+    <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
+    <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
+    <string name="restore_progress_header">אנחנו משחזרים כעת את האתר שלך</string>
+    <string name="restore_warning_action_button_content_description">כפתור \'לאשר את שחזור האתר\'</string>
+    <string name="restore_warning_icon_content_description">תמונה של עיגול אדום עם סימן קריאה</string>
+    <string name="restore_warning_action_button">לאשר את שחזור האתר</string>
+    <string name="restore_warning_description_with_two_parameters">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד ⁦%1$s⁩ בשעה ⁦%2$s⁩?\n פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
+    <string name="restore_warning_header">אזהרה</string>
+    <string name="restore_details_action_button_content_description">כפתור \'לשחזר את האתר\'</string>
+    <string name="restore_details_icon_content_description">סמל \'שחזור\'</string>
+    <string name="restore_details_action_button">לשחזר את האתר</string>
+    <string name="restore_details_description_with_two_parameters">המועד ⁦%1$s⁩ ⁦%2$s⁩ הוא המועד שנבחר לשחזור האתר.</string>
+    <string name="restore_details_header">לשחזר את האתר</string>
+    <string name="restore_details_choose_items_header">יש לבחור את הפריטים לשחזור:</string>
+    <string name="restore">לשחזר</string>
+    <string name="backup_download_complete_failed_icon_content_description">סמל ענן עם X</string>
+    <string name="backup_download_complete_failed_action_button_content_description">כפתור \'בוצע\'</string>
+    <string name="backup_download_complete_failed_action_button">סיימתי</string>
+    <string name="backup_download_complete_failed_description">לא הצלחנו ליצור את הגיבוי שלך. יש לנסות שוב מאוחר יותר.</string>
+    <string name="backup_download_complete_failed_title">ההורדה נכשלה</string>
+    <string name="web_preview_tablet">טאבלט</string>
+    <string name="web_preview_mobile">טלפון נייד</string>
+    <string name="quick_start_card_menu_remove">לא להציג שוב</string>
+    <string name="quick_start_card_menu_hide">להסתיר</string>
+    <string name="quick_start_card_menu_pin">לנעוץ את הפריט</string>
+    <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
+    <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
+    <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">יש לבחור באפשרות ⁦%1$s⁩ עמוד הבית ⁦%2$s⁩ כדי לערוך את עמוד הבית.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
+    <string name="quick_start_dialog_edit_homepage_message">לשנות, להוסיף או להסיר תוכן בעמוד הבית של האתר.</string>
+    <string name="quick_start_dialog_edit_homepage_title">לערוך את עמוד הבית</string>
+    <string name="reader_menu_mark_as_unseen">לסמן כ\'לא נקרא\'</string>
+    <string name="reader_menu_mark_as_seen">לסמן כ\'נקרא\'</string>
+    <string name="error_media_upload_failed_for_reason">העלאת המדיה נכשלה.\n%1$s</string>
+    <string name="error_media_not_enough_storage">אין מספיק שטח אחסון זמין באתר</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">לא ניתן לשנות את המצב \'נקרא\' בפוסט זה</string>
+    <string name="reader_marked_post_as_unseen">הפוסט סומן כ\'לא נקרא\'</string>
+    <string name="reader_marked_post_as_seen">הפוסט סומן כ\'נקרא\'</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">לא הצלחנו לתקן את כל האיומים. יש לפנות לתמיכה שלנו.</string>
+    <string name="threat_fix_all_status_error_message">שגיאה בקבלה של מצב התיקון. יש לפנות לתמיכה שלנו.</string>
+    <string name="threat_fix_all_status_success_message">האיומים תוקנו בהצלחה.</string>
+    <string name="threat_fix_all_error_message">שגיאה בתיקון האיומים. יש לפנות לתמיכה שלנו.</string>
+    <string name="threat_fix_all_started_message">אנחנו משקיעים המון מאמצים כדי לתקן את האיומים האלה ברקע. יש לבדוק שוב בעוד זמן קצר.</string>
+    <string name="threat_fix_all_warning_message">עליך לאשר שברצונך לתקן את %s האיומים הפעילים.</string>
+    <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
+    <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
+    <string name="threat_ignore_success_message">התעלמת מהאיום.</string>
+    <string name="threat_ignore_warning">לא כדאי להתעלם מאיומי אבטחה אלא אם אין לך ספק שהתוכן בטוח. אם ברצונך להתעלם מהאיום הזה, הוא יישאר באתר &lt;b>%s&lt;/b>.</string>
+    <string name="threat_fix_error_message">אירעה שגיאה בעת תיקון האיום. יש לפנות לתמיכה שלנו.</string>
+    <string name="threat_item_sub_header_status_ignored">התעלמת מהאיום</string>
+    <string name="threat_item_sub_header_status_fixed">האיום תוקן</string>
+    <string name="threat_fixing">מתקן את האיום</string>
+    <string name="threats_fix_num_of_threats">לתקן %s איומים</string>
+    <string name="scan_history_ignored_threats_tab">התעלמת מהאיום</string>
+    <string name="scan_history_no_threats_found">לא נמצאו פריטים</string>
+    <string name="scan_history_fixed_threats_tab">תוקן</string>
+    <string name="scan_history_all_threats_tab">הכול</string>
+    <string name="scan_scanning_title">סורק קבצים</string>
+    <string name="scan_preparing_to_scan_title">מתכונן לסריקה</string>
+    <string name="scan_history_menu_title">היסטוריה</string>
+    <string name="scan_history">היסטוריית סריקות</string>
+    <string name="backup_active_filter_empty_subtitle">כדאי לנסות להתאים את טווח התאריכים</string>
+    <string name="backup_active_filter_empty_title">לא נמצאו גיבויים תואמים</string>
+    <string name="backup_empty_subtitle">הגיבוי הראשון שלך יופיע כאן תוך 24 שעות ואנחנו נשלח לך הודעה כאשר הגיבוי יושלם</string>
+    <string name="backup_empty_title">הגיבוי הראשון שלך יהיה מוכן בקרוב</string>
+    <string name="request_failed_message">הייתה בעיה לטפל בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
+    <string name="gutenberg_native_move_to_bottom">להעביר לתחתית</string>
+    <string name="gutenberg_native_move_block_position">להזיז את המיקום של הבלוק</string>
     <string name="label_control_upload">להעלות</string>
     <string name="jetpack_icon_content_description">סמל</string>
     <string name="backup_download_complete_info">בנוסף, שלחנו לך הודעת אימייל עם קישור לקובץ שלך.</string>
@@ -17,6 +99,7 @@ Language: he_IL
     <string name="backup_download_complete_description_with_two_parameters">יצרנו בהצלחה גיבוי של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
+    <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_additional_info">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה</string>
     <string name="backup_download_progress_action_button_content_description">כפתור \'בסדר, תשלחו לי הודעה\'</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
@@ -34,6 +117,10 @@ Language: he_IL
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">crosspost</string>
     <string name="suggestion_user">משתמש</string>
+    <string name="suggestion_no_matching">לא נמצאה התאמה ל-%s.</string>
+    <string name="suggestion_problem">הייתה בעיה בטעינת ההצעות.</string>
+    <string name="suggestion_none">אין הצעות זמינות של %s.</string>
+    <string name="suggestion_selection_needed">יש להקליד כדי לסנן את רשימת ההצעות.</string>
     <string name="threat_get_free_estimate">הערכה חינם</string>
     <string name="threat_ignore">להתעלם מהאיום</string>
     <string name="threat_fix">לתקן את האיום</string>
@@ -105,6 +192,8 @@ Language: he_IL
     <string name="gutenberg_native_choose_file">לבחור קובץ</string>
     <string name="activity_log_item_menu_download_backup_label">להוריד גיבוי</string>
     <string name="activity_log_item_menu_restore_label">לשחזר לנקודה זאת</string>
+    <string name="activity_log_activity_type_filter_label">סוג הפעילות</string>
+    <string name="activity_log_date_range_filter_label">טווח תאריכים</string>
     <string name="activity_log_activity_type_filter_header">לסנן לפי סוג הפעילות</string>
     <string name="dialog_confirm_copy_local_copy_button">להעתיק את הגרסה מהאפליקציה הזאת</string>
     <string name="dialog_confirm_copy_local_edit_button">לערוך את הפוסט קודם כל</string>
@@ -122,6 +211,8 @@ Language: he_IL
     <string name="new_site_creation_domain_header_title">לבחור דומיין</string>
     <string name="my_site_btn_jetpack_settings">הגדרות Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">הופעל מעקב אחר השיחה באמצעות האימייל</string>
+    <string name="reader_btn_follow_comments">לעקוב אחר השיחה באמצעות האימייל</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">לא ניתן היה לבטל את ההרשמה מהתגובות לפוסט זה</string>
     <string name="reader_follow_comments_could_not_subscribe_error">לא ניתן היה להירשם לתגובות לפוסט זה</string>
     <string name="reader_follow_comments_get_status_error">שגיאה בהבאת מצב ההרשמה לפוסט</string>
@@ -221,6 +312,7 @@ Language: he_IL
     <string name="photo_picker_wordpress_media_library">לבחור מתוך ספריית המדיה של WordPress</string>
     <string name="reader_label_toolbar_back">חזרה</string>
     <string name="reader_discover_empty_button_text">מתחילים כאן</string>
+    <string name="reader_discover_empty_subtitle">לעקוב אחר נושאים כדי לגלות בלוגים חדשים</string>
     <string name="reader_post_details_header_by_author_name">לפי</string>
     <string name="stats_referrer_snackbar_cant_mark_as_spam">לא ניתן לסמן את מקור ההפניה כזבל</string>
     <string name="stats_referrer_popup_unmark_as_spam">לבטל את הסימון כתגובת זבל</string>
@@ -234,6 +326,7 @@ Language: he_IL
     <string name="gutenberg_native_add_this_telephone_link">להוסיף קישור למספר הטלפון</string>
     <string name="gutenberg_native_add_this_link">להוסיף את הקישור</string>
     <string name="gutenberg_native_add_this_email_link">להוסיף את הקישור לאימייל</string>
+    <string name="suggestion_no_connection">אין חיבור לאינטרנט.\nההצעות לא זמינות.</string>
     <string name="typeface_label_shrikhand">מודגש</string>
     <string name="typeface_label_space_mono">מודרני</string>
     <string name="typeface_label_pacifico">משעשע</string>
@@ -241,6 +334,7 @@ Language: he_IL
     <string name="typeface_label_libre_baskerville">קלאסי</string>
     <string name="typeface_label_nunito">יומיומי</string>
     <string name="toast_capture_operation_permission_needed">עליך לתת לאפליקציה הרשאה להקליט אודיו כדי להקליט וידאו</string>
+    <string name="mlp_notselected_description">%s</string>
     <string name="mlp_selected_description">%s נבחר</string>
     <string name="login_get_link_by_email">לקבל קישור לכניסה באימייל</string>
     <string name="email_not_registered_wpcom">מצטערים, לא הצלחנו לאתר את חשבון ה-WordPress.com שמקושר לכתובת האימייל הזו.</string>
@@ -324,6 +418,8 @@ Language: he_IL
     <string name="mlp_choose_layout_subtitle">ניתן להתחיל באמצעות בחירה ממגוון רחב של פריסות עמוד שהוכנו מראש. או פשוט להתחיל מעמוד ריק.</string>
     <string name="mlp_choose_layout_title">יש לבחור פריסה</string>
     <string name="prepublishing_nudges_story_title_hint">להגדיר שם לסטורי</string>
+    <string name="create_post_page_fab_tooltip_contributors_stories_enabled">ליצור פוסט או סטורי</string>
+    <string name="create_post_page_fab_tooltip_stories_enabled">ליצור פוסט, עמוד או סטורי</string>
     <string name="quick_start_dialog_create_new_post_message_short">יש להקיש על ⁦%1$s⁩ כדי ליצור. ⁦%2$s⁩ לאחר מכן, יש לבחור &lt;b>פוסט בבלוג&lt;/b></string>
     <string name="photo_picker_choose_file">לבחור מהמכשיר</string>
     <string name="my_site_bottom_sheet_add_story">פוסט של סטורי</string>
@@ -361,6 +457,7 @@ Language: he_IL
     <string name="create_account">ליצור חשבון</string>
     <string name="send_link_by_email">לשלוח את הקישור באימייל</string>
     <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
+    <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו. הרושם הראשוני חשוב!</string>
     <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
     <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b>⁦%1$s⁩&lt;/b> כדי להגדיר שם חדש</string>
@@ -421,11 +518,13 @@ Language: he_IL
     <string name="status_and_visibility">מצב וניראות</string>
     <string name="update_now">לעדכן עכשיו</string>
     <string name="gutenberg_native_open_block_actions_menu">לפתוח את התפריט של פעולות הבלוק</string>
+    <string name="gutenberg_native_move_to_top">להעביר לחלק העליון</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הכפתורים עם האפשרויות הזמינות</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">יש להקיש פעמיים כדי לפתוח את גיליון הפעולות עם האפשרויות הזמינות</string>
     <string name="pages_cannot_be_started">אין לנו אפשרות לפתוח את העמודים כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="pages_set_as_posts_page">להגדיר כעמוד פוסטים</string>
     <string name="pages_set_as_homepage">להגדיר כעמוד הבית</string>
+    <string name="suggestion_invalid">הפריט %s לא חוקי %s</string>
     <string name="site_settings_select_page">לבחור עמוד</string>
     <string name="site_settings_posts_page">עמוד הפוסטים</string>
     <string name="site_settings_static_homepage">עמוד בית קבוע</string>
@@ -639,6 +738,7 @@ Language: he_IL
     <string name="posts_cannot_be_started">אין לנו אפשרות לפתוח את הפוסטים כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="site_cannot_be_loaded">אין לנו אפשרות לטעון את הנתונים של האתר שלך כרגע. יש לנסות שוב מאוחר יותר</string>
     <string name="gutenberg_native_wordpress_media_library">ספריית המדיה של WordPress</string>
+    <string name="gutenberg_native_unsupported">לא נתמך</string>
     <string name="gutenberg_native_ungroup">לפרק קבוצה</string>
     <string name="gutenberg_native_translate">לתרגם</string>
     <string name="gutenberg_native_title">כותרת:</string>
@@ -900,6 +1000,7 @@ Language: he_IL
     <string name="editor_failed_to_insert_media_tap_to_retry">שילוב פירטי המדיה נכשל.\nיש להקיש כדי לנסות שוב.</string>
     <string name="editor_uploading_draft">אנחנו מעלים את הטיוטה שלך</string>
     <string name="post_uploading_draft">מעלה את הטיוטה</string>
+    <string name="post_list_tab_drafts">טיוטות</string>
     <string name="error_restoring_post">אירעה שגיאה בעת שחזור הפוסט</string>
     <string name="backdated_for">עדכון לתאריך הזה בעבר: %s</string>
     <string name="stats_insights_management_title">הצגה של הנתונים הסטטיסטיים הרלוונטיים ביותר בלבד. הוספת התובנות שמופיעות למטה וארגונן.</string>
@@ -945,6 +1046,7 @@ Language: he_IL
     <string name="plugin_install_custom_domain_required_dialog_register_btn">רישום הדומיין</string>
     <string name="plugin_install_custom_domain_required_dialog_message">כדי להתקין תוספים, עליך לספק דומיין מותאם אישית שמקושר לאתר שלך.</string>
     <string name="plugin_install_custom_domain_required_dialog_title">התקנת תוסף</string>
+    <string name="new_site_creation_preview_subtitle">תהיה לך אפשרות להתאים אישית את המראה והאווירה של האתר שלך בשלב מאוחר יותר</string>
     <string name="publish_on">פרסום בתאריך: %s</string>
     <string name="schedule_for">תזמון לתאריך: %s</string>
     <string name="published_on">פורסם בתאריך: %s</string>
@@ -1056,6 +1158,7 @@ Language: he_IL
     <string name="preference_strip_image_location">הסרת מיקום ממדיה</string>
     <string name="stats_cannot_be_started">אין לנו אפשרות לפתוח את הנתונים הסטטיסטיים כעת. יש לנסות שוב מאוחר יותר</string>
     <string name="gif_picker_endless_scroll_network_error">הטעינה של חלק מפרטי המדיה נכשלה עקב שגיאת רשת.</string>
+    <string name="gif_picker_empty_search_list">לא נמצאו פרטי מדיה שמתאימים לחיפוש שלך</string>
     <string name="gif_picker_initial_empty_text">לחפש קובצי GIF שניתן להוסיף לספריית המדיה שלך!</string>
     <string name="stats_author_views_label">צפיות</string>
     <string name="stats_author_label">מחבר</string>
@@ -1424,6 +1527,7 @@ Language: he_IL
     <string name="notifications_screen_title">הודעות</string>
     <string name="reader_screen_title">Reader</string>
     <string name="me_section_screen_title">אני</string>
+    <string name="my_site_section_screen_title">האתר שלי</string>
     <string name="notif_settings_screen_title">הגדרות הודעה</string>
     <string name="help_screen_title">עזרה ותמיכה</string>
     <string name="license_screen_title">רישיון</string>
@@ -1730,6 +1834,7 @@ Language: he_IL
     <string name="enter_site_address">יש להזין את כתובת האתר ב-WordPress שאליו ברצונך להתחבר.</string>
     <string name="login_already_logged_in_wpcom">כבר בוצע חיבור ל-WordPress.com</string>
     <string name="login_continue">המשך</string>
+    <string name="connect_more">חיבור אתר נוסף</string>
     <string name="enter_wpcom_password">הזן את הסיסמה שלך ל-WordPress.com.</string>
     <string name="login_magic_link_email_requesting">שולח בקשה לאימייל להתחברות</string>
     <string name="password_incorrect">נראה שהסיסמה הזו שגויה. יש לבדוק את המידע שהזנת ולנסות שוב.</string>
@@ -2270,6 +2375,7 @@ Language: he_IL
     <string name="reader_short_like_count_multi">%s לייקים</string>
     <string name="reader_short_like_count_one">לייק אחד</string>
     <string name="reader_short_like_count_none">לייק</string>
+    <string name="reader_label_follow_count">%,d עוקבים</string>
     <string name="reader_menu_tags">לערוך נושאים ואתרים</string>
     <string name="reader_title_post_detail">פוסט</string>
     <string name="notifications_push_summary">הגדרת התראות יוצגו במכשיר שלך. </string>
@@ -2512,6 +2618,7 @@ Language: he_IL
     <string name="reader_btn_unfollow">עוקב</string>
     <string name="reader_btn_follow">עקוב</string>
     <string name="reader_btn_share">שתף</string>
+    <string name="reader_view_reblog">פרסום מחדש בבלוג</string>
     <string name="reader_untitled_post">(ללא כותרת)</string>
     <string name="comments_empty_list">עדיין אין תגובות</string>
     <string name="empty_list_default">רשימה זו ריקה</string>
