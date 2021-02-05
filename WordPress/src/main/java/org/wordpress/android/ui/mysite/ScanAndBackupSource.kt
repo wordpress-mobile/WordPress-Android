@@ -21,12 +21,12 @@ class ScanAndBackupSource @Inject constructor(
             val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
             emit(
                     JetpackCapabilities(
-                            scanAvailable = scanScreenFeatureConfig.isEnabled()
-                                    && itemsVisibility.scan
-                                    && !site.isWPCom
-                                    && !site.isWPComAtomic,
-                            backupAvailable = backupScreenFeatureConfig.isEnabled()
-                                    && itemsVisibility.backup
+                            scanAvailable = scanScreenFeatureConfig.isEnabled() &&
+                                    itemsVisibility.scan &&
+                                    !site.isWPCom &&
+                                    !site.isWPComAtomic,
+                            backupAvailable = backupScreenFeatureConfig.isEnabled() &&
+                                    itemsVisibility.backup
                     )
             )
         }

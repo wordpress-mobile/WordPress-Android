@@ -281,8 +281,10 @@ class MySiteFragment : Fragment(),
             uiScope.launch {
                 val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
                 row_scan.setVisible(
-                        scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan &&
-                                !site.isWPCom && !site.isWPComAtomic
+                        scanScreenFeatureConfig.isEnabled() &&
+                                itemsVisibility.scan &&
+                                !site.isWPCom &&
+                                !site.isWPComAtomic
                 )
                 row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
             }
