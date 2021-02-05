@@ -221,7 +221,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(CUSTOMIZE.toString())
 
-        val quickStartUpdate = source.take(2).toList().last()
+        val quickStartUpdate = source.take(1).toList().last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(GROW)
@@ -234,7 +234,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(GROW.toString())
 
-        val quickStartUpdate = source.take(2).toList().last()
+        val quickStartUpdate = source.take(1).toList().last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
