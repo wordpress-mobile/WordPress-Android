@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.activitylog.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
@@ -38,5 +40,17 @@ class ActivityLogDetailActivity : LocaleAwareActivity(), BasicDialogPositiveClic
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.RESTORE -> if (resultCode == RESULT_OK) onActivityResultForRestore(data)
+        }
+    }
+
+    private fun onActivityResultForRestore(data: Intent?) {
+        setResult(RESULT_OK, data)
+        finish()
     }
 }
