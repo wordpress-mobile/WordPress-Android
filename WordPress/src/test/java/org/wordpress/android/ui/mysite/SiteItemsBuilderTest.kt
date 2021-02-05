@@ -86,6 +86,20 @@ class SiteItemsBuilderTest {
         )
     }
 
+    @Test
+    fun `passes parameter to show focus point to plan item`() {
+        val showPlansFocusPoint = true
+        setupHeaders(addPlanItem = true, showPlansFocusPoint = showPlansFocusPoint)
+
+        val buildSiteItems = siteItemsBuilder.buildSiteItems(
+                siteModel,
+                SITE_ITEM_ACTION,
+                showExplorePlansFocusPoint = showPlansFocusPoint
+        )
+
+        assertThat(buildSiteItems.first()).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint))
+    }
+
     private fun setupHeaders(
         addJetpackHeader: Boolean = false,
         addJetpackSettings: Boolean = false,
@@ -101,7 +115,8 @@ class SiteItemsBuilderTest {
         addSiteSettingsItem: Boolean = false,
         addThemesItem: Boolean = false,
         addBackupItem: Boolean = false,
-        addScanItem: Boolean = false
+        addScanItem: Boolean = false,
+        showPlansFocusPoint: Boolean = false
     ) {
         if (addJetpackHeader) {
             whenever(siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(siteModel)).thenReturn(
@@ -124,8 +139,14 @@ class SiteItemsBuilderTest {
             )
         }
         if (addPlanItem) {
-            whenever(siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)).thenReturn(
-                    PLAN_ITEM
+            whenever(
+                    siteListItemBuilder.buildPlanItemIfAvailable(
+                            siteModel,
+                            showPlansFocusPoint,
+                            SITE_ITEM_ACTION
+                    )
+            ).thenReturn(
+                    PLAN_ITEM.copy(showFocusPoint = showPlansFocusPoint)
             )
         }
         if (addActivityLogItem) {
