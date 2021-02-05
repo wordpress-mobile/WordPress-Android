@@ -32,7 +32,6 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
@@ -67,7 +66,6 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
-import org.wordpress.android.ui.mysite.QuickStartRepository.ExternalFocusPointInfo
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -130,7 +128,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private lateinit var textInputDialogModels: MutableList<TextInputDialogModel>
     private lateinit var dialogModels: MutableList<SiteDialogModel>
     private lateinit var navigationActions: MutableList<SiteNavigationAction>
-    private lateinit var externalFocusPointEvents: MutableList<List<ExternalFocusPointInfo>>
     private val avatarUrl = "https://1.gravatar.com/avatar/1000?s=96&d=identicon"
     private val siteId = 1
     private val siteUrl = "http://site.com"
@@ -190,7 +187,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         textInputDialogModels = mutableListOf()
         dialogModels = mutableListOf()
         navigationActions = mutableListOf()
-        externalFocusPointEvents = mutableListOf()
         launch(Dispatchers.Default) {
             viewModel.uiModel.observeForever {
                 uiModels.add(it)
@@ -214,11 +210,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         viewModel.onNavigation.observeForever { event ->
             event?.getContentIfNotHandled()?.let {
                 navigationActions.add(it)
-            }
-        }
-        viewModel.onExternalQuickStartFocusPointVisibilityChange.observeForever { event ->
-            event?.getContentIfNotHandled()?.let {
-                externalFocusPointEvents.add(it)
             }
         }
         site = SiteModel()
@@ -926,42 +917,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
-    @Test
-    fun `when the active task needs to show an external focus point, emit focus point event accordingly`() {
-        activeTask.value = FOLLOW_SITE
-
-        assertThat(externalFocusPointEvents).containsExactly(listOf(visibleFollowSiteFocusPointInfo))
-    }
-
-    @Test
-    fun `when the active task doesn't need to show an external focus point, emit focus point event accordingly`() {
-        activeTask.value = QuickStartTask.PUBLISH_POST
-
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
-    }
-
-    @Test
-    fun `when the active task is null, emit focus point event accordingly`() {
-        activeTask.value = null
-
-        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
-    }
-
-    @Test
-    fun `when the active task changes more than once, only emit focus point event if its value has changed`() {
-        activeTask.value = FOLLOW_SITE
-        activeTask.value = FOLLOW_SITE
-        activeTask.value = QuickStartTask.PUBLISH_POST
-        activeTask.value = null
-        activeTask.value = FOLLOW_SITE
-
-        assertThat(externalFocusPointEvents).containsExactly(
-                listOf(visibleFollowSiteFocusPointInfo),
-                listOf(invisibleFollowSiteFocusPointInfo),
-                listOf(visibleFollowSiteFocusPointInfo)
-        )
-    }
-
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
     private fun findDomainRegistrationBlock() =
@@ -1007,10 +962,5 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     private enum class SiteInfoBlockAction {
         TITLE_CLICK, ICON_CLICK, URL_CLICK, SWITCH_SITE_CLICK
-    }
-
-    companion object {
-        val visibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, true)
-        val invisibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, false)
     }
 }
