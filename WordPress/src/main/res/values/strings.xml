@@ -1010,7 +1010,7 @@
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
-    <string name="activity">Activity</string>
+    <string name="activity">Activity log</string>
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>

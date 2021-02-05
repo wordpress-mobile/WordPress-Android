@@ -34,7 +34,7 @@ class SiteListItemBuilder
         ) || site.isJetpackConnected
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
-                    R.drawable.ic_history_alt_white_24dp,
+                    R.drawable.ic_gridicons_clipboard_white_24dp,
                     UiStringRes(R.string.activity),
                     onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
             )
@@ -44,7 +44,7 @@ class SiteListItemBuilder
     fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
         return if (backupScreenFeatureConfig.isEnabled() && isBackupAvailable) {
             ListItem(
-                    R.drawable.ic_backup_alt_white_24dp,
+                    R.drawable.ic_gridicons_cloud_upload_white_24dp,
                     UiStringRes(R.string.backup),
                     onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
             )
@@ -54,7 +54,7 @@ class SiteListItemBuilder
     fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
         return if (scanScreenFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
-                    R.drawable.ic_scan_alt_white_24dp,
+                    R.drawable.ic_baseline_security_white_24dp,
                     UiStringRes(R.string.scan),
                     onClick = ListItemInteraction.create(ListItemAction.SCAN, onClick)
             )
