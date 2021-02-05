@@ -177,7 +177,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener extends DialogVisibilityProvider {
         void onEditorFragmentInitialized();
-        void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
+        void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
         void onAddMediaClicked();
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
@@ -214,6 +214,8 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles);
         void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles);
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
+        void onReplaceStoryEditedBlockActionSent();
+        void onReplaceStoryEditedBlockActionReceived();
     }
 
     /**
