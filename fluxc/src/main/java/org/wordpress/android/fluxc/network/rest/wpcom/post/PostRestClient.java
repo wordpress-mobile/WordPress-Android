@@ -227,7 +227,7 @@ public class PostRestClient extends BaseWPComRestClient {
         add(request);
     }
 
-    public void pushPost(final PostModel post, final SiteModel site) {
+    public void pushPost(final PostModel post, final SiteModel site, final boolean isFirstTimePublish) {
         String url;
 
         if (post.isLocalDraft()) {
@@ -251,6 +251,7 @@ public class PostRestClient extends BaseWPComRestClient {
                         uploadedPost.setLocalSiteId(site.getId());
 
                         RemotePostPayload payload = new RemotePostPayload(uploadedPost, site);
+                        payload.isFirstTimePublish = isFirstTimePublish;
                         mDispatcher.dispatch(UploadActionBuilder.newPushedPostAction(payload));
                     }
                 },
