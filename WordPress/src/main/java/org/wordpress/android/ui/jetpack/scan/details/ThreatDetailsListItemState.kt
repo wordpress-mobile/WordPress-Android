@@ -16,8 +16,7 @@ sealed class ThreatDetailsListItemState(override val type: ViewType) : JetpackLi
             @ColorRes val lineNumberBackgroundColorRes: Int,
             @ColorRes val contentBackgroundColorRes: Int,
             @ColorRes val highlightedBackgroundColorRes: Int,
-            @ColorRes val highlightedTextColorRes: Int,
-            @ColorRes val normalTextColorRes: Int
+            @ColorRes val highlightedTextColorRes: Int
         )
     }
 

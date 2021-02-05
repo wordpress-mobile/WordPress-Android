@@ -1433,6 +1433,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
+                        event.isFirstTimePublish,
                         event.post,
                         null,
                         targetSite);

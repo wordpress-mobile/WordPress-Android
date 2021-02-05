@@ -1166,7 +1166,7 @@ class MySiteFragment : Fragment(),
             if (event.post.localSiteId == site.id) {
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
-                        requireActivity().findViewById(R.id.coordinator), true,
+                        requireActivity().findViewById(R.id.coordinator), true, false,
                         event.post, event.errorMessage, site
                 )
             }
