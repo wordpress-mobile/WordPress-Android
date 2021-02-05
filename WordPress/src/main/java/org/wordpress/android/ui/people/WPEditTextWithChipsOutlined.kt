@@ -177,11 +177,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         setListeners()
     }
 
-    fun isEditorEmpty(): Boolean {
-        return !this.hasText()
-    }
-
-    fun getTextIfAvaliableOrNull(): String? {
+    fun getTextIfAvailableOrNull(): String? {
         throwExceptionIfChipifyNotEnabled()
 
         if (!hasText() || !canAddMoreChips()) {
