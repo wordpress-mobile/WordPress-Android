@@ -84,7 +84,7 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                             ActivityLauncher.viewScanRequestFixState(requireActivity(), site, this.threatId)
                         }
                         is ThreatDetailsNavigationEvents.ShowGetFreeEstimate -> {
-                            ActivityLauncher.openUrlExternal(context, this.url)
+                            ActivityLauncher.openUrlExternal(context, this.url())
                         }
                     }
                 }
