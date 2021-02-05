@@ -31,11 +31,6 @@ class MySiteStateProvider(
     }
 
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
-        data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
-            fun update(partialState: PartialState): SiteIdToState {
-                return this.copy(state = state.update(partialState))
-            }
-        }
         val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteId != null) {
             mySiteSources.map { source -> source.buildSource(siteId).distinctUntilChanged().asLiveData(bgDispatcher) }
@@ -50,8 +45,16 @@ class MySiteStateProvider(
                 }
             }
         }
+        // We want to filter out the empty state where we have a site ID but site object is missing.
+        // Without this check there is an emission of a NoSites state even if we have the site
         result.filter { it.siteId == null || it.state.site != null }.map { it.state }
     }.distinctUntilChanged()
+
+    private data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
+        fun update(partialState: PartialState): SiteIdToState {
+            return this.copy(state = state.update(partialState))
+        }
+    }
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {
