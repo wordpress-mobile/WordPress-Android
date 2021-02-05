@@ -6,13 +6,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.activity_log_item_detail.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
@@ -70,7 +68,7 @@ class ActivityLogDetailFragment : Fragment() {
                 else -> throw Throwable("Couldn't initialize Activity Log view model")
             }
 
-            viewModel.activityLogItem.observe(viewLifecycleOwner, Observer { activityLogModel ->
+            viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
                 uiHelpers.setTextOrHide(activityActorName, activityLogModel?.actorName)
                 uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
@@ -100,7 +98,7 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.rewindAvailable.observe(viewLifecycleOwner, Observer { available ->
+            viewModel.rewindAvailable.observe(viewLifecycleOwner, { available ->
                 activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
@@ -119,7 +117,7 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, Observer<FormattableRange> { range ->
+            viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, { range ->
                 if (range != null) {
                     formattableContentClickHandler.onClick(activity, range)
                 }
