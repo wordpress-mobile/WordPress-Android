@@ -197,18 +197,10 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         throwExceptionIfChipifyNotEnabled()
         val chips = getChipsMap()
 
-        if (chips.containsKey(item)) {
-            val matchedChips = chips.map { (_, v) ->
-                v
-            }.filter { chip ->
-                chip.text.toString() == item
-            }
-
-            for (chip: Chip in matchedChips) {
-                flexbox.removeView(chip)
-                if (flexbox.childCount == 1) {
-                    styleView(isEditorFocused(), hasItemsOrText(), true)
-                }
+        chips[item]?.let {
+            flexbox.removeView(it)
+            if (flexbox.childCount == 1) {
+                styleView(isEditorFocused(), hasItemsOrText(), true)
             }
         }
     }
