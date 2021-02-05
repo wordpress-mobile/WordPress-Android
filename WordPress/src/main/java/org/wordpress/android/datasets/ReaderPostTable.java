@@ -89,7 +89,8 @@ public class ReaderPostTable {
             + "is_private_atomic," // 47
             + "tags," // 48
             + "organization_id," // 49
-            + "is_seen"; // 50
+            + "is_seen," // 50
+            + "is_seen_supported"; // 51
 
     // used when querying multiple rows and skipping text column
     private static final String COLUMN_NAMES_NO_TEXT =
@@ -141,7 +142,8 @@ public class ReaderPostTable {
             + "is_private_atomic," // 46
             + "tags," // 47
             + "organization_id," // 48
-            + "is_seen"; // 49
+            + "is_seen," // 49
+            + "is_seen_supported"; // 50
 
     protected static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE tbl_posts ("
@@ -195,6 +197,7 @@ public class ReaderPostTable {
                    + " tags TEXT,"
                    + " organization_id INTEGER DEFAULT 0,"
                    + " is_seen INTEGER DEFAULT 0,"
+                   + " is_seen_supported INTEGER DEFAULT 0,"
                    + " PRIMARY KEY (pseudo_id, tag_name, tag_type)"
                    + ")");
 
@@ -541,9 +544,9 @@ public class ReaderPostTable {
     }
 
     public static boolean isPostSeen(ReaderPost post) {
-        String[] args = new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)};
+        String[] args = new String[]{Long.toString(post.blogId), Long.toString(post.postId)};
         return SqlUtils.boolForQuery(ReaderDatabase.getReadableDb(),
-                "SELECT is_seen FROM tbl_posts WHERE feed_id=? AND feed_item_id=?",
+                "SELECT is_seen FROM tbl_posts WHERE blog_id=? AND post_id=?",
                 args);
     }
 
@@ -552,8 +555,8 @@ public class ReaderPostTable {
         db.beginTransaction();
         try {
             String sql = "UPDATE tbl_posts SET is_seen=" + SqlUtils.boolToSql(isSeen)
-                         + " WHERE feed_id=? AND feed_item_id=?";
-            db.execSQL(sql, new String[]{Long.toString(post.feedId), Long.toString(post.feedItemId)});
+                         + " WHERE blog_id=? AND post_id=?";
+            db.execSQL(sql, new String[]{Long.toString(post.blogId), Long.toString(post.postId)});
 
             db.setTransactionSuccessful();
             EventBus.getDefault().post(ReaderPostTableActionEnded.INSTANCE);
@@ -861,7 +864,7 @@ public class ReaderPostTable {
                 + COLUMN_NAMES
                 + ") VALUES (?1,?2,?3,?4,?5,?6,?7,?8,?9,?10,?11,?12,?13,?14,?15,?16,?17,?18,?19,?20,?21,?22,?23,?24,"
                 + "?25,?26,?27,?28,?29,?30,?31,?32,?33,?34,?35,?36,?37,?38,?39,?40,?41,?42,?43,?44, ?45, ?46, ?47,"
-                + "?48,?49,?50)");
+                + "?48,?49,?50,?51)");
 
         db.beginTransaction();
         try {
@@ -924,6 +927,7 @@ public class ReaderPostTable {
                 stmtPosts.bindString(48, ReaderUtils.getCommaSeparatedTagSlugs(post.getTags()));
                 stmtPosts.bindLong(49, post.organizationId);
                 stmtPosts.bindLong(50, SqlUtils.boolToSql(post.isSeen));
+                stmtPosts.bindLong(51, SqlUtils.boolToSql(post.isSeenSupported));
                 stmtPosts.execute();
             }
 
@@ -1173,6 +1177,7 @@ public class ReaderPostTable {
         post.useExcerpt = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("use_excerpt")));
 
         post.isSeen = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen")));
+        post.isSeenSupported = SqlUtils.sqlToBool(c.getInt(c.getColumnIndex("is_seen_supported")));
 
         String commaSeparatedTags = (c.getString(c.getColumnIndex("tags")));
         if (commaSeparatedTags != null) {
