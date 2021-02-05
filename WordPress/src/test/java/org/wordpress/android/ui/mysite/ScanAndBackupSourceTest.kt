@@ -130,7 +130,6 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 JetpackPurchasedProducts(scan = true, backup = false)
         )
         whenever(site.isWPCom).thenReturn(true)
-        whenever(site.isWPComAtomic).thenReturn(false)
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
@@ -144,7 +143,6 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
                 JetpackPurchasedProducts(scan = true, backup = false)
         )
-        whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(true)
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
