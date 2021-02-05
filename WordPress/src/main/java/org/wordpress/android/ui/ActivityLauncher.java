@@ -633,9 +633,12 @@ public class ActivityLauncher {
     ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        String source = null;
         if (rewindableOnly) {
+            source = BACKUP_TRACK_EVENT_PROPERTY_VALUE;
             properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, BACKUP_TRACK_EVENT_PROPERTY_VALUE);
         } else {
+            source = ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE;
             properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
         }
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
@@ -643,6 +646,7 @@ public class ActivityLauncher {
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
@@ -1417,7 +1421,7 @@ public class ActivityLauncher {
     public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
                                                    int resultCode, String source) {
         Map<String, String> properties = new HashMap<>();
-        properties.put("source", source);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsTracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_OPENED, properties);
 
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
@@ -1441,8 +1445,9 @@ public class ActivityLauncher {
 
     public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
                                                    int resultCode, String source) {
+
         Map<String, String> properties = new HashMap<>();
-        properties.put("source", source);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsTracker.track(Stat.JETPACK_RESTORE_OPENED, properties);
 
         Intent intent = new Intent(activity, RestoreActivity.class);

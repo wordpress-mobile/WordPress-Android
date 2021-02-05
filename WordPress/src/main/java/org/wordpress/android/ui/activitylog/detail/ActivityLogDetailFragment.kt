@@ -12,6 +12,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
@@ -57,7 +58,11 @@ class ActivityLogDetailFragment : Fragment() {
             val (site, activityLogId) = when {
                 savedInstanceState != null -> {
                     val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-                    val activityLogId = requireNotNull(savedInstanceState.getString(ACTIVITY_LOG_ID_KEY))
+                    val activityLogId = requireNotNull(
+                            savedInstanceState.getString(
+                                    ACTIVITY_LOG_ID_KEY
+                            )
+                    )
                     site to activityLogId
                 }
                 intent != null -> {
@@ -74,12 +79,21 @@ class ActivityLogDetailFragment : Fragment() {
                 uiHelpers.setTextOrHide(activityActorRole, activityLogModel?.actorRole)
 
                 val spannable = activityLogModel?.content?.let {
-                    notificationsUtilsWrapper.getSpannableContentForRanges(it, activityMessage, { range ->
-                        viewModel.onRangeClicked(range)
-                    }, false)
+                    notificationsUtilsWrapper.getSpannableContentForRanges(
+                            it,
+                            activityMessage,
+                            { range ->
+                                viewModel.onRangeClicked(range)
+                            },
+                            false
+                    )
                 }
 
-                val noteBlockSpans = spannable?.getSpans(0, spannable.length, NoteBlockClickableSpan::class.java)
+                val noteBlockSpans = spannable?.getSpans(
+                        0,
+                        spannable.length,
+                        NoteBlockClickableSpan::class.java
+                )
 
                 noteBlockSpans?.forEach {
                     it.enableColors(activity)
@@ -110,9 +124,11 @@ class ActivityLogDetailFragment : Fragment() {
                                 viewModel.site,
                                 model.activityID,
                                 RequestCodes.RESTORE,
-                                DETAIL_TRACKING_SOURCE
+                                buildTrackingSource()
                         )
-                        is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(model)
+                        is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(
+                                model
+                        )
                     }
                 }
             })
@@ -127,7 +143,11 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
         return inflater.inflate(R.layout.activity_log_item_detail, container, false)
     }
 
@@ -168,11 +188,29 @@ class ActivityLogDetailFragment : Fragment() {
             dialog.initialize(
                     it,
                     getString(R.string.activity_log_rewind_site),
-                    getString(R.string.activity_log_rewind_dialog_message, item.createdDate, item.createdTime),
+                    getString(
+                            R.string.activity_log_rewind_dialog_message,
+                            item.createdDate,
+                            item.createdTime
+                    ),
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.cancel)
             )
             dialog.show(requireFragmentManager(), it)
         }
     }
+
+    private val forwardSlash = "/"
+
+    private fun buildTrackingSource() =
+        requireActivity().intent?.extras?.let {
+            when {
+                it.containsKey(SOURCE_TRACK_EVENT_PROPERTY_KEY) -> {
+                    it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY) + "$forwardSlash$DETAIL_TRACKING_SOURCE"
+                }
+                else -> {
+                    DETAIL_TRACKING_SOURCE
+                }
+            }
+        }
 }
