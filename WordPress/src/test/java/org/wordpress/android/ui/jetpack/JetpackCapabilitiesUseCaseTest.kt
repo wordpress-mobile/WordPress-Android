@@ -50,8 +50,7 @@ class JetpackCapabilitiesUseCaseTest {
                 store,
                 dispatcher,
                 appPrefsWrapper,
-                currentTimeProvider,
-                TEST_DISPATCHER
+                currentTimeProvider
         )
         event = buildCapabilitiesFetchedEvent(listOf(BACKUP_REALTIME))
         whenever(appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(anyLong())).thenReturn(0)

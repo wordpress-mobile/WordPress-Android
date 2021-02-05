@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpack
 
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -13,12 +12,12 @@ import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -31,10 +30,9 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
     private val dispatcher: Dispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val currentDateProvider: CurrentTimeProvider,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val currentDateProvider: CurrentTimeProvider
 ) {
-    private var continuation: Continuation<OnJetpackCapabilitiesFetched>? = null
+    private var continuation: HashMap<Long, Continuation<OnJetpackCapabilitiesFetched>?> = hashMapOf()
 
     suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
         emit(getCachedJetpackPurchasedProducts(remoteSiteId))
@@ -65,14 +63,12 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     }
 
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        if (continuation != null) {
-            throw IllegalStateException("Request already in progress.")
-        }
+        forceResumeDuplicateRequests(remoteSiteId)
 
         dispatcher.register(this@JetpackCapabilitiesUseCase)
         val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
             val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
-            continuation = cont
+            continuation[remoteSiteId] = cont
             dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
         }
 
@@ -81,6 +77,16 @@ class JetpackCapabilitiesUseCase @Inject constructor(
             updateCache(remoteSiteId, capabilities)
         }
         return capabilities
+    }
+
+    private fun forceResumeDuplicateRequests(remoteSiteId: Long) {
+        continuation[remoteSiteId]?.let {
+            continuation.remove(remoteSiteId)
+            val event = OnJetpackCapabilitiesFetched(
+                    remoteSiteId, listOf(), JetpackCapabilitiesError(GENERIC_ERROR, "Already running")
+            )
+            it.resume(event)
+        }
     }
 
     private fun updateCache(
@@ -93,12 +99,16 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         )
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onJetpackCapabilitiesFetched(event: OnJetpackCapabilitiesFetched) {
-        dispatcher.unregister(this@JetpackCapabilitiesUseCase)
-        continuation?.resume(event)
-        continuation = null
+        continuation[event.remoteSiteId]?.let {
+            continuation.remove(event.remoteSiteId)
+            it.resume(event)
+        }
+        if (continuation.isEmpty()) {
+            dispatcher.unregister(this@JetpackCapabilitiesUseCase)
+        }
     }
 
     data class JetpackPurchasedProducts(val scan: Boolean, val backup: Boolean)
