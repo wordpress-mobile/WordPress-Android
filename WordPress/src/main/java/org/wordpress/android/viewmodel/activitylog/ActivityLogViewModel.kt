@@ -363,7 +363,7 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 viewModelScope.launch {
-                    val purchasedProducts = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
+                    val purchasedProducts = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
                     if (purchasedProducts.backup) {
                         refreshFiltersUiState()
                     }
@@ -511,7 +511,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun dateRangePickerClicked() {
-        activityLogTracker.trackDateRangeFilterButtonClicked()
+        activityLogTracker.trackDateRangeFilterButtonClicked(rewindableOnly)
         _showDateRangePicker.value = ShowDateRangePicker(initialSelection = currentDateRangeFilter)
     }
 
@@ -520,14 +520,14 @@ class ActivityLogViewModel @Inject constructor(
             // adjust time of the end of the date range to 23:59:59
             Pair(dateRange.first, dateRange.second?.let { it + DAY_IN_MILLIS - ONE_SECOND_IN_MILLIS })
         }
-        activityLogTracker.trackDateRangeFilterSelected(dateRange)
+        activityLogTracker.trackDateRangeFilterSelected(dateRange, rewindableOnly)
         currentDateRangeFilter = adjustedDateRange
         refreshFiltersUiState()
         requestEventsUpdate(false)
     }
 
     fun onClearDateRangeFilterClicked() {
-        activityLogTracker.trackDateRangeFilterCleared()
+        activityLogTracker.trackDateRangeFilterCleared(rewindableOnly)
         currentDateRangeFilter = null
         refreshFiltersUiState()
         requestEventsUpdate(false)
@@ -557,6 +557,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     fun onRestoreConfirmed(rewindId: String) {
+        activityLogTracker.trackRestoreStarted(rewindId, site, rewindableOnly)
         viewModelScope.launch { handleRestoreRequest(postRestoreUseCase.postRestoreRequest(rewindId, site)) }
         showRestoreStartedMessage(rewindId)
     }

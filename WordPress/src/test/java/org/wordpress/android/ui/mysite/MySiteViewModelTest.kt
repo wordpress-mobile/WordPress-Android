@@ -24,13 +24,16 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_PROMPT_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_SUCCESS
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
-import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -65,6 +68,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -264,7 +268,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -487,7 +491,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(5)
+        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
@@ -589,11 +593,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen`() {
+    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
         initSelectedSite()
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
+        verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
@@ -639,9 +654,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `plan item click emits OpenPlan navigation event`() {
+    fun `plan item click emits OpenPlan navigation event and completes EXPLORE_PLANS quick task`() {
         invokeItemClickAction(PLAN)
 
+        verify(quickStartRepository).completeTask(EXPLORE_PLANS)
         assertThat(navigationActions).containsExactly(OpenPlan(site))
     }
 
@@ -656,6 +672,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(PAGES)
 
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(OpenPages(site))
     }
 
@@ -821,7 +838,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = eq(false),
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -837,7 +855,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = any(),
                 isScanAvailable = eq(false),
                 showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -853,7 +872,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = any(),
                 isScanAvailable = eq(true),
                 showViewSiteFocusPoint = eq(false),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -869,7 +889,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 isBackupAvailable = eq(true),
                 isScanAvailable = any(),
                 showViewSiteFocusPoint = any(),
-                showEnablePostSharingFocusPoint = any()
+                showEnablePostSharingFocusPoint = any(),
+                showExplorePlansFocusPoint = any()
         )
     }
 
@@ -877,7 +898,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
@@ -887,7 +909,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
@@ -902,9 +925,14 @@ class MySiteViewModelTest : BaseUnitTest() {
         assertThat(navigationActions).containsOnly(AddNewSite(true))
     }
 
-    private fun setupAccount(account: AccountModel?) = whenever(accountStore.account).thenReturn(account)
+    @Test
+    fun `hides quick start menu item in quickStartRepository`() {
+        val id = "id"
+        viewModel.onQuickStartMenuInteraction(QuickStartMenuInteraction.Hide(id))
 
-    private fun buildAccountWithAvatarUrl(avatarUrl: String?) = AccountModel().apply { this.avatarUrl = avatarUrl }
+        verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
+        verify(quickStartRepository).hideCategory(id)
+    }
 
     private fun findQuickActionsBlock() = getLastItems().find { it is QuickActionsBlock } as QuickActionsBlock?
 
@@ -936,7 +964,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         doAnswer {
             clickAction = it.getArgument(1)
             listOf<MySiteItem>()
-        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any())
+        }.whenever(siteItemsBuilder).buildSiteItems(eq(site), any(), any(), any(), any(), any(), any())
 
         initSelectedSite()
 

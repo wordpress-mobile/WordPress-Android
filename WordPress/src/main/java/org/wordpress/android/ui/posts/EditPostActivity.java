@@ -3518,8 +3518,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 View snackbarAttachView = findViewById(R.id.editor_activity);
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                        event.isError() ? event.error.message : null, getSite());
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(),
+                        event.isFirstTimePublish, post, event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
                     mEditPostRepository.set(() -> {
                         updateOnSuccessfulUpload();
