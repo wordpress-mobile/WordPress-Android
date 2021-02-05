@@ -7,8 +7,7 @@ import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import javax.inject.Inject
 
-class ScanAndBackupSource
-@Inject constructor(
+class ScanAndBackupSource @Inject constructor(
     private val selectedSiteRepository: SelectedSiteRepository,
     private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
@@ -22,9 +21,12 @@ class ScanAndBackupSource
             val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
             emit(
                     JetpackCapabilities(
-                            scanAvailable = scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan &&
-                                    !site.isWPCom && !site.isWPComAtomic,
-                            backupAvailable = backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup
+                            scanAvailable = scanScreenFeatureConfig.isEnabled()
+                                    && itemsVisibility.scan
+                                    && !site.isWPCom
+                                    && !site.isWPComAtomic,
+                            backupAvailable = backupScreenFeatureConfig.isEnabled()
+                                    && itemsVisibility.backup
                     )
             )
         }
