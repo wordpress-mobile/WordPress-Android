@@ -184,6 +184,16 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
+    fun `given without rewind id, when on rewind clicked, then do nothing`() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn(null)
+
+        viewModel.onRewindClicked(model)
+
+        assertEquals(null, viewModel.showRewindDialog.value)
+    }
+
+    @Test
     fun `given with rewind id, when on rewind clicked, then show rewind dialog with model`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn("123")
