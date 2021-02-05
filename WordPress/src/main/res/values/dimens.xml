@@ -355,6 +355,8 @@
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
+    <dimen name="people_chips_min_target">40dp</dimen>
+    <dimen name="people_default_margin_top">5dp</dimen>
 
     <!-- photo picker -->
     <dimen name="photo_picker_item_padding">2dp</dimen>
@@ -432,12 +434,12 @@
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
-    <dimen name="jetpack_backup_restore_sub_header_bottom_margin">20dp</dimen>
 
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
     <dimen name="scan_icon_size">48dp</dimen>
     <dimen name="scan_icon_margin">16dp</dimen>
+    <dimen name="scan_threat_item_icon_size">40dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
@@ -620,6 +622,19 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
+
+    <!-- edit text with chips view -->
+    <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
+    <dimen name="edit_text_with_chips_padding">12dp</dimen>
+    <dimen name="edit_text_with_chips_edit_view_min_height">32dp</dimen>
+    <dimen name="edit_text_with_chips_label_text_size">12sp</dimen>
+    <dimen name="edit_text_with_chips_hint_text_size">16sp</dimen>
+    <dimen name="edit_with_chips_outline_radius">4dp</dimen>
+    <dimen name="edit_with_chips_outline_default_width">1dp</dimen>
+    <dimen name="edit_with_chips_outline_focused_width">2dp</dimen>
+    <dimen name="edit_with_chips_outline_default_alpha" format="float" type="dimen">0.38</dimen>
+    <dimen name="edit_with_chips_outline_focused_alpha" format="float" type="dimen">1.0</dimen>
+    <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
 
     <!-- Hack to make snackbar padding smaller -->
     <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">

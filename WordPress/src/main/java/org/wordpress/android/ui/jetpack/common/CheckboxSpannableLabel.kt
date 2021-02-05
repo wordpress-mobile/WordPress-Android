@@ -23,7 +23,7 @@ class CheckboxSpannableLabel @Inject constructor(
         val labelHintText = resourceProvider.getString(labelHintRes)
         val spannable = SpannableString(labelHintText)
         spannable.setSpan(
-                ForegroundColorSpan(resourceProvider.getColor(color.neutral_40)),
+                ForegroundColorSpan(resourceProvider.getColor(color.neutral)),
                 0,
                 labelHintText.length,
                 Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
