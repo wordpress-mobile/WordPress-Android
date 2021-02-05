@@ -106,10 +106,7 @@ class ActivityLogDetailViewModel
             }
             _navigationEvents.value = Event(navigationEvent)
         } else {
-            AppLog.e(
-                    ACTIVITY_LOG,
-                    "Trying to rewind activity without rewind ID"
-            )
+            AppLog.e(ACTIVITY_LOG, "Trying to rewind activity without rewind ID")
         }
     }
 
