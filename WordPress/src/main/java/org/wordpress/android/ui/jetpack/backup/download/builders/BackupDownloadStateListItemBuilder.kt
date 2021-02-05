@@ -1,10 +1,16 @@
 package org.wordpress.android.ui.jetpack.backup.download.builders
 
 import androidx.annotation.ColorRes
+import androidx.annotation.DimenRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import dagger.Reusable
 import org.wordpress.android.R
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadErrorTypes.RemoteRequestFailure
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadUiState
+import org.wordpress.android.ui.jetpack.common.CheckboxSpannableLabel
+import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.BulletState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.FootnoteState
 import org.wordpress.android.ui.jetpack.common.JetpackBackupRestoreListItemState.SubHeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
@@ -14,6 +20,7 @@ import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionS
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ProgressState
+import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItem
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -25,7 +32,9 @@ import java.util.Date
 import javax.inject.Inject
 
 @Reusable
-class BackupDownloadStateListItemBuilder @Inject constructor() {
+class BackupDownloadStateListItemBuilder @Inject constructor(
+    private val checkboxSpannableLabel: CheckboxSpannableLabel
+) {
     fun buildDetailsListStateItems(
         published: Date,
         availableItems: List<JetpackAvailableItem>,
@@ -43,13 +52,14 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                         titleRes = R.string.backup_download_details_action_button,
                         contentDescRes = R.string.backup_download_details_action_button_content_description,
                         onClick = onCreateDownloadClick),
-                buildSubHeaderState()
+                buildSubHeaderState(R.string.backup_download_details_choose_items_header)
         )
 
         val availableItemsListItems: List<CheckboxState> = availableItems.map {
             CheckboxState(
                     availableItemType = it.availableItemType,
                     label = UiStringRes(it.labelResId),
+                    labelSpannable = checkboxSpannableLabel.buildSpannableLabel(it.labelResId, it.labelHintResId),
                     checked = true,
                     onClick = { onCheckboxItemClicked(it.availableItemType) }
             )
@@ -106,12 +116,45 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
         )
     }
 
-    fun buildCompleteListStateErrorItems(onDoneClick: () -> Unit) = listOf(
+    fun buildErrorListStateErrorItems(errorType: BackupDownloadErrorTypes, onDoneClick: () -> Unit) = (
+        if (errorType == RemoteRequestFailure) buildStatusErrorListStateItems(onDoneClick)
+        else buildGenericErrorListStateItems(onDoneClick)
+    )
+
+    private fun buildStatusErrorListStateItems(onDoneClick: () -> Unit) = listOf(
+            buildHeaderState(R.string.backup_download_status_failure_heading),
+            buildBulletState(
+                    R.drawable.ic_query_builder_white_24dp,
+                    R.string.backup_download_status_bullet_clock_icon_content_desc,
+                    R.color.warning_50,
+                    R.string.backup_download_status_failure_bullet1),
+            buildBulletState(
+                    R.drawable.ic_gridicons_checkmark_circle,
+                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+                    R.color.success_50,
+                    R.string.backup_download_status_failure_bullet2),
+            buildBulletState(
+                    R.drawable.ic_gridicons_checkmark_circle,
+                    R.string.backup_download_status_bullet_checkmark_icon_content_desc,
+                    R.color.success_50,
+                    R.string.backup_download_status_failure_bullet3,
+                    R.dimen.jetpack_backup_restore_last_bullet_bottom_margin),
+            buildActionButtonState(
+                    titleRes = R.string.restore_complete_failed_action_button,
+                    contentDescRes = R.string.restore_complete_failed_action_button_content_description,
+                    onClick = onDoneClick)
+    )
+
+    private fun buildGenericErrorListStateItems(onDoneClick: () -> Unit) = listOf(
             buildIconState(
-                    R.drawable.ic_notice_white_24dp,
+                    R.drawable.ic_cloud_off_white_24dp,
                     R.string.backup_download_complete_failed_icon_content_description,
                     R.color.error_50),
-            buildDescriptionState(R.string.backup_download_complete_failed_description),
+            buildHeaderState(R.string.backup_download_complete_failed_description),
+            buildSubHeaderState(
+                    R.string.request_failed_message,
+                    R.dimen.margin_none,
+                    R.dimen.jetpack_backup_restore_sub_header_bottom_margin),
             buildActionButtonState(
                     titleRes = R.string.backup_download_complete_failed_action_button,
                     contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
@@ -140,8 +183,6 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
             )
     )
 
-    private fun buildDescriptionState(@StringRes descRes: Int) = DescriptionState(UiStringRes(descRes))
-
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
@@ -156,8 +197,14 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
         onClick = onClick
     )
 
-    private fun buildSubHeaderState() =
-            SubHeaderState(text = UiStringRes(R.string.backup_download_details_choose_items_header))
+    private fun buildSubHeaderState(
+        @StringRes textResId: Int,
+        @DimenRes topMarginResId: Int? = null,
+        @DimenRes bottomMarginResId: Int? = null
+    ) = SubHeaderState(
+                    text = UiStringRes(textResId),
+                    itemTopMarginResId = topMarginResId,
+                    itemBottomMarginResId = bottomMarginResId)
 
     private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
             UiStringRes(textRes)
@@ -170,4 +217,51 @@ class BackupDownloadStateListItemBuilder @Inject constructor() {
                     listOf(UiStringText(progress.toString()))
             )
     )
+
+    private fun buildBulletState(
+        @DrawableRes iconRes: Int,
+        @StringRes contentDescRes: Int,
+        @ColorRes colorRes: Int,
+        @StringRes labelRes: Int,
+        @DimenRes itemBottomMarginResId: Int? = null
+    ) = BulletState(
+            icon = iconRes,
+            contentDescription = UiStringRes(contentDescRes),
+            colorResId = colorRes,
+            label = UiStringRes(labelRes),
+            itemBottomMarginResId = itemBottomMarginResId
+    )
+
+    fun updateCheckboxes(
+        uiState: BackupDownloadUiState,
+        itemType: JetpackAvailableItemType
+    ): List<JetpackListItemState> {
+        val updatedCheckboxes = uiState.items.map { state ->
+                if (state.type == CHECKBOX) {
+                    state as CheckboxState
+                    if (state.availableItemType == itemType) {
+                        state.copy(checked = !state.checked)
+                    } else {
+                        state
+                    }
+                } else {
+                    state
+                }
+        }
+        val atLeastOneChecked = updatedCheckboxes.filterIsInstance<CheckboxState>().find { it.checked } != null
+        return updateDetailsActionButtonState(updatedCheckboxes, atLeastOneChecked)
+    }
+
+    private fun updateDetailsActionButtonState(
+        details: List<JetpackListItemState>,
+        enableActionButton: Boolean
+    ): List<JetpackListItemState> {
+        return details.map { state ->
+            if (state is ActionButtonState) {
+                state.copy(isEnabled = enableActionButton)
+            } else {
+                state
+            }
+        }
+    }
 }

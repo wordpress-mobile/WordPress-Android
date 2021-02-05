@@ -4,28 +4,33 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Parcelable
 import androidx.annotation.VisibleForTesting
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.launch
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import kotlinx.android.parcel.Parcelize
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.DownloadFile
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigationEvents.ShareLink
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
-import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Success
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.COMPLETE
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadStep.DETAILS
@@ -44,7 +49,6 @@ import org.wordpress.android.ui.jetpack.backup.download.usecases.PostBackupDownl
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.ViewType
-import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
@@ -64,12 +68,16 @@ import org.wordpress.android.util.wizard.WizardState
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
 const val KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY = "key_backup_download_activity_id_key"
 const val KEY_BACKUP_DOWNLOAD_CURRENT_STEP = "key_backup_download_current_step"
 const val KEY_BACKUP_DOWNLOAD_STATE = "key_backup_download_state"
+private const val TRACKING_ERROR_CAUSE_OFFLINE = "offline"
+private const val TRACKING_ERROR_CAUSE_REMOTE = "remote"
+private const val TRACKING_ERROR_CAUSE_OTHER = "other"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -92,8 +100,7 @@ class BackupDownloadViewModel @Inject constructor(
     private val stateListItemBuilder: BackupDownloadStateListItemBuilder,
     private val postBackupDownloadUseCase: PostBackupDownloadUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
     private lateinit var site: SiteModel
@@ -143,16 +150,23 @@ class BackupDownloadViewModel @Inject constructor(
 
     fun onBackPressed() {
         when (wizardManager.currentStep) {
-            DETAILS.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
-            PROGRESS.id -> {
-                _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
-                    Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
-                } else {
-                    Event(BackupDownloadCanceled)
-                }
-            }
-            COMPLETE.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCompleted) }
-            ERROR.id -> { _wizardFinishedObservable.value = Event(BackupDownloadCanceled) }
+            DETAILS.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
+            PROGRESS.id -> constructProgressEvent()
+            COMPLETE.id -> _wizardFinishedObservable.value = Event(BackupDownloadCompleted)
+            ERROR.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
+        }
+    }
+
+    private fun constructProgressEvent() {
+        _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
+            Event(
+                    BackupDownloadInProgress(
+                            backupDownloadState.rewindId as String,
+                            backupDownloadState.downloadId as Long
+                    )
+            )
+        } else {
+            Event(BackupDownloadCanceled)
         }
     }
 
@@ -177,6 +191,7 @@ class BackupDownloadViewModel @Inject constructor(
                         type = StateType.DETAILS
                 )
             } else {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(BackupDownloadErrorTypes.GenericFailure)
             }
         }
@@ -200,15 +215,18 @@ class BackupDownloadViewModel @Inject constructor(
                         published = backupDownloadState.published as Date,
                         onDownloadFileClick = this@BackupDownloadViewModel::onDownloadFileClick,
                         onShareLinkClick = this@BackupDownloadViewModel::onShareLinkClick
-                ), type = StateType.COMPLETE)
+                ), type = StateType.COMPLETE
+        )
     }
 
     private fun buildError(errorType: BackupDownloadErrorTypes) {
         _uiState.value = ErrorState(
                 errorType = errorType,
-                items = stateListItemBuilder.buildCompleteListStateErrorItems(
+                items = stateListItemBuilder.buildErrorListStateErrorItems(
+                        errorType = errorType,
                         onDoneClick = this@BackupDownloadViewModel::onDoneClick
-                ))
+                )
+        )
     }
 
     @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
@@ -257,24 +275,29 @@ class BackupDownloadViewModel @Inject constructor(
     private fun handleBackupDownloadRequestResult(result: BackupDownloadRequestState) {
         when (result) {
             is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
                 _snackbarEvents.postValue(Event(NetworkUnavailableMsg))
             }
             is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
                 _snackbarEvents.postValue(Event(GenericFailureMsg))
             }
-            is Success -> {
-                backupDownloadState = backupDownloadState.copy(
-                        rewindId = result.rewindId,
-                        downloadId = result.downloadId,
-                        published = extractPublishedDate())
-                wizardManager.showNextStep()
-            }
+            is Success -> handleBackupDownloadRequestSuccess(result)
             is OtherRequestRunning -> {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 _snackbarEvents.postValue(Event(OtherRequestRunningMsg))
             }
-            else -> {
-            } // no op
+            else -> Unit // Do nothing
         }
+    }
+
+    private fun handleBackupDownloadRequestSuccess(result: Success) {
+        backupDownloadState = backupDownloadState.copy(
+                rewindId = result.rewindId,
+                downloadId = result.downloadId,
+                published = extractPublishedDate()
+        )
+        wizardManager.showNextStep()
     }
 
     private fun extractPublishedDate(): Date {
@@ -283,50 +306,54 @@ class BackupDownloadViewModel @Inject constructor(
 
     private fun queryStatus() {
         launch {
-            getBackupDownloadStatusUseCase.getBackupDownloadStatus(
-                    site,
-                    backupDownloadState.downloadId as Long
-            ).flowOn(bgDispatcher).collect { state -> handleQueryStatus(state) }
+            getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, backupDownloadState.downloadId as Long)
+                    .collect { state -> handleQueryStatus(state) }
         }
     }
 
     private fun handleQueryStatus(state: BackupDownloadRequestState) {
         when (state) {
             is NetworkUnavailable -> {
-                transitionToError(BackupDownloadErrorTypes.NetworkUnavailable)
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
             is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
                 transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
             }
-            is Progress -> {
-                (_uiState.value as? ProgressState)?.let { content ->
-                    val updatedList = content.items.map { contentState ->
-                        if (contentState.type == ViewType.PROGRESS) {
-                            contentState as JetpackListItemState.ProgressState
-                            contentState.copy(
-                                    progress = state.progress ?: 0,
-                                    progressLabel = UiStringResWithParams(
-                                            string.backup_download_progress_label,
-                                            listOf(UiStringText(state.progress?.toString() ?: "0"))
-                                    )
+            is Progress -> transitionToProgress(state)
+            is Complete -> transitionToComplete(state)
+            is Empty -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
+            }
+            else -> Unit // Do nothing
+        }
+    }
+
+    private fun transitionToProgress(state: Progress) {
+        (_uiState.value as? ProgressState)?.let { content ->
+            val updatedList = content.items.map { contentState ->
+                if (contentState.type == ViewType.PROGRESS) {
+                    contentState as JetpackListItemState.ProgressState
+                    contentState.copy(
+                            progress = state.progress ?: 0,
+                            progressLabel = UiStringResWithParams(
+                                    string.backup_download_progress_label,
+                                    listOf(UiStringText(state.progress?.toString() ?: "0"))
                             )
-                        } else {
-                            contentState
-                        }
-                    }
-                    _uiState.postValue(content.copy(items = updatedList))
+                    )
+                } else {
+                    contentState
                 }
             }
-            is Complete -> {
-                backupDownloadState = backupDownloadState.copy(url = state.url)
-                wizardManager.showNextStep()
-            }
-            is Empty -> {
-                transitionToError(BackupDownloadErrorTypes.RemoteRequestFailure)
-            }
-            else -> {
-            } // no op
+            _uiState.postValue(content.copy(items = updatedList))
         }
+    }
+
+    private fun transitionToComplete(state: Complete) {
+        backupDownloadState = backupDownloadState.copy(url = state.url)
+        wizardManager.showNextStep()
     }
 
     private fun clearOldBackupDownloadState(wizardStep: BackupDownloadStep) {
@@ -341,20 +368,9 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
-        (_uiState.value as? DetailsState)?.let { details ->
-            val updatedList = details.items.map { contentState ->
-                if (contentState.type == CHECKBOX) {
-                    contentState as CheckboxState
-                    if (contentState.availableItemType == itemType) {
-                        contentState.copy(checked = !contentState.checked)
-                    } else {
-                        contentState
-                    }
-                } else {
-                    contentState
-                }
-            }
-            _uiState.postValue(details.copy(items = updatedList))
+        (_uiState.value as? DetailsState)?.let {
+            val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
+            _uiState.postValue(it.copy(items = updatedItems))
         }
     }
 
@@ -363,6 +379,7 @@ class BackupDownloadViewModel @Inject constructor(
         if (rewindId == null) {
             transitionToError(BackupDownloadErrorTypes.GenericFailure)
         } else {
+            trackBackupDownloadConfirmed(types)
             launch {
                 val result = postBackupDownloadUseCase.postBackupDownloadRequest(
                         rewindId,
@@ -375,14 +392,22 @@ class BackupDownloadViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(BackupDownloadInProgress(backupDownloadState.downloadId as Long))
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED)
+        _wizardFinishedObservable.value = Event(
+                BackupDownloadInProgress(
+                        backupDownloadState.rewindId as String,
+                        backupDownloadState.downloadId as Long
+                )
+        )
     }
 
     private fun onDownloadFileClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(DownloadFile(it))) }
     }
 
     private fun onShareLinkClick() {
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED)
         backupDownloadState.url?.let { _navigationEvents.postValue(Event(ShareLink(it))) }
     }
 
@@ -393,6 +418,24 @@ class BackupDownloadViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
+    }
+
+    private fun trackBackupDownloadConfirmed(types: BackupDownloadRequestTypes) {
+        val propertiesSetup = mapOf(
+                "themes" to types.themes,
+                "plugins" to types.plugins,
+                "uploads" to types.uploads,
+                "sqls" to types.sqls,
+                "roots" to types.roots,
+                "contents" to types.contents)
+        val map = mapOf("restore_types" to JSONObject(propertiesSetup))
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_CONFIRMED, map)
+    }
+
+    private fun trackError(cause: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties["cause"] = cause
+        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_ERROR, properties)
     }
 
     companion object {
@@ -408,7 +451,10 @@ class BackupDownloadViewModel @Inject constructor(
         object BackupDownloadCanceled : BackupDownloadWizardState()
 
         @Parcelize
-        data class BackupDownloadInProgress(val downloadId: Long) : BackupDownloadWizardState()
+        data class BackupDownloadInProgress(
+            val rewindId: String,
+            val downloadId: Long
+        ) : BackupDownloadWizardState()
 
         @Parcelize
         object BackupDownloadCompleted : BackupDownloadWizardState()

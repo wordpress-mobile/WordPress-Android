@@ -30,6 +30,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -588,11 +592,31 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen`() {
+    fun `quick action stats click completes CHECK_STATS task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onStatsClick?.click()
+
+        verify(quickStartRepository).completeTask(CHECK_STATS)
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
         initSelectedSite()
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
+        verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
@@ -655,6 +679,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(PAGES)
 
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(OpenPages(site))
     }
 
@@ -733,6 +758,13 @@ class MySiteViewModelTest : BaseUnitTest() {
         invokeItemClickAction(STATS)
 
         assertThat(navigationActions).containsExactly(OpenStats(site))
+    }
+
+    @Test
+    fun `stats item click completes CHECK_STATS task`() {
+        invokeItemClickAction(STATS)
+
+        verify(quickStartRepository).completeTask(CHECK_STATS)
     }
 
     @Test
@@ -896,7 +928,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the active task needs to show an external focus point, emit focus point event accordingly`() {
-        activeTask.value = QuickStartTask.FOLLOW_SITE
+        activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(listOf(visibleFollowSiteFocusPointInfo))
     }
@@ -917,11 +949,11 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when the active task changes more than once, only emit focus point event if its value has changed`() {
-        activeTask.value = QuickStartTask.FOLLOW_SITE
-        activeTask.value = QuickStartTask.FOLLOW_SITE
+        activeTask.value = FOLLOW_SITE
+        activeTask.value = FOLLOW_SITE
         activeTask.value = QuickStartTask.PUBLISH_POST
         activeTask.value = null
-        activeTask.value = QuickStartTask.FOLLOW_SITE
+        activeTask.value = FOLLOW_SITE
 
         assertThat(externalFocusPointEvents).containsExactly(
                 listOf(visibleFollowSiteFocusPointInfo),
@@ -978,7 +1010,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     companion object {
-        val visibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(QuickStartTask.FOLLOW_SITE, true)
-        val invisibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(QuickStartTask.FOLLOW_SITE, false)
+        val visibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, true)
+        val invisibleFollowSiteFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, false)
     }
 }

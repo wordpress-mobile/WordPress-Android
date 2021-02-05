@@ -1024,9 +1024,15 @@
     <string name="activity_log_rewind_started_snackbar_message">Your site is being restored\nRestoring to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message">Your site has been successfully restored\nRestored to %1$s %2$s</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Your site has been successfully restored</string>
+    <string name="activity_log_backup_started_snackbar_message">Your site is being backed up\nBacking up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message">Your site has been successfully backed up\nBacked up from %1$s %2$s</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Your site has been successfully backed up</string>
     <string name="activity_log_currently_restoring_title">Currently restoring your site</string>
     <string name="activity_log_currently_restoring_message">Restoring to %1$s %2$s</string>
     <string name="activity_log_currently_restoring_message_no_dates">Restore in progress</string>
+    <string name="activity_log_currently_backing_up_title">Creating downloadable backup</string>
+    <string name="activity_log_currently_backing_up_message">Backing up site from %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Backing up site</string>
     <string name="activity_log_rewind_site">Restore Site</string>
     <string name="activity_log_rewind_dialog_message">Are you sure you want to restore your site back to %1$s at %2$s? This will remove all content and options created or changed since then.</string>
     <string name="activity_log_limited_content_on_free_plan">Since you\'re on a free plan, you\'ll see limited events in your activity.</string>
@@ -1075,12 +1081,15 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_fixing_threats_title">Fixing Threats</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description">We\'re hard at work fixing these threats in the background. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
-    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_idle_with_threats_description">The scan found %1s potential threats on %2s. Please review them below and take action. We\'re %3$s if you need us.</string>
+    <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hours ago</string>
     <string name="scan_in_minutes_ago">%s minutes ago</string>
@@ -1096,7 +1105,7 @@
     <string name="scan_history_request_failed" translatable="false">@string/request_failed_message</string>
 
     <!-- threats -->
-    <string name="threats_fix_num_of_threats">Fix %s threats</string>
+    <string name="threats_fix_all">Fix All</string>
     <string name="threats_found">Threats found</string>
     <string name="threat_fixing">Fixing threat</string>
 
@@ -2692,7 +2701,7 @@
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
@@ -3361,7 +3370,7 @@
     <string name="backup_download_details_page_title">Download Backup</string>
     <string name="backup_download_details_header">Create downloadable backup</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s is the selected point to create a downloadable backup.</string>
-    <string name="backup_download_details_choose_items_header">Choose the items you wish to include in the download:</string>
+    <string name="backup_download_details_choose_items_header">Items included in this download</string>
     <string name="backup_download_details_action_button">Create downloadable file</string>
     <string name="backup_download_details_icon_content_description">Create downloadable backup icon</string>
     <string name="backup_download_details_action_button_content_description">Create downloadable backup button</string>
@@ -3371,18 +3380,21 @@
     <string name="backup_download_progress_page_title">Download Backup</string>
     <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
-    <string name="backup_download_progress_action_button">OK, notify me!</string>
+    <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
-    <string name="backup_download_progress_action_button_content_description">OK, notify me button</string>
+    <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
     <string name="backup_item_plugins">WordPress Plugins</string>
     <string name="backup_item_media_uploads">Media Uploads</string>
-    <string name="backup_item_roots">WordPress root (includes wp-config.php and any non WordPress files)</string>
-    <string name="backup_item_contents">WP-content directory (excludes themes, plugins, and uploads)</string>
-    <string name="backup_item_sqls">Site database (SQL)</string>
+    <string name="backup_item_roots">WordPress root</string>
+    <string name="backup_item_roots_hint">(includes wp-config.php and any non WordPress files)</string>
+    <string name="backup_item_contents">WP-content directory</string>
+    <string name="backup_item_content_hint">(excludes themes, plugins, and uploads)</string>
+    <string name="backup_item_sqls">Site database</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
 
     <string name="backup_download_complete_page_title">Your Backup</string>
     <string name="backup_download_complete_header">Your backup is now available for download</string>
@@ -3394,7 +3406,7 @@
     <string name="backup_download_complete_download_share_action_button_content_description">Share link button</string>
     <string name="backup_download_complete_info">We\'ve also emailed you a link to your file.</string>
     <string name="backup_download_complete_failed_title">Download failed</string>
-    <string name="backup_download_complete_failed_description">We couldn\'t create your backup. Please try again later.</string>
+    <string name="backup_download_complete_failed_description">We couldn\'t create your backup</string>
     <string name="backup_download_complete_failed_action_button">Done</string>
     <string name="backup_download_complete_failed_action_button_content_description">Done button</string>
     <string name="backup_download_complete_failed_icon_content_description">Cloud with X icon</string>
@@ -3414,9 +3426,9 @@
 
     <string name="restore_warning_page_title" translatable="false">@string/restore</string>
     <string name="restore_warning_header">Warning</string>
-    <string name="restore_warning_description_with_two_parameters">Are you sure you want to rewind your site back to %1$s at %2$s?
-        This will remove all content and options created or changed since then.</string>
-    <string name="restore_warning_action_button">Confirm restore site</string>
+    <string name="restore_warning_description_with_two_parameters">Are you sure you want to revert your site back to %1$s at %2$s?
+        Anything you changed since then will be lost.</string>
+    <string name="restore_warning_action_button">Confirm</string>
     <string name="restore_warning_icon_content_description">Red circle image with exclamation point</string>
     <string name="restore_warning_action_button_content_description">Confirm restore site button</string>
 
@@ -3439,12 +3451,25 @@
     <string name="restore_complete_visit_site_button_content_description">Visit site button</string>
 
     <string name="restore_complete_failed_title">Restore failed</string>
-    <string name="restore_complete_failed_description">We couldn\'t restore your site. Please try again later.</string>
+    <string name="restore_complete_failed_description">We couldn\'t restore your site</string>
     <string name="restore_complete_failed_action_button" translatable="false">@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Done button</string>
     <string name="restore_complete_failed_icon_content_description">Error icon</string>
 
-    <string name="rewind_generic_failure" translatable="false">@string/backup_download_generic_failure</string>
-    <string name="rewind_another_process_running">There is another restore running.</string>
+    <string name="restore_generic_failure" translatable="false">@string/backup_download_generic_failure</string>
+    <string name="restore_another_process_running">There is another restore running.</string>
+    <string name="restore_status_failure_heading">Hmm, we couldn\'t find your restore status</string>
+    <string name="restore_status_failure_bullet1">We couldn\'t find the status to say how long your restore will take.</string>
+    <string name="restore_status_failure_bullet2">We\'ll still attempt to restore your site.</string>
+    <string name="restore_status_failure_bullet3">We\’ll notify you when its done.</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">Clock icon</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Checkmark icon</string>
+
+    <string name="backup_download_status_failure_heading">Hmm, we couldn\'t find your downloadable backup status</string>
+    <string name="backup_download_status_failure_bullet1">We couldn\'t find the status to say how long your downloadable backup will take.</string>
+    <string name="backup_download_status_failure_bullet2">We\'ll still attempt to create your downloadable backup file.</string>
+    <string name="backup_download_status_failure_bullet3" translatable="false">@string/restore_status_failure_bullet3</string>
+    <string name="backup_download_status_bullet_clock_icon_content_desc" translatable="false">@string/restore_status_bullet_clock_icon_content_desc</string>
+    <string name="backup_download_status_bullet_checkmark_icon_content_desc" translatable="false">@string/restore_status_bullet_checkmark_icon_content_desc</string>
 
 </resources>

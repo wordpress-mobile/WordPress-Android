@@ -38,8 +38,12 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
+import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -54,6 +58,7 @@ import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus
+import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.BackupDownloadEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.EmptyUiState
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.RestoreEvent
@@ -74,11 +79,20 @@ private const val RESTORE_STARTED = "Your site is being restored\nRestoring to d
 private const val RESTORING_CURRENTLY = "Currently restoring your site"
 private const val RESTORING_DATE_TIME = "Restoring to date time"
 private const val RESTORING_NO_DATE = "Restore in progress"
-private const val RESTORED_DATE_TIME = "Your site has been successfully restored\\nRestored to date time"
+private const val RESTORED_DATE_TIME = "Your site has been successfully restored\nRestored to date time"
 private const val RESTORED_NO_DATE = "Your site has been successfully restored"
+
+private const val BACKUP_STARTED = "Your site is being backed up\nBacking up from date time"
+private const val BACKING_UP_CURRENTLY = "Creating downloadable backup"
+private const val BACKING_UP_DATE_TIME = "Backing up site from date time"
+private const val BACKING_UP_NO_DATE = "Backing up site"
+private const val BACKED_UP_DATE_TIME = "Your site has been successfully backed up\nBacked up from date time"
+private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
 
 private const val REWIND_ID = "rewindId"
 private const val RESTORE_ID = 123456789L
+private const val DOWNLOAD_URL = "downloadUrl"
+private const val DOWNLOAD_ID = 987654321L
 
 @RunWith(MockitoJUnitRunner::class)
 class ActivityLogViewModelTest {
@@ -88,6 +102,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var postRestoreUseCase: PostRestoreUseCase
     @Mock private lateinit var getRestoreStatusUseCase: GetRestoreStatusUseCase
+    @Mock private lateinit var getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase
     @Mock private lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig
     @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
@@ -117,6 +132,7 @@ class ActivityLogViewModelTest {
                 store,
                 postRestoreUseCase,
                 getRestoreStatusUseCase,
+                getBackupDownloadStatusUseCase,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupDownloadFeatureConfig,
@@ -400,6 +416,16 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun dateRangeTrackDateRangeFilterSelectedEventFired() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        val dateRange = Pair(10L, 20L)
+
+        viewModel.onDateRangeSelected(dateRange)
+
+        verify(activityLogTracker).trackDateRangeFilterSelected(dateRange, rewindableOnly)
+    }
+
+    @Test
     fun dateRangeFilterClearActionShownWhenFilterNotEmpty() {
         whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
         val dateRange = Pair(10L, 20L)
@@ -454,6 +480,13 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         assertThat(formatDateRangeTimezoneCaptor.firstValue).isEqualTo(TIMEZONE_GMT_0)
+    }
+
+    @Test
+    fun dateRangeTrackDateRangeFilterButtonClickedEventFired() {
+        viewModel.dateRangePickerClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterButtonClicked(rewindableOnly)
     }
 
     @Test
@@ -526,6 +559,13 @@ class ActivityLogViewModelTest {
     }
 
     @Test
+    fun dateRangeTrackDateRangeFilterClearedEventFired() {
+        viewModel.onClearDateRangeFilterClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterCleared(rewindableOnly)
+    }
+
+    @Test
     fun verifyActivityLogEmptyScreenTextsWhenFiltersAreEmpty() {
         viewModel.onClearDateRangeFilterClicked()
         viewModel.onClearActivityTypeFilterClicked()
@@ -568,24 +608,26 @@ class ActivityLogViewModelTest {
         assertThat(viewModel.emptyUiState.value).isEqualTo(EmptyUiState.Backup.ActiveFilters)
     }
 
-    /* RELOAD EVENTS */
+    /* RELOAD EVENTS - RESTORE */
 
     @Test
-    fun `given no progress item, when reloading events, then the menu items are visible`() {
-        val displayProgressItem = false
+    fun `given no restore progress item, when reloading events, then the menu items are visible`() {
+        val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -594,21 +636,23 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given no progress item, when reloading events, then the progress item is not visible`() {
-        val displayProgressItem = false
+    fun `given no restore progress item, when reloading events, then item is not visible`() {
+        val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -617,35 +661,37 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given no progress item, when reloading events, then move to top is not triggered`() {
-        val displayProgressItem = false
+    fun `given no restore progress item, when reloading events, then move to top is not triggered`() {
+        val displayRestoreProgressItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertTrue(moveToTopEvents.isEmpty())
     }
 
     @Test
-    fun `given progress item, when reloading events, then the menu items are not visible`() {
-        val displayProgressItem = true
-        val displayProgressWithDate = false
-        initProgressMocks(displayProgressWithDate)
+    fun `given restore progress item, when reloading events, then the menu items are not visible`() {
+        val displayRestoreProgressItem = true
+        val displayRestoreProgressWithDate = false
+        initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = displayProgressWithDate,
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -654,23 +700,25 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given progress item with date, when reloading events, then the progress item is visible with date`() {
-        val displayProgressItem = true
-        val displayProgressWithDate = true
-        initProgressMocks(displayProgressWithDate)
+    fun `given restore progress item with date, when reloading events, then item is visible with date`() {
+        val displayRestoreProgressItem = true
+        val displayRestoreProgressWithDate = true
+        initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem, rewindId = REWIND_ID)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem, rewindId = REWIND_ID)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = displayProgressWithDate,
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -679,23 +727,25 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given progress item without date, when reloading events, then the progress item is visible without date`() {
-        val displayProgressItem = true
-        val displayProgressWithDate = false
-        initProgressMocks(displayProgressWithDate)
+    fun `given restore progress item without date, when reloading events, then item is visible without date`() {
+        val displayRestoreProgressItem = true
+        val displayRestoreProgressWithDate = false
+        initRestoreProgressMocks(displayRestoreProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                restoreEvent = RestoreEvent(displayProgress = displayRestoreProgressItem)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = displayProgressWithDate,
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = displayRestoreProgressItem,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -704,8 +754,8 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given progress item, when reloading events, then move to top is triggered`() {
-        initProgressMocks()
+    fun `given restore progress item, when reloading events, then move to top is triggered`() {
+        initRestoreProgressMocks()
 
         viewModel.reloadEvents(
                 done = false,
@@ -718,7 +768,7 @@ class ActivityLogViewModelTest {
     @Test
     fun `given restore finished with date, when reloading events, then show restore finished message with date`() {
         val date = activity().published
-        initProgressFinishedMocks(date, true)
+        initRestoreProgressFinishedMocks(date, true)
 
         viewModel.reloadEvents(
                 done = false,
@@ -736,7 +786,7 @@ class ActivityLogViewModelTest {
     @Test
     fun `given restore finished without date, when reloading events, then show restore finished msg without date`() {
         val date = null
-        initProgressFinishedMocks(date, false)
+        initRestoreProgressFinishedMocks(date, false)
 
         viewModel.reloadEvents(
                 done = false,
@@ -751,24 +801,259 @@ class ActivityLogViewModelTest {
         assertEquals(snackbarMessages.firstOrNull(), RESTORED_NO_DATE)
     }
 
+    /* RELOAD EVENTS - BACKUP DOWNLOAD */
+
     @Test
-    fun `given not done and the event list is empty, when reloading events, then the loading item is not visible`() {
-        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
-        val done = false
-        val displayProgressItem = false
+    fun `given no backup progress item, when reloading events, then the menu items are visible`() {
+        val displayBackupProgressItem = false
 
         viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
         )
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given no backup progress item, when reloading events, then item is not visible`() {
+        val displayBackupProgressItem = false
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given no backup progress item, when reloading events, then move to top is not triggered`() {
+        val displayBackupProgressItem = false
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertTrue(moveToTopEvents.isEmpty())
+    }
+
+    @Test
+    fun `given backup progress item, when reloading events, then the menu items are not visible`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = false
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item with date, when reloading events, then item is visible with date`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = true
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        rewindId = REWIND_ID
+                )
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item without date, when reloading events, then item is visible without date`() {
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = false
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given backup progress item, when reloading events, then move to top is triggered`() {
+        initBackupProgressMocks()
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+        )
+
+        assertTrue(moveToTopEvents.isNotEmpty())
+    }
+
+    @Test
+    fun `given backup finished with date, when reloading events, then show backup finished message with date`() {
+        val date = activity().published
+        initBackupProgressFinishedMocks(date, true)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        published = date
+                )
+        )
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_DATE_TIME)
+    }
+
+    @Test
+    fun `given backup finished without date, when reloading events, then show backup finished msg without date`() {
+        val date = null
+        initBackupProgressFinishedMocks(date, false)
+
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = false,
+                        isCompleted = true,
+                        rewindId = REWIND_ID,
+                        published = date
+                )
+        )
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
+    }
+
+    /* RELOAD EVENTS - RESTORE AND BACKUP DOWNLOAD */
+
+    @Test
+    fun `given restore and backup progress items, when reloading events, then both items are visible`() {
+        val displayRestoreProgressItem = true
+        val displayRestoreProgressWithDate = true
+        val displayBackupProgressItem = true
+        val displayBackupProgressWithDate = true
+        initRestoreProgressMocks(displayRestoreProgressWithDate)
+        initBackupProgressMocks(displayBackupProgressWithDate)
+
+        viewModel.reloadEvents(
+                done = false,
+                restoreEvent = RestoreEvent(
+                        displayProgress = displayRestoreProgressItem,
+                        rewindId = REWIND_ID
+                ),
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        rewindId = REWIND_ID
+                )
+        )
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = displayRestoreProgressItem,
+                        restoreProgressWithDate = displayRestoreProgressWithDate,
+                        displayBackupProgress = displayBackupProgressItem,
+                        backupProgressWithDate = displayBackupProgressWithDate,
+                        emptyList = false,
+                        rewindDisabled = displayRestoreProgressItem || displayBackupProgressItem,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    /* RELOAD EVENTS - DONE */
+
+    @Test
+    fun `given not done and the event list is empty, when reloading events, then the loading item is not visible`() {
+        whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
+        val done = false
+
+        viewModel.reloadEvents(done)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = true,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -780,20 +1065,18 @@ class ActivityLogViewModelTest {
     fun `given not done and the event list is not empty, when reloading events, then the loading item is visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = false
-        val displayProgressItem = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = true,
                         withFooter = false
@@ -805,20 +1088,18 @@ class ActivityLogViewModelTest {
     fun `given done and the event list is empty, when reloading events, then the loading item is not visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(emptyList())
         val done = true
-        val displayProgressItem = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = true,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -830,20 +1111,18 @@ class ActivityLogViewModelTest {
     fun `given done and the event list is not empty, when reloading events, then the loading item is not visible`() {
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
-        val displayProgressItem = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = false
@@ -856,20 +1135,18 @@ class ActivityLogViewModelTest {
         whenever(site.hasFreePlan).thenReturn(true)
         whenever(store.getActivityLogForSite(site, false, rewindableOnly)).thenReturn(activityList.toList())
         val done = true
-        val displayProgressItem = false
 
-        viewModel.reloadEvents(
-                done = done,
-                restoreEvent = RestoreEvent(displayProgress = displayProgressItem)
-        )
+        viewModel.reloadEvents(done)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = displayProgressItem,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
                         emptyList = false,
-                        rewindDisabled = displayProgressItem,
+                        rewindDisabled = false,
                         isLastPageAndFreeSite = false,
                         canLoadMore = false,
                         withFooter = true
@@ -878,6 +1155,13 @@ class ActivityLogViewModelTest {
     }
 
     /* RESTORE CONFIRMED */
+
+    @Test
+    fun `when restore confirmed, then track restore started event`() = test {
+        viewModel.onRestoreConfirmed(REWIND_ID)
+
+        verify(activityLogTracker).trackRestoreStarted(REWIND_ID, site, rewindableOnly)
+    }
 
     @Test
     fun `when restore confirmed, then trigger post restore request`() = test {
@@ -912,15 +1196,15 @@ class ActivityLogViewModelTest {
         whenever(postRestoreUseCase.postRestoreRequest(REWIND_ID, site)).thenReturn(success)
         val progress = RestoreRequestState.Progress(REWIND_ID, 50)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
-        initProgressMocks()
+        initRestoreProgressMocks()
 
         viewModel.onRestoreConfirmed(REWIND_ID)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = true,
-                        progressWithDate = true,
+                        displayRestoreProgress = true,
+                        restoreProgressWithDate = true,
                         emptyList = false,
                         rewindDisabled = true,
                         isLastPageAndFreeSite = false,
@@ -938,7 +1222,7 @@ class ActivityLogViewModelTest {
         val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
                 .thenReturn(flow { emit(progress); emit(complete) })
-        initProgressMocks()
+        initRestoreProgressMocks()
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
 
@@ -947,8 +1231,8 @@ class ActivityLogViewModelTest {
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = false,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -983,7 +1267,7 @@ class ActivityLogViewModelTest {
     /* QUERY RESTORE STATUS */
 
     @Test
-    fun `when query restore statues, then trigger get restore status`() = test {
+    fun `when query restore status, then trigger get restore status`() = test {
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         verify(getRestoreStatusUseCase).getRestoreStatus(site, RESTORE_ID)
@@ -993,15 +1277,15 @@ class ActivityLogViewModelTest {
     fun `given status is a progress, when query restore status, then reload events for progress`() = test {
         val progress = RestoreRequestState.Progress(REWIND_ID, 50)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID)).thenReturn(flow { emit(progress) })
-        initProgressMocks()
+        initRestoreProgressMocks()
 
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = true,
-                        progressWithDate = true,
+                        displayRestoreProgress = true,
+                        restoreProgressWithDate = true,
                         emptyList = false,
                         rewindDisabled = true,
                         isLastPageAndFreeSite = false,
@@ -1017,7 +1301,7 @@ class ActivityLogViewModelTest {
         val complete = RestoreRequestState.Complete(REWIND_ID, RESTORE_ID)
         whenever(getRestoreStatusUseCase.getRestoreStatus(site, RESTORE_ID))
                 .thenReturn(flow { emit(progress); emit(complete) })
-        initProgressMocks()
+        initRestoreProgressMocks()
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
 
@@ -1026,8 +1310,8 @@ class ActivityLogViewModelTest {
         assertEquals(
                 viewModel.events.value,
                 expectedActivityList(
-                        displayProgress = false,
-                        progressWithDate = false,
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
                         emptyList = false,
                         rewindDisabled = false,
                         isLastPageAndFreeSite = false,
@@ -1056,6 +1340,90 @@ class ActivityLogViewModelTest {
         viewModel.onQueryRestoreStatus(REWIND_ID, RESTORE_ID)
 
         assertEquals(snackbarMessages.firstOrNull(), RESTORE_STARTED)
+    }
+
+    /* QUERY BACKUP DOWNLOAD STATUS */
+
+    @Test
+    fun `when query backup status, then trigger get backup download status`() = test {
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        verify(getBackupDownloadStatusUseCase).getBackupDownloadStatus(site, DOWNLOAD_ID)
+    }
+
+    @Test
+    fun `given status is a progress, when query backup status, then reload events for progress`() = test {
+        val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(progress) })
+        initBackupProgressMocks()
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = true,
+                        backupProgressWithDate = true,
+                        emptyList = false,
+                        rewindDisabled = true,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = true,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is a complete, when query backup status, then request events update for complete`() = test {
+        val progress = BackupDownloadRequestState.Progress(REWIND_ID, 50)
+        val complete = BackupDownloadRequestState.Complete(REWIND_ID, DOWNLOAD_ID, DOWNLOAD_URL)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(progress); emit(complete) })
+        initBackupProgressMocks()
+        whenever(store.fetchActivities(anyOrNull()))
+                .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(
+                viewModel.events.value,
+                expectedActivityList(
+                        displayRestoreProgress = false,
+                        restoreProgressWithDate = false,
+                        displayBackupProgress = false,
+                        backupProgressWithDate = false,
+                        emptyList = false,
+                        rewindDisabled = false,
+                        isLastPageAndFreeSite = false,
+                        canLoadMore = false,
+                        withFooter = false
+                )
+        )
+    }
+
+    @Test
+    fun `given status is something else, when query backup status, then do not trigger anything`() = test {
+        val success = BackupDownloadRequestState.Success(REWIND_ID, REWIND_ID, DOWNLOAD_ID)
+        whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
+                .thenReturn(flow { emit(success) })
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertNull(viewModel.events.value)
+    }
+
+    @Test
+    fun `when query backup status, then show backup download started message`() {
+        whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        whenever(resourceProvider.getString(eq(R.string.activity_log_backup_started_snackbar_message), any(), any()))
+                .thenReturn(BACKUP_STARTED)
+
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+
+        assertEquals(snackbarMessages.firstOrNull(), BACKUP_STARTED)
     }
 
     /* PRIVATE */
@@ -1090,8 +1458,10 @@ class ActivityLogViewModelTest {
     }
 
     private fun expectedActivityList(
-        displayProgress: Boolean = false,
-        progressWithDate: Boolean = false,
+        displayRestoreProgress: Boolean = false,
+        restoreProgressWithDate: Boolean = false,
+        displayBackupProgress: Boolean = false,
+        backupProgressWithDate: Boolean = false,
         emptyList: Boolean = false,
         rewindDisabled: Boolean = true,
         isLastPageAndFreeSite: Boolean = false,
@@ -1099,12 +1469,21 @@ class ActivityLogViewModelTest {
         withFooter: Boolean = false
     ): List<ActivityLogListItem> {
         val list = mutableListOf<ActivityLogListItem>()
-        if (displayProgress) {
+        if (displayRestoreProgress || displayBackupProgress) {
             list.add(ActivityLogListItem.Header(NOW))
-            if (progressWithDate) {
-                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME))
+        }
+        if (displayRestoreProgress) {
+            if (restoreProgressWithDate) {
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_DATE_TIME, RESTORE))
             } else {
-                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE))
+                list.add(ActivityLogListItem.Progress(RESTORING_CURRENTLY, RESTORING_NO_DATE, RESTORE))
+            }
+        }
+        if (displayBackupProgress) {
+            if (backupProgressWithDate) {
+                list.add(ActivityLogListItem.Progress(BACKING_UP_CURRENTLY, BACKING_UP_DATE_TIME, BACKUP_DOWNLOAD))
+            } else {
+                list.add(ActivityLogListItem.Progress(BACKING_UP_CURRENTLY, BACKING_UP_NO_DATE, BACKUP_DOWNLOAD))
             }
         }
         if (!emptyList) {
@@ -1175,7 +1554,7 @@ class ActivityLogViewModelTest {
             isProgressBarVisible = false
     )
 
-    private fun initProgressMocks(displayProgressWithDate: Boolean = true) {
+    private fun initRestoreProgressMocks(displayProgressWithDate: Boolean = true) {
         if (displayProgressWithDate) {
             whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
         }
@@ -1191,8 +1570,24 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
-        initProgressMocks(displayProgressWithDate)
+    private fun initBackupProgressMocks(displayProgressWithDate: Boolean = true) {
+        if (displayProgressWithDate) {
+            whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
+        }
+        whenever(resourceProvider.getString(R.string.now)).thenReturn(NOW)
+        whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_title))
+                .thenReturn(BACKING_UP_CURRENTLY)
+        if (displayProgressWithDate) {
+            whenever(resourceProvider.getString(eq(R.string.activity_log_currently_backing_up_message), any(), any()))
+                    .thenReturn(BACKING_UP_DATE_TIME)
+        } else {
+            whenever(resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates))
+                    .thenReturn(BACKING_UP_NO_DATE)
+        }
+    }
+
+    private fun initRestoreProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
+        initRestoreProgressMocks(displayProgressWithDate)
         viewModel.reloadEvents(
                 done = false,
                 restoreEvent = RestoreEvent(displayProgress = true, rewindId = REWIND_ID)
@@ -1208,6 +1603,26 @@ class ActivityLogViewModelTest {
         } else {
             whenever(resourceProvider.getString(R.string.activity_log_rewind_finished_snackbar_message_no_dates))
                     .thenReturn(RESTORED_NO_DATE)
+        }
+    }
+
+    private fun initBackupProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
+        initBackupProgressMocks(displayProgressWithDate)
+        viewModel.reloadEvents(
+                done = false,
+                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+        )
+        if (date != null) {
+            whenever(
+                    resourceProvider.getString(
+                            eq(R.string.activity_log_backup_finished_snackbar_message),
+                            any(),
+                            any()
+                    )
+            ).thenReturn(BACKED_UP_DATE_TIME)
+        } else {
+            whenever(resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates))
+                    .thenReturn(BACKED_UP_NO_DATE)
         }
     }
 }

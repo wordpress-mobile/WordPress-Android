@@ -26,8 +26,11 @@ import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -167,7 +170,7 @@ class MySiteViewModel
             scanAvailable,
             backupAvailable,
             activeTask,
-    quickStartCategories
+            quickStartCategories
     ) ->
         val state = if (site != null) {
             val siteItems = mutableListOf<MySiteItem>()
@@ -189,7 +192,9 @@ class MySiteViewModel
                             ListItemInteraction.create(this::quickActionPagesClick),
                             ListItemInteraction.create(this::quickActionPostsClick),
                             ListItemInteraction.create(this::quickActionMediaClick),
-                            site.isSelfHostedAdmin || site.hasCapabilityEditPages
+                            site.isSelfHostedAdmin || site.hasCapabilityEditPages,
+                            activeTask == CHECK_STATS,
+                            activeTask == EDIT_HOMEPAGE || activeTask == REVIEW_PAGES
                     )
             )
             if (isDomainCreditAvailable) {
@@ -246,7 +251,10 @@ class MySiteViewModel
                 SCAN -> OpenScan(site)
                 PLAN -> OpenPlan(site)
                 POSTS -> OpenPosts(site)
-                PAGES -> OpenPages(site)
+                PAGES -> {
+                    quickStartRepository.completeTask(REVIEW_PAGES)
+                    OpenPages(site)
+                }
                 ADMIN -> OpenAdmin(site)
                 PEOPLE -> OpenPeople(site)
                 SHARING -> {
@@ -256,7 +264,10 @@ class MySiteViewModel
                 SITE_SETTINGS -> OpenSiteSettings(site)
                 THEMES -> OpenThemes(site)
                 PLUGINS -> OpenPlugins(site)
-                STATS -> getStatsNavigationActionForSite(site)
+                STATS -> {
+                    quickStartRepository.completeTask(CHECK_STATS)
+                    getStatsNavigationActionForSite(site)
+                }
                 MEDIA -> OpenMedia(site)
                 COMMENTS -> OpenComments(site)
                 VIEW_SITE -> {
@@ -340,12 +351,15 @@ class MySiteViewModel
     private fun quickActionStatsClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_STATS_TAPPED)
+        quickStartRepository.completeTask(CHECK_STATS)
         _onNavigation.value = Event(getStatsNavigationActionForSite(site))
     }
 
     private fun quickActionPagesClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(QUICK_ACTION_PAGES_TAPPED)
+        quickStartRepository.requestNextStepOfTask(EDIT_HOMEPAGE)
+        quickStartRepository.completeTask(REVIEW_PAGES)
         _onNavigation.value = Event(OpenPages(site))
     }
 
