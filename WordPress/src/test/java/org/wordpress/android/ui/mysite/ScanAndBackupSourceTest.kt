@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
@@ -7,12 +8,14 @@ import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 
@@ -22,6 +25,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
     private lateinit var scanAndBackupSource: ScanAndBackupSource
     private val siteId = 1
     private val siteRemoteId = 2L
@@ -32,8 +36,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 scanScreenFeatureConfig,
                 backupScreenFeatureConfig,
-                jetpackCapabilitiesUseCase
+                jetpackCapabilitiesUseCase,
+                siteUtilsWrapper
         )
+        whenever(siteUtilsWrapper.isBackupEnabled(anyBoolean(), anyBoolean())).thenCallRealMethod()
+        whenever(siteUtilsWrapper.isScanEnabled(anyBoolean(), anyBoolean(), eq(site))).thenCallRealMethod()
         whenever(site.id).thenReturn(siteId)
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)

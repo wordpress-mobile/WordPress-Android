@@ -154,6 +154,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgre
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
@@ -211,6 +212,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
@@ -281,12 +283,11 @@ class MySiteFragment : Fragment(),
             uiScope.launch {
                 val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
                 row_scan.setVisible(
-                        scanScreenFeatureConfig.isEnabled() &&
-                                itemsVisibility.scan &&
-                                !site.isWPCom &&
-                                !site.isWPComAtomic
+                        siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), itemsVisibility.scan, site)
                 )
-                row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
+                row_backup.setVisible(
+                        siteUtilsWrapper.isBackupEnabled(backupScreenFeatureConfig.isEnabled(), itemsVisibility.backup)
+                )
             }
         }
     }

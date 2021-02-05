@@ -21,6 +21,7 @@ import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
 import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
+import org.wordpress.android.util.config.ScanScreenFeatureConfig;
 import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
@@ -364,5 +365,15 @@ public class SiteUtils {
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
+    }
+
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    public static boolean isScanEnabled(boolean scanFeatureFlagEnabled, boolean scanPurchased, SiteModel site) {
+        return scanFeatureFlagEnabled && scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
+    }
+
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    public static boolean isBackupEnabled(boolean backupFeatureFlagEnabled, boolean backupPurchased) {
+        return backupFeatureFlagEnabled && backupPurchased;
     }
 }
