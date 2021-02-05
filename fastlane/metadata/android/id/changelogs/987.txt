@@ -1,0 +1,7 @@
+16.6:
+Apa yang baru?
+Pembuatan Situs: Saat menjelajahi desain beranda, Anda dapat melihat dan beralih antara pratinjau seluler, tablet, dan desktop.
+Pembaca: Untuk pengaturan yang lebih baik, kami menambahkan fitur penyaring ke tab Anda dari situs P2 yang diikuti.
+Mulai Cepat: Kami memperbarui tur yang memandu Anda menggunakan aplikasi, menambahkan langkah-langkah untuk meninjau halaman dan mengedit beranda Anda.
+
+
