@@ -102,6 +102,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -511,7 +512,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mViewModel.getOnFocusPointVisibilityChange().observe(this, event ->
                 event.applyIfNotHandled(focusPointInfos -> {
                     for (FocusPointInfo focusPointInfo : focusPointInfos) {
-                        addOrRemoveQuickStartFocusPoint(focusPointInfo);
+                        addOrRemoveQuickStartFocusPoint(focusPointInfo.getTask(), focusPointInfo.isVisible());
                     }
                     return null;
                 })
@@ -1227,15 +1228,17 @@ public class WPMainActivity extends LocaleAwareActivity implements
         return null;
     }
 
-    // We do this for Quick Start focus points that need to be shown on the activity level.
-    private void addOrRemoveQuickStartFocusPoint(FocusPointInfo focusPointInfo) {
-        final ViewGroup parentView = findViewById(R.id.root_view_main);
-        final View targetView = findViewById(R.id.bottom_nav_reader_button);
+    // We only do this for Quick Start focus points that need to be shown on the activity level.
+    private void addOrRemoveQuickStartFocusPoint(QuickStartTask activeTask, boolean shouldAdd) {
+        final QuickStartMySitePrompts prompts = QuickStartMySitePrompts.getPromptDetailsForTask(activeTask);
+        if (prompts == null) return;
+        final ViewGroup parentView = findViewById(prompts.getParentContainerId());
+        final View targetView = findViewById(prompts.getFocusedContainerId());
         if (parentView != null) {
             int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
             int horizontalOffset;
             int verticalOffset;
-            switch (focusPointInfo.getTask()) {
+            switch (activeTask) {
                 case FOLLOW_SITE:
                     horizontalOffset = targetView.getWidth() / 2 - size + getResources()
                             .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
@@ -1246,7 +1249,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     verticalOffset = 0;
                     break;
             }
-            if (targetView != null && focusPointInfo.isVisible()) {
+            if (targetView != null && shouldAdd) {
                 QuickStartUtils.addQuickStartFocusPointAboveTheView(
                         parentView,
                         targetView,
