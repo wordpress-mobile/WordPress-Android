@@ -20,6 +20,7 @@ import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.ActivityId;
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria;
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType;
 import org.wordpress.android.ui.posts.AuthorFilterSelection;
 import org.wordpress.android.ui.posts.PostListViewLayoutType;
 import org.wordpress.android.ui.reader.tracker.ReaderTab;
@@ -161,7 +162,8 @@ public class AppPrefs {
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         SITE_JETPACK_CAPABILITIES_LAST_UPDATED,
-        REMOVED_QUICK_START_CARD_TYPE
+        REMOVED_QUICK_START_CARD_TYPE,
+        PINNED_DYNAMIC_CARD
     }
 
     /**
@@ -988,6 +990,18 @@ public class AppPrefs {
 
     @NonNull private static String getQuickStartTaskTypeKey(QuickStartTaskType quickStartTaskType) {
         return DeletablePrefKey.REMOVED_QUICK_START_CARD_TYPE.name() + quickStartTaskType.toString();
+    }
+
+    public static void setPinnedDynamicCardType(String dynamicCardType) {
+        setString(DeletablePrefKey.PINNED_DYNAMIC_CARD, dynamicCardType);
+    }
+
+    public static void removePinnedDynamicCardType() {
+        remove(DeletablePrefKey.PINNED_DYNAMIC_CARD);
+    }
+
+    public static String getPinnedDynamicCardType() {
+        return getString(DeletablePrefKey.PINNED_DYNAMIC_CARD);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {

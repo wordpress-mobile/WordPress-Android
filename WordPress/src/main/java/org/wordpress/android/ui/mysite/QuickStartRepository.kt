@@ -26,6 +26,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -83,9 +86,8 @@ class QuickStartRepository
                     .mapNotNull { detailsMap[it] })
 
     override fun buildSource(siteId: Int) = flow {
-        emit(QuickStartUpdate())
         quickStartTaskTypes.asFlow().map { types ->
-            if (quickStartUtils.isQuickStartInProgress(siteId)) {
+            if (quickStartUtils.isQuickStartInProgress(siteId) || true) {
                 types.map { buildQuickStartCategory(siteId, it) }
             } else {
                 listOf()
@@ -160,15 +162,22 @@ class QuickStartRepository
         job.cancel()
     }
 
-    fun hideCategory(id: String) {
-        val hiddenCategory = QuickStartTaskType.fromString(id)
+    fun hideCategory(dynamicCardType: DynamicCardType) {
+        val hiddenCategory = dynamicCardType.toQuickStartTaskType()
         hideQuickStartType(hiddenCategory)
     }
 
-    fun removeCategory(id: String) {
-        val removedQuickStartTaskType = QuickStartTaskType.fromString(id)
+    fun removeCategory(dynamicCardType: DynamicCardType) {
+        val removedQuickStartTaskType = dynamicCardType.toQuickStartTaskType()
         appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
         hideQuickStartType(removedQuickStartTaskType)
+    }
+
+    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
+        return when(this) {
+            CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            GROW_QUICK_START -> GROW
+        }
     }
 
     private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {
