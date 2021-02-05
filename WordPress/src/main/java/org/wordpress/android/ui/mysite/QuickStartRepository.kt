@@ -60,11 +60,16 @@ class QuickStartRepository
 
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
             .associateBy { it.task }
-    private val refresh = MutableLiveData<Boolean?>()
+    private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+
+    init {
+        // TODO load this from prefs once we implement the "Remove" functionality
+        quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
+    }
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -78,13 +83,11 @@ class QuickStartRepository
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
             quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
-            refresh.postValue(true)
+            refresh()
         }
-        return merge(refresh, activeTask) { _, activeTask ->
+        return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
             val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
-                val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
-                val growCategory = buildQuickStartCategory(siteId, GROW)
-                listOfNotNull(customizeCategory, growCategory)
+                types?.map { buildQuickStartCategory(siteId, it) } ?: listOf()
             } else {
                 listOf()
             }
@@ -95,12 +98,12 @@ class QuickStartRepository
     fun startQuickStart() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             quickStartStore.setDoneTask(site.id.toLong(), CREATE_SITE, true)
-            refresh.postValue(false)
+            refresh()
         }
     }
 
-    fun refreshIfNecessary() {
-        refresh.postValue(false)
+    fun refresh() {
+        quickStartTaskTypes.postValue(quickStartTaskTypes.value)
     }
 
     fun setActiveTask(task: QuickStartTask) {
@@ -138,7 +141,7 @@ class QuickStartRepository
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
             analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
-            refresh.value = false
+            refresh()
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -155,6 +158,13 @@ class QuickStartRepository
 
     fun clear() {
         job.cancel()
+    }
+
+    fun hideCategory(id: String) {
+        val hiddenCategory = QuickStartTaskType.fromString(id)
+        val currentCategories = (quickStartTaskTypes.value ?: setOf()).toMutableSet()
+        currentCategories.remove(hiddenCategory)
+        quickStartTaskTypes.value = currentCategories
     }
 
     data class QuickStartCategory(

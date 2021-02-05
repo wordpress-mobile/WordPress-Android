@@ -21,6 +21,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_MEDIA_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_PAGES_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -54,6 +55,9 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction.Hide
+import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -380,7 +384,7 @@ class MySiteViewModel
 
     fun refresh() {
         selectedSiteRepository.updateSiteSettingsIfNecessary()
-        quickStartRepository.refreshIfNecessary()
+        quickStartRepository.refresh()
         currentAvatarSource.refresh()
     }
 
@@ -529,6 +533,17 @@ class MySiteViewModel
 
     fun startQuickStart() {
         quickStartRepository.startQuickStart()
+    }
+
+    fun onQuickStartMenuInteraction(interaction: QuickStartMenuInteraction) {
+        when (interaction) {
+            is QuickStartMenuInteraction.Remove,
+            is Pin -> TODO()
+            is Hide -> {
+                analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
+                quickStartRepository.hideCategory(interaction.id)
+            }
+        }
     }
 
     data class UiModel(
