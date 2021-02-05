@@ -2,9 +2,11 @@ package org.wordpress.android.ui.jetpack
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
+import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Rule
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import java.util.Date
 
 private const val SITE_ID = 1L
+
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class JetpackCapabilitiesUseCaseTest {
@@ -59,16 +62,16 @@ class JetpackCapabilitiesUseCaseTest {
     fun `coroutine resumed, when result event dispatched`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        val resultEvent = useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
-        assertThat(resultEvent).isEqualTo(event.capabilities)
+        assertThat(result.size).isEqualTo(2)
     }
 
     @Test
     fun `useCase subscribes to event bus`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
         verify(dispatcher).register(useCase)
     }
@@ -77,20 +80,20 @@ class JetpackCapabilitiesUseCaseTest {
     fun `useCase unsubscribes from event bus`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
         verify(dispatcher).unregister(useCase)
     }
 
     @Test
-    fun `cached value used, when not older than MAX_CACHE_VALIDITY`() = test {
+    fun `fetch not invoked, when not older than MAX_CACHE_VALIDITY`() = test {
         val expected = listOf(BACKUP, SCAN)
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(MAX_CACHE_VALIDITY - 1))
         whenever(appPrefsWrapper.getSiteJetpackCapabilities(SITE_ID)).thenReturn(expected)
 
-        val result = useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
-        assertThat(result).isEqualTo(expected)
+        verify(dispatcher, never()).dispatch(any())
     }
 
     @Test
@@ -98,16 +101,16 @@ class JetpackCapabilitiesUseCaseTest {
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(MAX_CACHE_VALIDITY))
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        val result = useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
-        assertThat(result).isEqualTo(event.capabilities)
+        verify(dispatcher).dispatch(any())
     }
 
     @Test
     fun `updates cache, when fetch finishes`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
 
-        useCase.getOrFetchJetpackCapabilities(SITE_ID)
+        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
 
         verify(appPrefsWrapper).setSiteJetpackCapabilities(SITE_ID, event.capabilities!!)
     }
@@ -118,7 +121,7 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(SCAN)))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.scan).isTrue
     }
@@ -129,7 +132,7 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf()))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.scan).isFalse
     }
@@ -140,7 +143,7 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP)))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.backup).isTrue
     }
@@ -151,7 +154,7 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP_REALTIME)))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.backup).isTrue
     }
@@ -162,7 +165,7 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf(BACKUP_DAILY)))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.backup).isTrue
     }
@@ -173,11 +176,11 @@ class JetpackCapabilitiesUseCaseTest {
             useCase.onJetpackCapabilitiesFetched(buildCapabilitiesFetchedEvent(listOf()))
         }
 
-        val result = useCase.getJetpackPurchasedProducts(SITE_ID)
+        val result = useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf()).last()
 
         assertThat(result.backup).isFalse
     }
 
     private fun buildCapabilitiesFetchedEvent(capabilities: List<JetpackCapability>) =
-        OnJetpackCapabilitiesFetched(SITE_ID, capabilities, null)
+            OnJetpackCapabilitiesFetched(SITE_ID, capabilities, null)
 }
