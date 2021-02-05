@@ -280,10 +280,16 @@ class MySiteFragment : Fragment(),
     private fun updateScanAndBackup(site: SiteModel) {
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
             // Make sure that we load the cached value synchronously as we want to suppress the default animation
-            updateScanAndBackupVisibility(site, jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId))
+            updateScanAndBackupVisibility(
+                    site = site,
+                    products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
+            )
             uiScope.launch {
                 if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
-                    updateScanAndBackupVisibility(site, jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId))
+                    updateScanAndBackupVisibility(
+                            site = site,
+                            products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+                    )
                 }
             }
         }
