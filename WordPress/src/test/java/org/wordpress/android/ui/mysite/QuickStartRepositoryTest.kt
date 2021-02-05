@@ -84,7 +84,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `refresh loads model`() = test {
         initStore()
 
-        quickStartRepository.refreshIfNecessary()
+        quickStartRepository.refresh()
 
         assertModel(1)
     }
@@ -103,7 +103,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Test
     fun `sets active task and shows stylized snackbar when not UPDATE_SITE_TITLE`() = test {
         initStore()
-        quickStartRepository.refreshIfNecessary()
+        quickStartRepository.refresh()
 
         val spannableString = initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
 
@@ -215,9 +215,35 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
 
+    @Test
+    fun `hides CUSTOMIZE category`() = test {
+        initStore()
+
+        quickStartRepository.hideCategory(CUSTOMIZE.toString())
+
+        val quickStartUpdate = source.take(1).toList().last()
+        quickStartUpdate.categories.apply {
+            assertThat(this).hasSize(1)
+            assertThat(this.first().taskType).isEqualTo(GROW)
+        }
+    }
+
+    @Test
+    fun `hides GROW category`() = test {
+        initStore()
+
+        quickStartRepository.hideCategory(GROW.toString())
+
+        val quickStartUpdate = source.take(1).toList().last()
+        quickStartUpdate.categories.apply {
+            assertThat(this).hasSize(1)
+            assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
+        }
+    }
+
     private fun initQuickStartInProgress() {
         initStore()
-        quickStartRepository.refreshIfNecessary()
+        quickStartRepository.refresh()
     }
 
     private fun initStore() {

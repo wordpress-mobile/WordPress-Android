@@ -7,6 +7,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,8 +20,11 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
+import org.wordpress.android.util.config.RestoreFeatureConfig
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -31,6 +35,7 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var rewindStatusService: RewindStatusService
+    @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val activityID = "id1"
@@ -61,15 +66,18 @@ class ActivityLogDetailViewModelTest {
     )
 
     private var lastEmittedItem: ActivityLogDetailModel? = null
+    private var navigationEvents: MutableList<Event<ActivityLogDetailNavigationEvents?>> = mutableListOf()
 
     @Before
     fun setUp() {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
                 activityLogStore,
-                rewindStatusService
+                rewindStatusService,
+                restoreFeatureConfig
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
+        viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
     }
 
     @After
@@ -91,11 +99,13 @@ class ActivityLogDetailViewModelTest {
 
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameIsJetpackAndTypeIsApplication() {
-        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
-                avatarURL = null,
-                displayName = "Jetpack",
-                type = "Application"
-        ))
+        val updatedActivity = activityLogModel.copy(
+                actor = activityLogModel.actor?.copy(
+                        avatarURL = null,
+                        displayName = "Jetpack",
+                        type = "Application"
+                )
+        )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
         viewModel.start(site, activityID)
@@ -109,11 +119,13 @@ class ActivityLogDetailViewModelTest {
 
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameAndTypeIsHappinessEngineer() {
-        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
-                avatarURL = null,
-                displayName = "Happiness Engineer",
-                type = "Happiness Engineer"
-        ))
+        val updatedActivity = activityLogModel.copy(
+                actor = activityLogModel.actor?.copy(
+                        avatarURL = null,
+                        displayName = "Happiness Engineer",
+                        type = "Happiness Engineer"
+                )
+        )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
         viewModel.start(site, activityID)
@@ -180,12 +192,38 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun onRewindClickTriggersRewindIfRewindIdNotNull() {
+    fun `given without rewind id, when on rewind clicked, then do nothing`() {
         val model = mock<ActivityLogDetailModel>()
-        whenever(model.rewindId).thenReturn("123")
+        whenever(model.rewindId).thenReturn(null)
 
         viewModel.onRewindClicked(model)
 
-        assertEquals(model, viewModel.showRewindDialog.value)
+        assertTrue(navigationEvents.isEmpty())
+    }
+
+    @Test
+    fun `given restore feature is disabled, when on rewind clicked, then show rewind dialog with model`() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn("123")
+        whenever(restoreFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.onRewindClicked(model)
+
+        navigationEvents.last().peekContent()?.let {
+            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRewindDialog).model)
+        }
+    }
+
+    @Test
+    fun `given restore feature is enabled, when on rewind clicked, then show restore with model`() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn("123")
+        whenever(restoreFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.onRewindClicked(model)
+
+        navigationEvents.last().peekContent()?.let {
+            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRestore).model)
+        }
     }
 }

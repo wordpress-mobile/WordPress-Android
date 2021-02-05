@@ -11,6 +11,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.distinctUntilChanged
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.util.filter
@@ -30,23 +31,30 @@ class MySiteStateProvider(
     }
 
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
-        val result = MediatorLiveData<MySiteUiState>()
+        val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteId != null) {
             mySiteSources.map { source -> source.buildSource(siteId).distinctUntilChanged().asLiveData(bgDispatcher) }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
                     .map { source -> source.buildSource().distinctUntilChanged().asLiveData(bgDispatcher) }
         }
-        result.value = MySiteUiState()
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
                 if (partialState != null) {
-                    result.value = (result.value ?: MySiteUiState()).update(partialState)
+                    result.value = (result.value ?: SiteIdToState(siteId)).update(partialState)
                 }
             }
         }
-        result
+        // We want to filter out the empty state where we have a site ID but site object is missing.
+        // Without this check there is an emission of a NoSites state even if we have the site
+        result.filter { it.siteId == null || it.state.site != null }.map { it.state }
     }.distinctUntilChanged()
+
+    private data class SiteIdToState(val siteId: Int?, val state: MySiteUiState = MySiteUiState()) {
+        fun update(partialState: PartialState): SiteIdToState {
+            return this.copy(state = state.update(partialState))
+        }
+    }
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {

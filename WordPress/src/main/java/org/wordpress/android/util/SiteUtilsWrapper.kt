@@ -21,4 +21,11 @@ class SiteUtilsWrapper @Inject constructor() {
     fun isAccessedViaWPComRest(site: SiteModel): Boolean = SiteUtils.isAccessedViaWPComRest(site)
     fun onFreePlan(site: SiteModel): Boolean = SiteUtils.onFreePlan(site)
     fun hasCustomDomain(site: SiteModel): Boolean = SiteUtils.hasCustomDomain(site)
+
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    fun isScanEnabled(scanFeatureFlagEnabled: Boolean, scanPurchased: Boolean, site: SiteModel) =
+            SiteUtils.isScanEnabled(scanFeatureFlagEnabled, scanPurchased, site)
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    fun isBackupEnabled(backupFeatureFlagEnabled: Boolean, backupPurchased: Boolean) =
+            SiteUtils.isBackupEnabled(backupFeatureFlagEnabled, backupPurchased)
 }
