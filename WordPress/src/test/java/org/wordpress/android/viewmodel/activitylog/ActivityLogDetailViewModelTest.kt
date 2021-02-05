@@ -19,8 +19,8 @@ import org.wordpress.android.fluxc.model.activity.ActivityLogModel
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -91,11 +91,13 @@ class ActivityLogDetailViewModelTest {
 
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameIsJetpackAndTypeIsApplication() {
-        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
-                avatarURL = null,
-                displayName = "Jetpack",
-                type = "Application"
-        ))
+        val updatedActivity = activityLogModel.copy(
+                actor = activityLogModel.actor?.copy(
+                        avatarURL = null,
+                        displayName = "Jetpack",
+                        type = "Application"
+                )
+        )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
         viewModel.start(site, activityID)
@@ -109,11 +111,13 @@ class ActivityLogDetailViewModelTest {
 
     @Test
     fun showsJetpackIconWhenActorIconEmptyAndNameAndTypeIsHappinessEngineer() {
-        val updatedActivity = activityLogModel.copy(actor = activityLogModel.actor?.copy(
-                avatarURL = null,
-                displayName = "Happiness Engineer",
-                type = "Happiness Engineer"
-        ))
+        val updatedActivity = activityLogModel.copy(
+                actor = activityLogModel.actor?.copy(
+                        avatarURL = null,
+                        displayName = "Happiness Engineer",
+                        type = "Happiness Engineer"
+                )
+        )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
         viewModel.start(site, activityID)
