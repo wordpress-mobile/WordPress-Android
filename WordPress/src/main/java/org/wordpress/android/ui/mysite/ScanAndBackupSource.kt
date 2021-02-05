@@ -17,8 +17,8 @@ class ScanAndBackupSource
 ) : MySiteSource<JetpackCapabilities> {
     override fun buildSource(siteId: Int) = flow {
         val site = selectedSiteRepository.getSelectedSite()
-        if (site == null || site.id != siteId) return@flow
-        if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
+        if (site != null && site.id == siteId &&
+                (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled())) {
             jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId).collect {
                 emit(
                         JetpackCapabilities(
