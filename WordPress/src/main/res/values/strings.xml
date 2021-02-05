@@ -2063,7 +2063,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
