@@ -359,7 +359,7 @@ public class SiteUtils {
     }
 
     public static boolean hasCustomDomain(@NonNull SiteModel site) {
-        return !site.getUrl().contains(".wordpress.com");
+        return !site.getUrl().contains(".wordpress.com") && !site.getUrl().contains(".wpcomstaging.com");
     }
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
