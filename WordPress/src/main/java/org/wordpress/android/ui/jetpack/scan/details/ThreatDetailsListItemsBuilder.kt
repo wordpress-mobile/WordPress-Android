@@ -184,16 +184,20 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     ): ThreatContextLinesItemState.ThreatContextLineItemState {
         val isHighlighted = line.highlights?.isNotEmpty() == true
 
-        val lineNumberBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_20
-        val contentBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_5
+        val lineNumberBackgroundColorRes = if (isHighlighted) {
+            R.color.context_line_highlighted_row_background
+        } else R.color.material_on_surface_disabled
+
+        val contentBackgroundColorRes = if (isHighlighted) {
+            R.color.context_line_highlighted_row_background
+        } else R.color.on_surface_emphasis_lowest
 
         return ThreatContextLinesItemState.ThreatContextLineItemState(
             line = line,
             lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
             contentBackgroundColorRes = contentBackgroundColorRes,
-            highlightedBackgroundColorRes = R.color.red,
-            highlightedTextColorRes = R.color.white,
-            normalTextColorRes = R.color.black
+            highlightedBackgroundColorRes = R.color.red_60,
+            highlightedTextColorRes = R.color.white
         )
     }
 

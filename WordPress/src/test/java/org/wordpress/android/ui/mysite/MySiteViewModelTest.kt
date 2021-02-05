@@ -31,6 +31,8 @@ import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
@@ -265,7 +267,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -488,7 +490,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(5)
+        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
@@ -590,11 +592,22 @@ class MySiteViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `quick action pages click opens pages screen`() {
+    fun `quick action pages click opens pages screen and requests next step of EDIT_HOMEPAGE task`() {
         initSelectedSite()
 
         findQuickActionsBlock()?.onPagesClick?.click()
 
+        verify(quickStartRepository).requestNextStepOfTask(EDIT_HOMEPAGE)
+        assertThat(navigationActions).containsOnly(OpenPages(site))
+    }
+
+    @Test
+    fun `quick action pages click opens pages screen and completes REVIEW_PAGES task`() {
+        initSelectedSite()
+
+        findQuickActionsBlock()?.onPagesClick?.click()
+
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsOnly(OpenPages(site))
     }
 
@@ -658,6 +671,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `pages item click emits OpenPages navigation event`() {
         invokeItemClickAction(PAGES)
 
+        verify(quickStartRepository).completeTask(REVIEW_PAGES)
         assertThat(navigationActions).containsExactly(OpenPages(site))
     }
 
@@ -883,7 +897,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
@@ -893,7 +908,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse

@@ -121,7 +121,7 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
      * off. To fix this, we add the bottom inset as the margin bottom of the fragment container.
      */
     private fun addWindowInsetToFragmentContainer() {
-        if (VERSION.SDK_INT == VERSION_CODES.Q) {
+        if (VERSION.SDK_INT >= VERSION_CODES.Q) {
             activity?.window?.decorView?.rootWindowInsets?.systemWindowInsetBottom?.let { bottomInset ->
                 val param = prepublishing_content_fragment.layoutParams as ViewGroup.MarginLayoutParams
                 param.setMargins(0, 0, 0, bottomInset)

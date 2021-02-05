@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
@@ -240,6 +241,23 @@ class GetRestoreStatusUseCaseTest {
                 )
             }
 
+    @Test
+    fun `given get status model is null without restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+
+        val result = useCase.getRestoreStatus(site, null).toList()
+
+        assertThat(result).contains(RestoreRequestState.Empty)
+    }
+
+    @Test
+    fun `given get status model is null with restoreId, when restore status triggers, then return empty`() = test {
+        whenever(activityLogStore.getRewindStatusForSite(site)).thenReturn(null)
+
+        val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+        assertThat(result).contains(RestoreRequestState.Empty)
+    }
     /* PRIVATE */
 
     private fun activityLogModel() = ActivityLogModel(
