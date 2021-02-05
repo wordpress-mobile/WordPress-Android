@@ -45,7 +45,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_get_app_white_24dp,
                         R.string.backup_download_details_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.backup_download_details_header),
                 buildDescriptionState(published, R.string.backup_download_details_description_with_two_parameters),
                 buildActionButtonState(
@@ -77,7 +77,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_get_app_white_24dp,
                         R.string.backup_download_progress_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.backup_download_progress_header),
                 buildDescriptionState(published, R.string.backup_download_progress_description_with_two_parameters),
                 buildProgressState(progress),
@@ -98,7 +98,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildIconState(
                         R.drawable.ic_cloud_done_white_24dp,
                         R.string.backup_download_complete_icon_content_description,
-                        R.color.success_50),
+                        R.color.success),
                 buildHeaderState(R.string.backup_download_complete_header),
                 buildDescriptionState(published, R.string.backup_download_complete_description_with_two_parameters),
                 buildActionButtonState(
@@ -126,17 +126,17 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             buildBulletState(
                     R.drawable.ic_query_builder_white_24dp,
                     R.string.backup_download_status_bullet_clock_icon_content_desc,
-                    R.color.warning_50,
+                    R.color.warning,
                     R.string.backup_download_status_failure_bullet1),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.backup_download_status_bullet_checkmark_icon_content_desc,
-                    R.color.success_50,
+                    R.color.success,
                     R.string.backup_download_status_failure_bullet2),
             buildBulletState(
                     R.drawable.ic_gridicons_checkmark_circle,
                     R.string.backup_download_status_bullet_checkmark_icon_content_desc,
-                    R.color.success_50,
+                    R.color.success,
                     R.string.backup_download_status_failure_bullet3,
                     R.dimen.jetpack_backup_restore_last_bullet_bottom_margin),
             buildActionButtonState(
@@ -149,12 +149,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             buildIconState(
                     R.drawable.ic_cloud_off_white_24dp,
                     R.string.backup_download_complete_failed_icon_content_description,
-                    R.color.error_50),
+                    R.color.error),
             buildHeaderState(R.string.backup_download_complete_failed_description),
-            buildSubHeaderState(
-                    R.string.request_failed_message,
-                    R.dimen.margin_none,
-                    R.dimen.jetpack_backup_restore_sub_header_bottom_margin),
+            buildDescriptionState(descRes = R.string.request_failed_message),
             buildActionButtonState(
                     titleRes = R.string.backup_download_complete_failed_action_button,
                     contentDescRes = R.string.backup_download_complete_failed_action_button_content_description,
@@ -173,14 +170,18 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
 
     private fun buildHeaderState(@StringRes titleRes: Int) = HeaderState(UiStringRes(titleRes))
 
-    private fun buildDescriptionState(published: Date, @StringRes descRes: Int) = DescriptionState(
-            UiStringResWithParams(
-                    descRes,
-                    listOf(
-                            UiStringText(published.toFormattedDateString()),
-                            UiStringText(published.toFormattedTimeString())
-                    )
-            )
+    private fun buildDescriptionState(published: Date? = null, @StringRes descRes: Int) = DescriptionState(
+            if (published != null) {
+                UiStringResWithParams(
+                        descRes,
+                        listOf(
+                                UiStringText(published.toFormattedDateString()),
+                                UiStringText(published.toFormattedTimeString())
+                        )
+                )
+            } else {
+                UiStringRes(descRes)
+            }
     )
 
     private fun buildActionButtonState(
