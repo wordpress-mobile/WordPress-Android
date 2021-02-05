@@ -2,7 +2,6 @@ package org.wordpress.android.ui.jetpack
 
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -39,10 +38,8 @@ class JetpackCapabilitiesUseCase @Inject constructor(
 
     suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
         emit(getCachedJetpackPurchasedProducts(remoteSiteId))
-        withContext(bgDispatcher) {
-            if (!hasValidCache(remoteSiteId)) {
-                emit(fetchJetpackPurchasedProducts(remoteSiteId))
-            }
+        if (!hasValidCache(remoteSiteId)) {
+            emit(fetchJetpackPurchasedProducts(remoteSiteId))
         }
     }
 
@@ -58,11 +55,9 @@ class JetpackCapabilitiesUseCase @Inject constructor(
                     backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
             )
 
-    suspend fun hasValidCache(remoteSiteId: Long): Boolean {
-        return withContext(bgDispatcher) {
-            val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-            lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
-        }
+    fun hasValidCache(remoteSiteId: Long): Boolean {
+        val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
+        return lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
     }
 
     private fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
@@ -70,24 +65,22 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     }
 
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return withContext(bgDispatcher) {
-            if (continuation != null) {
-                throw IllegalStateException("Request already in progress.")
-            }
-
-            dispatcher.register(this@JetpackCapabilitiesUseCase)
-            val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
-                val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
-                continuation = cont
-                dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
-            }
-
-            val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
-            if (!response.isError) {
-                updateCache(remoteSiteId, capabilities)
-            }
-            return@withContext capabilities
+        if (continuation != null) {
+            throw IllegalStateException("Request already in progress.")
         }
+
+        dispatcher.register(this@JetpackCapabilitiesUseCase)
+        val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
+            val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
+            continuation = cont
+            dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
+        }
+
+        val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
+        if (!response.isError) {
+            updateCache(remoteSiteId, capabilities)
+        }
+        return capabilities
     }
 
     private fun updateCache(
