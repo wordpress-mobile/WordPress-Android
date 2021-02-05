@@ -7,6 +7,7 @@ import org.junit.After
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -20,8 +21,10 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.util.config.RestoreFeatureConfig
+import org.wordpress.android.viewmodel.Event
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -63,6 +66,7 @@ class ActivityLogDetailViewModelTest {
     )
 
     private var lastEmittedItem: ActivityLogDetailModel? = null
+    private var navigationEvents: MutableList<Event<ActivityLogDetailNavigationEvents?>> = mutableListOf()
 
     @Before
     fun setUp() {
@@ -73,6 +77,7 @@ class ActivityLogDetailViewModelTest {
                 restoreFeatureConfig
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
+        viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
     }
 
     @After
@@ -193,7 +198,7 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.onRewindClicked(model)
 
-        assertEquals(null, viewModel.showRewindDialog.value)
+        assertTrue(navigationEvents.isEmpty())
     }
 
     @Test
@@ -203,6 +208,8 @@ class ActivityLogDetailViewModelTest {
 
         viewModel.onRewindClicked(model)
 
-        assertEquals(model, viewModel.showRewindDialog.value)
+        navigationEvents.last().peekContent()?.let {
+            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRewindDialog).model)
+        }
     }
 }

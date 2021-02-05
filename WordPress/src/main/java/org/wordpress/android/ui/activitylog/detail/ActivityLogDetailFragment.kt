@@ -100,8 +100,12 @@ class ActivityLogDetailFragment : Fragment() {
                 activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
-            viewModel.showRewindDialog.observe(viewLifecycleOwner, Observer<ActivityLogDetailModel> { detailModel ->
-                detailModel?.let { onRewindButtonClicked(it) }
+            viewModel.navigationEvents.observe(viewLifecycleOwner, {
+                it.applyIfNotHandled {
+                    when (this) {
+                        is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(model)
+                    }
+                }
             })
 
             viewModel.handleFormattableRangeClick.observe(viewLifecycleOwner, Observer<FormattableRange> { range ->
