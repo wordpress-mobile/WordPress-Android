@@ -15,7 +15,7 @@ class HorizontalMarginItemDecoration(private val defaultMargin: Int) : ItemDecor
     ) {
         val position = parent.getChildAdapterPosition(view)
         val viewType = parent.adapter?.getItemViewType(position)
-        if (viewType != ViewType.THREAT_ITEM.id) {
+        if (viewType != ViewType.THREAT_ITEM.id && viewType != ViewType.THREATS_HEADER.id) {
             outRect.left = defaultMargin
             outRect.right = defaultMargin
         }

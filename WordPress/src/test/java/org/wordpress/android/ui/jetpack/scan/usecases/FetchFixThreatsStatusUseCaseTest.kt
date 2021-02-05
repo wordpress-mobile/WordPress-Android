@@ -134,7 +134,37 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
             .toList(mutableListOf())
             .last()
 
-        assertThat(useCaseResult).isEqualTo(Failure.FixFailure(containsOnlyErrors = false))
+        assertThat(useCaseResult).isEqualTo(
+                Failure.FixFailure(
+                        containsOnlyErrors = false,
+                        mightBeMissingCredentials = false
+                )
+        )
+    }
+
+    @Test
+    fun `given result models contains only errors, then FixFailure - containsOnlyErrors is true`() = test {
+        val fixThreatsStatusModels = listOf(
+                fakeFixThreatsStatusModel.copy(status = FixStatus.NOT_FIXED),
+                fakeFixThreatsStatusModel.copy(status = FixStatus.UNKNOWN, error = "not_found")
+        )
+        val storeResultWithErrorFixStatusModel = OnFixThreatsStatusFetched(
+                fakeSiteId,
+                fixThreatsStatusModels,
+                FETCH_FIX_THREATS_STATUS
+        )
+        whenever(scanStore.fetchFixThreatsStatus(any())).thenReturn(storeResultWithErrorFixStatusModel)
+
+        val useCaseResult = useCase.fetchFixThreatsStatus(fakeSiteId, listOf(1L, 2L))
+                .toList(mutableListOf())
+                .last()
+
+        assertThat(useCaseResult).isEqualTo(
+                Failure.FixFailure(
+                        containsOnlyErrors = true,
+                        mightBeMissingCredentials = false
+                )
+        )
     }
 
     @Test
@@ -171,6 +201,11 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
             .toList(mutableListOf())
             .last()
 
-        assertThat(useCaseResult).isEqualTo(Failure.FixFailure(containsOnlyErrors = true))
+        assertThat(useCaseResult).isEqualTo(
+                Failure.FixFailure(
+                        containsOnlyErrors = true,
+                        mightBeMissingCredentials = true
+                )
+        )
     }
 }

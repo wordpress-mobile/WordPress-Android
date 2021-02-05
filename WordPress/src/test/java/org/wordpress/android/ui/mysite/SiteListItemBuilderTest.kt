@@ -153,10 +153,11 @@ class SiteListItemBuilderTest {
                 isWPCom = true,
                 isAutomatedTransfer = false
         )
+        val showFocusPoint = true
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, showFocusPoint, SITE_ITEM_ACTION)
 
-        assertThat(item).isEqualTo(PLAN_ITEM)
+        assertThat(item).isEqualTo(PLAN_ITEM.copy(showFocusPoint = showFocusPoint))
     }
 
     @Test
@@ -169,7 +170,7 @@ class SiteListItemBuilderTest {
                 isAutomatedTransfer = true
         )
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
 
         assertThat(item).isEqualTo(PLAN_ITEM)
     }
@@ -178,7 +179,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when plan name is empty`() {
         setupPlanItem(planShortName = "")
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -187,7 +188,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site cannot manage options`() {
         setupPlanItem(canManageOptions = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -196,7 +197,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is WP for teams`() {
         setupPlanItem(isWpForTeams = true)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }
@@ -205,7 +206,7 @@ class SiteListItemBuilderTest {
     fun `plan item not built when site is neither WP com nor AT`() {
         setupPlanItem(isWPCom = false, isAutomatedTransfer = false)
 
-        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, SITE_ITEM_ACTION)
+        val item = siteListItemBuilder.buildPlanItemIfAvailable(siteModel, false, SITE_ITEM_ACTION)
 
         assertThat(item).isNull()
     }

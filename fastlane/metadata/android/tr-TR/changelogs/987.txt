@@ -1,0 +1,7 @@
+16.6:
+Yenilikler
+Site Oluşturma: Ana sayfa tasarımlarına göz atarken mobil, tablet ve masaüstü önizlemelerini görüntüleyebilir ve aralarında geçiş yapabilirsiniz. 
+Okuyucu: Daha iyi bir organizasyon için, takip edilen P2 siteleri sekmenize bir filtre özelliği ekledik.
+Hızlı Başlangıç: Sayfaları incelemeniz ve ana sayfanızı düzenlemeniz için adımlar ekleyerek, uygulama içinde size rehberlik eden turu iyileştirdik.
+
+

@@ -23,14 +23,17 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.UiStat
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
 import javax.inject.Named
 
 private const val RETRY_DELAY = 300L
+
 class ScanHistoryViewModel @Inject constructor(
     private val scanStore: ScanStore,
     private val networkUtilsWrapper: NetworkUtilsWrapper,
+    private val scanTracker: ScanTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -59,11 +62,13 @@ class ScanHistoryViewModel @Inject constructor(
             if (networkUtilsWrapper.isNetworkAvailable()) {
                 val result = scanStore.fetchScanHistory(FetchScanHistoryPayload(site))
                 if (result.isError) {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.REMOTE)
                     _uiState.value = RequestFailed(this@ScanHistoryViewModel::onRetryClicked)
                 } else {
                     _threats.value = scanStore.getScanHistoryForSite(site)
                 }
             } else {
+                scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.OFFLINE)
                 _uiState.value = NoConnection(this@ScanHistoryViewModel::onRetryClicked)
             }
         }
@@ -71,6 +76,10 @@ class ScanHistoryViewModel @Inject constructor(
 
     private fun onRetryClicked() {
         fetchScanHistory(true)
+    }
+
+    fun onTabSelected(position: Int) {
+        scanTracker.trackOnScanHistoryTabSelected(ContentUiState.tabs[position].type)
     }
 
     data class TabUiState(val label: UiString, val type: ScanHistoryTabType)
@@ -88,6 +97,7 @@ class ScanHistoryViewModel @Inject constructor(
             abstract val title: UiString
             abstract val img: Int
             abstract val retry: () -> Unit
+
             data class NoConnection(override val retry: () -> Unit) : ErrorUiState() {
                 override val title: UiString = UiStringRes(R.string.scan_history_no_connection)
                 @DrawableRes override val img: Int = R.drawable.img_illustration_cloud_off_152dp

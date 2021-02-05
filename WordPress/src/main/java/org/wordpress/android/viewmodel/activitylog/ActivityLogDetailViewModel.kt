@@ -10,12 +10,15 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityLogModel.ActivityActor
 import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
+import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
+import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
@@ -26,14 +29,15 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService
+    private val rewindStatusService: RewindStatusService,
+    private val restoreFeatureConfig: RestoreFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
 
-    private val _showRewindDialog = SingleLiveEvent<ActivityLogDetailModel>()
-    val showRewindDialog: LiveData<ActivityLogDetailModel>
-        get() = _showRewindDialog
+    private val _navigationEvents = MutableLiveData<Event<ActivityLogDetailNavigationEvents>>()
+    val navigationEvents: LiveData<Event<ActivityLogDetailNavigationEvents>>
+        get() = _navigationEvents
 
     private val _handleFormattableRangeClick = SingleLiveEvent<FormattableRange>()
     val handleFormattableRangeClick: LiveData<FormattableRange>
@@ -95,12 +99,14 @@ class ActivityLogDetailViewModel
 
     fun onRewindClicked(model: ActivityLogDetailModel) {
         if (model.rewindId != null) {
-            _showRewindDialog.value = model
+            val navigationEvent = if (restoreFeatureConfig.isEnabled()) {
+                ActivityLogDetailNavigationEvents.ShowRestore(model)
+            } else {
+                ActivityLogDetailNavigationEvents.ShowRewindDialog(model)
+            }
+            _navigationEvents.value = Event(navigationEvent)
         } else {
-            AppLog.e(
-                    ACTIVITY_LOG,
-                    "Trying to rewind activity without rewind ID"
-            )
+            AppLog.e(ACTIVITY_LOG, "Trying to rewind activity without rewind ID")
         }
     }
 

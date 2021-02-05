@@ -18,5 +18,6 @@ class QuickActionsViewHolder(parent: ViewGroup) : MySiteItemViewHolder(parent, R
         middle_quick_action_spacing.visibility = pagesVisibility
 
         quick_start_stats_focus_point.setVisibleOrGone(item.showStatsFocusPoint)
+        quick_start_pages_focus_point.setVisibleOrGone(item.showPagesFocusPoint)
     }
 }
