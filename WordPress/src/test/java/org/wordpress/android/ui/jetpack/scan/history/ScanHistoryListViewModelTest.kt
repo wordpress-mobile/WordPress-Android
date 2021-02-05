@@ -14,6 +14,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
@@ -31,6 +32,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.Sc
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
+import org.wordpress.android.util.analytics.ScanTracker
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
@@ -42,6 +44,7 @@ class ScanHistoryListViewModelTest {
 
     @Mock private lateinit var scanThreatItemBuilder: ThreatItemBuilder
     @Mock private lateinit var scanHistoryViewModel: ScanHistoryViewModel
+    @Mock private lateinit var scanTracker: ScanTracker
     private val captor = argumentCaptor<ThreatModel>()
 
     private lateinit var viewModel: ScanHistoryListViewModel
@@ -50,7 +53,11 @@ class ScanHistoryListViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ScanHistoryListViewModel(scanThreatItemBuilder, TEST_DISPATCHER)
+        viewModel = ScanHistoryListViewModel(
+                scanThreatItemBuilder,
+                scanTracker,
+                TEST_DISPATCHER
+        )
         val threats = listOf(
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),
@@ -60,7 +67,7 @@ class ScanHistoryListViewModelTest {
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT))
         )
         whenever(scanHistoryViewModel.threats).thenReturn(MutableLiveData(threats))
-        whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull())).thenAnswer {
+        whenever(scanThreatItemBuilder.buildThreatItem(anyOrNull(), anyOrNull(), anyBoolean())).thenAnswer {
             ThreatItemState(1L, true, mock(), mock(), 0, 0, 0) {
                 it.getArgument<(Long) -> Unit>(ON_ITEM_CLICKED_PARAM_POSITION)(1L)
             }
@@ -92,7 +99,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.FIXED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(3)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(3)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.FIXED }
     }
 
@@ -101,7 +108,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.IGNORED, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(1)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(1)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch { it.baseThreatModel.status == ThreatStatus.IGNORED }
     }
 
@@ -110,7 +117,7 @@ class ScanHistoryListViewModelTest {
         viewModel.start(ScanHistoryTabType.ALL, site, scanHistoryViewModel)
         viewModel.uiState.observeForever(mock())
 
-        verify(scanThreatItemBuilder, times(4)).buildThreatItem(captor.capture(), anyOrNull())
+        verify(scanThreatItemBuilder, times(4)).buildThreatItem(captor.capture(), anyOrNull(), anyBoolean())
         assertThat(captor.allValues).allMatch {
             it.baseThreatModel.status == ThreatStatus.FIXED || it.baseThreatModel.status == ThreatStatus.IGNORED
         }

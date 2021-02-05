@@ -43,6 +43,7 @@
         <item name="android:textAlignment">viewStart</item>
         <item name="android:layout_marginBottom">@dimen/margin_extra_large</item>
         <item name="android:textAppearance">?attr/textAppearanceBody1</item>
+        <item name="android:lineSpacingMultiplier">1.3</item>
     </style>
 
     <style name="Jetpack.PrimaryButton" parent="WordPress.Button.Primary">
