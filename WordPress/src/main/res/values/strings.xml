@@ -2230,7 +2230,7 @@
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="invite_people">Invite People</string>
-    <string name="invite_names_title">Usernames or Emails</string>
+    <string name="invite_names_title">Usernames or emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
     <string name="invite_username_not_found">%s: User not found</string>
@@ -2238,11 +2238,7 @@
     <string name="invite_already_following">%s: Already following</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
-    <string name="invite_message_title">Custom Message</string>
-    <string name="invite_message_remaining_zero">0 characters remaining</string>
-    <string name="invite_message_remaining_one">1 character remaining</string>
-    <string name="invite_message_remaining_other">%d characters remaining</string>
-    <string name="invite_message_info">(Optional) You can enter a custom message of up to 500 characters that will be included in the invitation to the user(s).</string>
+    <string name="invite_message_title">Custom message</string>
     <string name="invite_message_usernames_limit">Invite up to 10 email addresses and/or WordPress.com usernames. Those needing a username will be sent instructions on how to create one.</string>
     <string name="invite_error_no_usernames">Please add at least one username</string>
     <string name="invite_error_invalid_usernames_one">Cannot send: A username or email is invalid</string>
@@ -2251,6 +2247,9 @@
     <string name="invite_error_some_failed">Invite sent but error(s) occurred!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
+
+    <string name="people_learn_more_about_roles">Learn more about roles</string>
+    <string name="people_optional_custom_message_helper_text">Optional: enter a custom message to be sent with your invitation.</string>
 
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_followers">Followers</string>
