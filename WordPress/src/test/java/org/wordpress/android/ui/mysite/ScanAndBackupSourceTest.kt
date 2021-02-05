@@ -2,6 +2,7 @@ package org.wordpress.android.ui.mysite
 
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
@@ -71,7 +72,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
@@ -85,7 +86,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
@@ -99,7 +100,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true, backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
@@ -113,7 +114,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true, backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = false, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = false, backup = false)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
@@ -127,7 +128,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPCom).thenReturn(true)
 
@@ -141,7 +142,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPComAtomic).thenReturn(true)
 
@@ -155,7 +156,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
