@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -233,23 +232,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean onActivityBackPressed();
     }
 
-    private Runnable mShowFabFocusPoint = new Runnable() {
-        @Override public void run() {
-            if (isFinishing()) {
-                return;
-            }
-            boolean focusPointVisible =
-                    findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point) != null;
-            if (!focusPointVisible) {
-                int horizontalOffset = getResources().getDimensionPixelOffset(
-                        R.dimen.quick_start_focus_point_my_site_right_offset
-                );
-                int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
-                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                        findViewById(R.id.fab_container), mFloatingActionButton, horizontalOffset,
-                        (mFloatingActionButton.getHeight() - focusPointSize) / 2
-                );
-            }
+    private final Runnable mShowFabFocusPoint = () -> {
+        if (isFinishing()) {
+            return;
+        }
+        boolean focusPointVisible =
+                findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point) != null;
+        if (!focusPointVisible) {
+            addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, true);
         }
     };
 
@@ -451,16 +441,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     mHandler.postDelayed(mShowFabFocusPoint, 200);
                 } else if (!fabUiState.isFocusPointVisible()) {
                     mHandler.removeCallbacks(mShowFabFocusPoint);
-                    mHandler.post(() -> {
-                        View focusPointView =
-                                findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point);
-                        if (focusPointView != null) {
-                            ViewParent directParent = focusPointView.getParent();
-                            if (directParent instanceof ViewGroup) {
-                                ((ViewGroup) directParent).removeView(focusPointView);
-                            }
-                        }
-                    });
+                    mHandler.post(() -> addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, false));
                 }
             }
         });
@@ -1243,6 +1224,11 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     horizontalOffset = targetView.getWidth() / 2 - size + getResources()
                             .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
                     verticalOffset = 0;
+                    break;
+                case PUBLISH_POST:
+                    horizontalOffset = getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
+                    verticalOffset = (targetView.getHeight() - size) / 2;
                     break;
                 default:
                     horizontalOffset = 0;
