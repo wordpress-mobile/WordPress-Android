@@ -12,14 +12,18 @@ import kotlinx.android.parcel.Parcelize
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
+import org.json.JSONObject
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_CONFIRMED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_ERROR
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindRequestTypes
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.CheckboxState
 import org.wordpress.android.ui.jetpack.common.ViewType
-import org.wordpress.android.ui.jetpack.common.ViewType.CHECKBOX
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType
 import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS
@@ -31,6 +35,7 @@ import org.wordpress.android.ui.jetpack.common.providers.JetpackAvailableItemsPr
 import org.wordpress.android.ui.jetpack.restore.RestoreErrorTypes.GenericFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreNavigationEvents.VisitSite
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.OtherRequestRunning
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
@@ -64,12 +69,16 @@ import org.wordpress.android.util.wizard.WizardStep
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import java.util.Date
+import java.util.HashMap
 import javax.inject.Inject
 import javax.inject.Named
 
 const val KEY_RESTORE_ACTIVITY_ID_KEY = "key_restore_activity_id_key"
 const val KEY_RESTORE_CURRENT_STEP = "key_restore_current_step"
 const val KEY_RESTORE_STATE = "key_restore_state"
+private const val TRACKING_ERROR_CAUSE_OFFLINE = "offline"
+private const val TRACKING_ERROR_CAUSE_REMOTE = "remote"
+private const val TRACKING_ERROR_CAUSE_OTHER = "other"
 
 @Parcelize
 @SuppressLint("ParcelCreator")
@@ -180,6 +189,7 @@ class RestoreViewModel @Inject constructor(
                         type = StateType.DETAILS
                 )
             } else {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
                 transitionToError(GenericFailure)
             }
         }
@@ -249,7 +259,11 @@ class RestoreViewModel @Inject constructor(
             WARNING -> buildWarning()
             PROGRESS -> buildProgress()
             COMPLETE -> buildComplete()
-            ERROR -> buildError(RestoreErrorTypes.fromInt(target.wizardState.errorType ?: GenericFailure.id))
+            ERROR -> buildError(
+                    RestoreErrorTypes.fromInt(
+                            target.wizardState.errorType ?: GenericFailure.id
+                    )
+            )
         }
     }
 
@@ -269,15 +283,31 @@ class RestoreViewModel @Inject constructor(
     private fun buildOptionsSelected(items: List<JetpackListItemState>): List<Pair<Int, Boolean>> {
         val checkboxes = items.filterIsInstance(CheckboxState::class.java)
         return listOf(
-                Pair(THEMES.id, checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true),
-                Pair(PLUGINS.id, checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true),
                 Pair(
-                        MEDIA_UPLOADS.id, checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
-                        ?: true
+                        THEMES.id,
+                        checkboxes.firstOrNull { it.availableItemType == THEMES }?.checked ?: true
                 ),
-                Pair(SQLS.id, checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true),
-                Pair(ROOTS.id, checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true),
-                Pair(CONTENTS.id, checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true)
+                Pair(
+                        PLUGINS.id,
+                        checkboxes.firstOrNull { it.availableItemType == PLUGINS }?.checked ?: true
+                ),
+                Pair(
+                        MEDIA_UPLOADS.id,
+                        checkboxes.firstOrNull { it.availableItemType == MEDIA_UPLOADS }?.checked
+                                ?: true
+                ),
+                Pair(
+                        SQLS.id,
+                        checkboxes.firstOrNull { it.availableItemType == SQLS }?.checked ?: true
+                ),
+                Pair(
+                        ROOTS.id,
+                        checkboxes.firstOrNull { it.availableItemType == ROOTS }?.checked ?: true
+                ),
+                Pair(
+                        CONTENTS.id,
+                        checkboxes.firstOrNull { it.availableItemType == CONTENTS }?.checked ?: true
+                )
         )
     }
 
@@ -296,10 +326,19 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleRestoreRequestResult(result: RestoreRequestState) {
         when (result) {
-            is NetworkUnavailable -> handleRestoreRequestError(NetworkUnavailableMsg)
-            is RemoteRequestFailure -> handleRestoreRequestError(GenericFailureMsg)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                handleRestoreRequestError(NetworkUnavailableMsg)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                handleRestoreRequestError(GenericFailureMsg)
+            }
             is Success -> handleRestoreRequestSuccess(result)
-            is OtherRequestRunning -> handleRestoreRequestError(OtherRequestRunningMsg)
+            is OtherRequestRunning -> {
+                trackError(TRACKING_ERROR_CAUSE_OTHER)
+                handleRestoreRequestError(OtherRequestRunningMsg)
+            }
             else -> throw Throwable("Unexpected restoreRequestResult ${this.javaClass.simpleName}")
         }
     }
@@ -340,11 +379,18 @@ class RestoreViewModel @Inject constructor(
 
     private fun handleQueryStatus(restoreStatus: RestoreRequestState) {
         when (restoreStatus) {
-            is NetworkUnavailable -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
-            is RemoteRequestFailure -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            is NetworkUnavailable -> {
+                trackError(TRACKING_ERROR_CAUSE_OFFLINE)
+                transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            }
+            is RemoteRequestFailure -> {
+                trackError(TRACKING_ERROR_CAUSE_REMOTE)
+                transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            }
             is Progress -> transitionToProgress(restoreStatus)
             is Complete -> wizardManager.showNextStep()
-            else -> throw Throwable("Unexpected queryStatus result ${this.javaClass.simpleName}")
+            is Empty -> transitionToError(RestoreErrorTypes.RemoteRequestFailure)
+            else -> Unit // Do nothing
         }
     }
 
@@ -393,26 +439,16 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onCheckboxItemClicked(itemType: JetpackAvailableItemType) {
-        (_uiState.value as? DetailsState)?.let { details ->
-            val updatedList = details.items.map { contentState ->
-                if (contentState.type == CHECKBOX) {
-                    contentState as CheckboxState
-                    if (contentState.availableItemType == itemType) {
-                        contentState.copy(checked = !contentState.checked)
-                    } else {
-                        contentState
-                    }
-                } else {
-                    contentState
-                }
-            }
-            _uiState.postValue(details.copy(items = updatedList))
+        (_uiState.value as? DetailsState)?.let {
+            val updatedItems = stateListItemBuilder.updateCheckboxes(it, itemType)
+            _uiState.postValue(it.copy(items = updatedItems))
         }
     }
 
     private fun onRestoreSiteClick() {
         val (rewindId, optionsSelected) = getParams()
         if (rewindId == null) {
+            trackError(TRACKING_ERROR_CAUSE_OTHER)
             transitionToError(GenericFailure)
         } else {
             restoreState = restoreState.copy(
@@ -427,8 +463,10 @@ class RestoreViewModel @Inject constructor(
 
     private fun onConfirmRestoreClick() {
         if (restoreState.rewindId == null) {
+            trackError(TRACKING_ERROR_CAUSE_OTHER)
             transitionToError(GenericFailure)
         } else {
+            trackRestoreConfirmed()
             wizardManager.showNextStep()
         }
     }
@@ -439,12 +477,8 @@ class RestoreViewModel @Inject constructor(
     }
 
     private fun onNotifyMeClick() {
-        _wizardFinishedObservable.value = Event(
-                RestoreInProgress(
-                        restoreState.rewindId as String,
-                        restoreState.restoreId as Long
-                )
-        )
+        AnalyticsTracker.track(JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED)
+        _wizardFinishedObservable.value = constructProgressEvent()
     }
 
     private fun onVisitSiteClick() {
@@ -458,6 +492,25 @@ class RestoreViewModel @Inject constructor(
     override fun onCleared() {
         super.onCleared()
         wizardManager.navigatorLiveData.removeObserver(wizardObserver)
+    }
+
+    private fun trackRestoreConfirmed() {
+        val types = buildRewindRequestTypes(restoreState.optionsSelected)
+        val propertiesSetup = mapOf(
+                "themes" to types.themes,
+                "plugins" to types.plugins,
+                "uploads" to types.uploads,
+                "sqls" to types.sqls,
+                "roots" to types.roots,
+                "contents" to types.contents)
+        val map = mapOf("restore_types" to JSONObject(propertiesSetup))
+        AnalyticsTracker.track(JETPACK_RESTORE_CONFIRMED, map)
+    }
+
+    private fun trackError(cause: String) {
+        val properties: MutableMap<String, String?> = HashMap()
+        properties["cause"] = cause
+        AnalyticsTracker.track(JETPACK_RESTORE_ERROR, properties)
     }
 
     companion object {

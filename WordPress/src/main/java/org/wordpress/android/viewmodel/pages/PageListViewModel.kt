@@ -24,6 +24,7 @@ import org.wordpress.android.fluxc.store.MediaStore.OnMediaChanged
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
 import org.wordpress.android.ui.pages.PageItem.Action
 import org.wordpress.android.ui.pages.PageItem.Divider
@@ -41,6 +42,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.LocaleManagerWrapper
 import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -66,7 +68,9 @@ class PageListViewModel @Inject constructor(
     private val localeManagerWrapper: LocaleManagerWrapper,
     private val accountStore: AccountStore,
     private val quickStartStore: QuickStartStore,
-    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher
+    @Named(BG_THREAD) private val coroutineDispatcher: CoroutineDispatcher,
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
+    private val quickStartRepository: QuickStartRepository
 ) : ScopedViewModel(coroutineDispatcher) {
     private val _pages: MutableLiveData<List<PageItem>> = MutableLiveData()
     val pages: LiveData<Triple<List<PageItem>, Boolean, Boolean>> = Transformations.map(_pages) {
@@ -169,14 +173,18 @@ class PageListViewModel @Inject constructor(
 
     private fun completeEditHomePageTour(pageItem: Page, context: Context) {
         if (isHomepage(pageItem)) {
-            QuickStartUtils.completeTaskAndRemindNextOne(
-                    quickStartStore,
-                    EDIT_HOMEPAGE,
-                    dispatcher,
-                    pagesViewModel.site,
-                    _quickStartEvent.value,
-                    context
-            )
+            if (mySiteImprovementsFeatureConfig.isEnabled()) {
+                quickStartRepository.completeTask(EDIT_HOMEPAGE)
+            } else {
+                QuickStartUtils.completeTaskAndRemindNextOne(
+                        quickStartStore,
+                        EDIT_HOMEPAGE,
+                        dispatcher,
+                        pagesViewModel.site,
+                        _quickStartEvent.value,
+                        context
+                )
+            }
         }
     }
 

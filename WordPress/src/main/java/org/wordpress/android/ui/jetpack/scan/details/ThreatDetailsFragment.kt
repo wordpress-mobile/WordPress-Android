@@ -83,6 +83,9 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
                                 .getSerializable(WordPress.SITE) as SiteModel
                             ActivityLauncher.viewScanRequestFixState(requireActivity(), site, this.threatId)
                         }
+                        is ThreatDetailsNavigationEvents.ShowGetFreeEstimate -> {
+                            ActivityLauncher.openUrlExternal(context, this.url)
+                        }
                     }
                 }
             }

@@ -114,6 +114,7 @@ sealed class RestoreRequestState {
         val published: Date? = null
     ) : RestoreRequestState()
 
+    object Empty : RestoreRequestState()
     sealed class Failure : RestoreRequestState() {
         object NetworkUnavailable : Failure()
         object RemoteRequestFailure : Failure()

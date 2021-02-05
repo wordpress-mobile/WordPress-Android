@@ -20,6 +20,7 @@ import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show

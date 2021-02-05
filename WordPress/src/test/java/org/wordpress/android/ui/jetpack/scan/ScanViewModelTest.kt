@@ -47,6 +47,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 
 private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 3
@@ -66,6 +67,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
     @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
     @Mock private lateinit var scanStore: ScanStore
+    @Mock private lateinit var scanTracker: ScanTracker
 
     private lateinit var viewModel: ScanViewModel
 
@@ -85,6 +87,7 @@ class ScanViewModelTest : BaseUnitTest() {
             fixThreatsUseCase,
             fetchFixThreatsStatusUseCase,
             scanStore,
+            scanTracker,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
@@ -467,7 +470,12 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = true,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
@@ -485,7 +493,12 @@ class ScanViewModelTest : BaseUnitTest() {
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(mock())))
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = false))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = false,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
@@ -535,7 +548,12 @@ class ScanViewModelTest : BaseUnitTest() {
             test {
         val messages = init().snackBarMsgs
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
 
         viewModel.onFixStateRequested(threatId = 11L)
@@ -547,7 +565,12 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
             test {
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
         val scanStateModelWithFixableThreats = fakeScanStateModel
             .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))

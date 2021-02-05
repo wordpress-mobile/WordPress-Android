@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -16,12 +17,14 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_ST
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
+import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -37,12 +40,24 @@ class WPMainActivityViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val analyticsTracker: AnalyticsTrackerWrapper,
     private val wpStoriesFeatureConfig: WPStoriesFeatureConfig,
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig,
+    private val quickStartRepository: QuickStartRepository,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
     private val _fabUiState = MutableLiveData<MainFabUiState>()
-    val fabUiState: LiveData<MainFabUiState> = _fabUiState
+    val fabUiState: LiveData<MainFabUiState> = merge(
+            _fabUiState,
+            quickStartRepository.activeTask
+    ) { fabUiState, activeTask ->
+        val isFocusPointVisible = activeTask == PUBLISH_POST && fabUiState?.isFabVisible == true
+        if (isFocusPointVisible != fabUiState?.isFocusPointVisible) {
+            fabUiState?.copy(isFocusPointVisible = isFocusPointVisible)
+        } else {
+            fabUiState
+        }
+    }
 
     private val _showQuickStarInBottomSheet = MutableLiveData<Boolean>()
 
@@ -90,33 +105,41 @@ class WPMainActivityViewModel @Inject constructor(
     private fun loadMainActions(site: SiteModel?) {
         val actionsList = ArrayList<MainActionListItem>()
 
-        actionsList.add(CreateAction(
-                actionType = NO_ACTION,
-                iconRes = 0,
-                labelRes = R.string.my_site_bottom_sheet_title,
-                onClickAction = null
-        ))
-        actionsList.add(CreateAction(
-                actionType = CREATE_NEW_POST,
-                iconRes = R.drawable.ic_posts_white_24dp,
-                labelRes = R.string.my_site_bottom_sheet_add_post,
-                onClickAction = ::onCreateActionClicked
-        ))
+        actionsList.add(
+                CreateAction(
+                        actionType = NO_ACTION,
+                        iconRes = 0,
+                        labelRes = R.string.my_site_bottom_sheet_title,
+                        onClickAction = null
+                )
+        )
+        actionsList.add(
+                CreateAction(
+                        actionType = CREATE_NEW_POST,
+                        iconRes = R.drawable.ic_posts_white_24dp,
+                        labelRes = R.string.my_site_bottom_sheet_add_post,
+                        onClickAction = ::onCreateActionClicked
+                )
+        )
         if (hasFullAccessToContent(site)) {
-            actionsList.add(CreateAction(
-                    actionType = CREATE_NEW_PAGE,
-                    iconRes = R.drawable.ic_pages_white_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_page,
-                    onClickAction = ::onCreateActionClicked
-            ))
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_PAGE,
+                            iconRes = R.drawable.ic_pages_white_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_page,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
         }
         if (shouldShowStories(site)) {
-            actionsList.add(CreateAction(
-                    actionType = CREATE_NEW_STORY,
-                    iconRes = R.drawable.ic_story_icon_24dp,
-                    labelRes = R.string.my_site_bottom_sheet_add_story,
-                    onClickAction = ::onCreateActionClicked
-            ))
+            actionsList.add(
+                    CreateAction(
+                            actionType = CREATE_NEW_STORY,
+                            iconRes = R.drawable.ic_story_icon_24dp,
+                            labelRes = R.string.my_site_bottom_sheet_add_story,
+                            onClickAction = ::onCreateActionClicked
+                    )
+            )
         }
 
         _mainActions.postValue(actionsList)
@@ -131,7 +154,11 @@ class WPMainActivityViewModel @Inject constructor(
         _showQuickStarInBottomSheet.value?.let { showQuickStart ->
             if (showQuickStart) {
                 if (actionType == CREATE_NEW_POST) {
-                    _completeBottomSheetQuickStartTask.call()
+                    if (mySiteImprovementsFeatureConfig.isEnabled()) {
+                        quickStartRepository.completeTask(PUBLISH_POST)
+                    } else {
+                        _completeBottomSheetQuickStartTask.call()
+                    }
                 }
                 _showQuickStarInBottomSheet.postValue(false)
             }
@@ -155,7 +182,9 @@ class WPMainActivityViewModel @Inject constructor(
         appPrefsWrapper.setMainFabTooltipDisabled(true)
         setMainFabUiState(true, site)
 
-        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint)
+        val quickStartFromImprovedMySiteFragment = mySiteImprovementsFeatureConfig.isEnabled() &&
+                quickStartRepository.activeTask.value == PUBLISH_POST
+        _showQuickStarInBottomSheet.postValue(shouldShowQuickStartFocusPoint || quickStartFromImprovedMySiteFragment)
 
         if (shouldShowStories(site) || hasFullAccessToContent(site)) {
             // The user has at least two create options available for this site (pages and/or story posts),
