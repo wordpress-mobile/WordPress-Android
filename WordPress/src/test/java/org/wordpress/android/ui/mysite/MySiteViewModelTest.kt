@@ -65,7 +65,7 @@ import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.I
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.SWITCH_SITE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.TITLE_CLICK
 import org.wordpress.android.ui.mysite.MySiteViewModelTest.SiteInfoBlockAction.URL_CLICK
-import org.wordpress.android.ui.mysite.QuickStartMenuViewModel.QuickStartMenuInteraction
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -88,6 +88,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenSiteSettings
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -122,6 +124,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     @Mock lateinit var quickStartItemBuilder: QuickStartItemBuilder
     @Mock lateinit var scanAndBackupSource: ScanAndBackupSource
     @Mock lateinit var currentAvatarSource: CurrentAvatarSource
+    @Mock lateinit var dynamicCardsSource: DynamicCardsSource
     private lateinit var viewModel: MySiteViewModel
     private lateinit var uiModels: MutableList<UiModel>
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -178,7 +181,8 @@ class MySiteViewModelTest : BaseUnitTest() {
                 displayUtilsWrapper,
                 quickStartRepository,
                 quickStartItemBuilder,
-                currentAvatarSource
+                currentAvatarSource,
+                dynamicCardsSource
         )
         uiModels = mutableListOf()
         snackbars = mutableListOf()
@@ -905,8 +909,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `hides quick start menu item in quickStartRepository`() {
-        val id = "id"
-        viewModel.onQuickStartMenuInteraction(QuickStartMenuInteraction.Hide(id))
+        val id = CUSTOMIZE_QUICK_START
+        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Hide(id))
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_HIDE_CARD_TAPPED)
         verify(quickStartRepository).hideCategory(id)
@@ -914,8 +918,8 @@ class MySiteViewModelTest : BaseUnitTest() {
 
     @Test
     fun `removes quick start menu item in quickStartRepository`() {
-        val id = "id"
-        viewModel.onQuickStartMenuInteraction(QuickStartMenuInteraction.Remove(id))
+        val id = CUSTOMIZE_QUICK_START
+        viewModel.onQuickStartMenuInteraction(DynamicCardMenuInteraction.Remove(id))
 
         verify(analyticsTrackerWrapper).track(Stat.QUICK_START_REMOVE_CARD_TAPPED)
         verify(quickStartRepository).removeCategory(id)
