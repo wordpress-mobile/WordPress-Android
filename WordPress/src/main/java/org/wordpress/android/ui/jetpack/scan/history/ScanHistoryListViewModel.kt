@@ -6,6 +6,7 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
@@ -23,6 +24,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHi
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.IGNORED
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -32,6 +34,7 @@ private const val SKELETON_LOADING_ITEM_COUNT = 10
 
 class ScanHistoryListViewModel @Inject constructor(
     private val scanThreatItemBuilder: ThreatItemBuilder,
+    private val scanTracker: ScanTracker,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -77,7 +80,10 @@ class ScanHistoryListViewModel @Inject constructor(
             threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
 
     private fun onItemClicked(threatId: Long) {
-        _navigation.value = Event(ShowThreatDetails(site, threatId))
+        launch {
+            scanTracker.trackOnThreatItemClicked(threatId, ScanTracker.OnThreatItemClickSource.HISTORY)
+            _navigation.value = Event(ShowThreatDetails(site, threatId))
+        }
     }
 
     private fun mapTabTypeToThreatStatuses(tabType: ScanHistoryTabType): List<ThreatStatus> =

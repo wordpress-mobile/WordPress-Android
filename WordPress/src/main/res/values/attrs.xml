@@ -247,6 +247,15 @@
     </declare-styleable>
 
     <!--
+    WPEditTextWithChipsOutlined
+    -->
+    <declare-styleable name="WPEditTextWithChipsOutlined">
+        <attr name="wpHint" format="reference"/>
+        <attr name="wpChipifyEnabled" format="boolean"/>
+        <attr name="wpMaxNumberChips" format="integer" />
+    </declare-styleable>
+
+    <!--
         QuickStartFocusPoint attributes
     -->
     <declare-styleable name="QuickStartFocusPoint">

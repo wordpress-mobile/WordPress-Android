@@ -147,11 +147,10 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             listOf(
                 ThreatContextLinesItemState.ThreatContextLineItemState(
                     line = ThreatTestData.contextLine,
-                    lineNumberBackgroundColorRes = R.color.pink_5,
-                    contentBackgroundColorRes = R.color.pink_5,
-                    highlightedBackgroundColorRes = R.color.red,
-                    highlightedTextColorRes = R.color.white,
-                    normalTextColorRes = R.color.black
+                    lineNumberBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                    contentBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                    highlightedBackgroundColorRes = R.color.red_60,
+                    highlightedTextColorRes = R.color.white
                 )
             )
         )

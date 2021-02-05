@@ -296,7 +296,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is ItemUploadedModel.PostUploaded -> {
                         uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                                 activity,
-                                requireActivity().findViewById(R.id.coordinator), true,
+                                requireActivity().findViewById(R.id.coordinator), true, false,
                                 itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
                         )
                     }

@@ -436,7 +436,7 @@
                             android:id="@+id/my_site_activity_log_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_history_alt_white_24dp" />
+                            android:src="@drawable/ic_gridicons_clipboard_white_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_activity_log_text_view"
@@ -455,7 +455,7 @@
                             android:id="@+id/my_site_backup_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_backup_alt_white_24dp" />
+                            android:src="@drawable/ic_gridicons_cloud_upload_white_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_backup_text_view"
@@ -474,7 +474,7 @@
                             android:id="@+id/my_site_scan_icon"
                             style="@style/MySiteListRowIcon"
                             android:importantForAccessibility="no"
-                            android:src="@drawable/ic_scan_alt_white_24dp" />
+                            android:src="@drawable/ic_baseline_security_white_24dp" />
 
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_scan_text_view"

@@ -651,6 +651,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_ACCESSED);
         Intent intent = new Intent(activity, ScanActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -686,6 +687,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_HISTORY_ACCESSED);
         Intent intent = new Intent(activity, ScanHistoryActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);

@@ -29,7 +29,6 @@ class ThreatContextLineViewHolder(
     private fun updateLineNumber(itemState: ThreatContextLineItemState) {
         with(line_number) {
             setBackgroundColor(ContextCompat.getColor(itemView.context, itemState.lineNumberBackgroundColorRes))
-            setTextColor(ContextCompat.getColor(itemView.context, itemState.normalTextColorRes))
             text = itemState.line.lineNumber.toString()
         }
     }
@@ -37,7 +36,6 @@ class ThreatContextLineViewHolder(
     private fun updateContent(itemState: ThreatContextLineItemState) {
         with(content) {
             setBackgroundColor(ContextCompat.getColor(itemView.context, itemState.contentBackgroundColorRes))
-            setTextColor(ContextCompat.getColor(itemView.context, itemState.normalTextColorRes))
             text = getHighlightedContentText(itemState)
             // Fixes highlighted background clip by the bounds of the TextView
             setShadowLayer(highlightedContentTextPadding.toFloat(), 0f, 0f, 0)
