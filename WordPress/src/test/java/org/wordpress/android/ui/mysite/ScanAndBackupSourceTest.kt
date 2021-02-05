@@ -128,7 +128,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPCom).thenReturn(true)
 
@@ -142,7 +142,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPComAtomic).thenReturn(true)
 
@@ -156,7 +156,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
         )
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
