@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack
 
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -36,25 +37,28 @@ class JetpackCapabilitiesUseCase @Inject constructor(
 ) {
     private var continuation: Continuation<OnJetpackCapabilitiesFetched>? = null
 
-    suspend fun getJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts {
-        val capabilities = withContext(bgDispatcher) {
-            getOrFetchJetpackCapabilities(remoteSiteId)
-        }
-        return JetpackPurchasedProducts(
-                scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
-                backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
-        )
-    }
-
-    suspend fun getOrFetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return if (hasValidCache(remoteSiteId)) {
-            getCachedJetpackCapabilities(remoteSiteId)
-        } else {
-            fetchJetpackCapabilities(remoteSiteId)
+    suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
+        emit(getCachedJetpackPurchasedProducts(remoteSiteId))
+        withContext(bgDispatcher) {
+            if (!hasValidCache(remoteSiteId)) {
+                emit(fetchJetpackPurchasedProducts(remoteSiteId))
+            }
         }
     }
 
-    private suspend fun hasValidCache(remoteSiteId: Long): Boolean {
+    fun getCachedJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
+            mapToJetpackPurchasedProducts(getCachedJetpackCapabilities(remoteSiteId))
+
+    suspend fun fetchJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
+            mapToJetpackPurchasedProducts(fetchJetpackCapabilities(remoteSiteId))
+
+    private fun mapToJetpackPurchasedProducts(capabilities: List<JetpackCapability>) =
+            JetpackPurchasedProducts(
+                    scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
+                    backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
+            )
+
+    suspend fun hasValidCache(remoteSiteId: Long): Boolean {
         return withContext(bgDispatcher) {
             val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
             lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
