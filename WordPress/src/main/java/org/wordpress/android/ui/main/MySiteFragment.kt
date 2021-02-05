@@ -104,6 +104,7 @@ import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -253,7 +254,7 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
-            updateScanAndBackupVisibility(site)
+            updateScanAndBackup(site)
 
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -274,16 +275,21 @@ class MySiteFragment : Fragment(),
         showQuickStartNoticeIfNecessary()
     }
 
-    private fun updateScanAndBackupVisibility(site: SiteModel) {
-        row_scan.setVisible(false)
-        row_backup.setVisible(false)
+    private fun updateScanAndBackup(site: SiteModel) {
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
+            // Make sure that we load the cached value synchronously as we want to suppress the default animation
+            updateScanAndBackupVisibility(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId))
             uiScope.launch {
-                val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
-                row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan)
-                row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
+                if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
+                    updateScanAndBackupVisibility(jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId))
+                }
             }
         }
+    }
+
+    private fun updateScanAndBackupVisibility(products: JetpackPurchasedProducts) {
+        row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && products.scan)
+        row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && products.backup)
     }
 
     private fun completeQuickStartStepsIfNeeded() {

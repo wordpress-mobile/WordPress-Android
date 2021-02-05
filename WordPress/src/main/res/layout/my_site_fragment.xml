@@ -448,6 +448,7 @@
                     <!--Backup-->
                     <LinearLayout
                         android:id="@+id/row_backup"
+                        android:visibility="gone"
                         style="@style/MySiteListRowLayout">
 
                         <ImageView
