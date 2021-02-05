@@ -1,27 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-26 10:32:13+0000
+Translation-Revision-Date: 2021-01-28 02:29:08+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
     <string name="restore_complete_failed_description">Vi lyckades inte återställa din webbplats. Försök igen senare.</string>
+    <string name="rewind_another_process_running">En annan återställning pågår.</string>
+    <string name="restore_complete_failed_action_button_content_description">Knapp ”klart”</string>
+    <string name="restore_complete_failed_icon_content_description">Felikon</string>
     <string name="restore_complete_failed_title">Återställning misslyckades</string>
     <string name="restore_complete_visit_site_action_button">Besök webbplats</string>
+    <string name="restore_progress_additional_info">Du behöver inte sitta och vänta. Vi aviserar dig när webbplatsen är återställd.</string>
+    <string name="restore_progress_label">%1$s %%</string>
+    <string name="restore_complete_header">Din webbplats har återställts</string>
+    <string name="restore_complete_description_with_two_parameters">Alla dina valda objekt har nu återställts till läget för %1$s %2$s.</string>
+    <string name="restore_complete_icon_content_description">Återställningsikon</string>
+    <string name="restore_complete_done_button_content_description">Knapp ”klart”</string>
+    <string name="restore_complete_visit_site_button_content_description">Knapp ”besök webbplatsen”</string>
+    <string name="restore_progress_header">Återställer just nu webbplatsen</string>
+    <string name="restore_progress_description_with_two_parameters">Vi håller på att återställa din webbplats till innehållet från  %1$s %2$s.</string>
+    <string name="restore_warning_action_button_content_description">Knapp ”bekräfta återställning av webbplatsen”</string>
+    <string name="restore_progress_icon_content_description">Ikon för återställning av webbplats</string>
     <string name="restore_warning_header">Varning</string>
+    <string name="restore_warning_description_with_two_parameters">Är du säker på att du vill återställa din webbplats till %1$s kl. %2$s?\nDetta kommer att avlägsna innehåll och inställningar som skapats eller ändrats sedan dess.</string>
+    <string name="restore_warning_action_button">Bekräfta återställning av webbplats</string>
+    <string name="restore_warning_icon_content_description">Röd cirkel med utropstecken</string>
+    <string name="restore_details_action_button_content_description">Knapp för återställning av webbplats</string>
     <string name="restore_details_action_button">Återställ webbplats</string>
     <string name="restore_details_header">Återställ webbplats</string>
     <string name="restore">Återställ</string>
+    <string name="backup_download_complete_failed_description">Vi lyckades inte skapa en säkerhetskopia åt dig. Försök igen senare.</string>
+    <string name="backup_download_complete_failed_action_button">Klart</string>
+    <string name="backup_download_complete_failed_icon_content_description">Moln med X-ikon</string>
+    <string name="restore_details_choose_items_header">Välj vilka objekt du vill återställa:</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s är den valda tidpunkten för återställningen av din webbplats.</string>
+    <string name="restore_details_icon_content_description">Återställningsikon</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Knapp ”klart”</string>
     <string name="backup_download_complete_failed_title">Nedladdning misslyckades</string>
     <string name="web_preview_tablet">Surfplatta</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Visa inte igen</string>
     <string name="quick_start_card_menu_hide">Dölj</string>
     <string name="quick_start_dialog_review_pages_title">Granska webbplatsens sidor</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">Välj %1$s Startsida %2$s för att redigera startsidan.</string>
+    <string name="quick_start_dialog_review_pages_message">Ändra, lägg till eller ta bort sidor på webbplatsen.</string>
+    <string name="quick_start_dialog_review_pages_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
+    <string name="quick_start_card_menu_pin">Klistra detta</string>
     <string name="quick_start_dialog_edit_homepage_title">Redigera din startsida</string>
+    <string name="quick_start_dialog_edit_homepage_message">Ändra, lägg till eller ta bort innehåll på startsidan för din webbplats.</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Alla hot kunde inte åtgärdas. Kontakta vår support.</string>
+    <string name="reader_marked_post_as_seen">Markera inlägget som visat</string>
+    <string name="reader_marked_post_as_unseen">Markera inlägget som ej visat</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Det gick inte att ändra statusen för om detta inlägg visats</string>
+    <string name="error_media_not_enough_storage">Otillräckligt lagringsutrymme för webbplatsen</string>
+    <string name="error_media_upload_failed_for_reason">Uppladdningen av media misslyckades.\n%1$s</string>
+    <string name="reader_menu_mark_as_seen">Markera som visat</string>
+    <string name="reader_menu_mark_as_unseen">Markera som ej visat</string>
+    <string name="threat_fix_all_warning_message">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
+    <string name="threat_fix_all_started_message">Vi arbetar hårt med att åtgärda dessa hot i bakgrunden. Kom tillbaka om en stund.</string>
+    <string name="threat_fix_all_error_message">Fel när hotet åtgärdades. Kontakta vår support.</string>
+    <string name="threat_fix_all_status_success_message">Hoten har åtgärdats utan problem.</string>
+    <string name="threat_fix_all_status_error_message">Ett fel inträffade när statusen för åtgärdandet skulle hämtas. Kontakta vår support.</string>
+    <string name="threat_ignore_warning">Du bör inte ignorera ett säkerhetshot om du inte är helt säker på att det är ofarligt. Om du väljer att ignorera detta hot kommer det att finnas kvar på webbplatsen &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_success_message">Hotet har ignorerats.</string>
+    <string name="threat_ignore_error_message">Ett fel inträffade när hotet skulle ignoreras. Kontakta vår support.</string>
+    <string name="threat_fix_all_warning_title">Åtgärda alla hot</string>
+    <string name="threat_fix_error_message">Ett fel inträffade när hotet skulle åtgärdas. Kontakta vår support.</string>
     <string name="scan_history_menu_title">Historik</string>
     <string name="scan_history">Skanningshistorik</string>
+    <string name="backup_empty_subtitle">Din första säkerhetskopia visas här inom 24 timmar och du får en avisering när säkerhetskopieringen har slutförts</string>
+    <string name="backup_active_filter_empty_title">Inga matchande säkerhetskopior hittades</string>
+    <string name="backup_active_filter_empty_subtitle">Försök att anpassa datumintervallet</string>
+    <string name="scan_preparing_to_scan_title">Förbereder för att skanna</string>
+    <string name="scan_scanning_title">Skannar filer</string>
+    <string name="scan_history_all_threats_tab">Alla</string>
+    <string name="scan_history_fixed_threats_tab">Åtgärdat</string>
+    <string name="scan_history_no_threats_found">Inga objekt hittades</string>
+    <string name="scan_history_ignored_threats_tab">Ignorerat</string>
+    <string name="threats_fix_num_of_threats">Åtgärda %s hot</string>
+    <string name="threat_fixing">Åtgärdar hot</string>
+    <string name="threat_item_sub_header_status_fixed">Hotet åtgärdat</string>
+    <string name="threat_item_sub_header_status_ignored">Hotet har ignorerats</string>
+    <string name="request_failed_message">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
+    <string name="backup_empty_title">Din första säkerhetskopia kommer snart vara klar</string>
     <string name="gutenberg_native_move_block_position">Ändra blockets position</string>
     <string name="gutenberg_native_move_to_bottom">Flytta längst ned</string>
     <string name="jetpack_icon_content_description">ikon</string>

@@ -7,31 +7,23 @@ Language: ru
 -->
 <resources>
     <string name="restore_complete_failed_description">Восстановление сайта невозможно. Попробуйте позже.</string>
-    <string name="restore_complete_failed_action_button">\@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Кнопка \"готово\"</string>
     <string name="restore_complete_failed_icon_content_description">Значок ошибки</string>
-    <string name="rewind_generic_failure">\@string/backup_download_generic_failure</string>
     <string name="rewind_another_process_running">Сейчас запущен другой процесс восстановления.</string>
     <string name="restore_progress_additional_info">Не обязательно ждать. Мы уведомим вас по окончании восстановления сайта.</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_complete_page_title">\@string/restore</string>
     <string name="restore_complete_header">Ваш сайт был восстановлен</string>
     <string name="restore_complete_description_with_two_parameters">Все выбранные элементы восстановлены на %1$s %2$s.</string>
-    <string name="restore_complete_done_action_button">\@string/label_done_button</string>
     <string name="restore_complete_visit_site_action_button">Перейти на сайт</string>
     <string name="restore_complete_icon_content_description">Значок восстановления</string>
     <string name="restore_complete_done_button_content_description">Кнопка \"готово\"</string>
     <string name="restore_complete_visit_site_button_content_description">Кнопка перехода на сайт</string>
     <string name="restore_complete_failed_title">Не удалось восстановить</string>
     <string name="restore_warning_action_button_content_description">Кнопка подтверждения восстановления</string>
-    <string name="restore_progress_page_title">\@string/restore</string>
     <string name="restore_progress_header">Идёт восстановление сайта</string>
     <string name="restore_progress_description_with_two_parameters">Выполняется откат к состоянию сайта на %1$s %2$s.</string>
-    <string name="restore_progress_action_button">\@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Значок восстановления сайта</string>
-    <string name="restore_progress_action_button_content_description">\@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_details_action_button_content_description">Кнопка восстановления сайта</string>
-    <string name="restore_warning_page_title">\@string/restore</string>
     <string name="restore_warning_header">Предупреждение</string>
     <string name="restore_warning_description_with_two_parameters">Вы уверены, что хотите откатить ваш сайт назад на %1$s в %2$s? \nВы потеряете все изменения в содержимом и настройки, сделанные после этого времени.</string>
     <string name="restore_warning_action_button">Подтвердить восстановление сайта</string>
@@ -41,7 +33,6 @@ Language: ru
     <string name="backup_download_complete_failed_action_button_content_description">Кнопка \"готово\"</string>
     <string name="backup_download_complete_failed_icon_content_description">Облако с значком Х</string>
     <string name="restore">Восстановление</string>
-    <string name="restore_details_page_title">\@string/restore</string>
     <string name="restore_details_choose_items_header">Выбор элементов для восстановления</string>
     <string name="restore_details_header">Восстановление сайта</string>
     <string name="restore_details_description_with_two_parameters"> %1$s %2$s — выбранная точка для восстановления сайта.</string>
@@ -89,8 +80,6 @@ Language: ru
     <string name="scan_history_fixed_threats_tab">Исправлено</string>
     <string name="scan_history_no_threats_found">Элементов не найдено.</string>
     <string name="scan_history_ignored_threats_tab">Проигнорировано</string>
-    <string name="scan_history_no_connection">\@string/no_network_message</string>
-    <string name="scan_history_request_failed">\@string/request_failed_message</string>
     <string name="threats_fix_num_of_threats">Устранить %s угрозы</string>
     <string name="threat_fixing">Устранение угрозы…</string>
     <string name="threat_item_sub_header_status_fixed">Угроза устранена</string>

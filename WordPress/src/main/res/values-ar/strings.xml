@@ -1,11 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-26 17:26:05+0000
+Translation-Revision-Date: 2021-02-04 15:54:08+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="rewind_another_process_running">هناك عملية استعادة قيد التشغيل.</string>
+    <string name="restore_complete_failed_icon_content_description">أيقونة الخطأ</string>
+    <string name="restore_complete_failed_action_button_content_description">زر الانتهاء</string>
+    <string name="restore_complete_failed_description">لا يمكننا استعادة موقعك، يرجى المحاولة مجددًا في وقت لاحق.</string>
+    <string name="restore_complete_failed_title">فشلت الاستعادة</string>
+    <string name="restore_complete_visit_site_button_content_description">زر زيارة الموقع</string>
+    <string name="restore_complete_done_button_content_description">زر الانتهاء</string>
+    <string name="restore_complete_icon_content_description">أيقونة الاستعادة</string>
+    <string name="restore_complete_visit_site_action_button">زيارة الموقع</string>
+    <string name="restore_complete_description_with_two_parameters">تمت الآن استعادة كافة العناصر التي قمت بتحديدها إلى %1$s %2$s.</string>
+    <string name="restore_complete_header">تمت استعادة موقعك</string>
+    <string name="restore_progress_label">%1$s%%</string>
+    <string name="restore_progress_additional_info">لا داعي للانتظار هنا. سنقوم بإعلامك عندما تتم استعادة موقعك.</string>
+    <string name="restore_progress_icon_content_description">أيقونة استعادة الموقع</string>
+    <string name="restore_progress_description_with_two_parameters">نحن بصدد استعادة موقعك إلى %1$s %2$s.</string>
+    <string name="restore_progress_header">جاري استعادة الموقع حاليًا</string>
+    <string name="restore_warning_action_button_content_description">زر تأكيد استعادة الموقع</string>
+    <string name="restore_warning_icon_content_description">صورة دائرة حمراء مع علامة تعجب</string>
+    <string name="restore_warning_action_button">تأكيد استعادة الموقع</string>
+    <string name="restore_warning_description_with_two_parameters">هل أنت متأكد من رغبتك في استرجاع موقعك مرة أخرى إلى %1$s at %2$s؟\n        سيؤدي هذا الإجراء إلى حذف كل المحتوى والخيارات التي تم إنشاؤها أو تغييرها من ذلك الحين.</string>
+    <string name="restore_warning_header">تحذير</string>
+    <string name="restore_details_action_button_content_description">زر استعادة الموقع</string>
+    <string name="restore_details_icon_content_description">أيقونة الاستعادة</string>
+    <string name="restore_details_action_button">استعادة الموقع</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s هي النقطة المُحدَّدة لاستعادة موقعك.</string>
+    <string name="restore_details_header">استعادة الموقع</string>
+    <string name="restore_details_choose_items_header">اختر العناصر المراد استعادتها:</string>
+    <string name="restore">استعادة</string>
+    <string name="backup_download_complete_failed_icon_content_description">سحابة مع أيقونة X</string>
+    <string name="backup_download_complete_failed_action_button_content_description">زر الانتهاء</string>
+    <string name="backup_download_complete_failed_action_button">تمّ</string>
+    <string name="backup_download_complete_failed_description">لم نتمكن من إنشاء النسخة الاحتياطية الخاصة بك، يرجى المحاولة مجددًا في وقت لاحق.</string>
+    <string name="backup_download_complete_failed_title">فشل في التنزيل</string>
+    <string name="web_preview_tablet">الأجهزة اللوحية</string>
+    <string name="web_preview_mobile">الجوال</string>
+    <string name="quick_start_card_menu_remove">عدم العرض مرة أخرى</string>
+    <string name="quick_start_card_menu_hide">إخفاء</string>
+    <string name="quick_start_card_menu_pin">تثبيت هذا</string>
+    <string name="quick_start_dialog_review_pages_message_short">حدّد %1$s الصفحات %2$s لرؤية قائمة صفحاتك.</string>
+    <string name="quick_start_dialog_review_pages_message">تغيير أو إضافة أو إزالة صفحات موقعك.</string>
+    <string name="quick_start_dialog_review_pages_title">مراجعة صفحات الموقع</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">حدّد %1$s الصفحة الرئيسية %2$s لتحرير صفحتك الرئيسية.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">حدّد %1$s الصفحات %2$s لرؤية قائمة صفحاتك.</string>
+    <string name="quick_start_dialog_edit_homepage_message">تغيير أو إضافة أو إزالة المحتوى من الصفحة الرئيسية لموقعك.</string>
+    <string name="quick_start_dialog_edit_homepage_title">تحرير صفحتك الرئيسية</string>
+    <string name="reader_menu_mark_as_unseen">وضع علامة لم تتم المشاهدة</string>
+    <string name="reader_menu_mark_as_seen">وضع علامة تمت المشاهدة</string>
+    <string name="error_media_upload_failed_for_reason">فشل رفع الوسائط.\n%1$s</string>
+    <string name="error_media_not_enough_storage">لا توجد مساحة تخزين كافية في الموقع</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">يتعذر التبديل إلى الحالة المرئية لهذه المقالة.</string>
+    <string name="reader_marked_post_as_unseen">تم وضع علامة على المقالة بوصفها لم يتم الاطلاع عليها</string>
+    <string name="reader_marked_post_as_seen">تم وضع علامة على المقالة بوصفها تم الاطلاع عليها</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">لا يمكن إصلاح جميع التهديدات. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
+    <string name="threat_fix_all_status_error_message">خطأ في الحصول على حالة المعالجة. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
+    <string name="threat_fix_all_status_success_message">تم معالجة التهديدات بنجاح.</string>
+    <string name="threat_fix_all_error_message">خطأ في معالجة التهديدات. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
+    <string name="threat_fix_all_started_message">نعمل بجد لإصلاح هذه التهديدات الموجودة في الخلفية. يُرجى التحقُّق مجددًا قريبًا.</string>
+    <string name="threat_fix_all_warning_message">يرجى التأكيد على رغبتك في معالجة جميع التهديدات النشطة التي تصل إلى %s.</string>
+    <string name="threat_fix_all_warning_title">معالجة كل التهديدات</string>
+    <string name="threat_ignore_error_message">خطأ في تجاهل التهديد. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
+    <string name="threat_ignore_success_message">تم تجاهل التهديد.</string>
+    <string name="threat_ignore_warning">لا ينبغي أن تتجاهل الأمان إلا إذا كنت متأكدًا تمامًا من أنه غير ضار. إذا اخترت تجاهل هذا التهديد، فسيبقى على موقعك &lt;b>%s&lt;/b>.</string>
+    <string name="threat_fix_error_message">خطأ في معالجة التهديد. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
+    <string name="threat_item_sub_header_status_ignored">تهديد تم تجاهله</string>
+    <string name="threat_item_sub_header_status_fixed">تهديد تمت معالجته</string>
+    <string name="threat_fixing">جاري معالجة التهديد</string>
+    <string name="threats_fix_num_of_threats">إصلاح %s تهديد</string>
+    <string name="scan_history_ignored_threats_tab">تم التجاهل</string>
+    <string name="scan_history_no_threats_found">لم يتم العثور على عناصر</string>
+    <string name="scan_history_fixed_threats_tab">تمت المعالجة</string>
+    <string name="scan_history_all_threats_tab">الكل</string>
+    <string name="scan_scanning_title">ملفات الفحص</string>
+    <string name="scan_preparing_to_scan_title">الإعداد للفحص</string>
+    <string name="scan_history_menu_title">السّجل</string>
+    <string name="scan_history">فحص السّجل</string>
+    <string name="backup_active_filter_empty_subtitle">حاول ضبط مدى التاريخ الخاص بك</string>
+    <string name="backup_active_filter_empty_title">لم يتم العثور على نسخ احتياطية مطابقة</string>
+    <string name="backup_empty_subtitle">ستظهر نسختك الاحتياطية الأولى هنا في غضون 24 ساعة وستتلقى إشعارًا بمجرد اكتمال النسخ الاحتياطي</string>
+    <string name="backup_empty_title">ستكون نسختك الاحتياطية الأولى جاهزة قريبًا</string>
+    <string name="request_failed_message">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
     <string name="gutenberg_native_move_to_bottom">تحريك للأسفل</string>
     <string name="gutenberg_native_move_block_position">تحريك موضع المكوّن</string>
     <string name="label_control_upload">رفع</string>
@@ -13,7 +93,7 @@ Language: ar
     <string name="backup_download_complete_info">أرسلنا إليك أيضًا رابطًا إلى ملفك عبر البريد الإلكتروني.</string>
     <string name="backup_download_complete_download_share_action_button_content_description">زر رابط المشاركة</string>
     <string name="backup_download_complete_download_action_button_content_description">زر التنزيل</string>
-    <string name="backup_download_complete_icon_content_description">الأيقونة الجاهزة للنسخ الاحتياطي قابلة للتنزيل</string>
+    <string name="backup_download_complete_icon_content_description">أيقونة جاهزية النسخ الاحتياطية القابلة للتنزيل</string>
     <string name="backup_download_complete_download_share_action_button">رابط المشاركة</string>
     <string name="backup_download_complete_download_action_button">تنزيل</string>
     <string name="backup_download_complete_description_with_two_parameters">أنشأنا نسخة احتياطية من موقعك بنجاح من %1$s %2$s.</string>
@@ -24,7 +104,7 @@ Language: ar
     <string name="backup_download_progress_action_button_content_description">حسنًا، زر أبلغني</string>
     <string name="backup_download_progress_icon_content_description">جاري إنشاء أيقونة نسخة احتياطية قابلة للتنزيل</string>
     <string name="backup_download_progress_action_button">حسنًا، أبلغني!</string>
-    <string name="backup_download_progress_description_with_two_parameters">سُننشئ نسخة احتياطية قابلة للتنزيل من موقعك من %1$s %2$s.</string>
+    <string name="backup_download_progress_description_with_two_parameters">سنُنشئ نسخة احتياطية قابلة للتنزيل من موقعك من %1$s %2$s.</string>
     <string name="backup_download_progress_header">إنشاء نسخة احتياطية قابلة للتنزيل من موقعك في الوقت الحالي</string>
     <string name="backup_download_progress_page_title">تنزيل النسخة الاحتياطية</string>
     <string name="backup_download_another_download_running">هناك عملية تنزيل قيد التشغيل.</string>
@@ -37,6 +117,10 @@ Language: ar
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">النشر المتعدد</string>
     <string name="suggestion_user">مستخدم</string>
+    <string name="suggestion_no_matching">لا يوجد تطابق %s.</string>
+    <string name="suggestion_problem">حدثت مشكلة أثناء تحميل الاقتراحات.</string>
+    <string name="suggestion_none">لا توجد اقتراحات %s متوفرة.</string>
+    <string name="suggestion_selection_needed">يرجى الكتابة لتصفية قائمة الاقتراحات.</string>
     <string name="threat_get_free_estimate">احصل على عرض سعر مجاني</string>
     <string name="threat_ignore">تجاهل التهديد</string>
     <string name="threat_fix">إصلاح التهديد</string>
@@ -127,6 +211,8 @@ Language: ar
     <string name="new_site_creation_domain_header_title">اختيار نطاق</string>
     <string name="my_site_btn_jetpack_settings">إعدادات Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">متابعة المحادثة عبر البريد الإلكتروني</string>
+    <string name="reader_btn_follow_comments">تابع المحادثة عبر البريد الإلكتروني</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">لا يمكن إلغاء الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_could_not_subscribe_error">لا يمكن الاشتراك في التعليقات لهذه المقالة</string>
     <string name="reader_follow_comments_get_status_error">خطأ في جلب حالة الاشتراك للمقالة</string>
@@ -240,6 +326,7 @@ Language: ar
     <string name="gutenberg_native_add_this_telephone_link">أضف رابط الهاتف هذا</string>
     <string name="gutenberg_native_add_this_link">إضافة هذا الرابط</string>
     <string name="gutenberg_native_add_this_email_link">إضافة رابط البريد الإلكتروني هذا</string>
+    <string name="suggestion_no_connection">لا يوجد اتصال بالإنترنت.\nالاقتراحات غير متوفرة.</string>
     <string name="typeface_label_shrikhand">عريض</string>
     <string name="typeface_label_space_mono">عصري</string>
     <string name="typeface_label_pacifico">مرح</string>
@@ -437,6 +524,7 @@ Language: ar
     <string name="pages_cannot_be_started">يتعذر علينا فتح الصفحات في الوقت الحالي. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="pages_set_as_posts_page">تعيين كصفحة مقالات</string>
     <string name="pages_set_as_homepage">تعيين كصفحة رئيسية</string>
+    <string name="suggestion_invalid">%s ليس %s صالح</string>
     <string name="site_settings_select_page">تحديد صفحة</string>
     <string name="site_settings_posts_page">صفحة المقالات</string>
     <string name="site_settings_static_homepage">الصفحة الرئيسية الثابتة</string>
@@ -650,6 +738,7 @@ Language: ar
     <string name="posts_cannot_be_started">يتعذر علينا فتح هذه المقالات الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="site_cannot_be_loaded">يتعذر علينا تحميل بيانات موقعك الآن. يرجى المحاولة مجددًا في وقت لاحق</string>
     <string name="gutenberg_native_wordpress_media_library">مكتبة وسائط ووردبريس</string>
+    <string name="gutenberg_native_unsupported">غير مدعوم</string>
     <string name="gutenberg_native_ungroup">فكّ التجميع</string>
     <string name="gutenberg_native_translate">الترجمة</string>
     <string name="gutenberg_native_title">العنوان:</string>
