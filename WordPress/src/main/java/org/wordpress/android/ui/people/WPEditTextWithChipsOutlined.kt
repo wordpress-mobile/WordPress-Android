@@ -392,7 +392,6 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
                 itemsManager?.onRemoveItem(itemName)
 
                 if (flexbox.childCount == 1) {
-                    editor.setText("")
                     styleView(isEditorFocused(), hasItemsOrText(), true)
                 }
             }
