@@ -65,8 +65,8 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         }
     }
 
-    private suspend fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return withContext(bgDispatcher) { appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId) }
+    private fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
+        return appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId)
     }
 
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
