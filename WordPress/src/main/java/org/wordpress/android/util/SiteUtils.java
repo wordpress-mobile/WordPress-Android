@@ -21,7 +21,6 @@ import org.wordpress.android.ui.reader.utils.SiteAccessibilityInfo;
 import org.wordpress.android.ui.reader.utils.SiteVisibility;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
-import org.wordpress.android.util.config.ScanScreenFeatureConfig;
 import org.wordpress.android.util.helpers.Version;
 import org.wordpress.android.util.image.BlavatarShape;
 import org.wordpress.android.util.image.ImageType;
