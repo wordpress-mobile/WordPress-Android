@@ -129,6 +129,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -506,6 +507,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 );
             }
         });
+
+        mViewModel.getOnFocusPointVisibilityChange().observe(this, event ->
+                event.applyIfNotHandled(focusPointInfos -> {
+                    for (FocusPointInfo focusPointInfo : focusPointInfos) {
+                        addOrRemoveQuickStartFocusPoint(focusPointInfo);
+                    }
+                    return null;
+                })
+        );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
             handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
@@ -1215,6 +1225,38 @@ public class WPMainActivity extends LocaleAwareActivity implements
             return (NotificationsListFragment) fragment;
         }
         return null;
+    }
+
+    // We do this for Quick Start focus points that need to be shown on the activity level.
+    private void addOrRemoveQuickStartFocusPoint(FocusPointInfo focusPointInfo) {
+        final ViewGroup parentView = findViewById(R.id.root_view_main);
+        final View targetView = findViewById(R.id.bottom_nav_reader_button);
+        if (parentView != null) {
+            int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+            int horizontalOffset;
+            int verticalOffset;
+            switch (focusPointInfo.getTask()) {
+                case FOLLOW_SITE:
+                    horizontalOffset = targetView.getWidth() / 2 - size + getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                    verticalOffset = 0;
+                    break;
+                default:
+                    horizontalOffset = 0;
+                    verticalOffset = 0;
+                    break;
+            }
+            if (targetView != null && focusPointInfo.isVisible()) {
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        parentView,
+                        targetView,
+                        horizontalOffset,
+                        verticalOffset
+                );
+            } else {
+                QuickStartUtils.removeQuickStartFocusPoint(parentView);
+            }
+        }
     }
 
     // Events

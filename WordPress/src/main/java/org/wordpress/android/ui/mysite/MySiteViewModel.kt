@@ -6,7 +6,6 @@ import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -29,7 +28,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
@@ -55,7 +53,6 @@ import org.wordpress.android.ui.mysite.ListItemAction.THEMES
 import org.wordpress.android.ui.mysite.ListItemAction.VIEW_SITE
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.QuickStartRepository.ExternalFocusPointInfo
 import org.wordpress.android.ui.mysite.SiteDialogModel.AddSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteDialogModel.ChangeSiteIconDialogModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
@@ -102,7 +99,6 @@ import org.wordpress.android.util.WPMediaUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.getEmailValidationMessage
 import org.wordpress.android.util.map
-import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -150,10 +146,6 @@ class MySiteViewModel
     val onNavigation = merge(_onNavigation, siteStoriesHandler.onNavigation)
     val onMediaUpload = _onMediaUpload as LiveData<Event<MediaModel>>
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
-    val onExternalQuickStartFocusPointVisibilityChange = quickStartRepository.activeTask
-            .mapNullable { getExternalFocusPointInfo(it) }
-            .distinctUntilChanged()
-            .map { Event(it) } as LiveData<Event<List<ExternalFocusPointInfo>>>
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
             bgDispatcher,
@@ -532,12 +524,6 @@ class MySiteViewModel
 
     fun startQuickStart() {
         quickStartRepository.startQuickStart()
-    }
-
-    private fun getExternalFocusPointInfo(task: QuickStartTask?): List<ExternalFocusPointInfo> {
-        // For now, we only do this for the FOLLOW_SITE task.
-        val followSitesTaskFocusPointInfo = ExternalFocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
-        return listOf(followSitesTaskFocusPointInfo)
     }
 
     data class UiModel(

@@ -22,7 +22,6 @@ import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.R.attr
 import org.wordpress.android.WordPress
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.TextInputDialogFragment
@@ -32,7 +31,6 @@ import org.wordpress.android.ui.main.SitePickerActivity
 import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
-import org.wordpress.android.ui.mysite.QuickStartRepository.ExternalFocusPointInfo
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewSite
 import org.wordpress.android.ui.mysite.SiteNavigationAction.AddNewStory
@@ -75,7 +73,6 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
-import org.wordpress.android.util.QuickStartUtils
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -186,11 +183,6 @@ class ImprovedMySiteFragment : Fragment(),
                 (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this.second, 0)
             }
         })
-        viewModel.onExternalQuickStartFocusPointVisibilityChange.observe(viewLifecycleOwner) {
-            it?.applyIfNotHandled {
-                this.forEach { focusPointInfo -> addOrRemoveExternalQuickStartFocusPoint(focusPointInfo) }
-            }
-        }
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { model ->
                 dialogViewModel.showDialog(requireActivity().supportFragmentManager,
@@ -455,38 +447,6 @@ class ImprovedMySiteFragment : Fragment(),
                         dismissCallback = { _, _ -> holder.onDismissAction() }
                 )
         )
-    }
-
-    // We do this for focus points that need to be shown on the activity level.
-    private fun addOrRemoveExternalQuickStartFocusPoint(focusPointInfo: ExternalFocusPointInfo) {
-        val parentView = requireActivity().findViewById<ViewGroup>(R.id.root_view_main)
-        val targetView = requireActivity().findViewById<View>(R.id.bottom_nav_reader_button)
-        if (parentView != null) {
-            val size = resources.getDimensionPixelOffset(R.dimen.quick_start_focus_point_size)
-            val horizontalOffset: Int
-            val verticalOffset: Int
-            when (focusPointInfo.task) {
-                FOLLOW_SITE -> {
-                    horizontalOffset = targetView.width / 2 - size + resources
-                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset)
-                    verticalOffset = 0
-                }
-                else -> {
-                    horizontalOffset = 0
-                    verticalOffset = 0
-                }
-            }
-            if (targetView != null && focusPointInfo.isVisible) {
-                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                        parentView,
-                        targetView,
-                        horizontalOffset,
-                        verticalOffset
-                )
-            } else {
-                QuickStartUtils.removeQuickStartFocusPoint(parentView)
-            }
-        }
     }
 
     companion object {

@@ -162,9 +162,4 @@ class QuickStartRepository
         val uncompletedTasks: List<QuickStartTaskDetails>,
         val completedTasks: List<QuickStartTaskDetails>
     )
-
-    data class ExternalFocusPointInfo(
-        val task: QuickStartTask,
-        val isVisible: Boolean
-    )
 }
