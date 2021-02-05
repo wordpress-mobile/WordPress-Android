@@ -155,6 +155,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgre
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
@@ -212,6 +213,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
@@ -278,18 +280,22 @@ class MySiteFragment : Fragment(),
     private fun updateScanAndBackup(site: SiteModel) {
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
             // Make sure that we load the cached value synchronously as we want to suppress the default animation
-            updateScanAndBackupVisibility(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId))
+            updateScanAndBackupVisibility(site, jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId))
             uiScope.launch {
                 if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
-                    updateScanAndBackupVisibility(jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId))
+                    updateScanAndBackupVisibility(site, jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId))
                 }
             }
         }
     }
 
-    private fun updateScanAndBackupVisibility(products: JetpackPurchasedProducts) {
-        row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && products.scan)
-        row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && products.backup)
+    private fun updateScanAndBackupVisibility(site: SiteModel, products: JetpackPurchasedProducts) {
+        row_scan.setVisible(
+                siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), products.scan, site)
+        )
+        row_backup.setVisible(
+                siteUtilsWrapper.isBackupEnabled(backupScreenFeatureConfig.isEnabled(), products.backup)
+        )
     }
 
     private fun completeQuickStartStepsIfNeeded() {

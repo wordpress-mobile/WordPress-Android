@@ -75,7 +75,11 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildPlanItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildPlanItemIfAvailable(
+        site: SiteModel,
+        showFocusPoint: Boolean,
+        onClick: (ListItemAction) -> Unit
+    ): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
                 site.hasCapabilityManageOptions &&
@@ -85,7 +89,8 @@ class SiteListItemBuilder
                     R.drawable.ic_plans_white_24dp,
                     UiStringRes(R.string.plan),
                     secondaryText = UiStringText(planShortName),
-                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick)
+                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick),
+                    showFocusPoint = showFocusPoint
             )
         } else null
     }
