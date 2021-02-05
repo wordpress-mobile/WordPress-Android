@@ -79,4 +79,8 @@
     <!-- Collapsing Toolbar Custom Scrim Color -->
     <color name="collapsing_toolbar_custom_scrim_color">@color/black_translucent_50</color>
 
+    <!-- Scan Threat Context Line Custom Colors -->
+    <color name="context_line_linenumber_background">@color/gray_50</color>
+    <color name="context_line_highlighted_row_background">@color/red_80</color>
+
 </resources>
