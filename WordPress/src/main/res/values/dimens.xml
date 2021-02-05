@@ -434,7 +434,6 @@
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
-    <dimen name="jetpack_backup_restore_sub_header_bottom_margin">20dp</dimen>
 
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
