@@ -196,7 +196,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
             line = line,
             lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
             contentBackgroundColorRes = contentBackgroundColorRes,
-            highlightedBackgroundColorRes = R.color.context_line_highlighted_content_background,
+            highlightedBackgroundColorRes = R.color.red_60,
             highlightedTextColorRes = R.color.white
         )
     }

@@ -348,6 +348,5 @@
 
     <!-- Scan Threat Context Line Custom Colors -->
     <color name="context_line_highlighted_row_background">@color/red_5</color>
-    <color name="context_line_highlighted_content_background">@color/red_60</color>
 
 </resources>
