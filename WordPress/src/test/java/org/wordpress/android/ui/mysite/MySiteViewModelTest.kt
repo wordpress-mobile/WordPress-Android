@@ -264,7 +264,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(4)
+        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -487,7 +487,7 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(5)
+        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
@@ -877,7 +877,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is higher than 600 pixels, show empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(600)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
@@ -887,7 +888,8 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `when no site is selected and screen height is lower than 600 pixels, hide empty view image`() {
         whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(500)
 
-        onSiteSelected.value = siteId
+        initSelectedSite()
+        onSiteSelected.value = null
 
         assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
         assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
