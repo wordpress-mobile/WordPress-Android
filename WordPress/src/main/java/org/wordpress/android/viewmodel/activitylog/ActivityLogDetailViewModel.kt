@@ -99,7 +99,12 @@ class ActivityLogDetailViewModel
 
     fun onRewindClicked(model: ActivityLogDetailModel) {
         if (model.rewindId != null) {
-            _navigationEvents.value = Event(ActivityLogDetailNavigationEvents.ShowRewindDialog(model))
+            val navigationEvent = if (restoreFeatureConfig.isEnabled()) {
+                ActivityLogDetailNavigationEvents.ShowRestore(model)
+            } else {
+                ActivityLogDetailNavigationEvents.ShowRewindDialog(model)
+            }
+            _navigationEvents.value = Event(navigationEvent)
         } else {
             AppLog.e(
                     ACTIVITY_LOG,

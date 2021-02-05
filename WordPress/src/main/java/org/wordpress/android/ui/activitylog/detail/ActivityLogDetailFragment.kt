@@ -13,6 +13,8 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.tools.FormattableRange
+import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -24,6 +26,8 @@ import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import javax.inject.Inject
+
+private const val DETAIL_TRACKING_SOURCE = "detail"
 
 class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -103,6 +107,13 @@ class ActivityLogDetailFragment : Fragment() {
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
                     when (this) {
+                        is ActivityLogDetailNavigationEvents.ShowRestore -> ActivityLauncher.showRestoreForResult(
+                                requireActivity(),
+                                viewModel.site,
+                                model.activityID,
+                                RequestCodes.RESTORE,
+                                DETAIL_TRACKING_SOURCE
+                        )
                         is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(model)
                     }
                 }
