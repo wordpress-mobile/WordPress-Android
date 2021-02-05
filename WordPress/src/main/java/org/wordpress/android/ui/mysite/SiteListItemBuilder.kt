@@ -35,7 +35,7 @@ class SiteListItemBuilder
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
                     R.drawable.ic_gridicons_clipboard_white_24dp,
-                    UiStringRes(R.string.activity),
+                    UiStringRes(R.string.activity_log),
                     onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
             )
         } else null
