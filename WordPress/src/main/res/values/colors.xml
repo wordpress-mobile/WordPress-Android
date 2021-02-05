@@ -347,8 +347,7 @@
     <color name="collapsing_toolbar_custom_scrim_color">@color/white_translucent_50</color>
 
     <!-- Scan Threat Context Line Custom Colors -->
-    <color name="context_line_linenumber_background">@color/gray_10</color>
-    <color name="context_line_highlighted_row_background">@color/red_10</color>
+    <color name="context_line_highlighted_row_background">@color/red_5</color>
     <color name="context_line_highlighted_content_background">@color/red_60</color>
 
 </resources>
