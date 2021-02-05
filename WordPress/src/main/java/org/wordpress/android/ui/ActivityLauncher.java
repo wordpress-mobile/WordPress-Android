@@ -1445,7 +1445,6 @@ public class ActivityLauncher {
 
     public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
                                                    int resultCode, String source) {
-
         Map<String, String> properties = new HashMap<>();
         properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsTracker.track(Stat.JETPACK_RESTORE_OPENED, properties);

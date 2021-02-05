@@ -200,13 +200,11 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private val forwardSlash = "/"
-
     private fun buildTrackingSource() =
         requireActivity().intent?.extras?.let {
             when {
                 it.containsKey(SOURCE_TRACK_EVENT_PROPERTY_KEY) -> {
-                    it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY) + "$forwardSlash$DETAIL_TRACKING_SOURCE"
+                    it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY) + "/$DETAIL_TRACKING_SOURCE"
                 }
                 else -> {
                     DETAIL_TRACKING_SOURCE
