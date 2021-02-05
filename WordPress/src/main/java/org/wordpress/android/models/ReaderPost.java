@@ -2,8 +2,6 @@ package org.wordpress.android.models;
 
 import android.text.TextUtils;
 
-import com.google.gson.internal.bind.util.ISO8601Utils;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,8 +20,6 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.UrlUtils;
 
 import java.text.BreakIterator;
-import java.text.ParseException;
-import java.text.ParsePosition;
 import java.util.Iterator;
 
 public class ReaderPost {
@@ -85,7 +81,6 @@ public class ReaderPost {
 
     private String mRailcarJson;
     private ReaderCardType mCardType = ReaderCardType.DEFAULT;
-    private static final long IS_SEEN_FEATURE_ENABLED_TIMESTAMP_MS = 1594598400000L;
 
     public static ReaderPost fromJson(JSONObject json) {
         if (json == null) {
@@ -124,7 +119,7 @@ public class ReaderPost {
         post.isJetpack = JSONUtils.getBool(json, "is_jetpack");
         post.useExcerpt = JSONUtils.getBool(json, "use_excerpt");
         post.isSeen = JSONUtils.getBool(json, "is_seen");
-//        post.isSeenSupported = json.has("is_seen");  // enable this flag when all endpoints will support is_seen
+        post.isSeenSupported = json.has("is_seen");
 
         JSONObject jsonDiscussion = json.optJSONObject("discussion");
         if (jsonDiscussion != null) {
@@ -144,14 +139,6 @@ public class ReaderPost {
         post.mDatePublished = JSONUtils.getString(json, "date");
         post.mDateLiked = JSONUtils.getString(json, "date_liked");
         post.mDateTagged = JSONUtils.getString(json, "tagged_on");
-
-        // remove this part when al endpoints will support is_seen
-        try {
-            long publishedTimeStamp = ISO8601Utils.parse(post.mDatePublished, new ParsePosition(0)).getTime();
-            post.isSeenSupported = publishedTimeStamp > IS_SEEN_FEATURE_ENABLED_TIMESTAMP_MS;
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
 
         // "score" only exists for search results
         post.score = json.optDouble("score");
