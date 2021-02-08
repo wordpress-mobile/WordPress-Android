@@ -441,7 +441,7 @@
                         <org.wordpress.android.widgets.WPTextView
                             android:id="@+id/my_site_activity_log_text_view"
                             style="@style/MySiteListRowTextView"
-                            android:text="@string/activity" />
+                            android:text="@string/activity_log" />
 
                     </LinearLayout>
 

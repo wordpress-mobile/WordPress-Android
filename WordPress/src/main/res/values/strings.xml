@@ -1010,7 +1010,6 @@
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
-    <string name="activity">Activity log</string>
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
@@ -2064,7 +2063,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
