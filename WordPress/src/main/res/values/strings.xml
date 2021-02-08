@@ -2815,10 +2815,10 @@
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
-    <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
