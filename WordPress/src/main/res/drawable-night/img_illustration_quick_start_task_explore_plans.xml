@@ -4,14 +4,9 @@
     android:viewportWidth="168"
     android:viewportHeight="94">
     <path
-        android:pathData="M0,0h168v94h-168z"
-        android:fillColor="#2C3338"/>
-    <group>
-        <clip-path
-            android:pathData="M84,22.833C70.708,22.833 59.833,33.708 59.833,47C59.833,60.292 70.708,71.167 84,71.167C97.292,71.167 108.167,60.292 108.167,47C108.167,33.708 97.292,22.833 84,22.833ZM81.583,51.833H69.5L81.583,27.667V51.833ZM86.417,42.167V66.333L98.5,42.167H86.417Z"
-            android:fillType="evenOdd"/>
-        <path
-            android:pathData="M55,18h58v58h-58z"
-            android:fillColor="#F6F7F7"/>
-    </group>
+        android:pathData="M0 0h168v94H0z"
+        android:fillColor="@color/gray_80" />
+    <path
+        android:pathData="M84 22.833c13.292 0 24.167 10.875 24.167 24.167 0 13.292-10.875 24.167-24.167 24.167-13.292 0-24.167-10.875-24.167-24.167 0-13.292 10.875-24.167 24.167-24.167zm14.5 19.334H86.417v24.166L98.5 42.167zm-16.917-14.5L69.5 51.833h12.083V27.667z"
+        android:fillColor="@color/gray_0" />
 </vector>
