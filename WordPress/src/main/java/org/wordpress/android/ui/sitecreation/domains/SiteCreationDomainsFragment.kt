@@ -120,6 +120,7 @@ class SiteCreationDomainsFragment : SiteCreationBaseFormFragment() {
 
     private fun updateContentUiState(contentState: DomainsUiContentState) {
         uiHelpers.updateVisibility(domain_list_empty_view, contentState.emptyViewVisibility)
+        uiHelpers.updateVisibility(domain_list_example_view, contentState.exampleViewVisibility)
         if (contentState.items.isNotEmpty()) {
             view?.announceForAccessibility(getString(R.string.suggestions_updated_content_description))
         }
