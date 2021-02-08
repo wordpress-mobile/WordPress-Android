@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -429,22 +430,24 @@ class ImprovedMySiteFragment : Fragment(),
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
-        snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = coordinator_layout,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
-                )
-        )
+        activity?.let { parent ->
+            snackbarSequencer.enqueue(
+                    SnackbarItem(
+                            Info(
+                                    view = parent.coordinator,
+                                    textRes = holder.message,
+                                    duration = Snackbar.LENGTH_LONG
+                            ),
+                            holder.buttonTitle?.let {
+                                Action(
+                                        textRes = holder.buttonTitle,
+                                        clickListener = { holder.buttonAction() }
+                                )
+                            },
+                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                    )
+            )
+        }
     }
 
     companion object {
