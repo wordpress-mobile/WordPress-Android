@@ -633,14 +633,13 @@ public class ActivityLauncher {
     ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
-        String source = null;
+        String source;
         if (rewindableOnly) {
             source = BACKUP_TRACK_EVENT_PROPERTY_VALUE;
-            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, BACKUP_TRACK_EVENT_PROPERTY_VALUE);
         } else {
             source = ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE;
-            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
         }
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
 
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);

@@ -27,6 +27,7 @@ import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
 import javax.inject.Inject
 
 private const val DETAIL_TRACKING_SOURCE = "detail"
+private const val FORWARD_SLASH = "/"
 
 class ActivityLogDetailFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -200,15 +201,11 @@ class ActivityLogDetailFragment : Fragment() {
         }
     }
 
-    private fun buildTrackingSource() =
-        requireActivity().intent?.extras?.let {
+    private fun buildTrackingSource() = requireActivity().intent?.extras?.let {
+        val source = it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY)
             when {
-                it.containsKey(SOURCE_TRACK_EVENT_PROPERTY_KEY) -> {
-                    it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY) + "/$DETAIL_TRACKING_SOURCE"
-                }
-                else -> {
-                    DETAIL_TRACKING_SOURCE
-                }
+                source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
+                else -> DETAIL_TRACKING_SOURCE
             }
         }
 }
