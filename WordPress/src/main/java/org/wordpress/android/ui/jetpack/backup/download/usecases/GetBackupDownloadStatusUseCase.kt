@@ -31,11 +31,11 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private val tag = javaClass.simpleName
     suspend fun getBackupDownloadStatus(
         site: SiteModel,
         downloadId: Long? = null
     ) = flow {
-        val tag = javaClass.simpleName
         var retryAttempts = 0
         var backoffDelay = DELAY_MILLIS
         while (true) {
@@ -43,13 +43,12 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded $MAX_RETRY retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                } else {
-                    delay(backoffDelay)
-                    backoffDelay = (backoffDelay * DELAY_FACTOR)
+                when (exceedsRetryAttempts(retryAttempts++)) {
+                    true -> return@flow
+                    false -> {
+                        delay(backoffDelay)
+                        backoffDelay = (backoffDelay * DELAY_FACTOR)
+                    }
                 }
             } else {
                 retryAttempts = 0
@@ -84,5 +83,13 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             emit(Progress(status.rewindId, status.progress, published))
             false
         }
+    }
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.exceedsRetryAttempts(retryAttempts: Int): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(RemoteRequestFailure)
+            true
+        } else false
     }
 }

@@ -46,13 +46,12 @@ class GetRestoreStatusUseCase @Inject constructor(
             if (!isNetworkAvailable()) return@flow
 
             if (!fetchActivitiesRewind(site)) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                } else {
-                    delay(backoffDelay)
-                    backoffDelay = (backoffDelay * DELAY_FACTOR)
+                when (exceedsRetryAttempts(retryAttempts++)) {
+                    true -> return@flow
+                    false -> {
+                        delay(backoffDelay)
+                        backoffDelay = (backoffDelay * DELAY_FACTOR)
+                    }
                 }
             } else {
                 retryAttempts = 0
@@ -107,5 +106,13 @@ class GetRestoreStatusUseCase @Inject constructor(
         val rewindId = rewind.rewindId as String
         val published = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
         emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, published))
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.exceedsRetryAttempts(retryAttempts: Int): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(RemoteRequestFailure)
+            true
+        } else false
     }
 }
