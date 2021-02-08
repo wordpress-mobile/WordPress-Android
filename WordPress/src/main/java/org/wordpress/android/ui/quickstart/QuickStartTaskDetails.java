@@ -70,7 +70,7 @@ public enum QuickStartTaskDetails {
     REVIEW_PAGES(
             QuickStartTask.REVIEW_PAGES,
             R.string.quick_start_dialog_review_pages_title,
-            R.string.quick_start_dialog_edit_homepage_message,
+            R.string.quick_start_dialog_review_pages_message,
             R.drawable.ic_pages_white_24dp
     );
 
