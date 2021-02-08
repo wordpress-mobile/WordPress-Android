@@ -30,11 +30,10 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEM
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DOMAIN_CREDIT_REDEMPTION_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -139,7 +138,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val emailAddress = "test@email.com"
     private lateinit var site: SiteModel
     private lateinit var siteInfoBlock: SiteInfoBlock
-    private val activeTask = MutableLiveData<QuickStartTask?>()
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
@@ -159,7 +157,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(currentAvatarSource.buildSource()).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(quickStartRepository.buildSource(any())).thenReturn(quickStartUpdate)
-        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
