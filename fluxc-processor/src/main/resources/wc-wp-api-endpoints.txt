@@ -13,6 +13,8 @@
 /products/shipping_classes/<id>/
 /products/attributes/
 /products/attributes/<attribute_id>
+/products/attributes/<attribute_id>/terms
+/products/attributes/<attribute_id>/terms/<term_id>
 
 /products/reviews/
 /products/reviews/<id>/
@@ -46,6 +48,8 @@
 
 /connect/normalize-address
 /connect/packages
+
+/connect/account/settings
 
 /leaderboards
 

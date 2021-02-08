@@ -12,104 +12,6 @@ import kotlin.test.assertEquals
 class FormattableContentMapperTest {
     private lateinit var formattableContentMapper: FormattableContentMapper
     private val url = "https://www.wordpress.com"
-    private val notificationSubjectResponse = "{\n" +
-            "      \"text\": \"You've received 20 likes on My Site\",\n" +
-            "      \"ranges\": [\n" +
-            "        {\n" +
-            "          \"type\": \"b\",\n" +
-            "          \"indices\": [\n" +
-            "            16,\n" +
-            "            18\n" +
-            "          ]\n" +
-            "        },\n" +
-            "        {\n" +
-            "          \"type\": \"site\",\n" +
-            "          \"indices\": [\n" +
-            "            28,\n" +
-            "            35\n" +
-            "          ],\n" +
-            "          \"url\": \"http://mysite.wordpress.com\",\n" +
-            "          \"id\": 123\n" +
-            "        }\n" +
-            "      ]\n" +
-            "    }"
-
-    private val notificationBodyResponse: String = "{\n" +
-            "          \"text\": \"This site was created by Author\",\n" +
-            "          \"ranges\": [\n" +
-            "            {\n" +
-            "              \"email\": \"user@automattic.com\",\n" +
-            "              \"url\": \"$url\",\n" +
-            "              \"id\": 111,\n" +
-            "              \"site_id\": 123,\n" +
-            "              \"type\": \"user\",\n" +
-            "              \"indices\": [\n" +
-            "                0,\n" +
-            "                9\n" +
-            "              ]\n" +
-            "            }\n" +
-            "          ],\n" +
-            "          \"media\": [\n" +
-            "            {\n" +
-            "              \"type\": \"image\",\n" +
-            "              \"indices\": [\n" +
-            "                0,\n" +
-            "                0\n" +
-            "              ],\n" +
-            "              \"height\": \"256\",\n" +
-            "              \"width\": \"256\",\n" +
-            "              \"url\": \"https://gravatar.jpg\"\n" +
-            "            }\n" +
-            "          ],\n" +
-            "          \"actions\": {\n" +
-            "            \"follow\": false\n" +
-            "          },\n" +
-            "          \"meta\": {\n" +
-            "            \"links\": {\n" +
-            "              \"email\": \"user@wp.com\",\n" +
-            "              \"home\": \"https://user.blog\"\n" +
-            "            },\n" +
-            "            \"ids\": {\n" +
-            "              \"user\": 1,\n" +
-            "              \"site\": 2\n" +
-            "            },\n" +
-            "            \"titles\": {\n" +
-            "              \"home\": \"Title\"\n" +
-            "            }\n" +
-            "          },\n" +
-            "          \"type\": \"user\"\n" +
-            "        }"
-
-    private val activityLogBodyResponse = "{\n" +
-            "          \"text\": \"Comment text\",\n" +
-            "          \"ranges\": [\n" +
-            "            {\n" +
-            "              \"url\": \"$url\",\n" +
-            "              \"indices\": [\n" +
-            "                27,\n" +
-            "                39\n" +
-            "              ],\n" +
-            "              \"site_id\": 123,\n" +
-            "              \"section\": \"post\",\n" +
-            "              \"intent\": \"edit\",\n" +
-            "              \"context\": \"single\",\n" +
-            "              \"id\": 111\n" +
-            "            },\n" +
-            "            {\n" +
-            "              \"url\": \"$url\",\n" +
-            "              \"indices\": [\n" +
-            "                0,\n" +
-            "                7\n" +
-            "              ],\n" +
-            "              \"site_id\": 123,\n" +
-            "              \"section\": \"comment\",\n" +
-            "              \"intent\": \"edit\",\n" +
-            "              \"context\": \"single\",\n" +
-            "              \"id\": 17,\n" +
-            "              \"root_id\": 68\n" +
-            "            }\n" +
-            "          ]\n" +
-            "        }"
 
     @Before
     fun setUp() {
@@ -119,6 +21,8 @@ class FormattableContentMapperTest {
 
     @Test
     fun mapsNotificationSubjectToRichFormattableContent() {
+        val notificationSubjectResponse = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/subject-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationSubjectResponse)
         assertEquals("You've received 20 likes on My Site", formattableContent.text)
         assertEquals(2, formattableContent.ranges!!.size)
@@ -136,9 +40,11 @@ class FormattableContentMapperTest {
 
     @Test
     fun mapsNotificationBodyToRichFormattableContent() {
+        val notificationBodyResponse = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/body-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
         assertEquals("This site was created by Author", formattableContent.text)
-        assertEquals(1, formattableContent.ranges!!.size)
+        assertEquals(2, formattableContent.ranges!!.size)
         with(formattableContent.ranges!![0]) {
             assertEquals(FormattableRangeType.USER, this.rangeType())
             assertEquals(123, this.siteId)
@@ -149,7 +55,17 @@ class FormattableContentMapperTest {
     }
 
     @Test
+    fun mapsScanTypeToScanFormattableRangeType() {
+        val notificationBodyResponse = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/body-response.json")
+        val formattableContent = formattableContentMapper.mapToFormattableContent(notificationBodyResponse)
+        assertEquals(FormattableRangeType.SCAN, formattableContent.ranges!![1].rangeType())
+    }
+
+    @Test
     fun mapsActivityLogContentToSimpleFormattableContent() {
+        val activityLogBodyResponse = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "activitylog/body-response.json")
         val formattableContent = formattableContentMapper.mapToFormattableContent(activityLogBodyResponse)
         assertEquals("Comment text", formattableContent.text)
         assertEquals(2, formattableContent.ranges!!.size)

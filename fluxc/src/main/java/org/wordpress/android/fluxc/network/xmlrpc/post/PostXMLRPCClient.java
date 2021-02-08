@@ -69,6 +69,11 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
     }
 
     public void fetchPost(final PostModel post, final SiteModel site, final PostAction origin) {
+        fetchPost(post, site, origin, false);
+    }
+
+    public void fetchPost(final PostModel post, final SiteModel site, final PostAction origin,
+                          final boolean isFirstTimePublish) {
         List<Object> params = createFetchPostParams(post, site);
 
         final XMLRPCRequest request = new XMLRPCRequest(site.getXmlRpcUrl(), XMLRPC.GET_POST, params,
@@ -88,7 +93,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                                 payload.error = new PostError(PostErrorType.INVALID_RESPONSE);
                             }
                             payload.origin = origin;
-
+                            payload.isFirstTimePublish = isFirstTimePublish;
                             mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
                         }
                     }
@@ -96,6 +101,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
             @Override
             public void onErrorResponse(@NonNull BaseNetworkError error) {
                 FetchPostResponsePayload payload = new FetchPostResponsePayload(post, site);
+                payload.isFirstTimePublish = isFirstTimePublish;
                 payload.error = createPostErrorFromBaseNetworkError(error);
                 payload.origin = origin;
                 mDispatcher.dispatch(PostActionBuilder.newFetchedPostAction(payload));
@@ -216,15 +222,16 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
         add(request);
     }
 
-    public void pushPost(final PostModel post, final SiteModel site) {
-        pushPostInternal(post, site, false);
+    public void pushPost(final PostModel post, final SiteModel site, boolean isFirstTimePublish) {
+        pushPostInternal(post, site, false, isFirstTimePublish);
     }
 
     public void restorePost(final PostModel post, final SiteModel site) {
-        pushPostInternal(post, site, true);
+        pushPostInternal(post, site, true, false);
     }
 
-    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost) {
+    private void pushPostInternal(final PostModel post, final SiteModel site, final boolean isRestoringPost,
+                                  final boolean isFirstTimePublish) {
         Map<String, Object> contentStruct = postModelToContentStruct(post);
 
         if (post.isLocalDraft()) {
@@ -255,6 +262,7 @@ public class PostXMLRPCClient extends BaseXMLRPCClient {
                         post.setIsLocallyChanged(false);
 
                         RemotePostPayload payload = new RemotePostPayload(post, site);
+                        payload.isFirstTimePublish = isFirstTimePublish;
 
                         Action resultAction = isRestoringPost ? PostActionBuilder.newRestoredPostAction(payload)
                                 : UploadActionBuilder.newPushedPostAction(payload);

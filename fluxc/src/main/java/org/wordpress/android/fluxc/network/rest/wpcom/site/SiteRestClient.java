@@ -572,23 +572,26 @@ public class SiteRestClient extends BaseWPComRestClient {
     public void fetchWpComBlockLayouts(final SiteModel site,
                                        List<String> supportedBlocks,
                                        Float previewWidth,
-                                       Float scale) {
+                                       Float scale,
+                                       Boolean isBeta) {
         String url = WPCOMV2.sites.site(site.getSiteId()).block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale);
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale, isBeta);
     }
 
     public void fetchSelfHostedBlockLayouts(final SiteModel site,
                                             List<String> supportedBlocks,
                                             Float previewWidth,
-                                            Float scale) {
+                                            Float scale,
+                                            Boolean isBeta) {
         String url = WPCOMV2.common_block_layouts.getUrl();
-        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale);
+        fetchBlockLayouts(site, url, supportedBlocks, previewWidth, scale, isBeta);
     }
 
     private void fetchBlockLayouts(final SiteModel site, String url,
                                    List<String> supportedBlocks,
                                    Float previewWidth,
-                                   Float scale) {
+                                   Float scale,
+                                   Boolean isBeta) {
         Map<String, String> params = new HashMap<>();
 
         if (supportedBlocks != null && !supportedBlocks.isEmpty()) {
@@ -601,6 +604,12 @@ public class SiteRestClient extends BaseWPComRestClient {
 
         if (scale != null) {
             params.put("scale", String.format(Locale.US, "%.1f", scale));
+        }
+
+        params.put("type", "mobile");
+
+        if (isBeta != null) {
+            params.put("is_beta", String.valueOf(isBeta));
         }
 
         final WPComGsonRequest<BlockLayoutsResponse> request = WPComGsonRequest.buildGetRequest(url, params,

@@ -28,7 +28,7 @@ import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
 
-private const val ACTIVITY_LOG_PAGE_SIZE = 20
+private const val ACTIVITY_LOG_PAGE_SIZE = 100
 
 @Singleton
 class ActivityLogStore
@@ -183,6 +183,8 @@ class ActivityLogStore
         } else {
             if (payload.rewindStatusModelResponse != null) {
                 activityLogSqlUtils.replaceRewindStatus(payload.site, payload.rewindStatusModelResponse)
+            } else {
+                activityLogSqlUtils.deleteRewindStatus(payload.site)
             }
             OnRewindStatusFetched(action)
         }
@@ -195,6 +197,8 @@ class ActivityLogStore
         } else {
             if (payload.backupDownloadStatusModelResponse != null) {
                 activityLogSqlUtils.replaceBackupDownloadStatus(payload.site, payload.backupDownloadStatusModelResponse)
+            } else {
+                activityLogSqlUtils.deleteBackupDownloadStatus(payload.site)
             }
             OnBackupDownloadStatusFetched(action)
         }

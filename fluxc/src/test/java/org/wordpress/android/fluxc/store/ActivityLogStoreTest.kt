@@ -164,7 +164,7 @@ class ActivityLogStoreTest {
         val rowsAffected = 1
         val activityModels = listOf<ActivityLogModel>(mock())
 
-        val action = initRestClient(activityModels, rowsAffected, totalItems = 100)
+        val action = initRestClient(activityModels, rowsAffected, totalItems = 500)
         whenever(activityLogSqlUtils.insertOrUpdateActivities(any(), any())).thenReturn(rowsAffected)
 
         activityLogStore.onAction(action)
@@ -426,6 +426,29 @@ class ActivityLogStoreTest {
         assertEquals(backupDownloadStatusModel, backDownloadStatusFromDb)
     }
 
+    @Test
+    fun storeFetchedEmptyRewindStatusRemoveFromDb() = test {
+        whenever(activityLogRestClient.fetchActivityRewind(siteModel))
+                .thenReturn(FetchedRewindStatePayload(null, siteModel))
+
+        val fetchAction = ActivityLogActionBuilder.newFetchRewindStateAction(FetchRewindStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteRewindStatus(siteModel)
+    }
+
+    @Test
+    fun storeFetchedEmptyBackupDownloadStatusRemoveFromDb() = test {
+        whenever(activityLogRestClient.fetchBackupDownloadState(siteModel))
+                .thenReturn(FetchedBackupDownloadStatePayload(null, siteModel))
+
+        val fetchAction =
+                ActivityLogActionBuilder.newFetchBackupDownloadStateAction(FetchBackupDownloadStatePayload(siteModel))
+        activityLogStore.onAction(fetchAction)
+
+        verify(activityLogSqlUtils).deleteBackupDownloadStatus(siteModel)
+    }
+
     private suspend fun initRestClient(
         activityModels: List<ActivityLogModel>,
         rowsAffected: Int,
@@ -444,6 +467,6 @@ class ActivityLogStoreTest {
 
     companion object {
         private const val OFFSET = 0
-        private const val PAGE_SIZE = 20
+        private const val PAGE_SIZE = 100
     }
 }
