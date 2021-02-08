@@ -94,6 +94,7 @@ class RestoreStateListItemBuilder @Inject constructor(
         progress: Int = 0,
         published: Date,
         isIndeterminate: Boolean = false,
+        showNotifyMe: Boolean,
         onNotifyMeClick: () -> Unit
     ): List<JetpackListItemState> {
         return mutableListOf(
@@ -107,7 +108,9 @@ class RestoreStateListItemBuilder @Inject constructor(
                 buildActionButtonState(
                         titleRes = R.string.restore_progress_action_button,
                         contentDescRes = R.string.restore_progress_action_button_content_description,
-                        onClick = onNotifyMeClick),
+                        onClick = onNotifyMeClick,
+                        isEnabled = showNotifyMe
+                ),
                 buildFootnoteState(R.string.restore_progress_footnote)
         )
     }
@@ -208,12 +211,14 @@ class RestoreStateListItemBuilder @Inject constructor(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
         isSecondary: Boolean = false,
+        isEnabled: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
         isSecondary = isSecondary,
-        onClick = onClick
+        onClick = onClick,
+        isEnabled = isEnabled
     )
 
     private fun buildSubHeaderState(
@@ -278,6 +283,16 @@ class RestoreStateListItemBuilder @Inject constructor(
         return details.map { state ->
             if (state is ActionButtonState) {
                 state.copy(isEnabled = enableActionButton)
+            } else {
+                state
+            }
+        }
+    }
+
+    fun updateProgressActionButtonState(uiState: RestoreUiState, value: Boolean): List<JetpackListItemState> {
+        return uiState.items.map { state ->
+            if (state is ActionButtonState) {
+                state.copy(isEnabled = value)
             } else {
                 state
             }

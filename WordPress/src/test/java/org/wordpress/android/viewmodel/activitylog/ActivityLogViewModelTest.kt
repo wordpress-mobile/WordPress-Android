@@ -159,7 +159,7 @@ class ActivityLogViewModelTest {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong()))
+        whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(anyLong()))
                 .thenReturn(JetpackPurchasedProducts(scan = false, backup = false))
     }
 
@@ -364,7 +364,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(SITE_ID))
+        whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(SITE_ID))
                 .thenReturn(JetpackPurchasedProducts(scan = false, backup = true))
 
         viewModel.start(site, rewindableOnly)

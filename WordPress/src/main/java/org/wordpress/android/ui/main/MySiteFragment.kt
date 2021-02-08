@@ -104,6 +104,7 @@ import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -154,6 +155,7 @@ import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgre
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
@@ -211,6 +213,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
@@ -253,7 +256,7 @@ class MySiteFragment : Fragment(),
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
-            updateScanAndBackupVisibility(site)
+            updateScanAndBackup(site)
 
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -274,16 +277,31 @@ class MySiteFragment : Fragment(),
         showQuickStartNoticeIfNecessary()
     }
 
-    private fun updateScanAndBackupVisibility(site: SiteModel) {
-        row_scan.setVisible(false)
-        row_backup.setVisible(false)
+    private fun updateScanAndBackup(site: SiteModel) {
         if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
+            // Make sure that we load the cached value synchronously as we want to suppress the default animation
+            updateScanAndBackupVisibility(
+                    site = site,
+                    products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
+            )
             uiScope.launch {
-                val itemsVisibility = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
-                row_scan.setVisible(scanScreenFeatureConfig.isEnabled() && itemsVisibility.scan)
-                row_backup.setVisible(backupScreenFeatureConfig.isEnabled() && itemsVisibility.backup)
+                if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
+                    updateScanAndBackupVisibility(
+                            site = site,
+                            products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+                    )
+                }
             }
         }
+    }
+
+    private fun updateScanAndBackupVisibility(site: SiteModel, products: JetpackPurchasedProducts) {
+        row_scan.setVisible(
+                siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), products.scan, site)
+        )
+        row_backup.setVisible(
+                siteUtilsWrapper.isBackupEnabled(backupScreenFeatureConfig.isEnabled(), products.backup)
+        )
     }
 
     private fun completeQuickStartStepsIfNeeded() {

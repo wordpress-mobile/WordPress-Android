@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_ST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -214,7 +215,8 @@ class MySiteViewModel
                             backupAvailable,
                             scanAvailable,
                             activeTask == QuickStartTask.VIEW_SITE,
-                            activeTask == ENABLE_POST_SHARING
+                            activeTask == ENABLE_POST_SHARING,
+                            activeTask == EXPLORE_PLANS
                     )
             )
             scrollToQuickStartTaskIfNecessary(
@@ -246,7 +248,10 @@ class MySiteViewModel
                 ACTIVITY_LOG -> OpenActivityLog(site)
                 BACKUP -> OpenBackup(site)
                 SCAN -> OpenScan(site)
-                PLAN -> OpenPlan(site)
+                PLAN -> {
+                    quickStartRepository.completeTask(EXPLORE_PLANS)
+                    OpenPlan(site)
+                }
                 POSTS -> OpenPosts(site)
                 PAGES -> {
                     quickStartRepository.completeTask(REVIEW_PAGES)

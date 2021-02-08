@@ -363,7 +363,7 @@ class ActivityLogViewModel @Inject constructor(
             !site.hasFreePlan -> refreshFiltersUiState()
             else -> {
                 viewModelScope.launch {
-                    val purchasedProducts = jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(site.siteId)
+                    val purchasedProducts = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
                     if (purchasedProducts.backup) {
                         refreshFiltersUiState()
                     }

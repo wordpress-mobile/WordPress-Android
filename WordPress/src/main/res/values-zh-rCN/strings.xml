@@ -1,11 +1,91 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-25 03:31:52+0000
+Translation-Revision-Date: 2021-02-05 15:38:05+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="rewind_another_process_running">另一项还原操作正在运行。</string>
+    <string name="restore_complete_failed_icon_content_description">“错误”图标</string>
+    <string name="restore_complete_failed_action_button_content_description">“完成”按钮</string>
+    <string name="restore_complete_failed_description">我们无法还原您的站点。 请稍后重试。</string>
+    <string name="restore_complete_failed_title">恢复失败</string>
+    <string name="restore_complete_visit_site_button_content_description">“访问站点”按钮</string>
+    <string name="restore_complete_done_button_content_description">“完成”按钮</string>
+    <string name="restore_complete_icon_content_description">“还原”图标</string>
+    <string name="restore_complete_visit_site_action_button">访问站点</string>
+    <string name="restore_complete_description_with_two_parameters">您选择的所有项目现在都会还原到 %1$s %2$s。</string>
+    <string name="restore_complete_header">已还原您的站点</string>
+    <string name="restore_progress_additional_info">无需等待。 在您的站点还原后，我们会通知您。</string>
+    <string name="restore_progress_icon_content_description">“还原站点”图标</string>
+    <string name="restore_progress_description_with_two_parameters">我们正在将您的站点还原到 %1$s %2$s。</string>
+    <string name="restore_progress_header">目前正在还原站点</string>
+    <string name="restore_warning_action_button_content_description">“确认还原站点”按钮</string>
+    <string name="restore_warning_icon_content_description">带感叹号的红色圆圈图片</string>
+    <string name="restore_warning_action_button">确认还原站点</string>
+    <string name="restore_warning_description_with_two_parameters">是否确定要在 %2$s 将站点还原至 %1$s？\n 此操作将删除在此时间之后创建或更改的所有内容和选项。</string>
+    <string name="restore_warning_header">警告</string>
+    <string name="restore_details_action_button_content_description">“还原站点”按钮</string>
+    <string name="restore_details_icon_content_description">“还原”图标</string>
+    <string name="restore_details_action_button">恢复站点</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s 是供您还原的选定点。</string>
+    <string name="restore_details_header">恢复站点</string>
+    <string name="restore_details_choose_items_header">选择要还原的项目：</string>
+    <string name="restore">恢复</string>
+    <string name="backup_download_complete_failed_icon_content_description">带 X 的云图标</string>
+    <string name="backup_download_complete_failed_action_button_content_description">“完成”按钮</string>
+    <string name="backup_download_complete_failed_action_button">完成</string>
+    <string name="backup_download_complete_failed_description">我们无法创建您的备份。 请稍后重试。</string>
+    <string name="backup_download_complete_failed_title">下载失败</string>
+    <string name="web_preview_tablet">平板电脑</string>
+    <string name="web_preview_mobile">移动设备</string>
+    <string name="quick_start_card_menu_remove">请勿再次显示</string>
+    <string name="quick_start_card_menu_hide">隐藏</string>
+    <string name="quick_start_card_menu_pin">固定此项</string>
+    <string name="quick_start_dialog_review_pages_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
+    <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
+    <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
+    <string name="quick_start_dialog_edit_homepage_message">在您站点的主页上更改、添加或删除内容。</string>
+    <string name="quick_start_dialog_edit_homepage_title">编辑您的主页</string>
+    <string name="reader_menu_mark_as_unseen">标记为未读</string>
+    <string name="reader_menu_mark_as_seen">标记为已读</string>
+    <string name="error_media_upload_failed_for_reason">媒体上传失败。\n%1$s</string>
+    <string name="error_media_not_enough_storage">可用的站点存储空间不足</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">无法切换此文章的已浏览状态</string>
+    <string name="reader_marked_post_as_unseen">将文章标记为未读</string>
+    <string name="reader_marked_post_as_seen">将文章标记为已读</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">并非所有威胁都能修复。 请联系我们的支持人员。</string>
+    <string name="threat_fix_all_status_error_message">获取修复状态时出错。 请联系我们的支持人员。</string>
+    <string name="threat_fix_all_status_success_message">威胁已成功修复。</string>
+    <string name="threat_fix_all_error_message">修复威胁时出错。 请联系我们的支持人员。</string>
+    <string name="threat_fix_all_started_message">我们正在后台努力修复这些威胁。 请稍后重试。</string>
+    <string name="threat_fix_all_warning_message">请确认您希望修复 %s 项活跃威胁。</string>
+    <string name="threat_fix_all_warning_title">修复所有威胁</string>
+    <string name="threat_ignore_error_message">忽略威胁时出错。 请联系支持人员。</string>
+    <string name="threat_ignore_success_message">已忽略威胁。</string>
+    <string name="threat_ignore_warning">您不应忽视安全性问题，除非您确信该问题不会带来负面影响。 如果您选择忽略此威胁，它将继续存留在您的站点 &lt;b>%s&lt;/b>。</string>
+    <string name="threat_fix_error_message">修复威胁时出错。 请联系我们的支持人员。</string>
+    <string name="threat_item_sub_header_status_ignored">已忽略威胁</string>
+    <string name="threat_item_sub_header_status_fixed">威胁已解决</string>
+    <string name="threat_fixing">修复威胁</string>
+    <string name="threats_fix_num_of_threats">修复 %s 项威胁</string>
+    <string name="scan_history_ignored_threats_tab">已忽略</string>
+    <string name="scan_history_no_threats_found">未找到项</string>
+    <string name="scan_history_fixed_threats_tab">固定</string>
+    <string name="scan_history_all_threats_tab">全部</string>
+    <string name="scan_scanning_title">正在扫描文件</string>
+    <string name="scan_preparing_to_scan_title">准备扫描</string>
+    <string name="scan_history_menu_title">历史记录</string>
+    <string name="scan_history">扫描历史记录</string>
+    <string name="backup_active_filter_empty_subtitle">尝试调整您的日期范围</string>
+    <string name="backup_active_filter_empty_title">未找到匹配的备份</string>
+    <string name="backup_empty_subtitle">您的第一个备份将在 24 小时显示在此处，备份完成后，您会收到通知。</string>
+    <string name="backup_empty_title">您的第一个备份即将准备就绪</string>
+    <string name="request_failed_message">处理请求时出现问题。 请稍后重试。</string>
+    <string name="gutenberg_native_move_to_bottom">移到底部</string>
     <string name="label_control_upload">上传</string>
     <string name="jetpack_icon_content_description">图标</string>
     <string name="backup_download_complete_info">我们还通过电子邮件向您发送了文件链接。</string>
@@ -34,6 +114,10 @@ Language: zh_CN
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">交叉发表</string>
     <string name="suggestion_user">用户</string>
+    <string name="suggestion_no_matching">没有符合条件的 %s。</string>
+    <string name="suggestion_problem">加载建议时出现问题。</string>
+    <string name="suggestion_none">%s 建议不可用。</string>
+    <string name="suggestion_selection_needed">请输入以过滤建议列表。</string>
     <string name="threat_get_free_estimate">获取免费估算</string>
     <string name="threat_ignore">忽略威胁</string>
     <string name="threat_fix">修复威胁</string>
@@ -99,6 +183,8 @@ Language: zh_CN
     <string name="new_site_creation_domain_header_title">选择域</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 设置</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">通过电子邮件关注对话</string>
+    <string name="reader_btn_follow_comments">通过电子邮件关注对话</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">无法取消订阅本博客的评论</string>
     <string name="reader_follow_comments_could_not_subscribe_error">无法订阅本博客的评论</string>
     <string name="reader_follow_comments_get_status_error">获取博客订阅状态时出错</string>
@@ -211,6 +297,7 @@ Language: zh_CN
     <string name="gutenberg_native_add_this_telephone_link">添加此电话链接</string>
     <string name="gutenberg_native_add_this_link">添加此链接</string>
     <string name="gutenberg_native_add_this_email_link">添加此电子邮件链接</string>
+    <string name="suggestion_no_connection">未连接互联网。\n建议不可用。</string>
     <string name="typeface_label_shrikhand">粗体</string>
     <string name="typeface_label_space_mono">现代</string>
     <string name="typeface_label_pacifico">有趣</string>
@@ -402,11 +489,13 @@ Language: zh_CN
     <string name="status_and_visibility">状态和可见性</string>
     <string name="update_now">现在更新</string>
     <string name="gutenberg_native_open_block_actions_menu">打开区块操作菜单</string>
+    <string name="gutenberg_native_move_to_top">移到顶部</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">双击以打开带有可用选项的底部表页</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">双击以打开带有可用选项的操作表页</string>
     <string name="pages_cannot_be_started">目前我们无法打开页面。请稍后重试</string>
     <string name="pages_set_as_posts_page">设为文章页面</string>
     <string name="pages_set_as_homepage">设为主页</string>
+    <string name="suggestion_invalid">%s 不是有效的 %s</string>
     <string name="site_settings_select_page">选择页面</string>
     <string name="site_settings_posts_page">文章页面</string>
     <string name="site_settings_static_homepage">静态主页</string>
@@ -620,6 +709,7 @@ Language: zh_CN
     <string name="posts_cannot_be_started">我们现在无法打开文章。请稍后重试</string>
     <string name="site_cannot_be_loaded">我们现在无法为您的站点加载数据。请稍后重试</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒体库</string>
+    <string name="gutenberg_native_unsupported">不受支持</string>
     <string name="gutenberg_native_ungroup">取消分组</string>
     <string name="gutenberg_native_translate">翻译</string>
     <string name="gutenberg_native_title">标题:</string>
