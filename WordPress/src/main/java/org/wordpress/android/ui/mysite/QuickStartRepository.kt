@@ -178,7 +178,7 @@ class QuickStartRepository
     }
 
     private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
-        return when(this) {
+        return when (this) {
             CUSTOMIZE_QUICK_START -> CUSTOMIZE
             GROW_QUICK_START -> GROW
         }

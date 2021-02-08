@@ -72,7 +72,14 @@ class MySiteItemTest {
 
     @Test
     fun `quick start card is never active`() {
-        val quickStartCard = QuickStartCard(GROW_QUICK_START, UiStringText("title"), listOf(), color.pink_40, 0, interaction)
+        val quickStartCard = QuickStartCard(
+                GROW_QUICK_START,
+                UiStringText("title"),
+                listOf(),
+                color.pink_40,
+                0,
+                interaction
+        )
 
         assertThat(quickStartCard.activeQuickStartItem).isFalse()
     }

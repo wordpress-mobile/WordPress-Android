@@ -25,7 +25,8 @@ class DynamicCardsSource
 
     override fun buildSource(): Flow<DynamicCards?> {
         return merge(pinnedItem, hiddenItems) { pinnedItem, hiddenItems ->
-            val filteredCards = DynamicCardType.values().filter { hiddenItems.isNullOrEmpty() || !hiddenItems.contains(it) }
+            val filteredCards = DynamicCardType.values()
+                    .filter { hiddenItems.isNullOrEmpty() || !hiddenItems.contains(it) }
             val indexOfPinnedItem = if (pinnedItem != null) {
                 filteredCards.indexOf(pinnedItem)
             } else {
@@ -63,4 +64,3 @@ class DynamicCardsSource
         hiddenItems.value = hiddenSetOfCards
     }
 }
-

@@ -62,7 +62,7 @@ class QuickStartItemBuilder
     }
 
     private fun QuickStartTaskType.toDynamicCardType(): DynamicCardType {
-        return when(this) {
+        return when (this) {
             CUSTOMIZE -> DynamicCardType.CUSTOMIZE_QUICK_START
             GROW -> DynamicCardType.GROW_QUICK_START
             UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
