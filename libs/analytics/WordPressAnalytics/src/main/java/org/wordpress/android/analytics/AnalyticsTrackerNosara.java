@@ -1802,6 +1802,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_notification_tapped";
             case QUICK_START_HIDE_CARD_TAPPED:
                 return "quick_start_hide_card_tapped";
+            case QUICK_START_REMOVE_CARD_TAPPED:
+                return "quick_start_remove_card_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
             case INSTALLATION_REFERRER_FAILED:
