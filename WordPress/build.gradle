@@ -26,6 +26,10 @@ apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
 
+detekt {
+    baseline = file("${project.rootDir}/config/detekt/baseline.xml")
+}
+
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
     annotation 'org.wordpress.android.testing.OpenClassAnnotation'
