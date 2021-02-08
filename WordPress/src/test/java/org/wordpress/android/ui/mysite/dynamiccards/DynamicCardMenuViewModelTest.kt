@@ -63,11 +63,4 @@ class DynamicCardMenuViewModelTest : BaseUnitTest() {
 
         assertThat(mInteractions).containsExactly(Pin(CUSTOMIZE_QUICK_START), Pin(GROW_QUICK_START))
     }
-
-    @Test
-    fun `when no id is set, should not emit any interaction events`() {
-        viewModel.onPinActionClicked()
-
-        assertThat(mInteractions).isEmpty()
-    }
 }

@@ -80,7 +80,7 @@ class DynamicCardMenuFragment : BottomSheetDialogFragment() {
         }
     }
 
-    class DynamicCardMenuModel(val cardType: DynamicCardType, val isPinned: Boolean) {
+    data class DynamicCardMenuModel(val cardType: DynamicCardType, val isPinned: Boolean) {
         val id = cardType.name
     }
 }
