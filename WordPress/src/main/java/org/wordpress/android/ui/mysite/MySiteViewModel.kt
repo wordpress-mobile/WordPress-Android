@@ -208,7 +208,10 @@ class MySiteViewModel
                 siteItems.add(DomainRegistrationBlock(ListItemInteraction.create(this::domainRegistrationClick)))
             }
             val dynamicCards: Map<DynamicCardType, DynamicCard> = mutableListOf<DynamicCard>().also { list ->
-                // Add all possible future dynamic cards here
+                // Add all possible future dynamic cards here. If we ever have a remote source of dynamic cards, we'd
+                // need to implement a smarter solution where we'd build the sources based on the dynamic cards.
+                // This means that the stream of dynamic cards would emit a new stream for each of the cards. The
+                // current solution is good enough for a few sources.
                 list.addAll(quickStartCategories.map { category ->
                     quickStartItemBuilder.build(
                             category,
