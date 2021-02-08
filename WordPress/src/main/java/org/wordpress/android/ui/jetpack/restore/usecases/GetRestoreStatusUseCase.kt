@@ -28,6 +28,7 @@ import javax.inject.Named
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -40,16 +41,21 @@ class GetRestoreStatusUseCase @Inject constructor(
         restoreId: Long? = null
     ) = flow {
         var retryAttempts = 0
+        var backoffDelay = DELAY_MILLIS
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
             if (!fetchActivitiesRewind(site)) {
                 if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded 3 retries while fetching status")
+                    AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
+                } else {
+                    delay(backoffDelay)
+                    backoffDelay = (backoffDelay * DELAY_FACTOR)
                 }
             } else {
+                retryAttempts = 0
                 val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
                 if (rewind == null) {
                     emit(Empty)
@@ -69,8 +75,8 @@ class GetRestoreStatusUseCase @Inject constructor(
                         QUEUED -> emitProgress(rewind)
                     }
                 }
+                delay(DELAY_MILLIS)
             }
-            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 

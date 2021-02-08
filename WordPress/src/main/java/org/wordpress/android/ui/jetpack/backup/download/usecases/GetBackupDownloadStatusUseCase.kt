@@ -24,6 +24,7 @@ import javax.inject.Named
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -36,17 +37,22 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     ) = flow {
         val tag = javaClass.simpleName
         var retryAttempts = 0
+        var backoffDelay = DELAY_MILLIS
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
                 if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
+                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded $MAX_RETRY retries while fetching status")
                     emit(RemoteRequestFailure)
                     return@flow
+                } else {
+                    delay(backoffDelay)
+                    backoffDelay = (backoffDelay * DELAY_FACTOR)
                 }
             } else {
+                retryAttempts = 0
                 val status = activityLogStore.getBackupDownloadStatusForSite(site)
                 if (status == null) {
                     emit(Empty)
