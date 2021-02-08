@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -51,6 +52,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
+    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -68,7 +70,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 resourceProvider,
                 analyticsTrackerWrapper,
                 dispatcher,
-                eventBus
+                eventBus,
+                appPrefsWrapper
         )
         snackbars = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
@@ -233,6 +236,34 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
 
         quickStartRepository.hideCategory(GROW.toString())
+
+        val quickStartUpdate = source.take(1).toList().last()
+        quickStartUpdate.categories.apply {
+            assertThat(this).hasSize(1)
+            assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
+        }
+    }
+
+    @Test
+    fun `removes CUSTOMIZE category`() = test {
+        initStore()
+
+        quickStartRepository.removeCategory(CUSTOMIZE.toString())
+
+        val quickStartUpdate = source.take(1).toList().last()
+        quickStartUpdate.categories.apply {
+            assertThat(this).hasSize(1)
+            assertThat(this.first().taskType).isEqualTo(GROW)
+        }
+
+        verify(appPrefsWrapper).removeQuickStartTaskType(CUSTOMIZE)
+    }
+
+    @Test
+    fun `removes GROW category`() = test {
+        initStore()
+
+        quickStartRepository.removeCategory(GROW.toString())
 
         val quickStartUpdate = source.take(1).toList().last()
         quickStartUpdate.categories.apply {

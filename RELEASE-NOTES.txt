@@ -10,6 +10,8 @@
 * [**] Block Editor: Disable Unsupported Block Editor for Reusable blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3067]
 * [**] Block Editor: Add proper handling for single use blocks such as the more block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3042]
 * [***] Jetpack: Jetpack site owners, you can now run scans, fix threats, restore your site and download backup files directly from within the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/13267]
+* [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet [https://github.com/wordpress-mobile/WordPress-Android/pull/13625]
+* [**] Reader: added functionality for marking reader posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13901]
 
 16.6
 -----

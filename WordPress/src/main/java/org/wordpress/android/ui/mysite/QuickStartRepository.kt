@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEX
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -52,7 +53,8 @@ class QuickStartRepository
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
-    private val eventBus: EventBusWrapper
+    private val eventBus: EventBusWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -67,8 +69,9 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     init {
-        // TODO load this from prefs once we implement the "Remove" functionality
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
+                .filter { !appPrefsWrapper.isQuickStartTaskTypeRemoved(it) }
+                .toSet()
     }
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
@@ -162,6 +165,16 @@ class QuickStartRepository
 
     fun hideCategory(id: String) {
         val hiddenCategory = QuickStartTaskType.fromString(id)
+        hideQuickStartType(hiddenCategory)
+    }
+
+    fun removeCategory(id: String) {
+        val removedQuickStartTaskType = QuickStartTaskType.fromString(id)
+        appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
+        hideQuickStartType(removedQuickStartTaskType)
+    }
+
+    private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {
         val currentCategories = (quickStartTaskTypes.value ?: setOf()).toMutableSet()
         currentCategories.remove(hiddenCategory)
         quickStartTaskTypes.value = currentCategories

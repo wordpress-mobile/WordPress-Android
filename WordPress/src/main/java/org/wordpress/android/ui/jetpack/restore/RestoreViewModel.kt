@@ -212,7 +212,8 @@ class RestoreViewModel @Inject constructor(
                         progress = progressStart,
                         published = restoreState.published as Date,
                         isIndeterminate = true,
-                        onNotifyMeClick = this@RestoreViewModel::onNotifyMeClick
+                        onNotifyMeClick = this@RestoreViewModel::onNotifyMeClick,
+                        showNotifyMe = !restoreState.shouldInitProgress
                 ),
                 type = StateType.PROGRESS
         )
@@ -348,6 +349,10 @@ class RestoreViewModel @Inject constructor(
                 rewindId = result.rewindId,
                 restoreId = result.restoreId
         )
+        (_uiState.value as? ProgressState)?.let {
+            val updatedItems = stateListItemBuilder.updateProgressActionButtonState(it, result.restoreId != null)
+            _uiState.postValue(it.copy(items = updatedItems))
+        }
         queryRestoreStatus()
     }
 
