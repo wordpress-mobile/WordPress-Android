@@ -2873,6 +2873,10 @@
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
     <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_edit_homepage_subtitle" translatable="false">@string/quick_start_dialog_edit_homepage_message</string>
+    <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
+    <string name="quick_start_list_review_pages_subtitle" translatable="false">@string/quick_start_dialog_review_pages_message</string>
+    <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize Your Site</string>
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>
