@@ -165,6 +165,7 @@ public class PostStore extends Store {
     public static class RemotePostPayload extends Payload<PostError> {
         public PostModel post;
         public SiteModel site;
+        public boolean isFirstTimePublish;
 
         public RemotePostPayload(PostModel post, SiteModel site) {
             this.post = post;
@@ -309,9 +310,11 @@ public class PostStore extends Store {
 
     public static class OnPostUploaded extends OnChanged<PostError> {
         public PostModel post;
+        public boolean isFirstTimePublish;
 
-        public OnPostUploaded(PostModel post) {
+        public OnPostUploaded(PostModel post, boolean isFirstTimePublish) {
             this.post = post;
+            this.isFirstTimePublish = isFirstTimePublish;
         }
     }
 
@@ -931,7 +934,7 @@ public class PostStore extends Store {
 
     private void handleFetchSinglePostCompleted(FetchPostResponsePayload payload) {
         if (payload.origin == PostAction.PUSH_POST) {
-            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
+            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post, payload.isFirstTimePublish);
             if (payload.isError()) {
                 onPostUploaded.error = payload.error;
             } else {
@@ -960,7 +963,7 @@ public class PostStore extends Store {
 
     private void handlePushPostCompleted(RemotePostPayload payload) {
         if (payload.isError()) {
-            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post);
+            OnPostUploaded onPostUploaded = new OnPostUploaded(payload.post, payload.isFirstTimePublish);
             onPostUploaded.error = payload.error;
             emitChange(onPostUploaded);
         } else {
@@ -968,13 +971,14 @@ public class PostStore extends Store {
                 // The WP.COM REST API response contains the modified post, so we're already in sync with the server
                 // All we need to do is store it and emit OnPostChanged
                 updatePost(payload.post, false);
-                emitChange(new OnPostUploaded(payload.post));
+                emitChange(new OnPostUploaded(payload.post, payload.isFirstTimePublish));
             } else {
                 // XML-RPC does not respond to new/edit post calls with the modified post
                 // Update the post locally to reflect its uploaded status, but also request a fresh copy
                 // from the server to ensure local copy matches server
                 mPostSqlUtils.insertOrUpdatePostOverwritingLocalChanges(payload.post);
-                mPostXMLRPCClient.fetchPost(payload.post, payload.site, PostAction.PUSH_POST);
+                mPostXMLRPCClient
+                        .fetchPost(payload.post, payload.site, PostAction.PUSH_POST, payload.isFirstTimePublish);
             }
         }
     }
@@ -1000,7 +1004,7 @@ public class PostStore extends Store {
 
     private void pushPost(RemotePostPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
-            mPostRestClient.pushPost(payload.post, payload.site);
+            mPostRestClient.pushPost(payload.post, payload.site, payload.isFirstTimePublish);
         } else {
             // TODO: check for WP-REST-API plugin and use it here
             PostModel postToPush = payload.post;
@@ -1008,7 +1012,7 @@ public class PostStore extends Store {
             if (TextUtils.isEmpty(postToPush.getStatus())) {
                 postToPush.setStatus(PostStatus.PUBLISHED.toString());
             }
-            mPostXMLRPCClient.pushPost(postToPush, payload.site);
+            mPostXMLRPCClient.pushPost(postToPush, payload.site, payload.isFirstTimePublish);
         }
     }
 

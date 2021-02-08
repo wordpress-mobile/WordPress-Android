@@ -161,15 +161,18 @@ public class SiteStore extends Store {
         @Nullable public List<String> supportedBlocks;
         @Nullable public Float previewWidth;
         @Nullable public Float scale;
+        @Nullable public Boolean isBeta;
 
         public FetchBlockLayoutsPayload(@NonNull SiteModel site,
                                         @Nullable List<String> supportedBlocks,
                                         @Nullable Float previewWidth,
-                                        @Nullable Float scale) {
+                                        @Nullable Float scale,
+                                        @Nullable Boolean isBeta) {
             this.site = site;
             this.supportedBlocks = supportedBlocks;
             this.previewWidth = previewWidth;
             this.scale = scale;
+            this.isBeta = isBeta;
         }
     }
 
@@ -1901,10 +1904,11 @@ public class SiteStore extends Store {
     private void fetchBlockLayouts(FetchBlockLayoutsPayload payload) {
         if (payload.site.isUsingWpComRestApi()) {
             mSiteRestClient
-                    .fetchWpComBlockLayouts(payload.site, payload.supportedBlocks, payload.previewWidth, payload.scale);
+                    .fetchWpComBlockLayouts(payload.site, payload.supportedBlocks, payload.previewWidth, payload.scale,
+                            payload.isBeta);
         } else {
             mSiteRestClient.fetchSelfHostedBlockLayouts(payload.site, payload.supportedBlocks, payload.previewWidth,
-                    payload.scale);
+                    payload.scale, payload.isBeta);
         }
     }
 
