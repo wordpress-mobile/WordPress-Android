@@ -47,12 +47,14 @@ class DynamicCardsSource
     }
 
     fun pinItem(dynamicCardType: DynamicCardType) {
-        if (pinnedItem.value == dynamicCardType) {
+        val currentlyPinnedItem = appPrefsWrapper.getPinnedDynamicCardType()
+        if (currentlyPinnedItem == dynamicCardType) {
             appPrefsWrapper.unpinDynamicCardType()
+            pinnedItem.value = null
         } else {
             appPrefsWrapper.pinDynamicCardType(dynamicCardType)
+            pinnedItem.value = dynamicCardType
         }
-        pinnedItem.value = appPrefsWrapper.getPinnedDynamicCardType()
     }
 
     fun hideItem(dynamicCardType: DynamicCardType) {

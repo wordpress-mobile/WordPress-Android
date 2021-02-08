@@ -5,8 +5,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
-import org.wordpress.android.R.color
-import org.wordpress.android.R.drawable
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -15,7 +13,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.*
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.UPDATE_SITE_TITLE
@@ -45,6 +42,25 @@ class QuickStartItemBuilderTest {
 
         quickStartCard.onMoreClick.click()
         assertThat(clickedId).isEqualTo(DynamicCardMenuModel(CUSTOMIZE_QUICK_START, false))
+    }
+
+    @Test
+    fun `builds a pinned dynamic card`() {
+        val quickStartCategory = QuickStartCategory(CUSTOMIZE, listOf(), listOf())
+        var clickedId: DynamicCardMenuModel? = null
+
+        val quickStartCard = builder.build(quickStartCategory, CUSTOMIZE_QUICK_START, { id ->
+            clickedId = id
+        }, onQuickStartTaskCardClick)
+
+        assertThat(quickStartCard.id).isEqualTo(CUSTOMIZE_QUICK_START)
+        assertThat(quickStartCard.title).isEqualTo(UiStringRes(R.string.quick_start_sites_type_customize))
+        assertThat(quickStartCard.accentColor).isEqualTo(R.color.green_20)
+        assertThat(quickStartCard.progress).isEqualTo(0)
+        assertThat(quickStartCard.taskCards).isEmpty()
+
+        quickStartCard.onMoreClick.click()
+        assertThat(clickedId).isEqualTo(DynamicCardMenuModel(CUSTOMIZE_QUICK_START, true))
     }
 
     @Test
@@ -127,8 +143,8 @@ class QuickStartItemBuilderTest {
                         QuickStartTask.UPDATE_SITE_TITLE,
                         UiStringRes(UPDATE_SITE_TITLE.titleResId),
                         UiStringRes(UPDATE_SITE_TITLE.subtitleResId),
-                        drawable.img_illustration_quick_start_task_set_site_title,
-                        color.green_20,
+                        R.drawable.img_illustration_quick_start_task_set_site_title,
+                        R.color.green_20,
                         true,
                         ListItemInteraction.create(QuickStartTask.UPDATE_SITE_TITLE, onQuickStartTaskCardClick)
                 )
