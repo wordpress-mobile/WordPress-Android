@@ -96,6 +96,24 @@ class ActivityLogSqlUtils
                 .execute()
     }
 
+    fun deleteRewindStatus(site: SiteModel): Int {
+        return WellSql
+                .delete(RewindStatusBuilder::class.java)
+                .where()
+                .equals(RewindStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+    }
+
+    fun deleteBackupDownloadStatus(site: SiteModel): Int {
+        return WellSql
+                .delete(BackupDownloadStatusBuilder::class.java)
+                .where()
+                .equals(BackupDownloadStatusTable.LOCAL_SITE_ID, site.id)
+                .endWhere()
+                .execute()
+    }
+
     fun replaceRewindStatus(site: SiteModel, rewindStatusModel: RewindStatusModel) {
         val rewindStatusBuilder = rewindStatusModel.toBuilder(site)
         WellSql.delete(RewindStatusBuilder::class.java)
