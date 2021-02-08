@@ -5,6 +5,13 @@
 * [*] Adds tablet mode in site and post/page previews [https://github.com/wordpress-mobile/WordPress-Android/pull/13787]
 * [*] Reader: show post menu for posts in Blog Preview and Search results [https://github.com/wordpress-mobile/WordPress-Android/pull/13897]
 * [**] Site Creation: Enables dot blog subdomains for each site design. [https://github.com/wordpress-mobile/WordPress-Android/pull/13917]
+* [***] Block Editor: New Block: Audio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2854, https://github.com/wordpress-mobile/gutenberg-mobile/pull/3070]
+* [**] Block Editor: Add support for setting heading anchors [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2947]
+* [**] Block Editor: Disable Unsupported Block Editor for Reusable blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3067]
+* [**] Block Editor: Add proper handling for single use blocks such as the more block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3042]
+* [***] Jetpack: Jetpack site owners, you can now run scans, fix threats, restore your site and download backup files directly from within the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/13267]
+* [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet [https://github.com/wordpress-mobile/WordPress-Android/pull/13625]
+* [**] Reader: added functionality for marking reader posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13901]
 
 16.6
 -----
@@ -15,7 +22,6 @@
 
 16.5
 -----
-* [**] Page List - Adds duplicate page functionality [https://github.com/wordpress-mobile/WordPress-Android/pull/13607]
 * [***] Block Editor: Cross-post suggestions are now available by typing the + character (or long-pressing the toolbar button labelled with an @-symbol) in a post on a P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/13184]
 * [***] Block Editor: Full-width and wide alignment support for Columns (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2919)
 * [**] Block Editor: Image block - Add link picker to the block settings and enhance link settings with auto-hide options (https://github.com/wordpress-mobile/gutenberg-mobile/pull/2841)

@@ -1,11 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-25 03:30:33+0000
+Translation-Revision-Date: 2021-02-05 15:58:22+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="rewind_another_process_running">還有其他還原正在執行。</string>
+    <string name="restore_complete_failed_icon_content_description">錯誤圖示</string>
+    <string name="restore_complete_failed_action_button_content_description">「完成」按鈕</string>
+    <string name="restore_complete_failed_description">我們無法還原你的網站。 請稍後再試一次。</string>
+    <string name="restore_complete_failed_title">還原失敗</string>
+    <string name="restore_complete_visit_site_button_content_description">「造訪網站」按鈕</string>
+    <string name="restore_complete_done_button_content_description">「完成」按鈕</string>
+    <string name="restore_complete_icon_content_description">還原圖示</string>
+    <string name="restore_complete_visit_site_action_button">造訪網站</string>
+    <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
+    <string name="restore_complete_header">你的網站已經還原</string>
+    <string name="restore_progress_additional_info">無須等待。 我們會在網站還原後通知你。</string>
+    <string name="restore_progress_icon_content_description">還原網站圖示</string>
+    <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
+    <string name="restore_progress_header">目前正在還原網站</string>
+    <string name="restore_warning_action_button_content_description">「確認還原網站」按鈕</string>
+    <string name="restore_warning_icon_content_description">紅色圓圈圖片，中間有驚嘆號</string>
+    <string name="restore_warning_action_button">確認還原網站</string>
+    <string name="restore_warning_description_with_two_parameters">是否確定要將網站還原至位於 %2$s 的 %1$s？\n 這將移除此後建立或變更的全部內容和選項。</string>
+    <string name="restore_warning_header">警告</string>
+    <string name="restore_details_action_button_content_description">「還原網站」按鈕</string>
+    <string name="restore_details_icon_content_description">還原圖示</string>
+    <string name="restore_details_action_button">還原網站</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s 是你選取的還原時間點。</string>
+    <string name="restore_details_header">還原網站</string>
+    <string name="restore_details_choose_items_header">選擇要還原的項目：</string>
+    <string name="restore">還原</string>
+    <string name="backup_download_complete_failed_icon_content_description">含有 X 圖示的雲端</string>
+    <string name="backup_download_complete_failed_action_button_content_description">「完成」按鈕</string>
+    <string name="backup_download_complete_failed_action_button">完成</string>
+    <string name="backup_download_complete_failed_description">我們無法建立你的備份。 請稍後再試一次。</string>
+    <string name="backup_download_complete_failed_title">下載失敗</string>
+    <string name="web_preview_tablet">平板電腦</string>
+    <string name="web_preview_mobile">行動裝置</string>
+    <string name="quick_start_card_menu_remove">不要再顯示</string>
+    <string name="quick_start_card_menu_hide">隱藏</string>
+    <string name="quick_start_card_menu_pin">釘選此項目</string>
+    <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
+    <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
+    <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">選取%1$s「首頁」%2$s以編輯首頁。</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
+    <string name="quick_start_dialog_edit_homepage_message">變更、新增或移除網站首頁的內容。</string>
+    <string name="quick_start_dialog_edit_homepage_title">編輯首頁</string>
+    <string name="reader_menu_mark_as_unseen">標示為未讀。</string>
+    <string name="reader_menu_mark_as_seen">標示為已讀。</string>
+    <string name="error_media_upload_failed_for_reason">上傳媒體失敗。\n%1$s</string>
+    <string name="error_media_not_enough_storage">網站儲存空間不足</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">無法切換此文章的已讀狀態</string>
+    <string name="reader_marked_post_as_unseen">已將文章標示為未讀</string>
+    <string name="reader_marked_post_as_seen">已將文章標示為已讀</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">並非所有威脅都可以修正。 請聯絡我們的支援團隊。</string>
+    <string name="threat_fix_all_status_error_message">取得修正狀態時發生錯誤。 請聯絡我們的支援團隊。</string>
+    <string name="threat_fix_all_status_success_message">已順利修正威脅。</string>
+    <string name="threat_fix_all_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
+    <string name="threat_fix_all_started_message">我們正努力在背景修正此威脅。 請稍後再回來查看。</string>
+    <string name="threat_fix_all_warning_message">請確認你要修正 %s 個作用中威脅</string>
+    <string name="threat_fix_all_warning_title">修復所有威脅</string>
+    <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
+    <string name="threat_ignore_success_message">已忽略威脅。</string>
+    <string name="threat_ignore_warning">除非完全確認其安全無害，否則你不應忽略安全性問題。 若你選擇忽略此威脅，該威脅會繼續存在於你的網站 &lt;b>%s&lt;/b>。</string>
+    <string name="threat_fix_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
+    <string name="threat_item_sub_header_status_ignored">威脅已忽略</string>
+    <string name="threat_item_sub_header_status_fixed">威脅已修正</string>
+    <string name="threat_fixing">正在修正威脅</string>
+    <string name="threats_fix_num_of_threats">修正 %s 個威脅</string>
+    <string name="scan_history_ignored_threats_tab">已忽略</string>
+    <string name="scan_history_no_threats_found">找不到任何項目</string>
+    <string name="scan_history_fixed_threats_tab">固定</string>
+    <string name="scan_history_all_threats_tab">全部</string>
+    <string name="scan_scanning_title">掃描檔案</string>
+    <string name="scan_preparing_to_scan_title">準備掃描</string>
+    <string name="scan_history_menu_title">記錄</string>
+    <string name="scan_history">掃描記錄</string>
+    <string name="backup_active_filter_empty_subtitle">請嘗試調整你的日期範圍</string>
+    <string name="backup_active_filter_empty_title">找不到相符的備份</string>
+    <string name="backup_empty_subtitle">你的第一次備份將於 24 小時內顯示於此；備份完成後，你會收到通知</string>
+    <string name="backup_empty_title">第一次備份即將準備就緒</string>
+    <string name="request_failed_message">處理要求時發生問題。 請稍後再試一次。</string>
+    <string name="gutenberg_native_move_to_bottom">移至底部</string>
+    <string name="gutenberg_native_move_block_position">移動區塊位置</string>
     <string name="label_control_upload">上傳</string>
     <string name="jetpack_icon_content_description">圖示</string>
     <string name="backup_download_complete_info">我們也已將檔案連結透過電子郵件傳送給你。</string>
@@ -34,6 +115,10 @@ Language: zh_TW
     <string name="pages_item_date_subtitle">%1$s ·</string>
     <string name="suggestion_xpost">多重發佈</string>
     <string name="suggestion_user">使用者</string>
+    <string name="suggestion_no_matching">沒有相符的 %s。</string>
+    <string name="suggestion_problem">載入建議時發生問題。</string>
+    <string name="suggestion_none">無可用的 %s 建議。</string>
+    <string name="suggestion_selection_needed">請輸入字詞以篩選建議清單。</string>
     <string name="threat_get_free_estimate">免費估價</string>
     <string name="threat_ignore">忽略威脅</string>
     <string name="threat_fix">威脅處理</string>
@@ -122,6 +207,8 @@ Language: zh_TW
     <string name="new_site_creation_domain_header_title">選擇網域</string>
     <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
+    <string name="reader_btn_following_comments">透過電子郵件追蹤對話</string>
+    <string name="reader_btn_follow_comments">透過電子郵件追蹤對話</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">無法取消訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_could_not_subscribe_error">無法訂閱這篇文章的留言</string>
     <string name="reader_follow_comments_get_status_error">擷取文章訂閱狀態時發生錯誤</string>
@@ -235,6 +322,7 @@ Language: zh_TW
     <string name="gutenberg_native_add_this_telephone_link">新增此電話連結</string>
     <string name="gutenberg_native_add_this_link">新增此連結</string>
     <string name="gutenberg_native_add_this_email_link">新增此電子郵件連結</string>
+    <string name="suggestion_no_connection">沒有網際網路連線。\n建議無法使用。</string>
     <string name="typeface_label_shrikhand">粗體</string>
     <string name="typeface_label_space_mono">現代</string>
     <string name="typeface_label_pacifico">趣味</string>
@@ -424,11 +512,13 @@ Language: zh_TW
     <string name="status_and_visibility">狀態及可見度</string>
     <string name="update_now">馬上更新</string>
     <string name="gutenberg_native_open_block_actions_menu">開啟區塊操作選單</string>
+    <string name="gutenberg_native_move_to_top">移至頂端</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">按兩下以開啟含有可用選項的底部工作表</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">按兩下以開啟含有可用選項的操作工作表</string>
     <string name="pages_cannot_be_started">目前我們無法開啟頁面。請稍後再試一次</string>
     <string name="pages_set_as_posts_page">設為文章頁面</string>
     <string name="pages_set_as_homepage">設為首頁</string>
+    <string name="suggestion_invalid">%s 不是有效的 %s</string>
     <string name="site_settings_select_page">選取頁面</string>
     <string name="site_settings_posts_page">文章列表頁面</string>
     <string name="site_settings_static_homepage">靜態首頁</string>
@@ -642,6 +732,7 @@ Language: zh_TW
     <string name="posts_cannot_be_started">目前無法開啟文章。請稍後再試一次</string>
     <string name="site_cannot_be_loaded">目前無法載入你的網站資料。請稍後再試一次</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress 媒體庫</string>
+    <string name="gutenberg_native_unsupported">不支援</string>
     <string name="gutenberg_native_ungroup">取消群組</string>
     <string name="gutenberg_native_translate">翻譯</string>
     <string name="gutenberg_native_title">標題：</string>

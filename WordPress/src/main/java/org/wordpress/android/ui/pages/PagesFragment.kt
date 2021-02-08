@@ -447,11 +447,12 @@ class PagesFragment : Fragment(), ScrollableViewInitializedListener {
         })
 
         viewModel.uploadFinishedAction.observe(viewLifecycleOwner, Observer {
-            it?.let { (page, isError) ->
+            it?.let { (page, isError, isFirstTimePublish) ->
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
                         activity.findViewById(R.id.coordinator),
                         isError,
+                        isFirstTimePublish,
                         page.post,
                         null,
                         page.site

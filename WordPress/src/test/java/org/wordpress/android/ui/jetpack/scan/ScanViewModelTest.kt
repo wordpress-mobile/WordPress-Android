@@ -47,11 +47,12 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 
-private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 2
-private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 3
-private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 4
+private const val ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION = 3
+private const val ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION = 4
+private const val ON_THREAT_ITEM_CLICKED_PARAM_POSITION = 5
 
 @ExperimentalCoroutinesApi
 @InternalCoroutinesApi
@@ -66,6 +67,7 @@ class ScanViewModelTest : BaseUnitTest() {
     @Mock private lateinit var fixThreatsUseCase: FixThreatsUseCase
     @Mock private lateinit var fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase
     @Mock private lateinit var scanStore: ScanStore
+    @Mock private lateinit var scanTracker: ScanTracker
 
     private lateinit var viewModel: ScanViewModel
 
@@ -85,16 +87,18 @@ class ScanViewModelTest : BaseUnitTest() {
             fixThreatsUseCase,
             fetchFixThreatsStatusUseCase,
             scanStore,
+            scanTracker,
             TEST_DISPATCHER
         )
         whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(fakeScanStateModel)))
-        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any())).thenAnswer {
-            createDummyScanStateListItems(
-                it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION),
-                it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
-            )
-        }
+        whenever(scanStateItemsBuilder.buildScanStateListItems(any(), any(), any(), any(), any(), any(), any()))
+            .thenAnswer {
+                createDummyScanStateListItems(
+                    it.getArgument(ON_START_SCAN_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_FIX_ALL_THREATS_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_THREAT_ITEM_CLICKED_PARAM_POSITION)
+                )
+            }
         whenever(scanStore.getScanStateForSite(site)).thenReturn(fakeScanStateModel)
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
             flowOf(FetchFixThreatsState.Complete)
@@ -418,30 +422,6 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when ok button on fix threats action confirmation dialog is clicked, then action buttons are disabled`() =
-        test {
-            val observers = init()
-
-            triggerFixThreatsAction(observers)
-
-            val contentItems = (observers.uiStates.last() as ContentUiState).items
-            val disabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { !it.isEnabled }
-            assertThat(disabledActionButtons.size).isEqualTo(2)
-        }
-
-    @Test
-    fun `given invalid response, when fix threats action is triggered, then action buttons are enabled`() = test {
-        whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Failure.RemoteRequestFailure)
-        val observers = init()
-
-        triggerFixThreatsAction(observers)
-
-        val contentItems = (observers.uiStates.last() as ContentUiState).items
-        val enabledActionButtons = contentItems.filterIsInstance<ActionButtonState>().map { it.isEnabled }
-        assertThat(enabledActionButtons.size).isEqualTo(2)
-    }
-
-    @Test
     fun `given threats are fixed, when threats fix status is checked, then success message is shown`() =
         test {
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
@@ -490,7 +470,12 @@ class ScanViewModelTest : BaseUnitTest() {
         test {
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = true,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
@@ -508,47 +493,18 @@ class ScanViewModelTest : BaseUnitTest() {
             whenever(fetchScanStateUseCase.fetchScanState(site)).thenReturn(flowOf(Success(mock())))
             whenever(fixThreatsUseCase.fixThreats(any(), any())).thenReturn(FixThreatsState.Success)
             whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = false))
+                    flowOf(
+                            FetchFixThreatsState.Failure.FixFailure(
+                                    containsOnlyErrors = false,
+                                    mightBeMissingCredentials = false
+                            )
+                    )
             )
             val observers = init()
 
             triggerFixThreatsAction(observers)
 
             verify(fetchScanStateUseCase, times(2)).fetchScanState(site = site)
-        }
-
-    @Test
-    fun `given threats are fixing, when threats fix status is checked, then an indeterminate progress bar is shown`() =
-        test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.InProgress(mock()))
-            )
-            val observers = init()
-
-            fetchFixThreatsStatus(observers)
-
-            val indeterminateProgressBars = (observers.uiStates.last() as ContentUiState).items
-                .filterIsInstance<ProgressState>()
-                .filter { it.isIndeterminate && it.isVisible }
-
-            assertThat(indeterminateProgressBars.isNotEmpty()).isTrue
-        }
-
-    @Test
-    fun `given threats not fixing, when threats fix status is checked, then indeterminate progress bar is not shown`() =
-        test {
-            whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-                flowOf(FetchFixThreatsState.Complete)
-            )
-            val observers = init()
-
-            fetchFixThreatsStatus(observers)
-
-            val indeterminateProgressBars = (observers.uiStates.last() as ContentUiState).items
-                .filterIsInstance<ProgressState>()
-                .filter { it.isIndeterminate && it.isVisible }
-
-            assertThat(indeterminateProgressBars.isEmpty()).isTrue
         }
 
     @Test
@@ -592,7 +548,12 @@ class ScanViewModelTest : BaseUnitTest() {
             test {
         val messages = init().snackBarMsgs
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
 
         viewModel.onFixStateRequested(threatId = 11L)
@@ -604,7 +565,12 @@ class ScanViewModelTest : BaseUnitTest() {
     fun `given FixFailure(onlyErr=true) returned, when fetchStatus NOT invoked by user, then snackbar is NOT shown`() =
             test {
         whenever(fetchFixThreatsStatusUseCase.fetchFixThreatsStatus(any(), any())).thenReturn(
-            flowOf(FetchFixThreatsState.Failure.FixFailure(containsOnlyErrors = true))
+                flowOf(
+                        FetchFixThreatsState.Failure.FixFailure(
+                                containsOnlyErrors = true,
+                                mightBeMissingCredentials = false
+                        )
+                )
         )
         val scanStateModelWithFixableThreats = fakeScanStateModel
             .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
@@ -651,7 +617,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ),
         ThreatItemState(
             threatId = fakeThreatId,
-            isFixable = true,
+            isFixing = false,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,

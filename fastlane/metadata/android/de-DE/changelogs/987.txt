@@ -1,0 +1,7 @@
+16.6:
+Neuerungen
+Websiteerstellung: Beim Durchsuchen von Homepage-Designs kannst du eine Vorschau für Mobiltelefone, Tablets und Desktops anzeigen und zwischen diesen wechseln.
+Reader: Für mehr Übersichtlichkeit haben wir eine Filterfunktion zu deinem Tab abonnierter P2-Seiten hinzugefügt.
+Schnellstart: Wir haben die Tour verbessert, die dich durch die App führt, und Schritte zum Prüfen von Seiten und Bearbeiten deiner Homepage hinzugefügt.
+
+

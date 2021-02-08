@@ -3,6 +3,7 @@ package org.wordpress.android.ui.mysite
 import android.text.SpannableString
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
@@ -17,9 +18,11 @@ import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
@@ -86,7 +89,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.refresh()
 
-        assertModel(2)
+        assertModel(1)
     }
 
     @Test
@@ -97,7 +100,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.startQuickStart()
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
-        assertModel(2)
+        assertModel(1)
     }
 
     @Test
@@ -109,7 +112,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
-        assertThat(source.take(3).toList().last().activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(source.take(1).toList().last().activeTask).isEqualTo(PUBLISH_POST)
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
     }
 
@@ -136,7 +139,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
-        val update = source.take(2).toList().last()
+        val update = source.take(1).toList().last()
         assertThat(update.activeTask).isNull()
         assertThat(update.categories).isNotEmpty()
     }
@@ -173,7 +176,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
-        val update = source.take(2).toList().last()
+        val update = source.take(1).toList().last()
         assertThat(update.activeTask).isNull()
     }
 
@@ -186,8 +189,33 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
         verifyZeroInteractions(eventBus)
-        val update = source.take(3).toList().last()
+        val update = source.take(1).toList().last()
         assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
+    }
+
+    @Test
+    fun `marks EDIT_HOMEPAGE task as done when site showing Posts instead of Homepage`() = test {
+        val updatedSiteId = 2
+        site.id = updatedSiteId
+        site.showOnFront = ShowOnFront.POSTS.value
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
+
+        quickStartRepository.buildSource(updatedSiteId)
+
+        verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
+    }
+
+    @Test
+    fun `does not mark EDIT_HOMEPAGE task as done when site showing Homepage`() = test {
+        val updatedSiteId = 2
+        site.id = updatedSiteId
+        site.showOnFront = ShowOnFront.PAGE.value
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+
+        quickStartRepository.buildSource(updatedSiteId)
+
+        verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
 
     @Test
@@ -196,7 +224,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(CUSTOMIZE.toString())
 
-        val quickStartUpdate = source.take(2).toList().last()
+        val quickStartUpdate = source.take(1).toList().last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(GROW)
@@ -209,7 +237,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(GROW.toString())
 
-        val quickStartUpdate = source.take(2).toList().last()
+        val quickStartUpdate = source.take(1).toList().last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
