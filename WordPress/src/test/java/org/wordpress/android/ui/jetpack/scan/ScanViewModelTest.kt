@@ -371,7 +371,7 @@ class ScanViewModelTest : BaseUnitTest() {
         }
 
     @Test
-    fun `when fix threats confirmation dialog action is triggered, then fix threats confirmation dialog is shown`() =
+    fun `when fix threat confirmation dialog action is triggered, then fix threat confirmation dialog is shown`() =
         test {
             val scanStateModelWithFixableThreats = fakeScanStateModel
                 .copy(threats = listOf(ThreatTestData.fixableThreatInCurrentStatus))
@@ -387,7 +387,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
                 assertThat(message).isEqualTo(
                     UiStringResWithParams(
-                        R.string.threat_fix_all_warning_message,
+                        R.string.threat_fix_single_warning_message,
                         listOf(UiStringText("1"))
                     )
                 )

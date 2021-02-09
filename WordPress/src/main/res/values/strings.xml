@@ -1158,7 +1158,8 @@
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
-    <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
+    <string name="threat_fix_all_warning_message">Please confirm you want to fix all %s active threats.</string>
+    <string name="threat_fix_single_warning_message">Please confirm you want to fix %s active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
     <string name="threat_fix_single_status_success_message">Threat was successfully fixed.</string>

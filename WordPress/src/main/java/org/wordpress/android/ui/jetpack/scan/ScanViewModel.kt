@@ -246,7 +246,9 @@ class ScanViewModel @Inject constructor(
             OpenFixThreatsConfirmationDialog(
                 title = UiStringRes(R.string.threat_fix_all_warning_title),
                 message = UiStringResWithParams(
-                    R.string.threat_fix_all_warning_message,
+                    if (fixableThreatIds.size > 1) {
+                        R.string.threat_fix_all_warning_message
+                    } else R.string.threat_fix_single_warning_message,
                     listOf(UiStringText("${fixableThreatIds.size}"))
                 ),
                 okButtonAction = this@ScanViewModel::fixAllThreats
