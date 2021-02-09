@@ -525,12 +525,6 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
-    public void gotUnregisteredEmail(String email) {
-        SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
-        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
-    }
-
-    @Override
     public void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                              String service) {
         SignupConfirmationFragment signupConfirmationFragment =
