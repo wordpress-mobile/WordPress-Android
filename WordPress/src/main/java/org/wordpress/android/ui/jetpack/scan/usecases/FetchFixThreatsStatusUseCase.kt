@@ -67,8 +67,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
             isFixing -> InProgress(fixingThreatIds)
             isFixingComplete -> Complete
             else -> {
-                // TODO ashiagr replace AppLog tag
-                if (errors.isNotEmpty()) AppLog.e(T.API, models.filter { it.error != null }.toString())
+                if (errors.isNotEmpty()) AppLog.e(T.JETPACK_SCAN, models.filter { it.error != null }.toString())
                 Failure.FixFailure(
                         containsOnlyErrors = errors.size == fixableThreatIds.size,
                         mightBeMissingCredentials = mightBeMissingCredentials
