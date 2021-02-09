@@ -281,12 +281,8 @@
     <ID>LoopWithTooManyJumpStatements:BackupDownloadProgressChecker.kt$BackupDownloadProgressChecker$while (coroutineContext.isActive) { val downloadStatusForSite = activityLogStore.getBackupDownloadStatusForSite(site) if (downloadStatusForSite != null &amp;&amp; downloadStatusForSite.downloadId == downloadId) { if (downloadStatusForSite.progress == null) { result = OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE) break } } result = activityLogStore.fetchBackupDownloadState( FetchBackupDownloadStatePayload( site ) ) if (result.isError) { break } delay(checkDelay) }</ID>
     <ID>LoopWithTooManyJumpStatements:RemoveMediaUseCase.kt$RemoveMediaUseCase$for (mediaId in mediaIds) { if (!TextUtils.isEmpty(mediaId)) { // make sure the MediaModel exists val mediaModel = try { mediaStore.getMediaWithLocalId(Integer.valueOf(mediaId)) ?: continue } catch (e: NumberFormatException) { AppLog.e(AppLog.T.MEDIA, "Invalid media id: $mediaId") continue } // also make sure it's not being uploaded anywhere else (maybe on some other Post, // simultaneously) if (mediaModel.uploadState != null &amp;&amp; mediaUtils.isLocalFile(mediaModel.uploadState.toLowerCase(Locale.ROOT)) &amp;&amp; !uploadService.isPendingOrInProgressMediaUpload(mediaModel)) { dispatcher.dispatch(MediaActionBuilder.newRemoveMediaAction(mediaModel)) } } }</ID>
     <ID>LoopWithTooManyJumpStatements:RewindProgressChecker.kt$RewindProgressChecker$while (coroutineContext.isActive) { val rewindStatusForSite = activityLogStore.getRewindStatusForSite(site) val rewind = rewindStatusForSite?.rewind if (rewind != null &amp;&amp; rewind.restoreId == restoreId) { if (rewind.status == FINISHED) { result = OnRewindStatusFetched(FETCH_REWIND_STATE) break } else if (rewind.status == FAILED) { result = OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR, rewind.reason), FETCH_REWIND_STATE) break } } result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site)) if (result.isError) { break } delay(checkDelay) }</ID>
-    <ID>MagicNumber:ActivityLogListItem.kt$ActivityLogListItem.ViewType.FOOTER$3</ID>
-    <ID>MagicNumber:ActivityLogListItem.kt$ActivityLogListItem.ViewType.LOADING$4</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$3</ID>
     <ID>MagicNumber:ActivityViewHolder.kt$ActivityViewHolder$50</ID>
-    <ID>MagicNumber:BackupDownloadStates.kt$StateType.ERROR$3</ID>
-    <ID>MagicNumber:BackupDownloadStep.kt$BackupDownloadStep.ERROR$3</ID>
     <ID>MagicNumber:BarChartViewHolder.kt$BarChartViewHolder$10</ID>
     <ID>MagicNumber:BarChartViewHolder.kt$BarChartViewHolder$100</ID>
     <ID>MagicNumber:BarChartViewHolder.kt$BarChartViewHolder$100F</ID>
@@ -322,9 +318,6 @@
     <ID>MagicNumber:GifPickerActivity.kt$GifPickerActivity$3</ID>
     <ID>MagicNumber:GifPickerActivity.kt$GifPickerActivity$4</ID>
     <ID>MagicNumber:ImprovedMySiteFragment.kt$ImprovedMySiteFragment$100</ID>
-    <ID>MagicNumber:JetpackAvailableItemsProvider.kt$JetpackAvailableItemsProvider.JetpackAvailableItemType.CONTENTS$5</ID>
-    <ID>MagicNumber:JetpackAvailableItemsProvider.kt$JetpackAvailableItemsProvider.JetpackAvailableItemType.ROOTS$4</ID>
-    <ID>MagicNumber:JetpackAvailableItemsProvider.kt$JetpackAvailableItemsProvider.JetpackAvailableItemType.SQLS$3</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$3</ID>
     <ID>MagicNumber:LargeValueFormatter.kt$LargeValueFormatter$5</ID>
     <ID>MagicNumber:LatestPostSummaryMapper.kt$LatestPostSummaryMapper$30</ID>
@@ -343,11 +336,7 @@
     <ID>MagicNumber:MySiteViewModel.kt$MySiteViewModel$600</ID>
     <ID>MagicNumber:NotificationsListFragmentPage.kt$NotificationsListFragmentPage$1000L</ID>
     <ID>MagicNumber:OverviewMapper.kt$OverviewMapper$100</ID>
-    <ID>MagicNumber:OverviewMapper.kt$OverviewMapper.SelectedType.Comments$3</ID>
     <ID>MagicNumber:OverviewUseCase.kt$OverviewUseCase$86400000.0</ID>
-    <ID>MagicNumber:PageItem.kt$PageItem.Type.EMPTY$3</ID>
-    <ID>MagicNumber:PageItem.kt$PageItem.Type.PARENT$4</ID>
-    <ID>MagicNumber:PageItem.kt$PageItem.Type.TOP_LEVEL_PARENT$5</ID>
     <ID>MagicNumber:PageItemViewHolder.kt$PageItemViewHolder.PageViewHolder$16</ID>
     <ID>MagicNumber:PageParentAdapter.kt$PageParentAdapter$200</ID>
     <ID>MagicNumber:PageParentFragment.kt$PageParentFragment$8</ID>
@@ -355,28 +344,9 @@
     <ID>MagicNumber:PagesFragment.kt$PagesFragment$8</ID>
     <ID>MagicNumber:PluginBrowserViewModel.kt$PluginBrowserViewModel$250</ID>
     <ID>MagicNumber:PostDayViewsMapper.kt$PostDayViewsMapper$100</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_CANCEL_PENDING_AUTO_UPLOAD$14</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_COPY$16</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_DELETE$6</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_DELETE_PERMANENTLY$13</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_MORE$9</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_MOVE_TO_DRAFT$12</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_PREVIEW$3</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_PUBLISH$7</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_RETRY$11</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_SHOW_MOVE_TRASHED_POST_TO_DRAFT_DIALOG$15</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_STATS$4</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_SUBMIT$10</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_SYNC$8</ID>
-    <ID>MagicNumber:PostListButtonType.kt$PostListButtonType.BUTTON_TRASH$5</ID>
     <ID>MagicNumber:PostListItemViewHolder.kt$PostListItemViewHolder.Standard$1000</ID>
-    <ID>MagicNumber:PostListRemotePreviewState.kt$PostListRemotePreviewState.PREVIEWING$3</ID>
-    <ID>MagicNumber:PostListRemotePreviewState.kt$PostListRemotePreviewState.REMOTE_AUTO_SAVE_PREVIEW_ERROR$4</ID>
     <ID>MagicNumber:PostModelUploadStatusTracker.kt$PostModelUploadStatusTracker$100</ID>
     <ID>MagicNumber:PostingActivityUseCase.kt$PostingActivityUseCase$2</ID>
-    <ID>MagicNumber:PreviewMode.kt$PreviewMode.DESKTOP$1200</ID>
-    <ID>MagicNumber:PreviewMode.kt$PreviewMode.MOBILE$400</ID>
-    <ID>MagicNumber:PreviewMode.kt$PreviewMode.TABLET$800</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$10</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$10000</ID>
     <ID>MagicNumber:PublishSettingsViewModel.kt$PublishSettingsViewModel$60</ID>
@@ -390,18 +360,8 @@
     <ID>MagicNumber:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$403</ID>
     <ID>MagicNumber:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$404</ID>
     <ID>MagicNumber:ReaderTagRepository.kt$ReaderTagRepository$5</ID>
-    <ID>MagicNumber:ReaderTracker.kt$ReaderTab.A8C$6</ID>
-    <ID>MagicNumber:ReaderTracker.kt$ReaderTab.CUSTOM$5</ID>
-    <ID>MagicNumber:ReaderTracker.kt$ReaderTab.LIKED$3</ID>
-    <ID>MagicNumber:ReaderTracker.kt$ReaderTab.P2$7</ID>
-    <ID>MagicNumber:ReaderTracker.kt$ReaderTab.SAVED$4</ID>
     <ID>MagicNumber:RequestThrottler.kt$RequestThrottler$1000L</ID>
     <ID>MagicNumber:RequestThrottler.kt$RequestThrottler$60</ID>
-    <ID>MagicNumber:RestoreErrorTypes.kt$RestoreErrorTypes.OtherRequestRunning$3</ID>
-    <ID>MagicNumber:RestoreStates.kt$StateType.COMPLETE$3</ID>
-    <ID>MagicNumber:RestoreStates.kt$StateType.ERROR$4</ID>
-    <ID>MagicNumber:RestoreStep.kt$RestoreStep.COMPLETE$3</ID>
-    <ID>MagicNumber:RestoreStep.kt$RestoreStep.ERROR$4</ID>
     <ID>MagicNumber:SaveInitialPostUseCase.kt$SaveInitialPostUseCase$1000</ID>
     <ID>MagicNumber:SearchInputWithHeader.kt$SearchInputWithHeader$200</ID>
     <ID>MagicNumber:SiteCreationMainVM.kt$SiteCreationMainVM$3</ID>
@@ -423,32 +383,15 @@
     <ID>MagicNumber:StatsUtils.kt$StatsUtils$1_000_000_000_000_000L</ID>
     <ID>MagicNumber:StatsUtils.kt$StatsUtils$1_000_000_000_000_000_000L</ID>
     <ID>MagicNumber:StatsViewAllFragment.kt$StatsViewAllFragment$100</ID>
-    <ID>MagicNumber:SubfilterListItem.kt$SubfilterListItem.ItemType.DIVIDER$3</ID>
-    <ID>MagicNumber:SubfilterListItem.kt$SubfilterListItem.ItemType.TAG$4</ID>
     <ID>MagicNumber:UiHelpers.kt$UiHelpers.Companion$0.8</ID>
     <ID>MagicNumber:UploadWorker.kt$6</ID>
     <ID>MagicNumber:UploadWorker.kt$8</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.BACKUP_RESTORE_BULLET$15</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.BACKUP_RESTORE_FOOTNOTE$13</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.BACKUP_RESTORE_SUB_HEADER$10</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.CHECKBOX$9</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.PRIMARY_ACTION_BUTTON$3</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.PROGRESS$14</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.SECONDARY_ACTION_BUTTON$4</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREATS_HEADER$5</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREAT_CONTEXT_LINES$11</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREAT_DETAIL_HEADER$6</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREAT_FILE_NAME$12</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREAT_ITEM$8</ID>
-    <ID>MagicNumber:ViewType.kt$ViewType.THREAT_ITEM_LOADING_SKELETON$7</ID>
     <ID>MagicNumber:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$255</ID>
     <ID>MagicNumber:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined$255f</ID>
     <ID>MagicNumber:WPTooltipView.kt$WPTooltipView$400</ID>
     <ID>MagicNumber:WPTooltipView.kt$WPTooltipView$90f</ID>
-    <ID>MagicNumber:WPTooltipView.kt$WPTooltipView.TooltipPosition.BELOW$3</ID>
     <ID>MagicNumber:WPWebView.kt$21</ID>
     <ID>MagicNumber:WPWebView.kt$22</ID>
-    <ID>MagicNumber:WPWebViewUsageCategory.kt$WPWebViewUsageCategory.REMOTE_PREVIEWING$3</ID>
     <ID>MagicNumber:WidgetUtils.kt$WidgetUtils$300</ID>
     <ID>MaxLineLength:AppConfig.kt$AppConfig$*</ID>
     <ID>MaxLineLength:EncryptedLogWriter.kt$EncryptedLogWriter$*</ID>
