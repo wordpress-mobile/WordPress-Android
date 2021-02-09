@@ -1,6 +1,11 @@
-What’s new?
-Site Creation: When browsing homepage designs, you can view and switch between mobile, tablet, and desktop previews.
-Reader: For better organization, we added a filter feature to your tab of followed P2 sites.
-Quick Start: We improved the tour that guides you through the app, adding steps to review pages and edit your homepage.
+* [*] Adds tablet mode in site and post/page previews [https://github.com/wordpress-mobile/WordPress-Android/pull/13787]
+* [*] Reader: show post menu for posts in Blog Preview and Search results [https://github.com/wordpress-mobile/WordPress-Android/pull/13897]
+* [**] Site Creation: Enables dot blog subdomains for each site design. [https://github.com/wordpress-mobile/WordPress-Android/pull/13917]
+* [***] Block Editor: New Block: Audio [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2854, https://github.com/wordpress-mobile/gutenberg-mobile/pull/3070]
+* [**] Block Editor: Add support for setting heading anchors [https://github.com/wordpress-mobile/gutenberg-mobile/pull/2947]
+* [**] Block Editor: Disable Unsupported Block Editor for Reusable blocks [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3067]
+* [**] Block Editor: Add proper handling for single use blocks such as the more block [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3042]
+* [***] Jetpack: Jetpack site owners, you can now run scans, fix threats, restore your site and download backup files directly from within the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/13267]
+* [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet [https://github.com/wordpress-mobile/WordPress-Android/pull/13625]
+* [**] Reader: added functionality for marking reader posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13901]
 
- 

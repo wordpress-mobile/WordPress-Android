@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+16.8
+-----
+
+
 16.7
 -----
 * [*] Adds tablet mode in site and post/page previews [https://github.com/wordpress-mobile/WordPress-Android/pull/13787]
