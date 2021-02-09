@@ -35,11 +35,9 @@ import javax.inject.Named
 private const val RETRY_DELAY = 300L
 
 class ScanHistoryViewModel @Inject constructor(
-    private val scanStore: ScanStore,
     private val scanTracker: ScanTracker,
     private val fetchScanHistoryUseCase: FetchScanHistoryUseCase,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -64,20 +62,10 @@ class ScanHistoryViewModel @Inject constructor(
             if (isRetry) {
                 delay(RETRY_DELAY)
             }
-            when (fetchScanHistoryUseCase.fetch(site)) {
-                Success -> {
-                    withContext(bgDispatcher) {
-                        _threats.postValue(scanStore.getScanHistoryForSite(site))
-                    }
-                }
-                NetworkUnavailable -> {
-                    scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.OFFLINE)
-                    _uiState.value = NoConnection(this@ScanHistoryViewModel::onRetryClicked)
-                }
-                RemoteRequestFailure -> {
-                    scanTracker.trackOnError(ScanTracker.ErrorAction.FETCH_SCAN_HISTORY, ScanTracker.ErrorCause.REMOTE)
-                    _uiState.value = RequestFailed(this@ScanHistoryViewModel::onRetryClicked)
-                }
+            when (val result = fetchScanHistoryUseCase.fetch(site)) {
+                is Success -> _threats.postValue(result.threatModels)
+                is NetworkUnavailable -> _uiState.value = NoConnection(this@ScanHistoryViewModel::onRetryClicked)
+                is RemoteRequestFailure -> _uiState.value = RequestFailed(this@ScanHistoryViewModel::onRetryClicked)
             }
         }
     }
