@@ -61,7 +61,10 @@ class MySiteStateProvider(
 
     private fun siteIconProgressSource(): MySiteSource<ShowSiteIconProgressBar> =
             object : MySiteSource<ShowSiteIconProgressBar> {
-                override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<ShowSiteIconProgressBar> {
+                override fun buildSource(
+                    coroutineScope: CoroutineScope,
+                    siteId: Int
+                ): LiveData<ShowSiteIconProgressBar> {
                     return selectedSiteRepository.showSiteIconProgressBar
                             .map { ShowSiteIconProgressBar(it == true) }
                             .distinctUntilChanged()

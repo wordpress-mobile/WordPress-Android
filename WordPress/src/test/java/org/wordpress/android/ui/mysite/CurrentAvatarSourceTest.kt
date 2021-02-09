@@ -4,17 +4,14 @@ import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
-class CurrentAvatarSourceTest: BaseUnitTest() {
+class CurrentAvatarSourceTest : BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var accountModel: AccountModel
     private lateinit var currentAvatarSource: CurrentAvatarSource
