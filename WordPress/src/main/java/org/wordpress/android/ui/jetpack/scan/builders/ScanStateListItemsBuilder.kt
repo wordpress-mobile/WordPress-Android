@@ -70,7 +70,10 @@ class ScanStateListItemsBuilder @Inject constructor(
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
-        val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
+        val scanHeaderResId = if (fixingThreatIds.size > 1) {
+            R.string.scan_fixing_threats_title
+        } else R.string.scan_fixing_threat_title
+        val scanHeader = HeaderState(UiStringRes(scanHeaderResId))
         val scanDescriptionResId = if (fixingThreatIds.size > 1) {
             R.string.scan_fixing_threats_description
         } else R.string.scan_fixing_threat_description

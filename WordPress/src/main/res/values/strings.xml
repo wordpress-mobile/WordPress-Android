@@ -1081,6 +1081,7 @@
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
     <string name="scan_fixing_threats_title">Fixing Threats</string>
+    <string name="scan_fixing_threat_title">Fixing Threat</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_fixing_threats_description">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_fixing_threat_description">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
