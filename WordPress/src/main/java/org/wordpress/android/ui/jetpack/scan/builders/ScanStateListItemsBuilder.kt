@@ -36,7 +36,7 @@ class ScanStateListItemsBuilder @Inject constructor(
     private val threatDetailsListItemsBuilder: ThreatDetailsListItemsBuilder,
     private val scanStore: ScanStore
 ) {
-    fun buildScanStateListItems(
+    suspend fun buildScanStateListItems(
         model: ScanStateModel,
         site: SiteModel,
         fixingThreatIds: List<Long>,
@@ -66,7 +66,7 @@ class ScanStateListItemsBuilder @Inject constructor(
         }
     }
 
-    private fun buildThreatsFixingStateItems(fixingThreatIds: List<Long>): List<JetpackListItemState> {
+    private suspend fun buildThreatsFixingStateItems(fixingThreatIds: List<Long>): List<JetpackListItemState> {
         val items = mutableListOf<JetpackListItemState>()
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
