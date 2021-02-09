@@ -82,21 +82,28 @@ class ScanStore @Inject constructor(
         }
     }
 
-    fun getScanStateForSite(site: SiteModel): ScanStateModel? {
-        val scanStateModel = scanSqlUtils.getScanStateForSite(site)
-        val threats = scanStateModel?.let { threatSqlUtils.getThreats(site, SCAN_THREAT_STATUSES) }
-        return scanStateModel?.copy(threats = threats)
-    }
+    suspend fun getScanStateForSite(site: SiteModel) =
+        coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "getScanStateForSite") {
+            val scanStateModel = scanSqlUtils.getScanStateForSite(site)
+            val threats = scanStateModel?.let { threatSqlUtils.getThreats(site, SCAN_THREAT_STATUSES) }
+            scanStateModel?.copy(threats = threats)
+        }
 
-    fun getScanHistoryForSite(site: SiteModel): List<ThreatModel> {
-        return threatSqlUtils.getThreats(site, SCAN_HISTORY_THREAT_STATUSES)
-    }
+    suspend fun getScanHistoryForSite(site: SiteModel) =
+        coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "getScanHistoryForSite") {
+            threatSqlUtils.getThreats(site, SCAN_HISTORY_THREAT_STATUSES)
+        }
 
-    fun getThreatModelByThreatId(threatId: Long) = threatSqlUtils.getThreatByThreatId(threatId)
+    suspend fun getThreatModelByThreatId(threatId: Long) =
+        coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "getThreatModelByThreatId") {
+            threatSqlUtils.getThreatByThreatId(threatId)
+        }
 
-    fun addOrUpdateScanStateModelForSite(action: ScanAction, site: SiteModel, scanStateModel: ScanStateModel) {
-        scanSqlUtils.replaceScanState(site, scanStateModel)
-        storeThreatsWithStatuses(action, site, scanStateModel.threats, SCAN_THREAT_STATUSES)
+    suspend fun addOrUpdateScanStateModelForSite(action: ScanAction, site: SiteModel, scanStateModel: ScanStateModel) {
+        coroutineEngine.withDefaultContext(AppLog.T.JETPACK_SCAN, this, "addOrUpdateScanStateModelForSite") {
+            scanSqlUtils.replaceScanState(site, scanStateModel)
+            storeThreatsWithStatuses(action, site, scanStateModel.threats, SCAN_THREAT_STATUSES)
+        }
     }
 
     override fun onRegister() {
@@ -108,7 +115,7 @@ class ScanStore @Inject constructor(
         return storeScanState(payload)
     }
 
-    private fun storeScanState(payload: FetchedScanStatePayload): OnScanStateFetched {
+    private suspend fun storeScanState(payload: FetchedScanStatePayload): OnScanStateFetched {
         return if (payload.error != null) {
             OnScanStateFetched(payload.error, FETCH_SCAN_STATE)
         } else {
