@@ -1090,6 +1090,7 @@
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
     <string name="scan_idle_with_threats_description">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_with_threat_description">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hours ago</string>

@@ -256,9 +256,12 @@ class ScanStateListItemsBuilder @Inject constructor(
     ): DescriptionState {
         val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
 
+        val descriptionTextResId = if (threatsCount > 1) {
+            R.string.scan_idle_with_threats_description
+        } else R.string.scan_idle_with_threat_description
         val descriptionText = htmlMessageUtils
             .getHtmlMessageFromStringFormatResId(
-                R.string.scan_idle_with_threats_description,
+                descriptionTextResId,
                 "<b>$threatsCount</b>",
                 "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
                 clickableText
