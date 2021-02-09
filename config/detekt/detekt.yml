@@ -232,7 +232,7 @@ exceptions:
 formatting:
   active: true
   android: false
-  autoCorrect: true
+  autoCorrect: false
   AnnotationOnSeparateLine:
     active: false
     autoCorrect: true
