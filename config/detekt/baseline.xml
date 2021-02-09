@@ -95,20 +95,6 @@
     <ID>EmptyFunctionBlock:WidgetBlockListProvider.kt$WidgetBlockListProvider${ }</ID>
     <ID>EmptyFunctionBlock:WordPressGlideModule.kt$WordPressGlideModule${}</ID>
     <ID>EmptySecondaryConstructor:WPEditTextWithChipsOutlined.kt$WPEditTextWithChipsOutlined.SavedState${}</ID>
-    <ID>ForbiddenComment:ActivityLogViewModel.kt$ActivityLogViewModel$// todo: annmarie - Remove once the feature exclusively uses the more menu</ID>
-    <ID>ForbiddenComment:BackupDownloadStatusService.kt$// todo: annmarie - add tracking key - may be rewindId const val REWIND_ID_TRACKING_KEY = "rewind_id"</ID>
-    <ID>ForbiddenComment:BackupDownloadStatusService.kt$BackupDownloadStatusService$// todo: annmarie - implement tracking here once naming has been decided</ID>
-    <ID>ForbiddenComment:MySiteFragment.kt$MySiteFragment$// TODO: Support Jetpack plans</ID>
-    <ID>ForbiddenComment:PostFetcher.kt$PostFetcher$// TODO: We should implement batch fetching when it's available in the API</ID>
-    <ID>ForbiddenComment:PostListItemDataSource.kt$PostListItemDataSource$* This is the post list data source to be used by `ListStore`. Before making any changes, it's important to know: * * 1. Lists managed by `ListStore` works by first fetching a smaller version of the models and then fetching the * actual model if necessary. * 2. During [getItemIdentifiers] the actual models might not be available and should not be relied upon. * 3. In [getItemsAndFetchIfNecessary], if the actual model is not available, this class is responsible for fetching * that model. For this post list specifically, when the actual model is fetched the list will update itself. * * // TODO: We can add a link to the wiki for ListStore when that's available. * For more information, please see the documentation for `ListStore` components.</ID>
-    <ID>ForbiddenComment:ReaderTagRepository.kt$ReaderTagRepository$// todo: remove method post implementation</ID>
-    <ID>ForbiddenComment:ReaderTracker.kt$ReaderTracker$// TODO: evaluate to use something like Dispatchers.Main.Immediate in the fun(s)</ID>
-    <ID>ForbiddenComment:ReaderViewModel.kt$ReaderViewModel$// todo: annnmarie removed this private val getFollowedTagsUseCase: GetFollowedTagsUseCase</ID>
-    <ID>ForbiddenComment:ScanStateListItemsBuilder.kt$ScanStateListItemsBuilder$// TODO: ashiagr replace icon with stroke, using direct icon (color = null) causing issues with dynamic tinting</ID>
-    <ID>ForbiddenComment:SiteUtilsWrapper.kt$SiteUtilsWrapper$// TODO: Inline this method when legacy MySiteFragment is removed</ID>
-    <ID>ForbiddenComment:StoriesPrefs.kt$StoriesPrefs$// TODO: assume it'll be accessible - we'll figure out later</ID>
-    <ID>ForbiddenComment:ThreatDetailsListItemsBuilder.kt$ThreatDetailsListItemsBuilder$// TODO: ashiagr custom diff view?</ID>
-    <ID>ForbiddenComment:ThreatDetailsViewModel.kt$ThreatDetailsViewModel.UiState$// TODO: ashiagr add states for loading, error as needed</ID>
     <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$// create_post_page_fab_tooltip_stories_feature_flag_on private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionNaming:WPMainActivityViewModel.kt$WPMainActivityViewModel$private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int</ID>
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
