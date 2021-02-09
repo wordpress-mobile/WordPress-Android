@@ -117,15 +117,15 @@ class ScanViewModel @Inject constructor(
                         is FetchScanState.Failure.NetworkUnavailable -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
                             scanStateModel
-                                    ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
-                                    ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
+                                ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
                         }
 
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
                             scanStateModel
-                                    ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
-                                    ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
+                                ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
                         }
                     }
                 }
@@ -192,7 +192,9 @@ class ScanViewModel @Inject constructor(
                 }
                 is FetchFixThreatsState.Complete -> {
                     someOrAllThreatFixed = true
-                    messageRes = R.string.threat_fix_all_status_success_message
+                    messageRes = if (status.fixedThreatsCount == 1) {
+                        R.string.threat_fix_single_status_success_message
+                    } else R.string.threat_fix_all_status_success_message
                 }
                 is FetchFixThreatsState.Failure.NetworkUnavailable -> {
                     scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.OFFLINE)
