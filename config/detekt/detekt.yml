@@ -231,7 +231,7 @@ exceptions:
 
 formatting:
   active: true
-  android: false
+  android: true
   autoCorrect: false
   AnnotationOnSeparateLine:
     active: false
