@@ -1109,6 +1109,7 @@
     <!-- threats -->
     <string name="threats_fix_all">Fix All</string>
     <string name="threats_found">Threats found</string>
+    <string name="threat_found">Threat found</string>
     <string name="threat_fixing">Fixing threat</string>
 
     <!-- threat item header -->
