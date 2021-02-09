@@ -1,10 +1,9 @@
 package org.wordpress.android.ui.mysite
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
@@ -15,9 +14,13 @@ import javax.inject.Singleton
 class CurrentAvatarSource
 @Inject constructor(private val accountStore: AccountStore) : SiteIndependentSource<CurrentAvatarUrl> {
     private val avatarUrl = MutableLiveData<CurrentAvatarUrl>()
-    override fun buildSource(): Flow<CurrentAvatarUrl> = flow {
-        emit(CurrentAvatarUrl(accountStore.account?.avatarUrl.orEmpty()))
-        avatarUrl.asFlow().collect { emit(it) }
+    override fun buildSource(coroutineScope: CoroutineScope): LiveData<CurrentAvatarUrl> {
+        val result = MediatorLiveData<CurrentAvatarUrl>()
+        result.value = CurrentAvatarUrl(accountStore.account?.avatarUrl.orEmpty())
+        result.addSource(avatarUrl) {
+            result.value = it
+        }
+        return result
     }
     fun refresh() {
         val url = accountStore.account?.avatarUrl.orEmpty()

@@ -1,20 +1,20 @@
 package org.wordpress.android.ui.mysite
 
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
-@RunWith(MockitoJUnitRunner::class)
-class CurrentAvatarSourceTest {
+class CurrentAvatarSourceTest: BaseUnitTest() {
     @Mock lateinit var accountStore: AccountStore
     @Mock lateinit var accountModel: AccountModel
     private lateinit var currentAvatarSource: CurrentAvatarSource
@@ -26,9 +26,10 @@ class CurrentAvatarSourceTest {
 
     @Test
     fun `current avatar is empty on start`() = test {
-        val result = currentAvatarSource.buildSource().take(1).toList()
+        var result: CurrentAvatarUrl? = null
+        currentAvatarSource.buildSource(this).observeForever { it?.let { result = it } }
 
-        assertThat(result.last().url).isEqualTo("")
+        assertThat(result!!.url).isEqualTo("")
     }
 
     @Test
@@ -37,9 +38,11 @@ class CurrentAvatarSourceTest {
         val avatarUrl = "avatar.jpg"
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
+        var result: CurrentAvatarUrl? = null
+        currentAvatarSource.buildSource(this).observeForever { it?.let { result = it } }
+
         currentAvatarSource.refresh()
 
-        val result = currentAvatarSource.buildSource().take(1).toList()
-        assertThat(result.last().url).isEqualTo(avatarUrl)
+        assertThat(result!!.url).isEqualTo(avatarUrl)
     }
 }
