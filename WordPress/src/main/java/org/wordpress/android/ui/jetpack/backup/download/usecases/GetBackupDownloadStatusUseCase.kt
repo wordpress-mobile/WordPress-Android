@@ -21,6 +21,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.max
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
@@ -37,19 +38,12 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
         downloadId: Long? = null
     ) = flow {
         var retryAttempts = 0
-        var backoffDelay = DELAY_MILLIS
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
-                when (exceedsRetryAttempts(retryAttempts++)) {
-                    true -> return@flow
-                    false -> {
-                        delay(backoffDelay)
-                        backoffDelay = (backoffDelay * DELAY_FACTOR)
-                    }
-                }
+                if (handleError(retryAttempts++)) return@flow
             } else {
                 retryAttempts = 0
                 val status = activityLogStore.getBackupDownloadStatusForSite(site)
@@ -85,11 +79,14 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
         }
     }
 
-    private suspend fun FlowCollector<BackupDownloadRequestState>.exceedsRetryAttempts(retryAttempts: Int): Boolean {
+    private suspend fun FlowCollector<BackupDownloadRequestState>.handleError(retryAttempts: Int): Boolean {
         return if (retryAttempts >= MAX_RETRY) {
             AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
             emit(RemoteRequestFailure)
             true
-        } else false
+        } else {
+            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
+            false
+        }
     }
 }
