@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack.scan.history
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -14,7 +13,6 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.FIXED
@@ -32,7 +30,6 @@ class ScanHistoryViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @Mock private lateinit var scanStore: ScanStore
     @Mock private lateinit var scanTracker: ScanTracker
     @Mock private lateinit var fetchScanHistoryUseCase: FetchScanHistoryUseCase
 
@@ -43,15 +40,12 @@ class ScanHistoryViewModelTest {
     @Before
     fun setUp() = test {
         viewModel = ScanHistoryViewModel(
-                scanStore,
                 scanTracker,
                 fetchScanHistoryUseCase,
-                TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success)
-        whenever(scanStore.getScanHistoryForSite(anyOrNull())).thenReturn(listOf(mock()))
+                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
     }
 
     @Test
@@ -104,7 +98,7 @@ class ScanHistoryViewModelTest {
         val observers = init()
 
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success)
+                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as NoConnection).retry.invoke()
 
         assertThat(viewModel.threats.value!!.size).isEqualTo(1)
@@ -117,7 +111,7 @@ class ScanHistoryViewModelTest {
         val observers = init()
 
         whenever(fetchScanHistoryUseCase.fetch(site))
-                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success)
+                .thenReturn(FetchScanHistoryUseCase.FetchScanHistoryState.Success(listOf(mock())))
         (observers.uiStates.last() as RequestFailed).retry.invoke()
 
         assertThat(viewModel.threats.value!!.size).isEqualTo(1)
