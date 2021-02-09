@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-import org.greenrobot.eventbus.ThreadMode
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
@@ -104,5 +103,4 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
 
         assertThat((result as Success).threatModels).isEqualTo(threats)
     }
-
 }
