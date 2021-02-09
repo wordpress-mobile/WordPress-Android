@@ -27,7 +27,7 @@ import org.wordpress.android.ui.stats.refresh.utils.LargeValueFormatter
 import org.wordpress.android.util.DisplayUtils
 
 private const val MIN_COLUMN_COUNT = 5
-private const val MIN_VALUE = 5f
+private const val MIN_VALUE = 4f
 
 private typealias BarCount = Int
 
