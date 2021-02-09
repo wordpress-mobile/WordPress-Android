@@ -21,7 +21,6 @@ public interface LoginListener {
 
     // Login Email input callbacks
     void gotWpcomEmail(String email, boolean verifyEmail, @Nullable AuthOptions authOptions);
-    void gotUnregisteredEmail(String email);
     void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                       String service);
     void loginViaSiteAddress();
