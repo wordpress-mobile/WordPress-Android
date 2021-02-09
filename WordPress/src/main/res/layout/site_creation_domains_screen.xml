@@ -44,6 +44,32 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
 
+    <ImageView
+        android:id="@+id/domain_list_example_back"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/site_creation_domains_example_height"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
+        android:scaleType="fitXY"
+        android:src="@drawable/domain_example_200dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
+        tools:ignore="ContentDescription" />
+
+    <TextView
+        android:id="@+id/domain_list_example_text"
+        style="@style/SiteCreationDomainExample"
+        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
+        android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
+        android:paddingTop="@dimen/margin_large"
+        android:text="@string/new_site_creation_search_domain_example"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/search_input_layout" />
+
     <View
         android:id="@+id/create_site_button_shaddow"
         android:layout_width="match_parent"
@@ -93,24 +119,5 @@
             android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
             android:text="@string/new_site_creation_empty_domain_list_message"
             android:textSize="@dimen/text_sz_extra_large" />
-    </FrameLayout>
-
-    <FrameLayout
-        android:id="@+id/domain_list_example_view"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/recycler_view">
-
-        <ImageView
-            style="@style/ActionableEmptyStateTitle"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/margin_extra_extra_medium_large"
-            android:text="@string/new_site_creation_empty_domain_list_message"
-            android:src="@drawable/domain_example_204dp"
-            tools:ignore="ContentDescription" />
     </FrameLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
