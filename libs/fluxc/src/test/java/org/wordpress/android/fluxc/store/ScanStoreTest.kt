@@ -158,7 +158,7 @@ class ScanStoreTest {
     }
 
     @Test
-    fun `get scan state returns state and threats from the db`() {
+    fun `get scan state returns state and threats from the db`() = test {
         val scanStateModel = ScanStateModel(State.IDLE, hasCloud = true, threats = listOf(threatInCurrentState))
         whenever(scanSqlUtils.getScanStateForSite(siteModel)).thenReturn(scanStateModel)
         whenever(threatSqlUtils.getThreats(siteModel, listOf(CURRENT))).thenReturn(listOf(threatInCurrentState))
