@@ -111,7 +111,7 @@ android {
             buildConfigField "boolean", "WP_STORIES_AVAILABLE", "true"
             buildConfigField "boolean", "ANY_FILE_UPLOAD", "false"
             buildConfigField "boolean", "ENABLE_FEATURE_CONFIGURATION", "false"
-            buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "true"
+            buildConfigField "boolean", "CONTACT_INFO_BLOCK_AVAILABLE", "false"
         }
 
         zalpha { // alpha version - enable experimental features
