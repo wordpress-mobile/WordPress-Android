@@ -1,18 +1,22 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.single
 import kotlinx.coroutines.flow.take
 import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
 
@@ -22,6 +26,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     @Mock lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
     @Mock lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock lateinit var site: SiteModel
+    @Mock lateinit var siteUtilsWrapper: SiteUtilsWrapper
     private lateinit var scanAndBackupSource: ScanAndBackupSource
     private val siteId = 1
     private val siteRemoteId = 2L
@@ -32,9 +37,14 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 selectedSiteRepository,
                 scanScreenFeatureConfig,
                 backupScreenFeatureConfig,
-                jetpackCapabilitiesUseCase
+                jetpackCapabilitiesUseCase,
+                siteUtilsWrapper
         )
+        whenever(siteUtilsWrapper.isBackupEnabled(anyBoolean(), anyBoolean())).thenCallRealMethod()
+        whenever(siteUtilsWrapper.isScanEnabled(anyBoolean(), anyBoolean(), eq(site))).thenCallRealMethod()
         whenever(site.id).thenReturn(siteId)
+        whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(false)
     }
 
     @Test
@@ -43,8 +53,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).single()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -53,8 +63,8 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
 
         val result = scanAndBackupSource.buildSource(siteId).single()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -62,13 +72,13 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isTrue()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isTrue
     }
 
     @Test
@@ -76,13 +86,13 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isTrue()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isTrue
+        assertThat(result.scanAvailable).isFalse
     }
 
     @Test
@@ -90,13 +100,13 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true, backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = true, backup = true)
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isTrue()
-        assertThat(result.scanAvailable).isTrue()
+        assertThat(result.backupAvailable).isTrue
+        assertThat(result.scanAvailable).isTrue
     }
 
     @Test
@@ -104,13 +114,56 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = true, backupScreenFeatureEnabled = true)
         whenever(site.siteId).thenReturn(siteRemoteId)
         whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
-                JetpackPurchasedProducts(scan = false, backup = false)
+                flow { emit(JetpackPurchasedProducts(scan = false, backup = false)) }
         )
 
         val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
 
-        assertThat(result.backupAvailable).isFalse()
-        assertThat(result.scanAvailable).isFalse()
+        assertThat(result.backupAvailable).isFalse
+        assertThat(result.scanAvailable).isFalse
+    }
+
+    @Test
+    fun `Scan not visible on wpcom sites even when Scan product is available`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
+        )
+        whenever(site.isWPCom).thenReturn(true)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isFalse
+    }
+
+    @Test
+    fun `Scan not visible on atomic sites even when Scan product is available`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
+        )
+        whenever(site.isWPComAtomic).thenReturn(true)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isFalse
+    }
+
+    @Test
+    fun `Scan visible on non-wpcom sites when Scan product is available and feature flag enabled`() = test {
+        init(scanScreenFeatureEnabled = true)
+        whenever(site.siteId).thenReturn(siteRemoteId)
+        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(siteRemoteId)).thenReturn(
+                flow { emit(JetpackPurchasedProducts(scan = true, backup = false)) }
+        )
+        whenever(site.isWPCom).thenReturn(false)
+        whenever(site.isWPComAtomic).thenReturn(false)
+
+        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+
+        assertThat(result.scanAvailable).isTrue
     }
 
     private fun init(scanScreenFeatureEnabled: Boolean = false, backupScreenFeatureEnabled: Boolean = false) {

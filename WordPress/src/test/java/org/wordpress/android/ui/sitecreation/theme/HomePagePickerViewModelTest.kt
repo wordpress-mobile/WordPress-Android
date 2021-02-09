@@ -20,6 +20,7 @@ import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
+import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
@@ -215,7 +216,7 @@ class HomePagePickerViewModelTest {
     @Test
     fun `when the changes the preview mode the thumbnails or preview change`() = mockResponse {
         viewModel.start()
-        viewModel.onThumbnailModeChanged(PreviewMode.DESKTOP)
+        viewModel.onPreviewModeChanged(PreviewMode.DESKTOP)
         val captor = ArgumentCaptor.forClass(PreviewMode::class.java)
         verify(previewModeObserver, times(2)).onChanged(captor.capture())
         assertThat(requireNotNull(captor.value as PreviewMode)).isEqualTo(PreviewMode.DESKTOP)

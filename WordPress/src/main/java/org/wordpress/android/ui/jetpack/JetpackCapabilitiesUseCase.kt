@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.jetpack
 
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.withContext
+import kotlinx.coroutines.flow.flow
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
@@ -13,12 +12,12 @@ import org.wordpress.android.fluxc.model.JetpackCapability.BACKUP_REALTIME
 import org.wordpress.android.fluxc.model.JetpackCapability.SCAN
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchJetpackCapabilitiesPayload
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesError
+import org.wordpress.android.fluxc.store.SiteStore.JetpackCapabilitiesErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.SiteStore.OnJetpackCapabilitiesFetched
 import org.wordpress.android.fluxc.utils.CurrentTimeProvider
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import javax.inject.Inject
-import javax.inject.Named
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
@@ -31,58 +30,62 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     @Suppress("unused") private val siteStore: SiteStore,
     private val dispatcher: Dispatcher,
     private val appPrefsWrapper: AppPrefsWrapper,
-    private val currentDateProvider: CurrentTimeProvider,
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val currentDateProvider: CurrentTimeProvider
 ) {
-    private var continuation: Continuation<OnJetpackCapabilitiesFetched>? = null
+    private var continuation: HashMap<Long, Continuation<OnJetpackCapabilitiesFetched>?> = hashMapOf()
 
-    suspend fun getJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts {
-        val capabilities = withContext(bgDispatcher) {
-            getOrFetchJetpackCapabilities(remoteSiteId)
-        }
-        return JetpackPurchasedProducts(
-                scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
-                backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
-        )
-    }
-
-    suspend fun getOrFetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return if (hasValidCache(remoteSiteId)) {
-            getCachedJetpackCapabilities(remoteSiteId)
-        } else {
-            fetchJetpackCapabilities(remoteSiteId)
+    suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
+        emit(getCachedJetpackPurchasedProducts(remoteSiteId))
+        if (!hasValidCache(remoteSiteId)) {
+            emit(fetchJetpackPurchasedProducts(remoteSiteId))
         }
     }
 
-    private suspend fun hasValidCache(remoteSiteId: Long): Boolean {
-        return withContext(bgDispatcher) {
-            val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-            lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
-        }
+    fun getCachedJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
+            mapToJetpackPurchasedProducts(getCachedJetpackCapabilities(remoteSiteId))
+
+    suspend fun fetchJetpackPurchasedProducts(remoteSiteId: Long): JetpackPurchasedProducts =
+            mapToJetpackPurchasedProducts(fetchJetpackCapabilities(remoteSiteId))
+
+    private fun mapToJetpackPurchasedProducts(capabilities: List<JetpackCapability>) =
+            JetpackPurchasedProducts(
+                    scan = capabilities.find { SCAN_CAPABILITIES.contains(it) } != null,
+                    backup = capabilities.find { BACKUP_CAPABILITIES.contains(it) } != null
+            )
+
+    fun hasValidCache(remoteSiteId: Long): Boolean {
+        val lastUpdated = appPrefsWrapper.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
+        return lastUpdated > currentDateProvider.currentDate().time - MAX_CACHE_VALIDITY
     }
 
-    private suspend fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return withContext(bgDispatcher) { appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId) }
+    private fun getCachedJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
+        return appPrefsWrapper.getSiteJetpackCapabilities(remoteSiteId)
     }
 
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
-        return withContext(bgDispatcher) {
-            if (continuation != null) {
-                throw IllegalStateException("Request already in progress.")
-            }
+        forceResumeDuplicateRequests(remoteSiteId)
 
-            dispatcher.register(this@JetpackCapabilitiesUseCase)
-            val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
-                val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
-                continuation = cont
-                dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
-            }
+        dispatcher.register(this@JetpackCapabilitiesUseCase)
+        val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
+            val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
+            continuation[remoteSiteId] = cont
+            dispatcher.dispatch(SiteActionBuilder.newFetchJetpackCapabilitiesAction(payload))
+        }
 
-            val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
-            if (!response.isError) {
-                updateCache(remoteSiteId, capabilities)
-            }
-            return@withContext capabilities
+        val capabilities: List<JetpackCapability> = response.capabilities ?: listOf()
+        if (!response.isError) {
+            updateCache(remoteSiteId, capabilities)
+        }
+        return capabilities
+    }
+
+    private fun forceResumeDuplicateRequests(remoteSiteId: Long) {
+        continuation[remoteSiteId]?.let {
+            continuation.remove(remoteSiteId)
+            val event = OnJetpackCapabilitiesFetched(
+                    remoteSiteId, listOf(), JetpackCapabilitiesError(GENERIC_ERROR, "Already running")
+            )
+            it.resume(event)
         }
     }
 
@@ -96,12 +99,16 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         )
     }
 
-    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     @SuppressWarnings("unused")
     fun onJetpackCapabilitiesFetched(event: OnJetpackCapabilitiesFetched) {
-        dispatcher.unregister(this@JetpackCapabilitiesUseCase)
-        continuation?.resume(event)
-        continuation = null
+        continuation[event.remoteSiteId]?.let {
+            continuation.remove(event.remoteSiteId)
+            it.resume(event)
+        }
+        if (continuation.isEmpty()) {
+            dispatcher.unregister(this@JetpackCapabilitiesUseCase)
+        }
     }
 
     data class JetpackPurchasedProducts(val scan: Boolean, val backup: Boolean)

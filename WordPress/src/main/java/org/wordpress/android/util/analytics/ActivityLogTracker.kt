@@ -3,6 +3,7 @@ package org.wordpress.android.util.analytics
 import androidx.core.util.Pair
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_SELECTED
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.ActivityTypeModel
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import java.util.Date
@@ -14,27 +15,39 @@ class ActivityLogTracker @Inject constructor(
     private val tracker: AnalyticsTrackerWrapper,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
 ) {
-    fun trackDateRangeFilterButtonClicked() {
-        tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+    fun trackDateRangeFilterButtonClicked(rewindableOnly: Boolean) {
+        if (rewindableOnly) {
+            tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+        } else {
+            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED)
+        }
     }
 
-    fun trackDateRangeFilterSelected(dateRange: Pair<Long, Long>?) {
+    fun trackDateRangeFilterSelected(dateRange: Pair<Long, Long>?, rewindableOnly: Boolean) {
         val start = dateRange?.first
         val end = dateRange?.second
         if (start == null || end == null) {
-            trackDateRangeFilterCleared()
+            trackDateRangeFilterCleared(rewindableOnly)
         } else {
             val map = mutableMapOf<String, Any>()
             // Number of selected days
             map["duration"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date(end)) + 1
             // Distance from the startDate to today (in days)
             map["distance"] = dateTimeUtilsWrapper.daysBetween(Date(start), Date())
-            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            if (rewindableOnly) {
+                tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            } else {
+                tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_SELECTED, map)
+            }
         }
     }
 
-    fun trackDateRangeFilterCleared() {
-        tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+    fun trackDateRangeFilterCleared(rewindableOnly: Boolean) {
+        if (rewindableOnly) {
+            tracker.track(Stat.JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_RESET)
+        } else {
+            tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_DATE_RANGE_RESET)
+        }
     }
 
     fun trackActivityTypeFilterButtonClicked() {
@@ -55,5 +68,14 @@ class ActivityLogTracker @Inject constructor(
 
     fun trackActivityTypeFilterCleared() {
         tracker.track(Stat.ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET)
+    }
+
+    fun trackRestoreStarted(rewindId: String, site: SiteModel, rewindableOnly: Boolean) {
+        val properties = mutableMapOf("rewind_id" to rewindId as Any)
+        if (rewindableOnly) {
+            AnalyticsUtils.trackWithSiteDetails(Stat.JETPACK_BACKUP_REWIND_STARTED, site, properties)
+        } else {
+            AnalyticsUtils.trackWithSiteDetails(Stat.ACTIVITY_LOG_REWIND_STARTED, site, properties)
+        }
     }
 }

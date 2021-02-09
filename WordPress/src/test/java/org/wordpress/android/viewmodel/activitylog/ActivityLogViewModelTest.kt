@@ -159,7 +159,7 @@ class ActivityLogViewModelTest {
         whenever(store.fetchActivities(anyOrNull())).thenReturn(mock())
         whenever(site.hasFreePlan).thenReturn(false)
         whenever(site.siteId).thenReturn(SITE_ID)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(anyLong()))
+        whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(anyLong()))
                 .thenReturn(JetpackPurchasedProducts(scan = false, backup = false))
     }
 
@@ -364,7 +364,7 @@ class ActivityLogViewModelTest {
     fun filtersAreVisibleWhenSiteOnFreePlanButHasPurchasedBackupProduct() = test {
         whenever(activityLogFiltersFeatureConfig.isEnabled()).thenReturn(true)
         whenever(site.hasFreePlan).thenReturn(true)
-        whenever(jetpackCapabilitiesUseCase.getJetpackPurchasedProducts(SITE_ID))
+        whenever(jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(SITE_ID))
                 .thenReturn(JetpackPurchasedProducts(scan = false, backup = true))
 
         viewModel.start(site, rewindableOnly)
@@ -413,6 +413,16 @@ class ActivityLogViewModelTest {
 
         assertThat(navigationEvents.last().peekContent())
                 .isInstanceOf(ActivityLogNavigationEvents.ShowBackupDownload::class.java)
+    }
+
+    @Test
+    fun dateRangeTrackDateRangeFilterSelectedEventFired() {
+        whenever(dateUtils.formatDateRange(anyOrNull(), anyOrNull(), anyOrNull())).thenReturn("TEST")
+        val dateRange = Pair(10L, 20L)
+
+        viewModel.onDateRangeSelected(dateRange)
+
+        verify(activityLogTracker).trackDateRangeFilterSelected(dateRange, rewindableOnly)
     }
 
     @Test
@@ -470,6 +480,13 @@ class ActivityLogViewModelTest {
         viewModel.onDateRangeSelected(Pair(10L, 20L))
 
         assertThat(formatDateRangeTimezoneCaptor.firstValue).isEqualTo(TIMEZONE_GMT_0)
+    }
+
+    @Test
+    fun dateRangeTrackDateRangeFilterButtonClickedEventFired() {
+        viewModel.dateRangePickerClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterButtonClicked(rewindableOnly)
     }
 
     @Test
@@ -539,6 +556,13 @@ class ActivityLogViewModelTest {
         val params = listOf(UiStringText("2"))
         assertThat((viewModel.filtersUiState.value as FiltersShown).activityTypeLabel)
                 .isEqualTo(UiStringResWithParams(R.string.activity_log_activity_type_filter_active_label, params))
+    }
+
+    @Test
+    fun dateRangeTrackDateRangeFilterClearedEventFired() {
+        viewModel.onClearDateRangeFilterClicked()
+
+        verify(activityLogTracker).trackDateRangeFilterCleared(rewindableOnly)
     }
 
     @Test
@@ -1131,6 +1155,13 @@ class ActivityLogViewModelTest {
     }
 
     /* RESTORE CONFIRMED */
+
+    @Test
+    fun `when restore confirmed, then track restore started event`() = test {
+        viewModel.onRestoreConfirmed(REWIND_ID)
+
+        verify(activityLogTracker).trackRestoreStarted(REWIND_ID, site, rewindableOnly)
+    }
 
     @Test
     fun `when restore confirmed, then trigger post restore request`() = test {

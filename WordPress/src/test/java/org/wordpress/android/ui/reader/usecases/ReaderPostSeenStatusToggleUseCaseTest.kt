@@ -86,7 +86,7 @@ class ReaderPostSeenStatusToggleUseCaseTest {
 
     @Test
     fun `toggleSeenStatus emits expected state when trying to change status of unsupported post`() = test {
-        val dummyPost = createDummyReaderPost(isSeen = true, feedItemId = 0)
+        val dummyPost = createDummyReaderPost(isSeen = true, isSeenSupported = false)
         val flow = seenStatusToggleUseCase.toggleSeenStatus(dummyPost, READER_POST_CARD)
 
         assertThat(flow.toList()).isEqualTo(
@@ -178,11 +178,12 @@ class ReaderPostSeenStatusToggleUseCaseTest {
         )
     }
 
-    private fun createDummyReaderPost(isSeen: Boolean = false, feedItemId: Long = 4): ReaderPost = ReaderPost().apply {
-        this.postId = 1
-        this.blogId = 2
-        this.feedId = 3
-        this.feedItemId = feedItemId
-        this.isSeen = isSeen
-    }
+    private fun createDummyReaderPost(isSeen: Boolean = false, isSeenSupported: Boolean = true): ReaderPost =
+            ReaderPost().apply {
+                this.postId = 1
+                this.blogId = 2
+                this.feedId = 3
+                this.isSeen = isSeen
+                this.isSeenSupported = isSeenSupported
+            }
 }

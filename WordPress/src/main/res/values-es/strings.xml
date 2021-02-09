@@ -1,12 +1,92 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-26 12:56:55+0000
+Translation-Revision-Date: 2021-02-05 16:16:38+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="rewind_another_process_running">Hay otra restauración en curso.</string>
+    <string name="restore_complete_failed_icon_content_description">Icono de error</string>
+    <string name="restore_complete_failed_action_button_content_description">Botón Listo</string>
+    <string name="restore_complete_failed_description">No hemos podido restaurar tu sitio. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="restore_complete_failed_title">No se ha podido restaurar</string>
+    <string name="restore_complete_visit_site_button_content_description">Botón Visitar sitio</string>
+    <string name="restore_complete_done_button_content_description">Botón Listo</string>
+    <string name="restore_complete_icon_content_description">Icono de restaurar</string>
+    <string name="restore_complete_visit_site_action_button">Visitar el sitio</string>
+    <string name="restore_complete_description_with_two_parameters">Todos los elementos seleccionados se han restaurado a la versión del %1$s %2$s.</string>
+    <string name="restore_complete_header">Tu sitio se ha restaurado</string>
+    <string name="restore_progress_additional_info">No hace falta que esperes. Te enviaremos una notificación cuando la restauración se haya completado.</string>
+    <string name="restore_progress_icon_content_description">Icono de restaurar sitio</string>
+    <string name="restore_progress_description_with_two_parameters">Estamos restaurando la versión de tu sitio del %1$s %2$s.</string>
+    <string name="restore_progress_header">Estamos restaurando el sitio</string>
+    <string name="restore_warning_action_button_content_description">Botón Confirmar restauración del sitio</string>
+    <string name="restore_warning_icon_content_description">Imagen de un círculo rojo con un signo de exclamación</string>
+    <string name="restore_warning_action_button">Confirmar restauración del sitio</string>
+    <string name="restore_warning_description_with_two_parameters">¿Seguro que quieres retroceder a la versión de tu sitio del %1$s a las %2$s?\n Esta acción eliminará todo el contenido y las opciones que has creado o cambiado desde entonces.</string>
+    <string name="restore_warning_header">Advertencia</string>
+    <string name="restore_details_action_button_content_description">Botón Restaurar sitio</string>
+    <string name="restore_details_icon_content_description">Icono de restaurar</string>
+    <string name="restore_details_action_button">Restaurar sitio</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s es el punto seleccionado para la restauración.</string>
+    <string name="restore_details_header">Restaurar sitio</string>
+    <string name="restore_details_choose_items_header">Elige los elementos que quieres restaurar:</string>
+    <string name="restore">Restaurar</string>
+    <string name="backup_download_complete_failed_icon_content_description">Nube con icono de X</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Botón Listo</string>
+    <string name="backup_download_complete_failed_action_button">Listo</string>
+    <string name="backup_download_complete_failed_description">No hemos podido crear la copia de seguridad. Por favor, inténtalo de nuevo más tarde.</string>
+    <string name="backup_download_complete_failed_title">La descarga ha fallado</string>
+    <string name="web_preview_tablet">Tableta</string>
+    <string name="web_preview_mobile">Dispositivos móviles</string>
+    <string name="quick_start_card_menu_remove">No mostrar de nuevo</string>
+    <string name="quick_start_card_menu_hide">Ocultar</string>
+    <string name="quick_start_card_menu_pin">Marcar esto</string>
+    <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
+    <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
+    <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecciona %1$s Página de inicio %2$s para editar tu página de inicio.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
+    <string name="quick_start_dialog_edit_homepage_message">Cambia, añade o elimina contenido en la página de inicio de tu sitio.</string>
+    <string name="quick_start_dialog_edit_homepage_title">Editar la página de inicio</string>
+    <string name="reader_menu_mark_as_unseen">Marcar como no leída</string>
+    <string name="reader_menu_mark_as_seen">Marcar como leída</string>
+    <string name="error_media_upload_failed_for_reason">No se han podido subir los elementos multimedia.\n%1$s</string>
+    <string name="error_media_not_enough_storage">Espacio de almacenamiento del sitio insuficiente</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">No se puede activar o desactivar el estado Es visible de esta entrada</string>
+    <string name="reader_marked_post_as_unseen">Marcar entrada como no leída</string>
+    <string name="reader_marked_post_as_seen">Marcar entrada como leída</string>
+    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">No se han podido corregir todas las amenazas. Ponte en contacto con el servicio de soporte.</string>
+    <string name="threat_fix_all_status_error_message">Se ha producido un error al comprobar el estado de la reparación. Ponte en contacto con el servicio de soporte.</string>
+    <string name="threat_fix_all_status_success_message">Las amenazas se han corregido correctamente.</string>
+    <string name="threat_fix_all_error_message">Se ha producido un error al corregir las amenazas. Ponte en contacto con el servicio de soporte.</string>
+    <string name="threat_fix_all_started_message">Estamos intentando corregir estas amenazas en segundo plano. Vuelve a comprobarlo en unos minutos.</string>
+    <string name="threat_fix_all_warning_message">Confirma que quieres corregir las %s amenazas activas.</string>
+    <string name="threat_fix_all_warning_title">Corregir todas las amenazas</string>
+    <string name="threat_ignore_error_message">No se ha podido ignorar la amenaza. Ponte en contacto con el servicio de soporte.</string>
+    <string name="threat_ignore_success_message">Se ha ignorado la amenaza.</string>
+    <string name="threat_ignore_warning">No ignores un aviso de seguridad a menos que estés completamente seguro de que es inofensivo. Si ignoras esta amenaza, permanecerá en tu sitio &lt;b>%s&lt;/b>.</string>
+    <string name="threat_fix_error_message">No se ha podido corregir la amenaza. Ponte en contacto con el servicio de soporte.</string>
+    <string name="threat_item_sub_header_status_ignored">Amenaza ignorada</string>
+    <string name="threat_item_sub_header_status_fixed">Amenaza reparada</string>
+    <string name="threat_fixing">Corrigiendo la amenaza</string>
+    <string name="threats_fix_num_of_threats">Corregir %s amenazas</string>
+    <string name="scan_history_ignored_threats_tab">Se ha ignorado</string>
+    <string name="scan_history_no_threats_found">No se encontró ningún elemento</string>
+    <string name="scan_history_fixed_threats_tab">Fijo</string>
+    <string name="scan_history_all_threats_tab">Todos</string>
+    <string name="scan_scanning_title">Analizando archivos</string>
+    <string name="scan_preparing_to_scan_title">Preparando escaneado</string>
+    <string name="scan_history_menu_title">Historia</string>
+    <string name="scan_history">Historial de exploraciones</string>
+    <string name="backup_active_filter_empty_subtitle">Prueba a ajustar el rango de fechas</string>
+    <string name="backup_active_filter_empty_title">No se han encontrado copias de seguridad coincidentes</string>
+    <string name="backup_empty_subtitle">Tu primera copia de seguridad estará disponible aquí en 24 horas y recibirás una notificación una vez que se haya completado</string>
+    <string name="backup_empty_title">Tu primera copia de seguridad estará lista pronto</string>
+    <string name="request_failed_message">Ha ocurrido un problema al gestionar la petición. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="gutenberg_native_move_block_position">Mover la posición del bloque</string>
+    <string name="gutenberg_native_move_to_bottom">Mover al final</string>
     <string name="label_control_upload">Subir</string>
     <string name="jetpack_icon_content_description">Icono</string>
     <string name="backup_download_complete_download_share_action_button_content_description">Botón de compartir enlace</string>

@@ -19,10 +19,11 @@ class SiteItemsBuilder
         isBackupAvailable: Boolean = false,
         isScanAvailable: Boolean = false,
         showViewSiteFocusPoint: Boolean = false,
-        showEnablePostSharingFocusPoint: Boolean = false
+        showEnablePostSharingFocusPoint: Boolean = false,
+        showExplorePlansFocusPoint: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
-                siteListItemBuilder.buildPlanItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildPlanItemIfAvailable(site, showExplorePlansFocusPoint, onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site),
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,

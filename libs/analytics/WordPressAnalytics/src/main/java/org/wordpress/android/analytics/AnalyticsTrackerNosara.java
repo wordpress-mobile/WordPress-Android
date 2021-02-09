@@ -20,10 +20,11 @@ public class AnalyticsTrackerNosara extends Tracker {
     @SuppressWarnings("checkstyle:RegexpSingleline")
     private static final String WPCOM_USER = "dotcom_user";
     private static final String IS_GUTENBERG_ENABLED = "gutenberg_enabled";
+    private static final String APP_SCHEME = "app_scheme";
 
     private static final String EVENTS_PREFIX = "wpandroid_";
 
-    private TracksClient mNosaraClient;
+    private final TracksClient mNosaraClient;
 
     public AnalyticsTrackerNosara(Context context) throws IllegalArgumentException {
         super(context);
@@ -567,6 +568,7 @@ public class AnalyticsTrackerNosara extends Tracker {
             properties.put(JETPACK_USER, metadata.isJetpackUser());
             properties.put(NUMBER_OF_BLOGS, metadata.getNumBlogs());
             properties.put(WPCOM_USER, metadata.isWordPressComUser());
+            properties.put(APP_SCHEME, metadata.getAppScheme());
             // Only add the editor information if it was set before.
             // See: https://github.com/wordpress-mobile/WordPress-Android/pull/10300#discussion_r309145514
             if (metadata.isGutenbergEnabledVariableSet()) {
@@ -1382,12 +1384,18 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_background_service_updated";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_VIEWED:
                 return "enhanced_site_creation_site_design_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_thumbnail_mode_button_tapped";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SELECTED:
                 return "enhanced_site_creation_site_design_selected";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_SKIPPED:
                 return "enhanced_site_creation_site_design_skipped";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_VIEWED:
                 return "enhanced_site_creation_site_design_preview_viewed";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_BUTTON_TAPPED:
+                return "enhanced_site_creation_site_design_preview_mode_button_tapped";
+            case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_MODE_CHANGED:
+                return "enhanced_site_creation_site_design_preview_mode_changed";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADING:
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
@@ -1670,6 +1678,42 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "activitylog_filterbar_reset_range";
             case ACTIVITY_LOG_FILTER_BAR_ACTIVITY_TYPE_RESET:
                 return "activitylog_filterbar_reset_type";
+            case JETPACK_BACKUP_LIST_OPENED:
+                return "jetpack_backup_list_opened";
+            case JETPACK_BACKUP_REWIND_STARTED:
+                return "jetpack_backup_rewind_started";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_BUTTON_TAPPED:
+                return "jetpack_backup_filterbar_range_button_tapped";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_SELECTED:
+                return "jetpack_backup_filterbar_select_range";
+            case JETPACK_BACKUP_FILTER_BAR_DATE_RANGE_RESET:
+                return "jetpack_backup_filterbar_reset_range";
+            case JETPACK_SCAN_ACCESSED:
+                return "jetpack_scan_accessed";
+            case JETPACK_SCAN_HISTORY_ACCESSED:
+                return "jetpack_scan_history_accessed";
+            case JETPACK_SCAN_HISTORY_FILTER:
+                return "jetpack_scan_history_filter";
+            case JETPACK_SCAN_THREAT_LIST_ITEM_TAPPED:
+                return "jetpack_scan_threat_list_item_tapped";
+            case JETPACK_SCAN_THREAT_CODEABLE_ESTIMATE_TAPPED:
+                return "jetpack_scan_threat_codeable_estimate_tapped";
+            case JETPACK_SCAN_RUN_TAPPED:
+                return "jetpack_scan_run_tapped";
+            case JETPACK_SCAN_IGNORE_THREAT_DIALOG_OPEN:
+                return "jetpack_scan_ignorethreat_dialogopen";
+            case JETPACK_SCAN_THREAT_IGNORE_TAPPED:
+                return "jetpack_scan_threat_ignore_tapped";
+            case JETPACK_SCAN_FIX_THREAT_DIALOG_OPEN:
+                return "jetpack_scan_fixthreat_dialogopen";
+            case JETPACK_SCAN_THREAT_FIX_TAPPED:
+                return "jetpack_scan_threat_fix_tapped";
+            case JETPACK_SCAN_ALL_THREATS_OPEN:
+                return "jetpack_scan_allthreats_open";
+            case JETPACK_SCAN_ALL_THREATS_FIX_TAPPED:
+                return "jetpack_scan_allthreats_fix_tapped";
+            case JETPACK_SCAN_ERROR:
+                return "jetpack_scan_error";
             case SUPPORT_HELP_CENTER_VIEWED:
                 return "support_help_center_viewed";
             case SUPPORT_NEW_REQUEST_VIEWED:
@@ -1756,6 +1800,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "quick_start_notification_sent";
             case QUICK_START_NOTIFICATION_TAPPED:
                 return "quick_start_notification_tapped";
+            case QUICK_START_HIDE_CARD_TAPPED:
+                return "quick_start_hide_card_tapped";
+            case QUICK_START_REMOVE_CARD_TAPPED:
+                return "quick_start_remove_card_tapped";
             case INSTALLATION_REFERRER_OBTAINED:
                 return "installation_referrer_obtained";
             case INSTALLATION_REFERRER_FAILED:
@@ -1956,6 +2004,34 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
                 return "reader_mark_as_unseen";
+            case JETPACK_RESTORE_OPENED:
+                return "jetpack_restore_opened";
+            case JETPACK_RESTORE_CONFIRMED:
+                return "jetpack_restore_confirmed";
+            case JETPACK_RESTORE_ERROR:
+                return "jetpack_restore_error";
+            case JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED:
+                return "jetpack_restore_notify_me_button_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_OPENED:
+                return "jetpack_backup_download_opened";
+            case JETPACK_BACKUP_DOWNLOAD_CONFIRMED:
+                return "jetpack_backup_download_confirmed";
+            case JETPACK_BACKUP_DOWNLOAD_ERROR:
+                return "jetpack_backup_download_error";
+            case JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED:
+                return "jetpack_backup_download_notify_me_button_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED:
+                return "jetpack_backup_download_share_link_tapped";
+            case MY_SITE_CREATE_SHEET_SHOWN:
+                return "my_site_create_sheet_shown";
+            case MY_SITE_CREATE_SHEET_ACTION_TAPPED:
+                return "my_site_create_sheet_action_tapped";
+            case POST_LIST_CREATE_SHEET_SHOWN:
+                return "post_list_create_sheet_shown";
+            case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
+                return "post_list_create_sheet_action_tapped";
         }
         return null;
     }

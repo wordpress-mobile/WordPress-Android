@@ -1,37 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-26 10:12:25+0000
+Translation-Revision-Date: 2021-01-29 10:45:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
-    <string name="rewind_another_process_running">Er loopt nog een andere download.</string>
     <string name="restore_complete_failed_description">We konden je site niet terugzetten. Probeer het later nog eens.</string>
-    <string name="restore_complete_failed_action_button">\@string/label_done_button</string>
     <string name="restore_complete_failed_action_button_content_description">Klaar knop</string>
     <string name="restore_complete_failed_icon_content_description">Fout pictogram</string>
-    <string name="rewind_generic_failure">\@string/backup_download_generic_failure</string>
+    <string name="rewind_another_process_running">Er loopt nog een andere terugzet actie.</string>
     <string name="restore_progress_additional_info">Je hoeft niet te wachten. We laten het je weten als je site teruggezet is.</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_complete_page_title">\@string/restore</string>
     <string name="restore_complete_header">Je site is teruggezet</string>
     <string name="restore_complete_description_with_two_parameters">Alle geselecteerde items zijn nu teruggezet naar %1$s %2$s.</string>
-    <string name="restore_complete_done_action_button">\@string/label_done_button</string>
     <string name="restore_complete_visit_site_action_button">Bezoek site</string>
     <string name="restore_complete_icon_content_description">Terugzet pictogram</string>
     <string name="restore_complete_done_button_content_description">Klaar knop</string>
     <string name="restore_complete_visit_site_button_content_description">Bezoek site knop</string>
     <string name="restore_complete_failed_title">Terugzetten mislukt</string>
     <string name="restore_warning_action_button_content_description">Bevestig terugzetten site knop</string>
-    <string name="restore_progress_page_title">\@string/restore</string>
     <string name="restore_progress_header">Momenteel wordt je site teruggezet</string>
     <string name="restore_progress_description_with_two_parameters">We zijn je site terug aan het zetten naar %1$s %2$s.</string>
-    <string name="restore_progress_action_button">\@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Terugzetten site pictogram</string>
-    <string name="restore_progress_action_button_content_description">\@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_details_action_button_content_description">Knop terugzetten site</string>
-    <string name="restore_warning_page_title">\@string/restore</string>
     <string name="restore_warning_header">Waarschuwing</string>
     <string name="restore_warning_action_button">Bevestig terugzetten site</string>
     <string name="restore_warning_icon_content_description">Rode cirkel afbeelding met uitroepteken</string>
@@ -45,12 +37,10 @@ Language: nl
     <string name="backup_download_complete_failed_action_button_content_description">Klaar knop</string>
     <string name="backup_download_complete_failed_icon_content_description">Cloud met X pictogram</string>
     <string name="restore">Terugzetten</string>
-    <string name="restore_details_page_title">\@string/restore</string>
     <string name="restore_details_choose_items_header">Kies de items om terug te zetten:</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selecteer %1$s Homepage %2$s om je homepage te bewerken.</string>
     <string name="quick_start_dialog_review_pages_title">Beoordeel site pagina\'s</string>
-    <string name="quick_start_dialog_review_pages_message">Verander, voeg toe of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecteer %1$s Pagina\'s %2$s om je paginalijst te zien.</string>
     <string name="quick_start_card_menu_pin">Pin dit</string>
     <string name="quick_start_card_menu_hide">Verberg</string>
@@ -58,8 +48,9 @@ Language: nl
     <string name="web_preview_mobile">Mobiel</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="backup_download_complete_failed_title">Download mislukt.</string>
+    <string name="quick_start_dialog_review_pages_message">Verander, voeg toe, of verwijder pagina\'s van je site.</string>
     <string name="quick_start_dialog_edit_homepage_title">Bewerk je homepage</string>
-    <string name="quick_start_dialog_edit_homepage_message">Verander, voeg toe of verwijder inhoud van de homepage van je site.</string>
+    <string name="quick_start_dialog_edit_homepage_message">Verander, voeg toe, of verwijder inhoud van de homepage van je site.</string>
     <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Niet alle bedreigingen konden worden opgelost. Neem contact op met onze ondersteuning.</string>
     <string name="reader_menu_mark_as_seen">Markeer als gezien</string>
     <string name="reader_menu_mark_as_unseen">Markeer als ongezien</string>
@@ -93,8 +84,6 @@ Language: nl
     <string name="threat_fixing">Bezig met bedreiging oplossen</string>
     <string name="threat_item_sub_header_status_fixed">Bedreiging opgelost</string>
     <string name="threat_item_sub_header_status_ignored">Bedreiging genegeerd</string>
-    <string name="scan_history_no_connection">\@string/no_network_message</string>
-    <string name="scan_history_request_failed">\@string/request_failed_message</string>
     <string name="backup_empty_title">Je eerste back-up is binnenkort klaar</string>
     <string name="request_failed_message">Er is een probleem opgetreden bij het verwerken van de aanvraag. Probeer het later opnieuw.</string>
     <string name="gutenberg_native_move_to_bottom">Verplaats naar beneden</string>
