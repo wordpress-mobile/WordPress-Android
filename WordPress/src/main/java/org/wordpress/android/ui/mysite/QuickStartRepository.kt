@@ -153,7 +153,6 @@ class QuickStartRepository
 
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
-        _activeTask.value = null
         eventBus.postSticky(QuickStartEvent(task))
     }
 
