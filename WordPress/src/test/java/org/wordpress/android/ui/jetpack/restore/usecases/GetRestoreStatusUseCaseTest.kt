@@ -258,6 +258,41 @@ class GetRestoreStatusUseCaseTest {
 
         assertThat(result).contains(RestoreRequestState.Empty)
     }
+
+    @Test
+    fun `max fetch retries exceeded, when restore status triggers, then return remote request failure`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+
+                val result = useCase.getRestoreStatus(site, null).toList()
+                advanceTimeBy(DELAY_MILLIS)
+
+                assertThat(result).contains(Failure.RemoteRequestFailure)
+            }
+
+    @Test
+    fun `given fetch error under retry count, when backup status triggers, then return progress`() =
+            coroutineScope.runBlockingTest {
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+                advanceTimeBy(DELAY_MILLIS)
+
+                assertThat(result).contains(
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
+                )
+            }
     /* PRIVATE */
 
     private fun activityLogModel() = ActivityLogModel(
