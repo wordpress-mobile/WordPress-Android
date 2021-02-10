@@ -442,8 +442,8 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 {{violation.message}}
 """
     violations = [
-            ["CHECKSTYLE", ".", ".*/build/.*\\checkstyle.xml\$", "Checkstyle"],
-            ["CHECKSTYLE", ".", ".*/build/.*\\detekt.xml\$", "Detekt"]
+            ["CHECKSTYLE", ".", ".*/build/.*/checkstyle/.*\\.xml\$", "Checkstyle"],
+            ["CHECKSTYLE", ".", ".*/build/.*/detekt/.*\\.xml\$", "Detekt"]
     ]
 }
 
