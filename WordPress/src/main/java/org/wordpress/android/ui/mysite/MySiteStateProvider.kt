@@ -2,24 +2,18 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.asFlow
-import androidx.lifecycle.asLiveData
 import androidx.lifecycle.distinctUntilChanged
 import androidx.lifecycle.switchMap
-import kotlinx.coroutines.CoroutineDispatcher
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.distinctUntilChanged
-import org.wordpress.android.modules.BG_THREAD
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.util.filter
 import org.wordpress.android.util.map
-import javax.inject.Named
 
 class MySiteStateProvider(
-    @param:Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
+    private val coroutineScope: CoroutineScope,
     private val selectedSiteRepository: SelectedSiteRepository,
     vararg sources: MySiteSource<*>
 ) {
@@ -33,10 +27,10 @@ class MySiteStateProvider(
     val state: LiveData<MySiteUiState> = selectedSiteRepository.siteSelected.switchMap { siteId ->
         val result = MediatorLiveData<SiteIdToState>()
         val currentSources = if (siteId != null) {
-            mySiteSources.map { source -> source.buildSource(siteId).distinctUntilChanged().asLiveData(bgDispatcher) }
+            mySiteSources.map { source -> source.buildSource(coroutineScope, siteId).distinctUntilChanged() }
         } else {
             mySiteSources.filterIsInstance(SiteIndependentSource::class.java)
-                    .map { source -> source.buildSource().distinctUntilChanged().asLiveData(bgDispatcher) }
+                    .map { source -> source.buildSource(coroutineScope).distinctUntilChanged() }
         }
         for (newSource in currentSources) {
             result.addSource(newSource) { partialState ->
@@ -58,18 +52,21 @@ class MySiteStateProvider(
 
     private fun selectedSiteSource(): MySiteSource<SelectedSite> =
             object : MySiteSource<SelectedSite> {
-                override fun buildSource(siteId: Int): Flow<SelectedSite?> {
+                override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<SelectedSite> {
                     return selectedSiteRepository.selectedSiteChange
                             .filter { it == null || it.id == siteId }
-                            .map { SelectedSite(it) }.asFlow()
+                            .map { SelectedSite(it) }
                 }
             }
 
     private fun siteIconProgressSource(): MySiteSource<ShowSiteIconProgressBar> =
             object : MySiteSource<ShowSiteIconProgressBar> {
-                override fun buildSource(siteId: Int): Flow<ShowSiteIconProgressBar> {
-                    return selectedSiteRepository.showSiteIconProgressBar.map { ShowSiteIconProgressBar(it == true) }
-                            .asFlow()
+                override fun buildSource(
+                    coroutineScope: CoroutineScope,
+                    siteId: Int
+                ): LiveData<ShowSiteIconProgressBar> {
+                    return selectedSiteRepository.showSiteIconProgressBar
+                            .map { ShowSiteIconProgressBar(it == true) }
                             .distinctUntilChanged()
                 }
             }

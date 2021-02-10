@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.RecyclerView.OnScrollListener
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
@@ -45,7 +45,7 @@ class QuickStartCardViewHolder(
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {
-                            currentItem?.let { saveScrollState(recyclerView, it.id) }
+                            currentItem?.let { saveScrollState(recyclerView, it.id.toString()) }
                         }
                     }
                 })
@@ -75,12 +75,12 @@ class QuickStartCardViewHolder(
 
         quick_start_card_title.text = uiHelpers.getTextOfUiString(context, item.title)
         (quick_start_card_recycler_view.adapter as? QuickStartTaskCardAdapter)?.loadData(item.taskCards)
-        restoreScrollState(quick_start_card_recycler_view, item.id)
-        quick_start_card_more_button.setOnClickListener { item.onMoreClick?.click() }
+        restoreScrollState(quick_start_card_recycler_view, item.id.toString())
+        quick_start_card_more_button.setOnClickListener { item.onMoreClick.click() }
     }
 
     fun onRecycled() {
-        currentItem?.let { saveScrollState(itemView.quick_start_card_recycler_view, it.id) }
+        currentItem?.let { saveScrollState(itemView.quick_start_card_recycler_view, it.id.toString()) }
         currentItem = null
     }
 
