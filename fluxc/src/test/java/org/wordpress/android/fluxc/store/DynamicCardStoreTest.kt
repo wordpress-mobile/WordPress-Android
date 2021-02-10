@@ -56,7 +56,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
     }
 
     @Test
@@ -66,7 +67,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(GROW_QUICK_START)
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START)
     }
 
     @Test
@@ -76,7 +78,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(CUSTOMIZE_QUICK_START)
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -85,7 +88,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(GROW_QUICK_START)
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START)
     }
 
     @Test
@@ -94,7 +98,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(CUSTOMIZE_QUICK_START)
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -103,7 +108,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).isEmpty()
+        assertThat(result.pinnedItem).isNull()
+        assertThat(result.dynamicCardTypes).isEmpty()
     }
 
     @Test
@@ -112,7 +118,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(GROW_QUICK_START, CUSTOMIZE_QUICK_START)
+        assertThat(result.pinnedItem).isEqualTo(GROW_QUICK_START)
+        assertThat(result.dynamicCardTypes).containsExactly(GROW_QUICK_START, CUSTOMIZE_QUICK_START)
     }
 
     @Test
@@ -121,7 +128,8 @@ class DynamicCardStoreTest {
 
         val result = dynamicCardStore.getCards(siteId)
 
-        assertThat(result).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        assertThat(result.pinnedItem).isEqualTo(CUSTOMIZE_QUICK_START)
+        assertThat(result.dynamicCardTypes).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
     }
 
     private fun initEmptyDatabase() {
