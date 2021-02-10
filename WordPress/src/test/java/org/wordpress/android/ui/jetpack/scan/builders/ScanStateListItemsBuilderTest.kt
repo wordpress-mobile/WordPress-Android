@@ -311,6 +311,34 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* SCANNING STATE */
 
     @Test
+    fun `builds preparing for scan header for scanning scan state model with zero progress`() = test {
+        val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            currentStatus = ScanProgressStatus(progress = 0, startDate = Date(0))
+        )
+
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_preparing_to_scan_title))
+        )
+    }
+
+    @Test
+    fun `builds preparing for scan header for scanning scan state model with non zero progress`() = test {
+        val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            currentStatus = ScanProgressStatus(progress = 10, startDate = Date(0))
+        )
+
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_scanning_title))
+        )
+    }
+
+    @Test
     fun `builds initial scanning description for scanning scan state model with no initial recent scan`() = test {
         val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
             state = State.SCANNING,
@@ -335,6 +363,27 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_description))
+        )
+    }
+
+    @Test
+    fun `builds progress bar with progress values for scanning scan state model`() = test {
+        val progress = 10
+        val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            currentStatus = ScanProgressStatus(progress = progress, startDate = Date(0))
+        )
+
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+
+        assertThat(scanStateItems.filterIsInstance(ProgressState::class.java).first()).isEqualTo(
+            ProgressState(
+                progress = progress,
+                progressLabel = UiStringResWithParams(
+                    R.string.scan_progress_label,
+                    listOf(UiStringText(progress.toString()))
+                )
+            )
         )
     }
 
