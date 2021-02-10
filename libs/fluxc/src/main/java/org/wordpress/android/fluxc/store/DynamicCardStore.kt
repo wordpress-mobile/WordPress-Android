@@ -1,6 +1,7 @@
 package org.wordpress.android.fluxc.store
 
 import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.persistence.DynamicCardSqlUtils
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog.T
@@ -37,7 +38,7 @@ class DynamicCardStore
                 hiddenCards[siteId] = currentHiddenCards
             }
 
-    suspend fun getCards(siteId: Int): List<DynamicCardType> =
+    suspend fun getCards(siteId: Int): DynamicCardsModel =
             coroutineEngine.withDefaultContext(T.MAIN, this, "Get dynamic card") {
                 val pinnedCard = dynamicCardSqlUtils.selectPinned(siteId)
                 val removedCards = dynamicCardSqlUtils.selectRemoved(siteId).toMutableSet()
@@ -52,9 +53,9 @@ class DynamicCardStore
                     val mutableFilteredCards = filteredCards.toMutableList()
                     mutableFilteredCards.removeAt(pinnedCardIndex)
                     mutableFilteredCards.add(0, pinnedCard)
-                    mutableFilteredCards
+                    DynamicCardsModel(pinnedItem = pinnedCard, dynamicCardTypes = mutableFilteredCards)
                 } else {
-                    filteredCards
+                    DynamicCardsModel(dynamicCardTypes = filteredCards)
                 }
             }
 }
