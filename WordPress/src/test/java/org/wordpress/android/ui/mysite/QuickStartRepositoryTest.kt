@@ -183,6 +183,18 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `requestNextStepOfTask clears current active task`() = test {
+        initQuickStartInProgress()
+
+        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
+        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
+        quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
+
+        val update = result.last()
+        assertThat(update.activeTask).isNull()
+    }
+
+    @Test
     fun `requestNextStepOfTask does not proceed if the active task is different`() = test {
         initQuickStartInProgress()
 
