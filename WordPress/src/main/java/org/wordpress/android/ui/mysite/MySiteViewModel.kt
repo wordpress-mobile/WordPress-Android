@@ -389,6 +389,10 @@ class MySiteViewModel
         currentAvatarSource.refresh()
     }
 
+    fun clearActiveQuickStartTask() {
+        quickStartRepository.clearActiveTask()
+    }
+
     fun onSiteNameChosen(input: String) {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.postValue(

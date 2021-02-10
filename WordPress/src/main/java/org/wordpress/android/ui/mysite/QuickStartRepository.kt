@@ -131,6 +131,10 @@ class QuickStartRepository
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
     }
 
+    fun clearActiveTask() {
+        _activeTask.value = null
+    }
+
     fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
