@@ -179,6 +179,36 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(ClickableTextInfo(17, 31, onHelpClickedMock))
     }
 
+    /* SCANNING STATE */
+
+    @Test
+    fun `builds initial scanning description for scanning scan state model with no initial recent scan`() = test {
+        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
+        )
+
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
+        )
+    }
+
+    @Test
+    fun `builds scanning description for scanning scan state model with past recent scan`() = test {
+        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+            state = State.SCANNING,
+            mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
+        )
+
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+
+        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
+            DescriptionState(UiStringRes(R.string.scan_scanning_description))
+        )
+    }
+
     /* PROVISIONING STATE */
 
     @Test
@@ -238,36 +268,6 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val scanStateItems = buildScanStateItems(scanStateModelInUnAvailableState)
 
         assertThat(scanStateItems).isEmpty()
-    }
-
-    /* SCANNING STATE */
-
-    @Test
-    fun `builds initial scanning description for scanning scan state model with no initial recent scan`() = test {
-        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
-            state = State.SCANNING,
-            mostRecentStatus = ScanProgressStatus(isInitial = true, startDate = Date(0))
-        )
-
-        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
-
-        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-            DescriptionState(UiStringRes(R.string.scan_scanning_is_initial_description))
-        )
-    }
-
-    @Test
-    fun `builds scanning description for scanning scan state model with past recent scan`() = test {
-        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
-            state = State.SCANNING,
-            mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
-        )
-
-        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
-
-        assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-            DescriptionState(UiStringRes(R.string.scan_scanning_description))
-        )
     }
 
     private suspend fun buildScanStateItems(
