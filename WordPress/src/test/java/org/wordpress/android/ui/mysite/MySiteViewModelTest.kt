@@ -58,7 +58,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -260,7 +259,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         currentAvatar.value = CurrentAvatarUrl("")
 
         assertThat(uiModels).hasSize(1)
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
     }
 
     @Test
@@ -900,8 +899,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
-        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
     }
 
     @Test
@@ -911,8 +910,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
-        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
     }
 
     @Test
