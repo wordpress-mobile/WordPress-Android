@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/content_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -44,28 +43,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/search_input_layout" />
 
-    <ImageView
-        android:id="@+id/domain_list_example_back"
+    <include
+        android:id="@+id/domain_list_example"
+        layout="@layout/site_creation_domains_screen_example"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/site_creation_domains_example_height"
+        android:layout_height="0dp"
         android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
         android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
         android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
-        android:scaleType="fitXY"
-        android:src="@drawable/domain_example_200dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/search_input_layout"
-        tools:ignore="ContentDescription" />
-
-    <TextView
-        android:id="@+id/domain_list_example_text"
-        style="@style/SiteCreationDomainExample"
-        android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginStart="@dimen/margin_extra_extra_medium_large"
-        android:layout_marginTop="@dimen/site_creation_domains_example_top_margin"
-        android:paddingTop="@dimen/margin_large"
-        android:text="@string/new_site_creation_search_domain_example"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/search_input_layout" />
