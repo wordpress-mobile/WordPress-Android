@@ -104,7 +104,7 @@ class QuickStartRepository
     }
 
     fun refresh() {
-        _activeTask.value = null
+        quickStartTaskTypes.postValue(quickStartTaskTypes.value)
     }
 
     fun setActiveTask(task: QuickStartTask) {
