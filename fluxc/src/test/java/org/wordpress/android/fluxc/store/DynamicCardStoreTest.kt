@@ -37,6 +37,13 @@ class DynamicCardStoreTest {
     }
 
     @Test
+    fun `unpin calls sql utils`() = test {
+        dynamicCardStore.unpinCard(siteId)
+
+        verify(dynamicCardSqlUtils).unpin(siteId)
+    }
+
+    @Test
     fun `remove calls sql utils`() = test {
         dynamicCardStore.removeCard(siteId, CUSTOMIZE_QUICK_START)
 
