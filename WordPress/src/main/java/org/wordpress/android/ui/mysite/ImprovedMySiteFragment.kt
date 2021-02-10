@@ -331,6 +331,15 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.refresh()
     }
 
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            if (!it.isChangingConfigurations) {
+                viewModel.clearActiveQuickStartTask()
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
         recycler_view.layoutManager?.let {
