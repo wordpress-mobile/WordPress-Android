@@ -71,7 +71,10 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeader = HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
-        val scanDescription = DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+        val scanDescriptionResId = if (fixingThreatIds.size > 1) {
+            R.string.scan_fixing_threats_description
+        } else R.string.scan_fixing_threat_description
+        val scanDescription = DescriptionState(UiStringRes(scanDescriptionResId))
         val scanProgress = ProgressState(isIndeterminate = true, isVisible = fixingThreatIds.isNotEmpty())
 
         items.add(scanIcon)

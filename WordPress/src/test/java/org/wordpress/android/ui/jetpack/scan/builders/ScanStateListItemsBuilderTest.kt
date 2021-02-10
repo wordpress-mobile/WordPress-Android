@@ -106,14 +106,14 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds fixing threats description for fixing threats state`() = test {
+    fun `builds fixing threat description for fixing threat state`() = test {
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
             fixingThreatIds = listOf(threat.baseThreatModel.id)
         )
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+            DescriptionState(UiStringRes(R.string.scan_fixing_threat_description))
         )
     }
 
