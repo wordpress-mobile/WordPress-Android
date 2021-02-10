@@ -1,8 +1,8 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.ui.mysite.MySiteSource.SiteIndependentSource
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCards
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -23,7 +23,7 @@ class DynamicCardsSource
         pinnedItem.value = appPrefsWrapper.getPinnedDynamicCardType()
     }
 
-    override fun buildSource(): Flow<DynamicCards?> {
+    override fun buildSource(coroutineScope: CoroutineScope): LiveData<DynamicCards> {
         return merge(pinnedItem, hiddenItems) { pinnedItem, hiddenItems ->
             val filteredCards = DynamicCardType.values()
                     .filter { hiddenItems.isNullOrEmpty() || !hiddenItems.contains(it) }
@@ -44,7 +44,7 @@ class DynamicCardsSource
                     pinnedItem,
                     updatedCards
             )
-        }.asFlow()
+        }
     }
 
     fun pinItem(dynamicCardType: DynamicCardType) {

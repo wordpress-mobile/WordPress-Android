@@ -56,6 +56,7 @@ import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCards
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
@@ -90,6 +91,7 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.ListItemInteraction
@@ -147,6 +149,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
+    private val dynamicCards = MutableLiveData(DynamicCards(cards = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)))
 
     @InternalCoroutinesApi
     @Before
@@ -159,6 +162,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
         whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
         whenever(quickStartRepository.buildSource(any(), any())).thenReturn(quickStartUpdate)
+        whenever(dynamicCardsSource.buildSource(any())).thenReturn(dynamicCards)
+        whenever(dynamicCardsSource.buildSource(any(), any())).thenReturn(dynamicCards)
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
@@ -262,7 +267,6 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteSelected.value = null
         currentAvatar.value = CurrentAvatarUrl("")
 
-        assertThat(uiModels).hasSize(1)
         assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
     }
 
@@ -270,7 +274,6 @@ class MySiteViewModelTest : BaseUnitTest() {
     fun `model contains header of selected site`() {
         initSelectedSite()
 
-        assertThat(uiModels).hasSize(2)
         assertThat(uiModels.last().state).isInstanceOf(SiteSelected::class.java)
 
         assertThat(getLastItems()).hasSize(2)
@@ -493,7 +496,6 @@ class MySiteViewModelTest : BaseUnitTest() {
 
         currentAvatar.value = CurrentAvatarUrl(avatarUrl)
 
-        assertThat(uiModels).hasSize(3)
         assertThat(uiModels.last().accountAvatarUrl).isEqualTo(avatarUrl)
     }
 
