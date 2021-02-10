@@ -4,19 +4,18 @@ import android.text.SpannableString
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
@@ -58,7 +57,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
-    private lateinit var source: Flow<QuickStartUpdate>
+    private lateinit var result: MutableList<QuickStartUpdate>
     private val siteId = 1
 
     @InternalCoroutinesApi
@@ -82,7 +81,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         }
         site = SiteModel()
         site.id = siteId
-        source = quickStartRepository.buildSource(siteId)
+        result = mutableListOf()
+        quickStartRepository.buildSource(TEST_SCOPE, siteId).observeForever { result.add(it) }
     }
 
     @Test
@@ -91,7 +91,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.refresh()
 
-        assertModel(1)
+        assertModel()
     }
 
     @Test
@@ -102,7 +102,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.startQuickStart()
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
-        assertModel(1)
+        assertModel()
     }
 
     @Test
@@ -114,7 +114,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
-        assertThat(source.take(1).toList().last().activeTask).isEqualTo(PUBLISH_POST)
+        assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
         assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
     }
 
@@ -141,7 +141,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.completeTask(task)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
-        val update = source.take(1).toList().last()
+        val update = result.last()
         assertThat(update.activeTask).isNull()
         assertThat(update.categories).isNotEmpty()
     }
@@ -153,6 +153,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(PUBLISH_POST)
+
+        reset(quickStartStore)
 
         quickStartRepository.completeTask(UPDATE_SITE_TITLE)
 
@@ -178,7 +180,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
-        val update = source.take(1).toList().last()
+        val update = result.last()
         assertThat(update.activeTask).isNull()
     }
 
@@ -191,7 +193,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
         verifyZeroInteractions(eventBus)
-        val update = source.take(1).toList().last()
+        val update = result.last()
         assertThat(update.activeTask).isEqualTo(PUBLISH_POST)
     }
 
@@ -203,7 +205,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
 
-        quickStartRepository.buildSource(updatedSiteId)
+        quickStartRepository.buildSource(TEST_SCOPE, updatedSiteId)
 
         verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
@@ -215,7 +217,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartRepository.buildSource(updatedSiteId)
+        quickStartRepository.buildSource(TEST_SCOPE, updatedSiteId)
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
@@ -226,7 +228,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(CUSTOMIZE_QUICK_START)
 
-        val quickStartUpdate = source.take(1).toList().last()
+        val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(GROW)
@@ -239,7 +241,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.hideCategory(GROW_QUICK_START)
 
-        val quickStartUpdate = source.take(1).toList().last()
+        val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
@@ -252,7 +254,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.removeCategory(CUSTOMIZE_QUICK_START)
 
-        val quickStartUpdate = source.take(1).toList().last()
+        val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(GROW)
@@ -267,7 +269,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
         quickStartRepository.removeCategory(GROW_QUICK_START)
 
-        val quickStartUpdate = source.take(1).toList().last()
+        val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
             assertThat(this).hasSize(1)
             assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
@@ -296,8 +298,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), GROW)).thenReturn(listOf(PUBLISH_POST))
     }
 
-    private suspend fun assertModel(elements: Int = 1) {
-        val quickStartUpdate = source.take(elements).toList().last()
+    private fun assertModel() {
+        val quickStartUpdate = result.last()
         quickStartUpdate.categories.let { categories ->
             assertThat(categories).hasSize(2)
             assertThat(categories[0].taskType).isEqualTo(CUSTOMIZE)

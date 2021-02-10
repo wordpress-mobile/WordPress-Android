@@ -13,7 +13,6 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.launch
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -32,8 +31,8 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.test
@@ -59,7 +58,6 @@ import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarU
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.NoSites
 import org.wordpress.android.ui.mysite.MySiteViewModel.State.SiteSelected
 import org.wordpress.android.ui.mysite.MySiteViewModel.TextInputDialogModel
@@ -145,10 +143,10 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val onSiteChange = MutableLiveData<SiteModel>()
     private val onSiteSelected = MutableLiveData<Int>()
     private val onShowSiteIconProgressBar = MutableLiveData<Boolean>()
-    private val isDomainCreditAvailable = MutableStateFlow(DomainCreditAvailable(false))
-    private val jetpackCapabilities = MutableStateFlow(JetpackCapabilities(false, false))
-    private val currentAvatar = MutableStateFlow(CurrentAvatarUrl(""))
-    private val quickStartUpdate = MutableStateFlow(QuickStartUpdate())
+    private val isDomainCreditAvailable = MutableLiveData(DomainCreditAvailable(false))
+    private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
+    private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
+    private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
 
     @InternalCoroutinesApi
     @Before
@@ -156,11 +154,11 @@ class MySiteViewModelTest : BaseUnitTest() {
         onSiteChange.value = null
         onShowSiteIconProgressBar.value = null
         onSiteSelected.value = null
-        whenever(domainRegistrationHandler.buildSource(any())).thenReturn(isDomainCreditAvailable)
-        whenever(scanAndBackupSource.buildSource(any())).thenReturn(jetpackCapabilities)
-        whenever(currentAvatarSource.buildSource()).thenReturn(currentAvatar)
+        whenever(domainRegistrationHandler.buildSource(any(), any())).thenReturn(isDomainCreditAvailable)
+        whenever(scanAndBackupSource.buildSource(any(), any())).thenReturn(jetpackCapabilities)
         whenever(currentAvatarSource.buildSource(any())).thenReturn(currentAvatar)
-        whenever(quickStartRepository.buildSource(any())).thenReturn(quickStartUpdate)
+        whenever(currentAvatarSource.buildSource(any(), any())).thenReturn(currentAvatar)
+        whenever(quickStartRepository.buildSource(any(), any())).thenReturn(quickStartUpdate)
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
@@ -265,7 +263,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         currentAvatar.value = CurrentAvatarUrl("")
 
         assertThat(uiModels).hasSize(1)
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
     }
 
     @Test
@@ -905,8 +903,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
-        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isTrue
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isTrue
     }
 
     @Test
@@ -916,8 +914,8 @@ class MySiteViewModelTest : BaseUnitTest() {
         initSelectedSite()
         onSiteSelected.value = null
 
-        assertThat(uiModels.last().state).isInstanceOf(State.NoSites::class.java)
-        assertThat((uiModels.last().state as State.NoSites).shouldShowImage).isFalse
+        assertThat(uiModels.last().state).isInstanceOf(NoSites::class.java)
+        assertThat((uiModels.last().state as NoSites).shouldShowImage).isFalse
     }
 
     @Test

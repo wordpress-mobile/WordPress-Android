@@ -5,14 +5,14 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.count
-import kotlinx.coroutines.flow.single
+import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.PlanModel
 import org.wordpress.android.fluxc.model.SiteModel
@@ -33,22 +33,29 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     @Mock lateinit var siteUtils: SiteUtilsWrapper
     private val siteId = 1
     private val site = SiteModel()
-    private lateinit var source: Flow<DomainCreditAvailable>
+    private lateinit var result: MutableList<DomainCreditAvailable>
     private lateinit var handler: DomainRegistrationHandler
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
-        handler = DomainRegistrationHandler(dispatcher, selectedSiteRepository, appLogWrapper, siteUtils)
+        handler = DomainRegistrationHandler(
+                TEST_DISPATCHER,
+                dispatcher,
+                selectedSiteRepository,
+                appLogWrapper,
+                siteUtils
+        )
         site.id = siteId
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
-        source = handler.buildSource(siteId)
+        result = mutableListOf()
     }
 
     @Test
     fun `when site is free, emit false and don't fetch`() = test {
         setupSite(site = site, isFree = true, hasCustomDomain = false)
 
-        assertThat(source.single().isDomainCreditAvailable).isFalse
+        assertThat(result.last().isDomainCreditAvailable).isFalse
 
         verify(dispatcher, never()).dispatch(any())
     }
@@ -57,7 +64,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     fun `when site has custom domain, emit false and don't fetch`() = test {
         setupSite(site = site, isFree = false, hasCustomDomain = true)
 
-        assertThat(source.single().isDomainCreditAvailable).isFalse
+        assertThat(result.last().isDomainCreditAvailable).isFalse
 
         verify(dispatcher, never()).dispatch(any())
     }
@@ -66,7 +73,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     fun `when fetched site has a plan with credits, start to fetch and emit true`() = test {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = true))
 
-        assertThat(source.single().isDomainCreditAvailable).isTrue
+        assertThat(result.last().isDomainCreditAvailable).isTrue
 
         verify(dispatcher, times(1)).dispatch(any())
     }
@@ -75,7 +82,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
     fun `when fetched site doesn't have a plan with credits, start to fetch and emit false`() = test {
         setupSite(site = site, currentPlan = buildPlan(hasDomainCredit = false))
 
-        assertThat(source.single().isDomainCreditAvailable).isFalse
+        assertThat(result.last().isDomainCreditAvailable).isFalse
     }
 
     @Test
@@ -90,14 +97,14 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
             handler.onPlansFetched(event)
         }
 
-        assertThat(source.single().isDomainCreditAvailable).isFalse
+        assertThat(result.last().isDomainCreditAvailable).isFalse
     }
 
     @Test
     fun `when fetch fails, don't emit value`() = test {
         setupSite(site = site, error = GENERIC_ERROR)
 
-        assertThat(source.count()).isEqualTo(0)
+        assertThat(result.count()).isEqualTo(0)
     }
 
     private fun setupSite(
@@ -112,6 +119,7 @@ class DomainRegistrationHandlerTest : BaseUnitTest() {
         buildOnPlansFetchedEvent(site, currentPlan, error)?.let { event ->
             whenever(dispatcher.dispatch(any())).then { handler.onPlansFetched(event) }
         }
+        handler.buildSource(TEST_SCOPE, siteId).observeForever { result.add(it) }
     }
 
     private fun buildOnPlansFetchedEvent(

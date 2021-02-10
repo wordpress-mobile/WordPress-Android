@@ -159,7 +159,7 @@ class MySiteViewModel
     val onUploadedItem = siteIconUploadHandler.onUploadedItem
 
     val uiModel: LiveData<UiModel> = MySiteStateProvider(
-            bgDispatcher,
+            this,
             selectedSiteRepository,
             quickStartRepository,
             currentAvatarSource,

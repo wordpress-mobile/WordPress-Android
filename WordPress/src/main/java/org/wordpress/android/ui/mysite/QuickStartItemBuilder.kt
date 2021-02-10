@@ -118,10 +118,10 @@ class QuickStartItemBuilder
             CHECK_STATS -> R.drawable.img_illustration_quick_start_task_check_site_stats
             EDIT_HOMEPAGE -> R.drawable.img_illustration_quick_start_task_edit_your_homepage
             REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
+            EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_explore_plans
             // Replace with an actual drawable or change the tasks, and then remove the placeholders
             CREATE_SITE -> R.drawable.bg_quick_start_customize_task_illustration_placeholder
-            QuickStartTask.UNKNOWN,
-            EXPLORE_PLANS -> R.drawable.bg_quick_start_grow_task_illustration_placeholder
+            QuickStartTask.UNKNOWN -> R.drawable.bg_quick_start_grow_task_illustration_placeholder
         }
     }
 }

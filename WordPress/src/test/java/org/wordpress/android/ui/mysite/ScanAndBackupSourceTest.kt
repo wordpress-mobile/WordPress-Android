@@ -2,20 +2,21 @@ package org.wordpress.android.ui.mysite
 
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.single
-import kotlinx.coroutines.flow.take
-import kotlinx.coroutines.flow.toList
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.TEST_DISPATCHER
+import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ScanScreenFeatureConfig
@@ -31,9 +32,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     private val siteId = 1
     private val siteRemoteId = 2L
 
+    @InternalCoroutinesApi
     @Before
     fun setUp() {
         scanAndBackupSource = ScanAndBackupSource(
+                TEST_DISPATCHER,
                 selectedSiteRepository,
                 scanScreenFeatureConfig,
                 backupScreenFeatureConfig,
@@ -51,20 +54,22 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
     fun `jetpack capabilities disabled when site not present`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        val result = scanAndBackupSource.buildSource(siteId).single()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isFalse
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.backupAvailable).isFalse
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
     fun `jetpack capabilities disabled when both scan and flag are disabled`() = test {
         init(scanScreenFeatureEnabled = false, backupScreenFeatureEnabled = false)
 
-        val result = scanAndBackupSource.buildSource(siteId).single()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isFalse
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.backupAvailable).isFalse
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
@@ -75,10 +80,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isFalse
-        assertThat(result.scanAvailable).isTrue
+        assertThat(result!!.backupAvailable).isFalse
+        assertThat(result!!.scanAvailable).isTrue
     }
 
     @Test
@@ -89,10 +95,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isTrue
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.backupAvailable).isTrue
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
@@ -103,10 +110,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = true, backup = true)) }
         )
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isTrue
-        assertThat(result.scanAvailable).isTrue
+        assertThat(result!!.backupAvailable).isTrue
+        assertThat(result!!.scanAvailable).isTrue
     }
 
     @Test
@@ -117,10 +125,11 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
                 flow { emit(JetpackPurchasedProducts(scan = false, backup = false)) }
         )
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.backupAvailable).isFalse
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.backupAvailable).isFalse
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
@@ -132,9 +141,10 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
         whenever(site.isWPCom).thenReturn(true)
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
@@ -146,9 +156,10 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
         whenever(site.isWPComAtomic).thenReturn(true)
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.scanAvailable).isFalse
+        assertThat(result!!.scanAvailable).isFalse
     }
 
     @Test
@@ -161,9 +172,10 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPCom).thenReturn(false)
         whenever(site.isWPComAtomic).thenReturn(false)
 
-        val result = scanAndBackupSource.buildSource(siteId).take(2).toList().last()
+        var result: JetpackCapabilities? = null
+        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
 
-        assertThat(result.scanAvailable).isTrue
+        assertThat(result!!.scanAvailable).isTrue
     }
 
     private fun init(scanScreenFeatureEnabled: Boolean = false, backupScreenFeatureEnabled: Boolean = false) {

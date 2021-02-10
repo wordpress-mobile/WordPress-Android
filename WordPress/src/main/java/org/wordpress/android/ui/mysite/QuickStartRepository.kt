@@ -3,11 +3,9 @@ package org.wordpress.android.ui.mysite
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -84,7 +82,7 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(siteId: Int): Flow<QuickStartUpdate> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
@@ -98,7 +96,7 @@ class QuickStartRepository
                 listOf()
             }
             QuickStartUpdate(activeTask, categories)
-        }.asFlow()
+        }
     }
 
     fun startQuickStart() {
