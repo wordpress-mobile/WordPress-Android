@@ -93,18 +93,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `refresh clears current active task`() = test {
-        initQuickStartInProgress()
-
-        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
-        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
-        quickStartRepository.refresh()
-
-        val update = result.last()
-        assertThat(update.activeTask).isNull()
-    }
-
-    @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
