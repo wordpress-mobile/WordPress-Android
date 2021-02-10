@@ -525,6 +525,11 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
     }
 
     @Override
+    public void gotUnregisteredEmail(String email) {
+        // Do nothing.
+    }
+
+    @Override
     public void gotUnregisteredSocialAccount(String email, String displayName, String idToken, String photoUrl,
                                              String service) {
         SignupConfirmationFragment signupConfirmationFragment =
