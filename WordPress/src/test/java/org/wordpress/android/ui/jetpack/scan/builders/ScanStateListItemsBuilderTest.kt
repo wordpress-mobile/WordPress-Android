@@ -2,6 +2,7 @@ package org.wordpress.android.ui.jetpack.scan.builders
 
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -20,6 +21,7 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.store.ScanStore
 import org.wordpress.android.test
+import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState.ClickableTextInfo
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
@@ -31,11 +33,15 @@ import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemsBuild
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 import java.util.Date
 
-// TODO ashiagr add missing tests
+private const val DUMMY_CURRENT_TIME = 10000000L
+private const val ONE_MINUTE = 60 * 1000L
+private const val ONE_HOUR = 60 * ONE_MINUTE
+
 @InternalCoroutinesApi
 class ScanStateListItemsBuilderTest : BaseUnitTest() {
     private lateinit var builder: ScanStateListItemsBuilder
@@ -71,6 +77,10 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
             threatDetailsListItemsBuilder,
             scanStore
         )
+        whenever(htmlMessageUtils.getHtmlMessageFromStringFormatResId(anyInt(), any())).thenReturn("")
+        whenever(resourceProvider.getString(R.string.scan_here_to_help)).thenReturn("")
+        whenever(site.name).thenReturn((""))
+        whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
     }
 
     /* FIXING THREATS STATE */
@@ -166,6 +176,51 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* IDLE - THREATS FOUND STATE */
 
     @Test
+    fun `builds threats found description for idle state model contains threats`() = test {
+        buildScanStateItems(scanStateModelWithThreats)
+
+        verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(
+            R.string.scan_idle_with_threats_description,
+            "<b>${threats.size}</b>",
+            "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
+            resourceProvider.getString(R.string.scan_here_to_help)
+        )
+    }
+
+    @Test
+    fun `builds scan now button for idle state model with threats`() = test {
+        val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+
+        assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
+            UiStringRes(R.string.scan_again)
+        )
+    }
+
+    @Test
+    fun `builds fix threats button for idle state model with fixable threats`() = test {
+        val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = mock())))
+        val scanStateModelWithFixableThreats = scanStateModelWithThreats.copy(threats = threats)
+
+        val scanStateItems = buildScanStateItems(scanStateModelWithFixableThreats)
+
+        assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
+            UiStringRes(R.string.threats_fix_all)
+        )
+    }
+
+    @Test
+    fun `builds fix threats button for idle state model with no fixable threats`() = test {
+        val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = null)))
+        val scanStateModelWithNoFixableThreats = scanStateModelWithThreats.copy(threats = threats)
+
+        val scanStateItems = buildScanStateItems(scanStateModelWithNoFixableThreats)
+
+        assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).doesNotContain(
+            UiStringRes(R.string.threats_fix_all)
+        )
+    }
+
+    @Test
     fun `builds clickable text info in description for scan state model with threats`() = test {
         val clickableText = "clickable text"
         val descriptionWithClickableText = "description with $clickableText"
@@ -178,6 +233,80 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         val descriptionState = scanStateItems.filterIsInstance(DescriptionState::class.java).first()
         assertThat(descriptionState.clickableTextsInfo?.first()).isEqualTo(ClickableTextInfo(17, 31, onHelpClickedMock))
     }
+
+    /* IDLE - THREATS NOT FOUND STATE */
+
+    @Test
+    fun `builds scan again button for idle state model with no threats`() = test {
+        val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
+
+        assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
+            UiStringRes(R.string.scan_now)
+        )
+    }
+
+    @Test
+    fun `builds seconds ago description for idle state model with most recent start date secs ago from current date`() =
+        test {
+            whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - 10))
+            )
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
+                        UiStringRes(R.string.scan_in_few_seconds),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
+                )
+            )
+        }
+
+    @Test
+    fun `builds hours ago description for idle state model with most recent start date hours ago from current date`() =
+        test {
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_HOUR))
+            )
+
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
+                        UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("${1}"))),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
+                )
+            )
+        }
+
+    @Test
+    fun `builds mins ago description for idle state model with most recent start date mins ago from current date`() =
+        test {
+            val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
+                mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_MINUTE))
+            )
+
+            val scanStateItems = buildScanStateItems(scanStateModelWithMostRecentStartDate)
+
+            assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).map { it.text }).contains(
+                UiStringResWithParams(
+                    R.string.scan_idle_last_scan_description,
+                    listOf(
+                        UiStringResWithParams(
+                            R.string.scan_in_minutes_ago,
+                            listOf(UiStringText("${1}"))
+                        ),
+                        UiStringRes(R.string.scan_idle_manual_scan_description)
+                    )
+                )
+            )
+        }
 
     /* SCANNING STATE */
 
