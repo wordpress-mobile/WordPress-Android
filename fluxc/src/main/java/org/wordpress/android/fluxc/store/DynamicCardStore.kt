@@ -20,6 +20,11 @@ class DynamicCardStore
                 dynamicCardSqlUtils.pin(siteId, dynamicCardType)
             }
 
+    suspend fun unpinCard(siteId: Int) =
+            coroutineEngine.withDefaultContext(T.MAIN, this, "Unpin dynamic card") {
+                dynamicCardSqlUtils.unpin(siteId)
+            }
+
     suspend fun removeCard(siteId: Int, dynamicCardType: DynamicCardType) =
             coroutineEngine.withDefaultContext(T.MAIN, this, "Remove dynamic card") {
                 dynamicCardSqlUtils.remove(siteId, dynamicCardType)
