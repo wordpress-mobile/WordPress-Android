@@ -81,18 +81,7 @@ class FetchScanHistoryUseCaseTest : BaseUnitTest() {
     }
 
     @Test
-    fun `Success returned, when the request succeeds`() = test {
-        whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(
-                OnScanHistoryFetched(site.siteId, null, FETCH_SCAN_HISTORY)
-        )
-
-        val result = fetchScanHistoryUseCase.fetch(site)
-
-        assertThat(result).isInstanceOf(Success::class.java)
-    }
-
-    @Test
-    fun `Data from db returned, when the request suceeds`() = test {
+    fun `Data from db returned, when the request succeeds`() = test {
         val threats = listOf<ThreatModel>(mock(), mock())
         whenever(scanStore.fetchScanHistory(anyOrNull())).thenReturn(
                 OnScanHistoryFetched(site.siteId, null, FETCH_SCAN_HISTORY)
