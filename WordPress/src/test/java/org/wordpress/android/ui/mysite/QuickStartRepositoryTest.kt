@@ -145,6 +145,23 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `completeTask marks current pending task as done and refreshes model`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        initStore()
+        val task = PUBLISH_POST
+
+        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.requestNextStepOfTask(task)
+        quickStartRepository.completeTask(task)
+
+        verify(quickStartStore).setDoneTask(siteId.toLong(), task, true)
+        val update = result.last()
+        assertThat(update.activeTask).isNull()
+        assertThat(update.categories).isNotEmpty()
+    }
+
+    @Test
     fun `completeTask does not marks active task as done if it is different`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
