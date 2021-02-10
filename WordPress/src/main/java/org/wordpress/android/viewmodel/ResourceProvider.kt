@@ -1,6 +1,9 @@
 package org.wordpress.android.viewmodel
 
+import android.content.Context
 import android.graphics.drawable.Drawable
+import android.util.TypedValue
+import androidx.annotation.AttrRes
 import androidx.annotation.ColorRes
 import androidx.annotation.DimenRes
 import androidx.annotation.StringRes
@@ -20,6 +23,14 @@ class ResourceProvider @Inject constructor(private val contextProvider: ContextP
 
     fun getColor(@ColorRes resourceId: Int): Int {
         return ContextCompat.getColor(contextProvider.getContext(), resourceId)
+    }
+
+    fun getAttr(activityContext: Context, @AttrRes colorAttr: Int): Int {
+        return ContextCompat.getColor(activityContext,
+                TypedValue().let {
+                    activityContext.theme.resolveAttribute(colorAttr, it, true)
+                    it.resourceId
+                })
     }
 
     fun getDimensionPixelSize(@DimenRes dimen: Int): Int {

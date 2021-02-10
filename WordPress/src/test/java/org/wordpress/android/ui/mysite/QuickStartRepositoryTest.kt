@@ -55,6 +55,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
+    private lateinit var quickStartPrompts: MutableList<QuickStartMySitePrompts>
     private lateinit var result: MutableList<QuickStartUpdate>
     private val siteId = 1
 
@@ -73,9 +74,13 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 appPrefsWrapper
         )
         snackbars = mutableListOf()
+        quickStartPrompts = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
             event?.getContentIfNotHandled()
                     ?.let { snackbars.add(it) }
+        }
+        quickStartRepository.onQuickStartMySitePrompts.observeForever { event ->
+            event?.getContentIfNotHandled()?.let { quickStartPrompts.add(it) }
         }
         site = SiteModel()
         site.id = siteId
@@ -108,23 +113,10 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
         quickStartRepository.refresh()
 
-        val spannableString = initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
-
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
         assertThat(result.last().activeTask).isEqualTo(PUBLISH_POST)
-        assertThat((snackbars.last().message as UiStringText).text).isEqualTo(spannableString)
-    }
-
-    private fun initActiveTask(quickStartMySitePrompts: QuickStartMySitePrompts): SpannableString {
-        val spannableString = mock<SpannableString>()
-        whenever(
-                quickStartUtils.stylizeQuickStartPrompt(
-                        eq(quickStartMySitePrompts.shortMessagePrompt),
-                        eq(quickStartMySitePrompts.iconId)
-                )
-        ).thenReturn(spannableString)
-        return spannableString
+        assertThat(quickStartPrompts.last()).isEqualTo(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
     }
 
     @Test
@@ -133,7 +125,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
         val task = PUBLISH_POST
 
-        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(task)
 
         quickStartRepository.completeTask(task)
@@ -149,7 +140,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
-        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(PUBLISH_POST)
 
         reset(quickStartStore)
@@ -163,7 +153,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `requestNextStepOfTask emits quick start event`() {
         initQuickStartInProgress()
 
-        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
@@ -174,7 +163,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `requestNextStepOfTask clears current active task`() = test {
         initQuickStartInProgress()
 
-        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 
@@ -186,7 +174,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `requestNextStepOfTask does not proceed if the active task is different`() = test {
         initQuickStartInProgress()
 
-        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(PUBLISH_POST)
         quickStartRepository.requestNextStepOfTask(ENABLE_POST_SHARING)
 

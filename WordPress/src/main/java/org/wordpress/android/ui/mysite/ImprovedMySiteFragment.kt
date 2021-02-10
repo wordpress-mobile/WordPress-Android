@@ -71,9 +71,11 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -95,6 +97,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
     private lateinit var quickStartMenuViewModel: QuickStartMenuViewModel
@@ -276,6 +279,16 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.onSnackbarMessage.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { messageHolder ->
                 showSnackbar(messageHolder)
+            }
+        })
+        viewModel.onQuickStartMySitePrompts.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { activeTutorialPrompt ->
+                val message = quickStartUtils.stylizeQuickStartPrompt(
+                        requireContext(),
+                        activeTutorialPrompt.shortMessagePrompt,
+                        activeTutorialPrompt.iconId
+                )
+                showSnackbar(SnackbarMessageHolder(UiStringText(message)))
             }
         })
         viewModel.onMediaUpload.observe(viewLifecycleOwner, {

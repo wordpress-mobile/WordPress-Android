@@ -67,6 +67,7 @@ class QuickStartUtils {
         @JvmOverloads
         fun stylizeQuickStartPrompt(
             resourceProvider: ResourceProvider,
+            activityContext: Context,
             messageId: Int,
             iconId: Int = ICON_NOT_SET
         ): Spannable {
@@ -96,7 +97,7 @@ class QuickStartUtils {
             )
             // nothing to highlight
             if (startOfHighlight != -1 && endOfHighlight != -1) {
-                val highlightColor = resourceProvider.getColor(android.R.color.white)
+                val highlightColor = resourceProvider.getAttr(activityContext, R.attr.colorSurface)
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
                         startOfHighlight, endOfHighlight, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
