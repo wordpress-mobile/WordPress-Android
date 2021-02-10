@@ -213,6 +213,18 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
+    fun `clearActiveTask clears current active task`() = test {
+        initQuickStartInProgress()
+
+        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
+        quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
+        quickStartRepository.clearActiveTask()
+
+        val update = result.last()
+        assertThat(update.activeTask).isNull()
+    }
+
+    @Test
     fun `marks EDIT_HOMEPAGE task as done when site showing Posts instead of Homepage`() = test {
         val updatedSiteId = 2
         site.id = updatedSiteId
