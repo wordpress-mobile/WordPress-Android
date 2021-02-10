@@ -326,12 +326,12 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
 
     @Test
     fun `builds scanning description for scanning scan state model with past recent scan`() = test {
-        val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
+        val scanStateModelInScanningNonInitialState = scanStateModelWithNoThreats.copy(
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
         )
 
-        val scanStateItems = buildScanStateItems(scanStateModelInScanningInitialState)
+        val scanStateItems = buildScanStateItems(scanStateModelInScanningNonInitialState)
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
             DescriptionState(UiStringRes(R.string.scan_scanning_description))
