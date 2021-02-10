@@ -7,9 +7,9 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.Type.CATEGORY_HEADER
 import org.wordpress.android.ui.mysite.MySiteItem.Type.DOMAIN_REGISTRATION_BLOCK

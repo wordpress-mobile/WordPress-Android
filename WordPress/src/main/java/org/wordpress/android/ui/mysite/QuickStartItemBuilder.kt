@@ -19,9 +19,11 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
@@ -32,7 +34,8 @@ class QuickStartItemBuilder
 @Inject constructor() {
     fun build(
         quickStartCategory: QuickStartCategory,
-        onQuickStartCardMoreClick: (String) -> Unit,
+        pinnedDynamicCardType: DynamicCardType?,
+        onQuickStartCardMoreClick: (DynamicCardMenuModel) -> Unit,
         onQuickStartTaskClick: (QuickStartTask) -> Unit
     ): QuickStartCard {
         val accentColor = getAccentColor(quickStartCategory.taskType)
@@ -46,15 +49,24 @@ class QuickStartItemBuilder
             )
         }
         tasks.addAll(completedTasks)
-        val id = quickStartCategory.taskType.toString()
+        val dynamicCardType = quickStartCategory.taskType.toDynamicCardType()
+        val isPinned = pinnedDynamicCardType == dynamicCardType
         return QuickStartCard(
-                id,
+                dynamicCardType,
                 UiStringRes(getTitle(quickStartCategory.taskType)),
                 tasks,
                 accentColor,
                 getProgress(tasks, completedTasks),
-                ListItemInteraction.create(id, onQuickStartCardMoreClick)
+                ListItemInteraction.create(DynamicCardMenuModel(dynamicCardType, isPinned), onQuickStartCardMoreClick)
         )
+    }
+
+    private fun QuickStartTaskType.toDynamicCardType(): DynamicCardType {
+        return when (this) {
+            CUSTOMIZE -> DynamicCardType.CUSTOMIZE_QUICK_START
+            GROW -> DynamicCardType.GROW_QUICK_START
+            UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
+        }
     }
 
     private fun getProgress(tasks: List<QuickStartTaskCard>, completedTasks: List<QuickStartTaskCard>): Int {

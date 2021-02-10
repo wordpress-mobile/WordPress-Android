@@ -24,6 +24,7 @@
 
         <TextView
             style="@style/MainBottomSheetRowTextView"
+            android:id="@+id/quick_start_pin_text"
             android:gravity="start"
             android:text="@string/quick_start_card_menu_pin" />
     </LinearLayout>
