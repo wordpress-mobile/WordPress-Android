@@ -341,7 +341,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 UiStringResWithParams(
                     R.string.scan_idle_last_scan_description,
                     listOf(
-                        UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("${1}"))),
+                        UiStringResWithParams(R.string.scan_in_hours_ago, listOf(UiStringText("1"))),
                         UiStringRes(R.string.scan_idle_manual_scan_description)
                     )
                 )
@@ -363,7 +363,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                     listOf(
                         UiStringResWithParams(
                             R.string.scan_in_minutes_ago,
-                            listOf(UiStringText("${1}"))
+                            listOf(UiStringText("1"))
                         ),
                         UiStringRes(R.string.scan_idle_manual_scan_description)
                     )
