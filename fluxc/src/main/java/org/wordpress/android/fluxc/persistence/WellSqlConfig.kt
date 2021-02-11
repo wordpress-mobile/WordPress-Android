@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 136
+        return 137
     }
 
     override fun getDbName(): String {
@@ -1490,6 +1490,21 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 135 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductAttributeModel RENAME TO WCGlobalAttributeModel")
+                }
+                136 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutModel")
+                    db.execSQL(
+                            "CREATE TABLE GutenbergLayoutModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "SITE_ID INTEGER," +
+                                    "TITLE TEXT NOT NULL," +
+                                    "PREVIEW TEXT NOT NULL," +
+                                    "PREVIEW_TABLET TEXT NOT NULL," +
+                                    "PREVIEW_MOBILE TEXT NOT NULL," +
+                                    "CONTENT TEXT NOT NULL," +
+                                    "DEMO_URL TEXT NOT NULL)"
+                    )
                 }
             }
         }
