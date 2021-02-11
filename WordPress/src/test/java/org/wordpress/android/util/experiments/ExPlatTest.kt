@@ -71,7 +71,7 @@ class ExPlatTest : BaseUnitTest() {
     fun `getVariation fetches assignments if cache is null`() = test {
         setupAssignments(cachedAssignments = null, fetchedAssignments = buildAssignments())
 
-        exPlat.getVariation(dummyExperiment, shouldFetchIfStale = true)
+        exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = true)
 
         verify(experimentStore, times(1)).fetchAssignments(any())
     }
@@ -80,7 +80,7 @@ class ExPlatTest : BaseUnitTest() {
     fun `getVariation fetches assignments if cache is stale`() = test {
         setupAssignments(cachedAssignments = buildAssignments(isStale = true), fetchedAssignments = buildAssignments())
 
-        exPlat.getVariation(dummyExperiment,  shouldFetchIfStale = true)
+        exPlat.getVariation(dummyExperiment,  shouldRefreshIfStale = true)
 
         verify(experimentStore, times(1)).fetchAssignments(any())
     }
@@ -89,25 +89,25 @@ class ExPlatTest : BaseUnitTest() {
     fun `getVariation does not fetch assignments if cache is fresh`() = test {
         setupAssignments(cachedAssignments = buildAssignments(isStale = false), fetchedAssignments = buildAssignments())
 
-        exPlat.getVariation(dummyExperiment,  shouldFetchIfStale = true)
+        exPlat.getVariation(dummyExperiment,  shouldRefreshIfStale = true)
 
         verify(experimentStore, never()).fetchAssignments(any())
     }
 
     @Test
-    fun `getVariation does not fetch assignments if cache is null but shouldFetchIfStale is false`() = test {
+    fun `getVariation does not fetch assignments if cache is null but shouldRefreshIfStale is false`() = test {
         setupAssignments(cachedAssignments = null, fetchedAssignments = buildAssignments())
 
-        exPlat.getVariation(dummyExperiment,  shouldFetchIfStale = false)
+        exPlat.getVariation(dummyExperiment,  shouldRefreshIfStale = false)
 
         verify(experimentStore, never()).fetchAssignments(any())
     }
 
     @Test
-    fun `getVariation does not fetch assignments if cache is stale but shouldFetchIfStale is false`() = test {
+    fun `getVariation does not fetch assignments if cache is stale but shouldRefreshIfStale is false`() = test {
         setupAssignments(cachedAssignments = null, fetchedAssignments = buildAssignments())
 
-        exPlat.getVariation(dummyExperiment,  shouldFetchIfStale = false)
+        exPlat.getVariation(dummyExperiment,  shouldRefreshIfStale = false)
 
         verify(experimentStore, never()).fetchAssignments(any())
     }

@@ -6,7 +6,7 @@ abstract class Experiment(
     val name: String,
     private val exPlat: ExPlat
 ) {
-    @JvmOverloads fun getVariation(shouldFetchIfStale: Boolean = false): Variation {
-        return exPlat.getVariation(this, shouldFetchIfStale)
+    @JvmOverloads fun getVariation(shouldRefreshIfStale: Boolean = false): Variation {
+        return exPlat.getVariation(this, shouldRefreshIfStale)
     }
 }

@@ -23,19 +23,19 @@ class ExPlat
     private val platform = Platform.WORDPRESS_COM
 
     fun refresh() {
-        getAssignments(shouldFetchIfStale = true)
+        getAssignments(shouldRefreshIfStale = true)
     }
 
     fun clear() {
         experimentStore.clearCachedAssignments()
     }
 
-    internal fun getVariation(experiment: Experiment, shouldFetchIfStale: Boolean) =
-            getAssignments(shouldFetchIfStale).getVariationForExperiment(experiment.name)
+    internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean) =
+            getAssignments(shouldRefreshIfStale).getVariationForExperiment(experiment.name)
 
-    private fun getAssignments(shouldFetchIfStale: Boolean): Assignments {
+    private fun getAssignments(shouldRefreshIfStale: Boolean): Assignments {
         val cachedAssignments = experimentStore.getCachedAssignments() ?: Assignments()
-        if (shouldFetchIfStale && cachedAssignments.isStale()) {
+        if (shouldRefreshIfStale && cachedAssignments.isStale()) {
             coroutineScope.launch { fetchAssignments() }
         }
         return cachedAssignments
