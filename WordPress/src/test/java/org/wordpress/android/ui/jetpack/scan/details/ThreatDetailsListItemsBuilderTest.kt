@@ -92,6 +92,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             .thenReturn(TEST_FIXED_ON_DATE)
     }
 
+    /* BASIC DETAILS */
+
     @Test
     fun `given fixed state threat, when items are built, then basic list items are built correctly`() {
         // Arrange
@@ -134,6 +136,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    /* TECHNICAL DETAILS - FILE THREAT */
+
     @Test
     fun `given file threat, when items are built, then technical details items are built correctly`() {
         // Arrange
@@ -166,6 +170,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         )
     }
 
+    /* TECHNICAL DETAILS - CORE FILE MODIFICATION THREAT */
+
     @Test
     fun `given core file modif threat, when items are built, then technical details items are built correctly`() {
         // Arrange
@@ -187,6 +193,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             expectedDiffItem
         )
     }
+
+    /* FIXABLE THREAT */
 
     @Test
     fun `given fixable threat, when items are built, then fix details items are built correctly`() {
@@ -211,6 +219,26 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
+    fun `given fixable threat, when items are built, then action buttons are built correctly`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(
+            model = ThreatTestData.fixableThreatInCurrentStatus,
+            onFixThreatButtonClicked = onFixThreatButtonClicked,
+            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
+        )
+
+        // Assert
+        val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
+        assertThat(buttonItems).size().isEqualTo(2)
+        assertThat(buttonItems).contains(
+            fixThreatButtonItem,
+            ignoreThreatButtonItem
+        )
+    }
+
+    /* NON FIXABLE THREAT */
+
+    @Test
     fun `given non fixable threat, when items are built, then fix details items are built correctly`() {
         // Arrange
         val notFixableThreat = GenericThreatModel(
@@ -231,24 +259,6 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fixable threat, when items are built, then action buttons are built correctly`() {
-        // Act
-        val threatItems = buildThreatDetailsListItems(
-            model = ThreatTestData.fixableThreatInCurrentStatus,
-            onFixThreatButtonClicked = onFixThreatButtonClicked,
-            onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
-        )
-
-        // Assert
-        val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
-        assertThat(buttonItems).size().isEqualTo(2)
-        assertThat(buttonItems).contains(
-            fixThreatButtonItem,
-            ignoreThreatButtonItem
-        )
-    }
-
-    @Test
     fun `given non fixable threat, when items are built, then action buttons are built correctly`() {
         // Act
         val threatItems = buildThreatDetailsListItems(
@@ -265,6 +275,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             ignoreThreatButtonItem
         )
     }
+
+    /* FIXED THREAT */
 
     @Test
     fun `given threat status = fixed, when items are built, then Fixed header is added as main header`() {
@@ -297,6 +309,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
             .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
 
+    /* IGNORED THREAT */
+
     @Test
     fun `given threat status = ignored, when items are built, then Found header is added as main header`() {
         // Arrange
@@ -312,6 +326,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].description)
             .isEqualTo(UiStringText(TEST_FOUND_ON_DATE))
     }
+
+    /* CURRENT THREAT */
 
     @Test
     fun `given threat status = current, when items are built, then Found header is added as main header`() {
