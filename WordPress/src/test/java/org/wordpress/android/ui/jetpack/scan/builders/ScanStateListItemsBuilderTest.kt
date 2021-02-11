@@ -112,7 +112,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-            HeaderState(UiStringRes(R.string.scan_fixing_threats_title))
+            HeaderState(UiStringRes(R.string.scan_fixing_threats_title_singular))
         )
     }
 
@@ -124,7 +124,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description))
+            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description_singular))
         )
     }
 
@@ -207,7 +207,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         buildScanStateItems(scanStateModelWithThreats)
 
         verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(
-            R.string.scan_idle_with_threats_description,
+            R.string.scan_idle_with_threats_description_singular,
             "<b>${threats.size}</b>",
             "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
             resourceProvider.getString(R.string.scan_here_to_help)
