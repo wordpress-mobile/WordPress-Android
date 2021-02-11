@@ -208,7 +208,6 @@ Language: ku_TR
     <string name="gutenberg_native_choose_image">Wêne Hilbijêre</string>
     <string name="gutenberg_native_block_removed">Blok hat rakirin</string>
     <string name="enter_your_site_address">Navnîşana malpera xwe ya heyî bikevê</string>
-    <string name="continue_with_wpcom">Bi WordPress.com\'ê re dewam bike</string>
     <string name="signup_confirmation_title">Pejirandina tomarbûnê</string>
     <string name="continue_with_google_terms_of_service_text">Heke tu bi Googleê re dewam bikî û hesabê te yê WordPress\'ê tune be, dema tu ajimêrekê biafirînî tu pê re %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
     <string name="continue_terms_of_service_text">Bi domandinê re tu %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
@@ -673,7 +672,6 @@ Language: ku_TR
     <string name="post_settings_notification">Danezan</string>
     <string name="post_settings_time_and_date">Dem û Dîrok</string>
     <string name="login_need_help_finding_connected_email">Ji bo ku tu emaila pê ve têketinê dikî bibînî, alîkarî lazim e?</string>
-    <string name="enter_wordpress_site">Malpera li ser vê navnîşanê ne malpereke WordPressê ye. Ji bo ku em lê bên girêdan divê li malperê WordPress sazkirî be.</string>
     <string name="login_invalid_site_url">Ji kerema xwe temama navnîşana malperê têkeve, mîna \"example.com\".</string>
     <string name="enter_email_for_site">J bo girêdana bi %1$s\'ê re têkeve hesabê xwe yê WordPress.com\'ê</string>
     <string name="stats_post_views_label">Dîtin</string>
@@ -1172,7 +1170,6 @@ Language: ku_TR
     <string name="activity_log_event">Çalakî</string>
     <string name="activity_log_icon">Îkona çalakiyê</string>
     <string name="activity_log">Tomargeha Çalakiyan</string>
-    <string name="activity">Çalakî</string>
     <string name="privacy_policy_read">Polîtîkaya nihêniyê bixwîne</string>
     <string name="third_party_policy_learn_more_caption">Hin aliyên sêyem jî tê de, em alavên şopandinê yên din bi kar tînin. Di derheqê wan û kontrolkirina wan de bixwîne.</string>
     <string name="third_party_policy_learn_more_header">Polîtîkaya Aliyên Sêyem</string>
@@ -1857,13 +1854,7 @@ Language: ku_TR
     <string name="invite_error_invalid_usernames_multiple">Nikare bişîne: Navê bikarhêner an jî email nederbasdar in</string>
     <string name="invite_error_invalid_usernames_one">Nikare bişîne: Navek an jî email nederbasdar e</string>
     <string name="invite_error_no_usernames">Ji kerema xwe herî kêm navê bikarhênerekî tevlî bike</string>
-    <string name="invite_message_info">(Girêdayî daxwazê) Tu dikarî peyameke taybet bi qasî 500 karakterî binivîsî ku di dema vexwendina bikarhêner(an) de tevlî nav nameya vexwendinê bike.</string>
-    <string name="invite_message_remaining_other">%d karakter mane</string>
-    <string name="invite_message_remaining_one">Karakterek maye</string>
-    <string name="invite_message_remaining_zero">0 karakter maye</string>
-    <string name="invite_message_title">Peyama Taybet</string>
     <string name="invite">Vexwîne</string>
-    <string name="invite_names_title">Email an jî navê bikarhêneran</string>
     <string name="invite_people">Mirovan Vexwîne</string>
     <string name="my_site_header_external">Derveyî</string>
     <string name="send_link">Girêdanê bişîne</string>

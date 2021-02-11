@@ -1154,7 +1154,7 @@
     <string name="threat_get_free_estimate">Get a free estimate</string>
     <!-- threat alert messages -->
     <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
-    <string name="threat_ignore_warning">You shouldn\’t ignore a security unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="threat_ignore_warning">You shouldn\’t ignore a security issue unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
@@ -2885,7 +2885,8 @@
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
-    <string name="quick_start_card_menu_pin">Pin this</string>
+    <string name="quick_start_card_menu_pin">Pin</string>
+    <string name="quick_start_card_menu_unpin">Unpin</string>
     <string name="quick_start_card_menu_hide">Hide</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
 

@@ -391,13 +391,7 @@ Language: ms
     <string name="invite_error_invalid_usernames_multiple">Tidak dapat menghantar: Terdapat nama pengguna atau emel yang tidak sah</string>
     <string name="invite_error_invalid_usernames_one">Tidak dapat menghantar: Nama pengguna atau emel adalah tidak sah</string>
     <string name="invite_error_no_usernames">Sila tambah sekurang-kurangnya satu nama pengguna</string>
-    <string name="invite_message_info">(Pilihan) Anda boleh memasukkan mesej tersuai sehingga 500 aksara yang akan disertakan dalam jemputan kepada pengguna.</string>
-    <string name="invite_message_remaining_other">Tinggal %d aksara</string>
-    <string name="invite_message_remaining_one">Tinggal 1 aksara</string>
-    <string name="invite_message_remaining_zero">Tinggal 0 aksara</string>
-    <string name="invite_message_title">Mesej Tersuai</string>
     <string name="invite">Jemput</string>
-    <string name="invite_names_title">Nama Pengguna atau Emel</string>
     <string name="send_link">Hantar pautan</string>
     <string name="my_site_header_external">Luaran</string>
     <string name="invite_people">Jemput Orang</string>

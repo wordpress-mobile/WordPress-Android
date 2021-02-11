@@ -214,7 +214,6 @@ Language: en_CA
     <string name="gutenberg_native_choose_image_or_video">Choose image or video</string>
     <string name="gutenberg_native_choose_image">Choose image</string>
     <string name="gutenberg_native_block_removed">Block removed</string>
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
@@ -675,7 +674,6 @@ Language: en_CA
     <string name="post_settings_notification">Notification</string>
     <string name="post_settings_time_and_date">Date and Time</string>
     <string name="login_need_help_finding_connected_email">Need help finding the email you connected with?</string>
-    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="login_invalid_site_url">Please enter a complete website address, like example.com.</string>
     <string name="enter_email_for_site">Log in with WordPress.com to connect to %1$s</string>
     <string name="stats_post_views_label">Views</string>
@@ -1172,7 +1170,6 @@ Language: en_CA
     <string name="activity_log_event">Event</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log">Activity Log</string>
-    <string name="activity">Activity</string>
     <string name="privacy_policy_read">Read privacy policy</string>
     <string name="third_party_policy_learn_more_caption">We use other tracking tools, including some from third parties. Read about these and how to control them.</string>
     <string name="third_party_policy_learn_more_header">Third Party Policy</string>
@@ -1857,13 +1854,7 @@ Language: en_CA
     <string name="invite_error_invalid_usernames_multiple">Cannot send: There are invalid usernames or emails</string>
     <string name="invite_error_invalid_usernames_one">Cannot send: A username or email is invalid</string>
     <string name="invite_error_no_usernames">Please add at least one username</string>
-    <string name="invite_message_info">(Optional) You can enter a custom message of up to 500 characters that will be included in the invitation to the user(s).</string>
-    <string name="invite_message_remaining_other">%d characters remaining</string>
-    <string name="invite_message_remaining_one">1 character remaining</string>
-    <string name="invite_message_remaining_zero">0 characters remaining</string>
-    <string name="invite_message_title">Custom Message</string>
     <string name="invite">Invite</string>
-    <string name="invite_names_title">Usernames or Emails</string>
     <string name="invite_people">Invite People</string>
     <string name="my_site_header_external">External</string>
     <string name="send_link">Send link</string>
