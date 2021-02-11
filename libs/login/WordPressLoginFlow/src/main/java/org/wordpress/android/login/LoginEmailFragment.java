@@ -717,7 +717,7 @@ public class LoginEmailFragment extends LoginBaseFormFragment<LoginListener> imp
 
                     if (mIsSignupFromLoginEnabled || isWooWPcomLoginFlow) {
                         if (mLoginListener != null) {
-                            mLoginListener.showSignupMagicLink(email);
+                            mLoginListener.gotUnregisteredEmail(email);
                         }
                     } else {
                         mAnalyticsListener.trackFailure("Email not registered WP.com");

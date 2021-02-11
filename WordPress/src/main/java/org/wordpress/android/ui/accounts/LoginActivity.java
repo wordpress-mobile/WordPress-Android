@@ -526,7 +526,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotUnregisteredEmail(String email) {
-        // Do nothing.
+        showSignupMagicLink(email);
     }
 
     @Override
