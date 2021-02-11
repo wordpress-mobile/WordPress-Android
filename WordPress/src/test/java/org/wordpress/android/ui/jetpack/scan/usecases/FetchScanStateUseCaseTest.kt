@@ -100,7 +100,8 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
-        verify(scanStore, times(2)).fetchScanState(any())
+        // one success and 1+MAX_RETRY attempts
+        verify(scanStore, times(5)).fetchScanState(any())
         assertThat(result).containsSequence(
                 FetchScanState.Success(scanStateScanningModel),
                 FetchScanState.Failure.RemoteRequestFailure
