@@ -41,19 +41,18 @@ class FetchScanStateUseCase @Inject constructor(
             if (result.isError) {
                 emit(Failure.RemoteRequestFailure)
                 return@flow
-            } else {
-                val scanStateModel = scanStore.getScanStateForSite(site)
-                if (scanStateModel != null) {
-                    emit(Success(scanStateModel))
-                    if (scanStateModel.state == ScanStateModel.State.SCANNING) {
-                        delay(FETCH_SCAN_STATE_DELAY_MILLIS)
-                    } else {
-                        return@flow
-                    }
+            }
+            val scanStateModel = scanStore.getScanStateForSite(site)
+            if (scanStateModel != null) {
+                emit(Success(scanStateModel))
+                if (scanStateModel.state == ScanStateModel.State.SCANNING) {
+                    delay(FETCH_SCAN_STATE_DELAY_MILLIS)
                 } else {
-                    emit(Failure.RemoteRequestFailure)
                     return@flow
                 }
+            } else {
+                emit(Failure.RemoteRequestFailure)
+                return@flow
             }
         }
     }.flowOn(bgDispatcher)
