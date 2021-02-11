@@ -129,13 +129,7 @@ Language: is
     <string name="invite_error_invalid_usernames_multiple">Get ekki sent: Ógild notandanöfn eða netföng</string>
     <string name="invite_error_invalid_usernames_one">Get ekki sent: Ógilt notandanafn eða netfang</string>
     <string name="invite_error_no_usernames">Vinsamlegast bættu við a.m.k einu notandanafni</string>
-    <string name="invite_message_info">(Valkvæmt) Þú getur slegið inn sérsniðin skilaboð allt að 500 stafir að lengd sem fylgja boðum til notanda/notenda.</string>
-    <string name="invite_message_remaining_other">%d stafir eftir</string>
-    <string name="invite_message_remaining_one">1 stafur eftir</string>
-    <string name="invite_message_remaining_zero">0 stafir eftir</string>
-    <string name="invite_message_title">Sérsniðin skilaboð</string>
     <string name="invite">Bjóða</string>
-    <string name="invite_names_title">Notendanöfn eða netföng</string>
     <string name="invite_people">Bjóða fólki</string>
     <string name="send_link">Senda tengil</string>
     <string name="my_site_header_external">Út á við</string>

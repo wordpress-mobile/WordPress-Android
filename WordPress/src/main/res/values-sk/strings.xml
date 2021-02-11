@@ -281,7 +281,6 @@ Language: sk
     <string name="activity_log_event">Udalosť</string>
     <string name="activity_log_icon">Ikonka aktivity</string>
     <string name="activity_log">Log aktivity</string>
-    <string name="activity">Aktivita</string>
     <string name="privacy_policy_read">Prečítajte si zásady ochrany osobných údajov</string>
     <string name="third_party_policy_learn_more_caption">Používame ďalšie nástroje na sledovanie, vrátane niektorých od tretích strán. Prečítajte si o nich a o možnostiach ako ich ovládať.</string>
     <string name="third_party_policy_learn_more_header">Pravidlá tretej strany</string>
@@ -965,13 +964,7 @@ Language: sk
     <string name="invite_error_invalid_usernames_multiple">Nemožno poslať: Nachdázajú sa tu neplatné používateľské mená alebo e-mailové adresy.</string>
     <string name="invite_error_invalid_usernames_one">Nemožno poslať: Používateľské meno alebo e-mailová adresa je neplatné</string>
     <string name="invite_error_no_usernames">Pridajte aspoň jedno používateľské meno</string>
-    <string name="invite_message_info">(Voliteľné) Môžete zadať vlastnú správu do 500 znakov, ktorú bude pozvánka  používateľovi/používateľom obsahovať.</string>
-    <string name="invite_message_remaining_other">%d zostávajúcich znakov</string>
-    <string name="invite_message_remaining_one">1 zostávajúci znak</string>
-    <string name="invite_message_remaining_zero">0 zostávajúcich znakov</string>
-    <string name="invite_message_title">Vlastná správa</string>
     <string name="invite">Pozvať</string>
-    <string name="invite_names_title">Používateľské mená alebo emaily</string>
     <string name="invite_people">Pozvať ľudí</string>
     <string name="my_site_header_external">Externý</string>
     <string name="send_link">Poslať odkaz</string>
