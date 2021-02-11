@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
-    <string name="backup_item_sqls">Base de datos do sitio (SQL)</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
     <string name="backup_item_plugins">Plugins de WordPress</string>
     <string name="backup_item_themes">Temas de WordPress</string>
@@ -31,7 +30,6 @@ Language: gl_ES
     <string name="gutenberg_native_copy_file_url">Copiar a URL do arquivo </string>
     <string name="gutenberg_native_choose_a_file">ELIXIR UN ARQUIVO</string>
     <string name="new_site_creation_domain_header_title">Elixe un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Axustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Non se puido crear a subscrición aos comentarios desta entrada</string>
     <string name="reader_follow_comments_get_status_error">Erro ao recuperar o estado da subscrición para a entrada</string>
@@ -223,7 +221,6 @@ Language: gl_ES
     <string name="gutenberg_native_choose_image">Elixir unha imaxe</string>
     <string name="gutenberg_native_block_removed">Bloque eliminado</string>
     <string name="enter_your_site_address">Introduce o enderezo do teu sitio existente</string>
-    <string name="continue_with_wpcom">Continuar con WordPress.com</string>
     <string name="signup_confirmation_title">Confirmación do rexistro</string>
     <string name="enter_account_info_for_site">Introduce a información da túa conta para %1$s.</string>
     <string name="login_or">ou</string>
@@ -673,7 +670,6 @@ Language: gl_ES
     <string name="post_settings_notification">Aviso</string>
     <string name="post_settings_time_and_date">Data e hora</string>
     <string name="login_need_help_finding_connected_email">Necesitas axuda para encontrar o correo electrónico co que te conectaches?</string>
-    <string name="enter_wordpress_site">A web neste enderezo non é un sitio WordPress. Para conectarnos a el, o sitio debe ter instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce un enderezo completo dunha web, como exemplo.gal.</string>
     <string name="enter_email_for_site">Accede con WordPress.com para conectar con %1$s</string>
     <string name="stats_post_views_label">Visitas</string>
@@ -1172,7 +1168,6 @@ Language: gl_ES
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icona de actividade</string>
     <string name="activity_log">Rexistro de actividade</string>
-    <string name="activity">Actividade</string>
     <string name="privacy_policy_read">Le a política de privacidade</string>
     <string name="third_party_policy_learn_more_caption">Usamos outras ferramentas de seguimento, incluídas algunhas de terceiros. Le acerca destas e como controlalas.</string>
     <string name="third_party_policy_learn_more_header">Política de terceiros</string>
@@ -1857,13 +1852,7 @@ Language: gl_ES
     <string name="invite_error_invalid_usernames_multiple">Non se pode enviar: Hai nomes de usuario ou enderezos de correo non válidos.</string>
     <string name="invite_error_invalid_usernames_one">Fallou o envío: un nome de usuario ou un enderezo non é válido.</string>
     <string name="invite_error_no_usernames">Introduce como mínimo un nome de usuario</string>
-    <string name="invite_message_info">(Opcional) Podes escribir unha mensaxe persoal de ata 500 caracteres para incluíla na invitación ao/s usuario/s.</string>
-    <string name="invite_message_remaining_other">quedan %d caracteres</string>
-    <string name="invite_message_remaining_one">queda 1 carácter</string>
-    <string name="invite_message_remaining_zero">quedan 0 caracteres</string>
-    <string name="invite_message_title">Mensaxe persoal</string>
     <string name="invite">Invitar</string>
-    <string name="invite_names_title">Nomes de usuario ou enderezos de correo</string>
     <string name="invite_people">Invitar xente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar o enlace</string>

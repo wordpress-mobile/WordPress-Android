@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
-    <string name="rewind_another_process_running">実行中の復元が他にあります。</string>
     <string name="restore_complete_failed_icon_content_description">エラーアイコン</string>
     <string name="restore_complete_failed_action_button_content_description">完了ボタン</string>
-    <string name="restore_complete_failed_description">サイトを復元できませんでした。 後ほど、もう一度お試しください。</string>
     <string name="restore_complete_failed_title">復元失敗</string>
     <string name="restore_complete_visit_site_button_content_description">サイトを表示ボタン</string>
     <string name="restore_complete_done_button_content_description">完了ボタン</string>
@@ -18,14 +16,11 @@ Language: ja_JP
     <string name="restore_complete_description_with_two_parameters">選択したすべてのアイテムは %1$s %2$s に復元されました。</string>
     <string name="restore_complete_header">サイトを復元しました</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_progress_additional_info">お待ちいただく必要はありません。 サイトが完全に復元されたらお知らせします。</string>
     <string name="restore_progress_icon_content_description">サイト復元アイコン</string>
     <string name="restore_progress_description_with_two_parameters">サイトを %1$s %2$s に復元しています。</string>
     <string name="restore_progress_header">現在サイトを復元中</string>
     <string name="restore_warning_action_button_content_description">サイト復元確認ボタン</string>
     <string name="restore_warning_icon_content_description">感嘆符付きの赤くて丸い画像</string>
-    <string name="restore_warning_action_button">サイト復元を確認</string>
-    <string name="restore_warning_description_with_two_parameters">%2$s でお使いのサイトを %1$s に巻き戻してもよいですか ?\n この操作により、作成したすべてのコンテンツとオプション、および作成後に行ったすべての変更が削除されます。</string>
     <string name="restore_warning_header">警告</string>
     <string name="restore_details_action_button_content_description">サイト復元ボタン</string>
     <string name="restore_details_icon_content_description">復元アイコン</string>
@@ -37,7 +32,6 @@ Language: ja_JP
     <string name="backup_download_complete_failed_icon_content_description">クラウドと X のアイコン</string>
     <string name="backup_download_complete_failed_action_button_content_description">完了ボタン</string>
     <string name="backup_download_complete_failed_action_button">完了</string>
-    <string name="backup_download_complete_failed_description">バックアップを作成できませんでした。 後ほど、もう一度お試しください。</string>
     <string name="backup_download_complete_failed_title">ダウンロード失敗</string>
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
@@ -58,11 +52,9 @@ Language: ja_JP
     <string name="reader_error_changing_seen_status_of_unsupported_post">この投稿の既読ステータスを切り替えられません</string>
     <string name="reader_marked_post_as_unseen">投稿を未読にする</string>
     <string name="reader_marked_post_as_seen">投稿を既読にする</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">すべての脅威を修正できませんでした。 サポートにご連絡ください。</string>
     <string name="threat_fix_all_status_error_message">修正のステータスの取得中にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_fix_all_status_success_message">脅威は正常に修正されました。</string>
     <string name="threat_fix_all_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
-    <string name="threat_fix_all_started_message">バックグラウンドでこれらの脅威を修正しています。 しばらくしてからもう一度お試しください。</string>
     <string name="threat_fix_all_warning_message">%s件のアクティブな脅威を修正してよろしいですか ?</string>
     <string name="threat_fix_all_warning_title">すべての脅威を修正</string>
     <string name="threat_ignore_error_message">脅威を無視する際にエラーが発生しました。 サポートにご連絡ください。</string>
@@ -70,9 +62,7 @@ Language: ja_JP
     <string name="threat_ignore_warning">安全であるという確信がない限り、セキュリティを無視しないでください。 この脅威を無視した場合、この脅威はサイト &lt;b>%s&lt;/b> に残ります。</string>
     <string name="threat_fix_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_item_sub_header_status_ignored">脅威を無視しました</string>
-    <string name="threat_item_sub_header_status_fixed">脅威を修正しました</string>
     <string name="threat_fixing">脅威を修正</string>
-    <string name="threats_fix_num_of_threats">%s件の脅威を修正</string>
     <string name="scan_history_ignored_threats_tab">無視済み</string>
     <string name="scan_history_no_threats_found">項目が見つかりませんでした</string>
     <string name="scan_history_fixed_threats_tab">固定</string>
@@ -87,7 +77,6 @@ Language: ja_JP
     <string name="backup_empty_title">最初のバックアップがもうすぐ完了します</string>
     <string name="request_failed_message">リクエストの処理中に問題が発生しました。 後ほどもう一度お試しください。</string>
     <string name="gutenberg_native_move_to_bottom">一番下へ</string>
-    <string name="gutenberg_native_move_block_position">ブロックの位置を移動</string>
     <string name="label_control_upload">アップロード</string>
     <string name="jetpack_icon_content_description">アイコン</string>
     <string name="backup_download_complete_info">ファイルへのリンクはメールでも送信されました。</string>
@@ -100,10 +89,7 @@ Language: ja_JP
     <string name="backup_download_complete_header">バックアップをダウンロードする準備が整いました</string>
     <string name="backup_download_complete_page_title">バックアップ</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">お待ちいただく必要はありません。 バックアップが完了したら通知します</string>
-    <string name="backup_download_progress_action_button_content_description">通知するボタン</string>
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
-    <string name="backup_download_progress_action_button">了解しました。通知してください。</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>
     <string name="backup_download_progress_header">現在、サイトのダウンロード可能なバックアップを作成中です</string>
     <string name="backup_download_progress_page_title">バックアップをダウンロードする</string>
@@ -136,7 +122,6 @@ Language: ja_JP
     <string name="threat_file_description">次のファイルで脅威が見つかりました :</string>
     <string name="threat_technical_details_header">技術詳細</string>
     <string name="threat_problem_header">問題は何でしたか ?</string>
-    <string name="threat_details_icon">脅威の詳細アイコン</string>
     <string name="threat_details">脅威の詳細</string>
     <string name="threat_item_sub_header_vulnerable_theme">テーマに脆弱性を発見</string>
     <string name="threat_item_sub_header_vulnerable_plugin">プラグインに脆弱性を発見</string>
@@ -154,10 +139,6 @@ Language: ja_JP
     <string name="scan_in_minutes_ago">%s分前</string>
     <string name="scan_in_hours_ago">%s時間前</string>
     <string name="scan_this_site">このサイト</string>
-    <string name="scan_idle_threats_found_description">%s のスキャンで%s件の潜在的な脅威が見つかりました。 以下の内容を確認して操作してください。 必要であればサポートいたします。</string>
-    <string name="scan_idle_last_scan_description">最新の Jetpack スキャンが %s を実行しました。問題は見つかりませんでした。 %s</string>
-    <string name="scan_idle_manual_scan_description">手動スキャンを今実行するか、本日後ほど Jetpack スキャンがサイトをスキャンするまでお待ちください。</string>
-    <string name="scan_scanning_description">Jetpack スキャンへようこそ。現在サイトの初回チェックを行っており、結果はすぐに表示されます。\n\n \nスキャンが完了したら、通知が送信されます。 その間、通常通りサイトを使用でき、いつでも進行状況を確認できます。</string>
     <string name="scan_idle_threats_found_title">サイトが危険にさらされている可能性があります</string>
     <string name="scan_idle_no_threats_found_title">ご心配は無用です</string>
     <string name="scan_again">再スキャン</string>
@@ -176,15 +157,11 @@ Language: ja_JP
     <string name="activity_log_active_filter_empty_subtitle">データ範囲またはアクティビティタイプフィルターを調整してみてください</string>
     <string name="activity_log_active_filter_empty_title">一致するイベントは見つかりませんでした</string>
     <string name="rewind">復元</string>
-    <string name="backup_item_sqls">サイトデータベース (SQL)</string>
-    <string name="backup_item_contents">WP-content ディレクトリ (テーマ、プラグイン、アップロードを除く)</string>
-    <string name="backup_item_roots">WordPress のルート (wp-config.php とすべての非 WordPress ファイルを含む)</string>
     <string name="backup_item_media_uploads">メディアのアップロード</string>
     <string name="backup_item_plugins">WordPress プラグイン</string>
     <string name="backup_item_themes">WordPress テーマ</string>
     <string name="backup_download_details_icon_content_description">ダウンロード可能なバックアップアイコンを作成</string>
     <string name="backup_download_details_action_button">ダウンロード可能なファイルを作成</string>
-    <string name="backup_download_details_choose_items_header">ダウンロードに含める項目を以下から選択してください。</string>
     <string name="backup_download_details_header">ダウンロード可能なバックアップを作成</string>
     <string name="backup_download_details_page_title">バックアップをダウンロードする</string>
     <string name="backup_download">バックアップのダウンロード</string>
@@ -209,7 +186,6 @@ Language: ja_JP
     <string name="gutenberg_native_copy_file_url">ファイルの URL をコピー</string>
     <string name="gutenberg_native_choose_a_file">ファイルを選択</string>
     <string name="new_site_creation_domain_header_title">ドメインを選択</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">メールで会話をフォロー中</string>
     <string name="reader_btn_follow_comments">メールで会話をフォロー</string>
@@ -435,7 +411,6 @@ Language: ja_JP
     <string name="gutenberg_native_choose_image">画像を選択</string>
     <string name="gutenberg_native_block_removed">削除したブロック</string>
     <string name="enter_your_site_address">既存のサイトアドレスを入力</string>
-    <string name="continue_with_wpcom">WordPress.com で続ける</string>
     <string name="signup_confirmation_title">登録の確認</string>
     <string name="continue_with_google_terms_of_service_text">Google を引き続き使用し、WordPress.com アカウントをまだお持ちでない場合は、アカウントを作成して WordPress.com の%1$s利用規約%2$sに同意します。</string>
     <string name="continue_terms_of_service_text">継続することで、%1$s利用規約%2$sに合意したことになります。</string>
@@ -905,7 +880,6 @@ Language: ja_JP
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日付と時刻</string>
     <string name="login_need_help_finding_connected_email">関連付けられているメールアドレスをお忘れですか ?</string>
-    <string name="enter_wordpress_site">このアドレスのサイトは WordPress のサイトではありません。接続するには、接続先のサイトに WordPress がインストールされている必要があります。</string>
     <string name="login_invalid_site_url">ウェブサイトの完全なアドレス (例 : example.com) を入力してください。</string>
     <string name="enter_email_for_site">WordPress.com でログインして、%1$s に接続してください</string>
     <string name="stats_post_views_label">表示数</string>
@@ -1410,7 +1384,6 @@ Language: ja_JP
     <string name="activity_log_event">イベント</string>
     <string name="activity_log_icon">アクティビティアイコン</string>
     <string name="activity_log">アクティビティログ</string>
-    <string name="activity">アクティビティ</string>
     <string name="privacy_policy_read">個人情報保護方針を読む</string>
     <string name="third_party_policy_learn_more_caption">サードパーティのものを含め、他の追跡ツールを使用します。それらについての詳細と設定方法についてお読みください。</string>
     <string name="third_party_policy_learn_more_header">サードパーティのポリシー</string>
@@ -2095,13 +2068,7 @@ Language: ja_JP
     <string name="invite_error_invalid_usernames_multiple">送信できません。無効なユーザー名またはメールアドレスがあります</string>
     <string name="invite_error_invalid_usernames_one">送信できません。ユーザー名またはメールアドレスが無効です</string>
     <string name="invite_error_no_usernames">最低1つのユーザー名を追加してください</string>
-    <string name="invite_message_info">(オプション) ユーザーへの招待メールには500文字以下のカスタムメッセージを含めることができます。</string>
-    <string name="invite_message_remaining_other">残りの文字数: %d</string>
-    <string name="invite_message_remaining_one">残り1文字です</string>
-    <string name="invite_message_remaining_zero">残り0文字です</string>
-    <string name="invite_message_title">カスタムメッセージ</string>
     <string name="invite">招待</string>
-    <string name="invite_names_title">ユーザー名またはメールアドレス</string>
     <string name="invite_people">他の人を招待</string>
     <string name="my_site_header_external">外部</string>
     <string name="send_link">リンクを送信</string>

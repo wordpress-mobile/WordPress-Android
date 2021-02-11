@@ -1154,7 +1154,7 @@
     <string name="threat_get_free_estimate">Get a free estimate</string>
     <!-- threat alert messages -->
     <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
-    <string name="threat_ignore_warning">You shouldn\’t ignore a security unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="threat_ignore_warning">You shouldn\’t ignore a security issue unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
@@ -3002,7 +3002,8 @@
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
-    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>

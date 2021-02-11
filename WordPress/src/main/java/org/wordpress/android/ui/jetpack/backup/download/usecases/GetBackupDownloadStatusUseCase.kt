@@ -21,32 +21,31 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.max
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private val tag = javaClass.simpleName
     suspend fun getBackupDownloadStatus(
         site: SiteModel,
         downloadId: Long? = null
     ) = flow {
-        val tag = javaClass.simpleName
         var retryAttempts = 0
         while (true) {
             if (!isNetworkAvailable()) return@flow
 
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                }
+                if (handleError(retryAttempts++)) return@flow
             } else {
+                retryAttempts = 0
                 val status = activityLogStore.getBackupDownloadStatusForSite(site)
                 if (status == null) {
                     emit(Empty)
@@ -76,6 +75,17 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             true
         } else {
             emit(Progress(status.rewindId, status.progress, published))
+            false
+        }
+    }
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.handleError(retryAttempts: Int): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(RemoteRequestFailure)
+            true
+        } else {
+            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
             false
         }
     }

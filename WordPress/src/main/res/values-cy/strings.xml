@@ -96,13 +96,7 @@ Language: cy_GB
     <string name="invite_error_invalid_usernames_multiple">Methu anfon: Mae yna enwau defnyddwyr neu e-bost annilys</string>
     <string name="invite_error_invalid_usernames_one">Methu anfon: Mae yna enw defnyddiwr neu e-bost annilys</string>
     <string name="invite_error_no_usernames">Ychwanegwch o leiaf un enw defnyddiwr</string>
-    <string name="invite_message_info">(Dewisol) Gallwch gynnwys neges bersonol o hyd at 500 nod a fydd yn cael ei gynnwys yn y gwahoddiad i\'r defnyddiwr.</string>
-    <string name="invite_message_remaining_other">%d nod yn weddill</string>
-    <string name="invite_message_remaining_one">1 nod yn weddill</string>
-    <string name="invite_message_remaining_zero">0 nod yn weddill</string>
-    <string name="invite_message_title">Neges Bersonol</string>
     <string name="invite">Gwahodd</string>
-    <string name="invite_names_title">Enwau defnyddwyr neu E-byst</string>
     <string name="send_link">Anfon dolen</string>
     <string name="my_site_header_external">Allanol</string>
     <string name="invite_people">Gwahodd Pobl</string>
