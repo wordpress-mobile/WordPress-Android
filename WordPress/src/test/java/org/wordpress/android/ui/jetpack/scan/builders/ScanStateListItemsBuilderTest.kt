@@ -194,6 +194,15 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
+    fun `given idle state with threats, when items are built, items contain header for threats found`() = test {
+        val scanStateItems = buildScanStateItems(model = scanStateModelWithThreats)
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_idle_threats_found_title))
+        )
+    }
+
+    @Test
     fun `given idle state with threats, when items are built, items contain threats found description`() = test {
         buildScanStateItems(scanStateModelWithThreats)
 
@@ -280,6 +289,15 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
                 )
             )
         }
+
+    @Test
+    fun `given idle no threats state, when items are built, items contain header for no threats found`() = test {
+        val scanStateItems = buildScanStateItems(model = scanStateModelWithNoThreats)
+
+        assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
+            HeaderState(UiStringRes(R.string.scan_idle_no_threats_found_title))
+        )
+    }
 
     @Test
     fun `given idle no threats state, when items are built, items contain scan again button `() = test {
