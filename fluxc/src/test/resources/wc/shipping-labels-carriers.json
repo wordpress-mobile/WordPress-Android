@@ -1,0 +1,33 @@
+{
+  "success": true,
+  "rates": {
+    "default_box": {
+      "default": {
+        "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
+        "rates": [{
+          "rate_id": "rate_cb976896a09c4171a93ace57ed66ce5b",
+          "service_id": "MediaMail",
+          "carrier_id": "usps",
+          "title": "USPS - Media Mail",
+          "rate": 3.86,
+          "retail_rate": 3.86,
+          "is_selected": false,
+          "delivery_days": 2,
+          "delivery_date_guaranteed": false,
+          "delivery_date": null
+        }, {
+          "rate_id": "rate_1b202bd43a8c4c929c73bb46989ef745",
+          "service_id": "FEDEX_GROUND",
+          "carrier_id": "fedex",
+          "title": "FedEx - Ground",
+          "rate": 21.55,
+          "retail_rate": 21.55,
+          "is_selected": false,
+          "delivery_days": 1,
+          "delivery_date_guaranteed": true,
+          "delivery_date": "2020-03-23T23:59:00.000Z"
+        }]
+      }
+    }
+  }
+}
