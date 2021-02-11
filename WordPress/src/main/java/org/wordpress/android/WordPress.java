@@ -364,6 +364,8 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
         mStoryNotificationTrackerProvider = new StoryNotificationTrackerProvider();
         mStoryMediaSaveUploadBridge.init(this);
         ProcessLifecycleOwner.get().getLifecycle().addObserver(mStoryMediaSaveUploadBridge);
+
+        mExPlat.forceRefresh();
     }
 
     protected void initWorkManager() {
