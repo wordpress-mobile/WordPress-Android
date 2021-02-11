@@ -5,13 +5,11 @@ import android.text.Spannable
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
 class QuickStartUtilsWrapper
 @Inject constructor(
-    private val quickStartStore: QuickStartStore,
-    private val resourceProvider: ResourceProvider
+    private val quickStartStore: QuickStartStore
 ) {
     fun isQuickStartInProgress(siteId: Int): Boolean {
         return QuickStartUtils.isQuickStartInProgress(quickStartStore, siteId)
@@ -24,7 +22,6 @@ class QuickStartUtilsWrapper
         iconId: Int = QuickStartUtils.ICON_NOT_SET
     ): Spannable {
         return QuickStartUtils.stylizeQuickStartPrompt(
-                resourceProvider = resourceProvider,
                 activityContext = activityContext,
                 messageId = messageId,
                 isThemedSnackbar = false,
@@ -39,7 +36,6 @@ class QuickStartUtilsWrapper
         iconId: Int = QuickStartUtils.ICON_NOT_SET
     ): Spannable {
         return QuickStartUtils.stylizeQuickStartPrompt(
-                resourceProvider = resourceProvider,
                 activityContext = activityContext,
                 messageId = messageId,
                 isThemedSnackbar = true,

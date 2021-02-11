@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
+import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
@@ -46,7 +47,6 @@ import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
-import org.wordpress.android.viewmodel.ResourceProvider
 
 class QuickStartUtils {
     companion object {
@@ -66,15 +66,14 @@ class QuickStartUtils {
         @JvmStatic
         @JvmOverloads
         fun stylizeQuickStartPrompt(
-            resourceProvider: ResourceProvider,
             activityContext: Context,
             messageId: Int,
             isThemedSnackbar: Boolean = true,
             iconId: Int = ICON_NOT_SET
         ): Spannable {
-            val spanTagOpen = resourceProvider.getString(R.string.quick_start_span_start)
-            val spanTagEnd = resourceProvider.getString(R.string.quick_start_span_end)
-            var formattedMessage = resourceProvider.getString(messageId, spanTagOpen, spanTagEnd)
+            val spanTagOpen = activityContext.getString(R.string.quick_start_span_start)
+            val spanTagEnd = activityContext.getString(R.string.quick_start_span_end)
+            var formattedMessage = activityContext.getString(messageId, spanTagOpen, spanTagEnd)
 
             val startOfHighlight = formattedMessage.indexOf(spanTagOpen)
 
@@ -101,7 +100,7 @@ class QuickStartUtils {
                 val highlightColor = if (isThemedSnackbar) {
                     activityContext.getColorFromAttribute(R.attr.colorSurface)
                 } else {
-                    resourceProvider.getColor(android.R.color.white)
+                    ContextCompat.getColor(activityContext, android.R.color.white)
                 }
                 mutableSpannedMessage.setSpan(
                         ForegroundColorSpan(highlightColor),
@@ -110,13 +109,14 @@ class QuickStartUtils {
 
                 val icon: Drawable? = try {
                     // .mutate() allows us to avoid sharing the state of drawables
-                    resourceProvider.getDrawable(iconId)?.mutate()
+                    activityContext.getDrawable(iconId)?.mutate()
                 } catch (e: Resources.NotFoundException) {
                     null
                 }
 
                 if (icon != null) {
-                    val iconSize = resourceProvider.getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
+                    val iconSize = activityContext.resources
+                            .getDimensionPixelOffset(R.dimen.dialog_snackbar_max_icons_size)
                     icon.setBounds(0, 0, iconSize, iconSize)
 
                     DrawableCompat.setTint(icon, highlightColor)
