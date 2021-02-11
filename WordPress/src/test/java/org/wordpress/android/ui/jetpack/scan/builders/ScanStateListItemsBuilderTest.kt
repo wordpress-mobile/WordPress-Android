@@ -236,19 +236,15 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with not fixable threats, when items are built, items contain fix all threats button`() =
+    fun `given idle state with no fixable threats, when items are built, items does not contain fix all threats btn`() =
         test {
             val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = null)))
             val scanStateModelWithNoFixableThreats = scanStateModelWithThreats.copy(threats = threats)
 
             val scanStateItems = buildScanStateItems(scanStateModelWithNoFixableThreats)
 
-            assertThat(
-                scanStateItems.filterIsInstance(ActionButtonState::class.java)
-                    .map { it.text }
-            ).doesNotContain(
-                UiStringRes(R.string.threats_fix_all)
-            )
+            assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text })
+                .doesNotContain(UiStringRes(R.string.threats_fix_all))
         }
 
     @Test
