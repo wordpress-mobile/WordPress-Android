@@ -207,7 +207,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         buildScanStateItems(scanStateModelWithThreats)
 
         verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(
-            R.string.scan_idle_with_threats_description,
+            R.string.scan_idle_with_threats_description_singular,
             "<b>${threats.size}</b>",
             "<b>${site.name ?: resourceProvider.getString(R.string.scan_this_site)}</b>",
             resourceProvider.getString(R.string.scan_here_to_help)
