@@ -589,8 +589,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             // Analytics resets
             AnalyticsTracker.endSession(false);
             AnalyticsTracker.clearAllData();
-
-            mExPlat.clear();
         }
 
         if (!event.isError() && mAccountStore.hasAccessToken()) {
@@ -623,6 +621,12 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
             // Make sure the Push Notification token is sent to our servers after a successful login
             GCMRegistrationIntentService.enqueueWork(this,
                     new Intent(this, GCMRegistrationIntentService.class));
+
+            // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
+            mExPlat.forceRefresh();
+        } else {
+            // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
+            mExPlat.clear();
         }
     }
 
