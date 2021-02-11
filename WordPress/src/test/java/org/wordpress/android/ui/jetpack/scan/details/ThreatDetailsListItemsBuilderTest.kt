@@ -284,35 +284,56 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
                 status = ThreatStatus.CURRENT
             )
         )
-        val expectedFixableHeaderItem = HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header))
-        val expectedFixableDescriptionItem = DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
 
         // Act
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
         // Assert
         assertThat(threatItems).containsSubsequence(
-            expectedFixableHeaderItem,
-            expectedFixableDescriptionItem
+            HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header)),
+            DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
         )
     }
 
     @Test
-    fun `given fixable threat, when items are built, then action buttons are built correctly`() {
+    fun `given fixable threat in current status, when items are built, then fix threat button exists`() {
         // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus,
-            onFixThreatButtonClicked = onFixThreatButtonClicked,
+            onFixThreatButtonClicked = onFixThreatButtonClicked
+        )
+
+        // Assert
+        val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
+        assertThat(buttonItems).contains(fixThreatButtonItem)
+    }
+
+    @Test
+    fun `given fixable threat in current status, when items are built, then ignore threat button exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(
+            model = ThreatTestData.fixableThreatInCurrentStatus,
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
-        assertThat(buttonItems).size().isEqualTo(2)
-        assertThat(buttonItems).contains(
-            fixThreatButtonItem,
-            ignoreThreatButtonItem
+        assertThat(buttonItems).contains(ignoreThreatButtonItem)
+    }
+
+    @Test
+    fun `given fixable threat in ignored status, when items are built, then ignore threat button exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(
+            model = ThreatTestData.fixableThreatInCurrentStatus.copy(
+                baseThreatModel = ThreatTestData.fixableThreatInCurrentStatus.baseThreatModel.copy(status = IGNORED)
+            ),
+            onFixThreatButtonClicked = onFixThreatButtonClicked
         )
+
+        // Assert
+        val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
+        assertThat(buttonItems).contains(fixThreatButtonItem)
     }
 
     /* NON FIXABLE THREAT */
@@ -321,38 +342,42 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     fun `given non fixable threat, when items are built, then fix details items are built correctly`() {
         // Arrange
         val notFixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(
-                fixable = null,
-                status = ThreatStatus.CURRENT
-            )
+            ThreatTestData.baseThreatModel.copy(fixable = null, status = ThreatStatus.CURRENT)
         )
-        val expectedNotFixableHeaderItem = HeaderState(UiStringRes(R.string.threat_fix_current_not_fixable_header))
-        val expectedNotFixableDescriptionStringResId = R.string.threat_fix_current_not_fixable_description
 
         // Act
         val threatItems = buildThreatDetailsListItems(notFixableThreat)
 
         // Assert
-        assertThat(threatItems).contains(expectedNotFixableHeaderItem)
-        verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(expectedNotFixableDescriptionStringResId)
+        assertThat(threatItems).contains(HeaderState(UiStringRes(R.string.threat_fix_current_not_fixable_header)))
+        verify(htmlMessageUtils)
+            .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
     }
 
     @Test
-    fun `given non fixable threat, when items are built, then action buttons are built correctly`() {
+    fun `given non fixable threat in current status, when items are built, then get free estimates button exists`() {
         // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.notFixableThreatInCurrentStatus,
-            onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked,
+            onGetFreeEstimateButtonClicked = onGetFreeEstimateButtonClicked
+        )
+
+        // Assert
+        val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
+        assertThat(buttonItems).contains(getFreeEstimateButtonItem)
+    }
+
+    @Test
+    fun `given non fixable threat in current status, when items are built, then ignore threat button exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(
+            model = ThreatTestData.notFixableThreatInCurrentStatus,
             onIgnoreThreatButtonClicked = onIgnoreThreatButtonClicked
         )
 
         // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
-        assertThat(buttonItems).size().isEqualTo(2)
-        assertThat(buttonItems).contains(
-            getFreeEstimateButtonItem,
-            ignoreThreatButtonItem
-        )
+        assertThat(buttonItems).contains(ignoreThreatButtonItem)
     }
 
     /* FIXED THREAT */
