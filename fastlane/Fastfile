@@ -715,7 +715,8 @@ ENV["validate_translations"]="lintVanillaRelease"
     apk_file_path = universal_apk_file_path(version)
     aab_file_path = bundle_file_path(version)
     # APKs built on CI are unsigned, so don't upload them until we have a fix
-    release_assets = is_ci ? aab_file_path : "#{apk_file_path},#{aab_file_path}" 
+    release_assets = [aab_file_path]
+    release_assets.append(apk_file_path) unless is_ci
     create_release(repository:GHHELPER_REPO, 
       version: version["name"], 
       release_notes_file_path:release_notes_path,
