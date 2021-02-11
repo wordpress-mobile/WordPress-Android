@@ -98,13 +98,15 @@ public class CommentStore extends Store {
         @NonNull public final SiteModel site;
         public final int number;
         public final int offset;
+        public final CommentStatus requestedStatus;
 
         public FetchCommentsResponsePayload(@NonNull List<CommentModel> comments, @NonNull SiteModel site, int number,
-                                            int offset) {
+                                            int offset, CommentStatus status) {
             this.comments = comments;
             this.site = site;
             this.number = number;
             this.offset = offset;
+            this.requestedStatus = status;
         }
     }
 
