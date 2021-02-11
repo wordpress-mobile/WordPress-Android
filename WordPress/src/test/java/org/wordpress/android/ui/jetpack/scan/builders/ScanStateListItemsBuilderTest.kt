@@ -86,7 +86,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* FIXING THREATS STATE */
 
     @Test
-    fun `given fixing threats state, when items are built, items contain shield warning icon with error color`() =
+    fun `given fixing threats state, when items are built, then shield warning icon with error color exists`() =
         test {
             val scanStateItems = buildScanStateItems(
                 model = scanStateModelWithThreats,
@@ -105,7 +105,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given fixing threats state, when items are built, items contain fixing threats header`() = test {
+    fun `given fixing threats state, when items are built, then fixing threats header exists`() = test {
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
             fixingThreatIds = listOf(threat.baseThreatModel.id)
@@ -117,7 +117,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fixing threats state, when items are built, items contain fixing threats description`() = test {
+    fun `given fixing threats state, when items are built, then fixing threats description exists`() = test {
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
             fixingThreatIds = listOf(threat.baseThreatModel.id)
@@ -129,7 +129,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fixing threats state, when items are built, items contain indeterminate progress bar`() = test {
+    fun `given fixing threats state, when items are built, then indeterminate progress bar exists`() = test {
         val scanStateItems = buildScanStateItems(
             model = scanStateModelWithThreats,
             fixingThreatIds = listOf(threat.baseThreatModel.id)
@@ -141,7 +141,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fixing threats state, when items are built, items contain fixing threats`() = test {
+    fun `given fixing threats state, when items are built, then fixing threats exist`() = test {
         val threatModel = ThreatTestData.fixableThreatInCurrentStatus
         val threatItemState = createDummyThreatItemState(threatModel)
         whenever(threatItemBuilder.buildThreatItem(threatModel)).thenReturn(threatItemState)
@@ -157,7 +157,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given fixing threats state, when items are built, items contain threats with fixable description subheader`() =
+    fun `given fixing threats state, when items are built, then threats with fixable description subheader exist`() =
         test {
             val threatModel = ThreatTestData.fixableThreatInCurrentStatus
             val threatItemState = createDummyThreatItemState(threatModel)
@@ -178,7 +178,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* IDLE - THREATS FOUND STATE */
 
     @Test
-    fun `given idle state with threats, when items are built, items contain shield warning icon with error color`() =
+    fun `given idle state with threats, when items are built, then shield warning icon with error color exists`() =
         test {
             val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
@@ -194,7 +194,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given idle state with threats, when items are built, items contain header for threats found`() = test {
+    fun `given idle state with threats, when items are built, then header for threats found exists`() = test {
         val scanStateItems = buildScanStateItems(model = scanStateModelWithThreats)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
@@ -203,7 +203,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with threats, when items are built, items contain threats found description`() = test {
+    fun `given idle state with threats, when items are built, then threats found description exists`() = test {
         buildScanStateItems(scanStateModelWithThreats)
 
         verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(
@@ -215,7 +215,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with threats, when items are built, items contain scan again button`() = test {
+    fun `given idle state with threats, when items are built, then scan again button exists`() = test {
         val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
@@ -224,7 +224,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with fixable threats, when items are built, items contain fix all threats button`() = test {
+    fun `given idle state with fixable threats, when items are built, then fix all threats button exists`() = test {
         val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = mock())))
         val scanStateModelWithFixableThreats = scanStateModelWithThreats.copy(threats = threats)
 
@@ -236,7 +236,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with no fixable threats, when items are built, items does not contain fix all threats btn`() =
+    fun `given idle state with no fixable threats, when items are built, then fix all threats btn does not exists`() =
         test {
             val threats = listOf(threat.copy(baseThreatModel = baseThreatModel.copy(fixable = null)))
             val scanStateModelWithNoFixableThreats = scanStateModelWithThreats.copy(threats = threats)
@@ -248,7 +248,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given idle state with threats, when items are built, items contain clickable help text info in description`() =
+    fun `given idle state with threats, when items are built, then description with clickable help info exists`() =
         test {
             val clickableText = "clickable help text"
             val descriptionWithClickableText = "description with $clickableText"
@@ -271,7 +271,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* IDLE - THREATS NOT FOUND STATE */
 
     @Test
-    fun `given idle no threats state, when items are built, items contain shield tick icon with green color`() =
+    fun `given idle no threats state, when items are built, then shield tick icon with green color exists`() =
         test {
             val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
 
@@ -287,7 +287,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given idle no threats state, when items are built, items contain header for no threats found`() = test {
+    fun `given idle no threats state, when items are built, then header for no threats found exists`() = test {
         val scanStateItems = buildScanStateItems(model = scanStateModelWithNoThreats)
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
@@ -296,7 +296,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle no threats state, when items are built, items contain scan now button `() = test {
+    fun `given idle no threats state, when items are built, then scan now button exists`() = test {
         val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
@@ -305,7 +305,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle no threats state with last scan secs ago, when items are built, items contain few secs in descr`() =
+    fun `given idle no threats state with last scan secs ago, when items are built, then few secs exists in desc`() =
         test {
             whenever(dateProvider.getCurrentDate()).thenReturn(Date(DUMMY_CURRENT_TIME))
             val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
@@ -325,7 +325,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given idle no threats state with last scan hrs ago, when items are built, items contain hrs ago in descr`() =
+    fun `given idle no threats state with last scan hrs ago, when items are built, then hrs ago exists in descr`() =
         test {
             val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
                 mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_HOUR))
@@ -345,7 +345,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given idle no threats state with last scan mins ago, when items are built, items contain mins ago in descr`() =
+    fun `given idle no threats state with last scan mins ago, when items are built, then mins ago exists in descr`() =
         test {
             val scanStateModelWithMostRecentStartDate = scanStateModelWithNoThreats.copy(
                 mostRecentStatus = ScanProgressStatus(startDate = Date(DUMMY_CURRENT_TIME - ONE_MINUTE))
@@ -370,7 +370,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* SCANNING STATE */
 
     @Test
-    fun `given scanning state, when items are built, items contain shield icon with light green color`() =
+    fun `given scanning state, when items are built, then shield icon with light green color exists`() =
         test {
             val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(state = State.SCANNING)
 
@@ -388,7 +388,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given scanning state with zero progress, when items are built, items contain preparing for scan header`() =
+    fun `given scanning state with zero progress, when items are built, then preparing for scan header exists`() =
         test {
             val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
                 state = State.SCANNING,
@@ -403,7 +403,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given scanning state with non zero progress, when items are built, items contain scanning files header`() =
+    fun `given scanning state with non zero progress, when items are built, then scanning files header exists`() =
         test {
             val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
                 state = State.SCANNING,
@@ -418,7 +418,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given initial scanning state, when items are built, items contain initial scanning descr`() =
+    fun `given initial scanning state, when items are built, then initial scanning description exists`() =
         test {
             val scanStateModelInScanningInitialState = scanStateModelWithNoThreats.copy(
                 state = State.SCANNING,
@@ -433,7 +433,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     @Test
-    fun `given non initial scanning state, when items are built, items contain scanning description`() = test {
+    fun `given non initial scanning state, when items are built, then scanning description exists`() = test {
         val scanStateModelInScanningNonInitialState = scanStateModelWithNoThreats.copy(
             state = State.SCANNING,
             mostRecentStatus = ScanProgressStatus(isInitial = false, startDate = Date(0))
@@ -447,7 +447,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given scanning state, when items are built, items contain progress bar with progress values`() = test {
+    fun `given scanning state, when items are built, then progress bar with progress values exists`() = test {
         val progress = 10
         val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(
             state = State.SCANNING,
@@ -470,7 +470,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* PROVISIONING STATE */
 
     @Test
-    fun `given provisioning state, when items are built, items contain shield icon with light green color`() = test {
+    fun `given provisioning state, when items are built, then shield icon with light green color exists`() = test {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
 
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
@@ -487,7 +487,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given provisioning state, when items are built, items contain preparing to scan header`() = test {
+    fun `given provisioning state, when items are built, then preparing to scan header exists`() = test {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
 
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
@@ -498,7 +498,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given provisioning state, when items are built, items contain provisioning description`() = test {
+    fun `given provisioning state, when items are built, then provisioning description exists`() = test {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
 
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
@@ -511,7 +511,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* INVALID STATES */
 
     @Test
-    fun `given unknown state, when items are built, items list is empty`() = test {
+    fun `given unknown state, when items are built, then items list is empty`() = test {
         val scanStateModelInUnknownState = scanStateModelWithNoThreats.copy(state = State.UNKNOWN)
 
         val scanStateItems = buildScanStateItems(scanStateModelInUnknownState)
@@ -520,7 +520,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given unavailable state, when items are built, items list is empty`() = test {
+    fun `given unavailable state, when items are built, then items list is empty`() = test {
         val scanStateModelInUnAvailableState = scanStateModelWithNoThreats.copy(state = State.UNAVAILABLE)
 
         val scanStateItems = buildScanStateItems(scanStateModelInUnAvailableState)
