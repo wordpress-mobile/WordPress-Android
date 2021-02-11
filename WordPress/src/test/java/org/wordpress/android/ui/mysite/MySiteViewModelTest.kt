@@ -149,7 +149,14 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
-    private val dynamicCards = MutableLiveData(DynamicCardsUpdate(cards = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)))
+    private val dynamicCards = MutableLiveData(
+            DynamicCardsUpdate(
+                    cards = listOf(
+                            CUSTOMIZE_QUICK_START,
+                            GROW_QUICK_START
+                    )
+            )
+    )
 
     @InternalCoroutinesApi
     @Before

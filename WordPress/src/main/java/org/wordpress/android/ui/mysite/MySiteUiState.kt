@@ -35,8 +35,10 @@ data class MySiteUiState(
             val categories: List<QuickStartCategory> = listOf()
         ) : PartialState()
 
-        data class DynamicCardsUpdate(val pinnedDynamicCard: DynamicCardType? = null, val cards: List<DynamicCardType>) :
-                PartialState()
+        data class DynamicCardsUpdate(
+            val pinnedDynamicCard: DynamicCardType? = null,
+            val cards: List<DynamicCardType>
+        ) : PartialState()
     }
 
     fun update(partialState: PartialState): MySiteUiState {

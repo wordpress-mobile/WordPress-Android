@@ -3,7 +3,6 @@ package org.wordpress.android.ui.mysite.dynamiccards
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
-import kotlinx.coroutines.delay
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
