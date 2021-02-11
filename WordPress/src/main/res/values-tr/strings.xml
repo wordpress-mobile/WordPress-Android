@@ -1,11 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-21 15:54:08+0000
+Translation-Revision-Date: 2021-02-05 15:57:27+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="restore_complete_failed_icon_content_description">Hata simgesi</string>
+    <string name="restore_complete_failed_action_button_content_description">Bitti düğmesi</string>
+    <string name="restore_complete_failed_title">Geri yükleme başarısız oldu</string>
+    <string name="restore_complete_visit_site_button_content_description">Siteyi ziyaret et düğmesi</string>
+    <string name="restore_complete_done_button_content_description">Bitti düğmesi</string>
+    <string name="restore_complete_icon_content_description">Geri yükle simgesi</string>
+    <string name="restore_complete_visit_site_action_button">Siteyi ziyaret et</string>
+    <string name="restore_complete_description_with_two_parameters">Seçtiğiniz tüm öğeler şimdi %1$s %2$s konumuna geri yüklendi.</string>
+    <string name="restore_complete_header">Siteniz geri yüklendi</string>
+    <string name="restore_progress_icon_content_description">Siteyi geri yükle simgesi</string>
+    <string name="restore_progress_description_with_two_parameters">Siteniz %1$s %2$s konumuna geri yükleniyor.</string>
+    <string name="restore_progress_header">Site şu anda geri yükleniyor</string>
+    <string name="restore_warning_action_button_content_description">Siteyi geri yüklemeyi onayla düğmesi</string>
+    <string name="restore_warning_icon_content_description">Ünlem işaretli kırmızı daire resmi</string>
+    <string name="restore_warning_header">Uyarı</string>
+    <string name="restore_details_action_button_content_description">Site geri yüklemesini onayla düğmesi</string>
+    <string name="backup_download_complete_failed_action_button">Tamam</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Tamam düğmesi</string>
+    <string name="restore">Geri yükle</string>
+    <string name="restore_details_choose_items_header">Geri döndürülecek öğeleri seçin:</string>
+    <string name="restore_details_header">Siteyi geri yükle</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s, geri yüklemeniz için seçilen noktadır.</string>
+    <string name="restore_details_action_button">Siteyi geri yükle</string>
+    <string name="restore_details_icon_content_description">Geri yükle simgesi</string>
+    <string name="backup_download_complete_failed_icon_content_description">X simgeli Cloud</string>
+    <string name="backup_download_complete_failed_title">Dosya indirilemedi</string>
+    <string name="web_preview_tablet">Tablet</string>
+    <string name="web_preview_mobile">Mobil</string>
+    <string name="quick_start_card_menu_remove">Tekrar gösterme</string>
+    <string name="quick_start_card_menu_hide">Gizle</string>
+    <string name="quick_start_card_menu_pin">Bunu sabitle</string>
+    <string name="quick_start_dialog_review_pages_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
+    <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
+    <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">Ana Sayfanızı düzenlemek için %1$s Ana Sayfa %2$s öğesini seçin.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
+    <string name="quick_start_dialog_edit_homepage_message">Sitenizin ana sayfasında içeriği değiştirin, ekleyin veya kaldırın.</string>
+    <string name="quick_start_dialog_edit_homepage_title">Ana sayfanızı düzenleyin</string>
+    <string name="reader_menu_mark_as_unseen">Görülmedi olarak işaretle</string>
+    <string name="reader_menu_mark_as_seen">Görüldü olarak işaretle</string>
+    <string name="error_media_upload_failed_for_reason">Medya yüklenemedi.\n%1$s</string>
+    <string name="error_media_not_enough_storage">Sitede yeterli depolama alanı yok</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Bu gönderinin görüldü durumu değiştirilemiyor</string>
+    <string name="reader_marked_post_as_unseen">Yayın görülmedi olarak işaretlendi</string>
+    <string name="reader_marked_post_as_seen">Yayın görüldü olarak işaretlendi</string>
+    <string name="threat_fix_all_status_error_message">Düzeltme durumu alınırken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
+    <string name="threat_fix_all_status_success_message">Tehditler başarıyla düzeltildi.</string>
+    <string name="threat_fix_all_error_message">Tehditler düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
+    <string name="threat_fix_all_warning_message">Lütfen %s aktif tehdidi düzeltmek istediğinizi onaylayın.</string>
+    <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
+    <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
+    <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
+    <string name="threat_ignore_warning">Zararsız olduğundan kesinlikle emin olmadığınız sürece bir güvenlik tehdidini göz ardı etmemelisiniz. Bu tehdidi göz ardı etmeyi seçerseniz &lt;b>%s&lt;/b> sitenizde kalacaktır.</string>
+    <string name="threat_fix_error_message">Tehdit düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
+    <string name="threat_item_sub_header_status_ignored">Tehdit göz ardı edildi</string>
+    <string name="threat_fixing">Tehditler düzeltiliyor</string>
+    <string name="scan_history_ignored_threats_tab">Yok sayıldı</string>
+    <string name="scan_history_no_threats_found">Hiç bir öğe bulunamadı</string>
+    <string name="scan_history_fixed_threats_tab">Sabit</string>
+    <string name="scan_history_all_threats_tab">Tümü</string>
+    <string name="scan_scanning_title">Dosyalar taranıyor</string>
+    <string name="scan_preparing_to_scan_title">Taramaya hazırlık</string>
+    <string name="scan_history_menu_title">Geçmiş</string>
+    <string name="scan_history">Tarama Geçmişi</string>
+    <string name="backup_active_filter_empty_subtitle">Tarih aralığınızı ayarlamayı deneyin</string>
+    <string name="backup_active_filter_empty_title">Eşleşen yedek bulunamadı</string>
+    <string name="backup_empty_subtitle">İlk yedeğiniz 24 saat içinde burada görünecek. Yedekleme tamamlandığında size haber vereceğiz.</string>
+    <string name="backup_empty_title">İlk yedeğiniz az sonra hazır olacak</string>
+    <string name="request_failed_message">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
+    <string name="gutenberg_native_move_to_bottom">Alta taşı</string>
     <string name="label_control_upload">Yükle</string>
     <string name="backup_download_complete_info">Ayrıca size dosyanızın bağlantısını da e-postayla gönderdik.</string>
     <string name="jetpack_icon_content_description">simge</string>
@@ -18,10 +88,7 @@ Language: tr
     <string name="backup_download_complete_header">Yedeklemeniz artık indirilebilir</string>
     <string name="backup_download_complete_page_title">Yedeklemeniz</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">Beklemeye gerek yok. Yedeklemeniz hazır olduğunda sizi bilgilendireceğiz</string>
-    <string name="backup_download_progress_action_button_content_description">Tamami beni bilgilendir düğmesi</string>
     <string name="backup_download_progress_icon_content_description">İndirişebilir yedek simgesi oluşturuluyor</string>
-    <string name="backup_download_progress_action_button">Tamam, beni bilgilendir!</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s üzerinden sitenizin indirilebilir bir yedeğini oluşturuyoruz.</string>
     <string name="backup_download_progress_header">Şu anda sitenizin indirilebilir bir yedeği oluşturuluyor</string>
     <string name="backup_download_another_download_running">Çalışan başka bir indirme var.</string>
@@ -42,10 +109,13 @@ Language: tr
     <string name="threat_fix_fixable_edit">Jetpack Scan enfekte dosya ya da dizini düzenleyecek.</string>
     <string name="threat_fix_fixable_update">Jetpack Scan daha güncel bir sürüme yükseltilecek (%s).</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan enfekte dosya ya da dizini silecek.</string>
+    <string name="suggestion_no_matching">Eşleşen %s yok.</string>
+    <string name="suggestion_problem">Öneriler yüklenirken bir problem oluştu.</string>
+    <string name="suggestion_none">Uygun %s önerisi yok.</string>
+    <string name="suggestion_selection_needed">Lütfen öneri listesini filtrelemek için yazmaya başlayın.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan enfekte dosya ya da dizini değiştirecek.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan bu tehdidi otomatik olarak düzeltemez.\n Tehdidi sizin manuel olarak çözmenizi öneririz: WordPress\'in, temanızın ve tüm eklentilerinizin güncel olduğundan emin olduktan sonra sorun yaratan kod, tema veya eklentiyi sitenizden kaldırın. \n \n\n Bu tehdidi gidermek için daha fazla yardıma ihtiyacınız varsa son derece deneyimli WordPress uzmanlarından oluşan güvenilir bir serbest çalışan pazarı olan &lt;b>Codeable&lt;/b>\'ı öneririz.\n Bunlar bu projelerde yardımcı olacak seçkin bir güvenlik uzmanı grubu belirlemiştir. Fiyatlandırma 70–120 ABD doları/saat arasında değişir ve kiralama zorunluluğu olmadan ücretsiz bir tahmin alabilirsiniz.</string>
     <string name="threat_file_description">Tehdit bulunan dosya:</string>
-    <string name="threat_details_icon">Tehdit ayrıntıları simgesi</string>
     <string name="threat_fix_current_not_fixable_header">Tehdidi çözme</string>
     <string name="threat_fix_fixed_header">Jetpack bunu nasıl düzeltti?</string>
     <string name="threat_fix_default_header">Nasıl düzelteceğiz?</string>
@@ -68,10 +138,6 @@ Language: tr
     <string name="scan_this_site">bu site</string>
     <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
     <string name="threat_item_header_threat_found">Tehdit bulundu</string>
-    <string name="scan_idle_threats_found_description">Tarama işlemi %s üzerinde %s olası tehdit buldu. Lütfen aşağıdakileri inceleyin ve gerekli işlemi yapın. Bize ihtiyacınız olursa yardım etmek için buradayız.</string>
-    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı (%s) ve her şey yolunda görünüyor. %s</string>
-    <string name="scan_idle_manual_scan_description">Şimdi manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
-    <string name="scan_scanning_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.\n\n \n Tarama tamamlandığında size bir bildirim göndereceğiz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir, istediğiniz zaman taramanın gidişatını kontrol edebilirsiniz.</string>
     <string name="scan_again">Yeniden tara</string>
     <string name="scan_now">Şimdi tara</string>
     <string name="scan_state_icon">Tarama durumu simgesi</string>
@@ -90,15 +156,11 @@ Language: tr
     <string name="activity_log_active_filter_empty_subtitle">Tarih aralığınızı veya etkinlik türü filtrelerinizi ayarlamayı deneyin</string>
     <string name="activity_log_active_filter_empty_title">Eşleşen etkinlik bulunamadı</string>
     <string name="rewind">Geri al</string>
-    <string name="backup_item_sqls">Site veritabanı (SQL)</string>
-    <string name="backup_item_contents">WP-İçerik dizini (temalar, eklentiler ve yüklemeler hariç)</string>
-    <string name="backup_item_roots">WordPress Root (wp-config.php ve WordPress\'e ait olmayan tüm dosyaları içerir)</string>
     <string name="backup_item_media_uploads">Medya Yüklemeleri</string>
     <string name="backup_item_plugins">WordPress Eklentileri</string>
     <string name="backup_item_themes">WordPress Temaları</string>
     <string name="backup_download_details_icon_content_description">İndirilebilir yedekleme oluştur simgesi</string>
     <string name="backup_download_details_action_button">İndirilebilir dosya oluştur</string>
-    <string name="backup_download_details_choose_items_header">İndirmeye eklemek istediğiniz öğeleri seçin:</string>
     <string name="backup_download_details_header">İndirilebilir yedekleme oluştur</string>
     <string name="backup_download_details_page_title">Yedeklemeyi İndir</string>
     <string name="backup_download">İndirilebilir Yedekleme</string>
@@ -123,12 +185,13 @@ Language: tr
     <string name="gutenberg_native_copy_file_url">Dosya adresini kopyala</string>
     <string name="gutenberg_native_choose_a_file">DOSYA SEÇ</string>
     <string name="new_site_creation_domain_header_title">Bir alan adı seçin</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack ayarları</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Bu yazının yorumları için abonelik sonlandırılamıyor</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Bu yazının yorumları için abonelik başlatılamıyor</string>
     <string name="reader_follow_comments_get_status_error">Bu yazı için abonelik durumu getirilemiyor</string>
     <string name="reader_follow_comments_unsubscribe_success">Yorum aboneliği başarıyla sonlandırıldı</string>
+    <string name="reader_btn_following_comments">Sohbet e-postayla takip ediliyor</string>
+    <string name="reader_btn_follow_comments">Sohbeti e-posta ile takip et</string>
     <string name="reader_follow_comments_subscribe_success">Yorumlara başarıyla abone olundu</string>
     <string name="reader_follow_comments_bad_format_response">Geçersiz yanıt alındı</string>
     <string name="reader_follow_comments_null_response">Yanıt alınamadı</string>
@@ -238,6 +301,7 @@ Language: tr
     <string name="gutenberg_native_add_this_telephone_link">Bu telefon bağlantısını ekle</string>
     <string name="gutenberg_native_add_this_link">Bu bağlantıyı ekle</string>
     <string name="gutenberg_native_add_this_email_link">Bu e-posta bağlantısını ekle</string>
+    <string name="suggestion_no_connection">İnternet bağlantısı yok.\nÖneriler kullanılamaz.</string>
     <string name="mlp_selected_description">%s seçildi</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="typeface_label_nunito">Gelişigüzel</string>
@@ -341,7 +405,6 @@ Language: tr
     <string name="pick_file">Dosya ekle</string>
     <string name="gutenberg_native_replace_image_or_video">Video veya görseli değiştir</string>
     <string name="gutenberg_native_replace_video">Videoyu değiştir</string>
-    <string name="continue_with_wpcom">WordPress.com ile devam et</string>
     <string name="gutenberg_native_block_removed">Blok kaldırıldı</string>
     <string name="gutenberg_native_choose_image">Görsel seç</string>
     <string name="gutenberg_native_choose_image_or_video">Görsel veya video seç</string>
@@ -429,6 +492,7 @@ Language: tr
     <string name="status_and_visibility">Durum ve görünürlük</string>
     <string name="ccpa_privacy_notice_header">Californiya kullanıcıları için gizlilik notu</string>
     <string name="gutenberg_native_open_block_actions_menu">Blok eylemleri menüsünü aç</string>
+    <string name="gutenberg_native_move_to_top">Üste taşı</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Uygun seçenekleri içeren Alt Sayfayı açmak için iki kez dokunun</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Uygun seçenekleri içeren Eylem Sayfasını açmak için iki kez dokunun</string>
     <string name="site_settings_posts_page">Yazılar sayfası</string>
@@ -439,6 +503,7 @@ Language: tr
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Seçilen ana sayfa ve gönderi sayfası aynı olamaz.</string>
     <string name="site_settings_classic_blog">Klasik blog</string>
     <string name="site_settings_static_homepage">Sabit ana sayfa</string>
+    <string name="suggestion_invalid">%s geçerli bir %s değil</string>
     <string name="site_settings_accept_homepage">Kabul et</string>
     <string name="site_settings_homepage_settings">Ana sayfa ayarları</string>
     <string name="site_settings_failed_update_homepage_settings">Ana sayfa ayarları güncellenemedi, internet bağlantınızı kontrol edin</string>
@@ -814,7 +879,6 @@ Language: tr
     <string name="post_settings_notification">Bildirim</string>
     <string name="post_settings_time_and_date">Tarih ve saat</string>
     <string name="login_need_help_finding_connected_email">Bağlanırken kullandığınız e-postayı bulmak için yardıma mı ihtiyacınız var?</string>
-    <string name="enter_wordpress_site">Bu adresteki web sitesi bir WordPress sitesi değil. Siteyle bağlantı kurabilmemiz için sitede WordPress yüklü olmalıdır.</string>
     <string name="login_invalid_site_url">Lütfen example.com gibi eksiksiz bir web sitesi adresi girin.</string>
     <string name="enter_email_for_site">%1$s ile bağlanmak için WordPress.com hesabınıza giriş yapın</string>
     <string name="stats_post_views_label">Görüntülemeler</string>
@@ -1318,7 +1382,6 @@ Language: tr
     <string name="activity_log_jetpack_icon">Jetpack simgesi</string>
     <string name="activity_log_event">İşlem</string>
     <string name="activity_log_icon">Etkinlik simgesi</string>
-    <string name="activity">Etkinlik</string>
     <string name="privacy_policy_read">Gizlilik politikasını okuyun</string>
     <string name="third_party_policy_learn_more_caption">Üçüncü taraflara ait olanlar dahil diğer izleme araçlarını kullanıyoruz. Bunlar ve nasıl kontrol edilecekleri hakkında bilgi alın.</string>
     <string name="privacy_policy_learn_more_caption">Bu bilgiler, ürünlerimizi geliştirmemize, pazarlamayı sizin için daha alakalı hale getirmemize, WordPress.com deneyiminizi kişiselleştirmemize ve ayrıntılı olarak gizlilik politikamızda belirttiğimiz şekilde daha fazlasına yardımcı olur.</string>
@@ -2004,13 +2067,7 @@ Language: tr
     <string name="invite_error_invalid_usernames_multiple">Gönderemiyor: Geçersiz kullanıcı adları veya e-postalar</string>
     <string name="invite_error_invalid_usernames_one">Gönderemiyor: bir kullanıcı adı veya e-posta geçersiz</string>
     <string name="invite_error_no_usernames">Lütfen en az bir kullanıcı adı ekleyin</string>
-    <string name="invite_message_info">(İsteğe bağlı) Kullanıcıya/Kullanıcılara göndereceğiniz davete 500 karaktere kadar özel bir mesaj ekleyebilirsiniz.</string>
-    <string name="invite_message_remaining_other">%d karakter kaldı</string>
-    <string name="invite_message_remaining_one">1 karakter kaldı</string>
-    <string name="invite_message_remaining_zero">0 karakter kaldı</string>
-    <string name="invite_message_title">Özel mesaj</string>
     <string name="invite">Davet et</string>
-    <string name="invite_names_title">Kullanıcı adları ya da e-postalar</string>
     <string name="send_link">Bağlantı gönder</string>
     <string name="my_site_header_external">Harici</string>
     <string name="invite_people">İnsanları davet et</string>

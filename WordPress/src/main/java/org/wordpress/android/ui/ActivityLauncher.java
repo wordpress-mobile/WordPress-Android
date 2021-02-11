@@ -130,6 +130,10 @@ import static org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewM
 import static org.wordpress.android.viewmodel.activitylog.ActivityLogViewModelKt.ACTIVITY_LOG_REWINDABLE_ONLY_KEY;
 
 public class ActivityLauncher {
+    public static final String SOURCE_TRACK_EVENT_PROPERTY_KEY = "source";
+    public static final String BACKUP_TRACK_EVENT_PROPERTY_VALUE = "backup";
+    public static final String ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE = "activity_log";
+
     public static void showMainActivityAndLoginEpilogue(Activity activity, ArrayList<Integer> oldSitesIds,
                                                         boolean doLoginUpdate) {
         Intent intent = new Intent(activity, WPMainActivity.class);
@@ -614,21 +618,34 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
-        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_LIST_OPENED, site);
+        AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.JETPACK_BACKUP_LIST_OPENED, site);
         Intent intent = new Intent(activity, ActivityLogListActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, true);
         activity.startActivity(intent);
     }
 
-    public static void viewActivityLogDetailForResult(Activity activity, SiteModel site, String activityId) {
+    public static void viewActivityLogDetailForResult(
+            Activity activity,
+            SiteModel site,
+            String activityId,
+            boolean rewindableOnly
+    ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        String source;
+        if (rewindableOnly) {
+            source = BACKUP_TRACK_EVENT_PROPERTY_VALUE;
+        } else {
+            source = ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE;
+        }
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
 
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
@@ -637,6 +654,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_ACCESSED);
         Intent intent = new Intent(activity, ScanActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -672,6 +690,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_HISTORY_ACCESSED);
         Intent intent = new Intent(activity, ScanHistoryActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
@@ -1399,7 +1418,11 @@ public class ActivityLauncher {
     }
 
     public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
-                                                   int resultCode) {
+                                                   int resultCode, String source) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
+        AnalyticsTracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_OPENED, properties);
+
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTIVITY_ID_KEY, activityId);
@@ -1420,7 +1443,11 @@ public class ActivityLauncher {
     }
 
     public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
-                                                   int resultCode) {
+                                                   int resultCode, String source) {
+        Map<String, String> properties = new HashMap<>();
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
+        AnalyticsTracker.track(Stat.JETPACK_RESTORE_OPENED, properties);
+
         Intent intent = new Intent(activity, RestoreActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(KEY_RESTORE_ACTIVITY_ID_KEY, activityId);

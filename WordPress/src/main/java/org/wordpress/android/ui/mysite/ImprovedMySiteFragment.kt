@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -61,6 +62,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -77,7 +80,6 @@ import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
 import org.wordpress.android.util.SnackbarSequencer
-import org.wordpress.android.util.ToastUtils.showToast
 import org.wordpress.android.util.UriWrapper
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.ImageManager
@@ -97,7 +99,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
-    private lateinit var quickStartMenuViewModel: QuickStartMenuViewModel
+    private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,8 +107,8 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
-        quickStartMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(QuickStartMenuViewModel::class.java)
+        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(DynamicCardMenuViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -210,11 +212,14 @@ class ImprovedMySiteFragment : Fragment(),
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
             }
         })
-        viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { id ->
-                ((parentFragmentManager.findFragmentByTag(id) as? QuickStartMenuFragment)
-                        ?: QuickStartMenuFragment.newInstance(id))
-                        .show(parentFragmentManager, id)
+        viewModel.onDynamicCardMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { dynamicCardMenuModel ->
+                ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
+                        ?: DynamicCardMenuFragment.newInstance(
+                                dynamicCardMenuModel.cardType,
+                                dynamicCardMenuModel.isPinned
+                        ))
+                        .show(parentFragmentManager, dynamicCardMenuModel.id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
@@ -286,9 +291,8 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
-        quickStartMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
-            // TODO Handle Quick Start menu interaction
-            it?.getContentIfNotHandled()?.let { interaction -> showToast(context, interaction.toString()) }
+        dynamicCardMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { interaction -> viewModel.onQuickStartMenuInteraction(interaction) }
         })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
@@ -296,7 +300,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is ItemUploadedModel.PostUploaded -> {
                         uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                                 activity,
-                                requireActivity().findViewById(R.id.coordinator), true,
+                                requireActivity().findViewById(R.id.coordinator), true, false,
                                 itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
                         )
                     }
@@ -431,22 +435,24 @@ class ImprovedMySiteFragment : Fragment(),
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
-        snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = coordinator_layout,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
-                )
-        )
+        activity?.let { parent ->
+            snackbarSequencer.enqueue(
+                    SnackbarItem(
+                            Info(
+                                    view = parent.coordinator,
+                                    textRes = holder.message,
+                                    duration = Snackbar.LENGTH_LONG
+                            ),
+                            holder.buttonTitle?.let {
+                                Action(
+                                        textRes = holder.buttonTitle,
+                                        clickListener = { holder.buttonAction() }
+                                )
+                            },
+                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                    )
+            )
+        }
     }
 
     companion object {

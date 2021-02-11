@@ -1,13 +1,81 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-22 18:54:09+0000
+Translation-Revision-Date: 2021-02-05 15:38:59+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="restore_complete_failed_icon_content_description">Fehler-Icon</string>
+    <string name="restore_complete_failed_action_button_content_description">Fertig-Button</string>
+    <string name="restore_complete_visit_site_action_button">Website besuchen</string>
+    <string name="restore_complete_failed_title">Wiederherstellungsfehler</string>
+    <string name="restore_complete_visit_site_button_content_description">Website besuchen-Button</string>
+    <string name="restore_complete_done_button_content_description">Fertig-Button</string>
+    <string name="restore_complete_icon_content_description">Wiederherstellen-Button</string>
+    <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente werden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
+    <string name="restore_complete_header">Deine Website wurde wiederhergestellt.</string>
+    <string name="restore_progress_icon_content_description">Website wiederherstellen-Button</string>
+    <string name="restore_progress_description_with_two_parameters">Wir stellen deine Website auf %1$s %2$s wieder her.</string>
+    <string name="restore_progress_header">Website wird derzeit wiederhergestellt</string>
+    <string name="restore_warning_action_button_content_description">Button für Websitewiederherstellung bestätigen</string>
+    <string name="restore_warning_header">Warnung</string>
+    <string name="restore_warning_icon_content_description">Bild mit rotem Kreis und Ausrufezeichen</string>
+    <string name="restore_details_action_button_content_description">Button für Websitewiederherstellung</string>
+    <string name="restore_details_action_button">Website wiederherstellen</string>
+    <string name="restore">Wiederherstellen</string>
+    <string name="backup_download_complete_failed_action_button">Fertig</string>
+    <string name="restore_details_icon_content_description">Wiederherstellen-Button</string>
+    <string name="restore_details_description_with_two_parameters">%1$s %2$s ist der ausgewählten Punkt für deine Wiederherstellung.</string>
+    <string name="restore_details_header">Website wiederherstellen</string>
+    <string name="restore_details_choose_items_header">Auswahl der Elemente zur Wiederherstellung:</string>
+    <string name="backup_download_complete_failed_icon_content_description">Button für Wolke mit X</string>
+    <string name="backup_download_complete_failed_action_button_content_description">Fertig-Button</string>
+    <string name="web_preview_tablet">Tablet</string>
+    <string name="web_preview_mobile">Mobil</string>
+    <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
+    <string name="quick_start_card_menu_remove">Nicht erneut anzeigen</string>
+    <string name="quick_start_card_menu_hide">Ausblenden</string>
+    <string name="quick_start_card_menu_pin">Anheften</string>
+    <string name="quick_start_dialog_review_pages_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
+    <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
+    <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
+    <string name="quick_start_dialog_edit_homepage_message_pages_short">Wähle %1$s Startseite %2$s aus, um deine Homepage zu bearbeiten.</string>
+    <string name="quick_start_dialog_edit_homepage_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
+    <string name="quick_start_dialog_edit_homepage_message">Du kannst Inhalte auf der Startseite deiner Website ändern, hinzufügen oder entfernen.</string>
+    <string name="quick_start_dialog_edit_homepage_title">Startseite bearbeiten</string>
+    <string name="reader_menu_mark_as_seen">Als gesehen markieren</string>
+    <string name="reader_menu_mark_as_unseen">Als nicht gesehen markieren</string>
+    <string name="error_media_upload_failed_for_reason">Medien-Upload fehlgeschlagen.\n%1$s</string>
+    <string name="error_media_not_enough_storage">Nicht genügend verfügbarer Websitespeicher</string>
+    <string name="reader_error_changing_seen_status_of_unsupported_post">Gesehen-Status dieses Beitrags kann nicht umgeschaltet werden</string>
+    <string name="reader_marked_post_as_unseen">Als nicht gesehen markiert</string>
+    <string name="reader_marked_post_as_seen">Beitrag als gesehen markiert</string>
+    <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
+    <string name="threat_fix_all_status_success_message">Bedrohungen wurden erfolgreich behoben.</string>
+    <string name="threat_fix_all_error_message">Fehler beim Beheben von Bedrohungen. Bitte kontaktiere den Support.</string>
+    <string name="threat_fix_all_warning_message">Bitte bestätige, dass du %s aktive Bedrohungen beheben möchtest.</string>
+    <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
+    <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
+    <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
+    <string name="threat_ignore_warning">Eine Sicherheitsmeldung solltest du nicht ignorieren, sofern du dir nicht absolut sicher bist, dass sie harmlos ist. Wenn du diese Bedrohung ignorieren möchtest, wird sie auf deiner Website &lt;b>%s&lt;/b> verbleiben.</string>
+    <string name="threat_fix_error_message">Fehler beim Beheben der Bedrohung. Bitte kontaktiere den Support.</string>
+    <string name="scan_history_ignored_threats_tab">Ignoriert</string>
+    <string name="threat_item_sub_header_status_ignored">Bedrohung ignoriert</string>
+    <string name="threat_fixing">Bedrohung wird behoben</string>
+    <string name="scan_history_no_threats_found">Keine Elemente gefunden</string>
+    <string name="scan_history_fixed_threats_tab">Fixiert</string>
+    <string name="scan_history_all_threats_tab">Alle</string>
+    <string name="scan_scanning_title">Dateien werden gescannt</string>
+    <string name="scan_preparing_to_scan_title">Scannen wird vorbereitet</string>
+    <string name="scan_history_menu_title">Verlauf</string>
+    <string name="scan_history">Scanverlauf</string>
+    <string name="backup_active_filter_empty_subtitle">Versuche, den Datumsbereich anzupassen</string>
+    <string name="backup_active_filter_empty_title">Keine passenden Backups gefunden</string>
+    <string name="backup_empty_subtitle">Dein erstes Backup wird innerhalb von 24 Stunden hier bereitgestellt. Du erhältst eine Benachrichtigung, wenn das Backup abgeschlossen ist.</string>
+    <string name="backup_empty_title">Dein erstes Backup ist bald fertig</string>
+    <string name="request_failed_message">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="gutenberg_native_move_to_bottom">Nach unten verschieben</string>
-    <string name="gutenberg_native_move_block_position">Block-Position verschieben</string>
     <string name="jetpack_icon_content_description">Icon</string>
     <string name="backup_download_complete_info">Wir haben dir auch einen Link zu deiner Datei per E-Mail geschickt.</string>
     <string name="label_control_upload">Upload</string>
@@ -20,10 +88,7 @@ Language: de
     <string name="backup_download_complete_description_with_two_parameters">Wir haben erfolgreich ein Backup deiner Website vom %1$s %2$s erstellt.</string>
     <string name="backup_download_complete_page_title">Dein Backup</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">Du brauchst nicht zu warten. Wir teilen dir mit, wenn dein Backup fertig ist</string>
-    <string name="backup_download_progress_action_button_content_description">OK, benachrichtige mich-Button</string>
     <string name="backup_download_progress_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
-    <string name="backup_download_progress_action_button">OK, benachrichtige mich!</string>
     <string name="backup_download_progress_description_with_two_parameters">Wir erstellen ein herunterladbares Backup deiner Website vom %1$s %2$s.</string>
     <string name="backup_download_progress_header">Wir erstellen momentan ein herunterladbares Backup deiner Website</string>
     <string name="backup_download_progress_page_title">Backup herunterladen</string>
@@ -44,6 +109,10 @@ Language: de
     <string name="threat_fix_fixable_edit">Jetpack Scan bearbeitet die betroffene Datei bzw. das betroffene Verzeichnis.</string>
     <string name="threat_fix_fixable_update">Jetpack Scan wird auf eine neuere Version (%s) aktualisiert.</string>
     <string name="threat_fix_fixable_delete">Jetpack Scan löscht die betroffene Datei bzw. das betroffene Verzeichnis.</string>
+    <string name="suggestion_no_matching">Keine passenden %s.</string>
+    <string name="suggestion_problem">Beim Laden von Vorschlägen ist ein Fehler aufgetreten.</string>
+    <string name="suggestion_none">Keine %s Vorschläge verfügbar.</string>
+    <string name="suggestion_selection_needed">Nimm eine Eingabe vor, um die Liste der Vorschläge zu filtern.</string>
     <string name="threat_fix_fixable_replace">Jetpack Scan ersetzt die betroffene Datei bzw. das betroffene Verzeichnis.</string>
     <string name="threat_fix_current_not_fixable_description">Jetpack Scan kann diese Bedrohung nicht automatisch beheben.\n Wir empfehlen dir, die Bedrohung manuell zu entfernen: Stelle sicher, dass WordPress, dein Theme und alle deine Plugins auf dem neuesten Stand sind und entferne anschließend den betroffenen Code, das betroffene Theme oder das betroffene Plugin von deiner Website. \n \n\n Wenn du weitere Hilfe benötigst, um diese Bedrohung zu beheben, empfehlen wir dir &lt;b>Codeable&lt;/b>, einen Marktplatz für vertrauenswürdige Freiberufler mit sorgfältig geprüften WordPress-Experten.\n Von Codeable wurde eine Gruppe ausgewählter Sicherheitsexperten zusammengestellt, um bei diesen Projekten Unterstützung zu leisten. Die Preise reichen von 70 bis 120 USD/Stunde und du kannst kostenlos ein unverbindliches Angebot einholen.</string>
     <string name="threat_fix_current_not_fixable_header">Beseitigen der Bedrohung</string>
@@ -52,7 +121,6 @@ Language: de
     <string name="threat_file_description">Bedrohung in Datei gefunden:</string>
     <string name="threat_technical_details_header">Die technischen Details</string>
     <string name="threat_problem_header">Was war das Problem?</string>
-    <string name="threat_details_icon">Icon für Bedrohungsdetails</string>
     <string name="threat_details">Bedrohungsdetails</string>
     <string name="threat_item_sub_header_vulnerable_theme">Schwachstelle im Theme gefunden</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Schwachstelle im Plugin gefunden</string>
@@ -70,10 +138,6 @@ Language: de
     <string name="threats_found">Bedrohungen gefunden</string>
     <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
     <string name="threat_item_header_infected_core_file">%s: infizierte Core-Datei</string>
-    <string name="scan_idle_threats_found_description">Beim Scan wurden %s mögliche Bedrohungen auf %s gefunden. Prüfe diese bitte unten und führe die erforderliche Aktion aus. Wir helfen dir gerne weiter.</string>
-    <string name="scan_idle_last_scan_description">Der letzte Jetpack-Scan wurde %s ausgeführt und zeigte keinerlei Probleme. %s</string>
-    <string name="scan_idle_manual_scan_description">Führe jetzt einen manuellen Scan aus oder warte, bis deine Website heute zu einem späteren Zeitpunkt von Jetpack gescannt wird.</string>
-    <string name="scan_scanning_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir das Ergebnis bald mit.\n\n \n Wir werden dir eine Benachrichtigung schicken, sobald der Scan abgeschlossen ist. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="backup">Backup</string>
     <string name="scan_now">Jetzt scannen</string>
     <string name="scan_again">Erneut scannen</string>
@@ -92,12 +156,9 @@ Language: de
     <string name="activity_log_active_filter_empty_title">Keine passenden Ereignisse gefunden</string>
     <string name="activity_log_active_filter_empty_subtitle">Versuche, deinen Zeitraum oder Aktivitätsfilter zu ändern</string>
     <string name="rewind">Wiederherstellen</string>
-    <string name="backup_item_sqls">Website-Datenbank (SQL)</string>
     <string name="backup_item_media_uploads">Medien-Uploads</string>
     <string name="backup_item_themes">WordPress-Themes</string>
     <string name="backup_item_plugins">WordPress-Plugins</string>
-    <string name="backup_item_roots">WordPress Root (beinhaltet wp-config.php und alle Nicht-WordPress-Dateien)</string>
-    <string name="backup_item_contents">WP-Content-Verzeichnis (mit Ausnahme von Themes, Plugins und Uploads)</string>
     <string name="backup_download_details_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
     <string name="activity_log_activity_type_filter_label">Aktivitätstyp</string>
     <string name="activity_log_item_menu_download_backup_label">Backup herunterladen</string>
@@ -107,7 +168,6 @@ Language: de
     <string name="backup_download_details_page_title">Backup herunterladen</string>
     <string name="backup_download_details_header">Herunterladbares Backup erstellen</string>
     <string name="backup_download">Backup-Download</string>
-    <string name="backup_download_details_choose_items_header">Wähle die Elemente aus, die du in den Download aufnehmen möchtest:</string>
     <string name="backup_download_details_action_button">Herunterladbare Datei erstellen</string>
     <string name="activity_log_date_range_filter_label">Zeitraum</string>
     <string name="button_copy">Duplizieren</string>
@@ -125,12 +185,13 @@ Language: de
     <string name="gutenberg_native_copy_file_url">Datei-URL kopieren</string>
     <string name="gutenberg_native_choose_a_file">Datei auswählen</string>
     <string name="new_site_creation_domain_header_title">Domain auswählen</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack-Einstellungen</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Abmeldung von den Kommentaren für diesen Beitrag fehlgeschlagen</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Abonnement für Kommentare in diesem Beitrag fehlgeschlagen</string>
     <string name="reader_follow_comments_get_status_error">Fehler beim Abrufen des Abonnementstatus für den Beitrag</string>
     <string name="reader_follow_comments_unsubscribe_success">Erfolgreich von den Kommentaren abgemeldet</string>
+    <string name="reader_btn_following_comments">Du folgst der Unterhaltung per E-Mail</string>
+    <string name="reader_btn_follow_comments">Unterhaltung per E-Mail folgen</string>
     <string name="reader_follow_comments_subscribe_success">Kommentare erfolgreich abonniert</string>
     <string name="reader_follow_comments_bad_format_response">Ungültige Antwort erhalten</string>
     <string name="reader_follow_comments_null_response">Keine Antwort erhalten</string>
@@ -240,6 +301,7 @@ Language: de
     <string name="gutenberg_native_add_this_telephone_link">Diesen Telefonlink hinzufügen</string>
     <string name="gutenberg_native_add_this_link">Diesen Link hinzufügen</string>
     <string name="gutenberg_native_add_this_email_link">Diesen E-Mail-Link hinzufügen</string>
+    <string name="suggestion_no_connection">Keine Internetverbindung.\nKeine Vorschläge verfügbar.</string>
     <string name="typeface_label_shrikhand">Fett</string>
     <string name="typeface_label_space_mono">Modern</string>
     <string name="typeface_label_pacifico">Verspielt</string>
@@ -347,7 +409,6 @@ Language: de
     <string name="gutenberg_native_choose_image_or_video">Bild oder Video auswählen</string>
     <string name="gutenberg_native_choose_image">Bild wählen</string>
     <string name="gutenberg_native_block_removed">Block entfernt</string>
-    <string name="continue_with_wpcom">Weiter mit WordPress.com</string>
     <string name="signup_confirmation_title">Registrierungsbestätigung</string>
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
@@ -442,6 +503,7 @@ Language: de
     <string name="site_settings_page_for_posts_and_homepage_cannot_be_equal">Die ausgewählte Homepage und die Seite für Beiträge können nicht identisch sein.</string>
     <string name="pages_cannot_be_started">Wir können die Seiten momentan nicht öffnen. Bitte versuche es später erneut</string>
     <string name="site_settings_static_homepage">Statische Seite</string>
+    <string name="suggestion_invalid">%s ist kein gültiger %s</string>
     <string name="site_settings_homepage_settings">Homepage-Einstellungen</string>
     <string name="site_settings_accept_homepage">Akzeptieren</string>
     <string name="site_settings_failed_to_save_homepage_settings">Homepage-Einstellungen können nicht gespeichert werden</string>
@@ -817,7 +879,6 @@ Language: de
     <string name="post_settings_notification">Benachrichtigung</string>
     <string name="post_settings_time_and_date">Datum und Uhrzeit</string>
     <string name="login_need_help_finding_connected_email">Brauchst du Hilfe beim Finden der E-Mail, mit der du dich angemeldet hast?</string>
-    <string name="enter_wordpress_site">Die Website unter dieser Adresse ist keine WordPress-Site. Damit wir uns damit verbinden können, muss auf der Website WordPress installiert sein.</string>
     <string name="login_invalid_site_url">Bitte gib eine vollständige Website-Adresse ein, wie z.&amp;nbsp;B. example.com.</string>
     <string name="stats_list_item_description">%1$s: %2$s, %3$s: %4$s</string>
     <string name="stats_post_label">Beitrag</string>
@@ -1322,7 +1383,6 @@ Language: de
     <string name="activity_log_event">Ereignis</string>
     <string name="activity_log_icon">Aktivitätssymbol</string>
     <string name="activity_log">Aktivitätsprotokoll</string>
-    <string name="activity">Aktivität</string>
     <string name="privacy_policy_read">Datenschutzerklärung lesen</string>
     <string name="third_party_policy_learn_more_caption">Wir verwenden andere Werkzeuge zum Tracking, darunter auch welche von Drittanbietern. Hier erhältst du weitere Informationen und Tipps, wie du sie kontrollierst.</string>
     <string name="third_party_policy_learn_more_header">Richtlinie für Drittanbieter</string>
@@ -2007,13 +2067,7 @@ Language: de
     <string name="invite_error_invalid_usernames_multiple">Senden fehlgeschlagen: Es wurden ungültige Benutzernamen oder E-Mail-Adressen angegeben</string>
     <string name="invite_error_invalid_usernames_one">Senden fehlgeschlagen: Benutzername oder E-Mail-Adresse sind ungültig</string>
     <string name="invite_error_no_usernames">Bitte trage mindestens einen Benutzernamen ein</string>
-    <string name="invite_message_info">(Optional) Du kannst eine individuelle Nachricht mit bis zu 500 Zeichen eintragen, die in der Einladung an die Benutzer mitgesendet wird.</string>
-    <string name="invite_message_remaining_other">Noch %d weitere Zeichen möglich</string>
-    <string name="invite_message_remaining_one">1 weiteres Zeichen möglich</string>
-    <string name="invite_message_remaining_zero">Keine weiteren Zeichen möglich</string>
-    <string name="invite_message_title">Individuelle Nachricht</string>
     <string name="invite">Einladen</string>
-    <string name="invite_names_title">Benutzernamen oder E-Mail-Adressen</string>
     <string name="send_link">Link senden</string>
     <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>

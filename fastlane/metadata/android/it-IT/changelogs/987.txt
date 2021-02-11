@@ -1,0 +1,7 @@
+16.6:
+Novità.
+Creazione del sito: quando esplori i design per la homepage, puoi passare dalla visualizzazione in anteprima per dispositivi mobili a quella per tablet e per desktop. 
+Reader: per una migliore organizzazione, abbiamo aggiunto una funzionalità di filtraggio alla scheda di siti P2 seguiti.
+Avvio rapido: abbiamo migliorato il tour che ti guida attraverso l'app aggiungendo dei passaggi alla revisione delle pagine e alla modifica della homepage.
+
+

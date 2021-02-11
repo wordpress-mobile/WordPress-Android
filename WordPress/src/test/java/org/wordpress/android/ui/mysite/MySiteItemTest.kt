@@ -2,15 +2,16 @@ package org.wordpress.android.ui.mysite
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Test
-import org.wordpress.android.R
+import org.wordpress.android.R.color
 import org.wordpress.android.R.drawable
 import org.wordpress.android.ui.mysite.MySiteItem.CategoryHeader
 import org.wordpress.android.ui.mysite.MySiteItem.DomainRegistrationBlock
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.ListItem
 import org.wordpress.android.ui.mysite.MySiteItem.QuickActionsBlock
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock
 import org.wordpress.android.ui.mysite.MySiteItem.SiteInfoBlock.IconState.Visible
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringText
 
@@ -71,7 +72,14 @@ class MySiteItemTest {
 
     @Test
     fun `quick start card is never active`() {
-        val quickStartCard = QuickStartCard("id", UiStringText("title"), listOf(), R.color.pink_40, 0, interaction)
+        val quickStartCard = QuickStartCard(
+                GROW_QUICK_START,
+                UiStringText("title"),
+                listOf(),
+                color.pink_40,
+                0,
+                interaction
+        )
 
         assertThat(quickStartCard.activeQuickStartItem).isFalse()
     }

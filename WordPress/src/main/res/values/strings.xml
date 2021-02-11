@@ -1010,7 +1010,6 @@
     <string name="login_to_to_connect_jetpack">Log in to the WordPress.com account you used to connect Jetpack.</string>
 
     <!-- activity log -->
-    <string name="activity">Activity</string>
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
@@ -1081,12 +1080,15 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
+    <string name="scan_fixing_threats_title">Fixing Threats</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description">We\'re hard at work fixing these threats in the background. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
-    <string name="scan_idle_manual_scan_description">Run a manual scan now or wait for Jetpack to scan your site later today.</string>
-    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and everything looked great. %s</string>
-    <string name="scan_idle_threats_found_description">The scan found %s potential threats on %s. Please review them below and take action. We\'re here to help if you need us.</string>
+    <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
+    <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
+    <string name="scan_idle_with_threats_description">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hours ago</string>
     <string name="scan_in_minutes_ago">%s minutes ago</string>
@@ -1102,7 +1104,7 @@
     <string name="scan_history_request_failed" translatable="false">@string/request_failed_message</string>
 
     <!-- threats -->
-    <string name="threats_fix_num_of_threats">Fix %s threats</string>
+    <string name="threats_fix_all">Fix All</string>
     <string name="threats_found">Threats found</string>
     <string name="threat_fixing">Fixing threat</string>
 
@@ -1152,7 +1154,7 @@
     <string name="threat_get_free_estimate">Get a free estimate</string>
     <!-- threat alert messages -->
     <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
-    <string name="threat_ignore_warning">You shouldn\’t ignore a security unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
+    <string name="threat_ignore_warning">You shouldn\’t ignore a security issue unless you are absolute sure it\’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b&gt;%s&lt;/b&gt;.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
@@ -2061,7 +2063,7 @@
     <string name="my_site_header_look_and_feel">Look and Feel</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="my_site_header_publish">Publish</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack settings</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack Settings</string>
     <string name="my_site_btn_site_pages">Site Pages</string>
     <string name="my_site_btn_blog_posts">Blog Posts</string>
     <string name="my_site_btn_sharing">Sharing</string>
@@ -2227,7 +2229,7 @@
     <string name="viewer_remove_confirmation_message">If you remove this viewer, he or she will not be able to visit this site.\n\nWould you still like to remove this viewer?</string>
     <string name="person_removed">Successfully removed %1$s</string>
     <string name="invite_people">Invite People</string>
-    <string name="invite_names_title">Usernames or Emails</string>
+    <string name="invite_names_title">Usernames or emails</string>
     <string name="invite">Invite</string>
     <string name="button_invite" translatable="false">@string/invite</string>
     <string name="invite_username_not_found">%s: User not found</string>
@@ -2235,11 +2237,7 @@
     <string name="invite_already_following">%s: Already following</string>
     <string name="invite_user_blocked_invites">%s: User blocked invites</string>
     <string name="invite_invalid_email">%s: Invalid email</string>
-    <string name="invite_message_title">Custom Message</string>
-    <string name="invite_message_remaining_zero">0 characters remaining</string>
-    <string name="invite_message_remaining_one">1 character remaining</string>
-    <string name="invite_message_remaining_other">%d characters remaining</string>
-    <string name="invite_message_info">(Optional) You can enter a custom message of up to 500 characters that will be included in the invitation to the user(s).</string>
+    <string name="invite_message_title">Custom message</string>
     <string name="invite_message_usernames_limit">Invite up to 10 email addresses and/or WordPress.com usernames. Those needing a username will be sent instructions on how to create one.</string>
     <string name="invite_error_no_usernames">Please add at least one username</string>
     <string name="invite_error_invalid_usernames_one">Cannot send: A username or email is invalid</string>
@@ -2248,6 +2246,9 @@
     <string name="invite_error_some_failed">Invite sent but error(s) occurred!</string>
     <string name="invite_error_for_username">%1$s: %2$s</string>
     <string name="invite_sent">Invite sent successfully</string>
+
+    <string name="people_learn_more_about_roles">Learn more about roles</string>
+    <string name="people_optional_custom_message_helper_text">Optional: enter a custom message to be sent with your invitation.</string>
 
     <string name="people_dropdown_item_team">Team</string>
     <string name="people_dropdown_item_followers">Followers</string>
@@ -2698,7 +2699,7 @@
     <string name="signup_magic_link_title">Magic link sent</string>
     <string name="signup_confirmation_title">Signup confirmation</string>
 
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="username_changer_action">Save</string>
@@ -2814,10 +2815,10 @@
     <string name="quick_start_dialog_remove_next_steps_message">Removing Next Steps will hide all tours on this site. This action cannot be undone.</string>
     <string name="quick_start_dialog_check_stats_message">Keep up to date on your site\'s performance.</string>
     <string name="quick_start_dialog_check_stats_title">Check your site stats</string>
-    <string name="quick_start_dialog_enable_sharing_message">Automatically share new posts to your social media accounts.</string>
+    <string name="quick_start_dialog_enable_sharing_message" tools:ignore="UnusedResources">Automatically share new posts to your social media accounts.</string>
     <string name="quick_start_dialog_enable_sharing_message_short_connections">Tap the %1$s Connections %2$s to add your social media accounts</string>
     <string name="quick_start_dialog_enable_sharing_message_short_sharing" tools:ignore="UnusedResources">Tap %1$s Sharing %2$s to continue</string>
-    <string name="quick_start_dialog_enable_sharing_title">Enable post sharing</string>
+    <string name="quick_start_dialog_enable_sharing_title" tools:ignore="UnusedResources">Enable post sharing</string>
     <string name="quick_start_dialog_explore_plans_message">Learn about the marketing and SEO tools in our paid plans.</string>
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
@@ -2855,23 +2856,27 @@
     <string name="quick_start_dialog_review_pages_message_short" tools:ignore="UnusedResources">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_list_check_stats_subtitle" translatable="false">@string/quick_start_dialog_check_stats_message</string>
-    <string name="quick_start_list_check_stats_title" translatable="false">@string/quick_start_dialog_check_stats_title</string>
+    <string name="quick_start_list_check_stats_title">Check your stats</string>
     <string name="quick_start_list_create_site_subtitle">Get your site up and running.</string>
     <string name="quick_start_list_create_site_title">Create your site</string>
     <string name="quick_start_list_update_site_title_title">Set your site title</string>
-    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
-    <string name="quick_start_list_enable_sharing_subtitle" translatable="false">@string/quick_start_dialog_enable_sharing_message</string>
-    <string name="quick_start_list_enable_sharing_title" translatable="false">@string/quick_start_dialog_enable_sharing_title</string>
+    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
+    <string name="quick_start_list_enable_sharing_title">Enable sharing</string>
     <string name="quick_start_list_explore_plans_subtitle" translatable="false">@string/quick_start_dialog_explore_plans_message</string>
     <string name="quick_start_list_explore_plans_title" translatable="false">@string/quick_start_dialog_explore_plans_title</string>
-    <string name="quick_start_list_follow_site_subtitle" translatable="false">@string/quick_start_dialog_follow_sites_message</string>
+    <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
     <string name="quick_start_list_follow_site_title" translatable="false">@string/quick_start_dialog_follow_sites_title</string>
     <string name="quick_start_list_publish_post_subtitle" translatable="false">@string/quick_start_dialog_publish_post_message</string>
     <string name="quick_start_list_publish_post_title" translatable="false">@string/quick_start_dialog_publish_post_title</string>
-    <string name="quick_start_list_upload_icon_subtitle" translatable="false">@string/quick_start_dialog_upload_icon_message</string>
+    <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
     <string name="quick_start_list_upload_icon_title" translatable="false">@string/quick_start_dialog_upload_icon_title</string>
     <string name="quick_start_list_view_site_subtitle" translatable="false">@string/quick_start_dialog_view_site_message</string>
-    <string name="quick_start_list_view_site_title" translatable="false">@string/quick_start_dialog_view_site_title</string>
+    <string name="quick_start_list_view_site_title">Visit your site</string>
+    <string name="quick_start_list_edit_homepage_subtitle" translatable="false">@string/quick_start_dialog_edit_homepage_message</string>
+    <string name="quick_start_list_edit_homepage_title" translatable="false">@string/quick_start_dialog_edit_homepage_title</string>
+    <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
+    <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_sites_type_customize">Customize Your Site</string>
     <string name="quick_start_sites_type_grow">Grow Your Audience</string>
@@ -2880,7 +2885,8 @@
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
-    <string name="quick_start_card_menu_pin">Pin this</string>
+    <string name="quick_start_card_menu_pin">Pin</string>
+    <string name="quick_start_card_menu_unpin">Unpin</string>
     <string name="quick_start_card_menu_hide">Hide</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
 
@@ -2996,7 +3002,8 @@
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
-    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>
@@ -3170,6 +3177,7 @@
     <string name="gutenberg_native_add_a_description" tools:ignore="UnusedResources">Add a description</string>
     <string name="gutenberg_native_add_a_shortcode" tools:ignore="UnusedResources">Add a shortcode…</string>
     <string name="gutenberg_native_add_annotation" tools:ignore="UnusedResources">Add annotation</string>
+    <string name="gutenberg_native_add_audio" tools:ignore="UnusedResources">ADD AUDIO</string>
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
@@ -3186,6 +3194,13 @@
     <string name="gutenberg_native_alt_text" tools:ignore="UnusedResources">Alt Text</string>
     <string name="gutenberg_native_an_unknown_error_occurred_please_try_again" tools:ignore="UnusedResources">An unknown error occurred. Please try again.</string>
     <string name="gutenberg_native_annotations_sidebar" tools:ignore="UnusedResources">Annotations Sidebar</string>
+    <!-- translators: accessibility text. Empty Audio caption. -->
+    <string name="gutenberg_native_audio_caption_empty" tools:ignore="UnusedResources">Audio caption. Empty</string>
+    <!-- translators: accessibility text. %s: Audio caption. -->
+    <string name="gutenberg_native_audio_caption_s" tools:ignore="UnusedResources">Audio caption. %s</string>
+    <!-- translators: displays audio file extension. e.g. MP3 audio file -->
+    <string name="gutenberg_native_audio_file" tools:ignore="UnusedResources"> audio file</string>
+    <string name="gutenberg_native_audio_player" tools:ignore="UnusedResources">Audio Player</string>
     <!-- translators: displayed right after the block is copied. -->
     <string name="gutenberg_native_block_copied" tools:ignore="UnusedResources">Block copied</string>
     <!-- translators: displayed right after the block is cut. -->
@@ -3197,7 +3212,9 @@
     <!-- translators: displayed right after the block is removed. -->
     <string name="gutenberg_native_block_removed" tools:ignore="UnusedResources">Block removed</string>
     <string name="gutenberg_native_block_settings" tools:ignore="UnusedResources">Block settings</string>
+    <string name="gutenberg_native_change_block_position" tools:ignore="UnusedResources">Change block position</string>
     <string name="gutenberg_native_choose_a_file" tools:ignore="UnusedResources">CHOOSE A FILE</string>
+    <string name="gutenberg_native_choose_audio" tools:ignore="UnusedResources">Choose audio</string>
     <string name="gutenberg_native_choose_file" tools:ignore="UnusedResources">Choose file</string>
     <string name="gutenberg_native_choose_from_device" tools:ignore="UnusedResources">Choose from device</string>
     <string name="gutenberg_native_choose_image" tools:ignore="UnusedResources">Choose image</string>
@@ -3221,6 +3238,7 @@
     <string name="gutenberg_native_double_tap_to_edit_this_value" tools:ignore="UnusedResources">Double tap to edit this value</string>
     <!-- translators: accessibility text (hint for moving to color settings) -->
     <string name="gutenberg_native_double_tap_to_go_to_color_settings" tools:ignore="UnusedResources">Double tap to go to color settings</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file" tools:ignore="UnusedResources">Double tap to listen the audio file</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_down" tools:ignore="UnusedResources">Double tap to move the block down</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Double tap to move the block to the left</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Double tap to move the block to the right</string>
@@ -3230,6 +3248,7 @@
     <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Double tap to redo last change</string>
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
     <string name="gutenberg_native_double_tap_to_select_a_video" tools:ignore="UnusedResources">Double tap to select a video</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file" tools:ignore="UnusedResources">Double tap to select an audio file</string>
     <string name="gutenberg_native_double_tap_to_select_an_image" tools:ignore="UnusedResources">Double tap to select an image</string>
     <!-- translators: accessibility text (hint for selecting option) -->
     <string name="gutenberg_native_double_tap_to_select_the_option" tools:ignore="UnusedResources">Double tap to select the option</string>
@@ -3242,6 +3261,7 @@
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
     <string name="gutenberg_native_excerpt_length_words" tools:ignore="UnusedResources">Excerpt length (words)</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert audio file. Please tap for options.</string>
     <string name="gutenberg_native_failed_to_insert_media_please_tap_for_options" tools:ignore="UnusedResources">Failed to insert media.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_save_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to save files.\nPlease tap for options.</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options" tools:ignore="UnusedResources">Failed to upload files.\nPlease tap for options.</string>
@@ -3259,13 +3279,13 @@
     <string name="gutenberg_native_image_link_url" tools:ignore="UnusedResources">Image Link URL</string>
     <string name="gutenberg_native_link_settings" tools:ignore="UnusedResources">Link Settings</string>
     <string name="gutenberg_native_link_to" tools:ignore="UnusedResources">Link To</string>
+    <string name="gutenberg_native_lock_icon" tools:ignore="UnusedResources">Lock icon</string>
     <string name="gutenberg_native_move_block_down" tools:ignore="UnusedResources">Move block down</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_down_from_row_1_s_to_row_2_s" tools:ignore="UnusedResources">Move block down from row %1$s to row %2$s</string>
     <string name="gutenberg_native_move_block_left" tools:ignore="UnusedResources">Move block left</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block left from position %1$s to position %2$s</string>
-    <string name="gutenberg_native_move_block_position" tools:ignore="UnusedResources">Move block position</string>
     <string name="gutenberg_native_move_block_right" tools:ignore="UnusedResources">Move block right</string>
     <!-- translators: accessibility text. %1: current block position (number). %2: next block position (number) -->
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s" tools:ignore="UnusedResources">Move block right from position %1$s to position %2$s</string>
@@ -3283,9 +3303,11 @@
     <string name="gutenberg_native_navigate_up" tools:ignore="UnusedResources">Navigate Up</string>
     <string name="gutenberg_native_navigates_to_custom_color_picker" tools:ignore="UnusedResources">Navigates to custom color picker</string>
     <string name="gutenberg_native_navigates_to_customize_the_gradient" tools:ignore="UnusedResources">Navigates to customize the gradient</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request" tools:ignore="UnusedResources">No application can handle this request.</string>
     <string name="gutenberg_native_no_application_can_handle_this_request_please_install_a_web_brows" tools:ignore="UnusedResources">No application can handle this request. Please install a Web browser.</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes" tools:ignore="UnusedResources">Note: Column layout may vary between themes and screen sizes</string>
     <string name="gutenberg_native_only_show_excerpt" tools:ignore="UnusedResources">Only show excerpt</string>
+    <string name="gutenberg_native_open" tools:ignore="UnusedResources">OPEN</string>
     <string name="gutenberg_native_open_block_actions_menu" tools:ignore="UnusedResources">Open Block Actions Menu</string>
     <string name="gutenberg_native_open_link_in_a_browser" tools:ignore="UnusedResources">Open link in a browser</string>
     <string name="gutenberg_native_open_settings" tools:ignore="UnusedResources">Open Settings</string>
@@ -3302,12 +3324,17 @@
     <!-- translators: accessibility text. %s: text content of the post title. -->
     <string name="gutenberg_native_post_title_s" tools:ignore="UnusedResources">Post title. %s</string>
     <string name="gutenberg_native_problem_displaying_block" tools:ignore="UnusedResources">Problem displaying block</string>
+    <string name="gutenberg_native_problem_opening_the_audio" tools:ignore="UnusedResources">Problem opening the audio</string>
     <string name="gutenberg_native_problem_opening_the_video" tools:ignore="UnusedResources">Problem opening the video</string>
     <string name="gutenberg_native_remove_annotations" tools:ignore="UnusedResources">Remove annotations</string>
+    <string name="gutenberg_native_replace_audio" tools:ignore="UnusedResources">Replace audio</string>
     <string name="gutenberg_native_replace_current_block" tools:ignore="UnusedResources">Replace Current Block</string>
+    <string name="gutenberg_native_replace_file" tools:ignore="UnusedResources">Replace file</string>
     <string name="gutenberg_native_replace_image_or_video" tools:ignore="UnusedResources">Replace image or video</string>
     <string name="gutenberg_native_replace_video" tools:ignore="UnusedResources">Replace video</string>
     <string name="gutenberg_native_reset_block" tools:ignore="UnusedResources">Reset Block</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for Android</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios" tools:ignore="UnusedResources">Reusable blocks aren\'t editable on WordPress for iOS</string>
     <!-- translators: accessibility text for the media block empty state. %s: media type -->
     <string name="gutenberg_native_s_block_empty" tools:ignore="UnusedResources">%s block. Empty</string>
     <!-- translators: %s: block title e.g: "Paragraph". -->
@@ -3338,6 +3365,7 @@
     <string name="gutenberg_native_ungroup" tools:ignore="UnusedResources">Ungroup</string>
     <string name="gutenberg_native_unsupported" tools:ignore="UnusedResources">Unsupported</string>
     <string name="gutenberg_native_updates_the_title" tools:ignore="UnusedResources">Updates the title.</string>
+    <string name="gutenberg_native_uploading" tools:ignore="UnusedResources">Uploading…</string>
     <!-- translators: accessibility text. Empty video caption. -->
     <string name="gutenberg_native_video_caption_empty" tools:ignore="UnusedResources">Video caption. Empty</string>
     <!-- translators: accessibility text. %s: video caption. -->

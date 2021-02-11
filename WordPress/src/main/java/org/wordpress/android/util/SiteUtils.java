@@ -359,10 +359,20 @@ public class SiteUtils {
     }
 
     public static boolean hasCustomDomain(@NonNull SiteModel site) {
-        return !site.getUrl().contains(".wordpress.com");
+        return !site.getUrl().contains(".wordpress.com") && !site.getUrl().contains(".wpcomstaging.com");
     }
 
     public static boolean hasFullAccessToContent(@Nullable SiteModel site) {
         return site != null && (site.isSelfHostedAdmin() || site.getHasCapabilityEditPages());
+    }
+
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    public static boolean isScanEnabled(boolean scanFeatureFlagEnabled, boolean scanPurchased, SiteModel site) {
+        return scanFeatureFlagEnabled && scanPurchased && !site.isWPCom() && !site.isWPComAtomic();
+    }
+
+    // TODO: Inline this method when legacy MySiteFragment is removed
+    public static boolean isBackupEnabled(boolean backupFeatureFlagEnabled, boolean backupPurchased) {
+        return backupFeatureFlagEnabled && backupPurchased;
     }
 }

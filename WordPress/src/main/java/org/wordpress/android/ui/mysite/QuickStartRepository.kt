@@ -3,22 +3,18 @@ package org.wordpress.android.ui.mysite
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onStart
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
@@ -26,8 +22,12 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -36,6 +36,7 @@ import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -53,7 +54,8 @@ class QuickStartRepository
     private val resourceProvider: ResourceProvider,
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
-    private val eventBus: EventBusWrapper
+    private val eventBus: EventBusWrapper,
+    private val appPrefsWrapper: AppPrefsWrapper
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -61,11 +63,17 @@ class QuickStartRepository
 
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
             .associateBy { it.task }
-    private val refresh = MutableLiveData<Boolean?>()
+    private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+
+    init {
+        quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
+                .filter { !appPrefsWrapper.isQuickStartTaskTypeRemoved(it) }
+                .toSet()
+    }
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -74,30 +82,32 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(siteId: Int) = flow {
-        emit(QuickStartUpdate())
-        refresh.asFlow().map {
-            if (quickStartUtils.isQuickStartInProgress(siteId)) {
-                val customizeCategory = buildQuickStartCategory(siteId, CUSTOMIZE)
-                val growCategory = buildQuickStartCategory(siteId, GROW)
-                listOfNotNull(customizeCategory, growCategory)
+    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
+        _activeTask.value = null
+        if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
+                !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
+            quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
+            refresh()
+        }
+        return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
+            val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
+                types?.map { buildQuickStartCategory(siteId, it) } ?: listOf()
             } else {
                 listOf()
             }
-        }.combine(_activeTask.asFlow().onStart { emit(null) }) { categories, activeTask ->
             QuickStartUpdate(activeTask, categories)
-        }.collect { emit(it) }
+        }
     }
 
     fun startQuickStart() {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             quickStartStore.setDoneTask(site.id.toLong(), CREATE_SITE, true)
-            refresh.postValue(false)
+            refresh()
         }
     }
 
-    fun refreshIfNecessary() {
-        refresh.postValue(false)
+    fun refresh() {
+        quickStartTaskTypes.postValue(quickStartTaskTypes.value)
     }
 
     fun setActiveTask(task: QuickStartTask) {
@@ -135,7 +145,7 @@ class QuickStartRepository
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
             analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
-            refresh.value = false
+            refresh()
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -152,6 +162,30 @@ class QuickStartRepository
 
     fun clear() {
         job.cancel()
+    }
+
+    fun hideCategory(dynamicCardType: DynamicCardType) {
+        val hiddenCategory = dynamicCardType.toQuickStartTaskType()
+        hideQuickStartType(hiddenCategory)
+    }
+
+    fun removeCategory(dynamicCardType: DynamicCardType) {
+        val removedQuickStartTaskType = dynamicCardType.toQuickStartTaskType()
+        appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
+        hideQuickStartType(removedQuickStartTaskType)
+    }
+
+    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
+        return when (this) {
+            CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            GROW_QUICK_START -> GROW
+        }
+    }
+
+    private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {
+        val currentCategories = (quickStartTaskTypes.value ?: setOf()).toMutableSet()
+        currentCategories.remove(hiddenCategory)
+        quickStartTaskTypes.value = currentCategories
     }
 
     data class QuickStartCategory(

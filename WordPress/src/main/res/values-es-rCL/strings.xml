@@ -364,7 +364,6 @@ Language: es_CL
     <string name="my_site_icon_dialog_change_message">¿Cómo te gustaría editar el icono?</string>
     <string name="my_site_icon_dialog_change_requires_permission_message">No tienes permiso para editar el icono del sitio.</string>
     <string name="activity_log_jetpack_icon">Icono de jetpack</string>
-    <string name="activity">Actividad</string>
     <string name="privacy_policy_learn_more_header">Política de Privacidad</string>
     <string name="cookie_policy_learn_more_header">Política de Cookies</string>
     <string name="activity_log">Registro de actividades</string>
@@ -1044,13 +1043,7 @@ Language: es_CL
     <string name="invite_error_invalid_usernames_multiple">No se puede enviar: hay nombres de usuario o correos no válidos</string>
     <string name="invite_error_invalid_usernames_one">No se puede enviar: un nombre de usuario o dirección de correo electrónico no es válido</string>
     <string name="invite_error_no_usernames">Por favor agrega al menos un nombre de usuario</string>
-    <string name="invite_message_info">(Opcional) Puedes escribir un mensaje personalizado de hasta 500 caracteres que serán incluidos en la invitación a lo(s) usuario(s).</string>
-    <string name="invite_message_remaining_other">%d caracteres restantes</string>
-    <string name="invite_message_remaining_one">1 caracter restantes</string>
-    <string name="invite_message_remaining_zero">0 caracteres restantes</string>
-    <string name="invite_message_title">Mensaje Personalizado</string>
     <string name="invite">Invitar</string>
-    <string name="invite_names_title">Nombres de usuario o correo electrónico</string>
     <string name="my_site_header_external">Externos</string>
     <string name="invite_people">Invitar Personas</string>
     <string name="send_link">Enviar enlace</string>

@@ -1,64 +1,134 @@
+<ar>
+16.6:
+ما الجديد؟
+إنشاء الموقع: عند تصفح تصميمات الصفحة الرئيسية، يمكنك عرض معاينات الهاتف والجهاز اللوحي وسطح المكتب والتبديل بينها.
+القارئ: للاستمتاع بتنظيم أفضل، أضفنا ميزة عامل التصفية إلى علامة تبويب مواقع P2 التي قمت بمتابعتها.
+البدء السريع: قمنا بتحسين الجولة التي توجهك خلال التطبيق، مع إضافة خطوات لاستعراض الصفحات وتحرير صفحتك الرئيسية.
+
+
+</ar>
+<de-DE>
+16.6:
+Neuerungen
+Websiteerstellung: Beim Durchsuchen von Homepage-Designs kannst du eine Vorschau für Mobiltelefone, Tablets und Desktops anzeigen und zwischen diesen wechseln.
+Reader: Für mehr Übersichtlichkeit haben wir eine Filterfunktion zu deinem Tab abonnierter P2-Seiten hinzugefügt.
+Schnellstart: Wir haben die Tour verbessert, die dich durch die App führt, und Schritte zum Prüfen von Seiten und Bearbeiten deiner Homepage hinzugefügt.
+
+
+</de-DE>
 <en-US>
-16.5:
-Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons. We also addressed an issue in text-based blocks with custom font size.
-
-Activity Log: Track your site activity with filters that sort by date or type.
-
-Site Pages: Copy a page with the Duplicate button.
+16.6:
+What’s new?
+Site Creation: When browsing homepage designs, you can view and switch between mobile, tablet, and desktop previews.
+Reader: For better organization, we added a filter feature to your tab of followed P2 sites.
+Quick Start: We improved the tour that guides you through the app, adding steps to review pages and edit your homepage.
 
 
 </en-US>
+<es-ES>
+16.6:
+¿Qué novedades hay?
+Creación del sitio: al explorar los diseños de la página de inicio, puedes ver y cambiar entre las previsualizaciones para móvil, tableta y ordenador.
+Lector: para mejorar la organización, hemos añadido una función de filtro a la pestaña de sitios P2 que sigues.
+Inicio rápido: hemos mejorado el recorrido guiado por la aplicación, la adición de pasos a las páginas de revisión y la edición de tu página de inicio.
+
+
+</es-ES>
+<iw-IL>
+16.6:
+מה חדש?
+יצירת אתר: כאשר מעיינים בעיצובים לעמוד הבית, אפשר להציג אותם ולהחליף בין תצוגה במכשירים ניידים, בטאבלטים ובמחשבים שולחניים.
+Reader: לצורך שיפור הארגון, הוספנו אפשרות מיון ללשונית של אתרי P2 שנמצאים במעקב שלך.
+התחלה מהירה: שיפרנו את סיור ההדרכה על השימוש באפליקציה והוספנו שלבים לבדיקת הדפים ולעריכה של עמוד הבית.
+
+
+</iw-IL>
+<id>
+16.6:
+Apa yang baru?
+Pembuatan Situs: Saat menjelajahi desain beranda, Anda dapat melihat dan beralih antara pratinjau seluler, tablet, dan desktop.
+Pembaca: Untuk pengaturan yang lebih baik, kami menambahkan fitur penyaring ke tab Anda dari situs P2 yang diikuti.
+Mulai Cepat: Kami memperbarui tur yang memandu Anda menggunakan aplikasi, menambahkan langkah-langkah untuk meninjau halaman dan mengedit beranda Anda.
+
+
+</id>
+<it-IT>
+16.6:
+Novità.
+Creazione del sito: quando esplori i design per la homepage, puoi passare dalla visualizzazione in anteprima per dispositivi mobili a quella per tablet e per desktop. 
+Reader: per una migliore organizzazione, abbiamo aggiunto una funzionalità di filtraggio alla scheda di siti P2 seguiti.
+Avvio rapido: abbiamo migliorato il tour che ti guida attraverso l'app aggiungendo dei passaggi alla revisione delle pagine e alla modifica della homepage.
+
+
+</it-IT>
+<ja-JP>
+16.6:
+ 最新情報
+サイト作成: ホームページのデザインをブラウジングする際、モバイル、タブレット、デスクトップのプレビューを表示して切り替えることができます。
+Reader: さらに整理できるよう、フォローした P2サイトのタブにフィルター機能を追加しました。
+クイックスタート: ページの確認とホームページの編集手順を追加して、アプリをガイドするツアーを改善しました。
+
+
+</ja-JP>
 <ko-KR>
-16.5:
-블록: P2용 교차 글 지원, 컬럼 블록에서 전체 넓이와 넓은 정렬을 지원, 이미지 블록에서 링크 고르는 기능, 그리고 위/아래 버튼을 길게 눌러 블록이 이동하는 기능을 추가했습니다.
-
-활동 기록: 날짜나 유형으로 정렬하는 필터로 사이트 활동을 추적하세요.
-
-사이트 패이지: 복제 버튼으로 패이지를 복사하세요.
+16.6:
+새로운 기능
+사이트 생성: 홈페이지 디자인을 찾아볼 때 모바일, 태블릿 및 데스크톱 미리보기를 전환하면서 볼 수 있습니다.
+뉴스피드: 팔로우된 P2 사이트를 더 잘 정리할 수 있도록 탭에 필터 기능을 추가했습니다.
+퀵 스타트: 페이지를 검토하고 홈페이지를 편집하는 단계를 추가하여 앱을 안내하는 둘러보기를 개선했습니다.
 
 
 </ko-KR>
-<ru-RU>
-16.5:
-Блоки: Добавлена поддержка кросс-постинга в P2, поддержка полной ширины и широкого выравнивания в блоке столбцов, возможность выбирать ссылку в блоке изображений и возможность перемещать блок, долгим нажатием кнопок вверх / вниз. Исправлена проблема блока текст с пользовательским шрифтом.
-
-Журнал активности: отслеживайте активность на сайте с помощью фильтров, которые сортируются по дате или типу.
-
-Страницы сайта: копируйте страницу с помощью кнопки «Дублировать».
-</ru-RU>
-
-<es-ES>
-16.5:
-Bloques: Hemos añadido compatibilidad para entradas cruzadas para P2, compatibilidad de alineación de ancho completo y amplia en el bloque de columnas, la capacidad de elegir un enlace en el bloque de imagen y la capacidad de mover un bloque manteniendo pulsados los botones arriba/abajo. 
-
-Registro de actividad: Rastrea la actividad de tu sitio con filtros que ordenan por fecha o por tipo.
-
-Páginas del sitio: Copia una página con el botón «Duplicar».
-</es-ES>
-
-<sv-SV>
-16.5:
-Block: Vi har lagt till stöd för korspublicering via P2, stöd för fullbred och bred justering i kolumnblocket, möjlighet att välja länk i bildblocket och att flytta ett block inom en sida med långt tryck på knapparna upp/ned. Dessutom har vi åtgärdat ett problem med anpassad textstorlek i textbaserade block.
-
-Aktivitetslogg: Följ händelserna på din webbplats med filter för sortering på datum eller aktivitetstyp.
-
-Sidor på webbplatsen: Skapa kopia av en sida med dupliceringsknappen.
-</sv-SV>
-
 <nl-NL>
-16.5:
-Blokken: we hebben cross-bericht-ondersteuning toegevoegd voor P2, ondersteuning voor volledige en brede uitlijning in het Kolommen blok, de mogelijkheid om een link te kiezen in het afbeelding-blok en de mogelijkheid om een blok te verplaatsen door lang op de knoppen omhoog/omlaag te drukken. 
+16.6:
+Wat is er nieuw?
+Site aanmaak: Bij het bladeren door homepage-ontwerpen, kan je bekijken en schakelen tussen mobiele, tablet en desktop voorbeelden.
+Reader: Voor een betere organisatie hebben we een filterfunctie toegevoegd aan je tab met gevolgde P2 sites.
+Snelstart: we hebben de tour verbeterd die je door de app leidt, door stappen toe te voegen om pagina's te bekijken en je homepage te bewerken.
 
-Activiteitenlog: houd je site activiteit bij met filters die op datum of type sorteren.
 
-Sitepagina's: kopieer een pagina met de knop Dupliceren.
 </nl-NL>
+<ru-RU>
+16.6:
+Что нового?
+Создание сайта: при просмотре дизайнов домашней страницы вы можете просматривать и переключаться между превью на телефоне, планшете и компьютере.
+Чтиво: Для лучшей организации мы добавили функцию фильтрации на вкладку отслеживаемых P2-сайтов.
+Быстрый старт: мы улучшили гид, который проведет вас по приложению, добавив шаги для просмотра страниц и редактирования вашей домашней страницы.
 
-<it-IT>
-16.5:
-Editor a blocchi: Abbiamo aggiunto il support per il cross-post nei P2, la possibilità di selezionare un link nel blocco immagine, e la possibilità di muovere un blocco premendo a lungo sui bottoni su/giù. 
+</ru-RU>
+<sv-SE>
+16.6:
+Vad är nytt?
+Skapa webbplats: När du letar efter startsidedesigner kan du visa och växla mellan förhandsgranskningar för mobil, surfplatta och skrivbord.
+Läsare: För bättre organisering har vi lagt till en filterfunktion på din flik med P2-sidor som följs.
+Snabbstart: Vi har förbättrat turen som guidar dig genom appen och lagt till steg för att granska sidor och redigera din startsida.
 
-Activity Log: Ora puoi ordinare l'attività del tuo sito per data e tipo.
 
-Site Pages: Copia una pagina con il bottone Duplica.
-</it-IT>
+</sv-SE>
+<tr-TR>
+16.6:
+Yenilikler
+Site Oluşturma: Ana sayfa tasarımlarına göz atarken mobil, tablet ve masaüstü önizlemelerini görüntüleyebilir ve aralarında geçiş yapabilirsiniz. 
+Okuyucu: Daha iyi bir organizasyon için, takip edilen P2 siteleri sekmenize bir filtre özelliği ekledik.
+Hızlı Başlangıç: Sayfaları incelemeniz ve ana sayfanızı düzenlemeniz için adımlar ekleyerek, uygulama içinde size rehberlik eden turu iyileştirdik.
+
+
+</tr-TR>
+<zh-CN>
+16.6：
+新增功能
+站点创建：浏览主页设计时，您可以查看并切换移动设备、平板电脑和桌面设备预览效果。
+阅读器：为方便整理，我们在以下 P2 站点的选项卡中添加了过滤器功能。
+快速入门：我们改进了指引您使用应用程序的导览，添加了检查页面和编辑主页的步骤。
+
+
+</zh-CN>
+<zh-TW>
+16.6：
+新功能
+建立網站：你瀏覽首頁設計時，可以檢視並切換在手機、平板電腦和桌上型電腦上的預覽畫面。
+閱讀器：為了更方便你整理，我們在你追蹤的 P2 網站的索引標籤中新增了篩選功能。
+快速入門：我們改良了引導你完成應用程式設定的導覽，新增了檢閱頁面和編輯首頁的步驟。
+
+
+</zh-TW>

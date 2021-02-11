@@ -59,15 +59,19 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         val isFixing = fixingThreatIds.isNotEmpty()
         val isFixingComplete = models.filter { it.status == FixStatus.FIXED }.size == fixableThreatIds.size
         val errors = models.filter { it.error != null || it.status == FixStatus.NOT_FIXED }
+        // When NOT_FIXED is returned for all threats, the .com account might be missing server credentials
+        val mightBeMissingCredentials = models.filter { it.status == FixStatus.NOT_FIXED }.size == fixableThreatIds.size
 
         return when {
             isFixingNotStarted -> NotStarted
             isFixing -> InProgress(fixingThreatIds)
             isFixingComplete -> Complete
             else -> {
-                // TODO ashiagr replace AppLog tag
-                if (errors.isNotEmpty()) AppLog.e(T.API, models.filter { it.error != null }.toString())
-                Failure.FixFailure(errors.size == fixableThreatIds.size)
+                if (errors.isNotEmpty()) AppLog.e(T.JETPACK_SCAN, models.filter { it.error != null }.toString())
+                Failure.FixFailure(
+                        containsOnlyErrors = errors.size == fixableThreatIds.size,
+                        mightBeMissingCredentials = mightBeMissingCredentials
+                )
             }
         }
     }
@@ -79,7 +83,10 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         sealed class Failure : FetchFixThreatsState() {
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()
-            data class FixFailure(val containsOnlyErrors: Boolean) : Failure()
+            data class FixFailure(
+                val containsOnlyErrors: Boolean,
+                val mightBeMissingCredentials: Boolean
+            ) : Failure()
         }
     }
 }

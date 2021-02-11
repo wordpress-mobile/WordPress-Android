@@ -43,6 +43,7 @@ public class AppLog {
         DOMAIN_REGISTRATION,
         JETPACK_BACKUP,
         JETPACK_REWIND,
+        JETPACK_SCAN,
     }
 
     public static final String TAG = "WordPress";
