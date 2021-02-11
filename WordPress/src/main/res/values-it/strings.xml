@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
-    <string name="rewind_another_process_running">È in corso un altro ripristino.</string>
     <string name="restore_complete_failed_icon_content_description">Icona Errore</string>
     <string name="restore_complete_failed_action_button_content_description">Pulsante Fatto</string>
-    <string name="restore_complete_failed_description">Impossibile ripristinare il sito. Riprova più tardi.</string>
     <string name="restore_complete_failed_title">Ripristino non riuscito</string>
     <string name="restore_complete_visit_site_button_content_description">Pulsante Visita il sito</string>
     <string name="restore_complete_done_button_content_description">Pulsante Fatto</string>
@@ -17,14 +15,11 @@ Language: it
     <string name="restore_complete_visit_site_action_button">Visita il sito</string>
     <string name="restore_complete_description_with_two_parameters">Tutti gli elementi selezionati sono ora ripristinati al giorno %1$s %2$s.</string>
     <string name="restore_complete_header">Il tuo sito è stato ripristinato</string>
-    <string name="restore_progress_additional_info">Non è necessario attendere. Ti invieremo una notifica quando il tuo sito sarà stato ripristinato.</string>
     <string name="restore_progress_icon_content_description">Icona Ripristina sito</string>
     <string name="restore_progress_description_with_two_parameters">Stiamo ripristinando il tuo sito al giorno %1$s %2$s.</string>
     <string name="restore_progress_header">Ripristino in corso del sito</string>
     <string name="restore_warning_action_button_content_description">Pulsante Conferma ripristino del sito</string>
     <string name="restore_warning_icon_content_description">Immagine del cerchio rosso con punto esclamativo</string>
-    <string name="restore_warning_action_button">Conferma ripristino del sito</string>
-    <string name="restore_warning_description_with_two_parameters">Desideri ripristinare il sito al giorno %1$s alle ore %2$s?\n In questo modo verranno rimossi tutti i contenuti e tutte le opzioni creati o modificati da allora.</string>
     <string name="restore_warning_header">Attenzione</string>
     <string name="restore_details_action_button_content_description">Pulsante Ripristina sito</string>
     <string name="restore_details_icon_content_description">Icona Ripristino</string>
@@ -36,7 +31,6 @@ Language: it
     <string name="backup_download_complete_failed_icon_content_description">Icona nuvola con X</string>
     <string name="backup_download_complete_failed_action_button_content_description">Pulsante Fatto</string>
     <string name="backup_download_complete_failed_action_button">Fatto</string>
-    <string name="backup_download_complete_failed_description">Impossibile creare il backup. Riprova più tardi.</string>
     <string name="backup_download_complete_failed_title">Download non riuscito</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Dispositivo mobile</string>
@@ -57,11 +51,9 @@ Language: it
     <string name="reader_error_changing_seen_status_of_unsupported_post">Impossibile attivare lo stato Letto per questo articolo</string>
     <string name="reader_marked_post_as_unseen">Articolo contrassegnato come non letto</string>
     <string name="reader_marked_post_as_seen">Articolo contrassegnato come letto</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Impossibile risolvere tutte le minacce. Contatta il nostro supporto.</string>
     <string name="threat_fix_all_status_error_message">Errore durante il recupero dello stato della correzione. Contatta il nostro supporto.</string>
     <string name="threat_fix_all_status_success_message">Le minacce sono state risolte.</string>
     <string name="threat_fix_all_error_message">Errore durante la risoluzione delle minacce. Contatta il nostro supporto.</string>
-    <string name="threat_fix_all_started_message">Stiamo facendo il possibile per risolvere queste minacce in background. Riprova tra poco.</string>
     <string name="threat_fix_all_warning_message">Conferma di voler correggere le %s minacce attive.</string>
     <string name="threat_fix_all_warning_title">Risolvi tutte le minacce</string>
     <string name="threat_ignore_error_message">Errore mentre la minaccia veniva ignorata. Contatta il supporto.</string>
@@ -69,9 +61,7 @@ Language: it
     <string name="threat_ignore_warning">Non dovresti ignorare un elemento di sicurezza a meno che tu non sia assolutamente certo che sia innocuo. Se scegli di ignorare questa minaccia, rimarrà sul tuo sito &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Errore durante la risoluzione della minaccia. Contatta il nostro supporto.</string>
     <string name="threat_item_sub_header_status_ignored">Minaccia ignorata</string>
-    <string name="threat_item_sub_header_status_fixed">Minaccia risolta</string>
     <string name="threat_fixing">Risoluzione della minaccia</string>
-    <string name="threats_fix_num_of_threats">Risolvi le %s minacce</string>
     <string name="scan_history_ignored_threats_tab">Ignorata</string>
     <string name="scan_history_no_threats_found">Nessun elemento trovato</string>
     <string name="scan_history_fixed_threats_tab">Risolta</string>
@@ -86,7 +76,6 @@ Language: it
     <string name="backup_empty_title">Il tuo primo backup sarà pronto a breve</string>
     <string name="request_failed_message">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
     <string name="gutenberg_native_move_to_bottom">Sposta in fondo</string>
-    <string name="gutenberg_native_move_block_position">Modifica la posizione del blocco</string>
     <string name="label_control_upload">Carica</string>
     <string name="jetpack_icon_content_description">icona</string>
     <string name="backup_download_complete_info">Ti abbiamo anche inviato una e-mail con un link al tuo file.</string>
@@ -98,10 +87,7 @@ Language: it
     <string name="backup_download_complete_description_with_two_parameters">Abbiamo creato correttamente un backup del sito da %1$s %2$s.</string>
     <string name="backup_download_complete_header">Il tuo backup è pronto per essere scaricato</string>
     <string name="backup_download_complete_page_title">Il tuo backup</string>
-    <string name="backup_download_progress_additional_info">Non è necessario attendere. Ti invieremo una notifica quando il backup è pronto.</string>
-    <string name="backup_download_progress_action_button_content_description">Pulsante OK, inviami una notifica</string>
     <string name="backup_download_progress_icon_content_description">Icona di creazione di un backup scaricabile</string>
-    <string name="backup_download_progress_action_button">OK, inviami una notifica.</string>
     <string name="backup_download_progress_description_with_two_parameters">Stiamo creando un backup scaricabile del sito da %1$s %2$s.</string>
     <string name="backup_download_progress_header">Creazione in corso del backup scaricabile del sito</string>
     <string name="backup_download_progress_page_title">Scarica il backup</string>
@@ -134,7 +120,6 @@ Language: it
     <string name="threat_file_description">Minaccia rilevata nel file:</string>
     <string name="threat_technical_details_header">I dettagli tecnici</string>
     <string name="threat_problem_header">Qual era il problema?</string>
-    <string name="threat_details_icon">Icona dettagli minaccia</string>
     <string name="threat_details">Dettagli minaccia</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerabilità trovata in Tema</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerabilità trovata in Plugin</string>
@@ -152,10 +137,6 @@ Language: it
     <string name="scan_in_minutes_ago">%s minuti fa</string>
     <string name="scan_in_hours_ago">%s ore fa</string>
     <string name="scan_this_site">questo sito</string>
-    <string name="scan_idle_threats_found_description">La scansione ha trovato %s potenziali minacce su %s. Esamina questi elementi di seguito e intraprendi l\'azione opportuna. Siamo qui per aiutarti se ne hai bisogno.</string>
-    <string name="scan_idle_last_scan_description">L\'ultima scansione di Jetpack è stata eseguita %s e sembrava che tutto andasse bene. %s</string>
-    <string name="scan_idle_manual_scan_description">Esegui ora una scansione manuale o attendi che Jetpack effettui la scansione del sito più tardi in giornata.</string>
-    <string name="scan_scanning_description">Jetpack Scan ti dà il benvenuto. Stiamo analizzando il tuo sito per la prima volta e presto riceverai il risultato.\n\n \n Ti invieremo una notifica al completamento della scansione. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito; puoi controllare l\'andamento in qualsiasi momento.</string>
     <string name="scan_idle_threats_found_title">Il sito potrebbe essere a rischio</string>
     <string name="scan_idle_no_threats_found_title">Non preoccuparti di nulla</string>
     <string name="scan_again">Esegui di nuovo la scansione</string>
@@ -174,15 +155,11 @@ Language: it
     <string name="activity_log_active_filter_empty_subtitle">Prova a regolare l’intervallo di date o i filtri del tipo attività</string>
     <string name="activity_log_active_filter_empty_title">Non è stato trovato alcun evento corrispondente</string>
     <string name="rewind">Ripristina</string>
-    <string name="backup_item_sqls">Database del sito (SQL)</string>
-    <string name="backup_item_contents">Directory WP-content (esclusi temi, plugin e caricamenti)</string>
-    <string name="backup_item_roots">WordPress root (include wp-config.php e tutti i file non di WordPress)</string>
     <string name="backup_item_media_uploads">Caricamento di contenuti multimediali</string>
     <string name="backup_item_plugins">Plugin WordPress</string>
     <string name="backup_item_themes">Temi WordPress</string>
     <string name="backup_download_details_icon_content_description">Crea l\'icona per il backup scaricabile</string>
     <string name="backup_download_details_action_button">Crea un file scaricabile</string>
-    <string name="backup_download_details_choose_items_header">Scegli gli elementi che vuoi includere nel file scaricabile:</string>
     <string name="backup_download_details_header">Crea un backup scaricabile</string>
     <string name="backup_download_details_page_title">Scarica il backup</string>
     <string name="backup_download">Scarica il backup</string>
@@ -207,7 +184,6 @@ Language: it
     <string name="gutenberg_native_copy_file_url">Copia URL file</string>
     <string name="gutenberg_native_choose_a_file">SCEGLI UN FILE</string>
     <string name="new_site_creation_domain_header_title">Scegli un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Impostazioni di Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Stai seguendo la conversazione tramite e-mail</string>
     <string name="reader_btn_follow_comments">Segui la conversazione tramite e-mail</string>
@@ -433,7 +409,6 @@ Language: it
     <string name="gutenberg_native_choose_image">Scegli immagine</string>
     <string name="gutenberg_native_block_removed">Blocco rimosso</string>
     <string name="enter_your_site_address">Immetti l\'indirizzo del sito esistente</string>
-    <string name="continue_with_wpcom">Continua con WordPress.com</string>
     <string name="signup_confirmation_title">Conferma dell\'iscrizione</string>
     <string name="continue_with_google_terms_of_service_text">Se continui con Google e non hai già un account WordPress.com, crei un account e accetti i nostri %1$sTermini di servizio%2$s.</string>
     <string name="continue_terms_of_service_text">Continuando, accetti i nostri %1$sTermini di servizio%2$s.</string>
@@ -903,7 +878,6 @@ Language: it
     <string name="post_settings_notification">Notifica</string>
     <string name="post_settings_time_and_date">Data e ora</string>
     <string name="login_need_help_finding_connected_email">Ti serve aiuto per trovare l\'e-mail con cui ti sei collegato?</string>
-    <string name="enter_wordpress_site">Il sito web su questo indirizzo non è un sito WordPress. Per poterci collegare a esso, il sito deve avere WordPress installato.</string>
     <string name="login_invalid_site_url">Inserisci un indirizzo di sito Web completo, come esempio.com.</string>
     <string name="enter_email_for_site">Accedi con WordPress.com per collegarti a %1$s</string>
     <string name="stats_post_views_label">Visualizzazioni</string>
@@ -1408,7 +1382,6 @@ Language: it
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icona attività</string>
     <string name="activity_log">Log attività</string>
-    <string name="activity">Attività</string>
     <string name="privacy_policy_read">Leggi l’informativa sulla privacy</string>
     <string name="third_party_policy_learn_more_caption">Utilizziamo altri strumenti di tracciamento, compresi alcuni di terzi. Leggi le informazioni sugli strumenti e come controllarli.</string>
     <string name="third_party_policy_learn_more_header">Informativa sulla privacy di terze parti</string>
@@ -2093,13 +2066,7 @@ Language: it
     <string name="invite_error_invalid_usernames_multiple">Non è possibile inviare l\'email: ci sono dei nomi utente o degli indirizzi non validi.</string>
     <string name="invite_error_invalid_usernames_one">Non è possibile inviare l\'email: c\'è un nomi utente o un indirizzo non valido. </string>
     <string name="invite_error_no_usernames">Aggiungi almeno un nome utente</string>
-    <string name="invite_message_info">(facoltativo) Puoi inserire un messaggio personalizzato di massimo 500 caratteri che verrà inserito nell\'invito a/agli utente/i.</string>
-    <string name="invite_message_remaining_other">%d caratteri rimanenti</string>
-    <string name="invite_message_remaining_one">1 carattere rimanente</string>
-    <string name="invite_message_remaining_zero">0 caratteri rimanenti</string>
-    <string name="invite_message_title">Messaggio personalizzato</string>
     <string name="invite">Invita</string>
-    <string name="invite_names_title">Nomi utente o email</string>
     <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
     <string name="send_link">Invia link</string>

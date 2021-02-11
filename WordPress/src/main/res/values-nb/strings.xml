@@ -6,15 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
-    <string name="backup_item_sqls">Nettstedsdatabase (SQL)</string>
-    <string name="backup_item_contents">Mappen WP-content (unntatt temaer, utvidelser og opplastinger)</string>
-    <string name="backup_item_roots">WordPress-roten (inkludert wp-config.php og filer som ikke tilhærer WordPress)</string>
     <string name="backup_item_media_uploads">Media-opplastinger</string>
     <string name="backup_item_plugins">WordPress-utvidelser</string>
     <string name="backup_item_themes">WordPress-temaer</string>
     <string name="backup_download_details_icon_content_description">Lag ikon for nedlastbar sikkerhetskopi</string>
     <string name="backup_download_details_action_button">Lag nedlastbar fil</string>
-    <string name="backup_download_details_choose_items_header">Velg elementene du ønsker å ha med i nedlastingen:</string>
     <string name="backup_download_details_header">Lag nedlastbar sikkerhetskopi</string>
     <string name="backup_download_details_page_title">Last ned sikkerhetskopi</string>
     <string name="backup_download">Nedlasting av sikkerhetskopi</string>
@@ -28,7 +24,6 @@ Language: nb_NO
     <string name="button_copy">Dupliser</string>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Tøm</string>
     <string name="activity_log_activity_type_filter_apply">Bruk</string>
@@ -158,7 +153,6 @@ Language: nb_NO
     <string name="gutenberg_native_choose_image">Velg bilde</string>
     <string name="gutenberg_native_block_removed">Blokk fjernet</string>
     <string name="enter_your_site_address">Oppgi din eksisterende nettstedsadresse</string>
-    <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
     <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
@@ -576,7 +570,6 @@ Language: nb_NO
     <string name="post_settings_notification">Varsling</string>
     <string name="post_settings_time_and_date">Dato og tid</string>
     <string name="login_need_help_finding_connected_email">Trenger du hjelp til å finne den e-postadressen du koblet til med?</string>
-    <string name="enter_wordpress_site">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må det ha WordPress installert.</string>
     <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
     <string name="enter_email_for_site">Logg inn med WordPress.com for å koble til %1$s</string>
     <string name="stats_post_views_label">Visninger</string>
@@ -1071,7 +1064,6 @@ Language: nb_NO
     <string name="activity_log_event">Hendelse</string>
     <string name="activity_log_icon">Aktivtitetsikon</string>
     <string name="activity_log">Aktivitetslogg</string>
-    <string name="activity">Aktivitet</string>
     <string name="privacy_policy_read">Les personvernerklæringen</string>
     <string name="privacy_policy_learn_more_header">Personvernerklæring</string>
     <string name="cookie_policy_learn_more_header">Policy for informasjonskapsler</string>
@@ -1734,13 +1726,7 @@ Language: nb_NO
     <string name="invite_error_invalid_usernames_multiple">Kan ikke sende: Det er ugyldige brukernavn eller E-poster</string>
     <string name="invite_error_invalid_usernames_one">Kan ikke sende: Et brukernavn eller en E-postadresse er ugyldig</string>
     <string name="invite_error_no_usernames">Vennligst legg til minst ett brukernavn</string>
-    <string name="invite_message_info">(Valgfritt) Du kan skrive inn en tilpasset melding på opptil 500 tegn, som vil bli inkludert i invitasjonen til brukeren(e).</string>
-    <string name="invite_message_remaining_other">%d tegn igjen</string>
-    <string name="invite_message_remaining_one">1 tegn igjen</string>
-    <string name="invite_message_remaining_zero">0 tegn igjen</string>
-    <string name="invite_message_title">Tilpasset melding</string>
     <string name="invite">Inviter</string>
-    <string name="invite_names_title">Brukernavn eller E-poster</string>
     <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
     <string name="send_link">Send lenke</string>

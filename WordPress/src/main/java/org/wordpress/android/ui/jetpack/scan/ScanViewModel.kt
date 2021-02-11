@@ -283,7 +283,7 @@ class ScanViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(
+    private suspend fun buildContentUiState(
         model: ScanStateModel,
         fixingThreatIds: List<Long> = emptyList()
     ) = ContentUiState(

@@ -6,9 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
-    <string name="backup_item_sqls">Baza danych witryny (SQL)</string>
-    <string name="backup_item_contents">Katalog WP-content (wyłączając themes, plugins, oraz uploads)</string>
-    <string name="backup_item_roots">Katalog główny WordPressa (zawiera wp-config.php oraz pliki nie należące do WordPressa)</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
     <string name="backup_item_themes">Motywy WordPressa</string>
@@ -16,7 +13,6 @@ Language: pl
     <string name="gutenberg_native_error">Błąd</string>
     <string name="gutenberg_native_choose_file">Wybierz plik</string>
     <string name="backup_download_details_action_button">Utwórz plik do pobrania</string>
-    <string name="backup_download_details_choose_items_header">Wybierz elementy które powinny być umieszczone w pliku do pobrania:</string>
     <string name="backup_download_details_header">Utwórz kopię zapasową, która można pobrać</string>
     <string name="backup_download_details_page_title">Pobierz kopię zapasową</string>
     <string name="backup_download">Pobranie kopii zapasowej</string>
@@ -36,7 +32,6 @@ Language: pl
     <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
     <string name="gutenberg_native_choose_a_file">WYBIERZ PLIK</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
-    <string name="my_site_btn_jetpack_settings">Ustawienia Jetpacka</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nie można było cofnąć subskrypcji komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nie można było subskrybować komentarzy dla tego wpisu</string>
@@ -253,7 +248,6 @@ Language: pl
     <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
     <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
     <string name="gutenberg_native_block_removed">Blok usunięto</string>
-    <string name="continue_with_wpcom">Kontynuuj z WordPress.com</string>
     <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
@@ -720,7 +714,6 @@ Language: pl
     <string name="post_settings_notification">Powiadomienie</string>
     <string name="post_settings_time_and_date">Data i czas</string>
     <string name="login_need_help_finding_connected_email">Potrzebujesz pomocy w znalezieniu adresu email za pomocą połączyłe(a)ś się?</string>
-    <string name="enter_wordpress_site">Witryna znajdująca się pod tym adresem nie jest witryną WordPressową. Abyśmy mogli ją podłączyć, witryna musi mieć zainstalowanego WordPressa.</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -1219,7 +1212,6 @@ Language: pl
     <string name="activity_log_event">Wydarzenie</string>
     <string name="activity_log_icon">Ikona aktywności</string>
     <string name="activity_log">Dziennik aktywności</string>
-    <string name="activity">Aktywność</string>
     <string name="privacy_policy_read">Przeczytaj politykę prywatności</string>
     <string name="third_party_policy_learn_more_caption">Korzystamy z narzędzi do śledzenia, w tym z narzędzi od podmiotów trzecich. Przeczytaj więcej i dowiedz się jak je kontrolować.</string>
     <string name="third_party_policy_learn_more_header">Polityka prywatności podmiotów trzecich</string>
@@ -1904,13 +1896,7 @@ Language: pl
     <string name="invite_error_invalid_usernames_multiple">Nie można wysłać: wystąpiły nieprawidłowe nazwy użytkownika lub adresy email</string>
     <string name="invite_error_invalid_usernames_one">Nie można wysłać: nieprawidłowa nazwa użytkownika lub email</string>
     <string name="invite_error_no_usernames">Proszę dodać przynajmniej jednego użytkownika</string>
-    <string name="invite_message_info">(Opcjonalnie) Możesz wprowadzić tekst wiadomości zawierającej do 500 znaków, która będzie załączona do zaproszenia do użytkownika(ów).</string>
-    <string name="invite_message_remaining_other">Pozostało %d znaków</string>
-    <string name="invite_message_remaining_one">Pozostał 1 znak</string>
-    <string name="invite_message_remaining_zero">Pozostało 0 znaków</string>
-    <string name="invite_message_title">Wiadomość spersonalizowana</string>
     <string name="invite">Zaproś</string>
-    <string name="invite_names_title">Nazwy użytkowników lub adresy e-mail</string>
     <string name="send_link">Wyślij odnośnik</string>
     <string name="invite_people">Zaproś ludzi</string>
     <string name="my_site_header_external">Na zewnątrz</string>

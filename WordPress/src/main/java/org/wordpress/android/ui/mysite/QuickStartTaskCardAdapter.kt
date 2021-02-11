@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import kotlinx.android.synthetic.main.quick_start_task_card.view.*
 import org.wordpress.android.R
-import org.wordpress.android.ui.mysite.MySiteItem.QuickStartCard.QuickStartTaskCard
+import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartTaskCardAdapter.QuickStartTaskCardViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 

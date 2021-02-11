@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="rewind_another_process_running">יש שחזור נוסף שפועל כרגע.</string>
     <string name="restore_complete_failed_icon_content_description">סמל שגיאה</string>
     <string name="restore_complete_failed_action_button_content_description">כפתור \'בוצע\'</string>
-    <string name="restore_complete_failed_description">לא הצלחנו לשחזר את האתר שלך. יש לנסות שוב מאוחר יותר.</string>
     <string name="restore_complete_failed_title">השחזור נכשל</string>
     <string name="restore_complete_visit_site_button_content_description">כפתור \'לבקר באתר\'</string>
     <string name="restore_complete_done_button_content_description">כפתור \'בוצע\'</string>
@@ -18,14 +16,11 @@ Language: he_IL
     <string name="restore_complete_description_with_two_parameters">כל הפריטים שבחרת שוחזרו לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_complete_header">האתר שלך שוחזר</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_progress_additional_info">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר השחזור של האתר שלך הסתיים.</string>
     <string name="restore_progress_icon_content_description">סמל \'לשחזר את האתר\'</string>
     <string name="restore_progress_description_with_two_parameters">אנחנו משחזרים את האתר שלך לגרסה מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="restore_progress_header">אנחנו משחזרים כעת את האתר שלך</string>
     <string name="restore_warning_action_button_content_description">כפתור \'לאשר את שחזור האתר\'</string>
     <string name="restore_warning_icon_content_description">תמונה של עיגול אדום עם סימן קריאה</string>
-    <string name="restore_warning_action_button">לאשר את שחזור האתר</string>
-    <string name="restore_warning_description_with_two_parameters">האם ברצונך לשחזר את האתר חזרה לגרסה ממועד ⁦%1$s⁩ בשעה ⁦%2$s⁩?\n פעולה זו תסיר את כל התוכן ואת האפשרויות שנוצרו או ששונו מאז.</string>
     <string name="restore_warning_header">אזהרה</string>
     <string name="restore_details_action_button_content_description">כפתור \'לשחזר את האתר\'</string>
     <string name="restore_details_icon_content_description">סמל \'שחזור\'</string>
@@ -37,7 +32,6 @@ Language: he_IL
     <string name="backup_download_complete_failed_icon_content_description">סמל ענן עם X</string>
     <string name="backup_download_complete_failed_action_button_content_description">כפתור \'בוצע\'</string>
     <string name="backup_download_complete_failed_action_button">סיימתי</string>
-    <string name="backup_download_complete_failed_description">לא הצלחנו ליצור את הגיבוי שלך. יש לנסות שוב מאוחר יותר.</string>
     <string name="backup_download_complete_failed_title">ההורדה נכשלה</string>
     <string name="web_preview_tablet">טאבלט</string>
     <string name="web_preview_mobile">טלפון נייד</string>
@@ -58,11 +52,9 @@ Language: he_IL
     <string name="reader_error_changing_seen_status_of_unsupported_post">לא ניתן לשנות את המצב \'נקרא\' בפוסט זה</string>
     <string name="reader_marked_post_as_unseen">הפוסט סומן כ\'לא נקרא\'</string>
     <string name="reader_marked_post_as_seen">הפוסט סומן כ\'נקרא\'</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">לא הצלחנו לתקן את כל האיומים. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_fix_all_status_error_message">שגיאה בקבלה של מצב התיקון. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_fix_all_status_success_message">האיומים תוקנו בהצלחה.</string>
     <string name="threat_fix_all_error_message">שגיאה בתיקון האיומים. יש לפנות לתמיכה שלנו.</string>
-    <string name="threat_fix_all_started_message">אנחנו משקיעים המון מאמצים כדי לתקן את האיומים האלה ברקע. יש לבדוק שוב בעוד זמן קצר.</string>
     <string name="threat_fix_all_warning_message">עליך לאשר שברצונך לתקן את %s האיומים הפעילים.</string>
     <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
     <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
@@ -70,9 +62,7 @@ Language: he_IL
     <string name="threat_ignore_warning">לא כדאי להתעלם מאיומי אבטחה אלא אם אין לך ספק שהתוכן בטוח. אם ברצונך להתעלם מהאיום הזה, הוא יישאר באתר &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">אירעה שגיאה בעת תיקון האיום. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_item_sub_header_status_ignored">התעלמת מהאיום</string>
-    <string name="threat_item_sub_header_status_fixed">האיום תוקן</string>
     <string name="threat_fixing">מתקן את האיום</string>
-    <string name="threats_fix_num_of_threats">לתקן %s איומים</string>
     <string name="scan_history_ignored_threats_tab">התעלמת מהאיום</string>
     <string name="scan_history_no_threats_found">לא נמצאו פריטים</string>
     <string name="scan_history_fixed_threats_tab">תוקן</string>
@@ -87,7 +77,6 @@ Language: he_IL
     <string name="backup_empty_title">הגיבוי הראשון שלך יהיה מוכן בקרוב</string>
     <string name="request_failed_message">הייתה בעיה לטפל בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="gutenberg_native_move_to_bottom">להעביר לתחתית</string>
-    <string name="gutenberg_native_move_block_position">להזיז את המיקום של הבלוק</string>
     <string name="label_control_upload">להעלות</string>
     <string name="jetpack_icon_content_description">סמל</string>
     <string name="backup_download_complete_info">בנוסף, שלחנו לך הודעת אימייל עם קישור לקובץ שלך.</string>
@@ -100,10 +89,7 @@ Language: he_IL
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה</string>
-    <string name="backup_download_progress_action_button_content_description">כפתור \'בסדר, תשלחו לי הודעה\'</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
-    <string name="backup_download_progress_action_button">בסדר, תשלחו לי הודעה!</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_progress_header">אנחנו כעת יוצרים גיבוי של האתר שלך להורדה</string>
     <string name="backup_download_progress_page_title">להוריד גיבוי</string>
@@ -136,7 +122,6 @@ Language: he_IL
     <string name="threat_file_description">נמצא איום בקובץ:</string>
     <string name="threat_technical_details_header">הפרטים הטכניים</string>
     <string name="threat_problem_header">מתי הבעיה התרחשה?</string>
-    <string name="threat_details_icon">סמל של פרטי האיום</string>
     <string name="threat_details">פרטי האיום</string>
     <string name="threat_item_sub_header_vulnerable_theme">מאפיינים פגיעים שנמצאו בערכת העיצוב</string>
     <string name="threat_item_sub_header_vulnerable_plugin">מאפיינים פגיעים שנמצאו בתוסף</string>
@@ -154,10 +139,6 @@ Language: he_IL
     <string name="scan_in_minutes_ago">לפני %s דקות</string>
     <string name="scan_in_hours_ago">לפני %s שעות</string>
     <string name="scan_this_site">האתר הזה</string>
-    <string name="scan_idle_threats_found_description">הסריקה איתרה %s איומים פוטנציאליים על %s. עליך לבדוק את הפרטים למטה ולבצע את הפעולה הנדרשת. אנחנו כאן לעזור אם צריך.</string>
-    <string name="scan_idle_last_scan_description">הסריקה האחרונה של Jetpack Scan פעלה %s והכול נראה מצוין. %s</string>
-    <string name="scan_idle_manual_scan_description">ניתן להפעיל סריקה ידנית כעת או להמתין ש-Jetpack יסרוק את האתר מאוחר יותר היום.</string>
-    <string name="scan_scanning_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.\n\n \nאנחנו נשלח אליך הודעה כאשר הסריקה תסתיים. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
     <string name="scan_idle_threats_found_title">ייתכן שהאתר שלך בסיכון</string>
     <string name="scan_idle_no_threats_found_title">אל דאגה</string>
     <string name="scan_again">לסרוק שוב</string>
@@ -176,15 +157,11 @@ Language: he_IL
     <string name="activity_log_active_filter_empty_subtitle">יש להתאים את המסננים של טווח התאריכים או של סוג הפעילות</string>
     <string name="activity_log_active_filter_empty_title">לא נמצאו אירועים תואמים</string>
     <string name="rewind">לשחזר</string>
-    <string name="backup_item_sqls">בסיס הנתונים של האתר (SQL)</string>
-    <string name="backup_item_contents">ספריית WP-content (לא כולל ערכות עיצוב, תוספים והעלאות)</string>
-    <string name="backup_item_roots">בסיס WordPress (כולל wp-config.php וקבצים שאינם WordPress)</string>
     <string name="backup_item_media_uploads">העלאות מדיה</string>
     <string name="backup_item_plugins">תוספים של WordPress</string>
     <string name="backup_item_themes">ערכות עיצוב של WordPress</string>
     <string name="backup_download_details_icon_content_description">סמל ליצירת גיבוי להורדה</string>
     <string name="backup_download_details_action_button">ליצור קובץ להורדה</string>
-    <string name="backup_download_details_choose_items_header">יש לבחור את הפריטים שברצונך להוסיף להורדה:</string>
     <string name="backup_download_details_header">ליצור גיבוי להורדה</string>
     <string name="backup_download_details_page_title">להוריד גיבוי</string>
     <string name="backup_download">הורדת גיבוי</string>
@@ -209,7 +186,6 @@ Language: he_IL
     <string name="gutenberg_native_copy_file_url">להעתיק כתובת URL של קובץ</string>
     <string name="gutenberg_native_choose_a_file">לבחור קובץ</string>
     <string name="new_site_creation_domain_header_title">לבחור דומיין</string>
-    <string name="my_site_btn_jetpack_settings">הגדרות Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">הופעל מעקב אחר השיחה באמצעות האימייל</string>
     <string name="reader_btn_follow_comments">לעקוב אחר השיחה באמצעות האימייל</string>
@@ -435,7 +411,6 @@ Language: he_IL
     <string name="gutenberg_native_choose_image">לבחור תמונה</string>
     <string name="gutenberg_native_block_removed">הבלוק הוסר</string>
     <string name="enter_your_site_address">יש להזין את כתובת האתר החדש שלך</string>
-    <string name="continue_with_wpcom">להמשיך עם WordPress.com</string>
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
     <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
@@ -905,7 +880,6 @@ Language: he_IL
     <string name="post_settings_notification">הודעה</string>
     <string name="post_settings_time_and_date">תאריך ושעה</string>
     <string name="login_need_help_finding_connected_email">נדרשת לך עזרה במציאת האימייל שבעזרתו התחברת?</string>
-    <string name="enter_wordpress_site">האתר בכתובת זו אינו אתר של WordPress. כדי שנוכל להתחבר לאתר, השירות של WordPress חייב להיות מותקן באתר.</string>
     <string name="login_invalid_site_url">יש להזין את כתובת האתר המלאה, לדוגמה example.com.</string>
     <string name="enter_email_for_site">עליך להתחבר אל WordPress.com כדי להתחבר אל %1$s</string>
     <string name="stats_post_views_label">צפיות</string>
@@ -1410,7 +1384,6 @@ Language: he_IL
     <string name="activity_log_event">אירוע</string>
     <string name="activity_log_icon">סמל פעילות</string>
     <string name="activity_log">יומן פעילות</string>
-    <string name="activity">פעילות</string>
     <string name="privacy_policy_read">עיון במדיניות פרטיות</string>
     <string name="third_party_policy_learn_more_caption">אנחנו משתמשים בכלים למעקב, כולל כלים של צד שלישי. אפשר לקרוא פרטים על אלו על אלו ועל אופן השליטה בהם.</string>
     <string name="third_party_policy_learn_more_header">מדיניות של צד שלישי</string>
@@ -2095,13 +2068,7 @@ Language: he_IL
     <string name="invite_error_invalid_usernames_multiple">לא ניתן לשלוח: יש שמות משתמש או כתובות אימייל לא תקפים</string>
     <string name="invite_error_invalid_usernames_one">לא ניתן לשלוח: שם משתמש או אימייל לא תקפים</string>
     <string name="invite_error_no_usernames">יש להוסיף שם משתמש אחד לפחות</string>
-    <string name="invite_message_info">(אופציונלי) אפשר להזין הודעה מותאמת אישית של עד 500 תווים שתיכלל בהזמנה למשתמשים.</string>
-    <string name="invite_message_remaining_other">נותרו %d תווים</string>
-    <string name="invite_message_remaining_one">תו אחד נותר</string>
-    <string name="invite_message_remaining_zero">לא נותרו תווים</string>
-    <string name="invite_message_title">הודעה מותאמת אישית</string>
     <string name="invite">הזמנה</string>
-    <string name="invite_names_title">שמות משתמש או אימיילים</string>
     <string name="invite_people">הזמנת אנשים</string>
     <string name="my_site_header_external">חיצוני</string>
     <string name="send_link">שלח קישור</string>

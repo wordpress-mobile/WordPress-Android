@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
-    <string name="rewind_another_process_running">Ka një rikthim në kryerje e sipër.</string>
     <string name="restore_complete_failed_icon_content_description">Ikonë gabimi</string>
     <string name="restore_complete_failed_action_button_content_description">Buton “U bë”</string>
-    <string name="restore_complete_failed_description">S’e rikthyem dot sajtin tuaj. Ju lutemi, riprovoni më vonë.</string>
     <string name="restore_complete_failed_title">Rikthimi dështoi</string>
     <string name="restore_complete_visit_site_button_content_description">Buton “Vizitoni sajtin”</string>
     <string name="restore_complete_done_button_content_description">Buton “U bë”</string>
@@ -18,14 +16,11 @@ Language: sq_AL
     <string name="restore_complete_description_with_two_parameters">Krejt zërat tuaj të përzgjedhur janë rikthyer te %1$s %2$s.</string>
     <string name="restore_complete_header">Sajti juaj u rikthye</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_progress_additional_info">S’ka nevojë të prisni këtu. Do t’ju njoftojmë, kur sajti të jetë rikthyer.</string>
     <string name="restore_progress_icon_content_description">Ikonë “Riktheni sajtin”</string>
     <string name="restore_progress_description_with_two_parameters">Po e rikthejmë sajtin tuaj te %1$s %2$s.</string>
     <string name="restore_progress_header">Sajti juaj po rikthehet</string>
     <string name="restore_warning_action_button_content_description">Buton “Ripohoni rikthim sajti”</string>
     <string name="restore_warning_icon_content_description">Figurë rreth i kuq me pikë çuditje</string>
-    <string name="restore_warning_action_button">Ripohoni rikthim sajti</string>
-    <string name="restore_warning_description_with_two_parameters">Jeni i sigurt se doni të rikthehet sajti juaj në %1$s më %2$s?\n        Kjo të sjellë heqjen e krejt lëndës së krijuar apo ndryshuar dhe mundësive të ndryshuara që nga ajo datë.</string>
     <string name="restore_warning_header">Kujdes</string>
     <string name="restore_details_action_button_content_description">Buton “Riktheje sajtin”</string>
     <string name="restore_details_icon_content_description">Ikonë rikthimi</string>
@@ -37,7 +32,6 @@ Language: sq_AL
     <string name="backup_download_complete_failed_icon_content_description">Re me ikonë X</string>
     <string name="backup_download_complete_failed_action_button_content_description">Buton “U bë”</string>
     <string name="backup_download_complete_failed_action_button">U bë</string>
-    <string name="backup_download_complete_failed_description">S’e krijuam dot kopjeruajtjen tuaj. Ju lutemi, riprovoni më vonë.</string>
     <string name="backup_download_complete_failed_title">Shkarkimi dështoi</string>
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Celular</string>
@@ -58,11 +52,9 @@ Language: sq_AL
     <string name="reader_error_changing_seen_status_of_unsupported_post">S’ndryshohet dot gjendja “parë” e këtij postimi</string>
     <string name="reader_marked_post_as_unseen">Postimit iu hoq shenja si i parë</string>
     <string name="reader_marked_post_as_seen">Postimit iu vu shenjë si i parë</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">S’janë zgjidhur të gjitha kërcënimet. Ju lutemi, lidhuni me asistencën tonë.</string>
     <string name="threat_fix_all_status_error_message">Gabim në marrje gjendje zgjidhjeje. Ju lutemi, lidhuni me asistencën tonë.</string>
     <string name="threat_fix_all_status_success_message">Kërcënimet u zgjidhën me sukses.</string>
     <string name="threat_fix_all_error_message">Gabim në zgjidhje kërcënimesh. Ju lutemi, lidhuni me asistencën tonë.</string>
-    <string name="threat_fix_all_started_message">Po punojmë fort në prapaskenë për zgjidhjen e këtyre kërcënimeve. Ju lutemi, kontrolloni pas pak.</string>
     <string name="threat_fix_all_warning_message">Ju lutemi, ripohoni se doni të zgjidhni %s kërcënime aktive.</string>
     <string name="threat_fix_all_warning_title">Zgjidhi krejt kërcënimet</string>
     <string name="threat_ignore_error_message">Gabim në shpërfillje kërcënimi. Ju lutemi, lidhuni me ata të asistencës.</string>
@@ -70,9 +62,7 @@ Language: sq_AL
     <string name="threat_ignore_warning">S’duhet ta shpërfillni një çështje sigurie, veç në qofshi absolutisht i sigurt se është e padëmshme. Nëse zgjidhni të shpërfillet ky kërcënim, do të mbetet në sajtin tuaj &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Gabim në zgjidhje kërcënimi. Ju lutemi, lidhuni me asistecën tonë.</string>
     <string name="threat_item_sub_header_status_ignored">Kërcënim i shpërfillur</string>
-    <string name="threat_item_sub_header_status_fixed">Kërcënim i zgjidhur</string>
     <string name="threat_fixing">Po zgjidhet kërcënim</string>
-    <string name="threats_fix_num_of_threats">Ndreqi %s kërcënimet</string>
     <string name="scan_history_ignored_threats_tab">Të shpërfillur</string>
     <string name="scan_history_no_threats_found">S’u gjetën zëra</string>
     <string name="scan_history_fixed_threats_tab">Të zgjidhur</string>
@@ -87,7 +77,6 @@ Language: sq_AL
     <string name="backup_empty_title">Kopjeruajtja juaj e parë do të jetë gati së shpejti</string>
     <string name="request_failed_message">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
     <string name="gutenberg_native_move_to_bottom">Kaloje në fund</string>
-    <string name="gutenberg_native_move_block_position">Pozicion lëvizjeje blloku</string>
     <string name="label_control_upload">Ngarkoje</string>
     <string name="jetpack_icon_content_description">ikonë</string>
     <string name="backup_download_complete_info">Ju dërguam gjithashtu me email një lidhje për te kartela juaj.</string>
@@ -100,10 +89,7 @@ Language: sq_AL
     <string name="backup_download_complete_header">Kopjeruajtja juaj tani është gati për shkarkim</string>
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati</string>
-    <string name="backup_download_progress_action_button_content_description">Buton “OK, njoftomëni”</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
-    <string name="backup_download_progress_action_button">OK, njoftomëni!</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_progress_header">Aktualisht duke krijuar një kopjeruajtje të shkarkueshme të sajtit tuaj</string>
     <string name="backup_download_progress_page_title">Shkarkoje Kopjeruajtjen</string>
@@ -135,7 +121,6 @@ Language: sq_AL
     <string name="threat_file_description">U gjet kërcënim te kartela:</string>
     <string name="threat_technical_details_header">Hollësitë teknike</string>
     <string name="threat_problem_header">Cili qe problemi?</string>
-    <string name="threat_details_icon">Ikonë “Hollësi Kërcënimi”</string>
     <string name="threat_details">Hollësi Kërcënimi</string>
     <string name="threat_item_sub_header_vulnerable_theme">U gjet cenueshmëri në temë grafike</string>
     <string name="threat_item_sub_header_vulnerable_plugin">U gjet cenueshmëri në shtojcë</string>
@@ -151,10 +136,6 @@ Language: sq_AL
     <string name="scan_in_minutes_ago">%s minuta më parë</string>
     <string name="scan_in_hours_ago">%s orë më parë</string>
     <string name="scan_this_site">këtë sajt</string>
-    <string name="scan_idle_threats_found_description">Kontrolli gjeti %s kërcënime potenciale në %s. Ju lutemi, shqyrtojini më poshtë dhe veproni. Këtu jemi, nëse ju duhet ndihmë.</string>
-    <string name="scan_idle_last_scan_description">Kontrolli i fundit nga Jetpack-u u krye më %s dhe gjithçka dukej paq. %s</string>
-    <string name="scan_idle_manual_scan_description">Bëni një skanim dorazi tani, ose pritni që Jetpack-u të skanojë sajtin tuaj sot më vonë.</string>
-    <string name="scan_scanning_description">Mirë se vini te Jetpack Scan, po i hedhim një sy sajtit tuaj tani dhe përfundimin do të keni së shpejti.\n\n        \nDo t’ju dërgojmë një njoftim, sapo kontrolli të jetë i plotë. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht. Ecurinë mund ta kontrolloni kur të doni.</string>
     <string name="scan_idle_threats_found_title">Sajti juaj mund të jetë i rrezikuar</string>
     <string name="scan_idle_no_threats_found_title">Mos vrisni mendjen</string>
     <string name="scan_again">Riskanoje</string>
@@ -173,15 +154,11 @@ Language: sq_AL
     <string name="activity_log_active_filter_empty_subtitle">Provoni të ndryshoni filtrat për intervalin tuaj të datave ose për lloj veprimtarie</string>
     <string name="activity_log_active_filter_empty_title">S’u gjetën veprimtari me përputhje</string>
     <string name="rewind">Riktheje</string>
-    <string name="backup_item_sqls">Bazë të dhënash (SQL) sajti</string>
-    <string name="backup_item_contents">Drejtori WP-content (përjashton tema, shtojca, dhe ngarkime)</string>
-    <string name="backup_item_roots">Rrënjë WordPress-i (përfshin wp-config.php dhe çfarëdo kartelash jo WordPress)</string>
     <string name="backup_item_media_uploads">Ngarkime Media</string>
     <string name="backup_item_plugins">Shtojca WordPress</string>
     <string name="backup_item_themes">Tema WordPress</string>
     <string name="backup_download_details_icon_content_description">Krijoni ikonë kopjeruajtjesh të shkarkueshme</string>
     <string name="backup_download_details_action_button">Krijoni kartelë të shkarkueshme</string>
-    <string name="backup_download_details_choose_items_header">Zgjidhni objektet që doni të përfshihen te shkarkimi:</string>
     <string name="backup_download_details_header">Krijoni kopjeruajtje të shkarkueshme</string>
     <string name="backup_download_details_page_title">Shkarkoni Kopjeruatjen</string>
     <string name="backup_download">Shkarkim Kopjeruajtjeje</string>
@@ -206,7 +183,6 @@ Language: sq_AL
     <string name="gutenberg_native_copy_file_url">Kopjoni URL-në e kartelës</string>
     <string name="gutenberg_native_choose_a_file">ZGJIDHNI NJË KARTELË</string>
     <string name="new_site_creation_domain_header_title">Zgjidhni përkatësi</string>
-    <string name="my_site_btn_jetpack_settings">Rregullime Jetpack-u</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Ndjekje bisede përmes email-i</string>
     <string name="reader_btn_follow_comments">Ndiqeni bisedën përmes email-i</string>
@@ -432,7 +408,6 @@ Language: sq_AL
     <string name="gutenberg_native_choose_image">Zgjidhni figurë</string>
     <string name="gutenberg_native_block_removed">Blloku u hoq</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
-    <string name="continue_with_wpcom">Vazhdoni me WordPress.com</string>
     <string name="signup_confirmation_title">Ripohim regjistrimi</string>
     <string name="continue_with_google_terms_of_service_text">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
     <string name="continue_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
@@ -902,7 +877,6 @@ Language: sq_AL
     <string name="post_settings_notification">Njoftim</string>
     <string name="post_settings_time_and_date">Data dhe Koha</string>
     <string name="login_need_help_finding_connected_email">Ju duhet ndihmë për të gjetur email-in me të cilin e lidhët?</string>
-    <string name="enter_wordpress_site">Sajti te kjo adresë s’është sajt WordPress. Që të lidhemi me të, sajti duhet të ketë të instaluar WordPress-in.</string>
     <string name="login_invalid_site_url">Ju lutemi, jepni një adresë të plotë sajti, bie fjala, example.com.</string>
     <string name="enter_email_for_site">Që të lidheni me %1$s, bëni hyrjen te llogaria juaj WordPress.com</string>
     <string name="stats_post_views_label">Pamje</string>
@@ -1407,7 +1381,6 @@ Language: sq_AL
     <string name="activity_log_event">Veprimtari</string>
     <string name="activity_log_icon">Ikonë veprimtarie</string>
     <string name="activity_log">Regjistër Veprimtarish</string>
-    <string name="activity">Veprimtari</string>
     <string name="privacy_policy_read">Lexoni rregullat e privatësisë</string>
     <string name="third_party_policy_learn_more_caption">Përdorim mjete të tjera gjurmimi, përfshi disa të tillë nga palë të treta. Lexoni rreth tyre dhe se si t’i mbani nën kontroll.</string>
     <string name="third_party_policy_learn_more_header">Rregulla Palësh të Treta</string>
@@ -2092,13 +2065,7 @@ Language: sq_AL
     <string name="invite_error_invalid_usernames_multiple">S’dërgohet dot: Ka emra përdoruesish ose email-e të pavlefshëm</string>
     <string name="invite_error_invalid_usernames_one">S’dërgohet dot: Një emër përdoruesi ose email është i pavlefshëm</string>
     <string name="invite_error_no_usernames">Ju lutemi, shtoni të paktën një emër përdoruesi</string>
-    <string name="invite_message_info">(Në daçi) Mund të jepni një mesazh të përshtatur, deri në 500 shenja, i cili do të përfshihet te ftesa për përdoruesin(t).</string>
-    <string name="invite_message_remaining_other">%d shenja ende</string>
-    <string name="invite_message_remaining_one">1 shenjë ende</string>
-    <string name="invite_message_remaining_zero">0 shenja</string>
-    <string name="invite_message_title">Mesazh i Personalizuar</string>
     <string name="invite">Ftoji</string>
-    <string name="invite_names_title">Emra përdoruesish ose Email-e</string>
     <string name="invite_people">Ftoni Njerëz</string>
     <string name="my_site_header_external">I jashtëm</string>
     <string name="send_link">Dërgo lidhje</string>

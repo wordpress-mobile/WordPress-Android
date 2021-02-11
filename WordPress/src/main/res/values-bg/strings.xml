@@ -328,13 +328,7 @@ Language: bg
     <string name="invite_error_invalid_usernames_multiple">Има невалидни имена или имейл адреси.</string>
     <string name="invite_error_invalid_usernames_one">Неуспешно изпращане: Невалиден имейл адрес или име</string>
     <string name="invite_error_no_usernames">Нужно е поне едно потребителско име</string>
-    <string name="invite_message_info">(По желание) Тук може да добавите съобщение до 500 символа, което ще бъде включено в поканата до потербителите.</string>
-    <string name="invite_message_remaining_other">Оставащи символи: %d</string>
-    <string name="invite_message_remaining_one">Оставащи символи: 1</string>
-    <string name="invite_message_remaining_zero">0 оставащи символи</string>
-    <string name="invite_message_title">Съобщение</string>
     <string name="invite">Покана</string>
-    <string name="invite_names_title">Имена или имейл адреси</string>
     <string name="my_site_header_external">Външна</string>
     <string name="invite_people">Покана</string>
     <string name="send_link">Изпращане на връзка</string>
