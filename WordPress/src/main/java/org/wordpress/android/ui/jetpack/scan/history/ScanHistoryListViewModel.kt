@@ -13,7 +13,9 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatDateItemState
 import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemLoadingSkeletonState
+import org.wordpress.android.ui.jetpack.scan.ScanListItemState.ThreatItemState
 import org.wordpress.android.ui.jetpack.scan.ScanNavigationEvents.ShowThreatDetails
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.ContentUiState
@@ -76,8 +78,18 @@ class ScanHistoryListViewModel @Inject constructor(
     private fun filterByTabType(threatList: List<ThreatModel>, tabType: ScanHistoryTabType) =
             threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
 
-    private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
-            threatList.map { scanThreatItemBuilder.buildThreatItem(it, this::onItemClicked) }
+    private fun mapToThreatUiStateList(threatList: List<ThreatModel>): List<ScanListItemState> {
+        val uiStates = mutableListOf<ScanListItemState>()
+        threatList.forEach { model ->
+            val currentItem = scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
+            val previousItem = uiStates.lastOrNull() as? ThreatItemState
+            if (previousItem == null || currentItem.firstDetectAt != previousItem.firstDetectAt) {
+                uiStates.add(ThreatDateItemState(currentItem.firstDetectAt))
+            }
+            uiStates.add(currentItem)
+        }
+        return uiStates
+    }
 
     private fun onItemClicked(threatId: Long) {
         launch {
