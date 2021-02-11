@@ -721,7 +721,7 @@ ENV["validate_translations"]="lintVanillaRelease"
       version: version["name"], 
       release_notes_file_path:release_notes_path,
       prerelease: set_prerelease_flag,
-      release_assets: release_assets
+      release_assets: release_assets.join(',')
     )
   end
 
