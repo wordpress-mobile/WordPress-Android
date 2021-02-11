@@ -178,6 +178,22 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* IDLE - THREATS FOUND STATE */
 
     @Test
+    fun `given idle state with threats, when items are built, items contain shield warning icon with error color`() =
+        test {
+            val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
+
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_warning_white,
+                    colorResId = R.color.error,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
+                )
+            )
+        }
+
+    @Test
     fun `given idle state with threats, when items are built, items contain threats found description`() = test {
         buildScanStateItems(scanStateModelWithThreats)
 
@@ -248,6 +264,22 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     /* IDLE - THREATS NOT FOUND STATE */
+
+    @Test
+    fun `given idle no threats state, when items are built, items contain shield tick icon with green color`() =
+        test {
+            val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
+
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_tick_white,
+                    colorResId = R.color.jetpack_green_40,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
+                )
+            )
+        }
 
     @Test
     fun `given idle no threats state, when items are built, items contain scan again button `() = test {
@@ -322,6 +354,24 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         }
 
     /* SCANNING STATE */
+
+    @Test
+    fun `given scanning state, when items are built, items contain shield icon with light green color`() =
+        test {
+            val scanStateModelInScanningState = scanStateModelWithNoThreats.copy(state = State.SCANNING)
+
+            val scanStateItems = buildScanStateItems(scanStateModelInScanningState)
+
+            assertThat(scanStateItems.filterIsInstance(IconState::class.java).first()).isEqualTo(
+                IconState(
+                    icon = R.drawable.ic_shield_white,
+                    colorResId = R.color.jetpack_green_5,
+                    sizeResId = R.dimen.scan_icon_size,
+                    marginResId = R.dimen.scan_icon_margin,
+                    contentDescription = UiStringRes(R.string.scan_state_icon)
+                )
+            )
+        }
 
     @Test
     fun `given scanning state with zero progress, when items are built, items contain preparing for scan header`() =
@@ -406,7 +456,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     /* PROVISIONING STATE */
 
     @Test
-    fun `given provisioning state, when items are built, items contain shield icon with green color`() = test {
+    fun `given provisioning state, when items are built, items contain shield icon with light green color`() = test {
         val scanStateModelInProvisioningState = scanStateModelWithNoThreats.copy(state = State.PROVISIONING)
 
         val scanStateItems = buildScanStateItems(scanStateModelInProvisioningState)
