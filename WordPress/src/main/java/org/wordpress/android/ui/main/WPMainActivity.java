@@ -225,8 +225,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     }
 
     /*
-     * fragments implement this and return true if the fragment handles the back button
-     * and doesn't want the activity to handle it as well
+     * fragments implement this and return true if the fragment handles the back button and doesn't want the activity to handle it as well
      */
     public interface OnActivityBackPressedListener {
         boolean onActivityBackPressed();
@@ -708,8 +707,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         @Override
                         public void onTokenInvalid() {
                             // Show a toast if the user took too long to open the notification
-                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
-                                    ToastUtils.Duration.LONG);
+                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
                             AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
                         }
                     });
