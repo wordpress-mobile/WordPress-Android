@@ -3,7 +3,6 @@ package org.wordpress.android.ui.prefs
 import org.wordpress.android.fluxc.model.JetpackCapability
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.models.ReaderTag
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.PostListViewLayoutType
 import org.wordpress.android.ui.reader.tracker.ReaderTab
@@ -185,23 +184,6 @@ class AppPrefsWrapper @Inject constructor() {
 
     fun getSiteJetpackCapabilitiesLastUpdated(remoteSiteId: Long): Long =
             AppPrefs.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-
-    fun removeQuickStartTaskType(quickStartTaskType: QuickStartTaskType) =
-            AppPrefs.removeQuickStartTaskType(quickStartTaskType)
-
-    fun isQuickStartTaskTypeRemoved(quickStartTaskType: QuickStartTaskType) =
-            AppPrefs.isQuickStartTaskTypeRemoved(quickStartTaskType)
-
-    fun pinDynamicCardType(dynamicCardType: DynamicCardType) =
-            AppPrefs.setPinnedDynamicCardType(dynamicCardType.toString())
-
-    fun unpinDynamicCardType() =
-            AppPrefs.removePinnedDynamicCardType()
-
-    fun getPinnedDynamicCardType(): DynamicCardType? {
-        val pinnedDynamicCardType = AppPrefs.getPinnedDynamicCardType()
-        return if (!pinnedDynamicCardType.isNullOrEmpty()) DynamicCardType.valueOf(pinnedDynamicCardType) else null
-    }
 
     companion object {
         private const val LIGHT_MODE_ID = 0

@@ -17,8 +17,12 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
+import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
@@ -29,8 +33,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -54,6 +56,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var dynamicCardStore: DynamicCardStore
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -72,7 +75,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
-                appPrefsWrapper
+                dynamicCardStore
         )
         snackbars = mutableListOf()
         quickStartRepository.onSnackbar.observeForever { event ->
@@ -162,7 +165,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `requestNextStepOfTask emits quick start event`() {
+    fun `requestNextStepOfTask emits quick start event`() = test {
         initQuickStartInProgress()
 
         initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
@@ -222,66 +225,20 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
 
-    @Test
-    fun `hides CUSTOMIZE category`() = test {
-        initStore()
-
-        quickStartRepository.hideCategory(CUSTOMIZE_QUICK_START)
-
-        val quickStartUpdate = result.last()
-        quickStartUpdate.categories.apply {
-            assertThat(this).hasSize(1)
-            assertThat(this.first().taskType).isEqualTo(GROW)
-        }
-    }
-
-    @Test
-    fun `hides GROW category`() = test {
-        initStore()
-
-        quickStartRepository.hideCategory(GROW_QUICK_START)
-
-        val quickStartUpdate = result.last()
-        quickStartUpdate.categories.apply {
-            assertThat(this).hasSize(1)
-            assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
-        }
-    }
-
-    @Test
-    fun `removes CUSTOMIZE category`() = test {
-        initStore()
-
-        quickStartRepository.removeCategory(CUSTOMIZE_QUICK_START)
-
-        val quickStartUpdate = result.last()
-        quickStartUpdate.categories.apply {
-            assertThat(this).hasSize(1)
-            assertThat(this.first().taskType).isEqualTo(GROW)
-        }
-
-        verify(appPrefsWrapper).removeQuickStartTaskType(CUSTOMIZE)
-    }
-
-    @Test
-    fun `removes GROW category`() = test {
-        initStore()
-
-        quickStartRepository.removeCategory(GROW_QUICK_START)
-
-        val quickStartUpdate = result.last()
-        quickStartUpdate.categories.apply {
-            assertThat(this).hasSize(1)
-            assertThat(this.first().taskType).isEqualTo(CUSTOMIZE)
-        }
-    }
-
-    private fun initQuickStartInProgress() {
+    private suspend fun initQuickStartInProgress() {
         initStore()
         quickStartRepository.refresh()
     }
 
-    private fun initStore() {
+    private suspend fun initStore() {
+        whenever(dynamicCardStore.getCards(siteId)).thenReturn(
+                DynamicCardsModel(
+                        dynamicCardTypes = listOf(
+                                CUSTOMIZE_QUICK_START,
+                                GROW_QUICK_START
+                        )
+                )
+        )
         whenever(quickStartUtils.isQuickStartInProgress(site.id)).thenReturn(true)
         whenever(quickStartStore.getUncompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(listOf(CREATE_SITE))
         whenever(quickStartStore.getCompletedTasksByType(siteId.toLong(), CUSTOMIZE)).thenReturn(

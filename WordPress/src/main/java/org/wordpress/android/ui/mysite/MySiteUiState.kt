@@ -1,16 +1,16 @@
 package org.wordpress.android.ui.mysite
 
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DomainCreditAvailable
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCards
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.SelectedSite
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.ShowSiteIconProgressBar
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 
 data class MySiteUiState(
     val currentAvatarUrl: String? = null,
@@ -35,7 +35,7 @@ data class MySiteUiState(
             val categories: List<QuickStartCategory> = listOf()
         ) : PartialState()
 
-        data class DynamicCards(val pinnedDynamicCard: DynamicCardType? = null, val cards: List<DynamicCardType>) :
+        data class DynamicCardsUpdate(val pinnedDynamicCard: DynamicCardType? = null, val cards: List<DynamicCardType>) :
                 PartialState()
     }
 
@@ -53,7 +53,7 @@ data class MySiteUiState(
                     activeTask = partialState.activeTask,
                     quickStartCategories = partialState.categories
             )
-            is DynamicCards -> this.copy(
+            is DynamicCardsUpdate -> this.copy(
                     pinnedDynamicCard = partialState.pinnedDynamicCard,
                     visibleDynamicCards = partialState.cards
             )

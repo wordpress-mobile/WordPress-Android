@@ -6,12 +6,13 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Remove
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 
 @RunWith(MockitoJUnitRunner::class)
 class DynamicCardMenuViewModelTest : BaseUnitTest() {
@@ -31,11 +32,19 @@ class DynamicCardMenuViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when pin button is pressed, should emit Pin interaction event with correct id`() {
+    fun `when pin button is pressed, should emit Pin interaction event with correct id and isPinned is false`() {
         viewModel.start(CUSTOMIZE_QUICK_START.name, false)
         viewModel.onPinActionClicked()
 
         assertThat(mInteractions).containsOnly(Pin(CUSTOMIZE_QUICK_START))
+    }
+
+    @Test
+    fun `when pin button is pressed, should emit Unpin interaction event when isPinned is true`() {
+        viewModel.start(CUSTOMIZE_QUICK_START.name, true)
+        viewModel.onPinActionClicked()
+
+        assertThat(mInteractions).containsOnly(Unpin(CUSTOMIZE_QUICK_START))
     }
 
     @Test

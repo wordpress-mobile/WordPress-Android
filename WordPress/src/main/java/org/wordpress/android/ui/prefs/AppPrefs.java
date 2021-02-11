@@ -979,30 +979,6 @@ public class AppPrefs {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
     }
 
-    public static void removeQuickStartTaskType(QuickStartTaskType quickStartTaskType) {
-        prefs().edit().putBoolean(getQuickStartTaskTypeKey(quickStartTaskType), true).apply();
-    }
-
-    public static boolean isQuickStartTaskTypeRemoved(QuickStartTaskType quickStartTaskType) {
-        return prefs().getBoolean(getQuickStartTaskTypeKey(quickStartTaskType), false);
-    }
-
-    @NonNull private static String getQuickStartTaskTypeKey(QuickStartTaskType quickStartTaskType) {
-        return DeletablePrefKey.REMOVED_QUICK_START_CARD_TYPE.name() + quickStartTaskType.toString();
-    }
-
-    public static void setPinnedDynamicCardType(String dynamicCardType) {
-        setString(DeletablePrefKey.PINNED_DYNAMIC_CARD, dynamicCardType);
-    }
-
-    public static void removePinnedDynamicCardType() {
-        remove(DeletablePrefKey.PINNED_DYNAMIC_CARD);
-    }
-
-    public static String getPinnedDynamicCardType() {
-        return getString(DeletablePrefKey.PINNED_DYNAMIC_CARD);
-    }
-
     public static void setMainFabTooltipDisabled(Boolean disable) {
         setBoolean(UndeletablePrefKey.IS_MAIN_FAB_TOOLTIP_DISABLED, disable);
     }

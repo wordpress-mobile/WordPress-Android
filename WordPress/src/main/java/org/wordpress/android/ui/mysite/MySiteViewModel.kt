@@ -23,6 +23,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_POSTS_
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_ACTION_STATS_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_HIDE_CARD_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.QUICK_START_REMOVE_CARD_TAPPED
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
@@ -30,8 +31,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.modules.BG_THREAD
@@ -88,7 +89,7 @@ import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.Dyna
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardsSource
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.PhotoPickerActivity.PhotoPickerMediaSource
@@ -554,17 +555,20 @@ class MySiteViewModel
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {
-        when (interaction) {
-            is DynamicCardMenuInteraction.Remove -> {
-                analyticsTrackerWrapper.track(QUICK_START_REMOVE_CARD_TAPPED)
-                quickStartRepository.removeCategory(interaction.cardType)
-                dynamicCardsSource.hideItem(interaction.cardType)
-            }
-            is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
-            is Hide -> {
-                analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
-                quickStartRepository.hideCategory(interaction.cardType)
-                dynamicCardsSource.hideItem(interaction.cardType)
+        launch {
+            when (interaction) {
+                is DynamicCardMenuInteraction.Remove -> {
+                    analyticsTrackerWrapper.track(QUICK_START_REMOVE_CARD_TAPPED)
+                    dynamicCardsSource.removeItem(interaction.cardType)
+                    quickStartRepository.refresh()
+                }
+                is Pin -> dynamicCardsSource.pinItem(interaction.cardType)
+                is Unpin -> dynamicCardsSource.unpinItem()
+                is Hide -> {
+                    analyticsTrackerWrapper.track(QUICK_START_HIDE_CARD_TAPPED)
+                    dynamicCardsSource.hideItem(interaction.cardType)
+                    quickStartRepository.refresh()
+                }
             }
         }
     }
