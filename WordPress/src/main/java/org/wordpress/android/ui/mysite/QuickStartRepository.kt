@@ -124,7 +124,6 @@ class QuickStartRepository
                 _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
             }
         }
-
     }
 
     fun completeTask(task: QuickStartTask) {

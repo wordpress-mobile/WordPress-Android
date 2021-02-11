@@ -1,8 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import android.text.SpannableString
-import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -37,7 +34,6 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
-import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
