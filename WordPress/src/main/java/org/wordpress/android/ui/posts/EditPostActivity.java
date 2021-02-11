@@ -2331,12 +2331,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
+        boolean enableAudioBlock = !SiteUtils.onFreePlan(mSite);
+
         return new GutenbergPropsBuilder(
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
+                enableAudioBlock,
                 mIsPreview,
                 wpcomLocaleSlug,
                 postType,
