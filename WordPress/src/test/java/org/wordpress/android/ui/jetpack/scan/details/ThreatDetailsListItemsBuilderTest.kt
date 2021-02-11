@@ -95,44 +95,60 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     /* BASIC DETAILS */
 
     @Test
-    fun `given fixed state threat, when items are built, then basic list items are built correctly`() {
-        // Arrange
-        val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
-        val expectedThreatDetailHeaderState = ThreatDetailHeaderState(
-            icon = threatItemBuilder.buildThreatItemIcon(threatModel),
-            iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
-            header = UiStringRes(R.string.threat_status_fixed),
-            description = UiStringText(TEST_FIXED_ON_DATE)
-        )
-        val expectedFoundHeader = HeaderState(text = UiStringRes(R.string.threat_found_header))
-
-        val expectedFoundSubHeader = DescriptionState(UiStringText(TEST_FOUND_ON_DATE))
-
-        val expectedThreatItemHeader = HeaderState(
-            text = threatItemBuilder.buildThreatItemHeader(threatModel),
-            textColorRes = R.attr.colorOnSurface
-        )
-        val expectedThreatItemSubHeader = DescriptionState(
-            threatItemBuilder.buildThreatItemDescription(threatModel)
-        )
-        val expectedProblemHeader = HeaderState(UiStringRes(R.string.threat_problem_header))
-        val expectedProblemDescription = DescriptionState(
-            UiStringText(threatModel.baseThreatModel.description)
-        )
-
+    fun `given any threat model, when items are built, then icon is added from threat item builder`() {
         // Act
-        val threatItems = buildThreatDetailsListItems(threatModel)
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
 
         // Assert
-        assertThat(threatItems).size().isEqualTo(7)
-        assertThat(threatItems).containsSequence(
-            expectedThreatDetailHeaderState,
-            expectedFoundHeader,
-            expectedFoundSubHeader,
-            expectedThreatItemHeader,
-            expectedThreatItemSubHeader,
-            expectedProblemHeader,
-            expectedProblemDescription
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].icon).isEqualTo(
+            threatItemBuilder.buildThreatItemIcon(ThreatTestData.genericThreatModel)
+        )
+    }
+
+    @Test
+    fun `given any threat model, when items are built, then icon background is added from threat item builder`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<ThreatDetailHeaderState>()[0].iconBackground).isEqualTo(
+            threatItemBuilder.buildThreatItemIconBackground(ThreatTestData.genericThreatModel)
+        )
+    }
+
+    @Test
+    fun `given any threat model, when items are built, then threat item header is added from threat item builder`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
+            HeaderState(threatItemBuilder.buildThreatItemHeader(ThreatTestData.genericThreatModel))
+        )
+    }
+
+    @Test
+    fun `given any threat model, when items are built, then threat item description added from threat item builder`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<DescriptionState>()).contains(
+            DescriptionState(threatItemBuilder.buildThreatItemDescription(ThreatTestData.genericThreatModel))
+        )
+    }
+
+    @Test
+    fun `given any threat model, when items are built, then problem details are added`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.genericThreatModel)
+
+        // Assert
+        assertThat(threatItems.filterIsInstance<HeaderState>()).contains(
+            HeaderState(UiStringRes(R.string.threat_problem_header))
+        )
+        assertThat(threatItems.filterIsInstance<DescriptionState>()).contains(
+            DescriptionState(UiStringText(ThreatTestData.genericThreatModel.baseThreatModel.description))
         )
     }
 
