@@ -23,7 +23,28 @@ class QuickStartUtilsWrapper
         messageId: Int,
         iconId: Int = QuickStartUtils.ICON_NOT_SET
     ): Spannable {
-        return QuickStartUtils.stylizeQuickStartPrompt(resourceProvider, activityContext, messageId, iconId)
+        return QuickStartUtils.stylizeQuickStartPrompt(
+                resourceProvider = resourceProvider,
+                activityContext = activityContext,
+                messageId = messageId,
+                isThemedSnackbar = false,
+                iconId = iconId
+        )
+    }
+
+    @JvmOverloads
+    fun stylizeThemedQuickStartPrompt(
+        activityContext: Context,
+        messageId: Int,
+        iconId: Int = QuickStartUtils.ICON_NOT_SET
+    ): Spannable {
+        return QuickStartUtils.stylizeQuickStartPrompt(
+                resourceProvider = resourceProvider,
+                activityContext = activityContext,
+                messageId = messageId,
+                isThemedSnackbar = true,
+                iconId = iconId
+        )
     }
 
     fun isEveryQuickStartTaskDone(siteId: Int): Boolean {

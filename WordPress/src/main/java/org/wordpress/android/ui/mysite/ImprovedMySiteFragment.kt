@@ -283,7 +283,7 @@ class ImprovedMySiteFragment : Fragment(),
         })
         viewModel.onQuickStartMySitePrompts.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { activeTutorialPrompt ->
-                val message = quickStartUtils.stylizeQuickStartPrompt(
+                val message = quickStartUtils.stylizeThemedQuickStartPrompt(
                         requireContext(),
                         activeTutorialPrompt.shortMessagePrompt,
                         activeTutorialPrompt.iconId
