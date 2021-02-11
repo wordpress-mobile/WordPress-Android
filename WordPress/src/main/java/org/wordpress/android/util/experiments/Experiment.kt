@@ -3,7 +3,6 @@ package org.wordpress.android.util.experiments
 import org.wordpress.android.fluxc.model.experiments.Variation
 
 abstract class Experiment(
-    val id: Int,
     val name: String,
     private val exPlat: ExPlat
 ) {

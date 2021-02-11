@@ -6,7 +6,6 @@ class BiasAAExperiment
 @Inject constructor(
     exPlat: ExPlat
 ) : Experiment(
-        id = 20085,
         name = "explat_test_aa_weekly_wpandroid_2021_week_06",
         exPlat
 )

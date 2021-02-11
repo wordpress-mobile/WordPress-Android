@@ -30,7 +30,7 @@ class ExPlatTest : BaseUnitTest() {
     @Before
     fun setUp() {
         exPlat = ExPlat(experimentStore, appLog, TEST_SCOPE)
-        dummyExperiment = object : Experiment(0, "dummy", exPlat) {}
+        dummyExperiment = object : Experiment("dummy", exPlat) {}
     }
 
     @Test
