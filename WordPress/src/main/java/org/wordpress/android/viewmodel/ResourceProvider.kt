@@ -25,14 +25,6 @@ class ResourceProvider @Inject constructor(private val contextProvider: ContextP
         return ContextCompat.getColor(contextProvider.getContext(), resourceId)
     }
 
-    fun getAttr(activityContext: Context, @AttrRes colorAttr: Int): Int {
-        return ContextCompat.getColor(activityContext,
-                TypedValue().let {
-                    activityContext.theme.resolveAttribute(colorAttr, it, true)
-                    it.resourceId
-                })
-    }
-
     fun getDimensionPixelSize(@DimenRes dimen: Int): Int {
         val resources = contextProvider.getContext().resources
         return resources.getDimensionPixelSize(dimen)
