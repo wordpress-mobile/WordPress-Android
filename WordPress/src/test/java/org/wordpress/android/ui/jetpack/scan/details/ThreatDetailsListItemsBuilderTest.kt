@@ -93,7 +93,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds basic list items correctly for a ThreatModel in Fixed state`() {
+    fun `given fixed state threat, when items are built, then basic list items are built correctly`() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
         val expectedThreatDetailHeaderState = ThreatDetailHeaderState(
@@ -135,7 +135,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds technical details list items correctly for FileThreatModel`() {
+    fun `given file threat, when items are built, then technical details items are built correctly`() {
         // Arrange
         val fileThreatModelWithFileName = ThreatTestData.fileThreatModel.copy(fileName = TEST_FILE_PATH)
 
@@ -167,7 +167,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds technical details list items correctly for CoreFileModificationThreatModel`() {
+    fun `given core file modif threat, when items are built, then technical details items are built correctly`() {
         // Arrange
         val expectedTechnicalDetailsHeaderItem = technicalDetailsHeaderItem
         val expectedFileNameDescriptionItem = fileNameDescriptionItem
@@ -189,7 +189,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds fix details items correctly for a fixable threat`() {
+    fun `given fixable threat, when items are built, then fix details items are built correctly`() {
         // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
@@ -211,7 +211,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds fix details items correctly for a non fixable threat`() {
+    fun `given non fixable threat, when items are built, then fix details items are built correctly`() {
         // Arrange
         val notFixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
@@ -231,7 +231,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds action buttons correctly for a fixable threat`() {
+    fun `given fixable threat, when items are built, then action buttons are built correctly`() {
         // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.fixableThreatInCurrentStatus,
@@ -249,7 +249,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `builds action buttons correctly for a non fixable threat`() {
+    fun `given non fixable threat, when items are built, then action buttons are built correctly`() {
         // Act
         val threatItems = buildThreatDetailsListItems(
             model = ThreatTestData.notFixableThreatInCurrentStatus,
@@ -267,7 +267,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat status = fixed, when detail shown, then Fixed header is shown as main header`() {
+    fun `given threat status = fixed, when items are built, then Fixed header is added as main header`() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
 
@@ -283,7 +283,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat status = fixed, when detail shown, then Found header is shown below main header`() {
+    fun `given threat status = fixed, when items are built, then Found header is added below main header`() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = FIXED))
 
@@ -298,7 +298,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat status = ignored, when detail shown, then Found header is shown as main header`() {
+    fun `given threat status = ignored, when items are built, then Found header is added as main header`() {
         // Arrange
         val threatModel = GenericThreatModel(ThreatTestData.genericThreatModel.baseThreatModel.copy(status = IGNORED))
 
@@ -314,7 +314,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given threat status = current, when detail shown, then Found header is shown as main header`() {
+    fun `given threat status = current, when items are built, then Found header is added as main header`() {
         // Arrange
         val threatModel = GenericThreatModel(
             ThreatTestData.genericThreatModel.baseThreatModel.copy(status = ThreatStatus.CURRENT)
