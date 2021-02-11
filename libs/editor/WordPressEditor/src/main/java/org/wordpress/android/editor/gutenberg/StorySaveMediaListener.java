@@ -7,5 +7,4 @@ public interface StorySaveMediaListener {
     void onMediaSaveFailed(String localId);
     void onStorySaveResult(String storyFirstMediaId, boolean success);
     void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl);
-    void onStoryMediaSavedToRemote(String localId, String remoteId, String oldUrl, String newUrl);
 }

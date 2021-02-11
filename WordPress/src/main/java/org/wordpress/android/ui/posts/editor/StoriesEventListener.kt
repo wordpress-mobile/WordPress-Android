@@ -25,7 +25,6 @@ import org.wordpress.android.editor.EditorMediaUploadListener
 import org.wordpress.android.editor.gutenberg.StorySaveMediaListener
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.LocalId
-import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.MediaModel
 import org.wordpress.android.fluxc.model.MediaModel.MediaUploadState.UPLOADED
 import org.wordpress.android.fluxc.model.SiteModel
@@ -36,7 +35,6 @@ import org.wordpress.android.ui.posts.editor.media.EditorMedia
 import org.wordpress.android.ui.posts.editor.media.EditorMediaListener
 import org.wordpress.android.ui.stories.StoryRepositoryWrapper
 import org.wordpress.android.ui.stories.media.StoryMediaSaveUploadBridge.StoryFrameMediaModelCreatedEvent
-import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.usecase.LoadStoryFromStoriesPrefsUseCase
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.util.AppLog
@@ -54,7 +52,6 @@ class StoriesEventListener @Inject constructor(
     private val eventBusWrapper: EventBusWrapper,
     private val editorMedia: EditorMedia,
     private val loadStoryFromStoriesPrefsUseCase: LoadStoryFromStoriesPrefsUseCase,
-    private val storiesPrefs: StoriesPrefs,
     private val storyRepositoryWrapper: StoryRepositoryWrapper
 ) : LifecycleObserver {
     private lateinit var lifecycle: Lifecycle
@@ -64,25 +61,10 @@ class StoriesEventListener @Inject constructor(
     var storiesSavingInProgress = HashSet<StoryIndex>()
         private set
 
-    data class StoryFrameMediaUploadedEvent(
-        val localId: LocalId,
-        val assignedMediaId: RemoteId,
-        val oldUrl: String,
-        val newUrl: String
-    )
-
-    fun startListening() {
-        if (!eventBusWrapper.isRegistered(this)) {
-            dispatcher.register(this)
-            eventBusWrapper.register(this)
-        }
-    }
-
-    fun pauseListening() {
-        if (eventBusWrapper.isRegistered(this)) {
-            dispatcher.unregister(this)
-            eventBusWrapper.unregister(this)
-        }
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    private fun onCreate() {
+        dispatcher.register(this)
+        eventBusWrapper.register(this)
     }
 
     /**
@@ -92,7 +74,8 @@ class StoriesEventListener @Inject constructor(
     @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
     private fun onDestroy() {
         lifecycle.removeObserver(this)
-        pauseListening()
+        dispatcher.unregister(this)
+        eventBusWrapper.unregister(this)
     }
 
     fun start(
@@ -110,33 +93,6 @@ class StoriesEventListener @Inject constructor(
 
     fun setSaveMediaListener(newListener: StorySaveMediaListener) {
         storySaveMediaListener = newListener
-    }
-
-    fun postStoryMediaUploadedEvent(mediaModel: MediaModel) {
-        // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
-        // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
-        // mediaId.
-        // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
-        // within a story block in this post: we will only replace items for which a local-keyed frame has
-        // been created before, which can only happen when using the Story Creator.
-        storiesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                mediaModel.getId(),
-                mediaModel.getMediaId(),
-                mediaModel.localSiteId.toLong()
-        )
-
-        // also, let's post a sticky event for StoriesEventListener to catch - if the listener is not yet
-        // registered, it will be listening to this event as needed when Gutenberg is re-attached and ready
-        // to process events
-        // see subscriber method fun onStoryFrameMediaUploadedEvent(event: StoryFrameMediaUploadedEvent) below
-        eventBusWrapper.postSticky(
-                StoryFrameMediaUploadedEvent(
-                        LocalId(mediaModel.id),
-                        RemoteId(mediaModel.mediaId),
-                        "",
-                        mediaModel.url
-                )
-        )
     }
 
     // Story Frame Save Service events
@@ -163,9 +119,8 @@ class StoriesEventListener @Inject constructor(
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, progress)
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveCompleted(event: FrameSaveCompleted) {
-        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -189,18 +144,16 @@ class StoriesEventListener @Inject constructor(
         storySaveMediaListener?.onMediaSaveProgress(localMediaId, totalProgress)
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryFrameMediaIdChanged(event: StoryFrameMediaModelCreatedEvent) {
-        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
         storySaveMediaListener?.onMediaModelCreatedForFile(event.oldId, event.newId.toString(), event.oldUrl)
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStoryFrameSaveFailed(event: FrameSaveFailed) {
-        eventBusWrapper.removeStickyEvent(event)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
         }
@@ -212,9 +165,8 @@ class StoriesEventListener @Inject constructor(
         // storySaveMediaListener?.onMediaSaveFailed(localMediaId)
     }
 
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
+    @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStorySaveProcessFinished(event: StorySaveResult) {
-        eventBusWrapper.removeStickyEvent(event)
         storiesSavingInProgress.remove(event.storyIndex)
         if (!lifecycle.currentState.isAtLeast(CREATED)) {
             return
@@ -230,22 +182,6 @@ class StoriesEventListener @Inject constructor(
     @Subscribe(threadMode = ThreadMode.MAIN)
     fun onStorySaveStart(event: StorySaveProcessStart) {
         storiesSavingInProgress.add(event.storyIndex)
-    }
-
-    // Story media Upload specific event - we trigger this from within this class so it can be handled appropriately
-    // and doesn't miss the target as regular FluxC upload events would if Gutenberg is not yet prepared
-    @Subscribe(sticky = true, threadMode = ThreadMode.MAIN)
-    fun onStoryFrameMediaUploadedEvent(event: StoryFrameMediaUploadedEvent) {
-        eventBusWrapper.removeStickyEvent(event)
-        if (!lifecycle.currentState.isAtLeast(CREATED)) {
-            return
-        }
-        storySaveMediaListener?.onStoryMediaSavedToRemote(
-                event.localId.value.toString(),
-                event.assignedMediaId.value.toString(),
-                event.oldUrl,
-                event.newUrl
-        )
     }
 
     // Editor load / cancel events

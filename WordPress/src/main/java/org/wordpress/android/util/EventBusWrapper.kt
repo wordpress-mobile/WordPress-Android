@@ -21,15 +21,7 @@ class EventBusWrapper @Inject constructor() {
         EventBus.getDefault().removeStickyEvent(event)
     }
 
-    fun isRegistered(subscriber: Any): Boolean {
-        return EventBus.getDefault().isRegistered(subscriber)
-    }
-
     fun postSticky(event: Any) {
         EventBus.getDefault().postSticky(event)
-    }
-
-    fun post(event: Any) {
-        EventBus.getDefault().post(event)
     }
 }

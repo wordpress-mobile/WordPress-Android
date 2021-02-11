@@ -13,6 +13,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode.MAIN
 import org.wordpress.android.WordPress
@@ -171,7 +172,7 @@ class StoryMediaSaveUploadBridge @Inject constructor(
                             // ids with the new MediaModel local ids are created so, broadcasting the event.
                             if (isEditMode) {
                                 // finally send the event that this frameId has changed
-                                eventBusWrapper.postSticky(
+                                EventBus.getDefault().post(
                                         StoryFrameMediaModelCreatedEvent(
                                                 oldTemporaryId,
                                                 it.id,
