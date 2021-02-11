@@ -27,14 +27,14 @@ class FetchScanStateUseCase @Inject constructor(
         site: SiteModel,
         startWithDelay: Boolean = false
     ): Flow<FetchScanState> = flow {
+        if (startWithDelay) {
+            delay(FETCH_SCAN_STATE_DELAY_MILLIS)
+        }
+
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 emit(Failure.NetworkUnavailable)
                 return@flow
-            }
-
-            if (startWithDelay) {
-                delay(FETCH_SCAN_STATE_DELAY_MILLIS)
             }
 
             val result = scanStore.fetchScanState(FetchScanStatePayload(site))
