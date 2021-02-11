@@ -863,7 +863,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
         mAppConfig.refresh();
-        mExPlat.refresh();
+        mExPlat.refreshIfNeeded();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)

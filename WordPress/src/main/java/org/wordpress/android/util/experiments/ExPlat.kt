@@ -25,7 +25,7 @@ class ExPlat
 ) {
     private val platform = Platform.WORDPRESS_COM
 
-    fun refresh() {
+    fun refreshIfNeeded() {
         getAssignments(refreshStrategy = IF_STALE)
     }
 

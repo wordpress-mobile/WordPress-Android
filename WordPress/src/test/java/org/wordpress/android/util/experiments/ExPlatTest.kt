@@ -34,28 +34,28 @@ class ExPlatTest : BaseUnitTest() {
     }
 
     @Test
-    fun `refresh fetches assignments if cache is null`() = test {
+    fun `refreshIfNeeded fetches assignments if cache is null`() = test {
         setupAssignments(cachedAssignments = null, fetchedAssignments = buildAssignments())
 
-        exPlat.refresh()
+        exPlat.refreshIfNeeded()
 
         verify(experimentStore, times(1)).fetchAssignments(any())
     }
 
     @Test
-    fun `refresh fetches assignments if cache is stale`() = test {
+    fun `refreshIfNeeded fetches assignments if cache is stale`() = test {
         setupAssignments(cachedAssignments = buildAssignments(isStale = true), fetchedAssignments = buildAssignments())
 
-        exPlat.refresh()
+        exPlat.refreshIfNeeded()
 
         verify(experimentStore, times(1)).fetchAssignments(any())
     }
 
     @Test
-    fun `refresh does not fetch assignments if cache is fresh`() = test {
+    fun `refreshIfNeeded does not fetch assignments if cache is fresh`() = test {
         setupAssignments(cachedAssignments = buildAssignments(isStale = false), fetchedAssignments = buildAssignments())
 
-        exPlat.refresh()
+        exPlat.refreshIfNeeded()
 
         verify(experimentStore, never()).fetchAssignments(any())
     }
