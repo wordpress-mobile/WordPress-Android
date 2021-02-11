@@ -139,34 +139,67 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     /* TECHNICAL DETAILS - FILE THREAT */
 
     @Test
-    fun `given file threat, when items are built, then technical details items are built correctly`() {
+    fun `given file threat, when items are built, then technical details exist in correct sequence`() {
         // Arrange
-        val fileThreatModelWithFileName = ThreatTestData.fileThreatModel.copy(fileName = TEST_FILE_PATH)
-
-        val expectedTechnicalDetailsHeaderItem = technicalDetailsHeaderItem
-        val expectedFileNameDescriptionItem = fileNameDescriptionItem
-        val expectedFileNameItem = ThreatFileNameState(UiStringText(TEST_FILE_PATH))
-        val expectedContextLinesItem = ThreatContextLinesItemState(
-            listOf(
-                ThreatContextLinesItemState.ThreatContextLineItemState(
-                    line = ThreatTestData.contextLine,
-                    lineNumberBackgroundColorRes = R.color.context_line_highlighted_row_background,
-                    contentBackgroundColorRes = R.color.context_line_highlighted_row_background,
-                    highlightedBackgroundColorRes = R.color.red_60,
-                    highlightedTextColorRes = R.color.white
-                )
-            )
-        )
+        val fileThreatModelWithFileName = ThreatTestData.fileThreatModel
 
         // Act
         val threatItems = buildThreatDetailsListItems(fileThreatModelWithFileName)
 
         // Assert
-        assertThat(threatItems).containsSequence(
-            expectedTechnicalDetailsHeaderItem,
-            expectedFileNameDescriptionItem,
-            expectedFileNameItem,
-            expectedContextLinesItem
+        assertThat(threatItems.map { it::class.java }).containsSequence(
+            HeaderState::class.java,
+            DescriptionState::class.java,
+            ThreatFileNameState::class.java,
+            ThreatContextLinesItemState::class.java
+        )
+    }
+
+    @Test
+    fun `given file threat, when items are built, then technical details header exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(technicalDetailsHeaderItem)
+    }
+
+    @Test
+    fun `given file threat with file name, when items are built, then file name description exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(fileNameDescriptionItem)
+    }
+
+    @Test
+    fun `given file threat with file name, when items are built, then file name exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(ThreatFileNameState(UiStringText(TEST_FILE_PATH)))
+    }
+
+    @Test
+    fun `given file threat, when items are built, then context lines exist`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.fileThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(
+            ThreatContextLinesItemState(
+                listOf(
+                    ThreatContextLinesItemState.ThreatContextLineItemState(
+                        line = ThreatTestData.contextLine,
+                        lineNumberBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                        contentBackgroundColorRes = R.color.context_line_highlighted_row_background,
+                        highlightedBackgroundColorRes = R.color.red_60,
+                        highlightedTextColorRes = R.color.white
+                    )
+                )
+            )
         )
     }
 
