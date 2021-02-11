@@ -41,7 +41,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         super(appContext, dispatcher, requestQueue, accessToken, userAgent);
     }
 
-    public void fetchComments(final SiteModel site, final int number, final int offset, CommentStatus status) {
+    public void fetchComments(final SiteModel site, final int number, final int offset, final CommentStatus status) {
         String url = WPCOMREST.sites.site(site.getSiteId()).comments.getUrlV1_1();
         Map<String, String> params = new HashMap<>();
         params.put("status", status.toString());
@@ -55,7 +55,7 @@ public class CommentRestClient extends BaseWPComRestClient {
                     public void onResponse(CommentsWPComRestResponse response) {
                         List<CommentModel> comments = commentsResponseToCommentList(response, site);
                         FetchCommentsResponsePayload payload = new FetchCommentsResponsePayload(comments, site, number,
-                                offset);
+                                offset, status);
                         mDispatcher.dispatch(CommentActionBuilder.newFetchedCommentsAction(payload));
                     }
                 },
