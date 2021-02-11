@@ -215,7 +215,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle state with threats, when items are built, items contain scan now button`() = test {
+    fun `given idle state with threats, when items are built, items contain scan again button`() = test {
         val scanStateItems = buildScanStateItems(scanStateModelWithThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
@@ -300,7 +300,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     }
 
     @Test
-    fun `given idle no threats state, when items are built, items contain scan again button `() = test {
+    fun `given idle no threats state, when items are built, items contain scan now button `() = test {
         val scanStateItems = buildScanStateItems(scanStateModelWithNoThreats)
 
         assertThat(scanStateItems.filterIsInstance(ActionButtonState::class.java).map { it.text }).contains(
