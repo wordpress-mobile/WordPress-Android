@@ -206,24 +206,54 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     /* TECHNICAL DETAILS - CORE FILE MODIFICATION THREAT */
 
     @Test
-    fun `given core file modif threat, when items are built, then technical details items are built correctly`() {
-        // Arrange
-        val expectedTechnicalDetailsHeaderItem = technicalDetailsHeaderItem
-        val expectedFileNameDescriptionItem = fileNameDescriptionItem
-        val expectedFileNameItem = ThreatFileNameState(
-            UiStringText(ThreatTestData.coreFileModificationThreatModel.fileName)
-        )
-        val expectedDiffItem = DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
-
+    fun `given core file modif threat, when items are built, then technical details exist in correct sequence`() {
         // Act
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
         // Assert
-        assertThat(threatItems).containsSubsequence(
-            expectedTechnicalDetailsHeaderItem,
-            expectedFileNameDescriptionItem,
-            expectedFileNameItem,
-            expectedDiffItem
+        assertThat(threatItems.map { it::class.java }).containsSequence(
+            HeaderState::class.java,
+            DescriptionState::class.java,
+            ThreatFileNameState::class.java,
+            DescriptionState::class.java
+        )
+    }
+
+    @Test
+    fun `given core file modif threat, when items are built, then technical details header exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(technicalDetailsHeaderItem)
+    }
+
+    @Test
+    fun `given core file modif threat with file name, when items are built, then file name description exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(fileNameDescriptionItem)
+    }
+
+    @Test
+    fun `given core file modif threat with file name, when items are built, then file name exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(fileNameDescriptionItem)
+    }
+
+    @Test
+    fun `given core file modif threat, when items are built, then diff item exists`() {
+        // Act
+        val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
+
+        // Assert
+        assertThat(threatItems).contains(
+            DescriptionState(UiStringText(ThreatTestData.coreFileModificationThreatModel.diff))
         )
     }
 
