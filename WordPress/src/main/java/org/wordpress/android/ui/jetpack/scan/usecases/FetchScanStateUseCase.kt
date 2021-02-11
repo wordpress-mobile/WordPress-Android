@@ -48,11 +48,11 @@ class FetchScanStateUseCase @Inject constructor(
                 return@flow
             }
             emit(Success(scanStateModel))
-            if (scanStateModel.state == ScanStateModel.State.SCANNING) {
-                delay(FETCH_SCAN_STATE_DELAY_MILLIS)
-            } else {
+
+            if (scanStateModel.state != ScanStateModel.State.SCANNING) {
                 return@flow
             }
+            delay(FETCH_SCAN_STATE_DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 
