@@ -31,7 +31,7 @@ class DynamicCardStore
                 dynamicCardSqlUtils.remove(siteId, dynamicCardType)
             }
 
-    suspend fun hideCard(siteId: Int, dynamicCardType: DynamicCardType)  =
+    suspend fun hideCard(siteId: Int, dynamicCardType: DynamicCardType) =
             coroutineEngine.withDefaultContext(T.MAIN, this, "Hide dynamic card") {
                 val currentHiddenCards = hiddenCards[siteId]?.toMutableSet() ?: mutableSetOf()
                 currentHiddenCards.add(dynamicCardType)
