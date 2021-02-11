@@ -34,6 +34,7 @@ class ExPlat
     }
 
     fun clear() {
+        appLog.d(T.API, "ExPlat: clearing cached assignments")
         experimentStore.clearCachedAssignments()
     }
 
