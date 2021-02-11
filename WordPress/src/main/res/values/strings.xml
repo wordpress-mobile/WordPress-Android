@@ -3002,7 +3002,8 @@
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
-    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>
