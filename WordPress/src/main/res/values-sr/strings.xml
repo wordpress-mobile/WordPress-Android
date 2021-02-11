@@ -145,7 +145,6 @@ Language: sr_RS
     <string name="gutenberg_native_choose_image_or_video">Одабери слику или видео запис</string>
     <string name="gutenberg_native_choose_image">Одабери слику</string>
     <string name="gutenberg_native_block_removed">Уклоњен блок</string>
-    <string name="continue_with_wpcom">Настави са WordPress.com</string>
     <string name="signup_confirmation_title">Потврда пријаве</string>
     <string name="enter_your_site_address">Унесите постојећу адресу свој сајта</string>
     <string name="continue_terms_of_service_text">Наставком, прихваћате наше %1$sУслове коришћења%2$s.</string>
@@ -814,7 +813,6 @@ Language: sr_RS
     <string name="my_site_icon_dialog_cancel_button">Откажи</string>
     <string name="my_site_icon_dialog_change_button">Промени</string>
     <string name="my_site_icon_dialog_change_requires_permission_message">Немате дозволу да уређујете иконицу сајта</string>
-    <string name="activity">Активност</string>
     <string name="activity_log_icon">Иконица активности</string>
     <string name="reader_followed_blog_notifications">Омогући обавештења за %1$s%2$s%3$s?</string>
     <string name="reader_btn_notifications_on">Укључи обавештења сајта</string>
@@ -1365,13 +1363,7 @@ Language: sr_RS
     <string name="invite_error_invalid_usernames_multiple">Неисправни емаил-ови или корисничка имена: позивнице нису познате</string>
     <string name="invite_error_invalid_usernames_one">Корисничко име или емаил нису исправни: позивница није послата</string>
     <string name="invite_error_no_usernames">Молимо вас додајте бар једно корисничко име</string>
-    <string name="invite_message_info">(Опционо) Можете да додате личну поруку дужине до 500 карактера која ће бити укључена у позивницу корисницима.</string>
-    <string name="invite_message_remaining_other">%d карактера је преостало</string>
-    <string name="invite_message_remaining_one">1 карактер је преостао</string>
-    <string name="invite_message_remaining_zero">0 карактера је преостало</string>
-    <string name="invite_message_title">Лична порука</string>
     <string name="invite">Позови</string>
-    <string name="invite_names_title">Корисничка имена или емаилови</string>
     <string name="invite_people">Позови људе</string>
     <string name="send_link">Пошаљи линк</string>
     <string name="my_site_header_external">Спољни</string>

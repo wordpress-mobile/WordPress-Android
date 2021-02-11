@@ -92,13 +92,7 @@ Language: vi_VN
     <string name="invite_error_invalid_usernames_multiple">Không thể gửi: Có tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_invalid_usernames_one">Không thể gửi: Một tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_no_usernames">Vui lòng thêm ít nhất 1 tên người dùng</string>
-    <string name="invite_message_info">(Tùy chọn) Bạn có thể nhập một tin nhắn tùy chỉnh lên tới 500 kí tự mà sẽ được bao gồm trong lời mời tới người dùng.</string>
-    <string name="invite_message_remaining_other">%d kí tự còn lại</string>
-    <string name="invite_message_remaining_one">1 kí tự còn lại</string>
-    <string name="invite_message_remaining_zero">0 kí tự còn lại</string>
-    <string name="invite_message_title">Tin nhắn tùy chỉnh</string>
     <string name="invite">Mời</string>
-    <string name="invite_names_title">Tên người dùng hoặc Email</string>
     <string name="send_link">Gửi liên kết</string>
     <string name="invite_people">Mời mọi người</string>
     <string name="my_site_header_external">Mở rộng</string>

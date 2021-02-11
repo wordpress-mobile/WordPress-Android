@@ -2,11 +2,14 @@ package org.wordpress.android.viewmodel.main
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
@@ -26,6 +29,8 @@ import org.wordpress.android.util.SiteUtils.hasFullAccessToContent
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
+import org.wordpress.android.util.map
+import org.wordpress.android.util.mapNullable
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -90,6 +95,11 @@ class WPMainActivityViewModel @Inject constructor(
 
     private val _completeBottomSheetQuickStartTask = SingleLiveEvent<Unit>()
     val completeBottomSheetQuickStartTask: LiveData<Unit> = _completeBottomSheetQuickStartTask
+
+    val onFocusPointVisibilityChange = quickStartRepository.activeTask
+            .mapNullable { getExternalFocusPointInfo(it) }
+            .distinctUntilChanged()
+            .map { Event(it) } as LiveData<Event<List<FocusPointInfo>>>
 
     fun start(site: SiteModel?) {
         if (isStarted) return
@@ -287,4 +297,15 @@ class WPMainActivityViewModel @Inject constructor(
     private fun shouldShowStories(site: SiteModel?): Boolean {
         return wpStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(site)
     }
+
+    private fun getExternalFocusPointInfo(task: QuickStartTask?): List<FocusPointInfo> {
+        // For now, we only do this for the FOLLOW_SITE task.
+        val followSitesTaskFocusPointInfo = FocusPointInfo(FOLLOW_SITE, task == FOLLOW_SITE)
+        return listOf(followSitesTaskFocusPointInfo)
+    }
+
+    data class FocusPointInfo(
+        val task: QuickStartTask,
+        val isVisible: Boolean
+    )
 }
