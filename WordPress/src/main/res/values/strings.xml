@@ -1080,17 +1080,17 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
-    <string name="scan_fixing_threats_title">Fixing Threats</string>
-    <string name="scan_fixing_threat_title">Fixing Threat</string>
+    <string name="scan_fixing_threats_title_plural">Fixing Threats</string>
+    <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
-    <string name="scan_fixing_threats_description">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
-    <string name="scan_fixing_threat_description">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description_singular">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_with_threats_description">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_with_threat_description">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hours ago</string>
@@ -1108,8 +1108,8 @@
 
     <!-- threats -->
     <string name="threats_fix_all">Fix All</string>
-    <string name="threats_found">Threats found</string>
-    <string name="threat_found">Threat found</string>
+    <string name="threats_found_plural">Threats found</string>
+    <string name="threats_found_singular">Threat found</string>
     <string name="threat_fixing">Fixing threat</string>
 
     <!-- threat item header -->
@@ -1162,11 +1162,11 @@
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
-    <string name="threat_fix_all_warning_message">Please confirm you want to fix all %s active threats.</string>
-    <string name="threat_fix_single_warning_message">Please confirm you want to fix %s active threat.</string>
+    <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
+    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix %s active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
-    <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
-    <string name="threat_fix_single_status_success_message">Threat was successfully fixed.</string>
+    <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->

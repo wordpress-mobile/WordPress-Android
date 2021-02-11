@@ -101,7 +101,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(scanStateItems.filterIsInstance(HeaderState::class.java).first()).isEqualTo(
-            HeaderState(UiStringRes(R.string.scan_fixing_threat_title))
+            HeaderState(UiStringRes(R.string.scan_fixing_threats_title_singular))
         )
     }
 
@@ -113,7 +113,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
         )
 
         assertThat(scanStateItems.filterIsInstance(DescriptionState::class.java).first()).isEqualTo(
-            DescriptionState(UiStringRes(R.string.scan_fixing_threat_description))
+            DescriptionState(UiStringRes(R.string.scan_fixing_threats_description_singular))
         )
     }
 

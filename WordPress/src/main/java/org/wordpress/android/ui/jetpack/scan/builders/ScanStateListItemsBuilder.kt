@@ -71,12 +71,12 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val scanIcon = buildScanIcon(R.drawable.ic_shield_warning_white, R.color.error)
         val scanHeaderResId = if (fixingThreatIds.size > 1) {
-            R.string.scan_fixing_threats_title
-        } else R.string.scan_fixing_threat_title
+            R.string.scan_fixing_threats_title_plural
+        } else R.string.scan_fixing_threats_title_singular
         val scanHeader = HeaderState(UiStringRes(scanHeaderResId))
         val scanDescriptionResId = if (fixingThreatIds.size > 1) {
-            R.string.scan_fixing_threats_description
-        } else R.string.scan_fixing_threat_description
+            R.string.scan_fixing_threats_description_plural
+        } else R.string.scan_fixing_threats_description_singular
         val scanDescription = DescriptionState(UiStringRes(scanDescriptionResId))
         val scanProgress = ProgressState(isIndeterminate = true, isVisible = fixingThreatIds.isNotEmpty())
 
@@ -257,8 +257,8 @@ class ScanStateListItemsBuilder @Inject constructor(
         val clickableText = resourceProvider.getString(R.string.scan_here_to_help)
 
         val descriptionTextResId = if (threatsCount > 1) {
-            R.string.scan_idle_with_threats_description
-        } else R.string.scan_idle_with_threat_description
+            R.string.scan_idle_with_threats_description_plural
+        } else R.string.scan_idle_with_threats_description_singular
         val descriptionText = htmlMessageUtils
             .getHtmlMessageFromStringFormatResId(
                 descriptionTextResId,

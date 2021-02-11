@@ -193,8 +193,8 @@ class ScanViewModel @Inject constructor(
                 is FetchFixThreatsState.Complete -> {
                     someOrAllThreatFixed = true
                     messageRes = if (status.fixedThreatsCount == 1) {
-                        R.string.threat_fix_single_status_success_message
-                    } else R.string.threat_fix_all_status_success_message
+                        R.string.threat_fix_all_status_success_message_singular
+                    } else R.string.threat_fix_all_status_success_message_plural
                 }
                 is FetchFixThreatsState.Failure.NetworkUnavailable -> {
                     scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.OFFLINE)
@@ -247,8 +247,8 @@ class ScanViewModel @Inject constructor(
                 title = UiStringRes(R.string.threat_fix_all_warning_title),
                 message = UiStringResWithParams(
                     if (fixableThreatIds.size > 1) {
-                        R.string.threat_fix_all_warning_message
-                    } else R.string.threat_fix_single_warning_message,
+                        R.string.threat_fix_all_warning_message_plural
+                    } else R.string.threat_fix_all_warning_message_singular,
                     listOf(UiStringText("${fixableThreatIds.size}"))
                 ),
                 okButtonAction = this@ScanViewModel::fixAllThreats

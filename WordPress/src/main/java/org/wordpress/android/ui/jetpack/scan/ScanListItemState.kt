@@ -12,7 +12,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
     data class ThreatsHeaderItemState(val threatsCount: Int) : ScanListItemState(
         ViewType.THREATS_HEADER
     ) {
-        val text = UiStringRes(if (threatsCount > 1) R.string.threats_found else R.string.threat_found)
+        val text = UiStringRes(if (threatsCount > 1) R.string.threats_found_plural else R.string.threats_found_singular)
     }
 
     data class ThreatItemState(

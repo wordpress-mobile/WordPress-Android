@@ -387,7 +387,7 @@ class ScanViewModelTest : BaseUnitTest() {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
                 assertThat(message).isEqualTo(
                     UiStringResWithParams(
-                        R.string.threat_fix_single_warning_message,
+                        R.string.threat_fix_all_warning_message_singular,
                         listOf(UiStringText("1"))
                     )
                 )
@@ -433,7 +433,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
             assertThat(snackBarMsg).isEqualTo(
-                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message))
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_plural))
             )
         }
 
@@ -449,7 +449,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
             val snackBarMsg = observers.snackBarMsgs.last().peekContent()
             assertThat(snackBarMsg).isEqualTo(
-                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_single_status_success_message))
+                SnackbarMessageHolder(UiStringRes(R.string.threat_fix_all_status_success_message_singular))
             )
         }
 
