@@ -29,6 +29,10 @@ class ExPlat
         getAssignments(refreshStrategy = IF_STALE)
     }
 
+    fun forceRefresh() {
+        getAssignments(refreshStrategy = ALWAYS)
+    }
+
     fun clear() {
         experimentStore.clearCachedAssignments()
     }

@@ -61,6 +61,15 @@ class ExPlatTest : BaseUnitTest() {
     }
 
     @Test
+    fun `forceRefresh fetches assignments if cache is fresh`() = test {
+        setupAssignments(cachedAssignments = buildAssignments(isStale = true), fetchedAssignments = buildAssignments())
+
+        exPlat.forceRefresh()
+
+        verify(experimentStore, times(1)).fetchAssignments(any())
+    }
+
+    @Test
     fun `clear calls experiment store`() = test {
         exPlat.clear()
 
