@@ -16,7 +16,10 @@ class GutenbergLayoutModel(
     @Column var siteId: Int = 0, // Foreign key
     @Column var title: String = "",
     @Column var preview: String = "",
-    @Column var content: String = ""
+    @Column(name = "PREVIEW_TABLET") var previewTablet: String = "",
+    @Column(name = "PREVIEW_MOBILE") var previewMobile: String = "",
+    @Column var content: String = "",
+    @Column(name = "DEMO_URL") var demoUrl: String = ""
 ) : Identifiable {
     override fun getId() = id
 
@@ -30,14 +33,20 @@ fun GutenbergLayout.transform(site: SiteModel) = GutenbergLayoutModel(
         siteId = site.id,
         title = title,
         preview = preview,
-        content = content
+        previewMobile = previewMobile,
+        previewTablet = previewTablet,
+        content = content,
+        demoUrl = demoUrl
 )
 
 fun GutenbergLayoutModel.transform(categories: List<GutenbergLayoutCategoryModel>) = GutenbergLayout(
         slug = slug,
         title = title,
         preview = preview,
+        previewTablet = previewTablet,
+        previewMobile = previewMobile,
         content = content,
+        demoUrl = demoUrl,
         categories = categories.transform()
 )
 
