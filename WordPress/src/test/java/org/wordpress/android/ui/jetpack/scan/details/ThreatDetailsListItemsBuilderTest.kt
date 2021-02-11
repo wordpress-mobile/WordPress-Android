@@ -6,7 +6,6 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
@@ -123,8 +122,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(threatModel)
 
         // Assert
-        Assertions.assertThat(threatItems).size().isEqualTo(7)
-        Assertions.assertThat(threatItems).containsSequence(
+        assertThat(threatItems).size().isEqualTo(7)
+        assertThat(threatItems).containsSequence(
             expectedThreatDetailHeaderState,
             expectedFoundHeader,
             expectedFoundSubHeader,
@@ -159,7 +158,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(fileThreatModelWithFileName)
 
         // Assert
-        Assertions.assertThat(threatItems).containsSequence(
+        assertThat(threatItems).containsSequence(
             expectedTechnicalDetailsHeaderItem,
             expectedFileNameDescriptionItem,
             expectedFileNameItem,
@@ -181,7 +180,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(ThreatTestData.coreFileModificationThreatModel)
 
         // Assert
-        Assertions.assertThat(threatItems).containsSubsequence(
+        assertThat(threatItems).containsSubsequence(
             expectedTechnicalDetailsHeaderItem,
             expectedFileNameDescriptionItem,
             expectedFileNameItem,
@@ -205,7 +204,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
         // Assert
-        Assertions.assertThat(threatItems).containsSubsequence(
+        assertThat(threatItems).containsSubsequence(
             expectedFixableHeaderItem,
             expectedFixableDescriptionItem
         )
@@ -227,7 +226,7 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(notFixableThreat)
 
         // Assert
-        Assertions.assertThat(threatItems).contains(expectedNotFixableHeaderItem)
+        assertThat(threatItems).contains(expectedNotFixableHeaderItem)
         verify(htmlMessageUtils).getHtmlMessageFromStringFormatResId(expectedNotFixableDescriptionStringResId)
     }
 
@@ -242,8 +241,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
-        Assertions.assertThat(buttonItems).size().isEqualTo(2)
-        Assertions.assertThat(buttonItems).contains(
+        assertThat(buttonItems).size().isEqualTo(2)
+        assertThat(buttonItems).contains(
             fixThreatButtonItem,
             ignoreThreatButtonItem
         )
@@ -260,8 +259,8 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
 
         // Assert
         val buttonItems = threatItems.filterIsInstance(ActionButtonState::class.java)
-        Assertions.assertThat(buttonItems).size().isEqualTo(2)
-        Assertions.assertThat(buttonItems).contains(
+        assertThat(buttonItems).size().isEqualTo(2)
+        assertThat(buttonItems).contains(
             getFreeEstimateButtonItem,
             ignoreThreatButtonItem
         )
