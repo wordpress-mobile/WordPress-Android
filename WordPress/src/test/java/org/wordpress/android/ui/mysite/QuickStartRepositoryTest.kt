@@ -29,6 +29,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -224,7 +226,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `hides CUSTOMIZE category`() = test {
         initStore()
 
-        quickStartRepository.hideCategory(CUSTOMIZE.toString())
+        quickStartRepository.hideCategory(CUSTOMIZE_QUICK_START)
 
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
@@ -237,7 +239,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `hides GROW category`() = test {
         initStore()
 
-        quickStartRepository.hideCategory(GROW.toString())
+        quickStartRepository.hideCategory(GROW_QUICK_START)
 
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
@@ -250,7 +252,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `removes CUSTOMIZE category`() = test {
         initStore()
 
-        quickStartRepository.removeCategory(CUSTOMIZE.toString())
+        quickStartRepository.removeCategory(CUSTOMIZE_QUICK_START)
 
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {
@@ -265,7 +267,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `removes GROW category`() = test {
         initStore()
 
-        quickStartRepository.removeCategory(GROW.toString())
+        quickStartRepository.removeCategory(GROW_QUICK_START)
 
         val quickStartUpdate = result.last()
         quickStartUpdate.categories.apply {

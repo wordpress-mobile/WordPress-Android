@@ -6,8 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: id
 -->
 <resources>
-    <string name="restore_complete_failed_description">Kami tidak dapat memulihkan situs Anda. Silakan coba kembali.</string>
-    <string name="rewind_another_process_running">Pemulihan lain yang sedang berlangsung.</string>
     <string name="restore_complete_failed_icon_content_description">Ikon Error</string>
     <string name="restore_complete_failed_action_button_content_description">Tombol Selesai</string>
     <string name="restore_complete_header">Situs Anda telah dipulihkan</string>
@@ -17,7 +15,6 @@ Language: id
     <string name="restore_complete_done_button_content_description">Tombol Selesai</string>
     <string name="restore_complete_icon_content_description">Ikon Pulihkan</string>
     <string name="restore_complete_description_with_two_parameters">Semua item yang Anda pilih sekarang telah dipulihkan kembali ke %1$s %2$s.</string>
-    <string name="restore_progress_additional_info">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika situs telah dipulihkan.</string>
     <string name="restore_progress_description_with_two_parameters">Kami memulihkan situs Anda ke %1$s %2$s.</string>
     <string name="restore_progress_icon_content_description">Pulihkan ikon situs</string>
     <string name="restore_progress_header">Sedang memulihkan situs</string>
@@ -25,9 +22,6 @@ Language: id
     <string name="restore_warning_header">Peringatan</string>
     <string name="restore_details_action_button_content_description">Pulihkan tombol situs</string>
     <string name="restore_warning_icon_content_description">Gambar lingkaran merah dengan tanda seru</string>
-    <string name="restore_warning_action_button">Konfirmasi pulihkan situs</string>
-    <string name="restore_warning_description_with_two_parameters">Anda yakin ingin mengembalikan situs ke %1$s pada %2$s?\n Tindakan ini akan menghapus semua konten dan opsi yang dibuat atau diubah sejak saat itu.</string>
-    <string name="backup_download_complete_failed_description">Kami tidak dapat membuat pencadangan untuk Anda. Silakan coba kembali.</string>
     <string name="restore_details_header">Pulihkan Situs</string>
     <string name="restore_details_action_button">Pulihkan situs</string>
     <string name="restore_details_icon_content_description">Pulihkan ikon</string>
@@ -57,8 +51,6 @@ Language: id
     <string name="reader_error_changing_seen_status_of_unsupported_post">Tidak dapat mengubah status dilihat pos ini</string>
     <string name="reader_marked_post_as_unseen">Menandai pos sebagai belum dilihat</string>
     <string name="reader_marked_post_as_seen">Menandai pos sebagai dilihat</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Tidak semua ancaman dapat diperbaiki. Silakan hubungi tim dukungan kami.</string>
-    <string name="threat_fix_all_started_message">Kami sedang berusaha mengatasi ancaman. Harap periksa kembali sesaat lagi.</string>
     <string name="threat_fix_all_status_success_message">Ancaman berhasil ditangani.</string>
     <string name="threat_fix_all_status_error_message">Terjadi error saat mendapatkan status perbaikan. Silakan hubungi tim dukungan kami.</string>
     <string name="threat_fix_all_error_message">Terjadi error saat memperbaiki ancaman. Silakan hubungi tim dukungan kami.</string>
@@ -71,11 +63,9 @@ Language: id
     <string name="backup_empty_subtitle">Pencadangan pertama Anda akan muncul di sini dalam waktu 24 jam dan Anda akan menerima pemberitahuan setelah pencadangan selesai.</string>
     <string name="backup_active_filter_empty_subtitle">Coba sesuaikan rentang tanggal Anda</string>
     <string name="threat_item_sub_header_status_ignored">Ancaman diabaikan</string>
-    <string name="threat_item_sub_header_status_fixed">Ancaman telah ditangani</string>
     <string name="scan_scanning_title">Memindai berkas</string>
     <string name="scan_history">Riwayat Pindai</string>
     <string name="threat_fixing">Memperbaiki ancaman</string>
-    <string name="threats_fix_num_of_threats">Perbaiki %s ancaman</string>
     <string name="scan_history_ignored_threats_tab">Diabaikan</string>
     <string name="scan_history_no_threats_found">Tidak ada item yang ditemukan</string>
     <string name="scan_history_fixed_threats_tab">Tetap</string>
@@ -85,7 +75,6 @@ Language: id
     <string name="backup_active_filter_empty_title">Tidak ditemukan cadangan yang cocok</string>
     <string name="backup_empty_title">Pencadangan pertama Anda akan segera tersedia</string>
     <string name="request_failed_message">Terdapat kendala saat menangani permintaan. Silakan coba kembali.</string>
-    <string name="gutenberg_native_move_block_position">Pindah posisi blok</string>
     <string name="gutenberg_native_move_to_bottom">Pindah ke bawah</string>
     <string name="label_control_upload">Unggah</string>
     <string name="jetpack_icon_content_description">ikon</string>
@@ -98,10 +87,7 @@ Language: id
     <string name="backup_download_complete_description_with_two_parameters">Kami berhasil membuat cadangan situs Anda dari %1$s %2$s.</string>
     <string name="backup_download_complete_header">Cadangan Anda sudah dapat diunduh</string>
     <string name="backup_download_complete_page_title">Cadangan Anda</string>
-    <string name="backup_download_progress_additional_info">Tidak perlu lagi menunggu. Kami akan memberi tahu Anda jika cadangan telah siap</string>
-    <string name="backup_download_progress_action_button_content_description">Tombol OK, beri tahu saya</string>
     <string name="backup_download_progress_icon_content_description">Membuat ikon cadangan yang dapat diunduh</string>
-    <string name="backup_download_progress_action_button">OK, beri tahu saya!</string>
     <string name="backup_download_progress_description_with_two_parameters">Kami sedang membuat cadangan situs yang dapat Anda unduh dari %1$s %2$s.</string>
     <string name="backup_download_progress_header">Sedang membuat cadangan situs Anda yang dapat diunduh</string>
     <string name="backup_download_progress_label">%1$s%%</string>
@@ -135,7 +121,6 @@ Language: id
     <string name="threat_file_description">Ancaman yang ditemukan di file:</string>
     <string name="threat_technical_details_header">Rincian teknis</string>
     <string name="threat_problem_header">Apa masalahnya?</string>
-    <string name="threat_details_icon">Ikon detail ancaman</string>
     <string name="threat_details">Detail Ancaman</string>
     <string name="threat_item_sub_header_vulnerable_theme">Kerentanan ditemukan dalam Tema</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Kerentanan ditemukan dalam Plugin</string>
@@ -153,10 +138,6 @@ Language: id
     <string name="scan_in_minutes_ago">%s menit yang lalu</string>
     <string name="scan_in_hours_ago">%s jam yang lalu</string>
     <string name="scan_this_site">situs ini</string>
-    <string name="scan_idle_threats_found_description">Pemindaian menemukan %s potensi ancaman di %s. Tinjau di bawah ini dan ambil tindakan. Kami siap membantu jika Anda membutuhkan kami.</string>
-    <string name="scan_idle_last_scan_description">Pemindaian Jetpack terakhir berjalan %s dan semuanya tampak baik. %s</string>
-    <string name="scan_idle_manual_scan_description">Jalankan pemindaian manual sekarang juga atau tunggu Jetpack memindai situs Anda nanti.</string>
-    <string name="scan_scanning_description">Selamat datang di Jetpack Scan, kami sedang memeriksa situs Anda untuk pertama kali dan hasilnya akan segera muncul. \n\n \n Kami akan mengirimkan pemberitahuan setelah pemindaian selesai dilakukan. Sementara itu Anda dapat terus menggunakan situs seperti biasa, Anda dapat memeriksa progresnya kapan saja.</string>
     <string name="scan_idle_threats_found_title">Situs Anda mungkin berada dalam risiko</string>
     <string name="scan_idle_no_threats_found_title">Jangan khawatir</string>
     <string name="scan_again">Pindai lagi</string>
@@ -175,15 +156,11 @@ Language: id
     <string name="activity_log_active_filter_empty_subtitle">Coba sesuaikan rentang tanggal atau penyaring jenis aktivitas</string>
     <string name="activity_log_active_filter_empty_title">Tidak ditemukan acara yang cocok</string>
     <string name="rewind">Pulihkan</string>
-    <string name="backup_item_sqls">Database situs (SQL)</string>
-    <string name="backup_item_contents">Direktori WP-content (kecuali tema, plugin, dan unggahan)</string>
-    <string name="backup_item_roots">Root WordPress (termasuk wp-config.php dan file apa pun selain WordPress)</string>
     <string name="backup_item_media_uploads">Unggahan Media</string>
     <string name="backup_item_plugins">Plugin WordPress</string>
     <string name="backup_item_themes">Tema WordPress</string>
     <string name="backup_download_details_icon_content_description">Buat ikon cadangan yang dapat diunduh</string>
     <string name="backup_download_details_action_button">Buat file yang dapat diunduh</string>
-    <string name="backup_download_details_choose_items_header">Pilih item yang ingin Anda sertakan dalam unduhan:</string>
     <string name="backup_download_details_header">Buat cadangan yang dapat diunduh</string>
     <string name="backup_download_details_page_title">Unduh Cadangan</string>
     <string name="backup_download">Unduhan Cadangan</string>
@@ -208,7 +185,6 @@ Language: id
     <string name="gutenberg_native_copy_file_url">Salin URL file</string>
     <string name="gutenberg_native_choose_a_file">PILIH FILE</string>
     <string name="new_site_creation_domain_header_title">Pilih domain</string>
-    <string name="my_site_btn_jetpack_settings">Pengaturan Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Tidak dapat berhenti berlangganan komentar pos ini</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Tidak dapat berlangganan komentar pos ini</string>
@@ -433,7 +409,6 @@ Language: id
     <string name="gutenberg_native_choose_image_or_video">Pilih gambar atau video</string>
     <string name="gutenberg_native_choose_image">Pilih gambar</string>
     <string name="gutenberg_native_block_removed">Blok dihapus</string>
-    <string name="continue_with_wpcom">Lanjutkan dengan WordPress.com</string>
     <string name="signup_confirmation_title">Konfirmasi pendaftaran</string>
     <string name="continue_with_google_terms_of_service_text">Jika Anda melanjutkan dengan Google dan belum memiliki akun WordPress.com, Anda akan membuat akun dan menyetujui  %1$sKetentuan Layanan%2$s kami.</string>
     <string name="enter_your_site_address">Masukkan alamat situs Anda yang sudah ada</string>
@@ -904,7 +879,6 @@ Language: id
     <string name="post_settings_notification">Pemberitahuan</string>
     <string name="post_settings_time_and_date">Tanggal dan Waktu</string>
     <string name="login_need_help_finding_connected_email">Perlu bantuan untuk menemukan email yang terhubung dengan Anda?</string>
-    <string name="enter_wordpress_site">Situs web di alamat ini bukan situs WordPress. Agar kami dapat terhubung ke situs tersebut, situs harus menggunakan WordPress.</string>
     <string name="login_invalid_site_url">Masukkan alamat situs web lengkap, seperti contoh.com.</string>
     <string name="enter_email_for_site">Login dengan WordPress.com untuk terhubung ke %1$s</string>
     <string name="stats_post_views_label">Tampilan</string>
@@ -1409,7 +1383,6 @@ Language: id
     <string name="activity_log_event">Peristiwa</string>
     <string name="activity_log_icon">Ikon aktivitas</string>
     <string name="activity_log">Log Aktivitas</string>
-    <string name="activity">Aktivitas</string>
     <string name="privacy_policy_read">Baca kebijakan privasi</string>
     <string name="third_party_policy_learn_more_caption">Kami menggunakan alat pelacakan lainnya, termasuk beberapa dari pihak ketiga. Baca tentang hal ini dan cara mengontrolnya.</string>
     <string name="third_party_policy_learn_more_header">Kebijakan Pihak Ketiga</string>
@@ -2094,13 +2067,7 @@ Language: id
     <string name="invite_error_invalid_usernames_multiple">Gagal mengirim: Ada nama pengguna atau email yang tak valid</string>
     <string name="invite_error_invalid_usernames_one">Gagal mengirim: Ada sebuah nama pengguna atau email yang tak valid</string>
     <string name="invite_error_no_usernames">Mohon tambahkan sedikitnya satu nama pengguna</string>
-    <string name="invite_message_info">(Opsional) Anda bisa memasukkan sebuah pesan sepanjang 500 karakter yang akan disertakan dalam undangan bagi para pengguna.</string>
-    <string name="invite_message_remaining_other">%d karakter tersisa</string>
-    <string name="invite_message_remaining_one">1 karakter tersisa</string>
-    <string name="invite_message_remaining_zero">0 karakter tersisa</string>
-    <string name="invite_message_title">Pesan Kustom</string>
     <string name="invite">Undang</string>
-    <string name="invite_names_title">Nama pengguna atau Email</string>
     <string name="send_link">Kirim tautan</string>
     <string name="my_site_header_external">Eksternal</string>
     <string name="invite_people">Undang Orang-orang</string>

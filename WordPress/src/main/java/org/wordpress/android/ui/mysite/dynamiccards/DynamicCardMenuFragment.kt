@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mysite
+package org.wordpress.android.ui.mysite.dynamiccards
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -15,16 +15,19 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.util.image.ImageManager
 import javax.inject.Inject
 
-class QuickStartMenuFragment : BottomSheetDialogFragment() {
+class DynamicCardMenuFragment : BottomSheetDialogFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
-    private lateinit var viewModel: QuickStartMenuViewModel
+    private lateinit var viewModel: DynamicCardMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().applicationContext as WordPress).component().inject(this)
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(QuickStartMenuViewModel::class.java)
-        viewModel.id = requireArguments().getString(ID_ARG_KEY)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(DynamicCardMenuViewModel::class.java)
+        viewModel.start(
+                requireNotNull(requireArguments().getString(ID_ARG_KEY)),
+                requireArguments().getBoolean(IS_PINNED_KEY)
+        )
     }
 
     override fun onCreateView(
@@ -36,6 +39,12 @@ class QuickStartMenuFragment : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val quickStartCardMenuPin = if (viewModel.isPinned) {
+            R.string.quick_start_card_menu_unpin
+        } else {
+            R.string.quick_start_card_menu_pin
+        }
+        quick_start_pin_text.setText(quickStartCardMenuPin)
         pin_action.setOnClickListener { invokeAndDismiss { viewModel.onPinActionClicked() } }
         hide_action.setOnClickListener { invokeAndDismiss { viewModel.onHideActionClicked() } }
         remove_action.setOnClickListener { invokeAndDismiss { viewModel.onRemoveActionClicked() } }
@@ -61,11 +70,17 @@ class QuickStartMenuFragment : BottomSheetDialogFragment() {
 
     companion object {
         const val ID_ARG_KEY = "ID_ARG_KEY"
+        const val IS_PINNED_KEY = "PINNED_KEY"
 
-        fun newInstance(id: String) = QuickStartMenuFragment().apply {
+        fun newInstance(cardType: DynamicCardType, isPinned: Boolean) = DynamicCardMenuFragment().apply {
             arguments = Bundle().apply {
-                putString(ID_ARG_KEY, id)
+                putString(ID_ARG_KEY, cardType.name)
+                putBoolean(IS_PINNED_KEY, isPinned)
             }
         }
+    }
+
+    data class DynamicCardMenuModel(val cardType: DynamicCardType, val isPinned: Boolean) {
+        val id = cardType.name
     }
 }

@@ -5,14 +5,11 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.model.SiteModel
@@ -38,10 +35,6 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
-
-    @ExperimentalCoroutinesApi
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
 
     @Before
     fun setup() = test {
@@ -72,7 +65,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given failure without download id, when backup status triggers, then return remote request failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.fetchBackupDownloadState(any()))
                         .thenReturn(
                                 OnBackupDownloadStatusFetched(
@@ -82,14 +75,13 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                         )
 
                 val result = useCase.getBackupDownloadStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(RemoteRequestFailure)
             }
 
     @Test
     fun `given failure with download id, when backup status triggers, then return remote request failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.fetchBackupDownloadState(any())).thenReturn(
                         OnBackupDownloadStatusFetched(
                                 BackupDownloadStatusError(GENERIC_ERROR),
@@ -98,7 +90,6 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                 )
 
                 val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(RemoteRequestFailure)
             }
@@ -141,7 +132,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
 
     @Test
     fun `given download in process without download id, when backup status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getBackupDownloadStatusForSite(site))
                         .thenReturn(inProgressModel)
                         .thenReturn(statusModel)
@@ -149,14 +140,13 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                         .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
                 val result = useCase.getBackupDownloadStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(progressStatus, completeStatus)
             }
 
     @Test
     fun `given download in process with download id, when backup status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getBackupDownloadStatusForSite(site))
                         .thenReturn(inProgressModel)
                         .thenReturn(statusModel)
@@ -164,9 +154,58 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                         .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
 
                 val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(progressStatus, completeStatus)
+            }
+
+    @Test
+    fun `given max fetch retries exceeded, when backup status triggers, then return remote request failure`() =
+            test {
+                whenever(activityLogStore.fetchBackupDownloadState(any()))
+                        .thenReturn(
+                            OnBackupDownloadStatusFetched(
+                                    BackupDownloadStatusError(GENERIC_ERROR),
+                                    FETCH_BACKUP_DOWNLOAD_STATE
+                            ))
+                            .thenReturn(
+                                    OnBackupDownloadStatusFetched(
+                                            BackupDownloadStatusError(GENERIC_ERROR),
+                                            FETCH_BACKUP_DOWNLOAD_STATE
+                            ))
+                            .thenReturn(
+                                    OnBackupDownloadStatusFetched(
+                                            BackupDownloadStatusError(GENERIC_ERROR),
+                                            FETCH_BACKUP_DOWNLOAD_STATE
+                            ))
+
+                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+
+                assertThat(result).size().isEqualTo(1)
+                assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+            }
+
+    @Test
+    fun `given fetch error under retry count, when backup status triggers, then return progress`() =
+            test {
+                whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                        .thenReturn(inProgressModel)
+                        .thenReturn(statusModel)
+                whenever(activityLogStore.fetchBackupDownloadState(any()))
+                        .thenReturn(
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                ))
+                        .thenReturn(
+                                OnBackupDownloadStatusFetched(
+                                        BackupDownloadStatusError(GENERIC_ERROR),
+                                        FETCH_BACKUP_DOWNLOAD_STATE
+                                ))
+                        .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+
+                val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+
+                assertThat(result).isEqualTo(listOf(progressStatus, completeStatus))
             }
 
     private val rewindId = "rewindId"
