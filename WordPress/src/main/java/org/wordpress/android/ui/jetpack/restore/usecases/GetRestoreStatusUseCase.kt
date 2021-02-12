@@ -38,6 +38,7 @@ class GetRestoreStatusUseCase @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
     private val tag = javaClass.simpleName
+    @Suppress("ComplexMethod", "LoopWithTooManyJumpStatements")
     suspend fun getRestoreStatus(
         site: SiteModel,
         restoreId: Long? = null
