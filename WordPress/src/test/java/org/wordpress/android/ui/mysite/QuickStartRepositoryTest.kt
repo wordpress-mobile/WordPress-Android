@@ -15,7 +15,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
@@ -32,6 +31,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.test
+import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -85,7 +85,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site = SiteModel()
         site.id = siteId
         result = mutableListOf()
-        quickStartRepository.buildSource(TEST_SCOPE, siteId).observeForever { result.add(it) }
+        quickStartRepository.buildSource(testScope(), siteId).observeForever { result.add(it) }
     }
 
     @Test
@@ -208,7 +208,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         whenever(quickStartStore.hasDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE)).thenReturn(false)
 
-        quickStartRepository.buildSource(TEST_SCOPE, updatedSiteId)
+        quickStartRepository.buildSource(testScope(), updatedSiteId)
 
         verify(quickStartStore).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }
@@ -220,7 +220,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         site.showOnFront = ShowOnFront.PAGE.value
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
 
-        quickStartRepository.buildSource(TEST_SCOPE, updatedSiteId)
+        quickStartRepository.buildSource(testScope(), updatedSiteId)
 
         verify(quickStartStore, never()).setDoneTask(updatedSiteId.toLong(), EDIT_HOMEPAGE, true)
     }

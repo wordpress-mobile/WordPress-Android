@@ -8,13 +8,13 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardsModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.test
+import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
@@ -42,7 +42,7 @@ class DynamicCardsSourceTest : BaseUnitTest() {
                 )
         )
         var result: DynamicCardsUpdate? = null
-        dynamicCardsSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        dynamicCardsSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
         assertThat(result?.cards).isEqualTo(dynamicCardTypes)

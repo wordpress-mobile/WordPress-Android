@@ -6,10 +6,10 @@ import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.AccountModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.test
+import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.CurrentAvatarUrl
 
 class CurrentAvatarSourceTest : BaseUnitTest() {
@@ -25,7 +25,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
     @Test
     fun `current avatar is empty on start`() = test {
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.buildSource(TEST_SCOPE).observeForever { it?.let { result = it } }
+        currentAvatarSource.buildSource(testScope()).observeForever { it?.let { result = it } }
 
         assertThat(result!!.url).isEqualTo("")
     }
@@ -37,7 +37,7 @@ class CurrentAvatarSourceTest : BaseUnitTest() {
         whenever(accountModel.avatarUrl).thenReturn(avatarUrl)
 
         var result: CurrentAvatarUrl? = null
-        currentAvatarSource.buildSource(TEST_SCOPE).observeForever { it?.let { result = it } }
+        currentAvatarSource.buildSource(testScope()).observeForever { it?.let { result = it } }
 
         currentAvatarSource.refresh()
 

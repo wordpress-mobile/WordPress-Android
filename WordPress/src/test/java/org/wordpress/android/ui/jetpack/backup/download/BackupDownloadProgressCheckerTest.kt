@@ -12,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_BACKUP_DOWNLOAD_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.BackupDownloadStatusModel
@@ -20,6 +19,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnBackupDownloadStatusFetched
+import org.wordpress.android.testScope
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -33,7 +33,7 @@ class BackupDownloadProgressCheckerTest {
     fun setUp() {
         backupDownloadProgressChecker = BackupDownloadProgressChecker(
                 activityLogStore,
-                TEST_SCOPE
+                testScope()
         )
     }
 

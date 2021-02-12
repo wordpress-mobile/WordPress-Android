@@ -12,7 +12,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.activity.RewindStatusModel
@@ -23,6 +22,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnRewindStatusFetched
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.GENERIC_ERROR
+import org.wordpress.android.testScope
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -35,7 +35,7 @@ class RewindProgressCheckerTest {
     fun setUp() {
         rewindProgressChecker = RewindProgressChecker(
                 activityLogStore,
-                TEST_SCOPE
+                testScope()
         )
     }
 
