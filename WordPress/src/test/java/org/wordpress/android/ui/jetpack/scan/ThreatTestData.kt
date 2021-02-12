@@ -51,36 +51,6 @@ object ThreatTestData {
     val genericThreatModel = GenericThreatModel(
         baseThreatModel = baseThreatModel
     )
-
-    // region data to test date functions
-
-    val genericThreatModelWithTodayDate1 = GenericThreatModel(
-        baseThreatModel = baseThreatModel.copy(
-            id = 1L,
-            firstDetected = Date(),
-        )
-    )
-    val genericThreatModelWithTodayDate2 = GenericThreatModel(
-        baseThreatModel = baseThreatModel.copy(
-             id = 2L,
-             firstDetected = Date()
-        )
-    )
-    val genericThreatModelWithYesterdayDate1 = GenericThreatModel(
-            baseThreatModel = baseThreatModel.copy(
-                    id = 3L,
-                    firstDetected = Date(System.currentTimeMillis() - 24*60*60*1000)
-            )
-    )
-    val genericThreatModelWithYesterdayDate2 = GenericThreatModel(
-            baseThreatModel = baseThreatModel.copy(
-                    id = 4L,
-                    firstDetected = Date(System.currentTimeMillis() - 24*60*60*1000)
-            )
-    )
-
-    // endregion data to test date functions
-
     val coreFileModificationThreatModel = CoreFileModificationThreatModel(
         baseThreatModel = baseThreatModel,
         fileName = TEST_FILE_PATH,

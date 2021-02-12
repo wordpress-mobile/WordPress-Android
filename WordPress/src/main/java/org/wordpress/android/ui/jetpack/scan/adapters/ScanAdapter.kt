@@ -39,7 +39,7 @@ class ScanAdapter(
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM_LOADING_SKELETON.id -> ThreatLoadingSkeletonViewHolder(parent)
-            ViewType.DETECTED_DATE.id -> ThreatsDateHeaderViewHolder(uiHelpers, parent)
+            ViewType.THREAT_DETECTED_DATE.id -> ThreatsDateHeaderViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

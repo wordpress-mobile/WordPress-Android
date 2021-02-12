@@ -285,7 +285,7 @@ class ScanStateListItemsBuilderTest : BaseUnitTest() {
     private fun createDummyThreatItemState(threatModel: ThreatModel) = ThreatItemState(
         threatId = threatModel.baseThreatModel.id,
         header = UiStringText(""),
-        firstDetectAt = UiStringText(""),
+        firstDetectedDate = UiStringText(""),
         subHeader = UiStringText(""),
         subHeaderColor = 0,
         icon = 0,

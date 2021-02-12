@@ -67,6 +67,7 @@ class ScanHistoryListViewModel @Inject constructor(
     ) = parentViewModel.threats
             .map { threatList -> filterByTabType(threatList, tabType) }
             .map { threatList -> mapToThreatUiStateList(threatList) }
+            .map { threatItemStateList -> addDateHeaders(threatItemStateList) }
             .map { threatUiStateList ->
                 if (threatUiStateList.isEmpty()) {
                     EmptyHistory
@@ -78,18 +79,19 @@ class ScanHistoryListViewModel @Inject constructor(
     private fun filterByTabType(threatList: List<ThreatModel>, tabType: ScanHistoryTabType) =
             threatList.filter { mapTabTypeToThreatStatuses(tabType).contains(it.baseThreatModel.status) }
 
-    private fun mapToThreatUiStateList(threatList: List<ThreatModel>): List<ScanListItemState> {
-        val uiStates = mutableListOf<ScanListItemState>()
-        threatList.forEach { model ->
-            val currentItem = scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
-            val previousItem = uiStates.lastOrNull() as? ThreatItemState
-            if (previousItem == null || currentItem.firstDetectAt != previousItem.firstDetectAt) {
-                uiStates.add(ThreatDateItemState(currentItem.firstDetectAt))
+    private fun mapToThreatUiStateList(threatList: List<ThreatModel>) =
+            threatList.map { model ->
+                scanThreatItemBuilder.buildThreatItem(model, this::onItemClicked)
             }
-            uiStates.add(currentItem)
-        }
-        return uiStates
-    }
+
+    private fun addDateHeaders(threatItemList: List<ThreatItemState>) =
+            threatItemList.groupBy { threatItem -> threatItem.firstDetectedDate }
+                    .flatMap { entry ->
+                        val uiStateList = mutableListOf<ScanListItemState>()
+                        uiStateList.add(ThreatDateItemState(entry.key))
+                        uiStateList.addAll(entry.value)
+                        uiStateList
+                    }
 
     private fun onItemClicked(threatId: Long) {
         launch {

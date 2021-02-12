@@ -619,7 +619,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ThreatItemState(
             threatId = fakeThreatId,
             isFixing = false,
-            firstDetectAt = fakeDetectedAt,
+            firstDetectedDate = fakeDetectedAt,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,

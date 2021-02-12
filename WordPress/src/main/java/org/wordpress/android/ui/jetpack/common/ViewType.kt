@@ -17,5 +17,5 @@ enum class ViewType(val id: Int) {
     BACKUP_RESTORE_FOOTNOTE(13),
     PROGRESS(14),
     BACKUP_RESTORE_BULLET(15),
-    DETECTED_DATE(16)
+    THREAT_DETECTED_DATE(16)
 }
