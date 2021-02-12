@@ -1537,10 +1537,6 @@
         <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
     </style>
 
-    <style name="ThemeOverlay.Invite.Button.OnSurface" parent="">
-        <item name="colorPrimary">?attr/colorOnSurface</item>
-    </style>
-
     <style name="WordPress.Button.Invite.DisruptiveAction" parent="WordPress.Invite.Button.Secondary">
         <item name="android:textColor">?attr/wpColorError</item>
     </style>
