@@ -1575,6 +1575,11 @@
         <item>@string/post_status_post_private</item>
     </string-array>
 
+    <string-array name="post_settings_homepage_statuses" translatable="false">
+        <item>@string/post_status_publish_post</item>
+        <item>@string/post_status_post_private</item>
+    </string-array>
+
     <!-- Aztec -->
     <string name="editor_content_hint">Share your story here…</string>
 
