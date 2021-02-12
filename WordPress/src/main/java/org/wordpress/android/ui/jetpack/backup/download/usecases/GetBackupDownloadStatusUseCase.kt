@@ -42,25 +42,23 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 val retryAttemptsExceeded = handleError(retryAttempts++, NetworkUnavailable)
-                if (retryAttemptsExceeded) return@flow
-            } else {
-                val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
-                if (result.isError) {
-                    val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
-                    if (retryAttemptsExceeded) return@flow
-                } else {
-                    retryAttempts = 0
-                    val status = activityLogStore.getBackupDownloadStatusForSite(site)
-                    if (status == null) {
-                        emit(Empty)
-                        return@flow
-                    }
-                    if (downloadId == null || status.downloadId == downloadId) {
-                        if (emitCompleteElseProgress(status)) return@flow
-                    }
-                    delay(DELAY_MILLIS)
-                }
+                if (retryAttemptsExceeded) break else continue
             }
+            val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
+            if (result.isError) {
+                val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
+                if (retryAttemptsExceeded) break else continue
+            }
+            retryAttempts = 0
+            val status = activityLogStore.getBackupDownloadStatusForSite(site)
+            if (status == null) {
+                emit(Empty)
+                break
+            }
+            if (downloadId == null || status.downloadId == downloadId) {
+                if (emitCompleteElseProgress(status)) break
+            }
+            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 

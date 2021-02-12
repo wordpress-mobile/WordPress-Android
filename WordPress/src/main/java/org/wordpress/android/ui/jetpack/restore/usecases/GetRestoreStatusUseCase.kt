@@ -46,33 +46,34 @@ class GetRestoreStatusUseCase @Inject constructor(
         while (true) {
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 val retryAttemptsExceeded = handleError(retryAttempts++, NetworkUnavailable)
-                if (retryAttemptsExceeded) return@flow
-            } else if (!fetchActivitiesRewind(site)) {
-                val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
-                if (retryAttemptsExceeded) return@flow
-            } else {
-                retryAttempts = 0
-                val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-                if (rewind == null) {
-                    emit(Empty)
-                    return@flow
-                }
-                if (restoreId == null || rewind.restoreId == restoreId) {
-                    when (rewind.status) {
-                        FINISHED -> {
-                            emitFinished(rewind)
-                            return@flow
-                        }
-                        FAILED -> {
-                            emitFailure()
-                            return@flow
-                        }
-                        RUNNING -> emitProgress(rewind)
-                        QUEUED -> emitProgress(rewind)
-                    }
-                }
-                delay(DELAY_MILLIS)
+                if (retryAttemptsExceeded) break else continue
             }
+            if (!fetchActivitiesRewind(site)) {
+                val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
+                if (retryAttemptsExceeded) break else continue
+            }
+
+            retryAttempts = 0
+            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+            if (rewind == null) {
+                emit(Empty)
+                break
+            }
+            if (restoreId == null || rewind.restoreId == restoreId) {
+                when (rewind.status) {
+                    FINISHED -> {
+                        emitFinished(rewind)
+                        break
+                    }
+                    FAILED -> {
+                        emitFailure()
+                        break
+                    }
+                    RUNNING -> emitProgress(rewind)
+                    QUEUED -> emitProgress(rewind)
+                }
+            }
+            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 
