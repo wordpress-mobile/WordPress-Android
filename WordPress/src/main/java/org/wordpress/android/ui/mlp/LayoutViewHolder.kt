@@ -4,14 +4,13 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType.FIT_CENTER
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_card.view.*
 import org.wordpress.android.R
+import org.wordpress.android.networking.MShot
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageManager.RequestListener
-import org.wordpress.android.util.image.ImageType
 import org.wordpress.android.util.setVisible
 
 /**
@@ -33,7 +32,7 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         uiState: LayoutListItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(preview, ImageType.THEME, uiState.preview, FIT_CENTER, null,
+        imageManager.loadWithResultListener(preview, MShot(uiState.preview),
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                     }
