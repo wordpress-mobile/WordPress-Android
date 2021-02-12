@@ -2331,7 +2331,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
-        boolean enableAudioBlock = !SiteUtils.onFreePlan(mSite);
+        boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
 
         return new GutenbergPropsBuilder(
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
@@ -2339,7 +2339,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
-                enableAudioBlock,
+                !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 mIsPreview,
                 wpcomLocaleSlug,
                 postType,
