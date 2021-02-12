@@ -361,7 +361,7 @@ jobs:
           condition: << parameters.post-to-slack >>
           steps:
             - slack/status:
-                fail_only: true
+                fail_only: false
                 include_job_number_field: false
                 include_project_field: false
                 failure_message: ':red_circle: WordPress Android connected tests failed on \`${CIRCLE_BRANCH}\` branch after merge by ${CIRCLE_USERNAME}. See <https://console.firebase.google.com/u/0/project/api-project-108380595987/testlab/histories/bh.e0c3a59bd9ed670|Firebase console test results> for details.\n\nPlease reach out in #platform9 if you think this failure is not caused by your changes, so we can investigate.'
@@ -633,6 +633,7 @@ workflows:
                 - /pull\/[0-9]+/
       - Connected Tests:
           requires: [Hold]
+          post-to-slack: true
   Translation Review Build:
     when: << pipeline.parameters.translation_review_build >>
     jobs:
