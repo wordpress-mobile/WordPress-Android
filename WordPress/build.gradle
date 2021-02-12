@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.google.gms:google-services:3.2.0'
-        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
+        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.28'
     }
 }
