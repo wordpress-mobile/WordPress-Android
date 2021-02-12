@@ -85,6 +85,7 @@ import org.wordpress.android.ui.pages.PageParentSearchFragment;
 import org.wordpress.android.ui.pages.PagesActivity;
 import org.wordpress.android.ui.pages.PagesFragment;
 import org.wordpress.android.ui.pages.SearchListFragment;
+import org.wordpress.android.ui.people.PeopleInviteDialogFragment;
 import org.wordpress.android.ui.people.PeopleInviteFragment;
 import org.wordpress.android.ui.people.PeopleListFragment;
 import org.wordpress.android.ui.people.PeopleManagementActivity;
@@ -341,6 +342,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(PeopleInviteFragment object);
 
     void inject(RoleSelectDialogFragment object);
+
+    void inject(PeopleInviteDialogFragment object);
 
     void inject(PlansActivity object);
 
