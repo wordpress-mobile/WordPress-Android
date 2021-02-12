@@ -96,6 +96,7 @@
     <string name="confirm">Confirm</string>
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
+    <string name="disable">Disable</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy_text">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
@@ -2265,6 +2266,21 @@
 
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
+
+    <string name="invite_links_section_title">Invite Link</string>
+    <string name="invite_links_get_status_retry">Get links retry</string>
+    <string name="invite_links_generate">Generate new link</string>
+    <string name="invite_links_share_invite_link">Share invite link</string>
+    <string name="invite_links_disable_invite_link">Disable invite link</string>
+    <string name="invite_links_expire_date">Expires %1$s</string>
+    <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
+    <string name="invite_links_generic_get_status_error">Unknown error fetching invite links status</string>
+    <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
+    <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
+    <string name="invite_links_null_response">No response received</string>
+    <string name="invite_links_bad_format_response">Invalid response received</string>
+    <string name="invite_links_disable_dialog_title">Disable invite link</string>
+    <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
 
     <!--Plugins-->
     <string name="plugins">Plugins</string>

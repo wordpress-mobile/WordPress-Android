@@ -1510,4 +1510,28 @@
         <item name="android:textColor">@color/blue_50</item>
         <item name="android:textSize">@dimen/text_sz_medium</item>
     </style>
+
+    <!-- Invite Links -->
+    <style name="WordPress.Invite.Button.Primary" parent="Widget.MaterialComponents.Button.UnelevatedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.Invite.Button.Secondary</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.Invite.Button.Secondary" parent="">
+        <item name="colorPrimary">?attr/colorSecondary</item>
+        <item name="colorOnPrimary">?attr/colorOnSecondary</item>
+    </style>
+
+    <style name="WordPress.Invite.Button.Secondary" parent="Widget.MaterialComponents.Button.OutlinedButton">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.LoginFlow.Button.OnSurface</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle2</item>
+    </style>
+
+    <style name="ThemeOverlay.Invite.Button.OnSurface" parent="">
+        <item name="colorPrimary">?attr/colorOnSurface</item>
+    </style>
+
+    <style name="WordPress.Button.Invite.DisruptiveAction" parent="WordPress.Invite.Button.Secondary">
+        <item name="android:textColor">?attr/wpColorError</item>
+    </style>
 </resources>
