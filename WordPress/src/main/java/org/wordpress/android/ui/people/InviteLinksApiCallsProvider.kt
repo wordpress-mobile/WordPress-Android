@@ -121,7 +121,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
                     "$functionName > Failed with empty string " +
                             "[blogId=$blogId - volleyError = $volleyError]"
             )
-            contextProvider.getContext().getString(R.string.invite_links_generic_get_status_error)
+            contextProvider.getContext().getString(R.string.invite_links_generic_get_data_error)
         } else {
             AppLog.d(
                     T.PEOPLE,
