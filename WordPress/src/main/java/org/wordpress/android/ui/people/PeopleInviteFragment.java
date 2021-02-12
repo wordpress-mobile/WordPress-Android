@@ -247,41 +247,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         );
 
         mViewModel.getInviteLinksUiState().observe(getViewLifecycleOwner(), uiState -> {
-            mInviteLinkContainer.setVisibility(uiState.isLinksSectionVisible() ? View.VISIBLE : View.GONE);
+            manageLinksControlsVisibility(uiState);
 
-            mLoadAndRetryLinksContainer.setVisibility(
-                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.HIDDEN
-                            ? View.GONE
-                            : View.VISIBLE
-            );
-            mLoadingLinksProgress.setVisibility(
-                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.LOADING
-                            ? View.VISIBLE
-                            : View.GONE
-            );
-            mRetryButton.setVisibility(
-                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.RETRY
-                            ? View.VISIBLE
-                            : View.GONE
-            );
+            manageShimmerSection(uiState.isShimmerSectionVisible(), uiState.getStartShimmer());
 
-            mShimmerContainer.setVisibility(uiState.isShimmerSectionVisible() ? View.VISIBLE : View.GONE);
-
-            if (uiState.getStartShimmer()) {
-                if (mShimmerContainer.isShimmerVisible()) {
-                    mShimmerContainer.startShimmer();
-                } else {
-                    mShimmerContainer.showShimmer(true);
-                }
-            } else {
-                mShimmerContainer.hideShimmer();
-            }
-
-            mGenerateLinksButton.setEnabled(uiState.getEnableActionButtons());
-            mShareLinksButton.setEnabled(uiState.getEnableActionButtons());
-            mLinksRoleTextView.setEnabled(uiState.getEnableActionButtons());
-            mDisableLinksButton.setEnabled(uiState.getEnableActionButtons());
-
+            manageActionButtonsEnable(uiState.getEnableActionButtons());
 
             switch (uiState.getType()) {
                 case HIDDEN:
@@ -298,26 +268,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                     mGenerateLinksButton.setVisibility(View.GONE);
                     mManageLinksContainer.setVisibility(View.VISIBLE);
 
-                    mLinksRoleTextView.setShowSoftInputOnFocus(false);
-                    mLinksRoleTextView.setInputType(EditorInfo.TYPE_NULL);
-                    mLinksRoleTextView.setKeyListener(null);
-
-                    if (uiState.isRoleSelectionAllowed()) {
-                        mLinksRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
-                        mLinksRoleTextView.setOnClickListener(v -> {
-                            mViewModel.onLinksRoleClicked();
-                        });
-                        mLinksRoleTextView.setFocusable(true);
-                        mLinksRoleTextView.setFocusableInTouchMode(true);
-                    } else {
-                        mLinksRoleContainer.setEndIconMode(END_ICON_NONE);
-                        mLinksRoleTextView.setOnClickListener(null);
-                        mLinksRoleTextView.setFocusable(false);
-                        mLinksRoleTextView.setFocusableInTouchMode(false);
-                    }
-
-                    mLinksRoleContainer.setEndIconOnClickListener(null);
-                    mLinksRoleContainer.setEndIconCheckable(false);
+                    setLinksRoleControlsBehaviour(uiState.isRoleSelectionAllowed());
 
                     mLinksRoleTextView.setText(uiState.getInviteLinksSelectedRole().getRoleDisplayName());
                     mExpireDateTextView.setText(
@@ -758,6 +709,70 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         if (getActivity() != null) {
             getActivity().invalidateOptionsMenu();
         }
+    }
+
+    private void manageActionButtonsEnable(boolean enable) {
+        mGenerateLinksButton.setEnabled(enable);
+        mShareLinksButton.setEnabled(enable);
+        mLinksRoleTextView.setEnabled(enable);
+        mDisableLinksButton.setEnabled(enable);
+    }
+
+    private void manageShimmerSection(boolean showShimmerSection, boolean startShimmer) {
+        mShimmerContainer.setVisibility(showShimmerSection ? View.VISIBLE : View.GONE);
+
+        if (startShimmer) {
+            if (mShimmerContainer.isShimmerVisible()) {
+                mShimmerContainer.startShimmer();
+            } else {
+                mShimmerContainer.showShimmer(true);
+            }
+        } else {
+            mShimmerContainer.hideShimmer();
+        }
+    }
+
+    private void manageLinksControlsVisibility(InviteLinksUiState uiState) {
+        mInviteLinkContainer.setVisibility(uiState.isLinksSectionVisible() ? View.VISIBLE : View.GONE);
+
+        mLoadAndRetryLinksContainer.setVisibility(
+                uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.HIDDEN
+                        ? View.GONE
+                        : View.VISIBLE
+        );
+        mLoadingLinksProgress.setVisibility(
+                uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.LOADING
+                        ? View.VISIBLE
+                        : View.GONE
+        );
+        mRetryButton.setVisibility(
+                uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.RETRY
+                        ? View.VISIBLE
+                        : View.GONE
+        );
+    }
+
+    private void setLinksRoleControlsBehaviour(boolean allowRoleSelection) {
+        mLinksRoleTextView.setShowSoftInputOnFocus(false);
+        mLinksRoleTextView.setInputType(EditorInfo.TYPE_NULL);
+        mLinksRoleTextView.setKeyListener(null);
+
+        if (allowRoleSelection) {
+            mLinksRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
+            mLinksRoleTextView.setOnClickListener(v -> {
+                mViewModel.onLinksRoleClicked();
+            });
+            mLinksRoleTextView.setFocusable(true);
+            mLinksRoleTextView.setFocusableInTouchMode(true);
+        } else {
+            mLinksRoleContainer.setEndIconMode(END_ICON_NONE);
+            mLinksRoleTextView.setOnClickListener(null);
+            mLinksRoleTextView.setFocusable(false);
+            mLinksRoleTextView.setFocusableInTouchMode(false);
+        }
+
+        mLinksRoleContainer.setEndIconOnClickListener(null);
+        mLinksRoleContainer.setEndIconCheckable(false);
     }
 
     public interface ValidationEndListener {
