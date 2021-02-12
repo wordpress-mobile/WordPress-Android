@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -36,7 +37,9 @@ import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -50,6 +53,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var htmlCompat: HtmlCompatWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -69,7 +73,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
-                appPrefsWrapper
+                appPrefsWrapper,
+                htmlCompat
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -93,6 +98,40 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.refresh()
 
         assertModel()
+    }
+
+    @Test
+    fun `refresh shows completion message if all tasks of a same type have been completed`() {
+        initStore()
+
+        val completionMessage = "All tasks completed!"
+
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
+        whenever(resourceProvider.getString(any())).thenReturn(completionMessage)
+        whenever(htmlCompat.fromHtml(completionMessage)).thenReturn(completionMessage)
+
+        val task = PUBLISH_POST
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.completeTask(task)
+        quickStartRepository.refresh()
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(completionMessage)))
+    }
+
+    @Test
+    fun `refresh does not show completion message if not all tasks of a same type have been completed`() {
+        initStore()
+
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(false)
+
+        val task = PUBLISH_POST
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.completeTask(task)
+        quickStartRepository.refresh()
+
+        assertThat(snackbars).isEmpty()
     }
 
     @Test
