@@ -32,6 +32,7 @@ class FetchScanStateUseCase @Inject constructor(
 ) {
     private val tag = javaClass.simpleName
 
+    @Suppress("ComplexMethod", "LoopWithTooManyJumpStatements")
     suspend fun fetchScanState(
         site: SiteModel,
         startWithDelay: Boolean = false
