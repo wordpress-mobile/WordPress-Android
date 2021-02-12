@@ -297,8 +297,7 @@ class WPMainNavigationView @JvmOverloads constructor(
         }
 
         internal fun getFragment(position: Int): Fragment? {
-            return pages().getOrNull(position)?.let { pageType ->
-                fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
+            return pages().getOrNull(position)?.let { pageType -> fragmentManager.findFragmentByTag(getTagForPageType(pageType)) ?: createFragment(pageType)
             }
         }
 
