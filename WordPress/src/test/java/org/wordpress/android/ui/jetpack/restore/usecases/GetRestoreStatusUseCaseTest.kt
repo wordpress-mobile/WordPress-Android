@@ -256,7 +256,7 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given fetch error under retry count, when backup status triggers, then return progress`() =
+    fun `given fetch error under retry count, when restore status triggers, then return progress`() =
             test {
                 whenever(activityLogStore.fetchActivitiesRewind(any()))
                         .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
@@ -276,7 +276,7 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given no network available under retry count, when backup status triggers, then return progress`() =
+    fun `given no network available under retry count, when restore status triggers, then return progress`() =
             test {
                 whenever(networkUtilsWrapper.isNetworkAvailable())
                         .thenReturn(false)
