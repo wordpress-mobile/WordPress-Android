@@ -3,29 +3,69 @@
   "rates": {
     "default_box": {
       "default": {
-        "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
         "rates": [{
           "rate_id": "rate_cb976896a09c4171a93ace57ed66ce5b",
           "service_id": "MediaMail",
           "carrier_id": "usps",
+          "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
           "title": "USPS - Media Mail",
-          "rate": 3.86,
-          "retail_rate": 3.86,
+          "rate": 3.5,
+          "insurance": 100,
+          "retail_rate": 3.5,
           "is_selected": false,
           "delivery_days": 2,
           "delivery_date_guaranteed": false,
-          "delivery_date": null
+          "delivery_date": null,
+          "tracking": false,
+          "free_pickup": false
         }, {
           "rate_id": "rate_1b202bd43a8c4c929c73bb46989ef745",
           "service_id": "FEDEX_GROUND",
           "carrier_id": "fedex",
           "title": "FedEx - Ground",
-          "rate": 21.55,
-          "retail_rate": 21.55,
+          "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
+          "rate": 21.5,
+          "insurance": 100,
+          "retail_rate": 21.5,
           "is_selected": false,
           "delivery_days": 1,
           "delivery_date_guaranteed": true,
-          "delivery_date": "2020-03-23T23:59:00.000Z"
+          "delivery_date": null,
+          "tracking": false,
+          "free_pickup": false
+        }]
+      },
+      "with_signature": {
+        "rates": [{
+          "rate_id": "rate_cb976896a09c4171a93ace57ed66ce5b",
+          "service_id": "MediaMail",
+          "carrier_id": "usps",
+          "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
+          "title": "USPS - Media Mail",
+          "rate": 13.5,
+          "insurance": 100,
+          "retail_rate": 13.5,
+          "is_selected": false,
+          "delivery_days": 2,
+          "delivery_date_guaranteed": false,
+          "delivery_date": null,
+          "tracking": true,
+          "free_pickup": true
+        }, {
+          "rate_id": "rate_1b202bd43a8c4c929c73bb46989ef745",
+          "service_id": "FEDEX_GROUND",
+          "carrier_id": "fedex",
+          "title": "FedEx - Ground",
+          "shipment_id": "shp_0a9b3ff983c6427eaf1e24cb344de36a",
+          "rate": 121.5,
+          "insurance": 100,
+          "retail_rate": 121.5,
+          "is_selected": false,
+          "delivery_days": 1,
+          "delivery_date_guaranteed": true,
+          "delivery_date": null,
+          "tracking": true,
+          "free_pickup": true
         }]
       }
     }
