@@ -83,7 +83,7 @@ class PeopleInviteDialogFragment : DialogFragment() {
     }
 
     enum class DialogMode(
-        val title: Int = 0,
+        val title: Int,
         val message: Int = 0,
         val negativeButtonText: Int = 0,
         val positiveButtonText: Int = 0
