@@ -125,13 +125,11 @@ class QuickStartRepository
         _activeTask.postValue(task)
         pendingTask = null
         if (task == UPDATE_SITE_TITLE) {
-            val shortQuickStartMessage = HtmlCompat.fromHtml(
-                    resourceProvider.getString(
-                            R.string.quick_start_dialog_update_site_title_message_short,
-                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            val shortQuickStartMessage = resourceProvider.getString(
+                    R.string.quick_start_dialog_update_site_title_message_short,
+                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
             )
-            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
         } else {
             QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
                 _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
@@ -211,11 +209,8 @@ class QuickStartRepository
 
     private fun showCategoryCompletionMessageIfNeeded() = pendingCategoryCompletion?.let { taskType ->
         pendingCategoryCompletion = null
-        val completionMessage = HtmlCompat.fromHtml(
-                getCategoryCompletionMessage(taskType),
-                HtmlCompat.FROM_HTML_MODE_COMPACT
-        )
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage))))
+        val completionMessage = getCategoryCompletionMessage(taskType)
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
     }
 
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
@@ -223,6 +218,8 @@ class QuickStartRepository
         GROW -> R.string.quick_start_completed_type_grow_message
         UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
     }.let { resourceProvider.getString(it) }
+
+    private fun String.asHtml() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
