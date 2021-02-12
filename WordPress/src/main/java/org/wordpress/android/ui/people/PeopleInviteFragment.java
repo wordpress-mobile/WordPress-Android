@@ -277,6 +277,12 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
                 mShimmerContainer.hideShimmer();
             }
 
+            mGenerateLinksButton.setEnabled(uiState.getEnableActionButtons());
+            mShareLinksButton.setEnabled(uiState.getEnableActionButtons());
+            mLinksRoleTextView.setEnabled(uiState.getEnableActionButtons());
+            mDisableLinksButton.setEnabled(uiState.getEnableActionButtons());
+
+
             switch (uiState.getType()) {
                 case HIDDEN:
                 case LOADING:

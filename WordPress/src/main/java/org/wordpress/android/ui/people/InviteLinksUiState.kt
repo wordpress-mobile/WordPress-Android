@@ -9,7 +9,8 @@ data class InviteLinksUiState(
     val isRoleSelectionAllowed: Boolean,
     val links: List<InviteLinksUiItem>,
     val inviteLinksSelectedRole: InviteLinksUiItem,
-    val enableManageLinksActions: Boolean
+    val enableManageLinksActions: Boolean,
+    val enableActionButtons: Boolean = !startShimmer
 )
 
 enum class InviteLinksUiStateType {
