@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.jetpack.scan.usecases
 
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -22,6 +23,8 @@ import org.wordpress.android.fluxc.store.ScanStore.ScanStateError
 import org.wordpress.android.fluxc.store.ScanStore.ScanStateErrorType
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Success
+import org.wordpress.android.ui.jetpack.scan.usecases.FetchScanStateUseCase.FetchScanState.Failure.RemoteRequestFailure
 import org.wordpress.android.util.NetworkUtilsWrapper
 
 @ExperimentalCoroutinesApi
@@ -55,7 +58,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
 
         val result = useCase.fetchScanState(site).toList(mutableListOf())
 
-        assertThat(result).contains(FetchScanState.Success(scanStateModel))
+        assertThat(result).contains(Success(scanStateModel))
     }
 
     @Test
@@ -85,7 +88,7 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         val result = useCase.fetchScanState(site = site).toList(mutableListOf())
 
         verify(scanStore, times(scanStateModels.size)).fetchScanState(any())
-        assertThat(result).containsSequence(scanStateModels.map { FetchScanState.Success(it) })
+        assertThat(result).containsSequence(scanStateModels.map { Success(it) })
     }
 
     @Test
@@ -103,8 +106,39 @@ class FetchScanStateUseCaseTest : BaseUnitTest() {
         // one success and 1+MAX_RETRY attempts
         verify(scanStore, times(5)).fetchScanState(any())
         assertThat(result).containsSequence(
-                FetchScanState.Success(scanStateScanningModel),
+                Success(scanStateScanningModel),
                 FetchScanState.Failure.RemoteRequestFailure
         )
+    }
+
+    @Test
+    fun `given max fetch retries exceeded, when scan state triggers, then return remote request failure`() = test {
+        val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
+        whenever(scanStore.fetchScanState(any())).thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
+
+        val result = useCase.fetchScanState(site = site).toList(mutableListOf())
+
+        verify(scanStore, times(MAX_RETRY + 1)).fetchScanState(anyOrNull())
+        assertThat(result).size().isEqualTo(1)
+        assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+    }
+
+    @Test
+    fun `given fetch error under retry count, when scan state triggers, then return only success`() = test {
+        val scanStateScanningModel = ScanStateModel(state = ScanStateModel.State.SCANNING)
+        val scanStateFinished = ScanStateModel(state = ScanStateModel.State.IDLE)
+        val scanStateError = ScanStateError(ScanStateErrorType.GENERIC_ERROR)
+        whenever(scanStore.fetchScanState(any()))
+                .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
+                .thenReturn(OnScanStateFetched(scanStateError, FETCH_SCAN_STATE))
+                .thenReturn(OnScanStateFetched(FETCH_SCAN_STATE))
+
+        whenever(scanStore.getScanStateForSite(site))
+                .thenReturn(scanStateScanningModel)
+                .thenReturn(scanStateFinished)
+
+        val result = useCase.fetchScanState(site = site).toList(mutableListOf())
+
+        assertThat(result).allSatisfy { it is Success }
     }
 }
