@@ -708,8 +708,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         @Override
                         public void onTokenInvalid() {
                             // Show a toast if the user took too long to open the notification
-                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired,
-                                    ToastUtils.Duration.LONG);
+                            ToastUtils.showToast(WPMainActivity.this, R.string.push_auth_expired, ToastUtils.Duration.LONG);
                             AnalyticsTracker.track(AnalyticsTracker.Stat.PUSH_AUTHENTICATION_EXPIRED);
                         }
                     });
