@@ -17,6 +17,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Empty
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
@@ -25,9 +26,11 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.max
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -41,45 +44,38 @@ class GetRestoreStatusUseCase @Inject constructor(
     ) = flow {
         var retryAttempts = 0
         while (true) {
-            if (!isNetworkAvailable()) return@flow
-
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                val retryAttemptsExceeded = handleError(retryAttempts++, NetworkUnavailable)
+                if (retryAttemptsExceeded) break else continue
+            }
             if (!fetchActivitiesRewind(site)) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded 3 retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                }
-            } else {
-                val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
-                if (rewind == null) {
-                    emit(Empty)
-                    return@flow
-                }
-                if (restoreId == null || rewind.restoreId == restoreId) {
-                    when (rewind.status) {
-                        FINISHED -> {
-                            emitFinished(rewind)
-                            return@flow
-                        }
-                        FAILED -> {
-                            emitFailure()
-                            return@flow
-                        }
-                        RUNNING -> emitProgress(rewind)
-                        QUEUED -> emitProgress(rewind)
+                val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
+                if (retryAttemptsExceeded) break else continue
+            }
+
+            retryAttempts = 0
+            val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
+            if (rewind == null) {
+                emit(Empty)
+                break
+            }
+            if (restoreId == null || rewind.restoreId == restoreId) {
+                when (rewind.status) {
+                    FINISHED -> {
+                        emitFinished(rewind)
+                        break
                     }
+                    FAILED -> {
+                        emitFailure()
+                        break
+                    }
+                    RUNNING -> emitProgress(rewind)
+                    QUEUED -> emitProgress(rewind)
                 }
             }
             delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
-
-    private suspend fun FlowCollector<RestoreRequestState>.isNetworkAvailable(): Boolean {
-        return if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(NetworkUnavailable)
-            false
-        } else true
-    }
 
     private suspend fun fetchActivitiesRewind(site: SiteModel): Boolean {
         val result = activityLogStore.fetchActivitiesRewind(FetchRewindStatePayload(site))
@@ -101,5 +97,16 @@ class GetRestoreStatusUseCase @Inject constructor(
         val rewindId = rewind.rewindId as String
         val published = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
         emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, published))
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.handleError(retryAttempts: Int, failure: Failure): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(failure)
+            true
+        } else {
+            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
+            false
+        }
     }
 }

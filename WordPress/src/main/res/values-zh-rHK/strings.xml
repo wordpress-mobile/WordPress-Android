@@ -6,10 +6,8 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
-    <string name="rewind_another_process_running">還有其他還原正在執行。</string>
     <string name="restore_complete_failed_icon_content_description">錯誤圖示</string>
     <string name="restore_complete_failed_action_button_content_description">「完成」按鈕</string>
-    <string name="restore_complete_failed_description">我們無法還原你的網站。 請稍後再試一次。</string>
     <string name="restore_complete_failed_title">還原失敗</string>
     <string name="restore_complete_visit_site_button_content_description">「造訪網站」按鈕</string>
     <string name="restore_complete_done_button_content_description">「完成」按鈕</string>
@@ -17,14 +15,11 @@ Language: zh_TW
     <string name="restore_complete_visit_site_action_button">造訪網站</string>
     <string name="restore_complete_description_with_two_parameters">所有你選取的項目現在都還原至 %1$s %2$s。</string>
     <string name="restore_complete_header">你的網站已經還原</string>
-    <string name="restore_progress_additional_info">無須等待。 我們會在網站還原後通知你。</string>
     <string name="restore_progress_icon_content_description">還原網站圖示</string>
     <string name="restore_progress_description_with_two_parameters">我們正在將你的網站還原至 %1$s %2$s。</string>
     <string name="restore_progress_header">目前正在還原網站</string>
     <string name="restore_warning_action_button_content_description">「確認還原網站」按鈕</string>
     <string name="restore_warning_icon_content_description">紅色圓圈圖片，中間有驚嘆號</string>
-    <string name="restore_warning_action_button">確認還原網站</string>
-    <string name="restore_warning_description_with_two_parameters">是否確定要將網站還原至位於 %2$s 的 %1$s？\n 這將移除此後建立或變更的全部內容和選項。</string>
     <string name="restore_warning_header">警告</string>
     <string name="restore_details_action_button_content_description">「還原網站」按鈕</string>
     <string name="restore_details_icon_content_description">還原圖示</string>
@@ -36,7 +31,6 @@ Language: zh_TW
     <string name="backup_download_complete_failed_icon_content_description">含有 X 圖示的雲端</string>
     <string name="backup_download_complete_failed_action_button_content_description">「完成」按鈕</string>
     <string name="backup_download_complete_failed_action_button">完成</string>
-    <string name="backup_download_complete_failed_description">我們無法建立你的備份。 請稍後再試一次。</string>
     <string name="backup_download_complete_failed_title">下載失敗</string>
     <string name="web_preview_tablet">平板電腦</string>
     <string name="web_preview_mobile">行動裝置</string>
@@ -57,11 +51,9 @@ Language: zh_TW
     <string name="reader_error_changing_seen_status_of_unsupported_post">無法切換此文章的已讀狀態</string>
     <string name="reader_marked_post_as_unseen">已將文章標示為未讀</string>
     <string name="reader_marked_post_as_seen">已將文章標示為已讀</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">並非所有威脅都可以修正。 請聯絡我們的支援團隊。</string>
     <string name="threat_fix_all_status_error_message">取得修正狀態時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_fix_all_status_success_message">已順利修正威脅。</string>
     <string name="threat_fix_all_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
-    <string name="threat_fix_all_started_message">我們正努力在背景修正此威脅。 請稍後再回來查看。</string>
     <string name="threat_fix_all_warning_message">請確認你要修正 %s 個作用中威脅</string>
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
@@ -69,9 +61,7 @@ Language: zh_TW
     <string name="threat_ignore_warning">除非完全確認其安全無害，否則你不應忽略安全性問題。 若你選擇忽略此威脅，該威脅會繼續存在於你的網站 &lt;b>%s&lt;/b>。</string>
     <string name="threat_fix_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_item_sub_header_status_ignored">威脅已忽略</string>
-    <string name="threat_item_sub_header_status_fixed">威脅已修正</string>
     <string name="threat_fixing">正在修正威脅</string>
-    <string name="threats_fix_num_of_threats">修正 %s 個威脅</string>
     <string name="scan_history_ignored_threats_tab">已忽略</string>
     <string name="scan_history_no_threats_found">找不到任何項目</string>
     <string name="scan_history_fixed_threats_tab">固定</string>
@@ -86,7 +76,6 @@ Language: zh_TW
     <string name="backup_empty_title">第一次備份即將準備就緒</string>
     <string name="request_failed_message">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="gutenberg_native_move_to_bottom">移至底部</string>
-    <string name="gutenberg_native_move_block_position">移動區塊位置</string>
     <string name="label_control_upload">上傳</string>
     <string name="jetpack_icon_content_description">圖示</string>
     <string name="backup_download_complete_info">我們也已將檔案連結透過電子郵件傳送給你。</string>
@@ -98,10 +87,7 @@ Language: zh_TW
     <string name="backup_download_complete_description_with_two_parameters">我們已成功建立 %1$s %2$s 的網站備份。</string>
     <string name="backup_download_complete_header">你的備份現在已可下載</string>
     <string name="backup_download_complete_page_title">你的備份</string>
-    <string name="backup_download_progress_additional_info">無須等待。 我們會在備份準備就緒時通知你</string>
-    <string name="backup_download_progress_action_button_content_description">「好，通知我」按鈕</string>
     <string name="backup_download_progress_icon_content_description">建立可下載備份圖示</string>
-    <string name="backup_download_progress_action_button">好，通知我！</string>
     <string name="backup_download_progress_description_with_two_parameters">我們正在為你的網站建立 %1$s %2$s 的可下載備份。</string>
     <string name="backup_download_progress_header">目前正在為你的網站建立可下載的備份</string>
     <string name="backup_download_progress_page_title">下載備份</string>
@@ -134,7 +120,6 @@ Language: zh_TW
     <string name="threat_file_description">檔案中發現的威脅：</string>
     <string name="threat_technical_details_header">技術詳細資訊</string>
     <string name="threat_problem_header">問題為何？</string>
-    <string name="threat_details_icon">威脅詳細資訊圖示</string>
     <string name="threat_details">威脅詳細資訊</string>
     <string name="threat_item_sub_header_vulnerable_theme">已在佈景主題中發現安全漏洞</string>
     <string name="threat_item_sub_header_vulnerable_plugin">已在外掛程式中發現安全漏洞</string>
@@ -152,10 +137,6 @@ Language: zh_TW
     <string name="scan_in_minutes_ago">%s 分鐘前</string>
     <string name="scan_in_hours_ago">%s 小時前</string>
     <string name="scan_this_site">此網站</string>
-    <string name="scan_idle_threats_found_description">掃描作業已在 %s 上找到 %s 個潛在威脅。 請檢閱以下威脅並採取行動。 我們很樂意為你提供協助。</string>
-    <string name="scan_idle_last_scan_description">Jetpack 上次已掃瞄 %s，沒有發現任何問題。 %s</string>
-    <string name="scan_idle_manual_scan_description">立即執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
-    <string name="scan_scanning_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。\n\n \n 掃瞄作業完成後，我們會傳送通知給你。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="scan_idle_threats_found_title">你的網站可能存在風險</string>
     <string name="scan_idle_no_threats_found_title">完全不必擔心</string>
     <string name="scan_again">重新掃瞄</string>
@@ -174,15 +155,11 @@ Language: zh_TW
     <string name="activity_log_active_filter_empty_subtitle">請嘗試調整日期範圍或活動類型篩選條件</string>
     <string name="activity_log_active_filter_empty_title">找不到符合的活動</string>
     <string name="rewind">還原</string>
-    <string name="backup_item_sqls">網站資料庫 (SQL)</string>
-    <string name="backup_item_contents">WP 內容目錄 (不包括佈景主題、外掛程式和上傳內容)</string>
-    <string name="backup_item_roots">WordPress 根目錄 (包括 wp-config.php 和任何非 WordPress 檔案)</string>
     <string name="backup_item_media_uploads">媒體上傳</string>
     <string name="backup_item_plugins">WordPress 外掛程式</string>
     <string name="backup_item_themes">WordPress 佈景主題</string>
     <string name="backup_download_details_icon_content_description">建立可下載的備份圖示</string>
     <string name="backup_download_details_action_button">建立可下載檔案</string>
-    <string name="backup_download_details_choose_items_header">選擇要加入下載的項目：</string>
     <string name="backup_download_details_header">建立可下載的備份</string>
     <string name="backup_download_details_page_title">下載備份</string>
     <string name="backup_download">備份下載</string>
@@ -205,7 +182,6 @@ Language: zh_TW
     <string name="gutenberg_native_copy_file_url">複製檔案 URL</string>
     <string name="gutenberg_native_choose_a_file">選擇檔案</string>
     <string name="new_site_creation_domain_header_title">選擇網域</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack 設定</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">透過電子郵件追蹤對話</string>
     <string name="reader_btn_follow_comments">透過電子郵件追蹤對話</string>
@@ -430,7 +406,6 @@ Language: zh_TW
     <string name="gutenberg_native_choose_image">選擇圖片</string>
     <string name="gutenberg_native_block_removed">已移除區塊</string>
     <string name="enter_your_site_address">輸入你現有的網址</string>
-    <string name="continue_with_wpcom">繼續使用 WordPress.com</string>
     <string name="signup_confirmation_title">註冊確認</string>
     <string name="continue_with_google_terms_of_service_text">如果你繼續使用 Google 操作且尚未擁有 WordPress.com 帳號，即表示你正在建立帳號，並同意我們的%1$s服務條款%2$s。</string>
     <string name="continue_terms_of_service_text">繼續操作即代表你同意我們的%1$s服務條款%2$s。</string>
@@ -899,7 +874,6 @@ Language: zh_TW
     <string name="post_settings_notification">通知</string>
     <string name="post_settings_time_and_date">日期和時間</string>
     <string name="login_need_help_finding_connected_email">需要協助找出你連結的電子郵件嗎？</string>
-    <string name="enter_wordpress_site">此地址的網站不是 WordPress 網站。為協助我們連結網站，網站必須安裝 WordPress。</string>
     <string name="login_invalid_site_url">請輸入完整的網站位址，例如 example.com。</string>
     <string name="enter_email_for_site">透過 WordPress.com 登入以連結至 %1$s</string>
     <string name="stats_post_views_label">瀏覽次數</string>
@@ -1394,7 +1368,6 @@ Language: zh_TW
     <string name="activity_log_event">事件</string>
     <string name="activity_log_icon">活動圖示</string>
     <string name="activity_log">活動記錄</string>
-    <string name="activity">活動</string>
     <string name="privacy_policy_read">閱讀隱私權政策</string>
     <string name="third_party_policy_learn_more_caption">我們會使用其他的追蹤工具，包括由第三方所提供的追蹤工具。瞭解相關資訊及其控制方式。</string>
     <string name="third_party_policy_learn_more_header">第三方政策</string>
@@ -2072,13 +2045,7 @@ Language: zh_TW
     <string name="invite_error_invalid_usernames_multiple">無法傳送：使用者名稱或電子郵件無效</string>
     <string name="invite_error_invalid_usernames_one">無法傳送：使用者名稱或電子郵件無效</string>
     <string name="invite_error_no_usernames">請新增至少一個使用者名稱</string>
-    <string name="invite_message_info">(選用) 你最多可以輸入 500 個字元的自訂訊息，附在傳送給使用者的邀請中。</string>
-    <string name="invite_message_remaining_other">剩下 %d 個字元</string>
-    <string name="invite_message_remaining_one">剩下 1 個字元</string>
-    <string name="invite_message_remaining_zero">剩下 0 個字元</string>
-    <string name="invite_message_title">自訂訊息</string>
     <string name="invite">邀請</string>
-    <string name="invite_names_title">使用者名稱或電子郵件</string>
     <string name="invite_people">邀請他人</string>
     <string name="my_site_header_external">外部</string>
     <string name="send_link">傳送連結</string>

@@ -1,15 +1,76 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-01-26 12:35:12+0000
+Translation-Revision-Date: 2021-02-09 15:58:03+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
-    <string name="rewind_another_process_running">Există o altă restaurare care rulează.</string>
+    <string name="backup_download_status_failure_bullet2">Vom încerca oricum să creăm fișierul cu copia de siguranță care poate fi descărcată.</string>
+    <string name="backup_download_status_failure_bullet1">Nu am putut găsi starea pentru a spune cât timp va dura crearea copiei de siguranță care poate fi descărcată.</string>
+    <string name="backup_download_status_failure_heading">Nu am putut găsi starea pentru copia de siguranță care poate fi descărcată</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Icon bifare</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">Icon ceas</string>
+    <string name="restore_status_failure_bullet3">Te vom anunța când este gata.</string>
+    <string name="restore_status_failure_bullet2">Vom încerca oricum să-ți restaurăm situl.</string>
+    <string name="restore_status_failure_bullet1">Nu am putut găsi starea pentru a spune cât timp va dura restaurarea.</string>
+    <string name="restore_status_failure_heading">Nu am putut găsi starea pentru restaurare</string>
+    <string name="restore_complete_failed_description">Nu am putut să-ți restaurăm situl</string>
+    <string name="restore_warning_action_button">Confirmă</string>
+    <string name="restore_warning_description_with_two_parameters">Sigur vrei să-ți restaurezi situl înapoi la %1$s pe %2$s?\n        Toate modificările pe care le-ai făcut de atunci se vor pierde.</string>
+    <string name="backup_download_complete_failed_description">Nu am putut să creăm copia de siguranță</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(exclude teme, module și încărcări)</string>
+    <string name="backup_item_contents">Directorul wp-content</string>
+    <string name="backup_item_roots">Rădăcină WordPress</string>
+    <string name="backup_download_progress_action_button_content_description">Anunță-mă când butonul este gata</string>
+    <string name="backup_download_progress_action_button">Anunță-mă când este gata!</string>
+    <string name="backup_download_details_choose_items_header">Elemente incluse în această descărcare</string>
+    <string name="gutenberg_native_uploading">Încarc…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blocurile reutilizabile nu pot fi editate pe WordPress pentru iOS</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Blocurile reutilizabile nu pot fi editate pe WordPress pentru Android</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Atinge de două ori pentru a selecta un fișier audio</string>
+    <string name="gutenberg_native_replace_file">Înlocuiește fișierul</string>
+    <string name="gutenberg_native_replace_audio">Înlocuiește fișierul audio</string>
+    <string name="gutenberg_native_problem_opening_the_audio">Problemă la deschiderea fișierul audio</string>
+    <string name="gutenberg_native_open">DESCHIDE</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">Această cerere nu poate fi gestionată de nicio aplicație.</string>
+    <string name="gutenberg_native_lock_icon">Icon blocare</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Inserarea fișierului audio a eșuat. Te rog atinge pentru opțiuni.</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Atinge de două ori pentru a asculta fișierul audio</string>
+    <string name="gutenberg_native_choose_audio">Alege un fișier audio</string>
+    <string name="gutenberg_native_audio_player">Player audio</string>
+    <string name="gutenberg_native_audio_file">fișier audio</string>
+    <string name="gutenberg_native_audio_caption_s">Text asociat audio. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">Text asociat audio. Gol</string>
+    <string name="gutenberg_native_add_audio">ADAUGĂ UN FIȘIER AUDIO</string>
+    <string name="continue_with_wpcom">Autentifică-te în WordPress.com sau înregistrează-te</string>
+    <string name="photo_picker_use_audio">Folosește acest fișier audio</string>
+    <string name="photo_picker_choose_audio">Alege un fișier audio de pe dispozitiv</string>
+    <string name="people_optional_custom_message_helper_text">Opțional: introdu un mesaj personalizat care să fie trimis împreună cu invitația.</string>
+    <string name="people_learn_more_about_roles">Află mai multe despre roluri</string>
+    <string name="threat_status_fixed">Înlăturate</string>
+    <string name="threat_found_header">Găsite</string>
+    <string name="scan_idle_with_threats_description">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
+    <string name="scan_here_to_help">aici pentru a te ajuta</string>
+    <string name="scan_idle_manual_scan_description">Pentru a analiza situl din nou, Rulează acum o scanare manuală sau așteaptă ca Jetpack să-ți scaneze situl azi, mai târziu.</string>
+    <string name="scan_provisioning_description">Bine ai venit la scanarea Jetpack Scan! Îți investigăm situl și ne pregătim să facem o scanare completă. Te vom anunța dacă detectăm probleme care ar putea afecta scanarea, apoi va începe prima scanare completă.</string>
+    <string name="scan_scanning_is_initial_description">Bine ai venit la scanarea Jetpack, acum aruncăm o primă privire pe situl tău, vei primi rezultatele în curând.</string>
+    <string name="scan_fixing_threats_description">Lucrăm din greu (în fundal) pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
+    <string name="scan_scanning_description">Îți vom trimite o notificare după ce scanarea va fi finalizată. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
+    <string name="scan_fixing_threats_title">Înlătur amenințările</string>
+    <string name="scan_start_request_failed_subtitle">Scanarea Jetpack nu a putut finaliza scanarea sitului tău. Te rog verifică dacă nu ți-a căzut situl - dacă funcționează, încearcă din nou. Dacă situl funcționează și ai în continuare probleme cu scanarea Jetpack, contactează echipa noastră pentru suport.</string>
+    <string name="scan_request_failed_title">Ceva nu a mers bine</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Creez o copie de siguranță a sitului</string>
+    <string name="activity_log_currently_backing_up_message">Creez o copie de siguranță a sitului din %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_title">Creez copia de siguranță care se poate descărca</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">A fost creată cu succes o copie de siguranță a sitului</string>
+    <string name="pick_audio">Selectează audio</string>
+    <string name="activity_log_backup_finished_snackbar_message">A fost creată cu succes o copie de siguranță a sitului\nCopie de siguranță creată din %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">Situl tău are o copie de siguranță\nCopie de siguranță creată din %1$s %2$s</string>
+    <string name="restore_another_process_running">Există o altă restaurare care rulează.</string>
     <string name="restore_complete_failed_icon_content_description">Icon eroare</string>
     <string name="restore_complete_failed_action_button_content_description">Buton Gata</string>
-    <string name="restore_complete_failed_description">Nu am putut să-ți restaurăm situl. Te rog reîncearcă mai târziu.</string>
     <string name="restore_complete_failed_title">Restaurarea a eșuat</string>
     <string name="restore_complete_done_button_content_description">Buton Gata</string>
     <string name="restore_complete_icon_content_description">Icon restaurează</string>
@@ -18,14 +79,12 @@ Language: ro
     <string name="restore_complete_description_with_two_parameters">Toate elementele selectate sunt restaurate acum înapoi la %1$s %2$s.</string>
     <string name="restore_complete_header">Situl tău a fost restaurat</string>
     <string name="restore_progress_label">%1$s%%</string>
-    <string name="restore_progress_additional_info">Nu trebuie să aștepți aici. Te vom anunța când situl a fost restaurat.</string>
+    <string name="restore_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când situl a fost restaurat.</string>
     <string name="restore_progress_icon_content_description">Icon Restaurează situl</string>
     <string name="restore_progress_description_with_two_parameters">Îți restaurăm înapoi situl la %1$s %2$s.</string>
     <string name="restore_progress_header">Îți restaurăm situl acum</string>
     <string name="restore_warning_action_button_content_description">Buton Confirmă restaurarea sitului</string>
-    <string name="restore_warning_action_button">Confirmă restaurarea sitului</string>
     <string name="restore_warning_icon_content_description">Imagine cu un cerc roșu și semn de exclamare</string>
-    <string name="restore_warning_description_with_two_parameters">Sigur vrei să-ți derulezi situl înapoi la %1$s pe %2$s?\n        Derularea înapoi va înlătura tot conținutul și opțiunile create sau modificate de atunci.</string>
     <string name="restore_warning_header">Avertizare</string>
     <string name="restore_details_action_button_content_description">Buton Restaurează situl</string>
     <string name="restore_details_icon_content_description">Icon restaurează</string>
@@ -36,7 +95,6 @@ Language: ro
     <string name="restore">Restaurează</string>
     <string name="backup_download_complete_failed_action_button_content_description">Buton Gata</string>
     <string name="backup_download_complete_failed_action_button">Gata</string>
-    <string name="backup_download_complete_failed_description">Nu am putut să-ți creăm copia de siguranță. Te rog reîncearcă mai târziu.</string>
     <string name="backup_download_complete_failed_icon_content_description">Nor cu iconul X</string>
     <string name="backup_download_complete_failed_title">Descărcarea a eșuat</string>
     <string name="web_preview_tablet">Tabletă</string>
@@ -52,7 +110,6 @@ Language: ro
     <string name="quick_start_dialog_edit_homepage_title">Editează prima pagină</string>
     <string name="quick_start_dialog_edit_homepage_message">Modifică conținutul, adaugă sau înlătură conținut, pe prima pagină a sitului tău.</string>
     <string name="reader_marked_post_as_seen">Articolul a fost marcat ca văzut</string>
-    <string name="threat_fix_all_status_some_threats_not_fixed_error_message">Nu au putut fi înlăturate toate amenințările. Te rog contactează suportul.</string>
     <string name="reader_marked_post_as_unseen">Articolul a fost marcat ca nevăzut</string>
     <string name="reader_error_changing_seen_status_of_unsupported_post">Nu pot comuta la starea văzut pentru acest articol</string>
     <string name="error_media_not_enough_storage">Nu este disponibil suficient spațiu de stocare pe sit</string>
@@ -62,14 +119,12 @@ Language: ro
     <string name="threat_fix_all_status_error_message">Eroare la primirea stării pentru înlăturarea amenințărilor. Te rog contactează suportul.</string>
     <string name="threat_fix_all_status_success_message">Amenințările au fost înlăturate cu succes.</string>
     <string name="threat_fix_all_error_message">Eroare la înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_started_message">Am muncit din greu ca să înlăturăm aceste amenințări în fundal. Te rog verifică din nou acum.</string>
     <string name="threat_fix_all_warning_message">Te rog confirmă că vrei să înlături %s amenințări active.</string>
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>
     <string name="threat_ignore_success_message">Amenințarea a fost ignorată.</string>
     <string name="threat_ignore_warning">Nu ar trebui să ignori o alertă de securitate decât dacă ești sigur că ea este inofensivă. Dacă alegi să ignori această amenințare, ea va rămâne pe situl tău &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Eroare la înlăturarea amenințării. Te rog contactează suportul.</string>
-    <string name="threats_fix_num_of_threats">Înlătură %s amenințări</string>
     <string name="scan_history_ignored_threats_tab">Ignorate</string>
     <string name="scan_history_no_threats_found">Niciun element găsit</string>
     <string name="scan_history_fixed_threats_tab">Înlăturate</string>
@@ -82,12 +137,12 @@ Language: ro
     <string name="backup_active_filter_empty_title">Nu am găsit nicio copie de siguranță care să se potrivească</string>
     <string name="backup_empty_subtitle">Prima copie de siguranță va apărea aici în maxim 24 de ore și vei primi o notificare după ce copia de siguranță a fost finalizată</string>
     <string name="threat_item_sub_header_status_ignored">Amenințarea a fost ignorată</string>
-    <string name="threat_item_sub_header_status_fixed">Amenințarea a fost înlăturată</string>
     <string name="threat_fixing">Înlătur amenințarea</string>
+    <string name="threat_item_sub_header_status_fixed_on">Amenințarea a fost înlăturată pe %s</string>
     <string name="request_failed_message">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
     <string name="backup_empty_title">Prima copie de siguranță va fi gata în curând</string>
     <string name="gutenberg_native_move_to_bottom">Mută în jos</string>
-    <string name="gutenberg_native_move_block_position">Mută poziția blocului</string>
+    <string name="gutenberg_native_change_block_position">Schimbă poziția blocului</string>
     <string name="label_control_upload">Încarcă</string>
     <string name="jetpack_icon_content_description">icon</string>
     <string name="backup_download_complete_info">De asemenea, ți-am trimis prin email o legătură la fișierul tău.</string>
@@ -100,10 +155,8 @@ Language: ro
     <string name="backup_download_complete_header">Copia ta de siguranță este disponibilă acum pentru descărcare</string>
     <string name="backup_download_complete_page_title">Copia ta de siguranță</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_additional_info">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata</string>
-    <string name="backup_download_progress_action_button_content_description">Buton Da, anunță-mă</string>
+    <string name="backup_download_progress_footnote">Nu trebuie să aștepți aici. Te vom anunța când copia de siguranță este gata</string>
     <string name="backup_download_progress_icon_content_description">Icon pentru Creez copii de siguranță care se pot descărca</string>
-    <string name="backup_download_progress_action_button">Da, anunță-mă</string>
     <string name="backup_download_progress_description_with_two_parameters">Creăm o copie de siguranță a sitului tău din %1$s %2$s, care se poate descărca.</string>
     <string name="backup_download_progress_header">Acum creăm o copie de siguranță a sitului tău care poate fi descărcată</string>
     <string name="backup_download_progress_page_title">Descarcă copia de siguranță</string>
@@ -136,7 +189,6 @@ Language: ro
     <string name="threat_file_description">Amenințare găsită în fișierul:</string>
     <string name="threat_technical_details_header">Detaliile tehnice</string>
     <string name="threat_problem_header">Care a fost problema?</string>
-    <string name="threat_details_icon">Icon Detalii amenințare</string>
     <string name="threat_details">Detalii amenințare</string>
     <string name="threat_item_sub_header_vulnerable_theme">Vulnerabilități găsite în teme</string>
     <string name="threat_item_sub_header_vulnerable_plugin">Vulnerabilități găsite în module</string>
@@ -147,9 +199,6 @@ Language: ro
     <string name="threat_item_header_file_malicious_code_pattern">%s: model de cod rău intenționat</string>
     <string name="threat_item_header_database_threat">%s amenințări în baza de date</string>
     <string name="threat_item_sub_header_file_signature">%s amenințări găsite</string>
-    <string name="scan_idle_manual_scan_description">Rulează acum o scanare manuală sau așteaptă ca Jetpack să-ți scaneze situl azi, mai târziu.</string>
-    <string name="scan_scanning_description">Bine ai venit la scanarea Jetpack, acum aruncăm o primă privire pe situl tău, vei primi rezultatele în curând.\n\n        \nÎți vom trimite o notificare după ce scanarea este finalizată. Între timp îți poți folosi situl așa cum o faci de obicei și poți vedea oricând desfășurarea procesului de scanare.</string>
-    <string name="scan_idle_last_scan_description">Ultima scanare Jetpack a rulat pe %s și totul arată foarte bine. %s</string>
     <string name="scan_in_few_seconds">în câteva secunde</string>
     <string name="scan_in_minutes_ago">acum %s minute</string>
     <string name="scan_in_hours_ago">acum %s ore</string>
@@ -157,7 +206,8 @@ Language: ro
     <string name="threat_item_header_threat_found">Amenințare găsită</string>
     <string name="threats_found">Amenințări găsite</string>
     <string name="threat_item_header_infected_core_file">%s: fișier infectat în nucleu</string>
-    <string name="scan_idle_threats_found_description">Scanarea a găsit %s potențiale amenințări pe %s. Te rog analizează-le mai jos și ia măsuri. Suntem aici pentru a te ajuta, dacă ai nevoie de noi.</string>
+    <string name="scan_idle_last_scan_description">Ultima scanare Jetpack a rulat pe %s și nu a găsit niciun risc. %s</string>
+    <string name="threats_fix_all">Înlătură-le pe toate</string>
     <string name="scan_again">Scanează încă o dată</string>
     <string name="scan_now">Scanează acum</string>
     <string name="scan_state_icon">Icon stare scanare</string>
@@ -176,15 +226,13 @@ Language: ro
     <string name="activity_log_active_filter_empty_title">Nu am găsit niciun eveniment care să se potrivească</string>
     <string name="activity_log_active_filter_empty_subtitle">Încearcă ajustarea filtrelor pentru intervalul de timp sau tipul de activitate</string>
     <string name="rewind">Restaurează</string>
-    <string name="backup_item_sqls">Bază de date sit (SQL)</string>
-    <string name="backup_item_contents">Director WP-content (exclude temele, modulele și încărcările)</string>
-    <string name="backup_item_roots">Rădăcină WordPress (include wp-config.php și toate fișierele care nu sunt din WordPress)</string>
     <string name="backup_item_media_uploads">Încărcări media</string>
     <string name="backup_item_plugins">Module WordPress</string>
     <string name="backup_item_themes">Teme WordPress</string>
     <string name="backup_download_details_icon_content_description">Icon Creează copii de siguranță care se pot descărca</string>
+    <string name="backup_item_sqls">Bază de date sit</string>
+    <string name="backup_item_roots_hint">(include wp-config.php și toate fișierele care nu sunt din WordPress)</string>
     <string name="backup_download_details_action_button">Creează un fișier care se poate descărca</string>
-    <string name="backup_download_details_choose_items_header">Alege elementele pe care vrei să le incluzi în descărcare:</string>
     <string name="backup_download_details_header">Creează copii de siguranță care se pot descărca</string>
     <string name="backup_download_details_page_title">Descarcă copia de siguranță</string>
     <string name="backup_download">Descărcare copii de siguranță</string>
@@ -434,7 +482,6 @@ Language: ro
     <string name="gutenberg_native_choose_image_or_video">Alege o imagine sau un video</string>
     <string name="gutenberg_native_choose_image">Alege o imagine</string>
     <string name="gutenberg_native_block_removed">Bloc înlăturat</string>
-    <string name="continue_with_wpcom">Continuă cu WordPress.com</string>
     <string name="signup_confirmation_title">Confirmare înregistrare</string>
     <string name="continue_with_google_terms_of_service_text">Dacă continui cu Google și nu ai deja un cont WordPress.com, îți creezi un cont și ești de acord cu %1$stermenii de utilizare ai serviciului%2$s nostru.</string>
     <string name="enter_your_site_address">Introdu adresa sitului tău de acum</string>
@@ -905,7 +952,6 @@ Language: ro
     <string name="post_settings_notification">Notificare</string>
     <string name="post_settings_time_and_date">Dată și oră</string>
     <string name="login_invalid_site_url">Te rog introdu adresa completă a sitului web, cum ar fi exemplu.com.</string>
-    <string name="enter_wordpress_site">Situl web de la această adresă nu este un sit WordPress. Pentru a-l putea conecta, situl trebuie să aibă instalat WordPress.</string>
     <string name="login_need_help_finding_connected_email">Ai nevoie de ajutor pentru a găsi emailul cu care te-ai conectat?</string>
     <string name="site_settings_editor">Editor</string>
     <string name="stats_loading_card">Încarc datele pentru cartușul selectat</string>
@@ -1405,7 +1451,6 @@ Language: ro
     <string name="my_site_icon_dialog_change_button">Modifică</string>
     <string name="activity_log_jetpack_icon">Icon Jetpack</string>
     <string name="activity_log_event">Eveniment</string>
-    <string name="activity">Activitate</string>
     <string name="privacy_policy_read">Citește politica de confidențialitate</string>
     <string name="cookie_policy_learn_more_header">Politică cookie-uri</string>
     <string name="privacy_policy_learn_more_header">Politică de confidențialitate</string>
@@ -2095,10 +2140,6 @@ Language: ro
     <string name="invite_error_invalid_usernames_multiple">Nu pot trimite: există nume de utilizator sau emailuri invalide</string>
     <string name="invite_error_invalid_usernames_one">Nu pot trimite: un nume utilizator sau un email este invalid</string>
     <string name="invite_error_no_usernames">Te rog adaugă cel puțin un nume utilizator</string>
-    <string name="invite_message_info">(Opțional) Poți introduce un mesaj personalizat de până la 500 de caractere care va fi inclus în invitația utilizatorului/utilizatorilor.</string>
-    <string name="invite_message_remaining_other">%d caractere rămase</string>
-    <string name="invite_message_remaining_one">1 caracter rămas</string>
-    <string name="invite_message_remaining_zero">Niciun caracter rămas</string>
     <string name="invite_message_title">Mesaj personalizat</string>
     <string name="invite">Invită</string>
     <string name="invite_names_title">Nume de utilizatori sau emailuri</string>

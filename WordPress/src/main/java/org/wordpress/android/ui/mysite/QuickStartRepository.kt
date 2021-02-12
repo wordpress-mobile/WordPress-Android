@@ -22,6 +22,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -63,7 +66,9 @@ class QuickStartRepository
     private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+    val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     private var pendingTask: QuickStartTask? = null
@@ -113,22 +118,19 @@ class QuickStartRepository
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
         pendingTask = null
-        val shortQuickStartMessage =
-                if (task == UPDATE_SITE_TITLE) {
-                    HtmlCompat.fromHtml(
-                            resourceProvider.getString(
-                                    R.string.quick_start_dialog_update_site_title_message_short,
-                                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                            ), HtmlCompat.FROM_HTML_MODE_COMPACT
-                    )
-                } else {
-                    val activeTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task)
-                    quickStartUtils.stylizeQuickStartPrompt(
-                            activeTutorialPrompt!!.shortMessagePrompt,
-                            activeTutorialPrompt.iconId
-                    )
-                }
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        if (task == UPDATE_SITE_TITLE) {
+            val shortQuickStartMessage = HtmlCompat.fromHtml(
+                    resourceProvider.getString(
+                            R.string.quick_start_dialog_update_site_title_message_short,
+                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
+                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        } else {
+            QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
+                _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
+            }
+        }
     }
 
     fun clearActiveTask() {
@@ -171,15 +173,22 @@ class QuickStartRepository
         job.cancel()
     }
 
-    fun hideCategory(id: String) {
-        val hiddenCategory = QuickStartTaskType.fromString(id)
+    fun hideCategory(dynamicCardType: DynamicCardType) {
+        val hiddenCategory = dynamicCardType.toQuickStartTaskType()
         hideQuickStartType(hiddenCategory)
     }
 
-    fun removeCategory(id: String) {
-        val removedQuickStartTaskType = QuickStartTaskType.fromString(id)
+    fun removeCategory(dynamicCardType: DynamicCardType) {
+        val removedQuickStartTaskType = dynamicCardType.toQuickStartTaskType()
         appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
         hideQuickStartType(removedQuickStartTaskType)
+    }
+
+    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
+        return when (this) {
+            CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            GROW_QUICK_START -> GROW
+        }
     }
 
     private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {
