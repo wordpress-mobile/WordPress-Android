@@ -6,15 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: es_VE
 -->
 <resources>
-    <string name="backup_item_sqls">Base de datos del sitio (SQL)</string>
-    <string name="backup_item_contents">Directorio wp-content (excluye themes, plugins y uploads)</string>
-    <string name="backup_item_roots">Raíz de WordPress (incluye wp-config php y cualquier archivo que no sea de WordPress)</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
     <string name="backup_item_plugins">Plugins de WordPress</string>
     <string name="backup_item_themes">Temas de WordPress</string>
     <string name="backup_download_details_icon_content_description">Crea un ícono de copia de seguridad descargable</string>
     <string name="backup_download_details_action_button">Crear un archivo descargable</string>
-    <string name="backup_download_details_choose_items_header">Elige los elementos que quieres incluir en la descarga:</string>
     <string name="backup_download_details_header">Crear una copia de seguridad descargable</string>
     <string name="backup_download_details_page_title">Descargar copia de seguridad</string>
     <string name="backup_download">Descarga de la copia de seguridad</string>
@@ -39,7 +35,6 @@ Language: es_VE
     <string name="gutenberg_native_copy_file_url">Copiar la URL del archivo </string>
     <string name="gutenberg_native_choose_a_file">ELEGIR UN ARCHIVO</string>
     <string name="new_site_creation_domain_header_title">Elige un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Ajustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_btn_following_comments">Siguiendo la conversación por correo electrónico</string>
     <string name="reader_btn_follow_comments">Seguir la conversación por correo electrónico</string>
@@ -265,7 +260,6 @@ Language: es_VE
     <string name="gutenberg_native_choose_image">Elegir una imagen</string>
     <string name="gutenberg_native_block_removed">Bloque eliminado</string>
     <string name="enter_your_site_address">Introduce la dirección de tu sitio existente</string>
-    <string name="continue_with_wpcom">Continuar con WordPress.com</string>
     <string name="signup_confirmation_title">Confirmación del registro</string>
     <string name="continue_with_google_terms_of_service_text">Si continúas con Google y aún no tienes una cuenta de WordPress.com, crearás una cuenta y aceptas nuestros %1$stérminos del servicio%2$s.</string>
     <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
@@ -735,7 +729,6 @@ Language: es_VE
     <string name="post_settings_notification">Aviso</string>
     <string name="post_settings_time_and_date">Fecha y hora</string>
     <string name="login_need_help_finding_connected_email">¿Necesitas ayuda para encontrar el correo electrónico con el que te conectaste?</string>
-    <string name="enter_wordpress_site">La web en esa dirección no es un sitio WordPress. Para conectarnos a él, el sitio debe tener instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce una dirección completa de una web, como example.com.</string>
     <string name="enter_email_for_site">Accede con WordPress.com para conectar con %1$s</string>
     <string name="stats_post_views_label">Visitas</string>
@@ -1240,7 +1233,6 @@ Language: es_VE
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icono de actividad</string>
     <string name="activity_log">Registro de actividad</string>
-    <string name="activity">Actividad</string>
     <string name="privacy_policy_read">Lee la política de privacidad</string>
     <string name="third_party_policy_learn_more_caption">Usamos otras herramientas de seguimiento, incluidas algunas de terceros. Lee acerca de estas y cómo controlarlas.</string>
     <string name="third_party_policy_learn_more_header">Política de terceros</string>
@@ -1925,13 +1917,7 @@ Language: es_VE
     <string name="invite_error_invalid_usernames_multiple">No se pudo enviar: Hay nombres de usuario o correos electrónicos no válidos.</string>
     <string name="invite_error_invalid_usernames_one">No se pudo enviar: Un nombre de usuario o correo electrónico no es válido</string>
     <string name="invite_error_no_usernames">Por favor, añade al menos un nombre de usuario</string>
-    <string name="invite_message_info">(Opcional) Puedes introducir un mensaje personalizado de hasta 500 caracteres que se incluirá en la invitación.</string>
-    <string name="invite_message_remaining_other">%d caracteres restantes</string>
-    <string name="invite_message_remaining_one">Queda 1 carácter</string>
-    <string name="invite_message_remaining_zero">Quedan 0 caracteres</string>
-    <string name="invite_message_title">Mensaje personalizado</string>
     <string name="invite">Invitar</string>
-    <string name="invite_names_title">Nombres de usuario o correos electrónicos</string>
     <string name="invite_people">Invitar a gente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar enlace</string>

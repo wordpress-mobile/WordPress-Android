@@ -9,9 +9,11 @@ import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 
 sealed class ScanListItemState(override val type: ViewType) : JetpackListItemState(type) {
-    data class ThreatsHeaderItemState(val text: UiString = UiStringRes(R.string.threats_found)) : ScanListItemState(
+    data class ThreatsHeaderItemState(val threatsCount: Int) : ScanListItemState(
         ViewType.THREATS_HEADER
-    )
+    ) {
+        val text = UiStringRes(if (threatsCount > 1) R.string.threats_found_plural else R.string.threats_found_singular)
+    }
 
     data class ThreatItemState(
         val threatId: Long,

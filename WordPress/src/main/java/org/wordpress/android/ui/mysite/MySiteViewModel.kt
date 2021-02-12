@@ -151,6 +151,7 @@ class MySiteViewModel
 
     val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
+    val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
     val onBasicDialogShown = _onBasicDialogShown as LiveData<Event<SiteDialogModel>>
     val onDynamicCardMenuShown = _onDynamicCardMenuShown as LiveData<Event<DynamicCardMenuModel>>

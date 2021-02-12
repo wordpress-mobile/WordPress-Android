@@ -66,7 +66,9 @@ class QuickStartRepository
     private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+    val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     init {
@@ -112,22 +114,19 @@ class QuickStartRepository
 
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
-        val shortQuickStartMessage =
-                if (task == UPDATE_SITE_TITLE) {
-                    HtmlCompat.fromHtml(
-                            resourceProvider.getString(
-                                    R.string.quick_start_dialog_update_site_title_message_short,
-                                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                            ), HtmlCompat.FROM_HTML_MODE_COMPACT
-                    )
-                } else {
-                    val activeTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task)
-                    quickStartUtils.stylizeQuickStartPrompt(
-                            activeTutorialPrompt!!.shortMessagePrompt,
-                            activeTutorialPrompt.iconId
-                    )
-                }
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        if (task == UPDATE_SITE_TITLE) {
+            val shortQuickStartMessage = HtmlCompat.fromHtml(
+                    resourceProvider.getString(
+                            R.string.quick_start_dialog_update_site_title_message_short,
+                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
+                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        } else {
+            QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
+                _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
+            }
+        }
     }
 
     fun completeTask(task: QuickStartTask) {
