@@ -276,12 +276,11 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     /* FIXABLE THREAT */
 
     @Test
-    fun `given fixable threat, when items are built, then fix details items are built correctly`() {
+    fun `given fixable threat not in fixed status, when items are built, then fix header exists`() {
         // Arrange
         val fixableThreat = GenericThreatModel(
             ThreatTestData.baseThreatModel.copy(
-                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null),
-                status = ThreatStatus.CURRENT
+                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
             )
         )
 
@@ -289,10 +288,23 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
         val threatItems = buildThreatDetailsListItems(fixableThreat)
 
         // Assert
-        assertThat(threatItems).containsSubsequence(
-            HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header)),
-            DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit))
+        assertThat(threatItems).contains(HeaderState(UiStringRes(R.string.threat_fix_current_fixable_header)))
+    }
+
+    @Test
+    fun `given fixable threat not in fixed status, when items are built, then fix description exists`() {
+        // Arrange
+        val fixableThreat = GenericThreatModel(
+            ThreatTestData.baseThreatModel.copy(
+                fixable = Fixable(file = null, fixer = Fixable.FixType.EDIT, target = null)
+            )
         )
+
+        // Act
+        val threatItems = buildThreatDetailsListItems(fixableThreat)
+
+        // Assert
+        assertThat(threatItems).contains(DescriptionState(UiStringRes(R.string.threat_fix_fixable_edit)))
     }
 
     @Test
@@ -339,17 +351,26 @@ class ThreatDetailsListItemsBuilderTest : BaseUnitTest() {
     /* NON FIXABLE THREAT */
 
     @Test
-    fun `given non fixable threat, when items are built, then fix details items are built correctly`() {
+    fun `given non fixable threat, when items are built, then not fixable header exists`() {
         // Arrange
-        val notFixableThreat = GenericThreatModel(
-            ThreatTestData.baseThreatModel.copy(fixable = null, status = ThreatStatus.CURRENT)
-        )
+        val notFixableThreat = GenericThreatModel(ThreatTestData.baseThreatModel.copy(fixable = null))
 
         // Act
         val threatItems = buildThreatDetailsListItems(notFixableThreat)
 
         // Assert
         assertThat(threatItems).contains(HeaderState(UiStringRes(R.string.threat_fix_current_not_fixable_header)))
+    }
+
+    @Test
+    fun `given non fixable threat, when items are built, then not fixable description exists`() {
+        // Arrange
+        val notFixableThreat = GenericThreatModel(ThreatTestData.baseThreatModel.copy(fixable = null))
+
+        // Act
+        buildThreatDetailsListItems(notFixableThreat)
+
+        // Assert
         verify(htmlMessageUtils)
             .getHtmlMessageFromStringFormatResId(R.string.threat_fix_current_not_fixable_description)
     }
