@@ -9,6 +9,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import com.android.volley.VolleyError
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
@@ -100,8 +101,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
                     val linksData = gson.fromJson<Array<InviteLinksItem>>(linksSection, mapType).toList()
 
                     Success(linksData)
-                } catch (e: Exception) {
-                    AppLog.d(T.PEOPLE, "getLinks > Error parsing server API response: error[{${e.message}}]")
+                } catch (jsonEx: JsonParseException) {
+                    AppLog.d(T.PEOPLE, "getLinks > Error parsing server API response: error[{${jsonEx.message}}]")
                     Failure(contextProvider.getContext().getString((string.invite_links_bad_format_response)))
                 }
             } else {

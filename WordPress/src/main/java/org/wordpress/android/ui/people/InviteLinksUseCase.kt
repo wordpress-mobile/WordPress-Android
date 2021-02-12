@@ -56,7 +56,7 @@ class InviteLinksUseCase @Inject constructor(
             flow.emit(UserNotAuthenticated)
         } else {
             flow.emit(InviteLinksLoading(scenarioContext))
-            delay(600) // Pretty arbitrary amount to allow the progress bar to appear to the user
+            delay(PROGRESS_DELAY_MS)
             if (!networkUtilsWrapper.isNetworkAvailable()) {
                 flow.emit(InviteLinksError(scenarioContext, UiStringRes(string.error_network_connection)))
             } else {
@@ -133,5 +133,10 @@ class InviteLinksUseCase @Inject constructor(
             override val scenarioContext: UseCaseScenarioContext,
             val error: UiString
         ) : InviteLinksState()
+    }
+
+    companion object {
+        // Pretty arbitrary amount to allow the progress bar to appear to the user
+        private const val PROGRESS_DELAY_MS = 600L
     }
 }

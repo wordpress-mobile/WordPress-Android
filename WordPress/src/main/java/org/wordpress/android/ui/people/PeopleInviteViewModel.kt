@@ -8,10 +8,8 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.store.SiteStore
-import org.wordpress.android.models.wrappers.RoleUtilsWrapper
+import org.wordpress.android.models.InvitePeopleUtils
 import org.wordpress.android.modules.BG_THREAD
-import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksItem
 import org.wordpress.android.ui.people.InviteLinksUiStateType.GET_STATUS_RETRY
@@ -26,7 +24,6 @@ import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState.Invit
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState.InviteLinksNotAllowed
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState.InviteLinksUserChangedRole
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState.UserNotAuthenticated
-import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext
 import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext.GENERATING_LINKS
 import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext.INITIALIZING
 import org.wordpress.android.ui.people.InviteLinksUseCase.UseCaseScenarioContext.MANAGING_AVAILABLE_LINKS
@@ -44,13 +41,11 @@ import javax.inject.Named
 
 class PeopleInviteViewModel @Inject constructor(
     private val inviteLinksHandler: InviteLinksHandler,
-    @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
-    private val siteStore: SiteStore,
     private val contextProvider: ContextProvider,
-    private val roleUtilsWrapper: RoleUtilsWrapper
-) : ScopedViewModel(mainDispatcher) {
+    private val invitePeopleUtils: InvitePeopleUtils
+) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var inviteLinksRequestJob: Job? = null
     private lateinit var siteModel: SiteModel
@@ -86,7 +81,10 @@ class PeopleInviteViewModel @Inject constructor(
 
         if (siteModel.isWpForTeamsSite) {
             _inviteLinksState.value = InviteLinksLoading(INITIALIZING)
-            getInviteLinksStatus(INITIALIZING)
+            inviteLinksRequestJob?.cancel()
+            inviteLinksRequestJob = launch(bgDispatcher) {
+                inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING)
+            }
         } else {
             _inviteLinksState.value = InviteLinksNotAllowed
         }
@@ -114,7 +112,7 @@ class PeopleInviteViewModel @Inject constructor(
     }
 
     fun onLinksRoleClicked() {
-        val roles = getInviteLinksRoleDisplayNames()
+        val roles = invitePeopleUtils.getInviteLinksRoleDisplayNames(inviteLinksData, siteModel)
 
         if (roles.count() > 0) {
             _showSelectLinksRoleDialog.value = Event(roles.toTypedArray())
@@ -132,7 +130,11 @@ class PeopleInviteViewModel @Inject constructor(
     }
 
     fun onLinksRoleSelected(roleDisplayName: String) {
-        val selectedRole = getInviteLinkDataFromRoleDisplayName(roleDisplayName)
+        val selectedRole = invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(
+                inviteLinksData,
+                siteModel,
+                roleDisplayName
+        )
 
         selectedRole?.let {
             _inviteLinksState.value = InviteLinksUserChangedRole(it)
@@ -154,7 +156,11 @@ class PeopleInviteViewModel @Inject constructor(
     }
 
     fun onShareButtonClicked(roleDisplayName: String) {
-        val selectedRole = getInviteLinkDataFromRoleDisplayName(roleDisplayName)
+        val selectedRole = invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(
+                inviteLinksData,
+                siteModel,
+                roleDisplayName
+        )
 
         selectedRole?.let {
             _shareLink.value = Event(it)
@@ -175,84 +181,15 @@ class PeopleInviteViewModel @Inject constructor(
         }
     }
 
-    private fun getInviteLinksStatus(scenarioContext: UseCaseScenarioContext) {
-        inviteLinksRequestJob?.cancel()
-        inviteLinksRequestJob = launch(bgDispatcher) {
-            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, scenarioContext)
-        }
-    }
-
-    private fun getInviteLinkDataFromRoleDisplayName(roleDisplayName: String): InviteLinksItem? {
-        val roles = getMappedLinksUiItems()
-
-        return inviteLinksData.firstOrNull { linksItem ->
-            roles.firstOrNull { linksUiItem ->
-                linksItem.role.equals(linksUiItem.roleName, ignoreCase = true) &&
-                        linksUiItem.roleDisplayName.equals(roleDisplayName, ignoreCase = true)
-            } != null
-        }
-    }
-
-    private fun getDisplayNameForRole(roleName: String): String {
-        val roles = roleUtilsWrapper.getInviteRoles(siteStore, siteModel, contextProvider.getContext())
-
-        return roles?.firstOrNull { roleModel ->
-            roleModel.name.equals(roleName, ignoreCase = true)
-        }?.displayName ?: ""
-    }
-
-    private fun getMappedLinksUiItems(): List<InviteLinksUiItem> {
-        val formatter = SimpleDateFormat.getDateInstance()
-        val roles = roleUtilsWrapper.getInviteRoles(siteStore, siteModel, contextProvider.getContext())
-
-        AppLog.d(T.PEOPLE, "getMappedLinksUiItems > ${siteModel.siteId}")
-        AppLog.d(
-                T.PEOPLE,
-                "getMappedLinksUiItems > roles: ${roles.map { "DisplayName: ${it.displayName} Name: ${it.name}" }}"
-        )
-        AppLog.d(
-                T.PEOPLE,
-                "getMappedLinksUiItems > " +
-                        "inviteLinksData: ${inviteLinksData.map { "DisplayName: ${it.role} Expiry: ${it.expiry}" }}"
-        )
-
-        return roles?.let {
-            it.filter { role ->
-                inviteLinksData.firstOrNull { linksItem ->
-                    role.name.equals(linksItem.role, ignoreCase = true)
-                } != null
-            }.map { role ->
-                val linksData = inviteLinksData.first { linksItem ->
-                    role.name.equals(linksItem.role, ignoreCase = true)
-                }
-
-                InviteLinksUiItem(
-                        roleName = role.name,
-                        roleDisplayName = role.displayName,
-                        expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(linksData.expiry))
-                )
-            }
-        } ?: listOf()
-    }
-
-    private fun getInviteLinksRoleDisplayNames(): List<String> {
-        val mappedRolesItems = getMappedLinksUiItems()
-
-        return mappedRolesItems.map { linksItem ->
-            linksItem.roleDisplayName
-        }
-    }
-
     private fun buildInviteLinksUiState(inviteLinksState: InviteLinksState): InviteLinksUiState {
         val formatter = SimpleDateFormat.getDateInstance()
-
-        var links: List<InviteLinksUiItem> = getMappedLinksUiItems()
+        var links: List<InviteLinksUiItem> = invitePeopleUtils.getMappedLinksUiItems(inviteLinksData, siteModel)
 
         if (inviteLinksState is InviteLinksData) {
             inviteLinksData.clear()
             inviteLinksData.addAll(inviteLinksState.links)
 
-            links = getMappedLinksUiItems()
+            links = invitePeopleUtils.getMappedLinksUiItems(inviteLinksData, siteModel)
 
             inviteLinksSelectedRole = links.firstOrNull() ?: InviteLinksUiItem.getEmptyItem()
         } else if (
@@ -269,12 +206,41 @@ class PeopleInviteViewModel @Inject constructor(
 
             inviteLinksSelectedRole = InviteLinksUiItem(
                     roleName = roleData.role,
-                    roleDisplayName = getDisplayNameForRole(roleData.role),
+                    roleDisplayName = invitePeopleUtils.getDisplayNameForRole(siteModel, roleData.role),
                     expiryDate = formatter.format(dateTimeUtilsWrapper.dateFromTimestamp(roleData.expiry))
             )
         }
 
-        val uiStateType = when (inviteLinksState) {
+        val uiStateType = mapUiStateType(inviteLinksState, links)
+
+        val loadAndRetryUiState = if (inviteLinksState.scenarioContext != INITIALIZING ||
+                listOf(LINKS_AVAILABLE, LINKS_GENERATE).contains(uiStateType)) {
+            LoadAndRetryUiState.HIDDEN
+        } else {
+            if (uiStateType == GET_STATUS_RETRY) {
+                LoadAndRetryUiState.RETRY
+            } else {
+                LoadAndRetryUiState.LOADING
+            }
+        }
+
+        return InviteLinksUiState(
+                type = uiStateType,
+                isLinksSectionVisible = uiStateType != HIDDEN,
+                loadAndRetryUiState = loadAndRetryUiState,
+                isShimmerSectionVisible = loadAndRetryUiState == LoadAndRetryUiState.HIDDEN,
+                isRoleSelectionAllowed = links.count() > 1,
+                links = links,
+                inviteLinksSelectedRole = inviteLinksSelectedRole,
+                enableManageLinksActions = links.count() > 0
+        )
+    }
+
+    private fun mapUiStateType(
+        inviteLinksState: InviteLinksState,
+        links: List<InviteLinksUiItem>
+    ): InviteLinksUiStateType {
+        return when (inviteLinksState) {
             InviteLinksNotAllowed, UserNotAuthenticated -> HIDDEN
             is InviteLinksData -> if (links.count() > 0) LINKS_AVAILABLE else LINKS_GENERATE
             is InviteLinksError -> when (inviteLinksState.scenarioContext) {
@@ -285,34 +251,6 @@ class PeopleInviteViewModel @Inject constructor(
             is InviteLinksLoading -> LOADING
             is InviteLinksUserChangedRole -> LINKS_AVAILABLE
         }
-
-        val loadAndRetryUiState = if (inviteLinksState.scenarioContext != INITIALIZING || listOf(
-                        LINKS_AVAILABLE,
-                        LINKS_GENERATE
-                ).contains(uiStateType)) {
-            LoadAndRetryUiState.HIDDEN
-        } else {
-            if (uiStateType == GET_STATUS_RETRY) {
-                LoadAndRetryUiState.RETRY
-            } else {
-                LoadAndRetryUiState.LOADING
-            }
-        }
-
-        val showShimmerSection = loadAndRetryUiState == LoadAndRetryUiState.HIDDEN
-        val startShimmer = showShimmerSection && uiStateType == LOADING
-
-        return InviteLinksUiState(
-                type = uiStateType,
-                isLinksSectionVisible = uiStateType != HIDDEN,
-                loadAndRetryUiState = loadAndRetryUiState,
-                isShimmerSectionVisible = showShimmerSection,
-                startShimmer = startShimmer,
-                isRoleSelectionAllowed = links.count() > 1,
-                links = links,
-                inviteLinksSelectedRole = inviteLinksSelectedRole,
-                enableManageLinksActions = links.count() > 0
-        )
     }
 
     override fun onCleared() {
