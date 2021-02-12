@@ -764,6 +764,9 @@ public final class AnalyticsTracker {
         MY_SITE_CREATE_SHEET_ACTION_TAPPED,
         POST_LIST_CREATE_SHEET_SHOWN,
         POST_LIST_CREATE_SHEET_ACTION_TAPPED,
+        INVITE_LINKS_GENERATE,
+        INVITE_LINKS_DISABLE,
+        INVITE_LINKS_SHARE
     }
 
     private static final List<Tracker> TRACKERS = new ArrayList<>();
