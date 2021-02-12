@@ -139,7 +139,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         initStore()
         val task = PUBLISH_POST
 
-        initActiveTask(QuickStartMySitePrompts.PUBLISH_POST_TUTORIAL)
         quickStartRepository.setActiveTask(task)
         quickStartRepository.requestNextStepOfTask(task)
         quickStartRepository.completeTask(task)
@@ -201,7 +200,6 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `clearActiveTask clears current active task`() = test {
         initQuickStartInProgress()
 
-        initActiveTask(QuickStartMySitePrompts.SHARE_SITE_TUTORIAL)
         quickStartRepository.setActiveTask(ENABLE_POST_SHARING)
         quickStartRepository.clearActiveTask()
 
