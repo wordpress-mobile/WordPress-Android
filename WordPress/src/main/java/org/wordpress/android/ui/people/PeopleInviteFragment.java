@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.people;
 
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextUtils;
@@ -13,14 +14,20 @@ import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.facebook.shimmer.ShimmerFrameLayout;
+import com.google.android.material.button.MaterialButton;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
 import com.google.android.material.textview.MaterialTextView;
 
@@ -32,13 +39,17 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.SiteStore;
 import org.wordpress.android.models.RoleUtils;
 import org.wordpress.android.ui.ActivityLauncher;
+import org.wordpress.android.ui.people.PeopleInviteDialogFragment.DialogMode;
 import org.wordpress.android.ui.people.WPEditTextWithChipsOutlined.ItemValidationState;
 import org.wordpress.android.ui.people.WPEditTextWithChipsOutlined.ItemsManagerInterface;
 import org.wordpress.android.ui.people.utils.PeopleUtils;
 import org.wordpress.android.ui.people.utils.PeopleUtils.ValidateUsernameCallback.ValidationResult;
+import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.viewmodel.ContextProvider;
+import org.wordpress.android.widgets.WPSnackbar;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -53,12 +64,15 @@ import javax.inject.Inject;
 import static com.google.android.material.textfield.TextInputLayout.END_ICON_DROPDOWN_MENU;
 import static com.google.android.material.textfield.TextInputLayout.END_ICON_NONE;
 
+import kotlin.Unit;
+
 public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFragment.OnRoleSelectListener,
         PeopleManagementActivity.InvitationSender {
     private static final String URL_USER_ROLES_DOCUMENTATION = "https://en.support.wordpress.com/user-roles/";
     private static final String FLAG_SUCCESS = "SUCCESS";
     private static final String KEY_USERNAMES = "usernames";
     private static final String KEY_SELECTED_ROLE = "selected-role";
+    public static final String DIALOG_TAG = "dialog_fragment_tag";
 
     private ArrayList<String> mUsernames = new ArrayList<>();
     private final HashMap<String, String> mUsernameResults = new HashMap<>();
@@ -69,6 +83,20 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private TextInputLayout mRoleContainer;
     private EditText mCustomMessageEditText;
 
+    private ViewGroup mCoordinator;
+    private ViewGroup mInviteLinkContainer;
+    private ShimmerFrameLayout mShimmerContainer;
+    private MaterialButton mGenerateLinksButton;
+    private ViewGroup mLoadAndRetryLinksContainer;
+    private MaterialButton mRetryButton;
+    private ProgressBar mLoadingLinksProgress;
+    private ViewGroup mManageLinksContainer;
+    private MaterialButton mShareLinksButton;
+    private AutoCompleteTextView mLinksRoleTextView;
+    private TextInputLayout mLinksRoleContainer;
+    private MaterialButton mDisableLinksButton;
+    private MaterialTextView mExpireDateTextView;
+
     private List<RoleModel> mInviteRoles;
     private String mCurrentRole;
     private String mCustomMessage = "";
@@ -76,6 +104,11 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
     private SiteModel mSite;
 
     @Inject SiteStore mSiteStore;
+    @Inject ViewModelProvider.Factory mViewModelFactory;
+    @Inject UiHelpers mUiHelpers;
+    @Inject ContextProvider mContextProvider;
+
+    private PeopleInviteViewModel mViewModel;
 
     public static PeopleInviteFragment newInstance(SiteModel site) {
         PeopleInviteFragment peopleInviteFragment = new PeopleInviteFragment();
@@ -124,7 +157,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         super.onCreate(savedInstanceState);
         ((WordPress) getActivity().getApplicationContext()).component().inject(this);
         updateSiteOrFinishActivity();
-        mInviteRoles = RoleUtils.getInviteRoles(mSiteStore, mSite, this);
+        mInviteRoles = RoleUtils.getInviteRoles(mSiteStore, mSite, mContextProvider.getContext());
 
         if (savedInstanceState != null) {
             mCurrentRole = savedInstanceState.getString(KEY_SELECTED_ROLE);
@@ -158,7 +191,165 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
             actionBar.setTitle(R.string.invite_people);
         }
 
+        mInviteLinkContainer = rootView.findViewById(R.id.invite_links_container);
+        mShimmerContainer = rootView.findViewById(R.id.shimmer_view_container);
+        mGenerateLinksButton = rootView.findViewById(R.id.generate_links);
+        mLoadAndRetryLinksContainer = rootView.findViewById(R.id.load_and_retry_container);
+        mRetryButton = rootView.findViewById(R.id.get_status_retry);
+        mLoadingLinksProgress = rootView.findViewById(R.id.get_links_status_progress);
+        mManageLinksContainer = rootView.findViewById(R.id.manage_links_container);
+        mShareLinksButton = rootView.findViewById(R.id.share_links);
+        mLinksRoleTextView = rootView.findViewById(R.id.links_role);
+        mLinksRoleContainer = rootView.findViewById(R.id.links_role_container);
+        mDisableLinksButton = rootView.findViewById(R.id.disable_button);
+        mExpireDateTextView = rootView.findViewById(R.id.expire_date);
+
         return rootView;
+    }
+
+    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PeopleInviteViewModel.class);
+
+        mGenerateLinksButton.setOnClickListener(v -> {
+            mViewModel.onGenerateLinksButtonClicked();
+        });
+
+        mShareLinksButton.setOnClickListener(v -> {
+            mViewModel.onShareButtonClicked(
+                    mLinksRoleTextView.getText() != null
+                            ? mLinksRoleTextView.getText().toString()
+                            : ""
+            );
+        });
+
+        mDisableLinksButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
+
+            PeopleInviteDialogFragment
+                    .newInstance(this, DialogMode.DISABLE_INVITE_LINKS_CONFIRMATION)
+                    .show(getParentFragmentManager(), DIALOG_TAG);
+        });
+
+        mRetryButton.setOnClickListener(v -> {
+            mViewModel.onRetryButtonClicked();
+        });
+
+        mViewModel.getSnackbarEvents().observe(getViewLifecycleOwner(), event ->
+                event.applyIfNotHandled(holder -> {
+                    WPSnackbar.make(mCoordinator,
+                            mUiHelpers.getTextOfUiString(mContextProvider.getContext(), holder.getMessage()),
+                            Snackbar.LENGTH_LONG)
+                              .show();
+                    return Unit.INSTANCE;
+                })
+        );
+
+        mViewModel.getInviteLinksUiState().observe(getViewLifecycleOwner(), uiState -> {
+            mInviteLinkContainer.setVisibility(uiState.isLinksSectionVisible() ? View.VISIBLE : View.GONE);
+
+            mLoadAndRetryLinksContainer.setVisibility(
+                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.HIDDEN
+                            ? View.GONE
+                            : View.VISIBLE
+            );
+            mLoadingLinksProgress.setVisibility(
+                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.LOADING
+                            ? View.VISIBLE
+                            : View.GONE
+            );
+            mRetryButton.setVisibility(
+                    uiState.getLoadAndRetryUiState() == LoadAndRetryUiState.RETRY
+                            ? View.VISIBLE
+                            : View.GONE
+            );
+
+            mShimmerContainer.setVisibility(uiState.isShimmerSectionVisible() ? View.VISIBLE : View.GONE);
+
+            if (uiState.getStartShimmer()) {
+                if (mShimmerContainer.isShimmerVisible()) {
+                    mShimmerContainer.startShimmer();
+                } else {
+                    mShimmerContainer.showShimmer(true);
+                }
+            } else {
+                mShimmerContainer.hideShimmer();
+            }
+
+            switch (uiState.getType()) {
+                case HIDDEN:
+                case LOADING:
+                case GET_STATUS_RETRY:
+                    // Nothing to do here
+                    break;
+                case LINKS_GENERATE:
+                    mManageLinksContainer.setVisibility(View.GONE);
+                    mGenerateLinksButton.setVisibility(View.VISIBLE);
+
+                    break;
+                case LINKS_AVAILABLE:
+                    mGenerateLinksButton.setVisibility(View.GONE);
+                    mManageLinksContainer.setVisibility(View.VISIBLE);
+
+                    mLinksRoleTextView.setShowSoftInputOnFocus(false);
+                    mLinksRoleTextView.setInputType(EditorInfo.TYPE_NULL);
+                    mLinksRoleTextView.setKeyListener(null);
+
+                    if (uiState.isRoleSelectionAllowed()) {
+                        mLinksRoleContainer.setEndIconMode(END_ICON_DROPDOWN_MENU);
+                        mLinksRoleTextView.setOnClickListener(v -> {
+                            mViewModel.onLinksRoleClicked();
+                        });
+                        mLinksRoleTextView.setFocusable(true);
+                        mLinksRoleTextView.setFocusableInTouchMode(true);
+                    } else {
+                        mLinksRoleContainer.setEndIconMode(END_ICON_NONE);
+                        mLinksRoleTextView.setOnClickListener(null);
+                        mLinksRoleTextView.setFocusable(false);
+                        mLinksRoleTextView.setFocusableInTouchMode(false);
+                    }
+
+                    mLinksRoleContainer.setEndIconOnClickListener(null);
+                    mLinksRoleContainer.setEndIconCheckable(false);
+
+                    mLinksRoleTextView.setText(uiState.getInviteLinksSelectedRole().getRoleDisplayName());
+                    mExpireDateTextView.setText(
+                            getString(
+                                    R.string.invite_links_expire_date,
+                                    uiState.getInviteLinksSelectedRole().getExpiryDate()
+                            )
+                    );
+
+                    break;
+            }
+        });
+
+        mViewModel.getShareLink().observe(getViewLifecycleOwner(), event ->
+            event.applyIfNotHandled(linksItem -> {
+                Intent shareIntent = new Intent(Intent.ACTION_SEND);
+                shareIntent.setType("text/plain");
+                shareIntent.putExtra(Intent.EXTRA_TEXT, linksItem.getLink());
+
+                startActivity(Intent.createChooser(shareIntent, getResources().getString(R.string.share_link)));
+
+                return null;
+            }
+        ));
+
+        mViewModel.getShowSelectLinksRoleDialog().observe(getViewLifecycleOwner(), event ->
+            event.applyIfNotHandled(roles -> {
+                if (isAdded()) {
+                    PeopleInviteDialogFragment
+                            .newInstance(this, DialogMode.INVITE_LINKS_ROLE_SELECTION, roles)
+                            .show(getParentFragmentManager(), DIALOG_TAG);
+                }
+
+                return null;
+            }
+        ));
+
+        mViewModel.start(mSite);
     }
 
     @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
@@ -168,6 +359,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mRoleContainer = getView().findViewById(R.id.role_container);
         mRoleTextView = getView().findViewById(R.id.role);
         mCustomMessageEditText = (EditText) getView().findViewById(R.id.message);
+        mCoordinator = getView().findViewById(R.id.coordinator_layout);
 
         if (TextUtils.isEmpty(mCurrentRole)) {
             mCurrentRole = getDefaultRole();
