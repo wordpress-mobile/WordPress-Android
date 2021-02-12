@@ -13,9 +13,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         ViewType.THREATS_HEADER
     )
 
-    data class ThreatDateItemState(val text:UiString):ScanListItemState(
-        ViewType.THREAT_DETECTED_DATE
-    )
+    data class ThreatDateItemState(val text:UiString) : ScanListItemState(ViewType.THREAT_DETECTED_DATE)
 
     data class ThreatItemState(
         val threatId: Long,
@@ -30,9 +28,9 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
     ) : ScanListItemState(
         ViewType.THREAT_ITEM
     ) {
-        override fun longId() = threatId.hashCode().toLong()
         val isLoadingVisible = isFixing
         val isIconVisible = !isFixing
+        override fun longId() = threatId.hashCode().toLong()
     }
 
     object ThreatItemLoadingSkeletonState : ScanListItemState(ViewType.THREAT_ITEM_LOADING_SKELETON)
