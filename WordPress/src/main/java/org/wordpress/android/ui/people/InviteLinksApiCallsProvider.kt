@@ -29,7 +29,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
             val result = getLinks(jsonObject)
             AppLog.d(
                     T.PEOPLE,
-                    "getInviteLinksStatus > Succeeded [blogId=$blogId - result = $result]"
+                    "getInviteLinksStatus > Succeeded [blogId=$blogId - result = " +
+                            "${(result as Success).links.map { "Name: ${it.role} Expiry: ${it.expiry}" }}]"
             )
             cont.resume(result)
         }
