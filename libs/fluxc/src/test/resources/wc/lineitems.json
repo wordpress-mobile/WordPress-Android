@@ -108,6 +108,10 @@
       },
       {
         "display_value": []
+      },
+      {
+        "display_key": "",
+        "display_value": "empty key"
       }
     ],
     "sku":"woo-vneck-tee",
