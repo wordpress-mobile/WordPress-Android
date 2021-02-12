@@ -13,7 +13,6 @@ import android.text.TextUtils;
 import android.view.HapticFeedbackConstants;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewParent;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -81,6 +80,7 @@ import org.wordpress.android.ui.accounts.SignupEpilogueActivity;
 import org.wordpress.android.ui.main.WPMainNavigationView.OnPageListener;
 import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
+import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.mysite.SelectedSiteRepository;
 import org.wordpress.android.ui.notifications.NotificationEvents;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -101,6 +101,7 @@ import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.prefs.AppSettingsFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsFragment;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
+import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts;
 import org.wordpress.android.ui.reader.ReaderFragment;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateTask;
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
@@ -128,6 +129,7 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.service.InstallationReferrerServiceStarter;
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo;
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
 import org.wordpress.android.widgets.WPDialogSnackbar;
@@ -212,6 +214,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Inject MediaPickerLauncher mMediaPickerLauncher;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
     @Inject SelectedSiteRepository mSelectedSiteRepository;
+    @Inject QuickStartRepository mQuickStartRepository;
 
     /*
      * fragments implement this if their contents can be scrolled, called when user
@@ -229,23 +232,14 @@ public class WPMainActivity extends LocaleAwareActivity implements
         boolean onActivityBackPressed();
     }
 
-    private Runnable mShowFabFocusPoint = new Runnable() {
-        @Override public void run() {
-            if (isFinishing()) {
-                return;
-            }
-            boolean focusPointVisible =
-                    findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point) != null;
-            if (!focusPointVisible) {
-                int horizontalOffset = getResources().getDimensionPixelOffset(
-                        R.dimen.quick_start_focus_point_my_site_right_offset
-                );
-                int focusPointSize = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
-                QuickStartUtils.addQuickStartFocusPointAboveTheView(
-                        findViewById(R.id.fab_container), mFloatingActionButton, horizontalOffset,
-                        (mFloatingActionButton.getHeight() - focusPointSize) / 2
-                );
-            }
+    private final Runnable mShowFabFocusPoint = () -> {
+        if (isFinishing()) {
+            return;
+        }
+        boolean focusPointVisible =
+                findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point) != null;
+        if (!focusPointVisible) {
+            addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, true);
         }
     };
 
@@ -447,16 +441,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                     mHandler.postDelayed(mShowFabFocusPoint, 200);
                 } else if (!fabUiState.isFocusPointVisible()) {
                     mHandler.removeCallbacks(mShowFabFocusPoint);
-                    mHandler.post(() -> {
-                        View focusPointView =
-                                findViewById(R.id.fab_container).findViewById(R.id.quick_start_focus_point);
-                        if (focusPointView != null) {
-                            ViewParent directParent = focusPointView.getParent();
-                            if (directParent instanceof ViewGroup) {
-                                ((ViewGroup) directParent).removeView(focusPointView);
-                            }
-                        }
-                    });
+                    mHandler.post(() -> addOrRemoveQuickStartFocusPoint(QuickStartTask.PUBLISH_POST, false));
                 }
             }
         });
@@ -504,6 +489,15 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 );
             }
         });
+
+        mViewModel.getOnFocusPointVisibilityChange().observe(this, event ->
+                event.applyIfNotHandled(focusPointInfos -> {
+                    for (FocusPointInfo focusPointInfo : focusPointInfos) {
+                        addOrRemoveQuickStartFocusPoint(focusPointInfo.getTask(), focusPointInfo.isVisible());
+                    }
+                    return null;
+                })
+        );
 
         mMLPViewModel.getOnCreateNewPageRequested().observe(this, request -> {
             handleNewPageAction(request.getTitle(), request.getContent(), request.getTemplate(),
@@ -902,12 +896,22 @@ public class WPMainActivity extends LocaleAwareActivity implements
         mReaderTracker.onBottomNavigationTabChanged();
         PageType pageType = WPMainNavigationView.getPageType(position);
         trackLastVisiblePage(pageType, true);
-        if (getMySiteFragment() != null) {
-            QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
-            hideQuickStartSnackBar();
-            if (pageType == PageType.READER && getMySiteFragment().isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+
+        if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+            if (pageType == PageType.READER) {
                 // MySite fragment might not be attached to activity, so we need to remove focus point from here
-                getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                mQuickStartRepository.requestNextStepOfTask(QuickStartTask.FOLLOW_SITE);
+            }
+        } else {
+            if (getMySiteFragment() != null) {
+                QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
+                hideQuickStartSnackBar();
+                if (pageType == PageType.READER && getMySiteFragment()
+                        .isQuickStartTaskActive(QuickStartTask.FOLLOW_SITE)) {
+                    // MySite fragment might not be attached to activity, so we need to remove focus point from here
+                    getMySiteFragment().requestNextStepOfActiveQuickStartTask();
+                }
             }
         }
 
@@ -1205,6 +1209,45 @@ public class WPMainActivity extends LocaleAwareActivity implements
         return null;
     }
 
+    // We only do this for Quick Start focus points that need to be shown on the activity level.
+    private void addOrRemoveQuickStartFocusPoint(QuickStartTask activeTask, boolean shouldAdd) {
+        final QuickStartMySitePrompts prompts = QuickStartMySitePrompts.getPromptDetailsForTask(activeTask);
+        if (prompts == null) return;
+        final ViewGroup parentView = findViewById(prompts.getParentContainerId());
+        final View targetView = findViewById(prompts.getFocusedContainerId());
+        if (parentView != null) {
+            int size = getResources().getDimensionPixelOffset(R.dimen.quick_start_focus_point_size);
+            int horizontalOffset;
+            int verticalOffset;
+            switch (activeTask) {
+                case FOLLOW_SITE:
+                    horizontalOffset = targetView.getWidth() / 2 - size + getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_bottom_nav_offset);
+                    verticalOffset = 0;
+                    break;
+                case PUBLISH_POST:
+                    horizontalOffset = getResources()
+                            .getDimensionPixelOffset(R.dimen.quick_start_focus_point_my_site_right_offset);
+                    verticalOffset = (targetView.getHeight() - size) / 2;
+                    break;
+                default:
+                    horizontalOffset = 0;
+                    verticalOffset = 0;
+                    break;
+            }
+            if (targetView != null && shouldAdd) {
+                QuickStartUtils.addQuickStartFocusPointAboveTheView(
+                        parentView,
+                        targetView,
+                        horizontalOffset,
+                        verticalOffset
+                );
+            } else {
+                QuickStartUtils.removeQuickStartFocusPoint(parentView);
+            }
+        }
+    }
+
     // Events
 
     @SuppressWarnings("unused")
@@ -1433,6 +1476,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         this,
                         findViewById(R.id.coordinator),
                         event.isError(),
+                        event.isFirstTimePublish,
                         event.post,
                         null,
                         targetSite);
@@ -1576,6 +1620,7 @@ public class WPMainActivity extends LocaleAwareActivity implements
     @Override protected void onPause() {
         super.onPause();
         hideQuickStartSnackBar();
+
         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) findViewById(R.id.root_view_main));
     }
 }

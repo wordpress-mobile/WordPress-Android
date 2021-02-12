@@ -9,10 +9,11 @@ import org.wordpress.android.ui.mysite.MySiteItem.Type.LIST_ITEM
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_ACTIONS_BLOCK
 import org.wordpress.android.ui.mysite.MySiteItem.Type.QUICK_START_CARD
 import org.wordpress.android.ui.mysite.MySiteItem.Type.SITE_INFO_BLOCK
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString
 
-sealed class MySiteItem(val type: Type, val activeQuickStartItem: Boolean = false) {
+sealed class MySiteItem(open val type: Type, open val activeQuickStartItem: Boolean = false) {
     enum class Type {
         SITE_INFO_BLOCK,
         QUICK_ACTIONS_BLOCK,
@@ -45,28 +46,39 @@ sealed class MySiteItem(val type: Type, val activeQuickStartItem: Boolean = fals
         val onPostsClick: ListItemInteraction,
         val onMediaClick: ListItemInteraction,
         val showPages: Boolean = true,
-        val showStatsFocusPoint: Boolean = false
-    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint)
+        val showStatsFocusPoint: Boolean = false,
+        val showPagesFocusPoint: Boolean = false
+    ) : MySiteItem(QUICK_ACTIONS_BLOCK, activeQuickStartItem = showStatsFocusPoint || showPagesFocusPoint)
 
     data class DomainRegistrationBlock(val onClick: ListItemInteraction) : MySiteItem(DOMAIN_REGISTRATION_BLOCK)
 
-    data class QuickStartCard(
-        val id: String,
-        val title: UiString,
-        val taskCards: List<QuickStartTaskCard>,
-        @ColorRes val accentColor: Int,
-        val progress: Int,
-        val onMoreClick: ListItemInteraction? = null
-    ) : MySiteItem(QUICK_START_CARD) {
-        data class QuickStartTaskCard(
-            val quickStartTask: QuickStartTask,
+    sealed class DynamicCard(
+        override val type: Type,
+        override val activeQuickStartItem: Boolean = false,
+        open val dynamicCardType: DynamicCardType,
+        open val onMoreClick: ListItemInteraction
+    ) : MySiteItem(
+            type,
+            activeQuickStartItem
+    ) {
+        data class QuickStartCard(
+            val id: DynamicCardType,
             val title: UiString,
-            val description: UiString,
-            @DrawableRes val illustration: Int,
+            val taskCards: List<QuickStartTaskCard>,
             @ColorRes val accentColor: Int,
-            val done: Boolean = false,
-            val onClick: ListItemInteraction
-        )
+            val progress: Int,
+            override val onMoreClick: ListItemInteraction
+        ) : DynamicCard(QUICK_START_CARD, dynamicCardType = id, onMoreClick = onMoreClick) {
+            data class QuickStartTaskCard(
+                val quickStartTask: QuickStartTask,
+                val title: UiString,
+                val description: UiString,
+                @DrawableRes val illustration: Int,
+                @ColorRes val accentColor: Int,
+                val done: Boolean = false,
+                val onClick: ListItemInteraction
+            )
+        }
     }
 
     data class CategoryHeader(val title: UiString) : MySiteItem(CATEGORY_HEADER)

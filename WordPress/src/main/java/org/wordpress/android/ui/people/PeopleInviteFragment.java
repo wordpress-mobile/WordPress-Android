@@ -642,7 +642,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
         enableSendButton(false);
 
-        String lastMinuteUser = mUsernamesEmails.getTextIfAvaliableOrNull();
+        String lastMinuteUser = mUsernamesEmails.getTextIfAvailableOrNull();
 
         if (lastMinuteUser != null) {
             addUsername(lastMinuteUser, new ValidationEndListener() {

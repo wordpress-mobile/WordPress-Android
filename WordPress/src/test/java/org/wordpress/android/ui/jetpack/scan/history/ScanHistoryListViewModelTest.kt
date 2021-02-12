@@ -32,6 +32,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.Sc
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.ScanHistoryUiState.EmptyUiState.EmptyHistory
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType.ALL
+import org.wordpress.android.util.analytics.ScanTracker
 
 private const val ON_ITEM_CLICKED_PARAM_POSITION = 1
 
@@ -43,6 +44,7 @@ class ScanHistoryListViewModelTest {
 
     @Mock private lateinit var scanThreatItemBuilder: ThreatItemBuilder
     @Mock private lateinit var scanHistoryViewModel: ScanHistoryViewModel
+    @Mock private lateinit var scanTracker: ScanTracker
     private val captor = argumentCaptor<ThreatModel>()
 
     private lateinit var viewModel: ScanHistoryListViewModel
@@ -51,7 +53,11 @@ class ScanHistoryListViewModelTest {
 
     @Before
     fun setUp() = test {
-        viewModel = ScanHistoryListViewModel(scanThreatItemBuilder, TEST_DISPATCHER)
+        viewModel = ScanHistoryListViewModel(
+                scanThreatItemBuilder,
+                scanTracker,
+                TEST_DISPATCHER
+        )
         val threats = listOf(
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.FIXED)),
                 GenericThreatModel(genericThreatModel.baseThreatModel.copy(status = ThreatStatus.UNKNOWN)),

@@ -895,6 +895,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
             Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
+                    requireContext(),
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 

@@ -5,12 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsNavigationEvents.OpenThreatActionDialog
@@ -28,12 +26,10 @@ import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
-import javax.inject.Named
-
-private const val DELAY_MILLIS = 2000L
 
 class ThreatDetailsViewModel @Inject constructor(
     private val getThreatModelUseCase: GetThreatModelUseCase,
@@ -43,7 +39,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private val builder: ThreatDetailsListItemsBuilder,
     private val htmlMessageUtils: HtmlMessageUtils,
     private val resourceProvider: ResourceProvider,
-    @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
+    private val scanTracker: ScanTracker
 ) : ViewModel() {
     private lateinit var site: SiteModel
     private lateinit var threatModel: ThreatModel
@@ -75,6 +71,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun fixThreat() {
+        scanTracker.trackOnFixThreatConfirmed(threatModel.baseThreatModel.signature)
         viewModelScope.launch {
             val threatId = threatModel.baseThreatModel.id
             updateThreatActionButtons(isEnabled = false)
@@ -83,10 +80,12 @@ class ThreatDetailsViewModel @Inject constructor(
                     updateNavigationEvent(ShowUpdatedFixState(threatId))
                 }
                 is FixThreatsState.Failure.NetworkUnavailable -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FIX, ScanTracker.ErrorCause.OFFLINE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
                 is FixThreatsState.Failure.RemoteRequestFailure -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.FIX, ScanTracker.ErrorCause.REMOTE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_fix_error_message))
                 }
@@ -95,6 +94,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun ignoreThreat() {
+        scanTracker.trackOnIgnoreThreatConfirmed(threatModel.baseThreatModel.signature)
         viewModelScope.launch {
             updateThreatActionButtons(isEnabled = false)
             when (ignoreThreatUseCase.ignoreThreat(site.siteId, threatModel.baseThreatModel.id)) {
@@ -103,11 +103,12 @@ class ThreatDetailsViewModel @Inject constructor(
                 )
 
                 is IgnoreThreatState.Failure.NetworkUnavailable -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.IGNORE, ScanTracker.ErrorCause.OFFLINE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network))
                 }
-
                 is IgnoreThreatState.Failure.RemoteRequestFailure -> {
+                    scanTracker.trackOnError(ScanTracker.ErrorAction.IGNORE, ScanTracker.ErrorCause.REMOTE)
                     updateThreatActionButtons(isEnabled = true)
                     updateSnackbarMessageEvent(UiStringRes(R.string.threat_ignore_error_message))
                 }
@@ -116,6 +117,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onFixThreatButtonClicked() {
+        scanTracker.trackOnFixThreatButtonClicked(threatModel.baseThreatModel.signature)
         val fixable = requireNotNull(threatModel.baseThreatModel.fixable)
         updateNavigationEvent(
             OpenThreatActionDialog(
@@ -127,6 +129,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onIgnoreThreatButtonClicked() {
+        scanTracker.trackOnIgnoreThreatButtonClicked(threatModel.baseThreatModel.signature)
         updateNavigationEvent(
             OpenThreatActionDialog(
                 title = UiStringRes(R.string.threat_ignore),
@@ -143,6 +146,7 @@ class ThreatDetailsViewModel @Inject constructor(
     }
 
     private fun onGetFreeEstimateButtonClicked() {
+        scanTracker.trackOnGetFreeEstimateButtonClicked()
         updateNavigationEvent(ThreatDetailsNavigationEvents.ShowGetFreeEstimate)
     }
 
@@ -174,7 +178,7 @@ class ThreatDetailsViewModel @Inject constructor(
     private fun buildContentUiState(model: ThreatModel) = Content(
         builder.buildThreatDetailsListItems(
             model,
-                this@ThreatDetailsViewModel::onFixThreatButtonClicked,
+            this@ThreatDetailsViewModel::onFixThreatButtonClicked,
             this@ThreatDetailsViewModel::onGetFreeEstimateButtonClicked,
             this@ThreatDetailsViewModel::onIgnoreThreatButtonClicked
         )

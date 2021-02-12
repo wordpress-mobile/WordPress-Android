@@ -12,7 +12,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R
-import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -52,6 +52,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
     @Mock private lateinit var builder: ThreatDetailsListItemsBuilder
     @Mock private lateinit var htmlMessageUtils: HtmlMessageUtils
     @Mock private lateinit var resourceProvider: ResourceProvider
+    @Mock private lateinit var scanTracker: ScanTracker
     private lateinit var viewModel: ThreatDetailsViewModel
     private val threatId = 1L
     private val fakeUiStringText = UiStringText("")
@@ -69,7 +70,7 @@ class ThreatDetailsViewModelTest : BaseUnitTest() {
             builder,
             htmlMessageUtils,
             resourceProvider,
-            TEST_DISPATCHER
+            scanTracker
         )
         whenever(site.name).thenReturn(TEST_SITE_NAME)
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)

@@ -14,6 +14,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -159,7 +160,9 @@ public class AppPrefs {
         READER_DISCOVER_WELCOME_BANNER_SHOWN,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
-        SITE_JETPACK_CAPABILITIES_LAST_UPDATED
+        SITE_JETPACK_CAPABILITIES_LAST_UPDATED,
+        REMOVED_QUICK_START_CARD_TYPE,
+        PINNED_DYNAMIC_CARD
     }
 
     /**
@@ -974,6 +977,30 @@ public class AppPrefs {
 
     public static boolean isQuickStartDisabled() {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
+    }
+
+    public static void removeQuickStartTaskType(QuickStartTaskType quickStartTaskType) {
+        prefs().edit().putBoolean(getQuickStartTaskTypeKey(quickStartTaskType), true).apply();
+    }
+
+    public static boolean isQuickStartTaskTypeRemoved(QuickStartTaskType quickStartTaskType) {
+        return prefs().getBoolean(getQuickStartTaskTypeKey(quickStartTaskType), false);
+    }
+
+    @NonNull private static String getQuickStartTaskTypeKey(QuickStartTaskType quickStartTaskType) {
+        return DeletablePrefKey.REMOVED_QUICK_START_CARD_TYPE.name() + quickStartTaskType.toString();
+    }
+
+    public static void setPinnedDynamicCardType(String dynamicCardType) {
+        setString(DeletablePrefKey.PINNED_DYNAMIC_CARD, dynamicCardType);
+    }
+
+    public static void removePinnedDynamicCardType() {
+        remove(DeletablePrefKey.PINNED_DYNAMIC_CARD);
+    }
+
+    public static String getPinnedDynamicCardType() {
+        return getString(DeletablePrefKey.PINNED_DYNAMIC_CARD);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {

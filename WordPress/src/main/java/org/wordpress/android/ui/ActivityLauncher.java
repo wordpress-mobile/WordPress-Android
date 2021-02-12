@@ -633,16 +633,19 @@ public class ActivityLauncher {
     ) {
         Map<String, Object> properties = new HashMap<>();
         properties.put(ACTIVITY_LOG_ACTIVITY_ID_KEY, activityId);
+        String source;
         if (rewindableOnly) {
-            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, BACKUP_TRACK_EVENT_PROPERTY_VALUE);
+            source = BACKUP_TRACK_EVENT_PROPERTY_VALUE;
         } else {
-            properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE);
+            source = ACTIVITY_LOG_TRACK_EVENT_PROPERTY_VALUE;
         }
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsUtils.trackWithSiteDetails(AnalyticsTracker.Stat.ACTIVITY_LOG_DETAIL_OPENED, site, properties);
 
         Intent intent = new Intent(activity, ActivityLogDetailActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.putExtra(ACTIVITY_LOG_ID_KEY, activityId);
+        intent.putExtra(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         activity.startActivityForResult(intent, RequestCodes.ACTIVITY_LOG_DETAIL);
     }
 
@@ -651,6 +654,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_ACCESSED);
         Intent intent = new Intent(activity, ScanActivity.class);
         intent.putExtra(WordPress.SITE, site);
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
@@ -686,6 +690,7 @@ public class ActivityLauncher {
             ToastUtils.showToast(activity, R.string.blog_not_found, ToastUtils.Duration.SHORT);
             return;
         }
+        AnalyticsTracker.track(Stat.JETPACK_SCAN_HISTORY_ACCESSED);
         Intent intent = new Intent(activity, ScanHistoryActivity.class);
         intent.putExtra(WordPress.SITE, site);
         activity.startActivity(intent);
@@ -1415,7 +1420,7 @@ public class ActivityLauncher {
     public static void showBackupDownloadForResult(Activity activity, @NonNull SiteModel site, String activityId,
                                                    int resultCode, String source) {
         Map<String, String> properties = new HashMap<>();
-        properties.put("source", source);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsTracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_OPENED, properties);
 
         Intent intent = new Intent(activity, BackupDownloadActivity.class);
@@ -1440,7 +1445,7 @@ public class ActivityLauncher {
     public static void showRestoreForResult(Activity activity, @NonNull SiteModel site, String activityId,
                                                    int resultCode, String source) {
         Map<String, String> properties = new HashMap<>();
-        properties.put("source", source);
+        properties.put(SOURCE_TRACK_EVENT_PROPERTY_KEY, source);
         AnalyticsTracker.track(Stat.JETPACK_RESTORE_OPENED, properties);
 
         Intent intent = new Intent(activity, RestoreActivity.class);

@@ -25,9 +25,11 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.max
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetRestoreStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -44,12 +46,9 @@ class GetRestoreStatusUseCase @Inject constructor(
             if (!isNetworkAvailable()) return@flow
 
             if (!fetchActivitiesRewind(site)) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded 3 retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                }
+                if (handleError(retryAttempts++)) return@flow
             } else {
+                retryAttempts = 0
                 val rewind = activityLogStore.getRewindStatusForSite(site)?.rewind
                 if (rewind == null) {
                     emit(Empty)
@@ -69,8 +68,8 @@ class GetRestoreStatusUseCase @Inject constructor(
                         QUEUED -> emitProgress(rewind)
                     }
                 }
+                delay(DELAY_MILLIS)
             }
-            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 
@@ -101,5 +100,16 @@ class GetRestoreStatusUseCase @Inject constructor(
         val rewindId = rewind.rewindId as String
         val published = activityLogStore.getActivityLogItemByRewindId(rewindId)?.published
         emit(Progress(rewindId, rewind.progress, rewind.message, rewind.currentEntry, published))
+    }
+
+    private suspend fun FlowCollector<RestoreRequestState>.handleError(retryAttempts: Int): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(RemoteRequestFailure)
+            true
+        } else {
+            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
+            false
+        }
     }
 }

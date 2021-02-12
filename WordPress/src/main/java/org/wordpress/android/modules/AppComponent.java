@@ -72,7 +72,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
-import org.wordpress.android.ui.mysite.QuickStartMenuFragment;
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -643,7 +643,7 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(RestoreActivity object);
 
-    void inject(QuickStartMenuFragment object);
+    void inject(DynamicCardMenuFragment object);
 
     void inject(BackupDownloadFragment object);
 

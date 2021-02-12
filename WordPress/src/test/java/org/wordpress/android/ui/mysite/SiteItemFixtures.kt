@@ -37,17 +37,17 @@ val STATS_ITEM = ListItem(
         onClick = ListItemInteraction.create(ListItemAction.STATS, SITE_ITEM_ACTION)
 )
 val ACTIVITY_ITEM = ListItem(
-        R.drawable.ic_history_alt_white_24dp,
-        UiStringRes(R.string.activity),
+        R.drawable.ic_gridicons_clipboard_white_24dp,
+        UiStringRes(R.string.activity_log),
         onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, SITE_ITEM_ACTION)
 )
 val BACKUP_ITEM = ListItem(
-        R.drawable.ic_backup_alt_white_24dp,
+        R.drawable.ic_gridicons_cloud_upload_white_24dp,
         UiStringRes(R.string.backup),
         onClick = ListItemInteraction.create(ListItemAction.BACKUP, SITE_ITEM_ACTION)
 )
 val SCAN_ITEM = ListItem(
-        R.drawable.ic_scan_alt_white_24dp,
+        R.drawable.ic_baseline_security_white_24dp,
         UiStringRes(R.string.scan),
         onClick = ListItemInteraction.create(ListItemAction.SCAN, SITE_ITEM_ACTION)
 )

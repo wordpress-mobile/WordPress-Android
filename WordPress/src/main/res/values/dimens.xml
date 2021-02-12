@@ -434,12 +434,12 @@
 
     <!-- jetpack backup restore last bullet bottom margin-->
     <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
-    <dimen name="jetpack_backup_restore_sub_header_bottom_margin">20dp</dimen>
 
     <!-- scan -->
     <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
     <dimen name="scan_icon_size">48dp</dimen>
     <dimen name="scan_icon_margin">16dp</dimen>
+    <dimen name="scan_threat_item_icon_size">40dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
@@ -495,6 +495,14 @@
     <dimen name="site_creation_container_elevation">6dp</dimen>
 
     <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
+
+    <dimen name="site_creation_domains_example_top_cell_height">28dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_height">23dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_top_margin">44dp</dimen>
+    <dimen name="site_creation_domains_example_bottom_cell_top_margin">75dp</dimen>
+    <dimen name="site_creation_domains_example_left_cell_width">97dp</dimen>
+    <dimen name="site_creation_domains_example_right_cell_width">49dp</dimen>
+    <dimen name="site_creation_domains_example_top_margin">40dp</dimen>
 
     <dimen name="site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="site_creation_preview_skeleton_large_block_height">136dp</dimen>

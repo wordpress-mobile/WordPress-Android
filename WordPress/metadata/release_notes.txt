@@ -1,6 +1,4 @@
-What’s new?
-Site Creation: When browsing homepage designs, you can view and switch between mobile, tablet, and desktop previews.
-Reader: For better organization, we added a filter feature to your tab of followed P2 sites.
-Quick Start: We improved the tour that guides you through the app, adding steps to review pages and edit your homepage.
-
- 
+- Jetpack customers can now restore a site or download a backup, scan, and fix threats
+- Various block editor updates, including a new Audio block and the ability to set anchors in the Heading block
+- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
+- .blog subdomains now available

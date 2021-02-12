@@ -20,8 +20,10 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.FEATURE_ANNOUNCEMENT_SHOWN_ON_APP_UPGRADE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.test
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_PAGE
 import org.wordpress.android.ui.main.MainActionListItem.ActionType.CREATE_NEW_POST
@@ -38,6 +40,7 @@ import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.config.WPStoriesFeatureConfig
+import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointInfo
 
 @RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
@@ -71,6 +74,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
             )
     )
     private lateinit var activeTask: MutableLiveData<QuickStartTask?>
+    private lateinit var externalFocusPointEvents: MutableList<List<FocusPointInfo>>
     private var fabUiState: MainFabUiState? = null
 
     @Before
@@ -79,6 +83,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         whenever(buildConfigWrapper.getAppVersionCode()).thenReturn(850)
         whenever(buildConfigWrapper.getAppVersionName()).thenReturn("14.7")
         activeTask = MutableLiveData()
+        externalFocusPointEvents = mutableListOf()
         whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         viewModel = WPMainActivityViewModel(
                 featureAnnouncementProvider,
@@ -96,6 +101,11 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.completeBottomSheetQuickStartTask.observeForever(
                 onQuickStartCompletedEventObserver
         )
+        viewModel.onFocusPointVisibilityChange.observeForever { event ->
+            event?.getContentIfNotHandled()?.let {
+                externalFocusPointEvents.add(it)
+            }
+        }
         // mainActions is MediatorLiveData and needs observer in order for us to access it's value
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
@@ -472,6 +482,42 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         verify(onFeatureAnnouncementRequestedObserver, times(1)).onChanged(anyOrNull())
     }
 
+    @Test
+    fun `when the active task needs to show an focus point, emit visible focus point info`() {
+        activeTask.value = FOLLOW_SITE
+
+        assertThat(externalFocusPointEvents).containsExactly(listOf(visibleFollowSiteFocusPointInfo))
+    }
+
+    @Test
+    fun `when the active task doesn't need to show an external focus point, emit invisible focus point info`() {
+        activeTask.value = VIEW_SITE
+
+        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+    }
+
+    @Test
+    fun `when the active task is null, emit invisible focus point info`() {
+        activeTask.value = null
+
+        assertThat(externalFocusPointEvents).containsExactly(listOf(invisibleFollowSiteFocusPointInfo))
+    }
+
+    @Test
+    fun `when the active task changes more than once, only emit focus point event if its value has changed`() {
+        activeTask.value = FOLLOW_SITE
+        activeTask.value = FOLLOW_SITE
+        activeTask.value = VIEW_SITE
+        activeTask.value = null
+        activeTask.value = FOLLOW_SITE
+
+        assertThat(externalFocusPointEvents).containsExactly(
+                listOf(visibleFollowSiteFocusPointInfo),
+                listOf(invisibleFollowSiteFocusPointInfo),
+                listOf(visibleFollowSiteFocusPointInfo)
+        )
+    }
+
     private fun startViewModelWithDefaultParameters() {
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
     }
@@ -489,5 +535,10 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     private fun setupWPStoriesFeatureConfigEnabled(buildConfigValue: Boolean) {
         whenever(wpStoriesFeatureConfig.isEnabled()).thenReturn(buildConfigValue)
+    }
+
+    companion object {
+        val visibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, true)
+        val invisibleFollowSiteFocusPointInfo = FocusPointInfo(FOLLOW_SITE, false)
     }
 }
