@@ -120,6 +120,7 @@ public abstract class WebViewActivity extends LocaleAwareActivity {
     private void pauseWebView() {
         if (mWebView != null) {
             mWebView.onPause();
+            loadUrl("about:blank");
         }
     }
 
