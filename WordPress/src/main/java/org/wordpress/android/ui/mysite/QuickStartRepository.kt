@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -35,6 +34,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -57,7 +57,8 @@ class QuickStartRepository
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper
+    private val appPrefsWrapper: AppPrefsWrapper,
+    private val htmlCompat: HtmlCompatWrapper
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -219,7 +220,7 @@ class QuickStartRepository
         UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
     }.let { resourceProvider.getString(it) }
 
-    private fun String.asHtml() = HtmlCompat.fromHtml(this, HtmlCompat.FROM_HTML_MODE_COMPACT)
+    private fun String.asHtml() = htmlCompat.fromHtml(this)
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
