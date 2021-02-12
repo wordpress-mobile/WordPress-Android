@@ -16,16 +16,18 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
@@ -72,6 +74,9 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     private var pendingTask: QuickStartTask? = null
+    private var pendingCategoryCompletion: QuickStartTaskType? = null
+
+    private val mySiteTasks = listOf(UPDATE_SITE_TITLE, UPLOAD_SITE_ICON)
 
     init {
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
@@ -113,6 +118,7 @@ class QuickStartRepository
 
     fun refresh() {
         quickStartTaskTypes.postValue(quickStartTaskTypes.value)
+        showCategoryCompletionMessageIfNeeded()
     }
 
     fun setActiveTask(task: QuickStartTask) {
@@ -153,7 +159,13 @@ class QuickStartRepository
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
             analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
-            refresh()
+            if (quickStartUtils.isEveryQuickStartTaskDoneForType(site.id, task.taskType)) {
+                pendingCategoryCompletion = task.taskType
+            }
+            // If the task is completed on the My Site screen, we need to refresh immediately
+            if (mySiteTasks.contains(task)) {
+                refresh()
+            }
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -196,6 +208,21 @@ class QuickStartRepository
         currentCategories.remove(hiddenCategory)
         quickStartTaskTypes.value = currentCategories
     }
+
+    private fun showCategoryCompletionMessageIfNeeded() = pendingCategoryCompletion?.let { taskType ->
+        pendingCategoryCompletion = null
+        val completionMessage = HtmlCompat.fromHtml(
+                getCategoryCompletionMessage(taskType),
+                HtmlCompat.FROM_HTML_MODE_COMPACT
+        )
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage))))
+    }
+
+    private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
+        CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
+        GROW -> R.string.quick_start_completed_type_grow_message
+        UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
+    }.let { resourceProvider.getString(it) }
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,
