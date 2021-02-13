@@ -152,7 +152,7 @@
                     android:layout_height="wrap_content"
                     android:paddingStart="@dimen/margin_large"
                     android:paddingEnd="@dimen/margin_large"
-                    android:paddingBottom="@dimen/margin_extra_large"
+                    android:paddingBottom="@dimen/margin_extra_medium_large"
                     android:text="@string/people_optional_custom_message_helper_text"
                     android:textAppearance="?attr/textAppearanceCaption" />
 
@@ -171,7 +171,6 @@
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/divider_size"
-                    android:layout_marginTop="@dimen/margin_extra_medium_large"
                     android:layout_marginBottom="@dimen/margin_extra_medium_large"
                     android:background="?android:attr/listDivider" />
 

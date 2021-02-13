@@ -9,6 +9,7 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.suspendCoroutine
 import com.android.volley.VolleyError
 import com.google.gson.Gson
+import com.google.gson.JsonParseException
 import com.google.gson.reflect.TypeToken
 import com.wordpress.rest.RestRequest.ErrorListener
 import com.wordpress.rest.RestRequest.Listener
@@ -29,7 +30,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
             val result = getLinks(jsonObject)
             AppLog.d(
                     T.PEOPLE,
-                    "getInviteLinksStatus > Succeeded [blogId=$blogId - result = $result]"
+                    "getInviteLinksStatus > Succeeded [blogId=$blogId - result = " +
+                            "${(result as Success).links.map { "Name: ${it.role} Expiry: ${it.expiry}" }}]"
             )
             cont.resume(result)
         }
@@ -99,8 +101,8 @@ class InviteLinksApiCallsProvider @Inject constructor(
                     val linksData = gson.fromJson<Array<InviteLinksItem>>(linksSection, mapType).toList()
 
                     Success(linksData)
-                } catch (e: Exception) {
-                    AppLog.d(T.PEOPLE, "getLinks > Error parsing server API response: error[{${e.message}}]")
+                } catch (jsonEx: JsonParseException) {
+                    AppLog.d(T.PEOPLE, "getLinks > Error parsing server API response: error[{${jsonEx.message}}]")
                     Failure(contextProvider.getContext().getString((string.invite_links_bad_format_response)))
                 }
             } else {
@@ -121,7 +123,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
                     "$functionName > Failed with empty string " +
                             "[blogId=$blogId - volleyError = $volleyError]"
             )
-            contextProvider.getContext().getString(R.string.invite_links_generic_get_status_error)
+            contextProvider.getContext().getString(R.string.invite_links_generic_get_data_error)
         } else {
             AppLog.d(
                     T.PEOPLE,

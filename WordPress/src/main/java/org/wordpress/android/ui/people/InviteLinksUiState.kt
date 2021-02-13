@@ -1,15 +1,18 @@
 package org.wordpress.android.ui.people
 
+import org.wordpress.android.ui.people.InviteLinksUiStateType.LOADING
+
 data class InviteLinksUiState(
     val type: InviteLinksUiStateType,
     val isLinksSectionVisible: Boolean,
     val loadAndRetryUiState: LoadAndRetryUiState,
     val isShimmerSectionVisible: Boolean,
-    val startShimmer: Boolean,
     val isRoleSelectionAllowed: Boolean,
     val links: List<InviteLinksUiItem>,
     val inviteLinksSelectedRole: InviteLinksUiItem,
-    val enableManageLinksActions: Boolean
+    val enableManageLinksActions: Boolean,
+    val startShimmer: Boolean = isShimmerSectionVisible && type == LOADING,
+    val enableActionButtons: Boolean = !startShimmer
 )
 
 enum class InviteLinksUiStateType {

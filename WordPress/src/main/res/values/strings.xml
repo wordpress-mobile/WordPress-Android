@@ -2279,7 +2279,7 @@
     <string name="invite_links_disable_invite_link">Disable invite link</string>
     <string name="invite_links_expire_date">Expires %1$s</string>
     <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
-    <string name="invite_links_generic_get_status_error">Unknown error fetching invite links status</string>
+    <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
     <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
     <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
     <string name="invite_links_null_response">No response received</string>
