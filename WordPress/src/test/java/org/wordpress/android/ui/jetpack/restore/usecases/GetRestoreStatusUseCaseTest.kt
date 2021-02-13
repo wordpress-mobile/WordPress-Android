@@ -256,11 +256,33 @@ class GetRestoreStatusUseCaseTest {
             }
 
     @Test
-    fun `given fetch error under retry count, when backup status triggers, then return progress`() =
+    fun `given fetch error under retry count, when restore status triggers, then return progress`() =
             test {
                 whenever(activityLogStore.fetchActivitiesRewind(any()))
                         .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
                         .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+                assertThat(result).contains(
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
+                )
+            }
+
+    @Test
+    fun `given no network available under retry count, when restore status triggers, then return progress`() =
+            test {
+                whenever(networkUtilsWrapper.isNetworkAvailable())
+                        .thenReturn(false)
+                        .thenReturn(false)
+                        .thenReturn(true)
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
                         .thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
 
                 whenever(activityLogStore.getRewindStatusForSite(site))
