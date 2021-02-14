@@ -73,7 +73,7 @@ class InviteLinksUseCase @Inject constructor(
             scenarioContext: UseCaseScenarioContext
         ) -> InviteLinksCallResult,
         scenarioContext: UseCaseScenarioContext,
-        stat: Stat,
+        stat: Stat
     ) {
         val properties = mutableMapOf<String, Any?>()
 
