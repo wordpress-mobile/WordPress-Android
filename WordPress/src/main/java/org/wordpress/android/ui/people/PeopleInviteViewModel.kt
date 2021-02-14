@@ -7,10 +7,15 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.INVITE_LINKS_GET_STATUS
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.people.AnalyticsInviteLinksActionResult.ERROR
+import org.wordpress.android.ui.people.AnalyticsInviteLinksActionResult.SUCCEEDED
+import org.wordpress.android.ui.people.AnalyticsInviteLinksGenericError.NO_ROLE_DATA_MATCHED
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksItem
 import org.wordpress.android.ui.people.InviteLinksUiStateType.GET_STATUS_RETRY
 import org.wordpress.android.ui.people.InviteLinksUiStateType.HIDDEN
@@ -31,6 +36,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtilsWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.map
 import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.Event
@@ -44,7 +50,8 @@ class PeopleInviteViewModel @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
     private val contextProvider: ContextProvider,
-    private val invitePeopleUtils: InvitePeopleUtils
+    private val invitePeopleUtils: InvitePeopleUtils,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper
 ) : ScopedViewModel(bgDispatcher) {
     private var isStarted = false
     private var inviteLinksRequestJob: Job? = null
@@ -83,7 +90,11 @@ class PeopleInviteViewModel @Inject constructor(
             _inviteLinksState.value = InviteLinksLoading(INITIALIZING)
             inviteLinksRequestJob?.cancel()
             inviteLinksRequestJob = launch(bgDispatcher) {
-                inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING)
+                inviteLinksHandler.handleInviteLinksStatusRequest(
+                        siteModel.siteId,
+                        INITIALIZING,
+                        INVITE_LINKS_GET_STATUS
+                )
             }
         } else {
             _inviteLinksState.value = InviteLinksNotAllowed
@@ -107,7 +118,7 @@ class PeopleInviteViewModel @Inject constructor(
     fun onRetryButtonClicked() {
         inviteLinksRequestJob?.cancel()
         inviteLinksRequestJob = launch(bgDispatcher) {
-            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING)
+            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING, INVITE_LINKS_GET_STATUS)
         }
     }
 
@@ -162,8 +173,12 @@ class PeopleInviteViewModel @Inject constructor(
                 roleDisplayName
         )
 
+        val properties = mutableMapOf<String, Any?>()
+
         selectedRole?.let {
             _shareLink.value = Event(it)
+            properties.addInviteLinksActionResult(SUCCEEDED)
+            properties.addInviteLinksSharedRole(it.role)
         } ?: run {
             AppLog.d(
                     T.PEOPLE,
@@ -178,7 +193,11 @@ class PeopleInviteViewModel @Inject constructor(
                             )
                     )
             )
+            properties.addInviteLinksActionResult(ERROR, NO_ROLE_DATA_MATCHED.errorMessage)
+            properties.addInviteLinksSharedRole(roleDisplayName)
         }
+
+        analyticsUtilsWrapper.trackInviteLinksAction(Stat.INVITE_LINKS_SHARE, siteModel, properties)
     }
 
     private fun buildInviteLinksUiState(inviteLinksState: InviteLinksState): InviteLinksUiState {

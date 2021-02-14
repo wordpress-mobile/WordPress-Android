@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState
@@ -29,8 +30,8 @@ class InviteLinksHandler @Inject constructor(
     private val _inviteLinksState = MediatorLiveData<InviteLinksState>()
     val inviteLinksState: LiveData<InviteLinksState> = _inviteLinksState
 
-    suspend fun handleInviteLinksStatusRequest(blogId: Long, scenarioContext: UseCaseScenarioContext) {
-        inviteLinksUseCase.getInviteLinksStatus(blogId, scenarioContext)
+    suspend fun handleInviteLinksStatusRequest(blogId: Long, scenarioContext: UseCaseScenarioContext, stat: Stat) {
+        inviteLinksUseCase.getInviteLinksStatus(blogId, scenarioContext, stat)
                 .flowOn(bgDispatcher).collect { state ->
                     manageState(state)
                 }
