@@ -16,6 +16,7 @@ import org.wordpress.android.fluxc.tools.FormattableRangeType.MEDIA
 import org.wordpress.android.fluxc.tools.FormattableRangeType.NOTICON
 import org.wordpress.android.fluxc.tools.FormattableRangeType.PAGE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.POST
+import org.wordpress.android.fluxc.tools.FormattableRangeType.REWIND_DOWNLOAD_READY
 import org.wordpress.android.fluxc.tools.FormattableRangeType.SITE
 import org.wordpress.android.fluxc.tools.FormattableRangeType.STAT
 import org.wordpress.android.fluxc.tools.FormattableRangeType.UNKNOWN
@@ -68,6 +69,7 @@ class FormattableContentClickHandler
             } else {
                 showPostActivity(activity, siteId, id)
             }
+            REWIND_DOWNLOAD_READY -> showBackup(activity, siteId)
             BLOCKQUOTE,
             NOTICON,
             MATCH,
@@ -128,5 +130,10 @@ class FormattableContentClickHandler
 
     private fun showReaderCommentsList(activity: FragmentActivity, siteId: Long, postId: Long, commentId: Long) {
         ReaderActivityLauncher.showReaderComments(activity, siteId, postId, commentId)
+    }
+
+    private fun showBackup(activity: FragmentActivity, siteId: Long) {
+        val site = siteStore.getSiteBySiteId(siteId)
+        ActivityLauncher.viewBackupList(activity, site)
     }
 }
