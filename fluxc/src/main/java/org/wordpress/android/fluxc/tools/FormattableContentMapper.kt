@@ -82,7 +82,10 @@ data class FormattableRange(
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
     fun rangeType(): FormattableRangeType {
-        return if (type != null) FormattableRangeType.fromString(type) else FormattableRangeType.fromString(section)
+        return if (type != null)
+            FormattableRangeType.fromString(type)
+        else
+           FormattableRangeType.fromString(section)
     }
 }
 
@@ -101,6 +104,7 @@ enum class FormattableRangeType {
     MATCH,
     MEDIA,
     B,
+    REWIND_DOWNLOAD_READY,
     UNKNOWN;
 
     companion object {
@@ -120,6 +124,7 @@ enum class FormattableRangeType {
                 "match" -> MATCH
                 "media" -> MEDIA
                 "b" -> B
+                "rewind_download_ready" -> REWIND_DOWNLOAD_READY
                 else -> UNKNOWN
             }
         }
