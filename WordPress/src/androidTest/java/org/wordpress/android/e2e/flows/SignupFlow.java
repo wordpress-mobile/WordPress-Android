@@ -35,10 +35,6 @@ public class SignupFlow {
     }
 
     public SignupFlow openMagicLink(ActivityTestRule<LoginMagicLinkInterceptActivity> magicLinkActivityTestRule) {
-        // Receive Magic Link – Choose "Send link by email"
-        // See SignupConfirmationFragment
-        clickOn(R.id.signup_confirmation_button);
-
         // Should see "Check email" button
         // See SignupMagicLinkFragment
         waitForElementToBeDisplayed(R.id.signup_magic_link_button);
