@@ -182,7 +182,7 @@ jobs:
             SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD: 1
           command: |
             if [ -n "$GITHUB_API_TOKEN" ]; then
-              ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GITHUB_API_TOKEN
+              ./gradlew --stacktrace violationCommentsToGitHub -DGITHUB_PULLREQUESTID=${CIRCLE_PULL_REQUEST##*/} -DGITHUB_OAUTH2TOKEN=$GHHELPER_ACCESS
             else
               echo "Not posting lint errors to Github because \$GITHUB_API_TOKEN is not found"
             fi
