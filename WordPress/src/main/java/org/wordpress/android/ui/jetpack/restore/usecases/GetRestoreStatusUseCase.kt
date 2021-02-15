@@ -74,7 +74,6 @@ class GetRestoreStatusUseCase @Inject constructor(
                     QUEUED -> emitProgress(rewind)
                 }
             }
-            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
 
