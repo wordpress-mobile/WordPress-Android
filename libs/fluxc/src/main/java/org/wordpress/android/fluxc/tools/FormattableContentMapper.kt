@@ -82,10 +82,7 @@ data class FormattableRange(
     @SerializedName("indices") val indices: List<Int>? = null
 ) {
     fun rangeType(): FormattableRangeType {
-        return if (type != null)
-            FormattableRangeType.fromString(type)
-        else
-           FormattableRangeType.fromString(section)
+        return if (type != null) FormattableRangeType.fromString(type) else FormattableRangeType.fromString(section)
     }
 }
 
