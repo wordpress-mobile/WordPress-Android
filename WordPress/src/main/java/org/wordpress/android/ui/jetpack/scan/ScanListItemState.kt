@@ -13,7 +13,7 @@ sealed class ScanListItemState(override val type: ViewType) : JetpackListItemSta
         ViewType.THREATS_HEADER
     )
 
-    data class ThreatDateItemState(val text:UiString) : ScanListItemState(ViewType.THREAT_DETECTED_DATE)
+    data class ThreatDateItemState(val text: UiString) : ScanListItemState(ViewType.THREAT_DETECTED_DATE)
 
     data class ThreatItemState(
         val threatId: Long,
