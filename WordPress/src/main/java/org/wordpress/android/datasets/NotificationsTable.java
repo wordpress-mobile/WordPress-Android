@@ -15,6 +15,8 @@ import org.wordpress.android.util.SqlUtils;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class NotificationsTable {
     private static final String NOTIFICATIONS_TABLE = "tbl_notifications";
@@ -24,6 +26,16 @@ public class NotificationsTable {
     }
 
     public static final int NOTES_TO_RETRIEVE = 200;
+
+    private static final Pattern STAT_ATTR_PATTERN = Pattern.compile(
+            "\"type\":\"stat\"",
+            Pattern.MULTILINE | Pattern.CASE_INSENSITIVE);
+
+    private static final Pattern REWIND_DOWNLOAD_READY_ATTR_PATTERN = Pattern.compile(
+            "\"type\":\"rewind_download_ready\"",
+            Pattern.DOTALL | Pattern.CASE_INSENSITIVE);
+
+    private static final String REWIND_DOWNLOAD_READY_ATTR_SUBSTR = "\"type\":\"rewind_download_ready\"";
 
     public static void createTables(SQLiteDatabase db) {
         db.execSQL("CREATE TABLE IF NOT EXISTS " + NOTIFICATIONS_TABLE + " ("
@@ -63,10 +75,12 @@ public class NotificationsTable {
     }
 
     private static boolean putNote(Note note, boolean checkBeforeInsert) {
+        String rawNote = prepareNote(note.getId(), note.getJSON().toString());
+
         ContentValues values = new ContentValues();
         values.put("type", note.getType());
         values.put("timestamp", note.getTimestamp());
-        values.put("raw_note_data", note.getJSON().toString());
+        values.put("raw_note_data", rawNote);
 
         long result;
         if (checkBeforeInsert && isNoteAvailable(note.getId())) {
@@ -87,6 +101,25 @@ public class NotificationsTable {
             }
             return result != -1;
         }
+    }
+
+    /***
+     * PrepareNote is used as a stop gap for handling rewind_download_ready notifications. As of this comment,
+     * rewind download ready notifications have a deep link to stats and until the API changes, we are going to
+     * swap "type""type":"stat" for "type""type":"rewind_download_ready" so that the generated link sends the
+     * user to the correct location in the app. The source remains the same if this is not a rewind_download_ready note.
+     * @param noteId
+     * @param noteSrc
+     * @return
+     */
+    private static String prepareNote(String noteId, String noteSrc) {
+        final Matcher typeMatcher = REWIND_DOWNLOAD_READY_ATTR_PATTERN.matcher(noteSrc);
+        if (typeMatcher.find()) {
+            AppLog.d(AppLog.T.DB, "Substituting " + REWIND_DOWNLOAD_READY_ATTR_SUBSTR + " in NoteID: " + noteId);
+            final Matcher matcher = STAT_ATTR_PATTERN.matcher(noteSrc);
+            noteSrc = matcher.replaceAll(REWIND_DOWNLOAD_READY_ATTR_SUBSTR);
+        }
+        return noteSrc;
     }
 
     public static void saveNotes(List<Note> notes, boolean clearBeforeSaving) {
