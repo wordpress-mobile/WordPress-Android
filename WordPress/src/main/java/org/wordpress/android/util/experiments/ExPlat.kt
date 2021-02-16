@@ -49,12 +49,11 @@ class ExPlat
         return cachedAssignments
     }
 
-    private suspend fun fetchAssignments() {
-        val result = experimentStore.fetchAssignments(FetchAssignmentsPayload(platform))
-        if (result.isError) {
-            appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${result.error}")
+    private suspend fun fetchAssignments() = experimentStore.fetchAssignments(FetchAssignmentsPayload(platform)).also {
+        if (it.isError) {
+            appLog.d(T.API, "ExPlat: fetching assignments failed with result: ${it.error}")
         } else {
-            appLog.d(T.API, "ExPlat: fetching assignments successful with result: ${result.assignments}")
+            appLog.d(T.API, "ExPlat: fetching assignments successful with result: ${it.assignments}")
         }
     }
 
