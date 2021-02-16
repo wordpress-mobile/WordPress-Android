@@ -3,6 +3,7 @@ package org.wordpress.android.util.experiments
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.fluxc.model.experiments.Assignments
+import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.FetchAssignmentsPayload
 import org.wordpress.android.fluxc.store.ExperimentStore.Platform
@@ -24,6 +25,7 @@ class ExPlat
     @Named(APPLICATION_SCOPE) private val coroutineScope: CoroutineScope
 ) {
     private val platform = Platform.WORDPRESS_COM
+    private val activeVariations = mutableMapOf<String, Variation>()
 
     fun refreshIfNeeded() {
         getAssignments(refreshStrategy = IF_STALE)
@@ -34,12 +36,24 @@ class ExPlat
     }
 
     fun clear() {
-        appLog.d(T.API, "ExPlat: clearing cached assignments")
+        appLog.d(T.API, "ExPlat: clearing cached assignments and active variations")
+        activeVariations.clear()
         experimentStore.clearCachedAssignments()
     }
 
+    /**
+     * This returns the current active [Variation] for the provided [Experiment].
+     *
+     * If no active [Variation] is found, we can assume this is the first time this method is being
+     * called for the provided [Experiment] during the current session. In this case, the [Variation]
+     * is returned from the cached [Assignments] and then set as active. If the cached [Assignments]
+     * is stale and [shouldRefreshIfStale] is `true`, then new [Assignments] are fetched and their
+     * variations are going to be returned by this method on the next session.
+     */
     internal fun getVariation(experiment: Experiment, shouldRefreshIfStale: Boolean) =
-            getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
+            activeVariations.getOrPut(experiment.name) {
+                getAssignments(if (shouldRefreshIfStale) IF_STALE else NEVER).getVariationForExperiment(experiment.name)
+            }
 
     private fun getAssignments(refreshStrategy: RefreshStrategy): Assignments {
         val cachedAssignments = experimentStore.getCachedAssignments() ?: Assignments()
