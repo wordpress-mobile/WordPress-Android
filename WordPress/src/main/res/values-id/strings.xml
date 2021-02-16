@@ -40,7 +40,6 @@ Language: id
     <string name="web_preview_mobile">Seluler</string>
     <string name="quick_start_card_menu_remove">Jangan tampilkan lagi</string>
     <string name="quick_start_card_menu_hide">Sembunyikan</string>
-    <string name="quick_start_card_menu_pin">Sematkan ini</string>
     <string name="quick_start_dialog_review_pages_message">Ubah, tambahkan, atau hapus halaman situs.</string>
     <string name="quick_start_dialog_edit_homepage_message">Ubah, tambahkan, atau hapus konten dari halaman beranda situs.</string>
     <string name="quick_start_dialog_edit_homepage_title">Sunting halaman beranda</string>
@@ -55,7 +54,6 @@ Language: id
     <string name="threat_fix_all_status_error_message">Terjadi error saat mendapatkan status perbaikan. Silakan hubungi tim dukungan kami.</string>
     <string name="threat_fix_all_error_message">Terjadi error saat memperbaiki ancaman. Silakan hubungi tim dukungan kami.</string>
     <string name="threat_fix_all_warning_message">Harap konfirmasi bahwa Anda ingin memperbaiki %s ancaman aktif.</string>
-    <string name="threat_ignore_warning">Sebaiknya jangan abaikan keamanan kecuali Anda benar-benar yakin tidak berbahaya. Jika Anda memilih untuk mengabaikannya, ancaman akan tetap ada di situs Anda &lt;b>%s&lt;/b>.</string>
     <string name="threat_ignore_success_message">Ancaman diabaikan.</string>
     <string name="threat_fix_all_warning_title">Perbaiki semua ancaman</string>
     <string name="threat_ignore_error_message">Terjadi error saat mengabaikan ancaman. Silakan hubungi dukungan.</string>
@@ -432,7 +430,6 @@ Language: id
     <string name="send_link_by_email">Kirim tautan lewat email</string>
     <string name="reset_your_password">Reset kata sandi</string>
     <string name="reader_error_request_failed_title">Ada masalah saat menangani permintaan. Silakan coba lagi nanti.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Berikan nama situs yang mencerminkan karakteristik dan topik situs Anda. Kesan pertama sangat berarti!</string>
     <string name="quick_start_list_update_site_title_title">Atur judul situs Anda</string>
     <string name="quick_start_dialog_update_site_title_message_short">Ketuk &lt;b>%1$s&lt;/b> untuk mengatur judul baru</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Membuang pos ini juga akan menghapus perubahan lokal, Anda yakin ingin melanjutkan?</string>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 22:59:11+0000
+Translation-Revision-Date: 2021-02-11 06:45:36+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="quick_start_list_review_pages_subtitle">Kontrollera dina sidor och gör ändringar, lägg till eller ta bort sidor.</string>
+    <string name="quick_start_card_menu_unpin">Avklistra</string>
+    <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämnesområde.</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Dela automatiskt dina nya inlägg i dina sociala media.</string>
+    <string name="quick_start_list_enable_sharing_title">Aktivera delning</string>
+    <string name="quick_start_list_follow_site_subtitle">Hitta och följ webbplatser som inspirerar dig.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Lägg till en webbplatsikon för ett genomarbetat och proffsigt utseende.</string>
+    <string name="quick_start_list_view_site_title">Besök din webbplats</string>
+    <string name="quick_start_list_check_stats_title">Kolla din statistik</string>
     <string name="backup_download_status_failure_bullet1">Vi lyckades inte hitta statusläget för att kunna säga hur lång tid den nedladdningsbara säkerhetskopieringen kommer att ta.</string>
     <string name="backup_download_status_failure_bullet2">Vi kommer fortfarande att försöka skapa din nedladdningsbara fil med en säkerhetskopia.</string>
     <string name="restore_status_failure_bullet3">Vi aviserar dig när det är klart.</string>
@@ -106,7 +115,7 @@ Language: sv_SE
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Välj %1$s Startsida %2$s för att redigera startsidan.</string>
     <string name="quick_start_dialog_review_pages_message">Ändra, lägg till eller ta bort sidor på webbplatsen.</string>
     <string name="quick_start_dialog_review_pages_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
-    <string name="quick_start_card_menu_pin">Klistra detta</string>
+    <string name="quick_start_card_menu_pin">Klistra</string>
     <string name="quick_start_dialog_edit_homepage_title">Redigera din startsida</string>
     <string name="quick_start_dialog_edit_homepage_message">Ändra, lägg till eller ta bort innehåll på startsidan för din webbplats.</string>
     <string name="reader_marked_post_as_seen">Markera inlägget som visat</string>
@@ -505,7 +514,6 @@ Language: sv_SE
     <string name="send_link_by_email">Skicka länk via e-post</string>
     <string name="check_email">Kolla din e-post</string>
     <string name="reader_error_request_failed_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b>%1$s&lt;/b> för att ange en ny rubrik</string>
     <string name="quick_start_list_update_site_title_title">Ange webbplatsens rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>

@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 09:14:20+0000
+Translation-Revision-Date: 2021-02-11 08:43:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_GB
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">Unpin</string>
+    <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
+    <string name="quick_start_list_view_site_title">Visit your site</string>
+    <string name="quick_start_list_upload_icon_subtitle">Add a site icon for a polished, pro look.</string>
+    <string name="quick_start_list_follow_site_subtitle">Discover and follow sites that inspire you.</string>
+    <string name="quick_start_list_enable_sharing_title">Enable sharing</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Automatically share new posts to your social media.</string>
+    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic.</string>
+    <string name="quick_start_list_check_stats_title">Check your stats</string>
     <string name="backup_download_status_failure_bullet2">We\'ll still attempt to create your downloadable backup file.</string>
     <string name="backup_download_status_failure_bullet1">We couldn\'t find the status to say how long your downloadable backup will take.</string>
     <string name="backup_download_status_failure_heading">Hmm, we couldn\'t find your downloadable backup status</string>
@@ -101,7 +110,7 @@ Language: en_GB
     <string name="web_preview_mobile">Mobile</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
     <string name="quick_start_card_menu_hide">Hide</string>
-    <string name="quick_start_card_menu_pin">Pin this</string>
+    <string name="quick_start_card_menu_pin">Pin</string>
     <string name="quick_start_dialog_review_pages_message_short">Select %1$s Pages %2$s to see your page list.</string>
     <string name="quick_start_dialog_review_pages_message">Change, add, or remove your site\'s pages.</string>
     <string name="quick_start_dialog_review_pages_title">Review site pages</string>
@@ -123,7 +132,7 @@ Language: en_GB
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
-    <string name="threat_ignore_warning">You shouldn’t ignore a security unless you are absolute sure it’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_warning">You shouldn’t ignore a security issue unless you are absolute sure it’s harmless. If you choose to ignore this threat, it will remain on your site &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Error fixing threat. Please contact our support.</string>
     <string name="threat_item_sub_header_status_ignored">Threat ignored</string>
     <string name="threat_item_sub_header_status_fixed_on">Threat fixed on %s</string>
@@ -505,7 +514,6 @@ Language: en_GB
     <string name="send_link_by_email">Send link by email</string>
     <string name="reset_your_password">Reset your password</string>
     <string name="reader_error_request_failed_title">There was a problem handling the request. Please try again later.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Give your site a name that reflects its personality and topic. First impressions count!</string>
     <string name="quick_start_list_update_site_title_title">Set your site title</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tap &lt;b>%1$s&lt;/b> to set a new title</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Binning this post will also discard local changes, are you sure you want to continue?</string>

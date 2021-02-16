@@ -37,7 +37,6 @@ Language: ja_JP
     <string name="web_preview_mobile">モバイル</string>
     <string name="quick_start_card_menu_remove">二度と表示しない</string>
     <string name="quick_start_card_menu_hide">非表示</string>
-    <string name="quick_start_card_menu_pin">上部固定</string>
     <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
@@ -59,7 +58,6 @@ Language: ja_JP
     <string name="threat_fix_all_warning_title">すべての脅威を修正</string>
     <string name="threat_ignore_error_message">脅威を無視する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_ignore_success_message">脅威を無視しました。</string>
-    <string name="threat_ignore_warning">安全であるという確信がない限り、セキュリティを無視しないでください。 この脅威を無視した場合、この脅威はサイト &lt;b>%s&lt;/b> に残ります。</string>
     <string name="threat_fix_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_item_sub_header_status_ignored">脅威を無視しました</string>
     <string name="threat_fixing">脅威を修正</string>
@@ -433,7 +431,6 @@ Language: ja_JP
     <string name="send_link_by_email">リンクをメールで送信</string>
     <string name="reset_your_password">パスワードをリセット</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
-    <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
     <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b>%1$s&lt;/b>をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>

@@ -36,7 +36,6 @@ Language: es
     <string name="web_preview_mobile">Dispositivos móviles</string>
     <string name="quick_start_card_menu_remove">No mostrar de nuevo</string>
     <string name="quick_start_card_menu_hide">Ocultar</string>
-    <string name="quick_start_card_menu_pin">Marcar esto</string>
     <string name="quick_start_dialog_review_pages_message_short">Selecciona %1$s Páginas %2$s para ver tu lista de páginas.</string>
     <string name="quick_start_dialog_review_pages_message">Cambia, añade o elimina páginas en tu sitio.</string>
     <string name="quick_start_dialog_review_pages_title">Revisar las páginas del sitio</string>
@@ -58,7 +57,6 @@ Language: es
     <string name="threat_fix_all_warning_title">Corregir todas las amenazas</string>
     <string name="threat_ignore_error_message">No se ha podido ignorar la amenaza. Ponte en contacto con el servicio de soporte.</string>
     <string name="threat_ignore_success_message">Se ha ignorado la amenaza.</string>
-    <string name="threat_ignore_warning">No ignores un aviso de seguridad a menos que estés completamente seguro de que es inofensivo. Si ignoras esta amenaza, permanecerá en tu sitio &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">No se ha podido corregir la amenaza. Ponte en contacto con el servicio de soporte.</string>
     <string name="threat_item_sub_header_status_ignored">Amenaza ignorada</string>
     <string name="threat_fixing">Corrigiendo la amenaza</string>
@@ -434,7 +432,6 @@ Language: es
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_list_update_site_title_title">Configura el título de tu sitio</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un nuevo título</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
     <string name="gutenberg_native_duplicate_block">Duplicar bloque</string>

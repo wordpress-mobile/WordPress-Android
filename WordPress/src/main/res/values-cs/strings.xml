@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-10 19:18:01+0000
+Translation-Revision-Date: 2021-02-11 05:53:08+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
@@ -445,7 +445,6 @@ Language: cs_CZ
     <string name="reader_error_request_failed_title">Při zpracování požadavku došlo k problému. Prosím zkuste to znovu později.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Klepnutím na &lt;b>%1$s&lt;/b> nastavíte nový název</string>
     <string name="quick_start_list_update_site_title_title">Zadejte název svého webu</string>
-    <string name="quick_start_list_update_site_title_subtitle">Pojmenujte svůj web podle jeho osobnosti a tématu. Počítají se první dojmy!</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Vymazáním tohoto příspěvku také zrušíte místní změny. Opravdu chcete pokračovat?</string>
     <string name="gutenberg_native_s_block_options">%s možnosti bloku</string>
     <string name="gutenberg_native_copy_block">Kopírovat blok</string>

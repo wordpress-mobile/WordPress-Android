@@ -36,7 +36,6 @@ Language: tr
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Tekrar gösterme</string>
     <string name="quick_start_card_menu_hide">Gizle</string>
-    <string name="quick_start_card_menu_pin">Bunu sabitle</string>
     <string name="quick_start_dialog_review_pages_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
     <string name="quick_start_dialog_review_pages_message">Sitenizde sayfaları değiştirin, ekleyin veya kaldırın.</string>
     <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>
@@ -58,7 +57,6 @@ Language: tr
     <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
     <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
     <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
-    <string name="threat_ignore_warning">Zararsız olduğundan kesinlikle emin olmadığınız sürece bir güvenlik tehdidini göz ardı etmemelisiniz. Bu tehdidi göz ardı etmeyi seçerseniz &lt;b>%s&lt;/b> sitenizde kalacaktır.</string>
     <string name="threat_fix_error_message">Tehdit düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
     <string name="threat_item_sub_header_status_ignored">Tehdit göz ardı edildi</string>
     <string name="threat_fixing">Tehditler düzeltiliyor</string>
@@ -434,7 +432,6 @@ Language: tr
     <string name="reader_error_request_failed_title">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Yeni bir başlık belirlemek için &lt;b>%1$s&lt;/b> dokunun</string>
     <string name="quick_start_list_update_site_title_title">Site başlığınızı ayarlayın</string>
-    <string name="quick_start_list_update_site_title_subtitle">Sitenize kişiliğini ve konuyu yansıtan bir ad verin. İlk izlenim önemlidir.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Bu yazının çöpe taşınması, yerel değişiklikleri yok sayar. Devam etmek istediğinizden emin misiniz?</string>
     <string name="gutenberg_native_s_block_options">%s blok seçenekleri</string>
     <string name="my_site_title_changer_dialog_not_allowed_hint">Site Başlığı yalnızca yönetici rolüne sahip bir kullanıcı tarafından değiştirilebilir.</string>

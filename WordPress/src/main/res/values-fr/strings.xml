@@ -30,7 +30,6 @@ Language: fr
     <string name="web_preview_mobile">Portable</string>
     <string name="quick_start_card_menu_remove">Ne plus afficher</string>
     <string name="quick_start_card_menu_hide">Cacher</string>
-    <string name="quick_start_card_menu_pin">Épingler ceci</string>
     <string name="quick_start_dialog_review_pages_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
     <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
     <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>
@@ -52,7 +51,6 @@ Language: fr
     <string name="threat_fix_all_warning_title">Corriger l’ensemble des menaces</string>
     <string name="threat_ignore_error_message">Une erreur s’est produite, l’erreur n’a pas pu être ignorée. Veuillez contacter l’assistance.</string>
     <string name="threat_ignore_success_message">Menace ignorée.</string>
-    <string name="threat_ignore_warning">Vous ne devriez pas ignorer un problème de sécurité, à moins d’avoir la certitude qu’il n’y a aucun danger. Si vous choisissez d’ignorer cette menace, elle restera présente sur votre site &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Erreur lors de la correction de la menace. Veuillez contacter l’assistance.</string>
     <string name="threat_item_sub_header_status_ignored">Menace ignorée</string>
     <string name="threat_fixing">Menace en cours de correction…</string>
@@ -412,7 +410,6 @@ Language: fr
     <string name="send_link_by_email">Envoyer un lien par e-mail</string>
     <string name="reset_your_password">Réinitialiser votre mot de passe</string>
     <string name="reader_error_request_failed_title">Un problème est survenu lors du traitement de la demande. Veuillez réessayer plus tard.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Donnez à votre site un nom qui reflète sa personnalité et son thème. La première impression est importante !</string>
     <string name="quick_start_list_update_site_title_title">Définir un titre pour votre site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Appuyer sur &lt;b>%1$s&lt;/b> pour définir un nouveau titre</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Supprimer cet article va également supprimer les modifications locales, confirmez-vous vous vouloir continuer ?</string>

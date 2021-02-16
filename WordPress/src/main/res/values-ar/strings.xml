@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 14:23:28+0000
+Translation-Revision-Date: 2021-02-12 13:33:57+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">إلغاء التثبيت</string>
+    <string name="quick_start_list_review_pages_subtitle">تحقّق من صفحاتك وقم بإجراء تغييرات، أو إضافة الصفحات أو إزالتها.</string>
+    <string name="quick_start_list_view_site_title">زيارة موقعك</string>
+    <string name="quick_start_list_follow_site_subtitle">استكشف وتابع المواقع التي تُلهمك.</string>
+    <string name="quick_start_list_enable_sharing_title">تمكين المشاركة</string>
+    <string name="quick_start_list_enable_sharing_subtitle">شارك المقالات الجديدة تلقائيًّا على وسائل التواصل الاجتماعي الخاصة بك.</string>
+    <string name="quick_start_list_check_stats_title">تحقّق من احصائياتك</string>
+    <string name="backup_download_status_failure_bullet2">سنستمر في محاولة إنشاء ملف النسخ الاحتياطي القابل للتنزيل.</string>
+    <string name="backup_download_status_failure_heading">حسنًا، لم نتمكن من العثور على حالة النسخ الاحتياطي القابلة للتنزيل</string>
     <string name="restore_status_bullet_checkmark_icon_content_desc">رمز علامة الاختيار</string>
     <string name="restore_status_bullet_clock_icon_content_desc">أيقونة الساعة</string>
+    <string name="restore_status_failure_bullet3">سنقوم بإعلامك عند الانتهاء.</string>
+    <string name="restore_status_failure_bullet2">سنستمر في محاولة استعادة موقعك.</string>
     <string name="restore_warning_action_button">تأكيد</string>
     <string name="backup_download_complete_failed_description">لم نتمكن من إنشاء النسخة الاحتياطية الخاصة بك</string>
     <string name="backup_item_sqls_hint">(SQL)</string>
@@ -19,8 +30,11 @@ Language: ar
     <string name="gutenberg_native_replace_audio">استبدال الصوت</string>
     <string name="gutenberg_native_problem_opening_the_audio">ثمَّة مشكلة أثناء فتح ملف الصوت</string>
     <string name="gutenberg_native_open">فتح</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">لا يوجد تطبيق يمكنه معالجة هذا الطلب.</string>
     <string name="gutenberg_native_lock_icon">أيقونة القفل</string>
     <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">فشل إدراج الملف الصوتي. يرجى النقر على الخيارات.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">الضغط المزدوج لتحديد ملف صوت</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">أنقر نقرًا مزدوجًا للاستماع إلى ملف الصوت</string>
     <string name="gutenberg_native_choose_audio">اختيار الصوت</string>
     <string name="gutenberg_native_audio_player">مشغل الصوت</string>
     <string name="gutenberg_native_audio_file">ملف صوت</string>
@@ -37,6 +51,7 @@ Language: ar
     <string name="scan_here_to_help">نحن هنا لمساعدتك</string>
     <string name="scan_provisioning_description">مرحبًا بك في فحص Jetpack! سنُحدِّد نطاق موقعك، وسنقوم بإعداده لإجراء فحص كامل. سنخبرك إذا اكتشفنا أي مشاكل قد تؤثر على الفحص، فسيبدأ حينها أول فحص كامل لك.</string>
     <string name="scan_scanning_is_initial_description">مرحبًا بك في \"فحص Jetpack\"، نلقي نظرة أولية على موقعك الآن وستكون النتائج معك قريبًا.</string>
+    <string name="scan_scanning_description">سنرسل إليك إشعارًا بمجرد انتهاء الفحص. في هذه الأثناء لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق مجددًا من حالة التقدُّم في أي وقت.</string>
     <string name="scan_fixing_threats_title">جاري معالجة التهديدات</string>
     <string name="scan_start_request_failed_subtitle">يتعذر على \"فحص Jetpack\" إكمال فحص موقعك. يرجى التحقُّق لمعرفة ما إذا كان موقعك معطَّلاً أم لا، وإذا لم يكن كذلك، فحاول مرة أخرى. إذا كان الأمر كذلك، أو إذا كان \"فحص Jetpack\" لا يزال يواجه مشكلات، فاتصل بفريق الدعم لدينا.</string>
     <string name="scan_request_failed_title">حدث خطأ ما</string>
@@ -78,7 +93,7 @@ Language: ar
     <string name="web_preview_mobile">الجوال</string>
     <string name="quick_start_card_menu_remove">عدم العرض مرة أخرى</string>
     <string name="quick_start_card_menu_hide">إخفاء</string>
-    <string name="quick_start_card_menu_pin">تثبيت هذا</string>
+    <string name="quick_start_card_menu_pin">تثبيت</string>
     <string name="quick_start_dialog_review_pages_message_short">حدّد %1$s الصفحات %2$s لرؤية قائمة صفحاتك.</string>
     <string name="quick_start_dialog_review_pages_message">تغيير أو إضافة أو إزالة صفحات موقعك.</string>
     <string name="quick_start_dialog_review_pages_title">مراجعة صفحات الموقع</string>
@@ -100,7 +115,7 @@ Language: ar
     <string name="threat_fix_all_warning_title">معالجة كل التهديدات</string>
     <string name="threat_ignore_error_message">خطأ في تجاهل التهديد. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
     <string name="threat_ignore_success_message">تم تجاهل التهديد.</string>
-    <string name="threat_ignore_warning">لا ينبغي أن تتجاهل الأمان إلا إذا كنت متأكدًا تمامًا من أنه غير ضار. إذا اخترت تجاهل هذا التهديد، فسيبقى على موقعك &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_warning">لا ينبغي أن تتجاهل مشكلة الأمان إلا إذا كنت متأكدًا تمامًا من أنه غير ضار. إذا اخترت تجاهل هذا التهديد، فسيبقى على موقعك &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">خطأ في معالجة التهديد. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
     <string name="threat_item_sub_header_status_ignored">تهديد تم تجاهله</string>
     <string name="threat_item_sub_header_status_fixed_on">تهديد تمت معالجته في %s</string>
@@ -482,7 +497,6 @@ Language: ar
     <string name="send_link_by_email">إرسال الرابط عبر البريد الإلكتروني</string>
     <string name="reset_your_password">إعادة تعيين كلمة المرور الخاصة بك</string>
     <string name="reader_error_request_failed_title">حدثت مشكلة أثناء معالجة الطلب. يرجى المحاولة مرة أخرى لاحقاً.</string>
-    <string name="quick_start_list_update_site_title_subtitle">حدِّد اسمًا لموقعك يعكس هويته وموضوعه. الاعتماد على الانطباعات الأولى!</string>
     <string name="quick_start_list_update_site_title_title">تعيين عنوان موقعك</string>
     <string name="quick_start_dialog_update_site_title_message_short">انقر على &lt;b>⁦%1$s⁩&lt;/b> لتعيين عنوان جديد</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">سيؤدي نقل هذه المقالة إلى سلة المهملات إلى تجاهل التغييرات المحلية كذلك، هل ترغب بالتأكيد في المتابعة؟</string>

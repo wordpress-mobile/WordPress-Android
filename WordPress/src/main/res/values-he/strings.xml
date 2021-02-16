@@ -37,7 +37,6 @@ Language: he_IL
     <string name="web_preview_mobile">טלפון נייד</string>
     <string name="quick_start_card_menu_remove">לא להציג שוב</string>
     <string name="quick_start_card_menu_hide">להסתיר</string>
-    <string name="quick_start_card_menu_pin">לנעוץ את הפריט</string>
     <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
@@ -59,7 +58,6 @@ Language: he_IL
     <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
     <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
     <string name="threat_ignore_success_message">התעלמת מהאיום.</string>
-    <string name="threat_ignore_warning">לא כדאי להתעלם מאיומי אבטחה אלא אם אין לך ספק שהתוכן בטוח. אם ברצונך להתעלם מהאיום הזה, הוא יישאר באתר &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">אירעה שגיאה בעת תיקון האיום. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_item_sub_header_status_ignored">התעלמת מהאיום</string>
     <string name="threat_fixing">מתקן את האיום</string>
@@ -433,7 +431,6 @@ Language: he_IL
     <string name="send_link_by_email">לשלוח את הקישור באימייל</string>
     <string name="reset_your_password">יש לאפס את הסיסמה שלך</string>
     <string name="reader_error_request_failed_title">הייתה בעיה בטיפול בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
-    <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו. הרושם הראשוני חשוב!</string>
     <string name="quick_start_list_update_site_title_title">להגדיר את שם האתר שלך</string>
     <string name="quick_start_dialog_update_site_title_message_short">יש להקיש &lt;b>⁦%1$s⁩&lt;/b> כדי להגדיר שם חדש</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">העברת הפוסט לפח תבטל גם שינויים מקומיים, האם ברצונך להמשיך?</string>
