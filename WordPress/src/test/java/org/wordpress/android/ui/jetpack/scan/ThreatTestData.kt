@@ -14,7 +14,6 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.VulnerableExtensionThreatModel.Extension.ExtensionType
-import java.util.Calendar
 import java.util.Date
 
 const val TEST_FILE_PATH = "/var/www/html/jp-scan-daily/wp-admin/index.php"
