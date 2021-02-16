@@ -208,6 +208,23 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
                 assertThat(result).isEqualTo(listOf(progressStatus, completeStatus))
             }
 
+    @Test
+    fun `given network not available under retry count, when backup status triggers, then return progress`() = test {
+        whenever(networkUtilsWrapper.isNetworkAvailable())
+                .thenReturn(false)
+                .thenReturn(false)
+                .thenReturn(true)
+        whenever(activityLogStore.getBackupDownloadStatusForSite(site))
+                .thenReturn(inProgressModel)
+                .thenReturn(statusModel)
+        whenever(activityLogStore.fetchBackupDownloadState(any()))
+                .thenReturn(OnBackupDownloadStatusFetched(FETCH_BACKUP_DOWNLOAD_STATE))
+
+        val result = useCase.getBackupDownloadStatus(site, downloadId).toList()
+
+        assertThat(result).isEqualTo(listOf(progressStatus, completeStatus))
+    }
+
     private val rewindId = "rewindId"
     private val url = "www.wordpress.com"
     private val downloadId = 100L

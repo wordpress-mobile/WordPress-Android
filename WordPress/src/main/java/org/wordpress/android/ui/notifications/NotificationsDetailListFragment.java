@@ -304,6 +304,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                             }
                             break;
+                        case REWIND_DOWNLOAD_READY:
+                            activity.showBackupForSite(clickedSpan.getSiteId());
+                            break;
                         default:
                             // We don't know what type of id this is, let's see if it has a URL and push a webview
                             if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
