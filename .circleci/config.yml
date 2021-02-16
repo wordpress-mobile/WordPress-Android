@@ -197,7 +197,7 @@ jobs:
           init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
-          cache_key_prefix: installable-build-v2
+          cache_key_prefix: installable-build-v4
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
@@ -249,7 +249,7 @@ jobs:
           init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
-          cache_key_prefix: installable-build-v2
+          cache_key_prefix: release-build-v2
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
@@ -548,7 +548,7 @@ jobs:
           init-submodules: true
       - checkout-submodules
       - bundle-install/bundle-install:
-          cache_key_prefix: installable-build-v2
+          cache_key_prefix: translation-review-build-v2
       - run:
           name: Copy Secrets
           command: bundle exec fastlane run configure_apply
