@@ -16,6 +16,8 @@
 * [***] Jetpack: Jetpack site owners, you can now run scans, fix threats, restore your site and download backup files directly from within the app. [https://github.com/wordpress-mobile/WordPress-Android/issues/13267]
 * [**] Reader: introduced an Unread Post counter in the Site Filter bottom sheet [https://github.com/wordpress-mobile/WordPress-Android/pull/13625]
 * [**] Reader: added functionality for marking reader posts as Seen or Unseen [https://github.com/wordpress-mobile/WordPress-Android/pull/13901]
+* [**] Block Editor: Make inserter long-press options "add to beginning" and "add to end" always available. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3074]
+* [*] Block Editor: Fix crash when Column block width attribute was empty. [https://github.com/WordPress/gutenberg/pull/29015]
 
 16.6
 -----
