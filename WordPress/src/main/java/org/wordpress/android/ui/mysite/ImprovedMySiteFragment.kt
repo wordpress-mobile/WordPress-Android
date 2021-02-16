@@ -349,12 +349,21 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.refresh()
     }
 
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            if (!it.isChangingConfigurations) {
+                viewModel.clearActiveQuickStartTask()
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        recycler_view.layoutManager?.let {
+        recycler_view?.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
-        (recycler_view.adapter as? MySiteAdapter)?.let {
+        (recycler_view?.adapter as? MySiteAdapter)?.let {
             outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
     }
