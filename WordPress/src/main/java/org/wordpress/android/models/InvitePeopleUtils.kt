@@ -11,7 +11,6 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @Reusable

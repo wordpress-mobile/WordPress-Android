@@ -3,7 +3,6 @@ package org.wordpress.android.ui.people
 import android.content.Context
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.eq
-import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
@@ -82,7 +81,9 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
             assertThat(it).isEqualTo(getInviteLinksUiState())
         }
 
-        verify(inviteLinksHandler, times(1)).handleInviteLinksStatusRequest(anyLong(), eq(INITIALIZING), eq(Stat.INVITE_LINKS_GET_STATUS))
+        verify(
+                inviteLinksHandler, times(1)
+        ).handleInviteLinksStatusRequest(anyLong(), eq(INITIALIZING), eq(Stat.INVITE_LINKS_GET_STATUS))
     }
 
     @Test
@@ -134,7 +135,9 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
         val role = "viewer"
 
         whenever(inviteLinksItem.role).thenReturn(role)
-        whenever(invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))).thenReturn(inviteLinksItem)
+        whenever(
+                invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
+        ).thenReturn(inviteLinksItem)
 
         setupObvserversAndStart()
 
@@ -151,7 +154,9 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
         val message = "snackbar message"
 
         whenever(inviteLinksItem.role).thenReturn(role)
-        whenever(invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))).thenReturn(null)
+        whenever(
+                invitePeopleUtils.getInviteLinkDataFromRoleDisplayName(anyList(), eq(siteModel), eq(role))
+        ).thenReturn(null)
         whenever(context.getString(anyInt(), eq(role))).thenReturn(message)
 
         setupObvserversAndStart()
@@ -210,7 +215,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
                     loadAndRetryUiState = loadAndRetryUiState,
                     isShimmerSectionVisible = isShimmerSectionVisible,
                     isRoleSelectionAllowed = isRoleSelectionAllowed,
-                    links=links,
+                    links = links,
                     inviteLinksSelectedRole = inviteLinksSelectedRole,
                     enableManageLinksActions = enableManageLinksActions,
                     startShimmer = startShimmer,
@@ -218,5 +223,4 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
             )
         }
     }
-
 }

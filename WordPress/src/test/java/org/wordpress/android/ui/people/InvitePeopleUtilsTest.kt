@@ -22,7 +22,7 @@ import org.wordpress.android.viewmodel.ContextProvider
 import java.text.DateFormat
 import java.util.Date
 
-class InvitePeopleUtilsTest : BaseUnitTest()  {
+class InvitePeopleUtilsTest : BaseUnitTest() {
     @Mock lateinit var siteStore: SiteStore
     @Mock lateinit var siteModel: SiteModel
     @Mock lateinit var contextProvider: ContextProvider

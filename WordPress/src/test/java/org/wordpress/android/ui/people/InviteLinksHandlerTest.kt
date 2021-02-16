@@ -1,17 +1,13 @@
 package org.wordpress.android.ui.people
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.flow
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.INVITE_LINKS_GET_STATUS
@@ -52,7 +48,9 @@ class InviteLinksHandlerTest : BaseUnitTest() {
                 error = errorMessage
         )
 
-        whenever(inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)).thenReturn( flow { emit(state) } )
+        whenever(
+                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        ).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
 
@@ -72,7 +70,9 @@ class InviteLinksHandlerTest : BaseUnitTest() {
                 links = listOf(mock(), mock())
         )
 
-        whenever(inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)).thenReturn( flow { emit(state) } )
+        whenever(
+                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        ).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
 
@@ -90,7 +90,7 @@ class InviteLinksHandlerTest : BaseUnitTest() {
                 links = listOf(mock(), mock())
         )
 
-        whenever(inviteLinksUseCase.generateLinks(blogId)).thenReturn( flow { emit(state) } )
+        whenever(inviteLinksUseCase.generateLinks(blogId)).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleGenerateLinks(blogId)
 
@@ -108,7 +108,7 @@ class InviteLinksHandlerTest : BaseUnitTest() {
                 links = listOf()
         )
 
-        whenever(inviteLinksUseCase.disableLinks(blogId)).thenReturn( flow { emit(state) } )
+        whenever(inviteLinksUseCase.disableLinks(blogId)).thenReturn(flow { emit(state) })
 
         inviteLinksHandler.handleDisableLinks(blogId)
 
