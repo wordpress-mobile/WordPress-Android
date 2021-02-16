@@ -5,6 +5,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,6 +15,8 @@ import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
+import org.wordpress.android.fluxc.model.experiments.Variation.Control
+import org.wordpress.android.fluxc.model.experiments.Variation.Treatment
 import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
@@ -119,6 +122,26 @@ class ExPlatTest : BaseUnitTest() {
         exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
 
         verify(experimentStore, never()).fetchAssignments(any())
+    }
+
+    @Test
+    fun `getVariation does not return different cached assignments if active variation exists`() = test {
+        val controlVariation = Control
+        val treatmentVariation = Treatment("treatment")
+
+        val treatmentAssignments = buildAssignments(variations = mapOf(dummyExperiment.name to treatmentVariation))
+
+        setupAssignments(cachedAssignments = null, fetchedAssignments = treatmentAssignments)
+
+        val firstVariation = exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
+        assertThat(firstVariation).isEqualTo(controlVariation)
+
+        exPlat.forceRefresh()
+
+        setupAssignments(cachedAssignments = treatmentAssignments, fetchedAssignments = treatmentAssignments)
+
+        val secondVariation = exPlat.getVariation(dummyExperiment, shouldRefreshIfStale = false)
+        assertThat(secondVariation).isEqualTo(controlVariation)
     }
 
     private suspend fun setupAssignments(cachedAssignments: Assignments?, fetchedAssignments: Assignments) {
