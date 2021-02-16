@@ -2,7 +2,8 @@
 
 16.8
 -----
-
+* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
+* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
 
 16.7
 -----
