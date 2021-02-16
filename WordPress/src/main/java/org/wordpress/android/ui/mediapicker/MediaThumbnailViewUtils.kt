@@ -4,6 +4,7 @@ import android.view.View
 import android.widget.ImageView
 import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ClickAction
 import org.wordpress.android.ui.mediapicker.MediaPickerUiItem.ToggleAction
@@ -16,6 +17,7 @@ import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.image.ImageType.VIDEO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import java.util.Locale
 
@@ -35,6 +37,36 @@ class MediaThumbnailViewUtils(val imageManager: ImageManager) {
                 url,
                 FIT_CENTER
         )
+        setupListeners(imgThumbnail, isSelected, toggleAction, clickAction, animateSelection)
+    }
+
+    fun setupThumbnailVideo(
+        coroutineScope: CoroutineScope,
+        imgThumbnail: ImageView,
+        url: String,
+        isSelected: Boolean,
+        clickAction: ClickAction,
+        toggleAction: ToggleAction,
+        animateSelection: Boolean
+    ) {
+        imageManager.cancelRequestAndClearImageView(imgThumbnail)
+        imageManager.loadThumbnailFromVideoUrl(
+                coroutineScope,
+                imgThumbnail,
+                VIDEO,
+                url,
+                FIT_CENTER
+        )
+        setupListeners(imgThumbnail, isSelected, toggleAction, clickAction, animateSelection)
+    }
+
+    private fun setupListeners(
+        imgThumbnail: ImageView,
+        isSelected: Boolean,
+        toggleAction: ToggleAction,
+        clickAction: ClickAction,
+        animateSelection: Boolean
+    ) {
         addImageSelectedToAccessibilityFocusedEvent(imgThumbnail, isSelected)
         imgThumbnail.setOnClickListener {
             toggleAction.toggle()

@@ -33,10 +33,12 @@ import com.bumptech.glide.request.target.Target
 import com.bumptech.glide.request.target.ViewTarget
 import com.bumptech.glide.request.transition.Transition
 import com.bumptech.glide.signature.ObjectKey
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.WordPress
 import org.wordpress.android.modules.GlideApp
 import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.networking.MShot
+import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
 import java.io.File
 import javax.inject.Inject
@@ -47,7 +49,10 @@ import javax.inject.Singleton
  */
 
 @Singleton
-class ImageManager @Inject constructor(private val placeholderManager: ImagePlaceholderManager) {
+class ImageManager @Inject constructor(
+    private val placeholderManager: ImagePlaceholderManager,
+    private val videoLoader: VideoLoader?
+) {
     interface RequestListener<T> {
         /**
          * Called when an exception occurs during a load
@@ -56,6 +61,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
          * @param model The model we were trying to load when the exception occurred.
          */
         fun onLoadFailed(e: Exception?, model: Any?)
+
         /**
          * Called when a load completes successfully
          *
@@ -111,6 +117,7 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
      */
     @JvmOverloads
     fun loadThumbnailFromVideoUrl(
+        scope: CoroutineScope,
         imageView: ImageView,
         imageType: ImageType,
         videoUrl: String = "",
@@ -119,15 +126,25 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     ) {
         val context = imageView.context
         if (!context.isAvailable()) return
-        GlideApp.with(context)
-                .load(videoUrl)
-                .addFallback(imageType)
-                .addPlaceholder(imageType)
-                .applyScaleType(scaleType)
-                .attachRequestListener(requestListener)
-                .apply(RequestOptions().frame(0))
-                .into(imageView)
-                .clearOnDetach()
+        videoLoader?.runIfMediaNotTooBig(scope,
+                videoUrl, {
+            GlideApp.with(context)
+                    .load(videoUrl)
+                    .addFallback(imageType)
+                    .addPlaceholder(imageType)
+                    .applyScaleType(scaleType)
+                    .attachRequestListener(requestListener)
+                    .apply(RequestOptions().frame(0))
+                    .into(imageView)
+                    .clearOnDetach()
+        }, {
+            GlideApp.with(context)
+                    .load(placeholderManager.getErrorResource(imageType))
+                    .addPlaceholder(imageType)
+                    .addFallback(imageType)
+                    .into(imageView)
+                    .clearOnDetach()
+        }) ?: throw java.lang.IllegalArgumentException("Video loader has to be set")
     }
 
     /**
@@ -554,6 +571,6 @@ class ImageManager @Inject constructor(private val placeholderManager: ImagePlac
     companion object {
         @JvmStatic
         @Deprecated("Use injected ImageManager")
-        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager()) }
+        val instance: ImageManager by lazy { ImageManager(ImagePlaceholderManager(), null) }
     }
 }

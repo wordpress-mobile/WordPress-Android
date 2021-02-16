@@ -233,7 +233,8 @@ class PhotoPickerFragment : Fragment() {
         if (uiModel is PhotoListUiModel.Data) {
             if (recycler.adapter == null) {
                 recycler.adapter = PhotoPickerAdapter(
-                        imageManager
+                        imageManager,
+                        viewModel
                 )
             }
             val adapter = recycler.adapter as PhotoPickerAdapter

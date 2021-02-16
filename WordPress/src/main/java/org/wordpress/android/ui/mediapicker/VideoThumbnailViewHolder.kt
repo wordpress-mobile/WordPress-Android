@@ -3,13 +3,18 @@ package org.wordpress.android.ui.mediapicker
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.R.id
 
 /*
  * ViewHolder containing a device thumbnail
  */
-class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailViewUtils: MediaThumbnailViewUtils) :
+class VideoThumbnailViewHolder(
+    parent: ViewGroup,
+    private val mediaThumbnailViewUtils: MediaThumbnailViewUtils,
+    private val coroutineScope: CoroutineScope
+) :
         ThumbnailViewHolder(
                 parent,
                 R.layout.media_picker_thumbnail_item
@@ -31,7 +36,8 @@ class VideoThumbnailViewHolder(parent: ViewGroup, private val mediaThumbnailView
         if (updateCount) {
             return
         }
-        mediaThumbnailViewUtils.setupThumbnailImage(
+        mediaThumbnailViewUtils.setupThumbnailVideo(
+                coroutineScope,
                 imgThumbnail,
                 item.url,
                 item.isSelected,

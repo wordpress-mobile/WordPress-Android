@@ -499,7 +499,8 @@ class MediaPickerFragment : Fragment() {
     private fun setupAdapter(items: List<MediaPickerUiItem>) {
         if (recycler.adapter == null) {
             recycler.adapter = MediaPickerAdapter(
-                    imageManager
+                    imageManager,
+                    viewModel
             )
         }
         val adapter = recycler.adapter as MediaPickerAdapter
