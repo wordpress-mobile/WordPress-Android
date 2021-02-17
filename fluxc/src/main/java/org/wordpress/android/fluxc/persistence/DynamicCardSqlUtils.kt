@@ -19,6 +19,14 @@ class DynamicCardSqlUtils
         siteId: Int,
         cardType: DynamicCardType
     ) {
+        selectPinned(siteId)?.let { pinnedCardType ->
+            if (pinnedCardType == cardType) {
+                return
+            } else {
+                unpin(siteId)
+            }
+        }
+
         WellSql.insert(
                 DynamicCardBuilder(
                         siteId = siteId,
@@ -43,6 +51,11 @@ class DynamicCardSqlUtils
         siteId: Int,
         cardType: DynamicCardType
     ) {
+        selectPinned(siteId)?.let { pinnedCardType ->
+            if (pinnedCardType == cardType) {
+                unpin(siteId)
+            }
+        }
         WellSql.insert(
                 DynamicCardBuilder(
                         siteId = siteId,
