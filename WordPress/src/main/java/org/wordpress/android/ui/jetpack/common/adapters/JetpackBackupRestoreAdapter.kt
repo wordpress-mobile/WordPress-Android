@@ -37,7 +37,11 @@ class JetpackBackupRestoreAdapter(
             ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
             ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.CHECKBOX.id -> JetpackCheckboxViewHolder(uiHelpers, parent)
-            ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(uiHelpers, parent)
+            ViewType.BACKUP_RESTORE_FOOTNOTE.id -> JetpackBackupRestoreFootnoteViewHolder(
+                    imageManager,
+                    uiHelpers,
+                    parent
+            )
             ViewType.BACKUP_RESTORE_SUB_HEADER.id -> JetpackBackupRestoreSubHeaderViewHolder(
                     uiHelpers,
                     parent
