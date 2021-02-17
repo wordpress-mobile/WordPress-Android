@@ -41,7 +41,7 @@ class InvitePeopleUtils @Inject constructor(
     ): String {
         val roles = getInviteRoles(siteStore, siteModel, contextProvider.getContext())
 
-        return roles?.firstOrNull { roleModel ->
+        return roles.firstOrNull { roleModel ->
             roleModel.name.equals(roleName, ignoreCase = true)
         }?.displayName ?: ""
     }
@@ -64,7 +64,7 @@ class InvitePeopleUtils @Inject constructor(
                         "inviteLinksData: ${inviteLinksData.map { "DisplayName: ${it.role} Expiry: ${it.expiry}" }}"
         )
 
-        return roles?.let {
+        return roles.let {
             it.filter { role ->
                 inviteLinksData.firstOrNull { linksItem ->
                     role.name.equals(linksItem.role, ignoreCase = true)
