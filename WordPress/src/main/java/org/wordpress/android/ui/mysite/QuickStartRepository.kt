@@ -66,8 +66,12 @@ class QuickStartRepository
     private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+    val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+
+    private var pendingTask: QuickStartTask? = null
 
     init {
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
@@ -84,6 +88,7 @@ class QuickStartRepository
 
     override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
+        pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
             quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
@@ -112,22 +117,24 @@ class QuickStartRepository
 
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
-        val shortQuickStartMessage =
-                if (task == UPDATE_SITE_TITLE) {
-                    HtmlCompat.fromHtml(
-                            resourceProvider.getString(
-                                    R.string.quick_start_dialog_update_site_title_message_short,
-                                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                            ), HtmlCompat.FROM_HTML_MODE_COMPACT
-                    )
-                } else {
-                    val activeTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task)
-                    quickStartUtils.stylizeQuickStartPrompt(
-                            activeTutorialPrompt!!.shortMessagePrompt,
-                            activeTutorialPrompt.iconId
-                    )
-                }
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        pendingTask = null
+        if (task == UPDATE_SITE_TITLE) {
+            val shortQuickStartMessage = HtmlCompat.fromHtml(
+                    resourceProvider.getString(
+                            R.string.quick_start_dialog_update_site_title_message_short,
+                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
+                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        } else {
+            QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
+                _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
+            }
+        }
+    }
+
+    fun clearActiveTask() {
+        _activeTask.value = null
     }
 
     fun completeTask(task: QuickStartTask) {
@@ -139,8 +146,9 @@ class QuickStartRepository
 //                refresh.value = false
 //                return
 //            }
-            if (task != activeTask.value) return
+            if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
+            pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
@@ -157,6 +165,7 @@ class QuickStartRepository
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
         _activeTask.value = null
+        pendingTask = task
         eventBus.postSticky(QuickStartEvent(task))
     }
 
