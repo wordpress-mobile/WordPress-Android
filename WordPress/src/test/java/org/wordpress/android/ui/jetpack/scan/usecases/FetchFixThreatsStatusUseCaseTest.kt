@@ -86,7 +86,7 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
             assertThat(useCaseResult).containsSequence(
                 InProgress(listOf(fakeThreatId)),
                 InProgress(listOf(fakeThreatId)),
-                Complete
+                Complete(fixedThreatsCount = 1)
             )
         }
 
@@ -98,7 +98,7 @@ class FetchFixThreatsStatusUseCaseTest : BaseUnitTest() {
             .toList(mutableListOf())
             .last()
 
-        assertThat(useCaseResult).isEqualTo(Complete)
+        assertThat(useCaseResult).isEqualTo(Complete(fixedThreatsCount = 1))
     }
 
     @Test
