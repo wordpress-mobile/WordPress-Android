@@ -6,18 +6,31 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.ActionableEmptyView
-        android:id="@+id/actionable_empty_view"
+    <org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+        android:id="@+id/ptr_layout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="gone"
-        app:aevImage="@drawable/img_illustration_empty_results_216dp"
-        app:aevTitle="@string/comments_empty_list"
-        tools:visibility="visible" />
+        android:layout_height="match_parent">
 
-    <org.wordpress.android.ui.FilteredRecyclerView
-        android:id="@+id/filtered_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/comments_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <org.wordpress.android.ui.ActionableEmptyView
+                android:id="@+id/actionable_empty_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone"
+                app:aevImage="@drawable/img_illustration_empty_results_216dp"
+                app:aevTitle="@string/comments_empty_list"
+                tools:visibility="visible" />
+
+        </RelativeLayout>
+
+    </org.wordpress.android.util.widgets.CustomSwipeRefreshLayout>
 
 </FrameLayout>
