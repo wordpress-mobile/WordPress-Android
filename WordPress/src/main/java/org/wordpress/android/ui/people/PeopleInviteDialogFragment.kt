@@ -14,6 +14,17 @@ import org.wordpress.android.ui.people.PeopleInviteDialogFragment.DialogMode.INV
 import org.wordpress.android.viewmodel.ContextProvider
 import javax.inject.Inject
 
+/**
+ * This dialog is used in PeopleInviteFragment in the following scenarios
+ * based on DialogMode
+ *
+ * When DialogMode is INVITE_LINKS_ROLE_SELECTION: the dialog shows a simple dialog
+ * listing the available roles for sites to choose from
+ *
+ * When DialogMode is DISABLE_INVITE_LINKS_CONFIRMATION: the dialog shows a confirmation
+ * dialog asking to confirm to disable or not the currently available invite links
+ */
+
 class PeopleInviteDialogFragment : DialogFragment() {
     @Inject lateinit var contextProvider: ContextProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
