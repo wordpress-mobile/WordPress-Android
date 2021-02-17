@@ -26,6 +26,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCard.WelcomeBannerCar
 import org.wordpress.android.test
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -41,6 +42,7 @@ class GetDiscoverCardsUseCaseTest {
     private val readerBlogTableWrapper: ReaderBlogTableWrapper = mock()
     private val appLogWrapper: AppLogWrapper = mock()
     private val appPrefsWrapper: AppPrefsWrapper = mock()
+    private val defaultSortingType = DiscoverSortingType.POPULARITY
 
     @Before
     fun setUp() {
@@ -59,7 +61,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedJsonArray.getJSONObject(0)).thenReturn(mockedPostCardJson)
         whenever(mockedJsonArray.getJSONObject(1)).thenReturn(mockedInterestsCardJson)
         whenever(mockedJsonArray.getJSONObject(2)).thenReturn(mockedRecommendedBlogsCardJson)
-        whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(listOf(""))
+        whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons(defaultSortingType)).thenReturn(listOf(""))
         whenever(parseDiscoverCardsJsonUseCase.parseInterestCard(anyOrNull())).thenReturn(mock())
         whenever(parseDiscoverCardsJsonUseCase.parseSimplifiedRecommendedBlogsCard(anyOrNull()))
                 .thenReturn(listOf(Pair(1L, 0L), Pair(2L, 0L)))
@@ -81,7 +83,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
                 .thenReturn(false)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards[0]).isInstanceOf(WelcomeBannerCard::class.java)
     }
@@ -92,7 +94,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(appPrefsWrapper.readerDiscoverWelcomeBannerShown)
                 .thenReturn(true)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards.filterIsInstance<WelcomeBannerCard>()).size().isEqualTo(0)
     }
@@ -102,7 +104,7 @@ class GetDiscoverCardsUseCaseTest {
         // Arrange
         whenever(mockedJsonArray.length()).thenReturn(0)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards.filterIsInstance<WelcomeBannerCard>()).size().isEqualTo(0)
     }
@@ -113,7 +115,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_INTERESTS_YOU_MAY_LIKE)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards[0]).isInstanceOf(InterestsYouMayLikeCard::class.java)
     }
@@ -124,7 +126,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_RECOMMENDED_BLOGS)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards[0]).isInstanceOf(ReaderRecommendedBlogsCard::class.java)
     }
@@ -135,7 +137,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(mockedPostCardJson.getString(ReaderConstants.JSON_CARD_TYPE))
                 .thenReturn(ReaderConstants.JSON_CARD_POST)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards[0]).isInstanceOf(ReaderPostCard::class.java)
     }
@@ -145,7 +147,7 @@ class GetDiscoverCardsUseCaseTest {
         // Arrange
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(null)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards.size).isEqualTo(2)
     }
@@ -155,7 +157,7 @@ class GetDiscoverCardsUseCaseTest {
         // Arrange
         whenever(readerPostTableWrapper.getBlogPost(anyLong(), anyLong(), anyBoolean())).thenReturn(mock())
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards.size).isEqualTo(3)
     }
@@ -164,9 +166,9 @@ class GetDiscoverCardsUseCaseTest {
     fun `when cards json is empty an empty ReaderDiscoverCards is returned`() = test {
         // Arrange
         val emptyList = listOf<String>()
-        whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()).thenReturn(emptyList)
+        whenever(readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons(defaultSortingType)).thenReturn(emptyList)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
         // Assert
         assertThat(result.cards).isEmpty()
     }
@@ -177,7 +179,7 @@ class GetDiscoverCardsUseCaseTest {
         val localReaderBlog = createReaderBlog()
         whenever(readerBlogTableWrapper.getReaderBlog(1L, 0L)).thenReturn(localReaderBlog)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
 
         // Assert
         assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.first()).isEqualTo(localReaderBlog)
@@ -190,7 +192,7 @@ class GetDiscoverCardsUseCaseTest {
         whenever(readerBlogTableWrapper.getReaderBlog(1L, 0L)).thenReturn(localReaderBlog)
         whenever(readerBlogTableWrapper.getReaderBlog(2L, 0L)).thenReturn(null)
         // Act
-        val result = useCase.get()
+        val result = useCase.get(defaultSortingType)
 
         // Assert
         assertThat((result.cards[2] as ReaderRecommendedBlogsCard).blogs.size).isEqualTo(1)

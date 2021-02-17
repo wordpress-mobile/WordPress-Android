@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -22,6 +23,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.POPULARITY
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
@@ -49,6 +51,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.distinct
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -87,6 +90,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
+
+    private val _sortingType = MutableLiveData<DiscoverSortingType>(POPULARITY)
+    val sortingType: LiveData<DiscoverSortingType> = _sortingType.distinct()
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -318,8 +324,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun onFollowSiteClicked(recommendedBlogUiState: ReaderRecommendedBlogUiState) {
         launch {
             val properties = mapOf(
-                "blog_id" to recommendedBlogUiState.blogId,
-                "follow" to !recommendedBlogUiState.isFollowed
+                    "blog_id" to recommendedBlogUiState.blogId,
+                    "follow" to !recommendedBlogUiState.isFollowed
             )
             analyticsTrackerWrapper.track(AnalyticsTracker.Stat.READER_SUGGESTED_SITE_TOGGLE_FOLLOW, properties)
             readerPostCardActionsHandler.handleFollowRecommendedSiteClicked(recommendedBlogUiState)
@@ -416,7 +422,9 @@ class ReaderDiscoverViewModel @Inject constructor(
         analyticsTrackerWrapper.track(READER_PULL_TO_REFRESH)
         swipeToRefreshTriggered = true
         launch {
-            readerDiscoverDataProvider.refreshCards()
+            sortingType.value?.let { sortingType ->
+                readerDiscoverDataProvider.refreshCards(sortingType)
+            }
         }
 
         appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
@@ -424,7 +432,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun onRetryButtonClick() {
         launch {
-            readerDiscoverDataProvider.refreshCards()
+            sortingType.value?.let { sortingType ->
+                readerDiscoverDataProvider.refreshCards(sortingType)
+            }
         }
     }
 

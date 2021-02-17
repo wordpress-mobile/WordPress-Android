@@ -113,6 +113,7 @@ class ReaderDiscoverViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
+    private val defaultSortingType = DiscoverSortingType.POPULARITY
 
     @Before
     fun setUp() = test {
@@ -525,7 +526,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         viewModel.swipeToRefresh()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards()
+        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
     }
 
     @Test
@@ -535,7 +536,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         viewModel.onRetryButtonClick()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards()
+        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
     }
 
     @Test
@@ -596,7 +597,7 @@ class ReaderDiscoverViewModelTest {
         // Act
         (viewModel.uiState.value as RequestFailedUiState).action.invoke()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards()
+        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {

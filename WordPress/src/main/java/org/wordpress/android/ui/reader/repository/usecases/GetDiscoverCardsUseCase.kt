@@ -17,6 +17,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.util.AppLog.T.READER
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -30,8 +31,8 @@ class GetDiscoverCardsUseCase @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) {
-    suspend fun get(): ReaderDiscoverCards = withContext(ioDispatcher) {
-        val cardJsonList = readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons()
+    suspend fun get(sortingType: DiscoverSortingType) = withContext(ioDispatcher) {
+        val cardJsonList = readerDiscoverCardsTableWrapper.loadDiscoverCardsJsons(sortingType)
         val cards: ArrayList<ReaderDiscoverCard> = arrayListOf()
 
         if (cardJsonList.isNotEmpty()) {

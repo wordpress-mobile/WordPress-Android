@@ -25,7 +25,7 @@ import java.util.Locale;
  */
 public class ReaderDatabase extends SQLiteOpenHelper {
     protected static final String DB_NAME = "wpreader.db";
-    private static final int DB_VERSION = 149;
+    private static final int DB_VERSION = 150;
     private static final int DB_LAST_VERSION_WITHOUT_MIGRATION_SCRIPT = 136; // do not change this value
 
     /*
@@ -108,6 +108,7 @@ public class ReaderDatabase extends SQLiteOpenHelper {
      * 147 - added tbl_blog_info.unseen_count
      * 148 - added tbl_posts.is_seen
      * 149 - added tbl_posts.is_seen_supported that will be false for posts created before 2020-07-13
+     * 150 - add tbl_discover_cards.cards_sorting_type
      */
 
     /*
@@ -234,6 +235,9 @@ public class ReaderDatabase extends SQLiteOpenHelper {
                 currentVersion++;
             case 148:
                 db.execSQL("ALTER TABLE tbl_posts ADD is_seen_supported BOOLEAN;");
+                currentVersion++;
+            case 149:
+                ReaderDiscoverCardsTable.INSTANCE.addSortingTypeColumnToTable(db);
                 currentVersion++;
         }
         if (currentVersion != newVersion) {

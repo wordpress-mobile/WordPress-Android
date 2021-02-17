@@ -23,6 +23,7 @@ import org.wordpress.android.ui.reader.ReaderEvents.FollowedTagsChanged
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
@@ -45,15 +46,27 @@ class ReaderDiscoverDataProviderTest {
     val rule = InstantTaskExecutorRule()
 
     @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
+    @JvmField
+    val coroutineScope = MainCoroutineScopeRule()
 
     private lateinit var dataProvider: ReaderDiscoverDataProvider
 
-    @Mock private lateinit var eventBusWrapper: EventBusWrapper
-    @Mock private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
-    @Mock private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
-    @Mock private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
-    @Mock private lateinit var readerTagWrapper: ReaderTagWrapper
+    @Mock
+    private lateinit var eventBusWrapper: EventBusWrapper
+
+    @Mock
+    private lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
+
+    @Mock
+    private lateinit var shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase
+
+    @Mock
+    private lateinit var fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase
+
+    @Mock
+    private lateinit var readerTagWrapper: ReaderTagWrapper
+
+    private val defaultSortingType = DiscoverSortingType.POPULARITY
 
     @Before
     fun setUp() {
@@ -70,11 +83,11 @@ class ReaderDiscoverDataProviderTest {
 
     @Test
     fun `when refreshCards is requested started gets posted on comm channel`() = test {
-        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType)).thenReturn(Started(REQUEST_FIRST_PAGE))
 
         dataProvider.communicationChannel.observeForever { }
 
-        dataProvider.refreshCards()
+        dataProvider.refreshCards(defaultSortingType)
 
         Assertions.assertThat(requireNotNull(dataProvider.communicationChannel.value?.peekContent()))
                 .isEqualTo(Started(REQUEST_FIRST_PAGE))
@@ -122,7 +135,7 @@ class ReaderDiscoverDataProviderTest {
     @Test
     fun `when new observer added and db is empty, does NOT post anything to discover feed`() = test {
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(ReaderDiscoverCards(listOf()))
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.discoverFeed.observeForever { }
@@ -133,7 +146,7 @@ class ReaderDiscoverDataProviderTest {
     @Test
     fun `when new observer added and db is NOT empty, the data gets posted to discover feed`() = test {
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.discoverFeed.observeForever { }
@@ -144,11 +157,11 @@ class ReaderDiscoverDataProviderTest {
     @Test
     fun `when request first page finishes, the data gets posted to discover feed`() = test {
         // Make sure the provider doesn't emit any values when a new observer is added
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(ReaderDiscoverCards(listOf()))
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(ReaderDiscoverCards(listOf()))
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
         dataProvider.discoverFeed.observeForever { }
         // Make sure the db returns some data
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         val event = FetchDiscoverCardsEnded(REQUEST_FIRST_PAGE, HAS_NEW)
 
         dataProvider.onCardsUpdated(event)
@@ -161,7 +174,7 @@ class ReaderDiscoverDataProviderTest {
 
     @Test
     fun `when loadMoreRequest in progress another started not posted to comm channel`() = test {
-        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)).thenReturn(Started(REQUEST_MORE))
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_MORE, defaultSortingType)).thenReturn(Started(REQUEST_MORE))
 
         dataProvider.communicationChannel.observeForever { }
 
@@ -185,8 +198,8 @@ class ReaderDiscoverDataProviderTest {
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers
     @Test
     fun `when loadData with refresh request is started and posted to comm channel`() = test {
-        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)).thenReturn(Started(REQUEST_FIRST_PAGE))
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType)).thenReturn(Started(REQUEST_FIRST_PAGE))
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(true)
 
         dataProvider.communicationChannel.observeForever { }
@@ -198,7 +211,7 @@ class ReaderDiscoverDataProviderTest {
 
     @Test
     fun `when loadData without refresh no start message posted to comm channel`() = test {
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
 
         dataProvider.communicationChannel.observeForever { }
@@ -210,7 +223,7 @@ class ReaderDiscoverDataProviderTest {
 
     @Test
     fun `when loadData with forceReload true data posted to discover channel`() = test {
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
 
         // No observer
@@ -227,7 +240,7 @@ class ReaderDiscoverDataProviderTest {
     fun `when loadData with existsInMemory data posted to discover feed`() = test {
         val discoverFeedObserver = Observer<ReaderDiscoverCards> { }
 
-        whenever(getDiscoverCardsUseCase.get()).thenReturn(createDummyReaderCardsList())
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(false)
 
         dataProvider.communicationChannel.observeForever { }
@@ -256,7 +269,7 @@ class ReaderDiscoverDataProviderTest {
         // Act
         dataProvider.onFollowedTagsChanged(FollowedTagsChanged(true))
         // Assert
-        verify(fetchDiscoverCardsUseCase).fetch(REQUEST_FIRST_PAGE)
+        verify(fetchDiscoverCardsUseCase).fetch(REQUEST_FIRST_PAGE, defaultSortingType)
     }
 
     // Helper functions lifted from ReaderDiscoverViewModelTest because why reinvent the wheel

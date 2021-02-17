@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.repository.usecases
 
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.NetworkUnavailable
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.ServiceNotStarted
@@ -14,13 +15,13 @@ class FetchDiscoverCardsUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val contextProvider: ContextProvider
 ) {
-    fun fetch(discoverTask: DiscoverTasks): ReaderDiscoverCommunication {
+    fun fetch(discoverTask: DiscoverTasks, sortingType: DiscoverSortingType): ReaderDiscoverCommunication {
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             return NetworkUnavailable(discoverTask)
         }
 
         val isStarted =
-                ReaderDiscoverServiceStarter.startService(contextProvider.getContext(), discoverTask)
+                ReaderDiscoverServiceStarter.startService(contextProvider.getContext(), discoverTask, sortingType)
 
         return if (isStarted)
             Started(discoverTask)

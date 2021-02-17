@@ -10,6 +10,7 @@ import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.PersistableBundle
 import org.wordpress.android.JobServiceId
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.READER
@@ -20,11 +21,13 @@ import org.wordpress.android.util.AppLog.T.READER
 */
 object ReaderDiscoverServiceStarter {
     const val ARG_DISCOVER_TASK = "discover_task"
+    const val ARG_SORTING_TYPE = "sortingType"
 
-    fun startService(context: Context, task: DiscoverTasks): Boolean {
+    fun startService(context: Context, task: DiscoverTasks, sortingType: DiscoverSortingType): Boolean {
         if (VERSION.SDK_INT < VERSION_CODES.O) {
             val intent = Intent(context, ReaderDiscoverService::class.java)
             intent.putExtra(ARG_DISCOVER_TASK, task)
+            intent.putExtra(ARG_SORTING_TYPE, sortingType)
             context.startService(intent)
         } else {
             // schedule the JobService here for API >= 26. The JobScheduler is available since API 21, but
@@ -32,6 +35,8 @@ object ReaderDiscoverServiceStarter {
             val componentName = ComponentName(context, ReaderDiscoverJobService::class.java)
             val extras = PersistableBundle()
             extras.putInt(ARG_DISCOVER_TASK, task.ordinal)
+            extras.putInt(ARG_SORTING_TYPE, task.ordinal)
+
             val jobInfo = Builder(JobServiceId.JOB_READER_DISCOVER_SERVICE_ID, componentName)
                     .setRequiresCharging(false)
                     .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)

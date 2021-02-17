@@ -7,6 +7,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import org.wordpress.android.ui.reader.services.ServiceCompletionListener
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic.DiscoverTasks
 import org.wordpress.android.util.AppLog
@@ -33,8 +34,8 @@ class ReaderDiscoverJobService : JobService(), ServiceCompletionListener, Corout
         AppLog.i(READER, "reader discover job service > started")
 
         val task = DiscoverTasks.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_DISCOVER_TASK] as Int)]
-
-        readerDiscoverLogic.performTasks(task, params)
+        val sortingType = DiscoverSortingType.values()[(params.extras[ReaderDiscoverServiceStarter.ARG_SORTING_TYPE] as Int)]
+        readerDiscoverLogic.performTasks(task, params, sortingType)
         return true
     }
 

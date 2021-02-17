@@ -19,6 +19,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.CHANGE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.FAILED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NEW
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error.RemoteRequestFailure
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Started
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Success
@@ -59,6 +60,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
         get() = ioDispatcher + job
 
     private var isStarted = false
+
     // Indicates that the data was changed in the db while no-one was subscribed to the feed.
     private val isDirty = AtomicBoolean()
     private var isLoadMoreRequestInProgress = false
@@ -76,7 +78,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
             )
 
     private var hasMoreCards = true
-
+    private var sortingType = DiscoverSortingType.POPULARITY
     private val _communicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
     val communicationChannel: LiveData<Event<ReaderDiscoverCommunication>> = _communicationChannel
             .perform {
@@ -101,9 +103,10 @@ class ReaderDiscoverDataProvider @Inject constructor(
         job.cancel()
     }
 
-    suspend fun refreshCards() {
+    suspend fun refreshCards(sortingType: DiscoverSortingType) {
+        this.sortingType = sortingType
         withContext(ioDispatcher) {
-            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
+            val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, sortingType)
             _communicationChannel.postValue(Event(response))
         }
     }
@@ -118,44 +121,44 @@ class ReaderDiscoverDataProvider @Inject constructor(
 
         if (hasMoreCards) {
             withContext(ioDispatcher) {
-                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE)
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_MORE, sortingType)
                 _communicationChannel.postValue(Event(response))
             }
         }
     }
 
     // Internal functionality
-    private suspend fun loadCards() {
+    private suspend fun loadCards(sortingType: DiscoverSortingType) {
         withContext(ioDispatcher) {
             val forceReload = isDirty.getAndSet(false)
             val existsInMemory = discoverFeed.value?.cards?.isNotEmpty() ?: false
             val refresh = shouldAutoUpdateTagUseCase.get(readerTag)
             if (forceReload || !existsInMemory) {
-                val result = getDiscoverCardsUseCase.get()
+                val result = getDiscoverCardsUseCase.get(sortingType)
                 if (result.cards.isNotEmpty()) {
                     _discoverFeed.postValue(result)
                 }
             }
 
             if (refresh) {
-                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE)
+                val response = fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, sortingType)
                 _communicationChannel.postValue(Event(response))
             }
         }
     }
 
-    private suspend fun reloadPosts() {
+    private suspend fun reloadPosts(sortingType: DiscoverSortingType) {
         withContext(ioDispatcher) {
-            val result = getDiscoverCardsUseCase.get()
+            val result = getDiscoverCardsUseCase.get(sortingType)
             _discoverFeed.postValue(result)
         }
     }
 
     // Handlers for ReaderPostServices
-    private fun onUpdated(task: DiscoverTasks?) {
+    private fun onUpdated(task: DiscoverTasks?, sortingType: DiscoverSortingType) {
         hasMoreCards = true
         launch {
-            reloadPosts()
+            reloadPosts(sortingType)
             if (task != null) {
                 _communicationChannel.postValue(Event(Success(task)))
             }
@@ -178,7 +181,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     // React to discoverFeed observers
     private fun onActiveDiscoverFeed() {
         launch {
-            loadCards()
+            loadCards(sortingType)
         }
     }
 
@@ -191,7 +194,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     fun onReaderPostTableAction(event: ReaderPostTableActionEnded) {
         if (_discoverFeed.hasObservers()) {
             isDirty.compareAndSet(true, false)
-            onUpdated(null)
+            onUpdated(null, sortingType)
         } else {
             isDirty.compareAndSet(false, true)
         }
@@ -201,7 +204,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     fun onCardsUpdated(event: FetchDiscoverCardsEnded) {
         event.result?.let {
             when (it) {
-                HAS_NEW, CHANGED -> onUpdated(event.task)
+                HAS_NEW, CHANGED -> onUpdated(event.task, sortingType)
                 UNCHANGED -> onUnchanged(event.task)
                 FAILED -> onFailed(event.task)
             }
@@ -211,7 +214,7 @@ class ReaderDiscoverDataProvider @Inject constructor(
     @Subscribe(threadMode = BACKGROUND)
     fun onFollowedTagsChanged(event: FollowedTagsChanged) {
         launch {
-            refreshCards()
+            refreshCards(sortingType)
         }
     }
 }
