@@ -255,7 +255,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
             manageShimmerSection(uiState.isShimmerSectionVisible(), uiState.getStartShimmer());
 
-            manageActionButtonsEnable(uiState.getEnableActionButtons());
+            manageActionButtonsEnabledState(uiState.isActionButtonsEnabled());
 
             switch (uiState.getType()) {
                 case HIDDEN:
@@ -716,7 +716,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void manageActionButtonsEnable(boolean enable) {
+    private void manageActionButtonsEnabledState(boolean enable) {
         mGenerateLinksButton.setEnabled(enable);
         mShareLinksButton.setEnabled(enable);
         mLinksRoleTextView.setEnabled(enable);

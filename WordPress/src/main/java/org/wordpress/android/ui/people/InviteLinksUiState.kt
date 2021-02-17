@@ -12,7 +12,7 @@ data class InviteLinksUiState(
     val inviteLinksSelectedRole: InviteLinksUiItem,
     val enableManageLinksActions: Boolean,
     val startShimmer: Boolean = isShimmerSectionVisible && type == LOADING,
-    val enableActionButtons: Boolean = !startShimmer
+    val isActionButtonsEnabled: Boolean = !startShimmer
 )
 
 enum class InviteLinksUiStateType {
