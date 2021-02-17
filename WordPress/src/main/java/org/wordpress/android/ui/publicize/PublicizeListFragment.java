@@ -142,8 +142,8 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
             showQuickStartFocusPoint();
 
-            Spannable title = mQuickStartUtilsWrapper
-                    .stylizeQuickStartPrompt(R.string.quick_start_dialog_enable_sharing_message_short_connections);
+            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(requireContext(),
+                    R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
             WPDialogSnackbar.make(getView(), title,
                     getResources().getInteger(R.integer.quick_start_snackbar_duration_ms)).show();

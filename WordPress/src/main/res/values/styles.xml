@@ -1055,6 +1055,16 @@
         <item name="android:enabled">false</item>
     </style>
 
+    <!-- Site Creation: Domain Search Example-->
+    <style name="SiteCreationDomainExample">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">center</item>
+        <item name="android:textColor">@color/gray_40</item>
+        <item name="android:textSize">@dimen/text_sz_medium</item>
+        <item name="android:drawableStart">@drawable/ic_gridicons_lock</item>
+    </style>
+
     <!--Site Preview -->
     <style name="SiteCreationHeaderLinearLayoutStyle">
         <item name="android:layout_width">match_parent</item>

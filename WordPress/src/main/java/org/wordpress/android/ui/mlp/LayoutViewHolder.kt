@@ -45,8 +45,11 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         selected.setVisible(uiState.selectedOverlayVisible)
         preview.contentDescription = parent.context.getString(uiState.contentDescriptionResId, uiState.title)
         preview.context?.let { ctx ->
-            container.strokeWidth = if (uiState.selectedOverlayVisible)
-                ctx.resources.getDimensionPixelSize(R.dimen.picker_header_selection_overlay_width) else 0
+            container.strokeWidth = if (uiState.selectedOverlayVisible) {
+                ctx.resources.getDimensionPixelSize(R.dimen.picker_header_selection_overlay_width)
+            } else {
+                0
+            }
         }
         container.setOnClickListener {
             uiState.onItemTapped.invoke()
