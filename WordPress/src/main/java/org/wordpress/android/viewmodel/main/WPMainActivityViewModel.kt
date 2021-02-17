@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -11,6 +12,7 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
+import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -21,6 +23,7 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.QuickStartRepository
+import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -87,8 +90,11 @@ class WPMainActivityViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    private val _startLoginFlow = MutableLiveData<Event<Boolean>>()
-    val startLoginFlow: LiveData<Event<Boolean>> = _startLoginFlow
+    private val _startLoginFlow = MutableLiveData<Event<Unit>>()
+    val startLoginFlow: LiveData<Event<Unit>> = _startLoginFlow
+
+    private val _switchToMySite = MutableLiveData<Event<Unit>>()
+    val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
@@ -225,8 +231,11 @@ class WPMainActivityViewModel @Inject constructor(
         disableTooltip(site)
     }
 
-    fun onOpenLoginPage() {
-        _startLoginFlow.value = Event(true)
+    fun onOpenLoginPage(mySitePosition: Int) = launch {
+        _startLoginFlow.value = Event(Unit)
+        appPrefsWrapper.setMainPageIndex(mySitePosition)
+        delay(500)
+        _switchToMySite.value = Event(Unit)
     }
 
     fun onResume(site: SiteModel?, showFab: Boolean) {
