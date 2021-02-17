@@ -75,6 +75,23 @@ public class CommentSqlUtils {
                 .execute();
     }
 
+    public static int removeCommentsWithFilters(SiteModel site, CommentStatus... statuses) {
+        if (site == null) {
+            return 0;
+        }
+
+        if (!Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+            return removeComments(site);
+        }
+
+        return WellSql.delete(CommentModel.class)
+                      .where()
+                      .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                      .isIn(CommentModelTable.STATUS, Arrays.asList(statuses))
+                      .endWhere()
+                      .execute();
+    }
+
     public static int deleteAllComments() {
         return WellSql.delete(CommentModel.class).execute();
     }
