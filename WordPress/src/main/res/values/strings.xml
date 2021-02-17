@@ -2273,7 +2273,7 @@
     <string name="role_viewer">Viewer</string>
 
     <string name="invite_links_section_title">Invite Link</string>
-    <string name="invite_links_get_status_retry">Get links retry</string>
+    <string name="invite_links_get_status_retry">Refresh links status</string>
     <string name="invite_links_generate">Generate new link</string>
     <string name="invite_links_share_invite_link">Share invite link</string>
     <string name="invite_links_disable_invite_link">Disable invite link</string>
