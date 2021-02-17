@@ -1093,9 +1093,9 @@
     <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
-    <string name="scan_in_hours_ago">%s hours ago</string>
-    <string name="scan_in_minutes_ago">%s minutes ago</string>
-    <string name="scan_in_few_seconds">in a few seconds</string>
+    <string name="scan_in_hours_ago">%s hour(s) ago</string>
+    <string name="scan_in_minutes_ago">%s minute(s) ago</string>
+    <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
 
     <!-- scan history -->
@@ -1572,6 +1572,11 @@
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
         <item>@string/post_status_pending_review</item>
+        <item>@string/post_status_post_private</item>
+    </string-array>
+
+    <string-array name="post_settings_homepage_statuses" translatable="false">
+        <item>@string/post_status_publish_post</item>
         <item>@string/post_status_post_private</item>
     </string-array>
 
