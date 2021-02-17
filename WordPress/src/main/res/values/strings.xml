@@ -3419,7 +3419,7 @@
     <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
     <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
-    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
