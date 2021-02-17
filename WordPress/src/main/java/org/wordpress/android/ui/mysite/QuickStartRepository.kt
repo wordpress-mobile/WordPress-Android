@@ -71,6 +71,8 @@ class QuickStartRepository
     val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
+    private var pendingTask: QuickStartTask? = null
+
     init {
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
                 .filter { !appPrefsWrapper.isQuickStartTaskTypeRemoved(it) }
@@ -86,6 +88,7 @@ class QuickStartRepository
 
     override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
+        pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
             quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
@@ -114,6 +117,7 @@ class QuickStartRepository
 
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
+        pendingTask = null
         if (task == UPDATE_SITE_TITLE) {
             val shortQuickStartMessage = HtmlCompat.fromHtml(
                     resourceProvider.getString(
@@ -129,6 +133,10 @@ class QuickStartRepository
         }
     }
 
+    fun clearActiveTask() {
+        _activeTask.value = null
+    }
+
     fun completeTask(task: QuickStartTask) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
@@ -138,8 +146,9 @@ class QuickStartRepository
 //                refresh.value = false
 //                return
 //            }
-            if (task != activeTask.value) return
+            if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
+            pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
@@ -156,6 +165,7 @@ class QuickStartRepository
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
         _activeTask.value = null
+        pendingTask = task
         eventBus.postSticky(QuickStartEvent(task))
     }
 

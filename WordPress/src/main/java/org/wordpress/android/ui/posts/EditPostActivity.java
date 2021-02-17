@@ -3332,6 +3332,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
     }
 
+    @Override public void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown) {
+        AppPrefs.setGutenbergFocalPointPickerTooltipShown(tooltipShown);
+    }
+
+    @Override public boolean onGutenbergEditorRequestFocalPointPickerTooltipShown() {
+        return AppPrefs.getGutenbergFocalPointPickerTooltipShown();
+    }
+
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();

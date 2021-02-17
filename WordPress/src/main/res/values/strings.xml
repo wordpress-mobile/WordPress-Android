@@ -1094,9 +1094,9 @@
     <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
-    <string name="scan_in_hours_ago">%s hours ago</string>
-    <string name="scan_in_minutes_ago">%s minutes ago</string>
-    <string name="scan_in_few_seconds">in a few seconds</string>
+    <string name="scan_in_hours_ago">%s hour(s) ago</string>
+    <string name="scan_in_minutes_ago">%s minute(s) ago</string>
+    <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
 
     <!-- scan history -->
@@ -1573,6 +1573,11 @@
         <item>@string/post_status_publish_post</item>
         <item>@string/post_status_draft</item>
         <item>@string/post_status_pending_review</item>
+        <item>@string/post_status_post_private</item>
+    </string-array>
+
+    <string-array name="post_settings_homepage_statuses" translatable="false">
+        <item>@string/post_status_publish_post</item>
         <item>@string/post_status_post_private</item>
     </string-array>
 
@@ -2629,6 +2634,7 @@
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
     <string name="login_get_link_by_email">Get a login link by email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -2706,7 +2712,6 @@
     <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_confirmation_magic_link_message">We’ll email you a signup link to create your new WordPress.com account.</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
