@@ -12,7 +12,6 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.FOLLOW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
-import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.main.MainActionListItem
 import org.wordpress.android.ui.main.MainActionListItem.ActionType
@@ -23,7 +22,6 @@ import org.wordpress.android.ui.main.MainActionListItem.ActionType.NO_ACTION
 import org.wordpress.android.ui.main.MainActionListItem.CreateAction
 import org.wordpress.android.ui.main.MainFabUiState
 import org.wordpress.android.ui.mysite.QuickStartRepository
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.whatsnew.FeatureAnnouncementProvider
 import org.wordpress.android.util.BuildConfigWrapper
@@ -41,6 +39,8 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val SWITCH_TO_MY_SITE_DELAY = 500L
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
@@ -234,7 +234,7 @@ class WPMainActivityViewModel @Inject constructor(
     fun onOpenLoginPage(mySitePosition: Int) = launch {
         _startLoginFlow.value = Event(Unit)
         appPrefsWrapper.setMainPageIndex(mySitePosition)
-        delay(500)
+        delay(SWITCH_TO_MY_SITE_DELAY)
         _switchToMySite.value = Event(Unit)
     }
 
@@ -268,25 +268,28 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (shouldShowStories(site))
+        return if (shouldShowStories(site)) {
             getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
-        else
+        } else {
             getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
+        }
     }
 
     // create_post_page_fab_tooltip_stories_feature_flag_on
     private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent)
+        return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip_stories_enabled
-        else
+        } else {
             R.string.create_post_page_fab_tooltip_contributors_stories_enabled
+        }
     }
 
     private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent)
+        return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip
-        else
+        } else {
             R.string.create_post_page_fab_tooltip_contributors
+        }
     }
 
     private fun updateFeatureAnnouncements() {
