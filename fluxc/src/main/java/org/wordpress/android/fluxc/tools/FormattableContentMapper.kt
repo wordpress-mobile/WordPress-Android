@@ -101,6 +101,7 @@ enum class FormattableRangeType {
     MATCH,
     MEDIA,
     B,
+    REWIND_DOWNLOAD_READY,
     UNKNOWN;
 
     companion object {
@@ -120,6 +121,7 @@ enum class FormattableRangeType {
                 "match" -> MATCH
                 "media" -> MEDIA
                 "b" -> B
+                "rewind_download_ready" -> REWIND_DOWNLOAD_READY
                 else -> UNKNOWN
             }
         }
