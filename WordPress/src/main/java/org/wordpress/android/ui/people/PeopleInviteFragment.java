@@ -214,10 +214,12 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PeopleInviteViewModel.class);
 
         mGenerateLinksButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onGenerateLinksButtonClicked();
         });
 
         mShareLinksButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onShareButtonClicked(
                     mLinksRoleTextView.getText() != null
                             ? mLinksRoleTextView.getText().toString()
@@ -234,6 +236,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
         mRetryButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onRetryButtonClicked();
         });
 
