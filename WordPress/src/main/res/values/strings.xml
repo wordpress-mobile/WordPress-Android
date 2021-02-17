@@ -3416,9 +3416,7 @@
     <string name="backup_download_progress_page_title">Download Backup</string>
     <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
-    <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
-    <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
     <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
@@ -3471,9 +3469,7 @@
     <string name="restore_progress_page_title" translatable="false">@string/restore</string>
     <string name="restore_progress_header">Currently restoring site</string>
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
-    <string name="restore_progress_action_button" translatable="false">@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
-    <string name="restore_progress_action_button_content_description" translatable="false">@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
 
