@@ -207,7 +207,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         return rootView;
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PeopleInviteViewModel.class);
@@ -309,7 +310,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mViewModel.start(mSite);
     }
 
-    @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
         mUsernamesEmails = getView().findViewById(R.id.user_names_emails);
