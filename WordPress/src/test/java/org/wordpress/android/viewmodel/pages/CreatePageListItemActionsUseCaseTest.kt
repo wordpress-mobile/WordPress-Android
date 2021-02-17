@@ -132,8 +132,6 @@ class CreatePageListItemActionsUseCaseTest {
                 VIEW_PAGE,
                 SET_PARENT,
                 SET_AS_POSTS_PAGE,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
                 COPY
         )
         site.showOnFront = ShowOnFront.PAGE.value
@@ -175,8 +173,6 @@ class CreatePageListItemActionsUseCaseTest {
         val expectedActions = setOf(
                 VIEW_PAGE,
                 SET_PARENT,
-                MOVE_TO_DRAFT,
-                MOVE_TO_TRASH,
                 COPY
         )
         site.showOnFront = ShowOnFront.PAGE.value
