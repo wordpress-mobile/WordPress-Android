@@ -2,9 +2,7 @@ package org.wordpress.android.ui.photopicker
 
 import android.view.View
 import android.widget.ImageView
-import android.widget.ImageView.ScaleType.FIT_CENTER
 import android.widget.TextView
-import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R.anim
 import org.wordpress.android.R.drawable
 import org.wordpress.android.R.string
@@ -16,53 +14,13 @@ import org.wordpress.android.util.AniUtils.Duration.SHORT
 import org.wordpress.android.util.PhotoPickerUtils
 import org.wordpress.android.util.ViewUtils
 import org.wordpress.android.util.image.ImageManager
-import org.wordpress.android.util.image.ImageType.PHOTO
-import org.wordpress.android.util.image.ImageType.VIDEO
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 import java.util.Locale
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mediapicker.ThumbnailViewUtils}")
 class ThumbnailViewUtils(val imageManager: ImageManager) {
-    fun setupThumbnailImage(
-        imgThumbnail: ImageView,
-        url: String,
-        isSelected: Boolean,
-        clickAction: ClickAction,
-        toggleAction: ToggleAction,
-        animateSelection: Boolean
-    ) {
-        imageManager.cancelRequestAndClearImageView(imgThumbnail)
-        imageManager.load(
-                imgThumbnail,
-                PHOTO,
-                url,
-                FIT_CENTER
-        )
-        setupListeners(imgThumbnail, isSelected, toggleAction, clickAction, animateSelection)
-    }
-
-    fun setupVideoThumbnailImage(
-        coroutineScope: CoroutineScope,
-        imgThumbnail: ImageView,
-        url: String,
-        isSelected: Boolean,
-        clickAction: ClickAction,
-        toggleAction: ToggleAction,
-        animateSelection: Boolean
-    ) {
-        imageManager.cancelRequestAndClearImageView(imgThumbnail)
-        imageManager.loadThumbnailFromVideoUrl(
-                coroutineScope,
-                imgThumbnail,
-                VIDEO,
-                url,
-                FIT_CENTER
-        )
-        setupListeners(imgThumbnail, isSelected, toggleAction, clickAction, animateSelection)
-    }
-
-    private fun setupListeners(
+    fun setupListeners(
         imgThumbnail: ImageView,
         isSelected: Boolean,
         toggleAction: ToggleAction,

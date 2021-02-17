@@ -44,8 +44,8 @@ class PhotoPickerAdapter internal constructor(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
         return when (viewType) {
-            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
-            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils, coroutineScope)
+            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager)
+            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager, coroutineScope)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

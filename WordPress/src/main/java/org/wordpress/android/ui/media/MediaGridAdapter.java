@@ -524,7 +524,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         imageView.setTag(R.id.media_grid_remote_thumb_extract_id, VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL);
-        mImageManager.loadThumbnailFromVideoUrl(mAppScope, imageView, ImageType.VIDEO, filePath, ScaleType.CENTER_CROP,
+        mImageManager.loadThumbnailFromVideoUrl(mAppScope, imageView, filePath, ScaleType.CENTER_CROP,
                 new ImageManager.RequestListener<Drawable>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {

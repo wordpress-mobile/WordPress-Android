@@ -40,6 +40,7 @@ import org.wordpress.android.modules.GlideRequest
 import org.wordpress.android.networking.MShot
 import org.wordpress.android.ui.media.VideoLoader
 import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.image.ImageType.VIDEO
 import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -119,12 +120,12 @@ class ImageManager @Inject constructor(
     fun loadThumbnailFromVideoUrl(
         scope: CoroutineScope,
         imageView: ImageView,
-        imageType: ImageType,
         videoUrl: String = "",
         scaleType: ScaleType = CENTER,
         requestListener: RequestListener<Drawable>? = null
     ) {
         val context = imageView.context
+        val imageType = VIDEO
         if (!context.isAvailable()) return
         videoLoader?.runIfMediaNotTooBig(scope,
                 videoUrl, {
