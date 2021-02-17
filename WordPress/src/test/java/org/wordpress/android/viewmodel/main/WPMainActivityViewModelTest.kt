@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -13,6 +14,7 @@ import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
@@ -341,10 +343,28 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     @Test
     fun `when user taps to open the login page from the bottom sheet empty view cta the correct action is triggered`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onOpenLoginPage()
+        var loginFlowTriggered = false
+        var switchTabTriggered = false
 
-        assertThat(viewModel.startLoginFlow.value!!.peekContent()).isTrue()
+        viewModel.startLoginFlow.observeForever { event ->
+            event.applyIfNotHandled {
+                loginFlowTriggered = true
+            }
+        }
+
+        viewModel.switchToMySite.observeForever { event ->
+            event.applyIfNotHandled {
+                switchTabTriggered = true
+            }
+        }
+
+        startViewModelWithDefaultParameters()
+
+        viewModel.onOpenLoginPage(0)
+
+        assertThat(loginFlowTriggered).isTrue
+        verify(appPrefsWrapper, times(1)).setMainPageIndex(eq(0))
+        assertThat(switchTabTriggered).isTrue
     }
 
     @Test
