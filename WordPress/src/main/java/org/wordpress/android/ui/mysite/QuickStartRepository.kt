@@ -46,6 +46,7 @@ import javax.inject.Singleton
 import kotlin.coroutines.CoroutineContext
 
 @Singleton
+@Suppress("LongParameterList")
 class QuickStartRepository
 @Inject constructor(
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
