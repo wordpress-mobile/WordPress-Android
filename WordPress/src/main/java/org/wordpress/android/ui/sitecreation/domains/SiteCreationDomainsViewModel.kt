@@ -340,20 +340,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
+            val exampleViewVisibility: Boolean,
             val items: List<DomainsListItemUiState>
         ) {
             object Initial : DomainsUiContentState(
                     emptyViewVisibility = false,
+                    exampleViewVisibility = true,
                     items = emptyList()
             )
 
             object Empty : DomainsUiContentState(
                     emptyViewVisibility = true,
+                    exampleViewVisibility = false,
                     items = emptyList()
             )
 
             class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
                     emptyViewVisibility = false,
+                    exampleViewVisibility = false,
                     items = items
             )
         }

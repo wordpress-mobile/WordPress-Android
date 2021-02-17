@@ -5,15 +5,12 @@ import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import kotlinx.coroutines.flow.toList
-import kotlinx.coroutines.test.runBlockingTest
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
-import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.model.SiteModel
@@ -29,6 +26,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Complete
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure
+import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState.Progress
 import org.wordpress.android.util.NetworkUtilsWrapper
 import java.util.Date
@@ -45,10 +43,6 @@ private val PUBLISHED = Date()
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class GetRestoreStatusUseCaseTest {
-    @ExperimentalCoroutinesApi
-    @Rule
-    @JvmField val coroutineScope = MainCoroutineScopeRule()
-
     private lateinit var useCase: GetRestoreStatusUseCase
 
     @Mock lateinit var networkUtilsWrapper: NetworkUtilsWrapper
@@ -83,109 +77,100 @@ class GetRestoreStatusUseCaseTest {
 
     @Test
     fun `given failure without restore id, when restore status triggers, then return remote request failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.fetchActivitiesRewind(any()))
                         .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given failure with restore id, when restore status triggers, then return failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.fetchActivitiesRewind(any()))
                         .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given finished without restore id and rewind id, when restore status triggers, then return complete`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
     }
 
     @Test
     fun `given finished with restore id and rewind id, when restore status triggers, then return complete`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Complete(REWIND_ID, RESTORE_ID, PUBLISHED))
     }
 
     @Test
     fun `given finished without restore id no rewind id, when restore status triggers, then return failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(null, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given finished with restore id no rewind id, when restore status triggers, then return failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(null, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given failed without restore id, when restore status triggers, then return failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FAILED))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given failed with restore id, when restore status triggers, then return failure`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FAILED))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(Failure.RemoteRequestFailure)
     }
 
     @Test
     fun `given running without restore id, when restore status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
                         Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
@@ -195,13 +180,12 @@ class GetRestoreStatusUseCaseTest {
 
     @Test
     fun `given running with restore id, when restore status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
                         Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
@@ -211,13 +195,12 @@ class GetRestoreStatusUseCaseTest {
 
     @Test
     fun `given queued without restore id, when restore status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.QUEUED))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, null).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
                         Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
@@ -227,13 +210,12 @@ class GetRestoreStatusUseCaseTest {
 
     @Test
     fun `given queued with restore id, when restore status triggers, then return progress`() =
-            coroutineScope.runBlockingTest {
+            test {
                 whenever(activityLogStore.getRewindStatusForSite(site))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.QUEUED))
                         .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
 
                 val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
-                advanceTimeBy(DELAY_MILLIS)
 
                 assertThat(result).contains(
                         Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
@@ -258,6 +240,62 @@ class GetRestoreStatusUseCaseTest {
 
         assertThat(result).contains(RestoreRequestState.Empty)
     }
+
+    @Test
+    fun `given max fetch retries exceeded, when restore status triggers, then return remote request failure`() =
+            test {
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+
+                val result = useCase.getRestoreStatus(site, null).toList()
+
+                assertThat(result).size().isEqualTo(1)
+                assertThat(result).isEqualTo(listOf(RemoteRequestFailure))
+            }
+
+    @Test
+    fun `given fetch error under retry count, when restore status triggers, then return progress`() =
+            test {
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(RewindStatusError(GENERIC_ERROR), FETCH_REWIND_STATE))
+                        .thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+                assertThat(result).contains(
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
+                )
+            }
+
+    @Test
+    fun `given no network available under retry count, when restore status triggers, then return progress`() =
+            test {
+                whenever(networkUtilsWrapper.isNetworkAvailable())
+                        .thenReturn(false)
+                        .thenReturn(false)
+                        .thenReturn(true)
+                whenever(activityLogStore.fetchActivitiesRewind(any()))
+                        .thenReturn(OnRewindStatusFetched(FETCH_REWIND_STATE))
+
+                whenever(activityLogStore.getRewindStatusForSite(site))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.RUNNING))
+                        .thenReturn(rewindStatusModel(REWIND_ID, Rewind.Status.FINISHED))
+
+                val result = useCase.getRestoreStatus(site, RESTORE_ID).toList()
+
+                assertThat(result).contains(
+                        Progress(REWIND_ID, PROGRESS, MESSAGE, CURRENT_ENTRY, PUBLISHED),
+                        Complete(REWIND_ID, RESTORE_ID, PUBLISHED)
+                )
+            }
     /* PRIVATE */
 
     private fun activityLogModel() = ActivityLogModel(

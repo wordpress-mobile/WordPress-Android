@@ -117,15 +117,15 @@ class ScanViewModel @Inject constructor(
                         is FetchScanState.Failure.NetworkUnavailable -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OFFLINE)
                             scanStateModel
-                                    ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
-                                    ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.error_generic_network)) }
+                                ?: updateUiState(ErrorUiState.NoConnection(::onRetryClicked))
                         }
 
                         is FetchScanState.Failure.RemoteRequestFailure -> {
                             scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.REMOTE)
                             scanStateModel
-                                    ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
-                                    ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
+                                ?.let { updateSnackbarMessageEvent(UiStringRes(R.string.request_failed_message)) }
+                                ?: updateUiState(ErrorUiState.GenericRequestFailed(::onContactSupportClicked))
                         }
                     }
                 }
@@ -192,7 +192,9 @@ class ScanViewModel @Inject constructor(
                 }
                 is FetchFixThreatsState.Complete -> {
                     someOrAllThreatFixed = true
-                    messageRes = R.string.threat_fix_all_status_success_message
+                    messageRes = if (status.fixedThreatsCount == 1) {
+                        R.string.threat_fix_all_status_success_message_singular
+                    } else R.string.threat_fix_all_status_success_message_plural
                 }
                 is FetchFixThreatsState.Failure.NetworkUnavailable -> {
                     scanTracker.trackOnError(ErrorAction.FETCH_FIX_THREAT_STATUS, ErrorCause.OFFLINE)
@@ -244,7 +246,9 @@ class ScanViewModel @Inject constructor(
             OpenFixThreatsConfirmationDialog(
                 title = UiStringRes(R.string.threat_fix_all_warning_title),
                 message = UiStringResWithParams(
-                    R.string.threat_fix_all_warning_message,
+                    if (fixableThreatIds.size > 1) {
+                        R.string.threat_fix_all_warning_message_plural
+                    } else R.string.threat_fix_all_warning_message_singular,
                     listOf(UiStringText("${fixableThreatIds.size}"))
                 ),
                 okButtonAction = this@ScanViewModel::fixAllThreats
@@ -283,7 +287,7 @@ class ScanViewModel @Inject constructor(
         _uiState.value = state
     }
 
-    private fun buildContentUiState(
+    private suspend fun buildContentUiState(
         model: ScanStateModel,
         fixingThreatIds: List<Long> = emptyList()
     ) = ContentUiState(

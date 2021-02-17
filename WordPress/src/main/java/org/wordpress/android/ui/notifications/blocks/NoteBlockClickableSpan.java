@@ -40,7 +40,6 @@ public class NoteBlockClickableSpan extends ClickableSpan {
     private int mLinkColor;
     private int mLightTextColor;
 
-
     public NoteBlockClickableSpan(FormattableRange range, boolean shouldLink, boolean isFooter) {
         mShouldLink = shouldLink;
         mIsFooter = isFooter;
@@ -119,6 +118,7 @@ public class NoteBlockClickableSpan extends ClickableSpan {
             case SITE:
             case POST:
             case COMMENT:
+            case REWIND_DOWNLOAD_READY:
             case B:
                 return Typeface.BOLD;
             case BLOCKQUOTE:

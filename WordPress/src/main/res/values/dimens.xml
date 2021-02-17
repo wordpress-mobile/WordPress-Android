@@ -496,6 +496,14 @@
 
     <dimen name="site_creation_domains_radio_button_padding_start">28dp</dimen>
 
+    <dimen name="site_creation_domains_example_top_cell_height">28dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_height">23dp</dimen>
+    <dimen name="site_creation_domains_example_middle_cell_top_margin">44dp</dimen>
+    <dimen name="site_creation_domains_example_bottom_cell_top_margin">75dp</dimen>
+    <dimen name="site_creation_domains_example_left_cell_width">97dp</dimen>
+    <dimen name="site_creation_domains_example_right_cell_width">49dp</dimen>
+    <dimen name="site_creation_domains_example_top_margin">40dp</dimen>
+
     <dimen name="site_creation_preview_skeleton_mid_size_width">174dp</dimen>
     <dimen name="site_creation_preview_skeleton_large_block_height">136dp</dimen>
     <dimen name="site_creation_preview_landscape_title_and_button_container_width">220dp</dimen>

@@ -65,10 +65,9 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
         return when {
             isFixingNotStarted -> NotStarted
             isFixing -> InProgress(fixingThreatIds)
-            isFixingComplete -> Complete
+            isFixingComplete -> Complete(fixableThreatIds.size)
             else -> {
-                // TODO ashiagr replace AppLog tag
-                if (errors.isNotEmpty()) AppLog.e(T.API, models.filter { it.error != null }.toString())
+                if (errors.isNotEmpty()) AppLog.e(T.JETPACK_SCAN, models.filter { it.error != null }.toString())
                 Failure.FixFailure(
                         containsOnlyErrors = errors.size == fixableThreatIds.size,
                         mightBeMissingCredentials = mightBeMissingCredentials
@@ -80,7 +79,7 @@ class FetchFixThreatsStatusUseCase @Inject constructor(
     sealed class FetchFixThreatsState {
         object NotStarted : FetchFixThreatsState()
         data class InProgress(val threatIds: List<Long>) : FetchFixThreatsState()
-        object Complete : FetchFixThreatsState()
+        data class Complete(val fixedThreatsCount: Int) : FetchFixThreatsState()
         sealed class Failure : FetchFixThreatsState() {
             object NetworkUnavailable : Failure()
             object RemoteRequestFailure : Failure()

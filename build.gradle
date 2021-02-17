@@ -7,6 +7,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.buildGutenbergMobileJSBundle = 1
     ext.wordPressUtilsVersion = '1.30.3-beta.1'
+    ext.detektVersion = '1.15.0'
 
     repositories {
         google()
@@ -20,6 +21,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
+        classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
     }
 }
 
@@ -45,6 +47,7 @@ setting wp.BUILD_GUTENBERG_FROM_SOURCE to false."
 
 allprojects {
     apply plugin: 'checkstyle'
+    apply plugin: 'io.gitlab.arturbosch.detekt'
 
     repositories {
         google()
@@ -77,6 +80,21 @@ allprojects {
     checkstyle {
         toolVersion = '8.3'
         configFile file("${project.rootDir}/config/checkstyle.xml")
+    }
+
+    detekt {
+        config = files("${project.rootDir}/config/detekt/detekt.yml")
+        autoCorrect = false
+        buildUponDefaultConfig = false
+        disableDefaultRuleSets = false
+        ignoreFailures = false
+        parallel = false
+        debug = false
+        reports {
+            html.enabled = true
+            xml.enabled = true
+            txt.enabled = true
+        }
     }
 
     tasks.withType(org.jetbrains.kotlin.gradle.tasks.KotlinCompile).all {
@@ -136,7 +154,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = '1.10.0'
+    fluxCVersion = '1.11.0-beta-2'
 
 
     appCompatVersion = '1.0.2'

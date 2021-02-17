@@ -3,11 +3,9 @@ package org.wordpress.android.ui.mysite
 import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.asFlow
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.flow.Flow
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
@@ -24,6 +22,9 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
@@ -65,8 +66,12 @@ class QuickStartRepository
     private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
+    private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
     val onSnackbar = _onSnackbar as LiveData<Event<SnackbarMessageHolder>>
+    val onQuickStartMySitePrompts = _onQuickStartMySitePrompts as LiveData<Event<QuickStartMySitePrompts>>
     val activeTask = _activeTask as LiveData<QuickStartTask?>
+
+    private var pendingTask: QuickStartTask? = null
 
     init {
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
@@ -81,8 +86,9 @@ class QuickStartRepository
             completedTasks = quickStartStore.getCompletedTasksByType(siteId.toLong(), quickStartTaskType)
                     .mapNotNull { detailsMap[it] })
 
-    override fun buildSource(siteId: Int): Flow<QuickStartUpdate> {
+    override fun buildSource(coroutineScope: CoroutineScope, siteId: Int): LiveData<QuickStartUpdate> {
         _activeTask.value = null
+        pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
             quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
@@ -95,7 +101,7 @@ class QuickStartRepository
                 listOf()
             }
             QuickStartUpdate(activeTask, categories)
-        }.asFlow()
+        }
     }
 
     fun startQuickStart() {
@@ -111,22 +117,24 @@ class QuickStartRepository
 
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
-        val shortQuickStartMessage =
-                if (task == UPDATE_SITE_TITLE) {
-                    HtmlCompat.fromHtml(
-                            resourceProvider.getString(
-                                    R.string.quick_start_dialog_update_site_title_message_short,
-                                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                            ), HtmlCompat.FROM_HTML_MODE_COMPACT
-                    )
-                } else {
-                    val activeTutorialPrompt = QuickStartMySitePrompts.getPromptDetailsForTask(task)
-                    quickStartUtils.stylizeQuickStartPrompt(
-                            activeTutorialPrompt!!.shortMessagePrompt,
-                            activeTutorialPrompt.iconId
-                    )
-                }
-        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        pendingTask = null
+        if (task == UPDATE_SITE_TITLE) {
+            val shortQuickStartMessage = HtmlCompat.fromHtml(
+                    resourceProvider.getString(
+                            R.string.quick_start_dialog_update_site_title_message_short,
+                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
+                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            )
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+        } else {
+            QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
+                _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
+            }
+        }
+    }
+
+    fun clearActiveTask() {
+        _activeTask.value = null
     }
 
     fun completeTask(task: QuickStartTask) {
@@ -138,8 +146,9 @@ class QuickStartRepository
 //                refresh.value = false
 //                return
 //            }
-            if (task != activeTask.value) return
+            if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
+            pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
@@ -156,6 +165,7 @@ class QuickStartRepository
     fun requestNextStepOfTask(task: QuickStartTask) {
         if (task != activeTask.value) return
         _activeTask.value = null
+        pendingTask = task
         eventBus.postSticky(QuickStartEvent(task))
     }
 
@@ -163,15 +173,22 @@ class QuickStartRepository
         job.cancel()
     }
 
-    fun hideCategory(id: String) {
-        val hiddenCategory = QuickStartTaskType.fromString(id)
+    fun hideCategory(dynamicCardType: DynamicCardType) {
+        val hiddenCategory = dynamicCardType.toQuickStartTaskType()
         hideQuickStartType(hiddenCategory)
     }
 
-    fun removeCategory(id: String) {
-        val removedQuickStartTaskType = QuickStartTaskType.fromString(id)
+    fun removeCategory(dynamicCardType: DynamicCardType) {
+        val removedQuickStartTaskType = dynamicCardType.toQuickStartTaskType()
         appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
         hideQuickStartType(removedQuickStartTaskType)
+    }
+
+    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
+        return when (this) {
+            CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            GROW_QUICK_START -> GROW
+        }
     }
 
     private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {

@@ -62,6 +62,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -71,9 +73,11 @@ import org.wordpress.android.ui.posts.BasicDialogViewModel.BasicDialogModel
 import org.wordpress.android.ui.uploads.UploadService
 import org.wordpress.android.ui.uploads.UploadUtilsWrapper
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.MAIN
 import org.wordpress.android.util.AppLog.T.UTILS
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SnackbarItem
 import org.wordpress.android.util.SnackbarItem.Action
 import org.wordpress.android.util.SnackbarItem.Info
@@ -95,9 +99,10 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var meGravatarLoader: MeGravatarLoader
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
+    @Inject lateinit var quickStartUtils: QuickStartUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
-    private lateinit var quickStartMenuViewModel: QuickStartMenuViewModel
+    private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -105,8 +110,8 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
-        quickStartMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
-                .get(QuickStartMenuViewModel::class.java)
+        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(DynamicCardMenuViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -210,11 +215,14 @@ class ImprovedMySiteFragment : Fragment(),
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
             }
         })
-        viewModel.onQuickStartMenuShown.observe(viewLifecycleOwner, {
-            it?.getContentIfNotHandled()?.let { id ->
-                ((parentFragmentManager.findFragmentByTag(id) as? QuickStartMenuFragment)
-                        ?: QuickStartMenuFragment.newInstance(id))
-                        .show(parentFragmentManager, id)
+        viewModel.onDynamicCardMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { dynamicCardMenuModel ->
+                ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
+                        ?: DynamicCardMenuFragment.newInstance(
+                                dynamicCardMenuModel.cardType,
+                                dynamicCardMenuModel.isPinned
+                        ))
+                        .show(parentFragmentManager, dynamicCardMenuModel.id)
             }
         })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
@@ -278,6 +286,16 @@ class ImprovedMySiteFragment : Fragment(),
                 showSnackbar(messageHolder)
             }
         })
+        viewModel.onQuickStartMySitePrompts.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { activeTutorialPrompt ->
+                val message = quickStartUtils.stylizeThemedQuickStartPrompt(
+                        requireContext(),
+                        activeTutorialPrompt.shortMessagePrompt,
+                        activeTutorialPrompt.iconId
+                )
+                showSnackbar(SnackbarMessageHolder(UiStringText(message)))
+            }
+        })
         viewModel.onMediaUpload.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { mediaModel ->
                 UploadService.uploadMedia(requireActivity(), mediaModel)
@@ -286,7 +304,7 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
-        quickStartMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
+        dynamicCardMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onQuickStartMenuInteraction(interaction) }
         })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
@@ -331,12 +349,21 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel.refresh()
     }
 
+    override fun onPause() {
+        super.onPause()
+        activity?.let {
+            if (!it.isChangingConfigurations) {
+                viewModel.clearActiveQuickStartTask()
+            }
+        }
+    }
+
     override fun onSaveInstanceState(outState: Bundle) {
         super.onSaveInstanceState(outState)
-        recycler_view.layoutManager?.let {
+        recycler_view?.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
         }
-        (recycler_view.adapter as? MySiteAdapter)?.let {
+        (recycler_view?.adapter as? MySiteAdapter)?.let {
             outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
     }

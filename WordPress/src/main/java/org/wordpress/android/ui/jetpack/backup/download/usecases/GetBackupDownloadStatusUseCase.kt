@@ -13,6 +13,7 @@ import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Complete
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Empty
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.NetworkUnavailable
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Failure.RemoteRequestFailure
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState.Progress
@@ -21,51 +22,46 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
 import javax.inject.Inject
 import javax.inject.Named
+import kotlin.math.max
 
 const val DELAY_MILLIS = 1000L
 const val MAX_RETRY = 3
+const val DELAY_FACTOR = 2
 
 class GetBackupDownloadStatusUseCase @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
     private val activityLogStore: ActivityLogStore,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher
 ) {
+    private val tag = javaClass.simpleName
+    @Suppress("ComplexMethod", "LoopWithTooManyJumpStatements")
     suspend fun getBackupDownloadStatus(
         site: SiteModel,
         downloadId: Long? = null
     ) = flow {
-        val tag = javaClass.simpleName
         var retryAttempts = 0
         while (true) {
-            if (!isNetworkAvailable()) return@flow
-
+            if (!networkUtilsWrapper.isNetworkAvailable()) {
+                val retryAttemptsExceeded = handleError(retryAttempts++, NetworkUnavailable)
+                if (retryAttemptsExceeded) break else continue
+            }
             val result = activityLogStore.fetchBackupDownloadState(FetchBackupDownloadStatePayload(site))
             if (result.isError) {
-                if (retryAttempts++ >= MAX_RETRY) {
-                    AppLog.d(T.JETPACK_BACKUP, "$tag Exceeded 3 retries while fetching status")
-                    emit(RemoteRequestFailure)
-                    return@flow
-                }
-            } else {
-                val status = activityLogStore.getBackupDownloadStatusForSite(site)
-                if (status == null) {
-                    emit(Empty)
-                    return@flow
-                }
-                if (downloadId == null || status.downloadId == downloadId) {
-                    if (emitCompleteElseProgress(status)) return@flow
-                }
-                delay(DELAY_MILLIS)
+                val retryAttemptsExceeded = handleError(retryAttempts++, RemoteRequestFailure)
+                if (retryAttemptsExceeded) break else continue
             }
+            retryAttempts = 0
+            val status = activityLogStore.getBackupDownloadStatusForSite(site)
+            if (status == null) {
+                emit(Empty)
+                break
+            }
+            if (downloadId == null || status.downloadId == downloadId) {
+                if (emitCompleteElseProgress(status)) break
+            }
+            delay(DELAY_MILLIS)
         }
     }.flowOn(bgDispatcher)
-
-    private suspend fun FlowCollector<BackupDownloadRequestState>.isNetworkAvailable(): Boolean {
-        return if (!networkUtilsWrapper.isNetworkAvailable()) {
-            emit(NetworkUnavailable)
-            false
-        } else true
-    }
 
     private suspend fun FlowCollector<BackupDownloadRequestState>.emitCompleteElseProgress(
         status: BackupDownloadStatusModel
@@ -76,6 +72,20 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             true
         } else {
             emit(Progress(status.rewindId, status.progress, published))
+            false
+        }
+    }
+
+    private suspend fun FlowCollector<BackupDownloadRequestState>.handleError(
+        retryAttempts: Int,
+        failure: Failure
+    ): Boolean {
+        return if (retryAttempts >= MAX_RETRY) {
+            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while fetching status")
+            emit(failure)
+            true
+        } else {
+            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
             false
         }
     }

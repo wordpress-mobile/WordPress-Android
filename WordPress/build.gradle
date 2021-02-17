@@ -6,7 +6,7 @@ buildscript {
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion"
         classpath 'com.google.gms:google-services:3.2.0'
-        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.51'
+        classpath 'se.bjurr.violations:violation-comments-to-github-gradle-plugin:1.67'
         classpath 'io.sentry:sentry-android-gradle-plugin:1.7.28'
     }
 }
@@ -25,6 +25,10 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'se.bjurr.violations.violation-comments-to-github-gradle-plugin'
 apply plugin: 'kotlin-allopen'
 apply plugin: 'kotlin-kapt'
+
+detekt {
+    baseline = file("${project.rootDir}/config/detekt/baseline.xml")
+}
 
 allOpen {
     // allows mocking for classes w/o directly opening them for release builds
@@ -54,9 +58,9 @@ android {
         if (project.hasProperty("versionName")) {
             versionName project.property("versionName")
         } else {
-            versionName "alpha-271"
+            versionName "alpha-274"
         }
-        versionCode 989
+        versionCode 995
         minSdkVersion rootProject.minSdkVersion
         targetSdkVersion rootProject.targetSdkVersion
 
@@ -100,9 +104,9 @@ android {
             dimension "buildType"
             // Only set the release version if one isn't provided
             if (!project.hasProperty("versionName")) {
-                versionName "16.7-rc-1"
+                versionName "16.7-rc-4"
             }
-            versionCode 988
+            versionCode 994
             buildConfigField "boolean", "ME_ACTIVITY_AVAILABLE", "false"
             buildConfigField "boolean", "TENOR_AVAILABLE", "false"
             buildConfigField "long", "REMOTE_CONFIG_FETCH_INTERVAL", "3600"
@@ -375,6 +379,8 @@ dependencies {
 
     // Enables accessibility checks in Espresso
     androidTestImplementation 'androidx.test.espresso:espresso-accessibility:3.3.0-alpha05'
+
+    detektPlugins "io.gitlab.arturbosch.detekt:detekt-formatting:$detektVersion"
 }
 
 configurations.all {
@@ -436,7 +442,8 @@ task violationCommentsToGitHub(type: se.bjurr.violations.comments.github.plugin.
 {{violation.message}}
 """
     violations = [
-            ["CHECKSTYLE", ".", ".*/build/.*\\.xml\$", "Checkstyle"]
+            ["CHECKSTYLE", ".", ".*/build/.*/checkstyle/.*\\.xml\$", "CheckStyle"],
+            ["CHECKSTYLE", ".", ".*/build/.*/detekt/.*\\.xml\$", "Detekt"]
     ]
 }
 

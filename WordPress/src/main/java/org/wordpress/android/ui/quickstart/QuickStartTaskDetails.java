@@ -63,14 +63,14 @@ public enum QuickStartTaskDetails {
     ),
     EDIT_HOMEPAGE(
             QuickStartTask.EDIT_HOMEPAGE,
-            R.string.quick_start_dialog_edit_homepage_title,
-            R.string.quick_start_dialog_edit_homepage_message,
+            R.string.quick_start_list_edit_homepage_title,
+            R.string.quick_start_list_edit_homepage_subtitle,
             R.drawable.ic_homepage_16dp
     ),
     REVIEW_PAGES(
             QuickStartTask.REVIEW_PAGES,
-            R.string.quick_start_dialog_review_pages_title,
-            R.string.quick_start_dialog_edit_homepage_message,
+            R.string.quick_start_list_review_pages_title,
+            R.string.quick_start_list_review_pages_subtitle,
             R.drawable.ic_pages_white_24dp
     );
 

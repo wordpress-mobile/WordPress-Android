@@ -130,6 +130,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+        GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -161,7 +162,8 @@ public class AppPrefs {
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
         SITE_JETPACK_CAPABILITIES_LAST_UPDATED,
-        REMOVED_QUICK_START_CARD_TYPE
+        REMOVED_QUICK_START_CARD_TYPE,
+        PINNED_DYNAMIC_CARD
     }
 
     /**
@@ -888,6 +890,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
+    public static void setGutenbergFocalPointPickerTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, tooltipShown);
+    }
+
+    public static boolean getGutenbergFocalPointPickerTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -988,6 +998,18 @@ public class AppPrefs {
 
     @NonNull private static String getQuickStartTaskTypeKey(QuickStartTaskType quickStartTaskType) {
         return DeletablePrefKey.REMOVED_QUICK_START_CARD_TYPE.name() + quickStartTaskType.toString();
+    }
+
+    public static void setPinnedDynamicCardType(String dynamicCardType) {
+        setString(DeletablePrefKey.PINNED_DYNAMIC_CARD, dynamicCardType);
+    }
+
+    public static void removePinnedDynamicCardType() {
+        remove(DeletablePrefKey.PINNED_DYNAMIC_CARD);
+    }
+
+    public static String getPinnedDynamicCardType() {
+        return getString(DeletablePrefKey.PINNED_DYNAMIC_CARD);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {
