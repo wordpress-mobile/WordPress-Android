@@ -116,7 +116,7 @@ class InviteLinksApiCallsProvider @Inject constructor(
         blogId: Long,
         volleyError: VolleyError?
     ): String {
-        var error = VolleyUtils.errStringFromVolleyError(volleyError)
+        val error = VolleyUtils.errStringFromVolleyError(volleyError)
         return if (error.isNullOrEmpty()) {
             AppLog.d(
                     T.PEOPLE,
