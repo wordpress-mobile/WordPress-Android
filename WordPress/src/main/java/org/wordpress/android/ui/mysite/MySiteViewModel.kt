@@ -333,7 +333,6 @@ class MySiteViewModel
     private fun iconClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
-        quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
         val hasIcon = site.iconUrl != null
         if (site.hasCapabilityManageOptions && site.hasCapabilityUploadFiles) {
             if (hasIcon) {
@@ -430,19 +429,26 @@ class MySiteViewModel
         when (interaction) {
             is Positive -> when (interaction.tag) {
                 TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON)
                     _onNavigation.postValue(
                             Event(OpenMediaPicker(requireNotNull(selectedSiteRepository.getSelectedSite())))
                     )
                 }
             }
             is Negative -> when (interaction.tag) {
+                TAG_ADD_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                }
                 TAG_CHANGE_SITE_ICON_DIALOG -> {
                     analyticsTrackerWrapper.track(MY_SITE_ICON_REMOVED)
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
                     selectedSiteRepository.updateSiteIconMediaId(0, true)
                 }
             }
-            is Dismissed -> {
-                // do nothing
+            is Dismissed -> when (interaction.tag) {
+                TAG_ADD_SITE_ICON_DIALOG, TAG_CHANGE_SITE_ICON_DIALOG -> {
+                    quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
+                }
             }
         }
     }
