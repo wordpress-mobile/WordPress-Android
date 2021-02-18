@@ -10,7 +10,6 @@ import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.INVITE_LINKS_GET_STATUS
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.people.InviteLinksUseCase.InviteLinksState
@@ -49,10 +48,10 @@ class InviteLinksHandlerTest : BaseUnitTest() {
         )
 
         whenever(
-                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
         ).thenReturn(flow { emit(state) })
 
-        inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING)
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)
@@ -71,10 +70,10 @@ class InviteLinksHandlerTest : BaseUnitTest() {
         )
 
         whenever(
-                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+                inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
         ).thenReturn(flow { emit(state) })
 
-        inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        inviteLinksHandler.handleInviteLinksStatusRequest(blogId, INITIALIZING)
 
         requireNotNull(uiState).let {
             assertThat(it).isEqualTo(state)

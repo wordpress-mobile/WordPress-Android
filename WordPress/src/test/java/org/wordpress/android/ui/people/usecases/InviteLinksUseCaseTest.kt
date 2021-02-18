@@ -59,7 +59,7 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
     fun `makeChecksAndApplyStrategy emits expected state when user not logged in`() = test {
         whenever(accountStore.hasAccessToken()).thenReturn(false)
 
-        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(listOf(UserNotAuthenticated))
     }
@@ -68,7 +68,7 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
     fun `makeChecksAndApplyStrategy emits expected states when no network`() = test {
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(false)
 
-        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(
@@ -84,7 +84,7 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
 
         whenever(inviteLinksApiCallsProvider.getInviteLinksStatus(anyLong())).thenReturn(Success(inviteLinks))
 
-        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(
@@ -100,7 +100,7 @@ class InviteLinksUseCaseTest : BaseUnitTest() {
 
         whenever(inviteLinksApiCallsProvider.getInviteLinksStatus(anyLong())).thenReturn(Failure(error))
 
-        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+        val flow = inviteLinksUseCase.getInviteLinksStatus(blogId, INITIALIZING)
 
         assertThat(flow.toList()).isEqualTo(
                 listOf(

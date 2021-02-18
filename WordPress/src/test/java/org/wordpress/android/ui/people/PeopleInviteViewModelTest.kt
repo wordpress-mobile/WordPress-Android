@@ -16,7 +16,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
 import org.wordpress.android.test
@@ -83,7 +82,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
 
         verify(
                 inviteLinksHandler, times(1)
-        ).handleInviteLinksStatusRequest(anyLong(), eq(INITIALIZING), eq(Stat.INVITE_LINKS_GET_STATUS))
+        ).handleInviteLinksStatusRequest(anyLong(), eq(INITIALIZING))
     }
 
     @Test
@@ -207,7 +206,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
             inviteLinksSelectedRole: InviteLinksUiItem = InviteLinksUiItem.getEmptyItem(),
             enableManageLinksActions: Boolean = false,
             startShimmer: Boolean = isShimmerSectionVisible && type == LOADING,
-            enableActionButtons: Boolean = !startShimmer
+            isActionButtonsEnabled: Boolean = !startShimmer
         ): InviteLinksUiState {
             return InviteLinksUiState(
                     type = type,
@@ -219,7 +218,7 @@ class PeopleInviteViewModelTest : BaseUnitTest() {
                     inviteLinksSelectedRole = inviteLinksSelectedRole,
                     enableManageLinksActions = enableManageLinksActions,
                     startShimmer = startShimmer,
-                    enableActionButtons = enableActionButtons
+                    isActionButtonsEnabled = isActionButtonsEnabled
             )
         }
     }
