@@ -43,7 +43,6 @@ class PagedListWrapper<T>(
     private val invalidate: () -> Unit,
     private val parentCoroutineContext: CoroutineContext
 ) : LifecycleObserver, CoroutineScope {
-
     /**
      * Extra information about the events that led to the list changing.
      * @property cause The cause of the change.
