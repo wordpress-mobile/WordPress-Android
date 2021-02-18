@@ -16,8 +16,7 @@ import org.wordpress.android.util.image.ImageManager
 class MediaPickerAdapter internal constructor(
     private val imageManager: ImageManager,
     private val coroutineScope: CoroutineScope
-) :
-        Adapter<ThumbnailViewHolder>() {
+) : Adapter<ThumbnailViewHolder>() {
     private val thumbnailViewUtils = MediaThumbnailViewUtils(imageManager)
     private var mediaList = listOf<MediaPickerUiItem>()
 
