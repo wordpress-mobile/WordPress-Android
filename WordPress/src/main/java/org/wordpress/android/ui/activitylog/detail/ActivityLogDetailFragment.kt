@@ -68,7 +68,7 @@ class ActivityLogDetailFragment : Fragment() {
                 }
                 intent != null -> {
                     val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-                    val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY)
+                    val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
                     site to activityLogId
                 }
                 else -> throw Throwable("Couldn't initialize Activity Log view model")
