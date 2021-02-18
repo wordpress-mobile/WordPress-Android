@@ -77,6 +77,8 @@ import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView;
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
 import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
@@ -599,7 +601,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             ((OpenSubsAtPage) action).getTabIndex()
                     );
                 } else {
-                    wpMainActivityViewModel.onOpenLoginPage();
+                    wpMainActivityViewModel.onOpenLoginPage(
+                            WPMainNavigationView.Companion.getPosition(PageType.MY_SITE)
+                    );
                 }
 
                 return null;

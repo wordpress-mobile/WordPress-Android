@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
@@ -38,6 +39,8 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import java.util.Locale
 import javax.inject.Inject
 import javax.inject.Named
+
+private const val SWITCH_TO_MY_SITE_DELAY = 500L
 
 class WPMainActivityViewModel @Inject constructor(
     private val featureAnnouncementProvider: FeatureAnnouncementProvider,
@@ -87,8 +90,11 @@ class WPMainActivityViewModel @Inject constructor(
     private val _isBottomSheetShowing = MutableLiveData<Event<Boolean>>()
     val isBottomSheetShowing: LiveData<Event<Boolean>> = _isBottomSheetShowing
 
-    private val _startLoginFlow = MutableLiveData<Event<Boolean>>()
-    val startLoginFlow: LiveData<Event<Boolean>> = _startLoginFlow
+    private val _startLoginFlow = MutableLiveData<Event<Unit>>()
+    val startLoginFlow: LiveData<Event<Unit>> = _startLoginFlow
+
+    private val _switchToMySite = MutableLiveData<Event<Unit>>()
+    val switchToMySite: LiveData<Event<Unit>> = _switchToMySite
 
     private val _onFeatureAnnouncementRequested = SingleLiveEvent<Unit>()
     val onFeatureAnnouncementRequested: LiveData<Unit> = _onFeatureAnnouncementRequested
@@ -225,8 +231,11 @@ class WPMainActivityViewModel @Inject constructor(
         disableTooltip(site)
     }
 
-    fun onOpenLoginPage() {
-        _startLoginFlow.value = Event(true)
+    fun onOpenLoginPage(mySitePosition: Int) = launch {
+        _startLoginFlow.value = Event(Unit)
+        appPrefsWrapper.setMainPageIndex(mySitePosition)
+        delay(SWITCH_TO_MY_SITE_DELAY)
+        _switchToMySite.value = Event(Unit)
     }
 
     fun onResume(site: SiteModel?, showFab: Boolean) {
@@ -259,25 +268,28 @@ class WPMainActivityViewModel @Inject constructor(
     }
 
     fun getCreateContentMessageId(site: SiteModel?): Int {
-        return if (shouldShowStories(site))
+        return if (shouldShowStories(site)) {
             getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent(site))
-        else
+        } else {
             getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent(site))
+        }
     }
 
     // create_post_page_fab_tooltip_stories_feature_flag_on
     private fun getCreateContentMessageId_StoriesFlagOn(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent)
+        return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip_stories_enabled
-        else
+        } else {
             R.string.create_post_page_fab_tooltip_contributors_stories_enabled
+        }
     }
 
     private fun getCreateContentMessageId_StoriesFlagOff(hasFullAccessToContent: Boolean): Int {
-        return if (hasFullAccessToContent)
+        return if (hasFullAccessToContent) {
             R.string.create_post_page_fab_tooltip
-        else
+        } else {
             R.string.create_post_page_fab_tooltip_contributors
+        }
     }
 
     private fun updateFeatureAnnouncements() {

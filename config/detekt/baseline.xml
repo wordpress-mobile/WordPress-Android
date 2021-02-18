@@ -414,7 +414,6 @@
     <ID>MemberNameEqualsClassName:ActivityLogTypeFilterViewModel.kt$ActivityLogTypeFilterViewModel.Action$lateinit var action: (() -&gt; Unit)</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.activitylog.list.EventItemViewHolder.kt:33</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.activitylog.list.EventItemViewHolder.kt:35</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.mlp.LayoutViewHolder.kt:50</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:252</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:254</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.pages.PageItemViewHolder.kt:84</ID>
