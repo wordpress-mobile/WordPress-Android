@@ -15,6 +15,7 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
+import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
@@ -40,6 +41,12 @@ class PagedListWrapper<T>(
     private val invalidate: () -> Unit,
     private val parentCoroutineContext: CoroutineContext
 ) : LifecycleObserver, CoroutineScope {
+
+    data class ListChangedEvent(
+        val cause: CauseOfListChange,
+        val totalDuration: Long?
+    )
+
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
@@ -56,6 +63,9 @@ class PagedListWrapper<T>(
 
     private val _isEmpty = MediatorLiveData<Boolean>()
     val isEmpty: LiveData<Boolean> = _isEmpty
+
+    private val _listChanged = MutableLiveData<ListChangedEvent?>()
+    val listChanged: LiveData<ListChangedEvent?> = _listChanged
 
     /**
      * Register the dispatcher so we can handle `ListStore` events and add an observer for the lifecycle so we can
@@ -125,6 +135,7 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
+        _listChanged.postValue(ListChangedEvent(cause = event.causeOfChange, totalDuration = event.totalDuration))
     }
 
     /**
