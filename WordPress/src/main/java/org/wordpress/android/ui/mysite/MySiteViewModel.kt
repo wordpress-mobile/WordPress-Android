@@ -134,7 +134,7 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    scanAndBackupSource: ScanAndBackupSource,
+    private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
@@ -540,6 +540,7 @@ class MySiteViewModel
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
         quickStartRepository.clear()
+        scanAndBackupSource.clear()
         super.onCleared()
     }
 

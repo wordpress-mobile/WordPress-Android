@@ -66,24 +66,6 @@ class JetpackCapabilitiesUseCaseTest {
     }
 
     @Test
-    fun `useCase subscribes to event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
-
-        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
-
-        verify(dispatcher).register(useCase)
-    }
-
-    @Test
-    fun `useCase unsubscribes from event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
-
-        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
-
-        verify(dispatcher).unregister(useCase)
-    }
-
-    @Test
     fun `fetch not invoked, when not older than MAX_CACHE_VALIDITY`() = test {
         val expected = listOf(BACKUP, SCAN)
         whenever(currentTimeProvider.currentDate()).thenReturn(Date(MAX_CACHE_VALIDITY - 1))

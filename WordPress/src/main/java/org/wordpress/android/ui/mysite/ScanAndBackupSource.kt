@@ -50,4 +50,8 @@ class ScanAndBackupSource @Inject constructor(
             return MutableLiveData(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
         }
     }
+
+    fun clear() {
+        jetpackCapabilitiesUseCase.clear()
+    }
 }
