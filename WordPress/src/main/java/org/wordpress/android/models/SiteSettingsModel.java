@@ -460,20 +460,20 @@ public class SiteSettingsModel {
         values.put(JETPACK_SEARCH_SUPPORTED_COLUMN_NAME, jetpackSearchSupported);
         values.put(JETPACK_SEARCH_ENABLED_COLUMN_NAME, jetpackSearchEnabled);
 
-        String moderationKeys = "";
+        StringBuilder moderationKeys = new StringBuilder();
         if (holdForModeration != null) {
             for (String key : holdForModeration) {
-                moderationKeys += key + "\n";
+                moderationKeys.append(key).append("\n");
             }
         }
-        String blacklistKeys = "";
+        StringBuilder blacklistKeys = new StringBuilder();
         if (blacklist != null) {
             for (String key : blacklist) {
-                blacklistKeys += key + "\n";
+                blacklistKeys.append(key).append("\n");
             }
         }
-        values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys);
-        values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys);
+        values.put(MODERATION_KEYS_COLUMN_NAME, moderationKeys.toString());
+        values.put(BLACKLIST_KEYS_COLUMN_NAME, blacklistKeys.toString());
         values.put(SHARING_LABEL_COLUMN_NAME, sharingLabel);
         values.put(SHARING_BUTTON_STYLE_COLUMN_NAME, sharingButtonStyle);
         values.put(ALLOW_REBLOG_BUTTON_COLUMN_NAME, allowReblogButton);

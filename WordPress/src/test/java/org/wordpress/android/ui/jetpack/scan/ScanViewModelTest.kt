@@ -73,6 +73,7 @@ class ScanViewModelTest : BaseUnitTest() {
 
     private val fakeScanStateModel = ScanStateModel(state = ScanStateModel.State.IDLE, hasCloud = true)
     private val fakeUiStringText = UiStringText("")
+    private val fakeDetectedAt = UiStringText("")
     private val fakeSubHeaderColor = 1
     private val fakeThreatId = 1L
     private val fakeIconId = 1
@@ -634,6 +635,7 @@ class ScanViewModelTest : BaseUnitTest() {
         ThreatItemState(
             threatId = fakeThreatId,
             isFixing = false,
+            firstDetectedDate = fakeDetectedAt,
             header = fakeUiStringText,
             subHeader = fakeUiStringText,
             subHeaderColor = fakeSubHeaderColor,

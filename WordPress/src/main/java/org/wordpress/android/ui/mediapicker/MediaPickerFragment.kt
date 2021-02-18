@@ -27,6 +27,7 @@ import androidx.recyclerview.widget.GridLayoutManager.SpanSizeLookup
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.media_picker_fragment.*
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -499,7 +500,8 @@ class MediaPickerFragment : Fragment() {
     private fun setupAdapter(items: List<MediaPickerUiItem>) {
         if (recycler.adapter == null) {
             recycler.adapter = MediaPickerAdapter(
-                    imageManager
+                    imageManager,
+                    viewModel as CoroutineScope
             )
         }
         val adapter = recycler.adapter as MediaPickerAdapter

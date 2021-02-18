@@ -13,8 +13,12 @@ sealed class JetpackBackupRestoreListItemState(override val type: ViewType) : Je
         @DimenRes val itemBottomMarginResId: Int? = null
     ) : JetpackBackupRestoreListItemState(ViewType.BACKUP_RESTORE_SUB_HEADER)
 
-    data class FootnoteState(val text: UiString) :
-            JetpackListItemState(ViewType.BACKUP_RESTORE_FOOTNOTE)
+    data class FootnoteState(
+        @DrawableRes val iconRes: Int? = null,
+        @DimenRes val iconSizeResId: Int? = null,
+        @DimenRes val textAlphaResId: Int? = null,
+        val text: UiString
+    ) : JetpackListItemState(ViewType.BACKUP_RESTORE_FOOTNOTE)
 
     data class BulletState(
         @DrawableRes val icon: Int,
