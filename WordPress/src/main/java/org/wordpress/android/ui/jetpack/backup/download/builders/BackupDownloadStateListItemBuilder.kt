@@ -84,8 +84,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildActionButtonState(
                         titleRes = R.string.backup_download_progress_action_button,
                         contentDescRes = R.string.backup_download_progress_action_button_content_description,
-                        onClick = onNotifyMeClick),
-                buildFootnoteState(R.string.backup_download_progress_footnote)
+                        onClick = onNotifyMeClick,
+                        isVisible = false),
+                buildFootnoteState(R.string.backup_download_progress_footnote, false)
         )
     }
 
@@ -189,13 +190,15 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @StringRes contentDescRes: Int,
         isSecondary: Boolean = false,
         @DrawableRes iconRes: Int? = null,
+        isVisible: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
         isSecondary = isSecondary,
         iconRes = iconRes,
-        onClick = onClick
+        onClick = onClick,
+        isVisible = isVisible
     )
 
     private fun buildSubHeaderState(
@@ -207,8 +210,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                     itemTopMarginResId = topMarginResId,
                     itemBottomMarginResId = bottomMarginResId)
 
-    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
-            UiStringRes(textRes)
+    private fun buildFootnoteState(@StringRes textRes: Int, isVisible: Boolean = true) = FootnoteState(
+            text = UiStringRes(textRes),
+            isVisible = isVisible
     )
 
     private fun buildProgressState(progress: Int) = ProgressState(
