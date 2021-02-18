@@ -869,7 +869,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     void onAppComesFromBackground() {
         mApplicationLifecycleMonitor.onAppComesFromBackground();
         mAppConfig.refresh();
-        mExPlat.refreshIfNeeded();
     }
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
@@ -999,6 +998,12 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
             // Let's migrate the old editor preference if available in AppPrefs to the remote backend
             SiteUtils.migrateAppWideMobileEditorPreferenceToRemote(mAccountStore, mSiteStore, mDispatcher);
+
+            if (!mFirstActivityResumed) {
+                // Since we're force refreshing on app startup, we don't need to try refreshing again
+                // when starting our first Activity.
+                mExPlat.refreshIfNeeded();
+            }
 
             if (mFirstActivityResumed) {
                 deferredInit();
