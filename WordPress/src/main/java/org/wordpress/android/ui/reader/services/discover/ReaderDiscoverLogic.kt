@@ -64,12 +64,23 @@ class ReaderDiscoverLogic(
         appComponent.inject(this)
     }
 
-    @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
-    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
-    @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
-    @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
-    @Inject lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
-    @Inject lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
+    @Inject
+    lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+
+    @Inject
+    lateinit var appPrefsWrapper: AppPrefsWrapper
+
+    @Inject
+    lateinit var readerTagTableWrapper: ReaderTagTableWrapper
+
+    @Inject
+    lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+
+    @Inject
+    lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+
+    @Inject
+    lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -119,7 +130,12 @@ class ReaderDiscoverLogic(
 
             val listener = Listener { jsonObject ->
                 coroutineScope.launch {
-                    handleRequestDiscoverDataResponse(taskType,sortingType, jsonObject, resultListener)
+                    handleRequestDiscoverDataResponse(
+                            taskType,
+                            sortingType,
+                            jsonObject,
+                            resultListener
+                    )
                 }
             }
             val errorListener = ErrorListener { volleyError ->
@@ -152,7 +168,7 @@ class ReaderDiscoverLogic(
 
         // Simplify the json. The simplified version is used in the upper layers to load the data from the db.
         val simplifiedCardsJson = createSimplifiedJson(fullCardsJson)
-        insertCardsJsonIntoDb(simplifiedCardsJson,sortingType)
+        insertCardsJsonIntoDb(simplifiedCardsJson, sortingType)
 
         val nextPageHandle = parseDiscoverCardsJsonUseCase.parseNextPageHandle(json)
         appPrefsWrapper.readerCardsPageHandle = nextPageHandle
@@ -255,9 +271,17 @@ class ReaderDiscoverLogic(
                 originalCardJson.optJSONArray(JSON_CARD_DATA)?.let { jsonRecommendedBlogs ->
                     for (i in 0 until jsonRecommendedBlogs.length()) {
                         JSONObject().apply {
-                            val jsonRecommendedBlog = jsonRecommendedBlogs.getJSONObject(i)
-                            put(RECOMMENDED_BLOG_ID, jsonRecommendedBlog.optLong(RECOMMENDED_BLOG_ID))
-                            put(RECOMMENDED_FEED_ID, jsonRecommendedBlog.optLong(RECOMMENDED_FEED_ID))
+                            val jsonRecommendedBlog = jsonRecommendedBlogs
+                                    .getJSONObject(i)
+                            put(
+                                    RECOMMENDED_BLOG_ID,
+                                    jsonRecommendedBlog.optLong(RECOMMENDED_BLOG_ID)
+                            )
+
+                            put(
+                                    RECOMMENDED_FEED_ID,
+                                    jsonRecommendedBlog.optLong(RECOMMENDED_FEED_ID)
+                            )
                         }.let {
                             put(it)
                         }
@@ -271,7 +295,7 @@ class ReaderDiscoverLogic(
     }
 
     private fun insertCardsJsonIntoDb(simplifiedCardsJson: JSONArray, sortingType: DiscoverSortingType) {
-        ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString(),sortingType)
+        ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString(), sortingType)
     }
 
     private suspend fun clearCache(sortingType: DiscoverSortingType) {

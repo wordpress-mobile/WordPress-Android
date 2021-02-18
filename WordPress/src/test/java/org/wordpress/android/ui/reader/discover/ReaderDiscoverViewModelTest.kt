@@ -523,20 +523,24 @@ class ReaderDiscoverViewModelTest {
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
         val navigaitonObserver = init()
+        viewModel.sortingType.observeForever(mock())
+        val currentSortingType = viewModel.sortingType.value
         // Act
         viewModel.swipeToRefresh()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     @Test
     fun `Data are refreshed when the user clicks on retry`() = test {
         // Arrange
         val navigaitonObserver = init()
+        viewModel.sortingType.observeForever(mock())
+        val currentSortingType = viewModel.sortingType.value
         // Act
         viewModel.onRetryButtonClick()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     @Test
@@ -592,12 +596,15 @@ class ReaderDiscoverViewModelTest {
     fun `Action button on error empty screen invokes refresh cards`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
+        viewModel.sortingType.observeForever(mock())
+        val currentSortingType = viewModel.sortingType.value
+
         viewModel.start(parentViewModel)
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Act
         (viewModel.uiState.value as RequestFailedUiState).action.invoke()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(defaultSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {

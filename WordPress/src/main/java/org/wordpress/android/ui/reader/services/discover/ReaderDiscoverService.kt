@@ -25,7 +25,9 @@ import kotlin.coroutines.CoroutineContext
  * Service which updates data for discover tab in Reader, relies on EventBus to notify of changes.
  */
 class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineScope {
-    @Inject @field:Named("IO_THREAD") lateinit var ioDispatcher: CoroutineDispatcher
+    @Inject
+    @field:Named("IO_THREAD")
+    lateinit var ioDispatcher: CoroutineDispatcher
     private lateinit var readerDiscoverLogic: ReaderDiscoverLogic
 
     private var job: Job = Job()
@@ -57,9 +59,13 @@ class ReaderDiscoverService : Service(), ServiceCompletionListener, CoroutineSco
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         if (intent != null && intent.hasExtra(ARG_DISCOVER_TASK)) {
-            val task = intent.getSerializableExtra(ARG_DISCOVER_TASK) as DiscoverTasks
-            val sortingType= intent.getSerializableExtra(ARG_SORTING_TYPE) as? DiscoverSortingType
-            readerDiscoverLogic.performTasks(task, null,sortingType?: POPULARITY)
+            val task = intent.getSerializableExtra(ARG_DISCOVER_TASK)
+                    as DiscoverTasks
+
+            val sortingType = intent.getSerializableExtra(ARG_SORTING_TYPE)
+                    as? DiscoverSortingType
+
+            readerDiscoverLogic.performTasks(task, null, sortingType ?: POPULARITY)
         }
         return START_NOT_STICKY
     }

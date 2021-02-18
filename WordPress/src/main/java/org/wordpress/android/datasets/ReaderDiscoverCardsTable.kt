@@ -34,8 +34,8 @@ object ReaderDiscoverCardsTable {
 
     fun clear(DiscoverSortingType: DiscoverSortingType) {
         val args = arrayOf(DiscoverSortingType.sortedBy)
-        val whereClause = "WHERE $CARDS_SORTING_TYPE_COLUMN = ?"+
-        AppLog.i(AppLog.T.READER, "clearing ReaderDiscoverCardsTable")
+        val whereClause = "WHERE $CARDS_SORTING_TYPE_COLUMN = ?" +
+                AppLog.i(AppLog.T.READER, "clearing ReaderDiscoverCardsTable")
         getWritableDb().delete(DISCOVER_CARDS_TABLE, whereClause, args)
     }
 
@@ -59,7 +59,7 @@ object ReaderDiscoverCardsTable {
         val args = arrayOf(DiscoverSortingType.sortedBy)
         val c = getReadableDb()
                 .rawQuery("SELECT * FROM $DISCOVER_CARDS_TABLE " +
-                        "WHERE $CARDS_SORTING_TYPE_COLUMN = ?"+
+                        "WHERE $CARDS_SORTING_TYPE_COLUMN = ?" +
                         " ORDER BY _id ASC", args)
         val cardJsonList = arrayListOf<String>()
         try {

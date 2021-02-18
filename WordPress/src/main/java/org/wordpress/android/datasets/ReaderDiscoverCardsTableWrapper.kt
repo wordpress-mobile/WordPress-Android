@@ -6,5 +6,6 @@ import javax.inject.Inject
 
 @Reusable
 class ReaderDiscoverCardsTableWrapper @Inject constructor() {
-    fun loadDiscoverCardsJsons(sortingType: DiscoverSortingType) = ReaderDiscoverCardsTable.loadDiscoverCardsJsons(sortingType)
+    fun loadDiscoverCardsJsons(sortingType: DiscoverSortingType) =
+            ReaderDiscoverCardsTable.loadDiscoverCardsJsons(sortingType)
 }

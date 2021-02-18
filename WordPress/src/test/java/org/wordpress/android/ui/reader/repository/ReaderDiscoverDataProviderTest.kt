@@ -83,7 +83,8 @@ class ReaderDiscoverDataProviderTest {
 
     @Test
     fun `when refreshCards is requested started gets posted on comm channel`() = test {
-        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType)).thenReturn(Started(REQUEST_FIRST_PAGE))
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType))
+                .thenReturn(Started(REQUEST_FIRST_PAGE))
 
         dataProvider.communicationChannel.observeForever { }
 
@@ -198,8 +199,12 @@ class ReaderDiscoverDataProviderTest {
     // The following test the loadData(), which is kicked off when discoverFeed obtains observers
     @Test
     fun `when loadData with refresh request is started and posted to comm channel`() = test {
-        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType)).thenReturn(Started(REQUEST_FIRST_PAGE))
-        whenever(getDiscoverCardsUseCase.get(defaultSortingType)).thenReturn(createDummyReaderCardsList())
+        whenever(fetchDiscoverCardsUseCase.fetch(REQUEST_FIRST_PAGE, defaultSortingType))
+                .thenReturn(Started(REQUEST_FIRST_PAGE))
+
+        whenever(getDiscoverCardsUseCase.get(defaultSortingType))
+                .thenReturn(createDummyReaderCardsList())
+
         whenever(shouldAutoUpdateTagUseCase.get(dataProvider.readerTag)).thenReturn(true)
 
         dataProvider.communicationChannel.observeForever { }
