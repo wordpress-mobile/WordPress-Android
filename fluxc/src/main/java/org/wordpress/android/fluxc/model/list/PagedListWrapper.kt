@@ -31,6 +31,8 @@ import kotlin.coroutines.CoroutineContext
  * can be directly used in the UI.
  * @property listError A [LiveData] instance that tells whether the last fetch resulted in an error. It can be used
  * to either let the user know of each error or present the error in the empty view when it's visible.
+ * @property listChanged A [LiveData] instance that emits events when the list is changed due to first or subsequent
+ * page loads, or fetch errors. The values will typically only be used to metric tracking.
  */
 class PagedListWrapper<T>(
     val data: LiveData<PagedList<T>>,
