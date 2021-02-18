@@ -17,8 +17,7 @@ class VideoThumbnailViewHolder(
     private val mediaThumbnailViewUtils: MediaThumbnailViewUtils,
     private val imageManager: ImageManager,
     private val coroutineScope: CoroutineScope
-) :
-        ThumbnailViewHolder(
+) : ThumbnailViewHolder(
                 parent,
                 R.layout.media_picker_thumbnail_item
         ) {
