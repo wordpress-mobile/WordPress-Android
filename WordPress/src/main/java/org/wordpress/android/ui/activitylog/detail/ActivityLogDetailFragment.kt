@@ -53,7 +53,7 @@ class ActivityLogDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let { activity ->
             viewModel = ViewModelProvider(activity, viewModelFactory)
-                    .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
+                    .get(ActivityLogDetailViewModel::class.java)
 
             val intent = activity.intent
             val (site, activityLogId) = when {
