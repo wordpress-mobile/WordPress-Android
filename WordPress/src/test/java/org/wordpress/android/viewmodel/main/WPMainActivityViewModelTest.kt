@@ -50,7 +50,6 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     private var loginFlowTriggered: Boolean = false
     private var switchTabTriggered: Boolean = false
 
-
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
     @Mock lateinit var onFeatureAnnouncementRequestedObserver: Observer<Unit>
