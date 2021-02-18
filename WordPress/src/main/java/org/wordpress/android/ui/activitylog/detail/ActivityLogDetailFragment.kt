@@ -197,7 +197,7 @@ class ActivityLogDetailFragment : Fragment() {
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.cancel)
             )
-            dialog.show(requireFragmentManager(), it)
+            dialog.show(parentFragmentManager, it)
         }
     }
 
