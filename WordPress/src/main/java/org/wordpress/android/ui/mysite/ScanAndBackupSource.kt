@@ -39,4 +39,8 @@ class ScanAndBackupSource @Inject constructor(
             emit(JetpackCapabilities(scanAvailable = false, backupAvailable = false))
         }
     }
+
+    fun clear() {
+        jetpackCapabilitiesUseCase.clear()
+    }
 }
