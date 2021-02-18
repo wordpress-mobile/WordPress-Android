@@ -87,7 +87,9 @@
                     android:textColor="?attr/colorOnSurface"
                     tools:ignore="RelativeOverlap"
                     tools:text="11:32 PM" />
+
             </LinearLayout>
+
         </LinearLayout>
 
         <org.wordpress.android.widgets.WPTextView
@@ -136,6 +138,9 @@
                 android:textAllCaps="true"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorPrimary" />
+
         </LinearLayout>
+
     </LinearLayout>
+
 </androidx.core.widget.NestedScrollView>
