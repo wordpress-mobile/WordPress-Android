@@ -124,7 +124,7 @@
             android:id="@+id/activityRestoreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:contentDescription="@string/rewind"
+            android:contentDescription="@string/restore"
             android:orientation="horizontal">
 
             <ImageView
@@ -142,7 +142,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:text="@string/rewind"
+                android:text="@string/restore"
                 android:textAllCaps="true"
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorPrimary" />

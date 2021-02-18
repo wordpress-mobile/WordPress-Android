@@ -1014,7 +1014,6 @@
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
-    <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_title">No activity yet</string>
