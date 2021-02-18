@@ -90,6 +90,25 @@
             </LinearLayout>
         </LinearLayout>
 
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/activityType"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            android:textColor="?attr/wpColorOnSurfaceMedium"
+            tools:text="Plugin autoupdated" />
+
+        <org.wordpress.android.widgets.WPTextView
+            android:id="@+id/activityMessage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:focusable="true"
+            android:linksClickable="true"
+            android:textAppearance="?attr/textAppearanceSubtitle1"
+            tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
+
         <LinearLayout
             android:id="@+id/activityRewindButton"
             android:layout_width="wrap_content"
@@ -118,24 +137,5 @@
                 android:textAppearance="?attr/textAppearanceBody2"
                 android:textColor="?attr/colorPrimary" />
         </LinearLayout>
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/activityType"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            android:textColor="?attr/wpColorOnSurfaceMedium"
-            tools:text="Plugin autoupdated" />
-
-        <org.wordpress.android.widgets.WPTextView
-            android:id="@+id/activityMessage"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:focusable="true"
-            android:linksClickable="true"
-            android:textAppearance="?attr/textAppearanceSubtitle1"
-            tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
     </LinearLayout>
 </androidx.core.widget.NestedScrollView>
