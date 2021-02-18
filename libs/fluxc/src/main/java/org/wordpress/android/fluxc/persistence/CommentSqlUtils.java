@@ -80,7 +80,7 @@ public class CommentSqlUtils {
             return 0;
         }
 
-        if (!Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+        if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
             return removeComments(site);
         }
 
