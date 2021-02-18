@@ -8,7 +8,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.INVITE_LINKS_GET_STATUS
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.models.InvitePeopleUtils
 import org.wordpress.android.modules.BG_THREAD
@@ -92,8 +91,7 @@ class PeopleInviteViewModel @Inject constructor(
             inviteLinksRequestJob = launch(bgDispatcher) {
                 inviteLinksHandler.handleInviteLinksStatusRequest(
                         siteModel.siteId,
-                        INITIALIZING,
-                        INVITE_LINKS_GET_STATUS
+                        INITIALIZING
                 )
             }
         } else {
@@ -118,7 +116,7 @@ class PeopleInviteViewModel @Inject constructor(
     fun onRetryButtonClicked() {
         inviteLinksRequestJob?.cancel()
         inviteLinksRequestJob = launch(bgDispatcher) {
-            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING)
         }
     }
 

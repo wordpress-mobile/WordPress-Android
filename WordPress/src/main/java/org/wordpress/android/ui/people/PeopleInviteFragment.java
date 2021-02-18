@@ -207,16 +207,19 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         return rootView;
     }
 
-    @Override public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
         mViewModel = new ViewModelProvider(this, mViewModelFactory).get(PeopleInviteViewModel.class);
 
         mGenerateLinksButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onGenerateLinksButtonClicked();
         });
 
         mShareLinksButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onShareButtonClicked(
                     mLinksRoleTextView.getText() != null
                             ? mLinksRoleTextView.getText().toString()
@@ -233,6 +236,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         });
 
         mRetryButton.setOnClickListener(v -> {
+            if (!isAdded()) return;
             mViewModel.onRetryButtonClicked();
         });
 
@@ -251,7 +255,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
 
             manageShimmerSection(uiState.isShimmerSectionVisible(), uiState.getStartShimmer());
 
-            manageActionButtonsEnable(uiState.getEnableActionButtons());
+            manageActionButtonsEnabledState(uiState.isActionButtonsEnabled());
 
             switch (uiState.getType()) {
                 case HIDDEN:
@@ -309,7 +313,8 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         mViewModel.start(mSite);
     }
 
-    @Override public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
 
         mUsernamesEmails = getView().findViewById(R.id.user_names_emails);
@@ -711,7 +716,7 @@ public class PeopleInviteFragment extends Fragment implements RoleSelectDialogFr
         }
     }
 
-    private void manageActionButtonsEnable(boolean enable) {
+    private void manageActionButtonsEnabledState(boolean enable) {
         mGenerateLinksButton.setEnabled(enable);
         mShareLinksButton.setEnabled(enable);
         mLinksRoleTextView.setEnabled(enable);

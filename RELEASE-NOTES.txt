@@ -2,6 +2,8 @@
 
 16.8
 -----
+* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
+* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
 * [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
 
 16.7

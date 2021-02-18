@@ -3,6 +3,7 @@ package org.wordpress.android.ui.photopicker
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
+import kotlinx.coroutines.CoroutineScope
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.COUNT_CHANGE
 import org.wordpress.android.ui.photopicker.PhotoPickerAdapterDiffCallback.Payload.SELECTION_CHANGE
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.PhotoItem
@@ -10,9 +11,14 @@ import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.Type
 import org.wordpress.android.ui.photopicker.PhotoPickerUiItem.VideoItem
 import org.wordpress.android.util.image.ImageManager
 
-@Deprecated("This class is being refactored, if you implement any change, please also update " +
-        "{@link org.wordpress.android.ui.mediapicker.MedaPickerAdapter}")
-class PhotoPickerAdapter internal constructor(private val imageManager: ImageManager) : Adapter<ThumbnailViewHolder>() {
+@Deprecated(
+        "This class is being refactored, if you implement any change, please also update " +
+                "{@link org.wordpress.android.ui.mediapicker.MedaPickerAdapter}"
+)
+class PhotoPickerAdapter internal constructor(
+    private val imageManager: ImageManager,
+    private val coroutineScope: CoroutineScope
+) : Adapter<ThumbnailViewHolder>() {
     private val thumbnailViewUtils = ThumbnailViewUtils(imageManager)
     private var mediaList = listOf<PhotoPickerUiItem>()
 
@@ -38,8 +44,8 @@ class PhotoPickerAdapter internal constructor(private val imageManager: ImageMan
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ThumbnailViewHolder {
         return when (viewType) {
-            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils)
-            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils)
+            Type.PHOTO.ordinal -> PhotoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager)
+            Type.VIDEO.ordinal -> VideoThumbnailViewHolder(parent, thumbnailViewUtils, imageManager, coroutineScope)
             else -> throw IllegalArgumentException("Unexpected view type")
         }
     }

@@ -443,6 +443,13 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         }
     }
 
+    public void showBackupForSite(long siteId) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            showBackupActivityForSite(site);
+        }
+    }
+
     @Nullable
     private SiteModel getSiteOrToast(long siteId) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
@@ -465,6 +472,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }
+    }
+
+    private void showBackupActivityForSite(@NonNull SiteModel site) {
+        if (isFinishing()) {
+            return;
+        }
+
+         ActivityLauncher.viewBackupList(this, site);
     }
 
     public void showWebViewActivityForUrl(String url) {

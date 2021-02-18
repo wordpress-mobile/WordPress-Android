@@ -578,19 +578,23 @@ public class WPMainActivity extends LocaleAwareActivity implements
         });
 
         mViewModel.getStartLoginFlow().observe(this, event -> {
-            event.applyIfNotHandled(startLoginFlow -> {
+            event.applyIfNotHandled(unit -> {
+                ActivityLauncher.viewMeActivityForResult(this);
+
+                return null;
+            });
+        });
+
+        mViewModel.getSwitchToMySite().observe(this, event -> {
+            event.applyIfNotHandled(unit -> {
                 if (mBottomNav != null) {
-                    mBottomNav.postDelayed(new Runnable() {
-                        @Override public void run() {
-                            mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
-                        }
-                    }, 500);
-                    ActivityLauncher.viewMeActivityForResult(this);
+                    mBottomNav.setCurrentSelectedPage(PageType.MY_SITE);
                 }
 
                 return null;
             });
         });
+
 
         // At this point we still haven't initialized mSelectedSite, which will mean that the ViewModel
         // will act as though SiteUtils.hasFullAccessToContent() is false, and as such the state will be
