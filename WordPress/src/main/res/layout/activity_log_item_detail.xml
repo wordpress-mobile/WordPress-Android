@@ -95,6 +95,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            android:layout_marginTop="32dp"
             android:orientation="vertical">
 
             <org.wordpress.android.widgets.WPTextView
@@ -110,7 +112,7 @@
                 android:id="@+id/activityMessage"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="8dp"
                 android:focusable="true"
                 android:linksClickable="true"
                 android:textAppearance="?attr/textAppearanceSubtitle1"
@@ -122,7 +124,6 @@
             android:id="@+id/activityRestoreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
             android:contentDescription="@string/rewind"
             android:orientation="horizontal">
 
