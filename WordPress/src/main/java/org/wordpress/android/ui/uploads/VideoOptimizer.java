@@ -85,18 +85,28 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
 
         mOutputPath = mCacheDir.getPath() + "/" + mFilename;
 
-        MediaComposer mediaComposer = WPVideoUtils.getVideoOptimizationComposer(
-                getContext(),
-                mInputPath,
-                mOutputPath,
-                this,
-                AppPrefs.getVideoOptimizeWidth(),
-                AppPrefs.getVideoOptimizeQuality());
+        MediaComposer mediaComposer = null;
+        boolean wasNpeDetected = false;
+
+        try {
+            mediaComposer = WPVideoUtils.getVideoOptimizationComposer(
+                    getContext(),
+                    mInputPath,
+                    mOutputPath,
+                    this,
+                    AppPrefs.getVideoOptimizeWidth(),
+                    AppPrefs.getVideoOptimizeQuality());
+        } catch (NullPointerException npe) {
+            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > NullPointerException while getting composer " + npe.getMessage());
+            wasNpeDetected = true;
+        }
 
         if (mediaComposer == null) {
             AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > null composer");
-            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, AnalyticsUtils.getMediaProperties(getContext(), true,
-                    null, mInputPath));
+            Map<String, Object> properties = AnalyticsUtils.getMediaProperties(getContext(), true,
+                    null, mInputPath);
+            properties.put("was_npe_detected", wasNpeDetected);
+            AnalyticsTracker.track(MEDIA_VIDEO_CANT_OPTIMIZE, properties);
             mListener.onVideoOptimizationCompleted(mMedia);
             return;
         }
