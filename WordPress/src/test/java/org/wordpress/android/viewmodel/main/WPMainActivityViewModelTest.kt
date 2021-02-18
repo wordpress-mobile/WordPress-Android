@@ -268,7 +268,7 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         assertThat(action).isNotNull
         action.onClickAction?.invoke(CREATE_NEW_POST)
         verify(onQuickStartCompletedEventObserver).onChanged(anyOrNull())
-        verify(quickStartRepository, never()).completeTask(any())
+        verify(quickStartRepository, never()).completeTask(any(), any())
 
         assertThat(viewModel.mainActions.value?.any { it is CreateAction && it.showQuickStartFocusPoint }).isEqualTo(
                 false
