@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 17:43:25+0000
+Translation-Revision-Date: 2021-02-18 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">להסיר את הנעץ</string>
+    <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
+    <string name="quick_start_list_view_site_title">מעבר לאתר שלך</string>
+    <string name="quick_start_list_upload_icon_subtitle">להוסיף סמל לאתר למראה נקי ומקצועי.</string>
+    <string name="quick_start_list_follow_site_subtitle">לגלות אתרים שמספקים לך השראה ולעקוב אחריהם.</string>
+    <string name="quick_start_list_enable_sharing_title">להפעיל את השיתוף</string>
+    <string name="quick_start_list_enable_sharing_subtitle">לשתף באופן אוטומטי פוסטים חדשים ברשתות החברתיות.</string>
+    <string name="quick_start_list_update_site_title_subtitle">כדאי לתת לאתר שלך שם שמשקף את האישיות שלו והנושאים שמוצגים בו.</string>
+    <string name="quick_start_list_check_stats_title">לבדוק את הנתונים הסטטיסטיים שלך</string>
+    <string name="backup_download_status_failure_bullet2">אנחנו נמשיך לנסות ליצור את קובץ הגיבוי שלך להורדה.</string>
+    <string name="backup_download_status_failure_bullet1">לא הצלחנו למצוא את הסטטוס כדי לציין כמה זמן צפויה להימשך היצירה של הגיבוי להורדה.</string>
+    <string name="backup_download_status_failure_heading">ניסינו אבל לא הצלחנו למצוא את הסטטוס של הגיבוי להורדה</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">סמל ביקורת</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">סמל שעון</string>
+    <string name="restore_status_failure_bullet3">אנחנו נודיע לך כאשר הפעולה תושלם.</string>
+    <string name="restore_status_failure_bullet2">אנחנו עדיין ננסה לשחזר את האתר שלך.</string>
+    <string name="restore_status_failure_bullet1">לא הצלחנו למצוא את הסטטוס כדי לציין כמה זמן צפוי להימשך השחזור.</string>
+    <string name="restore_status_failure_heading">ניסינו אבל לא הצלחנו למצוא את הסטטוס של השחזור</string>
+    <string name="restore_complete_failed_description">לא הצלחנו לשחזר את האתר שלך</string>
+    <string name="restore_warning_action_button">אישור</string>
+    <string name="restore_warning_description_with_two_parameters">האם ברצונך להחזיר את האתר לגרסה ממועד ⁦%1$s⁩ בשעה ⁦%2$s⁩?\n        כל השינויים שבוצעו לאחר מועד זה יאבדו.</string>
+    <string name="backup_download_complete_failed_description">לא הצלחנו ליצור את הגיבוי שלך</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(לא כולל ערכות עיצוב, תוספים והעלאות)</string>
+    <string name="backup_item_contents">ספריית WP-content</string>
+    <string name="backup_item_roots">בסיס של WordPress</string>
+    <string name="backup_download_progress_action_button_content_description">כפתור \'הודיעו לי כאשר הפעולה מסתיימת\'</string>
+    <string name="backup_download_progress_action_button">הודיעו לי כאשר הפעולה מסתיימת!</string>
+    <string name="backup_download_details_choose_items_header">הפריטים שכלולים בהורדה זו</string>
+    <string name="gutenberg_native_uploading">מעלה…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">לא ניתן לערוך בלוקים לשימוש חוזר ב-WordPress ל-iOS</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">לא ניתן לערוך בלוקים לשימוש חוזר ב-WordPress ל-Android</string>
+    <string name="gutenberg_native_replace_file">להחליף את הקובץ</string>
+    <string name="gutenberg_native_replace_audio">להחליף אודיו</string>
+    <string name="gutenberg_native_problem_opening_the_audio">בעיה בפתיחת האודיו</string>
+    <string name="gutenberg_native_open">לפתוח</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">אין אפליקציה שיכולה לטפל בבקשה הזאת.</string>
+    <string name="gutenberg_native_lock_icon">סמל מנעול</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">נכשלה ההוספה של קובץ האודיו. יש להקיש לאפשרויות.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">יש להקיש פעמיים כדי לבחור קובץ אודיו</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">יש להקיש פעמיים כדי להאזין לקובץ האודיו</string>
+    <string name="gutenberg_native_choose_audio">לבחור אודיו</string>
+    <string name="gutenberg_native_audio_player">לנגן אודיו</string>
+    <string name="gutenberg_native_audio_file">קובץ אודיו</string>
+    <string name="gutenberg_native_audio_caption_s">תיאור אודיו. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">תיאור אודיו. ריק</string>
+    <string name="gutenberg_native_add_audio">להוסיף אודיו</string>
+    <string name="continue_with_wpcom">יש להתחבר או להירשם עם WordPress.com</string>
+    <string name="photo_picker_use_audio">להשתמש באודיו זה</string>
+    <string name="photo_picker_choose_audio">לבחור אודיו מהמכשיר</string>
+    <string name="people_optional_custom_message_helper_text">אופציונלי: ניתן להזין הודעה מותאמת אישית שתישלח עם ההזמנה.</string>
+    <string name="people_learn_more_about_roles">למידע נוסף על תפקידים</string>
+    <string name="threat_status_fixed">תוקן</string>
+    <string name="threat_found_header">נמצא</string>
+    <string name="scan_here_to_help">אנחנו פה לעזור</string>
+    <string name="scan_idle_with_threats_description">הסריקה איתרה %1s איומים פוטנציאליים עם %2s. עליך לבדוק את הפרטים למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%3$s⁩ אם נדרשת עזרה.</string>
+    <string name="scan_idle_manual_scan_description">כדי לבדוק את האתר שלך שוב, יש להפעיל סריקה ידנית או להמתין לסריקה על ידי Jetpack מאוחר יותר היום.</string>
+    <string name="scan_provisioning_description">ברוך בואך ל-Jetpack Scan! אנחנו מכינים את האתר לסריקה מלאה. אנחנו נודיע לך אם נמצא בעיות כלשהן שעלולות להפריע לסריקה ולאחר מכן, הסריקה הראשונה שלך תתחיל.</string>
+    <string name="scan_scanning_is_initial_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.</string>
+    <string name="scan_fixing_threats_description">אנחנו משקיעים המון מאמצים כדי לתקן את האיומים האלה ברקע. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="scan_scanning_description">אנחנו נשלח אליך הודעה כאשר הסריקה תושלם. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="scan_fixing_threats_title">מתקן את האיומים</string>
+    <string name="scan_start_request_failed_subtitle">ל-Jetpack Scan לא הייתה אפשרות להשלים את הסריקה של האתר שלך. יש לבדוק אם האתר מושבת – אם לא, יש לנסות שוב. אם האתר מושבת או אם עדיין יש בעיות בהפעלה של Jetpack Scan, עליך ליצור קשר עם צוות התמיכה.</string>
+    <string name="scan_request_failed_title">משהו השתבש</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">מגבה את האתר</string>
+    <string name="activity_log_currently_backing_up_message">גיבוי האתר מתאריך ⁦%1$s⁩ %2$s</string>
+    <string name="activity_log_currently_backing_up_title">יוצר גיבוי להורדה</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">הגיבוי של האתר שלך בוצע בהצלחה</string>
+    <string name="activity_log_backup_finished_snackbar_message">הגיבוי של האתר שלך בוצע בהצלחה\nגיבוי נוצר מתאריך ⁦%1$s⁩ %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">הגיבוי של האתר שלך מתבצע כעת\nהגיבוי מתבצע מתאריך ⁦%1$s⁩ %2$s</string>
+    <string name="pick_audio">לבחור אודיו</string>
     <string name="restore_complete_failed_icon_content_description">סמל שגיאה</string>
     <string name="restore_complete_failed_action_button_content_description">כפתור \'בוצע\'</string>
     <string name="restore_complete_failed_title">השחזור נכשל</string>
@@ -37,6 +108,7 @@ Language: he_IL
     <string name="web_preview_mobile">טלפון נייד</string>
     <string name="quick_start_card_menu_remove">לא להציג שוב</string>
     <string name="quick_start_card_menu_hide">להסתיר</string>
+    <string name="quick_start_card_menu_pin">לנעוץ</string>
     <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
@@ -58,8 +130,10 @@ Language: he_IL
     <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
     <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
     <string name="threat_ignore_success_message">התעלמת מהאיום.</string>
+    <string name="threat_ignore_warning">לא כדאי להתעלם מבעיות אבטחה אלא אם אין לך ספק שהתוכן בטוח. אם ברצונך להתעלם מהאיום הזה, הוא יישאר באתר &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">אירעה שגיאה בעת תיקון האיום. יש לפנות לתמיכה שלנו.</string>
     <string name="threat_item_sub_header_status_ignored">התעלמת מהאיום</string>
+    <string name="threat_item_sub_header_status_fixed_on">האיומים תוקנו בתאריך %s</string>
     <string name="threat_fixing">מתקן את האיום</string>
     <string name="scan_history_ignored_threats_tab">התעלמת מהאיום</string>
     <string name="scan_history_no_threats_found">לא נמצאו פריטים</string>
@@ -75,6 +149,7 @@ Language: he_IL
     <string name="backup_empty_title">הגיבוי הראשון שלך יהיה מוכן בקרוב</string>
     <string name="request_failed_message">הייתה בעיה לטפל בבקשה הזאת. יש לנסות שוב מאוחר יותר.</string>
     <string name="gutenberg_native_move_to_bottom">להעביר לתחתית</string>
+    <string name="gutenberg_native_change_block_position">לבדוק את מיקום הבלוק</string>
     <string name="label_control_upload">להעלות</string>
     <string name="jetpack_icon_content_description">סמל</string>
     <string name="backup_download_complete_info">בנוסף, שלחנו לך הודעת אימייל עם קישור לקובץ שלך.</string>
@@ -87,6 +162,7 @@ Language: he_IL
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_progress_header">אנחנו כעת יוצרים גיבוי של האתר שלך להורדה</string>
@@ -137,6 +213,7 @@ Language: he_IL
     <string name="scan_in_minutes_ago">לפני %s דקות</string>
     <string name="scan_in_hours_ago">לפני %s שעות</string>
     <string name="scan_this_site">האתר הזה</string>
+    <string name="scan_idle_last_scan_description">השירות של Jetpack Scan פעל %s ולא איתר סיכונים. %s</string>
     <string name="scan_idle_threats_found_title">ייתכן שהאתר שלך בסיכון</string>
     <string name="scan_idle_no_threats_found_title">אל דאגה</string>
     <string name="scan_again">לסרוק שוב</string>
@@ -155,6 +232,8 @@ Language: he_IL
     <string name="activity_log_active_filter_empty_subtitle">יש להתאים את המסננים של טווח התאריכים או של סוג הפעילות</string>
     <string name="activity_log_active_filter_empty_title">לא נמצאו אירועים תואמים</string>
     <string name="rewind">לשחזר</string>
+    <string name="backup_item_sqls">בסיס הנתונים של האתר</string>
+    <string name="backup_item_roots_hint">(כולל wp-config.php וקבצים שאינם WordPress)</string>
     <string name="backup_item_media_uploads">העלאות מדיה</string>
     <string name="backup_item_plugins">תוספים של WordPress</string>
     <string name="backup_item_themes">ערכות עיצוב של WordPress</string>
@@ -2066,6 +2145,7 @@ Language: he_IL
     <string name="invite_error_invalid_usernames_one">לא ניתן לשלוח: שם משתמש או אימייל לא תקפים</string>
     <string name="invite_error_no_usernames">יש להוסיף שם משתמש אחד לפחות</string>
     <string name="invite">הזמנה</string>
+    <string name="invite_names_title">שמות משתמשים או כתובות אימייל</string>
     <string name="invite_people">הזמנת אנשים</string>
     <string name="my_site_header_external">חיצוני</string>
     <string name="send_link">שלח קישור</string>

@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:57:27+0000
+Translation-Revision-Date: 2021-02-18 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: tr
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">Sabitlemeyi kaldır</string>
+    <string name="quick_start_list_review_pages_subtitle">Sayfalarınızı kontrol edin ve değişiklikler yapın veya sayfa ekleyin ya da kaldırın.</string>
+    <string name="quick_start_list_view_site_title">Sitenizi ziyaret edin</string>
+    <string name="quick_start_list_upload_icon_subtitle">Göz alıcı ve profesyonel bir görünüm için bir site simgesi ekleyin.</string>
+    <string name="quick_start_list_follow_site_subtitle">Size ilham veren siteleri keşfedin ve takip edin.</string>
+    <string name="quick_start_list_enable_sharing_title">Paylaşımı etkinleştir</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Yeni yazıları sosyal medyanızda otomatik olarak paylaşın.</string>
+    <string name="quick_start_list_update_site_title_subtitle">Sitenize kişiliğini ve konuyu yansıtan bir ad verin.</string>
+    <string name="quick_start_list_check_stats_title">İstatistiklerinizi kontrol edin</string>
+    <string name="backup_download_status_failure_bullet2">Yine de indirilebilir yedek dosyanızı oluşturmaya çalışacağız.</string>
+    <string name="backup_download_status_failure_bullet1">İndirilebilir yedeğinizin hazırlanmasının ne kadar süreceğini ilişkin bir durum bilgisi bulunamadı.</string>
+    <string name="backup_download_status_failure_heading">Maalesef indirilebilir yedeğinizin durum bilgisi bulunamadı</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Onay işareti simgesi</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">Saat simgesi</string>
+    <string name="restore_status_failure_bullet3">Tamamlandığında sizi bilgilendireceğiz.</string>
+    <string name="restore_status_failure_bullet2">Yine de sitenizi geri yüklemeyi deneyeceğiz.</string>
+    <string name="restore_status_failure_bullet1">Geri yüklemenizin ne kadar süreceğine ilişkin durum bilgisi bulunamadı.</string>
+    <string name="restore_status_failure_heading">Maalesef geri yükleme ile ilgili durum bilgisi bulunamadı</string>
+    <string name="restore_complete_failed_description">Sitenizi geri yükleyemedik</string>
+    <string name="restore_warning_action_button">Onayla</string>
+    <string name="restore_warning_description_with_two_parameters">Sitenizi %1$s, %2$s durumuna geri döndürmek istediğinizden emin misiniz?\n        O zamandan beri değiştirdiğiniz her şey kaybolacak</string>
+    <string name="backup_download_complete_failed_description"> Yedeğinizi oluşturamadık</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(temalar, eklentiler ve yüklemeler hariç)</string>
+    <string name="backup_item_contents">WP-content dizini</string>
+    <string name="backup_item_roots">WordPress kök dizini</string>
+    <string name="backup_download_progress_action_button_content_description">Bittiğinde bana haber ver düğmesi</string>
+    <string name="backup_download_progress_action_button">Bittiğinde bana haber ver!</string>
+    <string name="backup_download_details_choose_items_header">Bu indirmeye dahil olan öğeler</string>
+    <string name="gutenberg_native_uploading">Yükleniyor…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Yeniden kullanılabilir bloklar iOS için WordPress\'te düzenlenemez</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Yeniden kullanılabilir bloklar Android için WordPress\'te düzenlenemez</string>
+    <string name="gutenberg_native_replace_file">Dosyayı değiştir</string>
+    <string name="gutenberg_native_replace_audio">Sesi değiştir</string>
+    <string name="gutenberg_native_problem_opening_the_audio">Sesi açma sorunu</string>
+    <string name="gutenberg_native_open">AÇIK</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">Hiçbir uygulama bu isteği yerine getiremiyor.</string>
+    <string name="gutenberg_native_lock_icon">Kilit simgesi</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Ses dosyası eklenemedi. Seçenekler için lütfen dokunun.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Bir ses dosyası seçmek için iki kez dokunun</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Ses dosyasını dinlemek için iki kez dokunun</string>
+    <string name="gutenberg_native_choose_audio">Ses seç</string>
+    <string name="gutenberg_native_audio_player">Ses oynatıcı</string>
+    <string name="gutenberg_native_audio_file"> ses dosyası</string>
+    <string name="gutenberg_native_audio_caption_s">Ses yazısı. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">Ses yazısı. Boş</string>
+    <string name="gutenberg_native_add_audio">SES EKLE</string>
+    <string name="continue_with_wpcom">WordPress.com\'a giriş yapın veya kaydolun</string>
+    <string name="photo_picker_use_audio">Bu sesi kullan</string>
+    <string name="photo_picker_choose_audio">Cihazdan ses seç</string>
+    <string name="people_optional_custom_message_helper_text">İsteğe bağlı: Davetinizle birlikte gönderilecek özel bir mesaj girin.</string>
+    <string name="people_learn_more_about_roles">Roller hakkında daha fazla bilgi edinin</string>
+    <string name="threat_status_fixed">Sabit</string>
+    <string name="threat_found_header">Bulundu</string>
+    <string name="scan_here_to_help">yardım etmek için buradayım</string>
+    <string name="scan_idle_with_threats_description">Tarama %2s ile ilgili %1s potansiyel tehdit buldu. Lütfen aşağıdan bunları inceleyin ve gereken adımı atın veya tümünü düzelt düğmesine dokunun. Bize  ihtiyacın olursa %3$s.</string>
+    <string name="scan_idle_manual_scan_description">Sitenizi yeniden gözden geçirmek için manuel bir tarama yapın veya Jetpack\'in sitenizi bugün daha sonra taramasını bekleyin.</string>
+    <string name="scan_provisioning_description">Jetpack Scan\'e hoş geldiniz! Sitenize göz atıyor ve tam bir tarama yapacak şekilde ayarlıyoruz. Taramayı etkileyebilecek herhangi bir sorun tespit edersek size haber vereceğiz, ardından ilk tam taramanız başlayacaktır.</string>
+    <string name="scan_scanning_is_initial_description">Jetpack Scan\'e hoşgeldiniz. Şimdi sitenize bakıyoruz, az sonra sonuçları sizinle de paylaşacağız.</string>
+    <string name="scan_fixing_threats_description">Arka planda bu tehditleri düzeltmek için çok çalışıyoruz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
+    <string name="scan_scanning_description">Tarama tamamlandığında size bir bildirim göndereceğiz. Bu arada sitenizi normal şekilde kullanmaya devam edebilir ve ilerleme durumunu istediğiniz zaman kontrol edebilirsiniz.</string>
+    <string name="scan_fixing_threats_title">Tehditler Düzeltiliyor</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan sitenizin taramasını tamamlayamadı. Lütfen sitenizin devre dışı olup olmadığını kontrol edin, değilse tekrar deneyin. Devre dışıysa veya Jetpack Scan\'de hâlâ sorun varsa destek ekibimizle iletişime geçin.</string>
+    <string name="scan_request_failed_title">Bir şeyler yanlış gitti</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Site yedekleniyor</string>
+    <string name="activity_log_currently_backing_up_message">Siteden %1$s %2$s kaynağından yedekleniyor</string>
+    <string name="activity_log_currently_backing_up_title">İndirilebilir yedek oluşturuluyor</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Siteniz başarıyla yedeklendi</string>
+    <string name="activity_log_backup_finished_snackbar_message">Siteniz başarıyla yedeklendi\n%1$s %2$s kaynağından yedeklendi</string>
+    <string name="activity_log_backup_started_snackbar_message">Siteniz yedekleniyor\n%1$s %2$s kaynağından yedekleniyor</string>
+    <string name="pick_audio">Ses seç</string>
     <string name="restore_complete_failed_icon_content_description">Hata simgesi</string>
     <string name="restore_complete_failed_action_button_content_description">Bitti düğmesi</string>
     <string name="restore_complete_failed_title">Geri yükleme başarısız oldu</string>
@@ -41,6 +112,7 @@ Language: tr
     <string name="quick_start_dialog_review_pages_title">Site sayfalarını inceleyin</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Ana Sayfanızı düzenlemek için %1$s Ana Sayfa %2$s öğesini seçin.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Sayfa listenizi görmek için %1$s Sayfalar %2$s öğesini seçin.</string>
+    <string name="quick_start_card_menu_pin">Sabitle</string>
     <string name="quick_start_dialog_edit_homepage_message">Sitenizin ana sayfasında içeriği değiştirin, ekleyin veya kaldırın.</string>
     <string name="quick_start_dialog_edit_homepage_title">Ana sayfanızı düzenleyin</string>
     <string name="reader_menu_mark_as_unseen">Görülmedi olarak işaretle</string>
@@ -57,6 +129,7 @@ Language: tr
     <string name="threat_fix_all_warning_title">Tüm tehditleri gider</string>
     <string name="threat_ignore_error_message">Tehdit yok sayılırken hata oluştu. Lütfen destek birimine başvurun.</string>
     <string name="threat_ignore_success_message">Tehdit yok sayıldı.</string>
+    <string name="threat_ignore_warning">Zararsız olduğundan kesinlikle emin değilseniz bir güvenlik sorununu görmezden gelmemelisiniz. Bu tehdidi göz ardı etmeyi seçerseniz &lt;b>%s&lt;/b> sitenizde kalacaktır.</string>
     <string name="threat_fix_error_message">Tehdit düzeltilirken hata oluştu. Lütfen destek ekibimizle iletişime geçin.</string>
     <string name="threat_item_sub_header_status_ignored">Tehdit göz ardı edildi</string>
     <string name="threat_fixing">Tehditler düzeltiliyor</string>
@@ -71,9 +144,11 @@ Language: tr
     <string name="backup_active_filter_empty_subtitle">Tarih aralığınızı ayarlamayı deneyin</string>
     <string name="backup_active_filter_empty_title">Eşleşen yedek bulunamadı</string>
     <string name="backup_empty_subtitle">İlk yedeğiniz 24 saat içinde burada görünecek. Yedekleme tamamlandığında size haber vereceğiz.</string>
+    <string name="threat_item_sub_header_status_fixed_on">%s üzerindeki tehdit düzeltildi</string>
     <string name="backup_empty_title">İlk yedeğiniz az sonra hazır olacak</string>
     <string name="request_failed_message">İstek işlenirken bir sorun oluştu. Lütfen daha sonra tekrar deneyin.</string>
     <string name="gutenberg_native_move_to_bottom">Alta taşı</string>
+    <string name="gutenberg_native_change_block_position">Blok konumunu değiştir</string>
     <string name="label_control_upload">Yükle</string>
     <string name="backup_download_complete_info">Ayrıca size dosyanızın bağlantısını da e-postayla gönderdik.</string>
     <string name="jetpack_icon_content_description">simge</string>
@@ -89,6 +164,7 @@ Language: tr
     <string name="backup_download_progress_icon_content_description">İndirişebilir yedek simgesi oluşturuluyor</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s üzerinden sitenizin indirilebilir bir yedeğini oluşturuyoruz.</string>
     <string name="backup_download_progress_header">Şu anda sitenizin indirilebilir bir yedeği oluşturuluyor</string>
+    <string name="backup_download_progress_footnote">Beklemeye gerek yok. Yedeğiniz hazır olduğunda sizi bilgilendireceğiz.</string>
     <string name="backup_download_another_download_running">Çalışan başka bir indirme var.</string>
     <string name="backup_download_details_action_button_content_description">İndirilebilir yedekleme düğmesi oluştur</string>
     <string name="backup_download_progress_page_title">Yedeklemeyi indir</string>
@@ -136,6 +212,7 @@ Language: tr
     <string name="scan_this_site">bu site</string>
     <string name="threat_item_header_infected_core_file">%s: enfekte çekirdek dosyası</string>
     <string name="threat_item_header_threat_found">Tehdit bulundu</string>
+    <string name="scan_idle_last_scan_description">Son Jetpack taraması çalıştı %s ve herhangi bir risk bulunmadı. %s</string>
     <string name="scan_again">Yeniden tara</string>
     <string name="scan_now">Şimdi tara</string>
     <string name="scan_state_icon">Tarama durumu simgesi</string>
@@ -158,6 +235,8 @@ Language: tr
     <string name="backup_item_plugins">WordPress Eklentileri</string>
     <string name="backup_item_themes">WordPress Temaları</string>
     <string name="backup_download_details_icon_content_description">İndirilebilir yedekleme oluştur simgesi</string>
+    <string name="backup_item_sqls">Site veritabanı</string>
+    <string name="backup_item_roots_hint">(wp-config.php ve WordPress\'e ait olmayan tüm dosyaları içerir)</string>
     <string name="backup_download_details_action_button">İndirilebilir dosya oluştur</string>
     <string name="backup_download_details_header">İndirilebilir yedekleme oluştur</string>
     <string name="backup_download_details_page_title">Yedeklemeyi İndir</string>
@@ -2064,7 +2143,9 @@ Language: tr
     <string name="invite_error_invalid_usernames_multiple">Gönderemiyor: Geçersiz kullanıcı adları veya e-postalar</string>
     <string name="invite_error_invalid_usernames_one">Gönderemiyor: bir kullanıcı adı veya e-posta geçersiz</string>
     <string name="invite_error_no_usernames">Lütfen en az bir kullanıcı adı ekleyin</string>
+    <string name="invite_message_title">Özel Mesaj</string>
     <string name="invite">Davet et</string>
+    <string name="invite_names_title">Kullanıcı Adları veya E-postalar</string>
     <string name="send_link">Bağlantı gönder</string>
     <string name="my_site_header_external">Harici</string>
     <string name="invite_people">İnsanları davet et</string>

@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:56:58+0000
+Translation-Revision-Date: 2021-02-18 11:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">고정 해제</string>
+    <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
+    <string name="quick_start_list_view_site_title">사이트 방문</string>
+    <string name="quick_start_list_upload_icon_subtitle">깔끔하고 전문적으로 보이도록 사이트에 아이콘을 추가하세요.</string>
+    <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
+    <string name="quick_start_list_enable_sharing_title">공유 사용</string>
+    <string name="quick_start_list_enable_sharing_subtitle">새 글을 소셜 미디어에 자동으로 공유합니다.</string>
+    <string name="quick_start_list_update_site_title_subtitle">개성과 게시글을 반영하는 이름을 사이트에 지정하세요.</string>
+    <string name="quick_start_list_check_stats_title">통계 확인</string>
+    <string name="backup_download_status_failure_bullet2">그래도 다운로드 가능한 백업 파일 만들기는 시도됩니다.</string>
+    <string name="backup_download_status_failure_bullet1">다운로드 가능한 백업에 걸리는 시간을 알려주는 상태를 찾을 수 없습니다.</string>
+    <string name="backup_download_status_failure_heading">다운로드 가능한 백업 상태를 찾을 수 없습니다.</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">체크 표시 아이콘</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">시계 아이콘</string>
+    <string name="restore_status_failure_bullet3">완료되면 알려드립니다.</string>
+    <string name="restore_status_failure_bullet2">그래도 사이트 복원은 시도됩니다.</string>
+    <string name="restore_status_failure_bullet1">복원에 걸리는 시간을 알려주는 상태를 찾을 수 없습니다.</string>
+    <string name="restore_status_failure_heading">복원 상태를 찾을 수 없습니다.</string>
+    <string name="restore_complete_failed_description">사이트를 복원할 수 없습니다.</string>
+    <string name="restore_warning_action_button">확인</string>
+    <string name="restore_warning_description_with_two_parameters">사이트를 %2$s의 %1$s(으)로 되돌리시겠어요?\n        해당 시점 이후에 변경한 모든 내용이 손실됩니다.</string>
+    <string name="backup_download_complete_failed_description">백업을 만들 수 없습니다.</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(테마, 플러그인 및 업로드 제외)</string>
+    <string name="backup_item_contents">WP-content 디렉터리</string>
+    <string name="backup_item_roots">워드프레스 루터</string>
+    <string name="backup_download_progress_action_button_content_description">완료되면 알려주세요 버튼</string>
+    <string name="backup_download_progress_action_button">완료되면 알려주세요!</string>
+    <string name="backup_download_details_choose_items_header">이 다운로드에 포함된 항목</string>
+    <string name="gutenberg_native_uploading">업로드 중…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">재활용 가능한 블록은 iOS용 WordPress에서 편집할 수 없습니다.</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">재활용 가능한 블록은 Android용 WordPress에서 편집할 수 없습니다.</string>
+    <string name="gutenberg_native_replace_file">파일 바꾸기</string>
+    <string name="gutenberg_native_replace_audio">오디오 교체</string>
+    <string name="gutenberg_native_problem_opening_the_audio">오디오 열기 문제</string>
+    <string name="gutenberg_native_open">열기</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">이 요청을 처리할 수 있는 애플리케이션이 없습니다.</string>
+    <string name="gutenberg_native_lock_icon">잠금 아이콘</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">오디오 파일 삽입에 실패했습니다. 옵션을 보려면 누르세요.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">오디오 파일을 두 번 눌러 선택하기</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">오디오 파일을 두 번 눌러 듣기</string>
+    <string name="gutenberg_native_choose_audio">오디오 선택</string>
+    <string name="gutenberg_native_audio_player">오디오 플레이어</string>
+    <string name="gutenberg_native_audio_file">오디오 파일</string>
+    <string name="gutenberg_native_audio_caption_s">오디오 캡션. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">오디오 캡션. 비었음</string>
+    <string name="gutenberg_native_add_audio">오디오 추가</string>
+    <string name="continue_with_wpcom">워드프레스닷컴을 통해 로그인하거나 가입</string>
+    <string name="photo_picker_use_audio">이 오디오 사용</string>
+    <string name="photo_picker_choose_audio">기기에서 오디오 선택</string>
+    <string name="people_optional_custom_message_helper_text">선택 사항: 초대장과 함께 보낼 사용자 정의 메시지를 입력하세요.</string>
+    <string name="people_learn_more_about_roles">역할에 대하여 더 알아보기</string>
+    <string name="threat_status_fixed">해결됨</string>
+    <string name="threat_found_header">찾음</string>
+    <string name="scan_here_to_help">도움말</string>
+    <string name="scan_idle_with_threats_description">스캔에서 %2s에 대한 잠재적 위협 %1s개를 찾았습니다. 아래 내용을 검토하고 조치를 취하거나 모두 고치기 버튼을 누르세요. 도움말이 필요하면 %3$s을(를) 클릭하세요.</string>
+    <string name="scan_idle_manual_scan_description">사이트를 다시 검토하려면 수동 스캔을 실행하거나 젯팩의 오늘 중 사이트 스캔을 기다리세요.</string>
+    <string name="scan_provisioning_description">Jetpack Scan에 오신 것을 환영합니다. 전체 스캔이 수행되도록 설정하여 사이트를 자세히 살펴보는 중입니다. 스캔에 영향을 미칠 만한 문제를 발견하면 먼저 알려드리고 전체 스캔을 시작합니다.</string>
+    <string name="scan_scanning_is_initial_description">Jetpack Scan에 오신 것을 환영합니다. 지금 회원님 사이트를 살펴보고 있으며 결과를 곧 알려드리겠습니다.</string>
+    <string name="scan_fixing_threats_description">백그라운드에서 이러한 위협을 해결하기 위해 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행 상황을 확인하실 수 있습니다.</string>
+    <string name="scan_scanning_description">스캔이 완료되면 알림을 보내드립니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행 상황을 확인하실 수 있습니다.</string>
+    <string name="scan_fixing_threats_title">위협 해결 중</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan에서 사이트 스캔을 완료할 수 없습니다. 사이트가 다운되었는지 확인해 주세요. 다운되지 않았으면 다시 시도해 주세요. 다운되었거나 Jetpack Scan에서 계속 문제가 발생하는 경우 지원팀에 문의하세요.</string>
+    <string name="scan_request_failed_title">문제가 발생했습니다</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">사이트 백업 중</string>
+    <string name="activity_log_currently_backing_up_message">%1$s %2$s에서 사이트 백업 중</string>
+    <string name="activity_log_currently_backing_up_title">다운로드 가능한 백업을 만드는 중</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">사이트가 백업되었습니다.</string>
+    <string name="activity_log_backup_finished_snackbar_message">사이트가 백업되었습니다.\n%1$s %2$s에서 백업됨</string>
+    <string name="activity_log_backup_started_snackbar_message">사이트가 백업되는 중입니다.\n%1$s %2$s에서 백업 중</string>
+    <string name="pick_audio">오디오 선택</string>
     <string name="restore_complete_failed_icon_content_description">오류 아이콘</string>
     <string name="restore_complete_failed_title">복원 실패</string>
     <string name="restore_complete_visit_site_button_content_description">사이트 방문 버튼</string>
@@ -34,6 +105,7 @@ Language: ko_KR
     <string name="quick_start_dialog_review_pages_title">사이트 페이지 검토</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">홈페이지를 편집하려면 %1$s 홈페이지 %2$s을(를) 선택하세요.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">페이지 목록을 참조하려면 %1$s 페이지 %2$s을(를) 선택하세요.</string>
+    <string name="quick_start_card_menu_pin">고정</string>
     <string name="quick_start_dialog_edit_homepage_message">사이트의 홈페이지에서 콘텐츠를 변경, 추가 또는 제거합니다.</string>
     <string name="quick_start_dialog_edit_homepage_title">홈페이지 편집</string>
     <string name="reader_menu_mark_as_unseen">안 읽음으로 표시</string>
@@ -64,9 +136,11 @@ Language: ko_KR
     <string name="backup_active_filter_empty_subtitle">날짜 범위 조정 시도</string>
     <string name="backup_active_filter_empty_title">일치하는 백업을 찾을 수 없음</string>
     <string name="backup_empty_subtitle">첫 번째 백업이 24시간 이내에 여기에 표시되고 백업이 완료되면 알림이 수신됩니다.</string>
+    <string name="threat_item_sub_header_status_fixed_on">%s에 위협 해결됨</string>
     <string name="backup_empty_title">첫 번째 백업이 곧 준비됩니다</string>
     <string name="request_failed_message">요청 처리 중 문제가 발생했습니다. 나중에 다시 시도하세요.</string>
     <string name="gutenberg_native_move_to_bottom">아래로 이동하기</string>
+    <string name="gutenberg_native_change_block_position">블록 위치 변경</string>
     <string name="backup_download_complete_download_share_action_button_content_description">링크 버튼 공유하기</string>
     <string name="backup_download_complete_info">파일에 연결하는 링크도 이메일했습니다.</string>
     <string name="jetpack_icon_content_description">아이콘</string>
@@ -82,6 +156,7 @@ Language: ko_KR
     <string name="backup_download_progress_icon_content_description">다운로드할 수 있는 백업 만들기 아이콘</string>
     <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_complete_page_title">백업</string>
+    <string name="backup_download_progress_footnote">기다리시지 않아도 됩니다. 백업이 준비되면 알려드립니다.</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s은(는) 다운로드할 수 있는 백업을 만들기 위해 선택한 지점입니다.</string>
     <string name="backup_download_details_action_button_content_description">다운로드할 수 있는 백업 만들기 버튼</string>
     <string name="backup_download_generic_failure">요청을 처리하는 중에 문제가 있었습니다. 나중에 다시 시도하기 바랍니다.</string>
@@ -129,6 +204,7 @@ Language: ko_KR
     <string name="threats_found">위협을 찾았습니다</string>
     <string name="threat_item_header_threat_found">위협을 찾았습니다</string>
     <string name="threat_item_header_infected_core_file">%s: 감염 코어 파일</string>
+    <string name="scan_idle_last_scan_description">%s에 마지막 젯팩 스캔이 실행되었으며 위험이 발견되지 않았습니다. %s</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">활동 유형 필터 (%s유형을 선택했습니다)</string>
     <string name="backup">백업하기</string>
     <string name="scan_state_icon">상태 검사하기 아이콘</string>
@@ -151,6 +227,8 @@ Language: ko_KR
     <string name="backup_item_themes">워드프레스 테마</string>
     <string name="backup_item_plugins">워드프레스 플러그인</string>
     <string name="backup_item_media_uploads">미디어 업로드</string>
+    <string name="backup_item_sqls">사이트 데이터배이스</string>
+    <string name="backup_item_roots_hint">(wp-config.php 및 비 WordPress 파일 포함)</string>
     <string name="activity_log_date_range_filter_label">날짜 범위</string>
     <string name="activity_log_activity_type_filter_label">활동 유형</string>
     <string name="activity_log_item_menu_restore_label">이 지점으로 복원하기</string>
