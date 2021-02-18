@@ -310,7 +310,7 @@ class MySiteViewModel
 
     private fun titleClick() {
         val selectedSite = requireNotNull(selectedSiteRepository.getSelectedSite())
-        quickStartRepository.completeTask(UPDATE_SITE_TITLE)
+        quickStartRepository.completeTask(UPDATE_SITE_TITLE, true)
         if (!networkUtilsWrapper.isNetworkAvailable()) {
             _onSnackbarMessage.value = Event(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
         } else if (!SiteUtils.isAccessedViaWPComRest(selectedSite) || !selectedSite.hasCapabilityManageOptions) {
@@ -334,7 +334,7 @@ class MySiteViewModel
     private fun iconClick() {
         val site = requireNotNull(selectedSiteRepository.getSelectedSite())
         analyticsTrackerWrapper.track(MY_SITE_ICON_TAPPED)
-        quickStartRepository.completeTask(UPLOAD_SITE_ICON)
+        quickStartRepository.completeTask(UPLOAD_SITE_ICON, true)
         val hasIcon = site.iconUrl != null
         if (site.hasCapabilityManageOptions && site.hasCapabilityUploadFiles) {
             if (hasIcon) {

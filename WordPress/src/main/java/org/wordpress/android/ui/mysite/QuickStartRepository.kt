@@ -15,7 +15,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
@@ -76,8 +75,6 @@ class QuickStartRepository
 
     private var pendingTask: QuickStartTask? = null
     private var pendingCategoryCompletion: QuickStartTaskType? = null
-
-    private val mySiteTasks = listOf(UPDATE_SITE_TITLE, UPLOAD_SITE_ICON)
 
     init {
         quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
@@ -142,7 +139,7 @@ class QuickStartRepository
         _activeTask.value = null
     }
 
-    fun completeTask(task: QuickStartTask) {
+    fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
             // Uncomment this code to mark a task as not completed for testing purposes
@@ -161,8 +158,8 @@ class QuickStartRepository
             if (quickStartUtils.isEveryQuickStartTaskDoneForType(site.id, task.taskType)) {
                 pendingCategoryCompletion = task.taskType
             }
-            // If the task is completed on the My Site screen, we need to refresh immediately
-            if (mySiteTasks.contains(task)) {
+            // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
+            if (refreshImmediately) {
                 refresh()
             }
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
