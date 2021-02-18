@@ -84,6 +84,7 @@ android {
         buildConfigField "boolean", "FOLLOW_UNFOLLOW_COMMENTS", "false"
         buildConfigField "boolean", "SEEN_UNSEEN_WITH_COUNTER", "false"
         buildConfigField "boolean", "RESTORE_AVAILABLE", "false"
+        buildConfigField "boolean", "ENABLE_FILTER_FOR_DISCOVER", "false"
     }
 
     // Gutenberg's dependency - react-native-video is using
