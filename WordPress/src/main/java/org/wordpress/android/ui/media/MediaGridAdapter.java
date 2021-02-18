@@ -51,6 +51,11 @@ import java.util.List;
 import java.util.Locale;
 
 import javax.inject.Inject;
+import javax.inject.Named;
+
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
+
+import kotlinx.coroutines.CoroutineScope;
 
 /**
  * An adapter for the media gallery grid.
@@ -83,6 +88,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
 
     @Inject ImageManager mImageManager;
     @Inject AuthenticationUtils mAuthenticationUtils;
+    @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     public interface MediaGridAdapterCallback {
         void onAdapterFetchMoreData();
@@ -518,7 +524,7 @@ public class MediaGridAdapter extends RecyclerView.Adapter<MediaGridAdapter.Grid
         }
 
         imageView.setTag(R.id.media_grid_remote_thumb_extract_id, VIEW_TAG_EXTRACT_FROM_REMOTE_VIDEO_URL);
-        mImageManager.loadThumbnailFromVideoUrl(imageView, ImageType.VIDEO, filePath, ScaleType.CENTER_CROP,
+        mImageManager.loadThumbnailFromVideoUrl(mAppScope, imageView, filePath, ScaleType.CENTER_CROP,
                 new ImageManager.RequestListener<Drawable>() {
                     @Override
                     public void onLoadFailed(@Nullable Exception e, @Nullable Object model) {

@@ -70,8 +70,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
 
     fun buildProgressListStateItems(
         progress: Int = 0,
-        published: Date,
-        onNotifyMeClick: () -> Unit
+        published: Date
     ): List<JetpackListItemState> {
         return mutableListOf(
                 buildIconState(
@@ -81,11 +80,10 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildHeaderState(R.string.backup_download_progress_header),
                 buildDescriptionState(published, R.string.backup_download_progress_description_with_two_parameters),
                 buildProgressState(progress),
-                buildActionButtonState(
-                        titleRes = R.string.backup_download_progress_action_button,
-                        contentDescRes = R.string.backup_download_progress_action_button_content_description,
-                        onClick = onNotifyMeClick),
-                buildFootnoteState(R.string.backup_download_progress_footnote)
+                buildFootnoteState(
+                        iconRes = R.drawable.ic_info_outline_white_24dp,
+                        iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
+                        textRes = R.string.backup_download_progress_footnote)
         )
     }
 
@@ -112,8 +110,9 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                         isSecondary = true,
                         iconRes = R.drawable.ic_share_white_24dp,
                         onClick = onShareLinkClick),
-                buildFootnoteState(R.string.backup_download_complete_info)
-        )
+                buildFootnoteState(
+                        textRes = R.string.backup_download_complete_info,
+                        textAlphaResId = R.dimen.material_emphasis_medium))
     }
 
     fun buildErrorListStateErrorItems(errorType: BackupDownloadErrorTypes, onDoneClick: () -> Unit) = (
@@ -207,8 +206,16 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                     itemTopMarginResId = topMarginResId,
                     itemBottomMarginResId = bottomMarginResId)
 
-    private fun buildFootnoteState(@StringRes textRes: Int) = FootnoteState(
-            UiStringRes(textRes)
+    private fun buildFootnoteState(
+        @DrawableRes iconRes: Int? = null,
+        @DimenRes textAlphaResId: Int? = null,
+        @DimenRes iconSizeResId: Int? = null,
+        @StringRes textRes: Int
+    ) = FootnoteState(
+            iconRes = iconRes,
+            textAlphaResId = textAlphaResId,
+            iconSizeResId = iconSizeResId,
+            text = UiStringRes(textRes)
     )
 
     private fun buildProgressState(progress: Int) = ProgressState(
