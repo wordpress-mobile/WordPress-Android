@@ -26,10 +26,10 @@ class SelectedSiteRepository
         if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
             showSiteIconProgressBar(false)
         }
+        _selectedSiteChange.value = selectedSite
         if (selectedSite?.id != _siteSelected.value) {
             _siteSelected.value = selectedSite?.id
         }
-        _selectedSiteChange.value = selectedSite
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
