@@ -44,6 +44,11 @@ class PagedListWrapper<T>(
     private val parentCoroutineContext: CoroutineContext
 ) : LifecycleObserver, CoroutineScope {
 
+    /**
+     * Extra information about the events that led to the list changing.
+     * @property cause The cause of the change.
+     * @property totalDuration The total duration in milliseconds from the start of an API request until data persistence finished.
+     */
     data class ListChangedEvent(
         val cause: CauseOfListChange,
         val totalDuration: Long?
