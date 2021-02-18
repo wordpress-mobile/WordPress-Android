@@ -141,7 +141,8 @@ class PagedListWrapperTest {
                 error = null
         ))
 
-        captureAndVerifySingleValue(listChangedObserver, ListChangedEvent(cause = LOADED_MORE, totalDuration = 1_984_981))
+        captureAndVerifySingleValue(listChangedObserver,
+                ListChangedEvent(cause = LOADED_MORE, totalDuration = 1_984_981))
     }
 
     @Test
@@ -189,7 +190,7 @@ class PagedListWrapperTest {
                 listDescriptors = listOf(mockListDescriptor),
                 causeOfChange = causeOfListChange,
                 totalDuration = totalDuration,
-                error = error,
+                error = error
         )
         pagedListWrapper.onListChanged(event)
     }
