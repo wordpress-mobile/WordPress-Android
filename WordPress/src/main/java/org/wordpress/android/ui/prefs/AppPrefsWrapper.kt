@@ -183,9 +183,6 @@ class AppPrefsWrapper @Inject constructor() {
     fun getSiteJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> =
             AppPrefs.getSiteJetpackCapabilities(remoteSiteId)
 
-    fun getSiteJetpackCapabilitiesLastUpdated(remoteSiteId: Long): Long =
-            AppPrefs.getSiteJetpackCapabilitiesLastUpdated(remoteSiteId)
-
     fun removeQuickStartTaskType(quickStartTaskType: QuickStartTaskType) =
             AppPrefs.removeQuickStartTaskType(quickStartTaskType)
 
