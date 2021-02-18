@@ -624,9 +624,6 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
             // Force a refresh if user has logged in. This can be removed once we start using an anonymous ID.
             mExPlat.forceRefresh();
-        } else {
-            // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
-            mExPlat.clear();
         }
     }
 
@@ -680,6 +677,9 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         // Remove private Atomic cookie
         mPrivateAtomicCookie.clearCookie();
+
+        // Clear cached assignments if user has logged out. This can be removed once we start using an anonymous ID.
+        mExPlat.clear();
     }
 
     private static String mDefaultUserAgent;
