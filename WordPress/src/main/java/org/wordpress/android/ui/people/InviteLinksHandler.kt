@@ -30,8 +30,8 @@ class InviteLinksHandler @Inject constructor(
     private val _inviteLinksState = MediatorLiveData<InviteLinksState>()
     val inviteLinksState: LiveData<InviteLinksState> = _inviteLinksState
 
-    suspend fun handleInviteLinksStatusRequest(blogId: Long, scenarioContext: UseCaseScenarioContext, stat: Stat) {
-        inviteLinksUseCase.getInviteLinksStatus(blogId, scenarioContext, stat)
+    suspend fun handleInviteLinksStatusRequest(blogId: Long, scenarioContext: UseCaseScenarioContext) {
+        inviteLinksUseCase.getInviteLinksStatus(blogId, scenarioContext)
                 .flowOn(bgDispatcher).collect { state ->
                     manageState(state)
                 }

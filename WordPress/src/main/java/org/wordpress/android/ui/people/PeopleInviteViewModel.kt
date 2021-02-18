@@ -92,8 +92,7 @@ class PeopleInviteViewModel @Inject constructor(
             inviteLinksRequestJob = launch(bgDispatcher) {
                 inviteLinksHandler.handleInviteLinksStatusRequest(
                         siteModel.siteId,
-                        INITIALIZING,
-                        INVITE_LINKS_GET_STATUS
+                        INITIALIZING
                 )
             }
         } else {
@@ -118,7 +117,7 @@ class PeopleInviteViewModel @Inject constructor(
     fun onRetryButtonClicked() {
         inviteLinksRequestJob?.cancel()
         inviteLinksRequestJob = launch(bgDispatcher) {
-            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING, INVITE_LINKS_GET_STATUS)
+            inviteLinksHandler.handleInviteLinksStatusRequest(siteModel.siteId, INITIALIZING)
         }
     }
 

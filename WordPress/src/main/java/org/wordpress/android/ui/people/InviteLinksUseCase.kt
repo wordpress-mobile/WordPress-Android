@@ -38,10 +38,15 @@ class InviteLinksUseCase @Inject constructor(
 ) {
     suspend fun getInviteLinksStatus(
         blogId: Long,
-        scenarioContext: UseCaseScenarioContext,
-        stat: Stat
+        scenarioContext: UseCaseScenarioContext
     ): Flow<InviteLinksState> = flow {
-        makeChecksAndApplyStrategy(this, blogId, ::getInvitesStrategy, scenarioContext, stat)
+        makeChecksAndApplyStrategy(
+                this,
+                blogId,
+                ::getInvitesStrategy,
+                scenarioContext,
+                Stat.INVITE_LINKS_GET_STATUS
+        )
     }
 
     suspend fun generateLinks(blogId: Long): Flow<InviteLinksState> = flow {
