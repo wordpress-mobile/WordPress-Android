@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
+import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
@@ -45,6 +46,9 @@ import org.wordpress.android.viewmodel.main.WPMainActivityViewModel.FocusPointIn
 @RunWith(MockitoJUnitRunner::class)
 class WPMainActivityViewModelTest : BaseUnitTest() {
     private lateinit var viewModel: WPMainActivityViewModel
+
+    private var loginFlowTriggered: Boolean = false
+    private var switchTabTriggered: Boolean = false
 
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var featureAnnouncementProvider: FeatureAnnouncementProvider
@@ -110,6 +114,9 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
         viewModel.mainActions.observeForever { }
         viewModel.fabUiState.observeForever { fabUiState = it }
         whenever(mySiteImprovementsFeatureConfig.isEnabled()).thenReturn(false)
+
+        loginFlowTriggered = false
+        switchTabTriggered = false
     }
 
     @Test
@@ -340,11 +347,36 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
     }
 
     @Test
-    fun `when user taps to open the login page from the bottom sheet empty view cta the correct action is triggered`() {
-        startViewModelWithDefaultParameters()
-        viewModel.onOpenLoginPage()
+    fun `when user taps to open the login page from the bottom sheet empty view cta the login page flow is started`() {
+        setupObservers()
 
-        assertThat(viewModel.startLoginFlow.value!!.peekContent()).isTrue()
+        startViewModelWithDefaultParameters()
+
+        viewModel.onOpenLoginPage(0)
+
+        assertThat(loginFlowTriggered).isTrue
+    }
+
+    @Test
+    fun `when user taps to open the login page from the bottom sheet empty view cta default page is set to My Site`() {
+        setupObservers()
+
+        startViewModelWithDefaultParameters()
+
+        viewModel.onOpenLoginPage(0)
+
+        verify(appPrefsWrapper, times(1)).setMainPageIndex(eq(0))
+    }
+
+    @Test
+    fun `when user taps to open the login page from the bottom sheet empty view cta main page switches to My Site`() {
+        setupObservers()
+
+        startViewModelWithDefaultParameters()
+
+        viewModel.onOpenLoginPage(0)
+
+        assertThat(switchTabTriggered).isTrue
     }
 
     @Test
@@ -520,6 +552,20 @@ class WPMainActivityViewModelTest : BaseUnitTest() {
 
     private fun startViewModelWithDefaultParameters() {
         viewModel.start(site = initSite(hasFullAccessToContent = true, supportsStories = true))
+    }
+
+    private fun setupObservers() {
+        viewModel.startLoginFlow.observeForever { event ->
+            event.applyIfNotHandled {
+                loginFlowTriggered = true
+            }
+        }
+
+        viewModel.switchToMySite.observeForever { event ->
+            event.applyIfNotHandled {
+                switchTabTriggered = true
+            }
+        }
     }
 
     private fun resumeViewModelWithDefaultParameters() {

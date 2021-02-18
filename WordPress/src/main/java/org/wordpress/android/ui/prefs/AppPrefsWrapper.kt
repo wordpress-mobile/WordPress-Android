@@ -200,6 +200,8 @@ class AppPrefsWrapper @Inject constructor() {
         return if (!pinnedDynamicCardType.isNullOrEmpty()) DynamicCardType.valueOf(pinnedDynamicCardType) else null
     }
 
+    fun setMainPageIndex(index: Int) = AppPrefs.setMainPageIndex(index)
+
     companion object {
         private const val LIGHT_MODE_ID = 0
         private const val DARK_MODE_ID = 1
