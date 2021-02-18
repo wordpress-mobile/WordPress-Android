@@ -107,14 +107,14 @@ class ActivityLogDetailFragment : Fragment() {
                 activityCreatedTime.text = activityLogModel?.createdTime
 
                 if (activityLogModel != null) {
-                    activityRewindButton.setOnClickListener {
+                    activityRestoreButton.setOnClickListener {
                         viewModel.onRewindClicked(activityLogModel)
                     }
                 }
             })
 
             viewModel.rewindAvailable.observe(viewLifecycleOwner, { available ->
-                activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
+                activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
             viewModel.navigationEvents.observe(viewLifecycleOwner, {

@@ -110,7 +110,7 @@
             tools:text="Jetpack by WordPress.com autoupdated to 5.6" />
 
         <LinearLayout
-            android:id="@+id/activityRewindButton"
+            android:id="@+id/activityRestoreButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="24dp"
