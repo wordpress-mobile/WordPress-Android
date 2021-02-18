@@ -287,10 +287,13 @@ class MySiteFragment : Fragment(),
             )
             uiScope.launch {
                 if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
-                    updateScanAndBackupVisibility(
-                            site = site,
-                            products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
-                    )
+                    val products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+                    view?.let {
+                        updateScanAndBackupVisibility(
+                                site = site,
+                                products = products
+                        )
+                    }
                 }
             }
         }
