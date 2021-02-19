@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.comments;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -52,6 +53,7 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
 
+import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class CommentsListFragment extends Fragment {
@@ -302,7 +304,7 @@ public class CommentsListFragment extends Fragment {
             getAdapter().removeComment(comment);
         }
         // Show the empty view if the comment count drop to zero
-        updateEmptyView();
+//        updateEmptyView();
     }
 
     @Override
@@ -475,6 +477,20 @@ public class CommentsListFragment extends Fragment {
         } catch (IllegalArgumentException e) {
             // raised when dialog wasn't created
         }
+    }
+
+    @Override public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == RESULT_OK) {
+//            val commentId = data!!.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1)
+//            val newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA)
+//            if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
+//                onModerateComment(
+//                        commentStore.getCommentBySiteAndRemoteId(site, commentId),
+//                        CommentStatus.fromString(newStatus)
+//                )
+//            }
+//        }
     }
 
     private void moderateSelectedComments(final CommentStatus newStatus) {
@@ -781,7 +797,7 @@ public class CommentsListFragment extends Fragment {
 
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            if (event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
+            if (event.requestedStatus == null || event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
                 loadComments();
                 return;
             }
