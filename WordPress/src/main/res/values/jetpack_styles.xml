@@ -52,6 +52,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="layout_constraintWidth_max">@dimen/jetpack_button_max_width</item>
+        <item name="layout_constraintHorizontal_bias">0</item>
     </style>
 
     <style name="Jetpack.SecondaryButton" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -61,6 +63,8 @@
         <item name="materialThemeOverlay">@style/ThemeOverlay.SecondaryButton.OnSurface</item>
         <item name="android:layout_marginTop">@dimen/margin_small</item>
         <item name="android:layout_marginBottom">@dimen/margin_small</item>
+        <item name="layout_constraintWidth_max">@dimen/jetpack_button_max_width</item>
+        <item name="layout_constraintHorizontal_bias">0</item>
     </style>
 
     <style name="ThemeOverlay.SecondaryButton.OnSurface" parent="">
