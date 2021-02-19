@@ -440,6 +440,8 @@
     <dimen name="scan_icon_size">48dp</dimen>
     <dimen name="scan_icon_margin">16dp</dimen>
     <dimen name="scan_threat_item_icon_size">40dp</dimen>
+    <dimen name="jetpack_scan_content_margin">@dimen/content_margin_none</dimen>
+    <dimen name="jetpack_button_max_width">0dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>

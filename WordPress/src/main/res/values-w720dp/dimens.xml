@@ -10,5 +10,6 @@
     <dimen name="notifications_content_margin">@dimen/content_margin_tablet_big</dimen>
     <dimen name="site_creation_content_margin">@dimen/content_margin_tablet_big</dimen>
     <dimen name="post_list_content_margin_standard">@dimen/content_margin_tablet_big</dimen>
-
+    <dimen name="jetpack_scan_content_margin">@dimen/content_margin_tablet_big</dimen>
+    <dimen name="jetpack_button_max_width">244dp</dimen>
 </resources>
