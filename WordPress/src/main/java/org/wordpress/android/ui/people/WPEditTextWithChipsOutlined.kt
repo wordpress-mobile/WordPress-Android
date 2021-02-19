@@ -181,7 +181,7 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
         throwExceptionIfChipifyNotEnabled()
 
         if (!hasText() || !canAddMoreChips()) {
-            editor.setText("")
+            resetText()
             return null
         }
 
@@ -333,13 +333,13 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
 
     private fun addItem(item: String) {
         if (!canAddMoreChips() && item.isNotBlank()) {
-            editor.setText("")
+            resetText()
         } else {
             val cleanedItem = removeDelimiterFromItemIfPresent(item)
 
             if (cleanedItem.isNullOrBlank()) return
 
-            editor.setText("")
+            resetText()
 
             itemsManager?.onAddItem(cleanedItem) ?: chipify(cleanedItem, ItemValidationState.NEUTRAL)
         }
@@ -387,7 +387,13 @@ class WPEditTextWithChipsOutlined @JvmOverloads constructor(
             flexBox.addView(chip as View, index)
         }
 
-        editor.setText("")
+        resetText()
+    }
+
+    private fun resetText() {
+        editor.apply {
+            text?.clear() ?: setText("")
+        }
     }
 
     private fun removeDelimiterFromItemIfPresent(item: String?): String? {
