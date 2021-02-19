@@ -47,6 +47,10 @@ class ActivityLogDetailViewModel
     val restoreVisible: LiveData<Boolean>
         get() = _restoreVisible
 
+    private val _downloadBackupVisible = MutableLiveData<Boolean>()
+    val downloadBackupVisible: LiveData<Boolean>
+        get() = _downloadBackupVisible
+
     fun start(site: SiteModel, activityLogId: String, areButtonsVisible: Boolean) {
         this.site = site
         this.activityLogId = activityLogId

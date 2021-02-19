@@ -116,6 +116,9 @@ class ActivityLogDetailFragment : Fragment() {
             viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
                 activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
+            viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+                activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
+            })
 
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
