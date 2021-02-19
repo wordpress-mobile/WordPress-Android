@@ -273,7 +273,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
 
         // Enable log recording
         AppLog.enableRecording(true);
-        AppLog.enableLogFilePersistence(this.getBaseContext(), 30);
+        AppLog.enableLogFilePersistence(this.getBaseContext(), 5);
         AppLog.addListener(new AppLogListener() {
             @Override
             public void onLog(T tag, LogLevel logLevel, String message) {
