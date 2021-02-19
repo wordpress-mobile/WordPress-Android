@@ -1568,6 +1568,7 @@ class MySiteFragment : Fragment(),
                     )
                 } else {
                     quickStartUtilsWrapper.stylizeQuickStartPrompt(
+                            requireContext(),
                             activeTutorialPrompt!!.shortMessagePrompt,
                             activeTutorialPrompt!!.iconId
                     )

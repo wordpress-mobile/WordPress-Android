@@ -16,4 +16,6 @@ class DateTimeUtilsWrapper @Inject constructor(
     fun dateFromIso8601(date: String) = DateTimeUtils.dateFromIso8601(date)
 
     fun daysBetween(start: Date, end: Date) = DateTimeUtils.daysBetween(start, end)
+
+    fun dateFromTimestamp(timestamp: Long) = DateTimeUtils.dateFromTimestamp(timestamp)
 }

@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.webkit.MimeTypeMap;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import org.json.JSONException;
@@ -751,5 +752,13 @@ public class AnalyticsUtils {
 
             AnalyticsTracker.track(stat, properties);
         }
+    }
+
+    public static void trackInviteLinksAction(
+            AnalyticsTracker.Stat stat,
+            @Nullable SiteModel site,
+            @Nullable Map<String, Object> properties
+    ) {
+        AnalyticsUtils.trackWithSiteDetails(stat, site, properties);
     }
 }
