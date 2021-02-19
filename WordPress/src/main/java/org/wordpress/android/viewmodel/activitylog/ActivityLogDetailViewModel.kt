@@ -58,6 +58,7 @@ class ActivityLogDetailViewModel
         this.activityLogId = activityLogId
 
         _restoreVisible.value = areButtonsVisible
+        _downloadBackupVisible.value = areButtonsVisible && backupDownloadFeatureConfig.isEnabled()
 
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore
