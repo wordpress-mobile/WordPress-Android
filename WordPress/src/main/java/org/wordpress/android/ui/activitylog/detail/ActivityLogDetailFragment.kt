@@ -216,9 +216,9 @@ class ActivityLogDetailFragment : Fragment() {
 
     private fun buildTrackingSource() = requireActivity().intent?.extras?.let {
         val source = it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY)
-            when {
-                source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
-                else -> DETAIL_TRACKING_SOURCE
-            }
+        when {
+            source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
+            else -> DETAIL_TRACKING_SOURCE
         }
+    }
 }
