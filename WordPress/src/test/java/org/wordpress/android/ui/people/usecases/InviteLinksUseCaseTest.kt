@@ -10,7 +10,6 @@ import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.INVITE_LINKS_GET_STATUS
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.test
