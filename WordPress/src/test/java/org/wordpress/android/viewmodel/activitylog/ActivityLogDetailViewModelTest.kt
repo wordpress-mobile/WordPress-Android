@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.tools.FormattableContent
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
+import org.wordpress.android.util.config.BackupDownloadFeatureConfig
 import org.wordpress.android.util.config.RestoreFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import java.util.Date
@@ -34,6 +35,7 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var activityLogStore: ActivityLogStore
     @Mock private lateinit var site: SiteModel
     @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
+    @Mock private lateinit var backupDownloadFeatureConfig: BackupDownloadFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
     private val areButtonsVisible = true
@@ -67,6 +69,7 @@ class ActivityLogDetailViewModelTest {
 
     private var lastEmittedItem: ActivityLogDetailModel? = null
     private var restoreVisible: Boolean = false
+    private var downloadBackupVisible: Boolean = false
     private var navigationEvents: MutableList<Event<ActivityLogDetailNavigationEvents?>> = mutableListOf()
 
     @Before
@@ -74,10 +77,12 @@ class ActivityLogDetailViewModelTest {
         viewModel = ActivityLogDetailViewModel(
                 dispatcher,
                 activityLogStore,
-                restoreFeatureConfig
+                restoreFeatureConfig,
+                backupDownloadFeatureConfig
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
         viewModel.restoreVisible.observeForever { restoreVisible = it }
+        viewModel.downloadBackupVisible.observeForever { downloadBackupVisible = it }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
     }
 
@@ -98,6 +103,31 @@ class ActivityLogDetailViewModelTest {
         viewModel.start(site, activityID, true)
 
         assertEquals(true, restoreVisible)
+    }
+
+    @Test
+    fun `given buttons are not visible, when view model starts, then download backup button is not shown`() {
+        viewModel.start(site, activityID, false)
+
+        assertEquals(false, downloadBackupVisible)
+    }
+
+    @Test
+    fun `given backup download feature is disabled, when view model starts, then download backup button is shown`() {
+        whenever(backupDownloadFeatureConfig.isEnabled()).thenReturn(false)
+
+        viewModel.start(site, activityID, true)
+
+        assertEquals(false, downloadBackupVisible)
+    }
+
+    @Test
+    fun `given backup download feature is enabled, when view model starts, then download backup button is shown`() {
+        whenever(backupDownloadFeatureConfig.isEnabled()).thenReturn(true)
+
+        viewModel.start(site, activityID, true)
+
+        assertEquals(true, downloadBackupVisible)
     }
 
     @Test
