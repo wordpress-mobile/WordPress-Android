@@ -2917,6 +2917,9 @@
     <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
 
+    <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ll reach more people. Nice job!</string>
+
     <!-- Pages -->
     <string name="pages_published" tools:ignore="UnusedResources">Published</string>
     <string name="pages_drafts" tools:ignore="UnusedResources">Drafts</string>

@@ -2028,6 +2028,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_create_sheet_shown";
             case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
                 return "post_list_create_sheet_action_tapped";
+            case INVITE_LINKS_GET_STATUS:
+                return "invite_links_get_status";
+            case INVITE_LINKS_GENERATE:
+                return "invite_links_generate";
+            case INVITE_LINKS_DISABLE:
+                return "invite_links_disable";
+            case INVITE_LINKS_SHARE:
+                return "invite_links_share";
         }
         return null;
     }

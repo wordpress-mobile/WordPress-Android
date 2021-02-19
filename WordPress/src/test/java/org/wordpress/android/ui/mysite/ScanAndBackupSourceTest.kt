@@ -11,9 +11,9 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.test
+import org.wordpress.android.testScope
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.JetpackCapabilities
@@ -55,7 +55,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -66,7 +66,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         init(scanScreenFeatureEnabled = false, backupScreenFeatureEnabled = false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -81,7 +81,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isTrue
@@ -96,7 +96,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isTrue
         assertThat(result!!.scanAvailable).isFalse
@@ -111,7 +111,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isTrue
         assertThat(result!!.scanAvailable).isTrue
@@ -126,7 +126,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         )
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.backupAvailable).isFalse
         assertThat(result!!.scanAvailable).isFalse
@@ -142,7 +142,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPCom).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -157,7 +157,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(true)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isFalse
     }
@@ -173,7 +173,7 @@ class ScanAndBackupSourceTest : BaseUnitTest() {
         whenever(site.isWPComAtomic).thenReturn(false)
 
         var result: JetpackCapabilities? = null
-        scanAndBackupSource.buildSource(TEST_SCOPE, siteId).observeForever { result = it }
+        scanAndBackupSource.buildSource(testScope(), siteId).observeForever { result = it }
 
         assertThat(result!!.scanAvailable).isTrue
     }
