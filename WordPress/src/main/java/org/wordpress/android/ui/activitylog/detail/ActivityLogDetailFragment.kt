@@ -97,7 +97,7 @@ class ActivityLogDetailFragment : Fragment() {
 
                 if (activityLogModel != null) {
                     activityRestoreButton.setOnClickListener {
-                        viewModel.onRewindClicked(activityLogModel)
+                        viewModel.onRestoreClicked(activityLogModel)
                     }
                     activityDownloadBackupButton.setOnClickListener {
                         viewModel.onDownloadBackupClicked(activityLogModel)

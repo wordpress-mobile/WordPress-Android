@@ -237,22 +237,22 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given without rewind id, when on rewind clicked, then do nothing`() {
+    fun `given without rewind id, when on restore clicked, then do nothing`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn(null)
 
-        viewModel.onRewindClicked(model)
+        viewModel.onRestoreClicked(model)
 
         assertTrue(navigationEvents.isEmpty())
     }
 
     @Test
-    fun `given restore feature is disabled, when on rewind clicked, then show rewind dialog with model`() {
+    fun `given restore feature is disabled, when on restore clicked, then show rewind dialog with model`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn("123")
         whenever(restoreFeatureConfig.isEnabled()).thenReturn(false)
 
-        viewModel.onRewindClicked(model)
+        viewModel.onRestoreClicked(model)
 
         navigationEvents.last().peekContent()?.let {
             assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRewindDialog).model)
@@ -260,12 +260,12 @@ class ActivityLogDetailViewModelTest {
     }
 
     @Test
-    fun `given restore feature is enabled, when on rewind clicked, then show restore with model`() {
+    fun `given restore feature is enabled, when on restore clicked, then show restore with model`() {
         val model = mock<ActivityLogDetailModel>()
         whenever(model.rewindId).thenReturn("123")
         whenever(restoreFeatureConfig.isEnabled()).thenReturn(true)
 
-        viewModel.onRewindClicked(model)
+        viewModel.onRestoreClicked(model)
 
         navigationEvents.last().peekContent()?.let {
             assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRestore).model)

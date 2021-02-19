@@ -89,7 +89,7 @@ class ActivityLogDetailViewModel
         _handleFormattableRangeClick.value = range
     }
 
-    fun onRewindClicked(model: ActivityLogDetailModel) {
+    fun onRestoreClicked(model: ActivityLogDetailModel) {
         if (model.rewindId != null) {
             val navigationEvent = if (restoreFeatureConfig.isEnabled()) {
                 ActivityLogDetailNavigationEvents.ShowRestore(model)
@@ -98,7 +98,7 @@ class ActivityLogDetailViewModel
             }
             _navigationEvents.value = Event(navigationEvent)
         } else {
-            AppLog.e(ACTIVITY_LOG, "Trying to rewind activity without rewind ID")
+            AppLog.e(ACTIVITY_LOG, "Trying to restore activity without rewind ID")
         }
     }
 
