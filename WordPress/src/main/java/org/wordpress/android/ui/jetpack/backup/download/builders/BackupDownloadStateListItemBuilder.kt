@@ -184,6 +184,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             }
     )
 
+    @Suppress("LongMethod", "LongParameterList")
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
