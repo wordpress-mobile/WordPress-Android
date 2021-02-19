@@ -55,7 +55,7 @@ class EventItemViewHolder(
         thumbnail.setImageResource(activity.icon.drawable)
         thumbnail.setBackgroundResource(activity.status.color)
         container.setOnClickListener {
-            itemClickListener(activity)
+            itemClickListener(activity.copy(isButtonVisible = actionButton.visibility == View.VISIBLE))
         }
 
         actionButton.setOnClickListener {

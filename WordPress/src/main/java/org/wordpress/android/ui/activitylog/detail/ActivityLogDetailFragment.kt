@@ -25,6 +25,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
@@ -60,6 +61,7 @@ class ActivityLogDetailFragment : Fragment() {
                     .get(ActivityLogDetailViewModel::class.java)
 
             val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
+            val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
 
             viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
@@ -140,7 +142,7 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.start(site, activityLogId, false)
+            viewModel.start(site, activityLogId, areButtonsVisible)
         }
     }
 
@@ -162,6 +164,14 @@ class ActivityLogDetailFragment : Fragment() {
         else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
+    private fun areButtonsVisible(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null ->
+            requireNotNull(savedInstanceState.getBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, true))
+        intent != null ->
+            intent.getBooleanExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, true)
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -174,6 +184,7 @@ class ActivityLogDetailFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
+        outState.putBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, viewModel.areButtonsVisible)
     }
 
     fun onRewindConfirmed(rewindId: String) {

@@ -21,6 +21,7 @@ import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 
 const val ACTIVITY_LOG_ID_KEY: String = "activity_log_id_key"
+const val ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY: String = "activity_log_are_buttons_visible_key"
 const val ACTIVITY_LOG_REWIND_ID_KEY: String = "activity_log_rewind_id_key"
 
 class ActivityLogDetailViewModel
@@ -32,6 +33,7 @@ class ActivityLogDetailViewModel
 ) : ViewModel() {
     lateinit var site: SiteModel
     lateinit var activityLogId: String
+    var areButtonsVisible = false
 
     private val _navigationEvents = MutableLiveData<Event<ActivityLogDetailNavigationEvents>>()
     val navigationEvents: LiveData<Event<ActivityLogDetailNavigationEvents>>
@@ -56,6 +58,7 @@ class ActivityLogDetailViewModel
     fun start(site: SiteModel, activityLogId: String, areButtonsVisible: Boolean) {
         this.site = site
         this.activityLogId = activityLogId
+        this.areButtonsVisible = areButtonsVisible
 
         _restoreVisible.value = areButtonsVisible
         _downloadBackupVisible.value = areButtonsVisible && backupDownloadFeatureConfig.isEnabled()
