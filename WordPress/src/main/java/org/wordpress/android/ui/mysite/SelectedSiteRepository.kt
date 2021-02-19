@@ -2,6 +2,8 @@ package org.wordpress.android.ui.mysite
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
+import androidx.lifecycle.map
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -17,19 +19,15 @@ class SelectedSiteRepository
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
     private val _selectedSiteChange = MutableLiveData<SiteModel>()
-    private val _siteSelected = MutableLiveData<Int>()
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel>
-    val siteSelected = _siteSelected as LiveData<Int?>
+    val siteSelected = _selectedSiteChange.map { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
     fun updateSite(selectedSite: SiteModel?) {
         if (getSelectedSite()?.iconUrl != selectedSite?.iconUrl) {
             showSiteIconProgressBar(false)
         }
         _selectedSiteChange.value = selectedSite
-        if (selectedSite?.id != _siteSelected.value) {
-            _siteSelected.value = selectedSite?.id
-        }
     }
 
     fun updateSiteIconMediaId(mediaId: Int, showProgressBar: Boolean) {
