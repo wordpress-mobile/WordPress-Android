@@ -18,6 +18,8 @@
 
     <org.wordpress.android.ui.prefs.EmptyViewRecyclerView
         android:id="@+id/recycler_view"
+        android:paddingStart="@dimen/jetpack_scan_content_margin"
+        android:paddingEnd="@dimen/jetpack_scan_content_margin"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
