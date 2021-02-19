@@ -6,6 +6,7 @@ import android.app.ProgressDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -80,7 +81,6 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
 import org.wordpress.android.util.ToastUtils
-import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
@@ -383,16 +383,17 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 }
         )
         storyEditorMedia.snackBarMessage.observe(this,
-                Observer<Event<SnackbarMessageHolder>> { event: Event<SnackbarMessageHolder?> ->
-                    val messageHolder = event.getContentIfNotHandled()
-                    if (messageHolder != null) {
-                        WPSnackbar
-                                .make(
-                                        findViewById(org.wordpress.android.R.id.editor_activity),
-                                        uiHelpers.getTextOfUiString(this, messageHolder.message),
-                                        Snackbar.LENGTH_SHORT
-                                )
-                                .show()
+                { event: Event<SnackbarMessageHolder?> ->
+                    event.getContentIfNotHandled()?.let { messageHolder ->
+                        findViewById<View>(R.id.editor_activity)?.let {
+                            WPSnackbar
+                                    .make(
+                                            it,
+                                            uiHelpers.getTextOfUiString(this, messageHolder.message),
+                                            Snackbar.LENGTH_SHORT
+                                    )
+                                    .show()
+                        }
                     }
                 }
         )
