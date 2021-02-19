@@ -8,7 +8,7 @@ import javax.inject.Inject
 /**
  * Configuration of the my site infrastructure improvements
  */
-@Feature(remoteField = MY_SITE_IMPROVEMENTS_REMOTE_FIELD)
+@Feature(remoteField = MY_SITE_IMPROVEMENTS_REMOTE_FIELD, defaultValue = true)
 class MySiteImprovementsFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
