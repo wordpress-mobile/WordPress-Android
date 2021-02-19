@@ -43,6 +43,10 @@ class ActivityLogDetailViewModel
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
 
+    private val _restoreVisible = MutableLiveData<Boolean>()
+    val restoreVisible: LiveData<Boolean>
+        get() = _restoreVisible
+
     fun start(site: SiteModel, activityLogId: String) {
         this.site = site
         this.activityLogId = activityLogId
