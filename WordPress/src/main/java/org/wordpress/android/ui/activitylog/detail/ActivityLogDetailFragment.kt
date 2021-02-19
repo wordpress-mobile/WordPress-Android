@@ -140,7 +140,7 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.start(site, activityLogId)
+            viewModel.start(site, activityLogId, false)
         }
     }
 

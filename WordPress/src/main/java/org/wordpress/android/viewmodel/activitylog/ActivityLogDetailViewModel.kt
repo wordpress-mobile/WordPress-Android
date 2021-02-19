@@ -47,9 +47,11 @@ class ActivityLogDetailViewModel
     val restoreVisible: LiveData<Boolean>
         get() = _restoreVisible
 
-    fun start(site: SiteModel, activityLogId: String) {
+    fun start(site: SiteModel, activityLogId: String, areButtonsVisible: Boolean) {
         this.site = site
         this.activityLogId = activityLogId
+
+        _restoreVisible.value = areButtonsVisible
 
         if (activityLogId != _item.value?.activityID) {
             _item.value = activityLogStore

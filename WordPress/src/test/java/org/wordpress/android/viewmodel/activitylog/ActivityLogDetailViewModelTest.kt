@@ -36,6 +36,8 @@ class ActivityLogDetailViewModelTest {
     @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
     private lateinit var viewModel: ActivityLogDetailViewModel
 
+    private val areButtonsVisible = true
+
     private val activityID = "id1"
     private val summary = "Jetpack"
     private val text = "Blog post 123 created"
@@ -86,14 +88,14 @@ class ActivityLogDetailViewModelTest {
 
     @Test
     fun `given buttons are not visible, when view model starts, then restore button is not shown`() {
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, false)
 
         assertEquals(false, restoreVisible)
     }
 
     @Test
     fun `given buttons are visible, when view model starts, then restore button is shown`() {
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, true)
 
         assertEquals(true, restoreVisible)
     }
@@ -102,7 +104,7 @@ class ActivityLogDetailViewModelTest {
     fun emitsUIModelOnStart() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -121,7 +123,7 @@ class ActivityLogDetailViewModelTest {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -141,7 +143,7 @@ class ActivityLogDetailViewModelTest {
         )
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(updatedActivity))
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -154,11 +156,11 @@ class ActivityLogDetailViewModelTest {
     fun doesNotReemitUIModelOnStartWithTheSameActivityID() {
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel))
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         assertNull(lastEmittedItem)
     }
@@ -171,11 +173,11 @@ class ActivityLogDetailViewModelTest {
         val secondActivity = activityLogModel.copy(activityID = activityID2, content = updatedContent)
         whenever(activityLogStore.getActivityLogForSite(site)).thenReturn(listOf(activityLogModel, secondActivity))
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         lastEmittedItem = null
 
-        viewModel.start(site, activityID2)
+        viewModel.start(site, activityID2, areButtonsVisible)
 
         assertNotNull(lastEmittedItem)
         lastEmittedItem?.let {
@@ -190,7 +192,7 @@ class ActivityLogDetailViewModelTest {
 
         lastEmittedItem = mock()
 
-        viewModel.start(site, activityID)
+        viewModel.start(site, activityID, areButtonsVisible)
 
         assertNull(lastEmittedItem)
     }
