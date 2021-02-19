@@ -15,7 +15,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.action.ActivityLogAction.FETCH_REWIND_STATE
 import org.wordpress.android.fluxc.action.ActivityLogAction.REWIND
 import org.wordpress.android.fluxc.model.SiteModel
@@ -37,6 +36,7 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.RewindPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.RewindStatusErrorType.INVALID_RESPONSE
 import org.wordpress.android.fluxc.tools.FormattableContent
+import org.wordpress.android.testScope
 import org.wordpress.android.ui.jetpack.rewind.RewindStatusService.RewindProgress
 import java.util.Date
 
@@ -98,7 +98,7 @@ class RewindStatusServiceTest {
         rewindStatusService = RewindStatusService(
                 activityLogStore,
                 rewindProgressChecker,
-                TEST_SCOPE
+                testScope()
         )
         rewindAvailable = null
         rewindStatusService.rewindAvailable.observeForever { rewindAvailable = it }

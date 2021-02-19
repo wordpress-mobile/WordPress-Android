@@ -3,9 +3,11 @@ package org.wordpress.android.ui.mysite.dynamiccards
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import org.wordpress.android.fluxc.model.DynamicCardType
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Hide
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Pin
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Remove
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel.DynamicCardMenuInteraction.Unpin
 import org.wordpress.android.viewmodel.Event
 import javax.inject.Inject
 
@@ -18,7 +20,11 @@ class DynamicCardMenuViewModel
     var isPinned: Boolean = false
 
     fun onPinActionClicked() {
-        _onInteraction.postValue(Event(Pin(cardType)))
+        if (isPinned) {
+            _onInteraction.postValue(Event(Unpin(cardType)))
+        } else {
+            _onInteraction.postValue(Event(Pin(cardType)))
+        }
     }
 
     fun onHideActionClicked() {
@@ -36,6 +42,7 @@ class DynamicCardMenuViewModel
 
     sealed class DynamicCardMenuInteraction(open val cardType: DynamicCardType) {
         data class Pin(override val cardType: DynamicCardType) : DynamicCardMenuInteraction(cardType)
+        data class Unpin(override val cardType: DynamicCardType) : DynamicCardMenuInteraction(cardType)
         data class Hide(override val cardType: DynamicCardType) : DynamicCardMenuInteraction(cardType)
         data class Remove(override val cardType: DynamicCardType) : DynamicCardMenuInteraction(cardType)
     }

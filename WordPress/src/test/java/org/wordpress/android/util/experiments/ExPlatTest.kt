@@ -12,7 +12,6 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
-import org.wordpress.android.TEST_SCOPE
 import org.wordpress.android.fluxc.model.experiments.Assignments
 import org.wordpress.android.fluxc.model.experiments.Variation
 import org.wordpress.android.fluxc.model.experiments.Variation.Control
@@ -21,6 +20,7 @@ import org.wordpress.android.fluxc.store.ExperimentStore
 import org.wordpress.android.fluxc.store.ExperimentStore.OnAssignmentsFetched
 import org.wordpress.android.fluxc.utils.AppLogWrapper
 import org.wordpress.android.test
+import org.wordpress.android.testScope
 import java.util.Date
 
 @RunWith(MockitoJUnitRunner::class)
@@ -32,7 +32,7 @@ class ExPlatTest : BaseUnitTest() {
 
     @Before
     fun setUp() {
-        exPlat = ExPlat(experimentStore, appLog, TEST_SCOPE)
+        exPlat = ExPlat(experimentStore, appLog, testScope())
         dummyExperiment = object : Experiment("dummy", exPlat) {}
     }
 

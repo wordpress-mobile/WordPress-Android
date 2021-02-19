@@ -9,7 +9,11 @@ import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
+import org.wordpress.android.fluxc.model.DynamicCardType
+import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
+import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
@@ -23,11 +27,7 @@ import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
@@ -37,6 +37,7 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -57,7 +58,7 @@ class QuickStartRepository
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
-    private val appPrefsWrapper: AppPrefsWrapper,
+    private val dynamicCardStore: DynamicCardStore,
     private val htmlCompat: HtmlCompatWrapper
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
@@ -66,7 +67,7 @@ class QuickStartRepository
 
     private val detailsMap: Map<QuickStartTask, QuickStartTaskDetails> = QuickStartTaskDetails.values()
             .associateBy { it.task }
-    private val quickStartTaskTypes = MutableLiveData<Set<QuickStartTaskType>>()
+    private val refresh = MutableLiveData<Boolean>()
     private val _activeTask = MutableLiveData<QuickStartTask?>()
     private val _onSnackbar = MutableLiveData<Event<SnackbarMessageHolder>>()
     private val _onQuickStartMySitePrompts = MutableLiveData<Event<QuickStartMySitePrompts>>()
@@ -76,12 +77,6 @@ class QuickStartRepository
 
     private var pendingTask: QuickStartTask? = null
     private var pendingCategoryCompletion: QuickStartTaskType? = null
-
-    init {
-        quickStartTaskTypes.value = setOf(CUSTOMIZE, GROW)
-                .filter { !appPrefsWrapper.isQuickStartTaskTypeRemoved(it) }
-                .toSet()
-    }
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -97,6 +92,9 @@ class QuickStartRepository
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
             quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
             refresh()
+        }
+        val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
+            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }
         }
         return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
             val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
@@ -116,7 +114,7 @@ class QuickStartRepository
     }
 
     fun refresh() {
-        quickStartTaskTypes.postValue(quickStartTaskTypes.value)
+        refresh.postValue(true)
         showCategoryCompletionMessageIfNeeded()
     }
 
@@ -182,30 +180,6 @@ class QuickStartRepository
         job.cancel()
     }
 
-    fun hideCategory(dynamicCardType: DynamicCardType) {
-        val hiddenCategory = dynamicCardType.toQuickStartTaskType()
-        hideQuickStartType(hiddenCategory)
-    }
-
-    fun removeCategory(dynamicCardType: DynamicCardType) {
-        val removedQuickStartTaskType = dynamicCardType.toQuickStartTaskType()
-        appPrefsWrapper.removeQuickStartTaskType(removedQuickStartTaskType)
-        hideQuickStartType(removedQuickStartTaskType)
-    }
-
-    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
-        return when (this) {
-            CUSTOMIZE_QUICK_START -> CUSTOMIZE
-            GROW_QUICK_START -> GROW
-        }
-    }
-
-    private fun hideQuickStartType(hiddenCategory: QuickStartTaskType) {
-        val currentCategories = (quickStartTaskTypes.value ?: setOf()).toMutableSet()
-        currentCategories.remove(hiddenCategory)
-        quickStartTaskTypes.value = currentCategories
-    }
-
     private fun showCategoryCompletionMessageIfNeeded() = pendingCategoryCompletion?.let { taskType ->
         pendingCategoryCompletion = null
         val completionMessage = getCategoryCompletionMessage(taskType)
@@ -219,6 +193,13 @@ class QuickStartRepository
     }.let { resourceProvider.getString(it) }
 
     private fun String.asHtml() = htmlCompat.fromHtml(this)
+
+    private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
+        return when (this) {
+            CUSTOMIZE_QUICK_START -> CUSTOMIZE
+            GROW_QUICK_START -> GROW
+        }
+    }
 
     data class QuickStartCategory(
         val taskType: QuickStartTaskType,

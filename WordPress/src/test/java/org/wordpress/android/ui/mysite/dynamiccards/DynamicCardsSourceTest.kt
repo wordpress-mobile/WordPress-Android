@@ -1,105 +1,104 @@
 package org.wordpress.android.ui.mysite.dynamiccards
 
-import com.nhaarman.mockitokotlin2.inOrder
 import com.nhaarman.mockitokotlin2.verify
+import com.nhaarman.mockitokotlin2.verifyZeroInteractions
 import com.nhaarman.mockitokotlin2.whenever
 import org.assertj.core.api.Java6Assertions.assertThat
 import org.junit.Before
 import org.junit.Test
 import org.mockito.Mock
 import org.wordpress.android.BaseUnitTest
+import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardsModel
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.test
-import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCards
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.testScope
+import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.DynamicCardsUpdate
+import org.wordpress.android.ui.mysite.SelectedSiteRepository
 
 class DynamicCardsSourceTest : BaseUnitTest() {
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Mock lateinit var dynamicCardStore: DynamicCardStore
+    @Mock lateinit var selectedSiteRepository: SelectedSiteRepository
+    @Mock lateinit var siteModel: SiteModel
     private lateinit var dynamicCardsSource: DynamicCardsSource
+    private val siteId: Int = 1
 
     @Before
     fun setUp() {
-        whenever(appPrefsWrapper.getPinnedDynamicCardType()).thenReturn(null)
-        dynamicCardsSource = DynamicCardsSource(appPrefsWrapper)
+        dynamicCardsSource = DynamicCardsSource(dynamicCardStore, selectedSiteRepository)
+        whenever(siteModel.id).thenReturn(siteId)
     }
 
     @Test
-    fun `build all dynamic card types in original order`() = test {
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
-
-        assertThat(result?.cards).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-    }
-
-    @Test
-    fun `hides customize card`() = test {
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
-        dynamicCardsSource.hideItem(CUSTOMIZE_QUICK_START)
-
-        assertThat(result?.cards).containsExactly(GROW_QUICK_START)
-    }
-
-    @Test
-    fun `hides grow card`() = test {
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
-        dynamicCardsSource.hideItem(GROW_QUICK_START)
-
-        assertThat(result?.cards).containsExactly(CUSTOMIZE_QUICK_START)
-    }
-
-    @Test
-    fun `hides both cards`() = test {
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
-        dynamicCardsSource.hideItem(GROW_QUICK_START)
-        dynamicCardsSource.hideItem(CUSTOMIZE_QUICK_START)
-
-        assertThat(result?.cards).isEmpty()
-    }
-
-    @Test
-    fun `pin grow card reorders cards`() = test {
+    fun `returns cards from the store`() = test {
         val pinnedItem = GROW_QUICK_START
-        whenever(appPrefsWrapper.getPinnedDynamicCardType()).thenReturn(null)
+        val dynamicCardTypes = listOf(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
+        whenever(dynamicCardStore.getCards(siteId)).thenReturn(
+                DynamicCardsModel(
+                        pinnedItem,
+                        dynamicCardTypes
+                )
+        )
+        var result: DynamicCardsUpdate? = null
+        dynamicCardsSource.buildSource(testScope(), siteId).observeForever { result = it }
 
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
-
-        dynamicCardsSource.pinItem(pinnedItem)
-
-        assertThat(result?.cards).containsExactly(GROW_QUICK_START, CUSTOMIZE_QUICK_START)
-        verify(appPrefsWrapper).pinDynamicCardType(pinnedItem)
+        assertThat(result?.pinnedDynamicCard).isEqualTo(pinnedItem)
+        assertThat(result?.cards).isEqualTo(dynamicCardTypes)
     }
 
     @Test
-    fun `repin originally first card`() = test {
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
+    fun `hides card when site is present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
 
-        dynamicCardsSource.pinItem(GROW_QUICK_START)
+        dynamicCardsSource.hideItem(CUSTOMIZE_QUICK_START)
+
+        verify(dynamicCardStore).hideCard(siteId, CUSTOMIZE_QUICK_START)
+    }
+
+    @Test
+    fun `does not hide card when site not present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        dynamicCardsSource.hideItem(GROW_QUICK_START)
+
+        verifyZeroInteractions(dynamicCardStore)
+    }
+
+    @Test
+    fun `pins card when site is present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+
         dynamicCardsSource.pinItem(CUSTOMIZE_QUICK_START)
 
-        assertThat(result?.cards).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-        inOrder(appPrefsWrapper).apply {
-            verify(appPrefsWrapper).pinDynamicCardType(GROW_QUICK_START)
-            verify(appPrefsWrapper).pinDynamicCardType(CUSTOMIZE_QUICK_START)
-        }
+        verify(dynamicCardStore).pinCard(siteId, CUSTOMIZE_QUICK_START)
     }
 
     @Test
-    fun `unpins card when already pinned`() = test {
-        whenever(appPrefsWrapper.getPinnedDynamicCardType()).thenReturn(GROW_QUICK_START)
-        val unpinnedItem = GROW_QUICK_START
+    fun `does not pin card when site not present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
 
-        var result: DynamicCards? = null
-        dynamicCardsSource.buildSource(this).observeForever { result = it }
+        dynamicCardsSource.pinItem(GROW_QUICK_START)
 
-        dynamicCardsSource.pinItem(unpinnedItem)
+        verifyZeroInteractions(dynamicCardStore)
+    }
 
-        assertThat(result?.cards).containsExactly(CUSTOMIZE_QUICK_START, GROW_QUICK_START)
-        verify(appPrefsWrapper).unpinDynamicCardType()
+    @Test
+    fun `unpins when site is present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(siteModel)
+
+        dynamicCardsSource.unpinItem()
+
+        verify(dynamicCardStore).unpinCard(siteId)
+    }
+
+    @Test
+    fun `does not unpin when site not present`() = test {
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(null)
+
+        dynamicCardsSource.unpinItem()
+
+        verifyZeroInteractions(dynamicCardStore)
     }
 }
