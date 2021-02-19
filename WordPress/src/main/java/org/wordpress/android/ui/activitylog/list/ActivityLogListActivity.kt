@@ -9,6 +9,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWIND_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
@@ -67,10 +68,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         super.onActivityResult(requestCode, resultCode, data)
         when (requestCode) {
             RequestCodes.ACTIVITY_LOG_DETAIL -> {
-                if (restoreFeatureConfig.isEnabled()) {
-                    onActivityResultForRestore(data)
-                } else {
-                    onActivityResultForActivityLogDetails(data)
+                when (data?.getStringExtra(ActivityLogDetailActivity.EXTRA_INNER_FLOW)) {
+                    ActivityLogDetailActivity.EXTRA_RESTORE_FLOW -> onActivityResultForRestore(data)
+                    ActivityLogDetailActivity.EXTRA_BACKUP_DOWNLOAD_FLOW -> onActivityResultForBackupDownload(data)
+                    else -> onActivityResultForActivityLogDetails(data)
                 }
             }
             RequestCodes.RESTORE -> onActivityResultForRestore(data)
