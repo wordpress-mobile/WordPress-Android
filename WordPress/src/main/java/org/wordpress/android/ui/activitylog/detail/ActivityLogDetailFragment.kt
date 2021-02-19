@@ -15,6 +15,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -110,21 +113,21 @@ class ActivityLogDetailFragment : Fragment() {
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
                     when (this) {
-                        is ActivityLogDetailNavigationEvents.ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                                 requireActivity(),
                                 viewModel.site,
                                 model.activityID,
                                 RequestCodes.BACKUP_DOWNLOAD,
                                 buildTrackingSource()
                         )
-                        is ActivityLogDetailNavigationEvents.ShowRestore -> ActivityLauncher.showRestoreForResult(
+                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
                                 requireActivity(),
                                 viewModel.site,
                                 model.activityID,
                                 RequestCodes.RESTORE,
                                 buildTrackingSource()
                         )
-                        is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(
+                        is ShowRewindDialog -> onRewindButtonClicked(
                                 model
                         )
                     }
