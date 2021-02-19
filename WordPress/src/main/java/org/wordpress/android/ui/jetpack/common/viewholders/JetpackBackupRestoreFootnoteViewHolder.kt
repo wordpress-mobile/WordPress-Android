@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
+import android.view.View
 import android.view.ViewGroup
 import kotlinx.android.synthetic.main.jetpack_backup_restore_list_footnote_item.*
 import org.wordpress.android.R
@@ -14,5 +15,6 @@ class JetpackBackupRestoreFootnoteViewHolder(
     override fun onBind(itemUiState: JetpackListItemState) {
         val state = itemUiState as FootnoteState
         footnote.text = uiHelpers.getTextOfUiString(itemView.context, state.text)
+        footnote.visibility = if (state.isVisible) View.VISIBLE else View.GONE
     }
 }
