@@ -194,6 +194,13 @@ public class CommentStore extends Store {
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
      */
     @SuppressLint("WrongConstant")
+    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit, int offset,
+                                                 CommentStatus... statuses) {
+        @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
+        return CommentSqlUtils.getCommentsForSite(site, order, limit, offset, statuses);
+    }
+
+    @SuppressLint("WrongConstant")
     public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
                                                  CommentStatus... statuses) {
         @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
@@ -418,7 +425,7 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             // Clear existing comments in case some were deleted on the server. Only remove them if we request the
             // first comments (offset == 0).
-            if (payload.offset == 0) {
+            if (payload.offset == 0 && payload.requestedStatus == CommentStatus.ALL) {
                 CommentSqlUtils.removeCommentsWithFilters(payload.site, payload.requestedStatus);
             }
 
