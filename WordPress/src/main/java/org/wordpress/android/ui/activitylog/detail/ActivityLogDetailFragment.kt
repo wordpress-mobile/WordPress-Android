@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.activitylog.detail
 
 import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -55,24 +56,7 @@ class ActivityLogDetailFragment : Fragment() {
             viewModel = ViewModelProvider(activity, viewModelFactory)
                     .get(ActivityLogDetailViewModel::class.java)
 
-            val intent = activity.intent
-            val (site, activityLogId) = when {
-                savedInstanceState != null -> {
-                    val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-                    val activityLogId = requireNotNull(
-                            savedInstanceState.getString(
-                                    ACTIVITY_LOG_ID_KEY
-                            )
-                    )
-                    site to activityLogId
-                }
-                intent != null -> {
-                    val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-                    val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
-                    site to activityLogId
-                }
-                else -> throw Throwable("Couldn't initialize Activity Log view model")
-            }
+            val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
 
             viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
@@ -155,6 +139,24 @@ class ActivityLogDetailFragment : Fragment() {
 
             viewModel.start(site, activityLogId, false)
         }
+    }
+
+    private fun sideAndActivityId(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null -> {
+            val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            val activityLogId = requireNotNull(
+                    savedInstanceState.getString(
+                            ACTIVITY_LOG_ID_KEY
+                    )
+            )
+            site to activityLogId
+        }
+        intent != null -> {
+            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
+            site to activityLogId
+        }
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
     override fun onCreateView(
