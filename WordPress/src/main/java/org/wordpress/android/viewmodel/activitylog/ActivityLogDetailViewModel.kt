@@ -1,9 +1,7 @@
 package org.wordpress.android.viewmodel.activitylog
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.SiteModel
@@ -12,7 +10,6 @@ import org.wordpress.android.fluxc.store.ActivityLogStore
 import org.wordpress.android.fluxc.tools.FormattableRange
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailModel
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents
-import org.wordpress.android.ui.jetpack.rewind.RewindStatusService
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.ACTIVITY_LOG
 import org.wordpress.android.util.config.RestoreFeatureConfig
@@ -29,7 +26,6 @@ class ActivityLogDetailViewModel
 @Inject constructor(
     val dispatcher: Dispatcher,
     private val activityLogStore: ActivityLogStore,
-    private val rewindStatusService: RewindStatusService,
     private val restoreFeatureConfig: RestoreFeatureConfig
 ) : ViewModel() {
     lateinit var site: SiteModel
@@ -46,21 +42,6 @@ class ActivityLogDetailViewModel
     private val _item = MutableLiveData<ActivityLogDetailModel>()
     val activityLogItem: LiveData<ActivityLogDetailModel>
         get() = _item
-
-    private val mediatorRewindAvailable = MediatorLiveData<Boolean>()
-
-    val rewindAvailable: LiveData<Boolean>
-        get() = mediatorRewindAvailable
-
-    init {
-        val itemRewindAvailable = Transformations.map(_item) { it?.isRewindButtonVisible ?: false }
-        mediatorRewindAvailable.addSource(itemRewindAvailable) {
-            mediatorRewindAvailable.value = it == true && mediatorRewindAvailable.value != false
-        }
-        mediatorRewindAvailable.addSource(rewindStatusService.rewindAvailable) {
-            mediatorRewindAvailable.value = it == true && mediatorRewindAvailable.value != false
-        }
-    }
 
     fun start(site: SiteModel, activityLogId: String) {
         this.site = site
@@ -86,11 +67,6 @@ class ActivityLogDetailViewModel
                         )
                     }
         }
-        rewindStatusService.start(site)
-    }
-
-    fun stop() {
-        rewindStatusService.stop()
     }
 
     fun onRangeClicked(range: FormattableRange) {

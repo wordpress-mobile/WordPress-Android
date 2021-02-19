@@ -113,10 +113,6 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.rewindAvailable.observe(viewLifecycleOwner, { available ->
-                activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
-            })
-
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
                     when (this) {
