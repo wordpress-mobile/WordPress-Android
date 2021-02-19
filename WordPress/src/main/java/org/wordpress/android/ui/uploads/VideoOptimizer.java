@@ -97,7 +97,10 @@ public class VideoOptimizer implements org.m4m.IProgressListener {
                     AppPrefs.getVideoOptimizeWidth(),
                     AppPrefs.getVideoOptimizeQuality());
         } catch (NullPointerException npe) {
-            AppLog.w(AppLog.T.MEDIA, "VideoOptimizer > NullPointerException while getting composer " + npe.getMessage());
+            AppLog.w(
+                    AppLog.T.MEDIA,
+                    "VideoOptimizer > NullPointerException while getting composer " + npe.getMessage()
+            );
             wasNpeDetected = true;
         }
 
