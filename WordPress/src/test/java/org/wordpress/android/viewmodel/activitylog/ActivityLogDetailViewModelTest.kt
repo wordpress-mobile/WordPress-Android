@@ -271,4 +271,26 @@ class ActivityLogDetailViewModelTest {
             assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowRestore).model)
         }
     }
+
+    @Test
+    fun `given without rewind id, when on download backup clicked, then do nothing`() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn(null)
+
+        viewModel.onDownloadBackupClicked(model)
+
+        assertTrue(navigationEvents.isEmpty())
+    }
+
+    @Test
+    fun `given with rewind id, when on download backup clicked, then show backup download with model`() {
+        val model = mock<ActivityLogDetailModel>()
+        whenever(model.rewindId).thenReturn("123")
+
+        viewModel.onDownloadBackupClicked(model)
+
+        navigationEvents.last().peekContent()?.let {
+            assertEquals(model, (it as ActivityLogDetailNavigationEvents.ShowBackupDownload).model)
+        }
+    }
 }

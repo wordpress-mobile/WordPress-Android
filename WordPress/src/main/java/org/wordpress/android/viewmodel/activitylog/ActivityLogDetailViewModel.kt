@@ -99,6 +99,10 @@ class ActivityLogDetailViewModel
         }
     }
 
+    fun onDownloadBackupClicked(model: ActivityLogDetailModel) {
+        // TODO: Implement logic.
+    }
+
     private fun ActivityActor.showJetpackIcon(): Boolean {
         return displayName == "Jetpack" && type == "Application" ||
                 displayName == "Happiness Engineer" && type == "Happiness Engineer"
