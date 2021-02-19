@@ -36,7 +36,7 @@ class JetpackBackupRestoreFootnoteViewHolder(
 
         state.iconRes?.let {
             imageManager.load(icon, it)
-            icon.visibility = View.VISIBLE
+            icon.visibility = if (state.isVisible) View.VISIBLE else View.GONE
         }
     }
 }
