@@ -40,4 +40,10 @@ class AnalyticsUtilsWrapper @Inject constructor(private val appContext: Context)
         post: ReaderPost?,
         properties: Map<String, Any?>?
     ) = AnalyticsUtils.trackFollowCommentsWithReaderPostDetails(stat, blogId, postId, post, properties)
+
+    fun trackInviteLinksAction(
+        stat: AnalyticsTracker.Stat,
+        site: SiteModel?,
+        properties: Map<String, Any?>?
+    ) = AnalyticsUtils.trackInviteLinksAction(stat, site, properties)
 }

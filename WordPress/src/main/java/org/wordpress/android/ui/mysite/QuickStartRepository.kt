@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.mysite
 
-import androidx.core.text.HtmlCompat
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
@@ -23,6 +22,7 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.CUSTOMIZE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
 import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.modules.BG_THREAD
@@ -33,6 +33,7 @@ import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -57,7 +58,8 @@ class QuickStartRepository
     private val analyticsTrackerWrapper: AnalyticsTrackerWrapper,
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
-    private val dynamicCardStore: DynamicCardStore
+    private val dynamicCardStore: DynamicCardStore,
+    private val htmlCompat: HtmlCompatWrapper
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -74,6 +76,7 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     private var pendingTask: QuickStartTask? = null
+    private var pendingCategoryCompletion: QuickStartTaskType? = null
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -112,19 +115,18 @@ class QuickStartRepository
 
     fun refresh() {
         refresh.postValue(true)
+        showCategoryCompletionMessageIfNeeded()
     }
 
     fun setActiveTask(task: QuickStartTask) {
         _activeTask.postValue(task)
         pendingTask = null
         if (task == UPDATE_SITE_TITLE) {
-            val shortQuickStartMessage = HtmlCompat.fromHtml(
-                    resourceProvider.getString(
-                            R.string.quick_start_dialog_update_site_title_message_short,
-                            SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
-                    ), HtmlCompat.FROM_HTML_MODE_COMPACT
+            val shortQuickStartMessage = resourceProvider.getString(
+                    R.string.quick_start_dialog_update_site_title_message_short,
+                    SiteUtils.getSiteNameOrHomeURL(selectedSiteRepository.getSelectedSite())
             )
-            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage))))
+            _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(shortQuickStartMessage.asHtml()))))
         } else {
             QuickStartMySitePrompts.getPromptDetailsForTask(task)?.let { activeTutorialPrompt ->
                 _onQuickStartMySitePrompts.postValue(Event(activeTutorialPrompt))
@@ -136,7 +138,7 @@ class QuickStartRepository
         _activeTask.value = null
     }
 
-    fun completeTask(task: QuickStartTask) {
+    @JvmOverloads fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
             // TODO Remove this before the feature is done
             // Uncomment this code to mark a task as not completed for testing purposes
@@ -152,7 +154,13 @@ class QuickStartRepository
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
             analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
-            refresh()
+            if (quickStartUtils.isEveryQuickStartTaskDoneForType(site.id, task.taskType)) {
+                pendingCategoryCompletion = task.taskType
+            }
+            // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
+            if (refreshImmediately) {
+                refresh()
+            }
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
                 analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
@@ -171,6 +179,20 @@ class QuickStartRepository
     fun clear() {
         job.cancel()
     }
+
+    private fun showCategoryCompletionMessageIfNeeded() = pendingCategoryCompletion?.let { taskType ->
+        pendingCategoryCompletion = null
+        val completionMessage = getCategoryCompletionMessage(taskType)
+        _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
+    }
+
+    private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
+        CUSTOMIZE -> R.string.quick_start_completed_type_customize_message
+        GROW -> R.string.quick_start_completed_type_grow_message
+        UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
+    }.let { resourceProvider.getString(it) }
+
+    private fun String.asHtml() = htmlCompat.fromHtml(this)
 
     private fun DynamicCardType.toQuickStartTaskType(): QuickStartTaskType {
         return when (this) {

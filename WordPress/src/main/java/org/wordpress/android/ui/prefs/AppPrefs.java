@@ -28,7 +28,6 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -160,7 +159,6 @@ public class AppPrefs {
         READER_DISCOVER_WELCOME_BANNER_SHOWN,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
-        SITE_JETPACK_CAPABILITIES_LAST_UPDATED,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD
     }
@@ -1278,10 +1276,6 @@ public class AppPrefs {
         }
 
         Editor editor = prefs().edit();
-        editor.putLong(
-                DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId),
-                new Date().getTime()
-        );
         editor.putStringSet(
                 DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
                 capabilitiesSet
@@ -1299,10 +1293,5 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
-    }
-
-    public static long getSiteJetpackCapabilitiesLastUpdated(long remoteSiteId) {
-        return prefs()
-                .getLong(DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId), 0);
     }
 }

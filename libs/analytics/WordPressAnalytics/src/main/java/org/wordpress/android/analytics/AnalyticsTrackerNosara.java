@@ -2010,16 +2010,12 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "jetpack_restore_confirmed";
             case JETPACK_RESTORE_ERROR:
                 return "jetpack_restore_error";
-            case JETPACK_RESTORE_NOTIFY_ME_BUTTON_TAPPED:
-                return "jetpack_restore_notify_me_button_tapped";
             case JETPACK_BACKUP_DOWNLOAD_OPENED:
                 return "jetpack_backup_download_opened";
             case JETPACK_BACKUP_DOWNLOAD_CONFIRMED:
                 return "jetpack_backup_download_confirmed";
             case JETPACK_BACKUP_DOWNLOAD_ERROR:
                 return "jetpack_backup_download_error";
-            case JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED:
-                return "jetpack_backup_download_notify_me_button_tapped";
             case JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED:
                 return "jetpack_backup_download_file_download_tapped";
             case JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED:
@@ -2032,6 +2028,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "post_list_create_sheet_shown";
             case POST_LIST_CREATE_SHEET_ACTION_TAPPED:
                 return "post_list_create_sheet_action_tapped";
+            case INVITE_LINKS_GET_STATUS:
+                return "invite_links_get_status";
+            case INVITE_LINKS_GENERATE:
+                return "invite_links_generate";
+            case INVITE_LINKS_DISABLE:
+                return "invite_links_disable";
+            case INVITE_LINKS_SHARE:
+                return "invite_links_share";
         }
         return null;
     }

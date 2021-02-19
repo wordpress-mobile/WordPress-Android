@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.mysite
 
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.reset
 import com.nhaarman.mockitokotlin2.verify
@@ -31,14 +32,15 @@ import org.wordpress.android.test
 import org.wordpress.android.testScope
 import org.wordpress.android.ui.mysite.MySiteUiState.PartialState.QuickStartUpdate
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
-import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartMySitePrompts
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.CREATE_SITE_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.SHARE_SITE_TUTORIAL
+import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
@@ -51,8 +53,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     @Mock lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var eventBus: EventBusWrapper
-    @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var dynamicCardStore: DynamicCardStore
+    @Mock lateinit var htmlCompat: HtmlCompatWrapper
     private lateinit var site: SiteModel
     private lateinit var quickStartRepository: QuickStartRepository
     private lateinit var snackbars: MutableList<SnackbarMessageHolder>
@@ -72,7 +74,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
                 analyticsTrackerWrapper,
                 dispatcher,
                 eventBus,
-                dynamicCardStore
+                dynamicCardStore,
+                htmlCompat
         )
         snackbars = mutableListOf()
         quickStartPrompts = mutableListOf()
@@ -96,6 +99,40 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.refresh()
 
         assertModel()
+    }
+
+    @Test
+    fun `refresh shows completion message if all tasks of a same type have been completed`() = test {
+        initStore()
+
+        val completionMessage = "All tasks completed!"
+
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(true)
+        whenever(resourceProvider.getString(any())).thenReturn(completionMessage)
+        whenever(htmlCompat.fromHtml(completionMessage)).thenReturn(completionMessage)
+
+        val task = PUBLISH_POST
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.completeTask(task)
+        quickStartRepository.refresh()
+
+        assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(completionMessage)))
+    }
+
+    @Test
+    fun `refresh does not show completion message if not all tasks of a same type have been completed`() = test {
+        initStore()
+
+        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
+        whenever(quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, GROW)).thenReturn(false)
+
+        val task = PUBLISH_POST
+        quickStartRepository.setActiveTask(task)
+        quickStartRepository.completeTask(task)
+        quickStartRepository.refresh()
+
+        assertThat(snackbars).isEmpty()
     }
 
     @Test
@@ -124,6 +161,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `completeTask marks current active task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
+        quickStartRepository.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)
@@ -140,6 +178,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     fun `completeTask marks current pending task as done and refreshes model`() = test {
         whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
+        quickStartRepository.refresh()
         val task = PUBLISH_POST
 
         quickStartRepository.setActiveTask(task)

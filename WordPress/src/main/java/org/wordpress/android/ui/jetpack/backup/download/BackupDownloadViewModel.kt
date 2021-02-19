@@ -18,7 +18,6 @@ import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_CONFIRMED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_ERROR
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_FILE_DOWNLOAD_TAPPED
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.JETPACK_BACKUP_DOWNLOAD_SHARE_LINK_TAPPED
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
@@ -201,8 +200,7 @@ class BackupDownloadViewModel @Inject constructor(
         _uiState.value = ProgressState(
                 items = stateListItemBuilder.buildProgressListStateItems(
                         progress = progressStart,
-                        published = backupDownloadState.published as Date,
-                        onNotifyMeClick = this@BackupDownloadViewModel::onNotifyMeClick
+                        published = backupDownloadState.published as Date
                 ),
                 type = StateType.PROGRESS
         )
@@ -389,16 +387,6 @@ class BackupDownloadViewModel @Inject constructor(
                 handleBackupDownloadRequestResult(result)
             }
         }
-    }
-
-    private fun onNotifyMeClick() {
-        AnalyticsTracker.track(JETPACK_BACKUP_DOWNLOAD_NOTIFY_ME_BUTTON_TAPPED)
-        _wizardFinishedObservable.value = Event(
-                BackupDownloadInProgress(
-                        backupDownloadState.rewindId as String,
-                        backupDownloadState.downloadId as Long
-                )
-        )
     }
 
     private fun onDownloadFileClick() {
