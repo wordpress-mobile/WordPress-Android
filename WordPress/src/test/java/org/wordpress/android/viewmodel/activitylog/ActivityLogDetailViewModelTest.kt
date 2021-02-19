@@ -64,6 +64,7 @@ class ActivityLogDetailViewModelTest {
     )
 
     private var lastEmittedItem: ActivityLogDetailModel? = null
+    private var restoreVisible: Boolean = false
     private var navigationEvents: MutableList<Event<ActivityLogDetailNavigationEvents?>> = mutableListOf()
 
     @Before
@@ -74,12 +75,27 @@ class ActivityLogDetailViewModelTest {
                 restoreFeatureConfig
         )
         viewModel.activityLogItem.observeForever { lastEmittedItem = it }
+        viewModel.restoreVisible.observeForever { restoreVisible = it }
         viewModel.navigationEvents.observeForever { navigationEvents.add(it) }
     }
 
     @After
     fun tearDown() {
         lastEmittedItem = null
+    }
+
+    @Test
+    fun `given buttons are not visible, when view model starts, then restore button is not shown`() {
+        viewModel.start(site, activityID)
+
+        assertEquals(false, restoreVisible)
+    }
+
+    @Test
+    fun `given buttons are visible, when view model starts, then restore button is shown`() {
+        viewModel.start(site, activityID)
+
+        assertEquals(true, restoreVisible)
     }
 
     @Test
