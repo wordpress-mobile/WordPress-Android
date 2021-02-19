@@ -120,7 +120,7 @@ class QuickStartItemBuilder
             REVIEW_PAGES -> R.drawable.img_illustration_quick_start_task_review_site_pages
             EXPLORE_PLANS -> R.drawable.img_illustration_quick_start_task_explore_plans
             CREATE_SITE -> R.drawable.img_illustration_quick_start_task_create_site
-            QuickStartTask.UNKNOWN -> R.drawable.bg_quick_start_grow_task_illustration_placeholder
+            QuickStartTask.UNKNOWN -> R.drawable.img_illustration_quick_start_task_placeholder
         }
     }
 }
