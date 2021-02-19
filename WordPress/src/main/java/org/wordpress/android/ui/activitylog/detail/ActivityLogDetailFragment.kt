@@ -110,6 +110,9 @@ class ActivityLogDetailFragment : Fragment() {
                     activityRestoreButton.setOnClickListener {
                         viewModel.onRewindClicked(activityLogModel)
                     }
+                    activityDownloadBackupButton.setOnClickListener {
+                        viewModel.onDownloadBackupClicked(activityLogModel)
+                    }
                 }
             })
 
@@ -123,6 +126,13 @@ class ActivityLogDetailFragment : Fragment() {
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
                     when (this) {
+                        is ActivityLogDetailNavigationEvents.ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                                requireActivity(),
+                                viewModel.site,
+                                model.activityID,
+                                RequestCodes.BACKUP_DOWNLOAD,
+                                buildTrackingSource()
+                        )
                         is ActivityLogDetailNavigationEvents.ShowRestore -> ActivityLauncher.showRestoreForResult(
                                 requireActivity(),
                                 viewModel.site,

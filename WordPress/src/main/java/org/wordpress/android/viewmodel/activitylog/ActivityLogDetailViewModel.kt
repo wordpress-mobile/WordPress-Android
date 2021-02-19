@@ -100,7 +100,11 @@ class ActivityLogDetailViewModel
     }
 
     fun onDownloadBackupClicked(model: ActivityLogDetailModel) {
-        // TODO: Implement logic.
+        if (model.rewindId != null) {
+            _navigationEvents.value = Event(ActivityLogDetailNavigationEvents.ShowBackupDownload(model))
+        } else {
+            AppLog.e(ACTIVITY_LOG, "Trying to download backup activity without rewind ID")
+        }
     }
 
     private fun ActivityActor.showJetpackIcon(): Boolean {
