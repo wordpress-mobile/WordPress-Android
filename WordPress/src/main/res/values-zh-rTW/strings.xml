@@ -1,11 +1,83 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:58:22+0000
+Translation-Revision-Date: 2021-02-19 10:54:07+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_TW
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">取消釘選</string>
+    <string name="quick_start_list_review_pages_subtitle">檢查你的頁面並進行變更，或新增/移除頁面。</string>
+    <string name="quick_start_list_view_site_title">造訪你的網站</string>
+    <string name="quick_start_list_upload_icon_subtitle">新增網站圖示，讓網站看起來更專業幹練。</string>
+    <string name="quick_start_list_follow_site_subtitle">探索並追蹤帶給你啟發的網站。</string>
+    <string name="quick_start_list_enable_sharing_title">啟用分享功能</string>
+    <string name="quick_start_list_enable_sharing_subtitle">自動將新文章分享到社群媒體。</string>
+    <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。</string>
+    <string name="quick_start_list_check_stats_title">檢視統計資料</string>
+    <string name="backup_download_status_failure_bullet2">我們仍會嘗試為你建立可下載的備份檔案。</string>
+    <string name="backup_download_status_failure_bullet1">我們擷取不到狀態，無法判斷需要花多久時間建立可下載的備份。</string>
+    <string name="backup_download_status_failure_heading">看來，我們擷取不到可下載備份的狀態</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">核取記號圖示</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">時鐘圖示</string>
+    <string name="restore_status_failure_bullet3">我們會在完成時通知你。</string>
+    <string name="restore_status_failure_bullet2">我們仍在嘗試還原你的網站。</string>
+    <string name="restore_status_failure_bullet1">我們擷取不到狀態，無法判斷還原程序需要花多久時間。</string>
+    <string name="restore_status_failure_heading">看來，我們擷取不到你的還原狀態</string>
+    <string name="restore_complete_failed_description">我們無法還原你的網站</string>
+    <string name="restore_warning_action_button">確認</string>
+    <string name="restore_warning_description_with_two_parameters">你確定要將網站還原到 %2$s 的 %1$s 嗎？\n        你在那之後所做的任何變更都會遺失。</string>
+    <string name="backup_download_complete_failed_description">我們無法建立你的備份</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(排除佈景主題、外掛程式和上傳內容)</string>
+    <string name="backup_item_contents">WP 內容目錄</string>
+    <string name="backup_item_roots">WordPress 根目錄</string>
+    <string name="backup_download_progress_action_button_content_description">「完成時通知我」按鈕</string>
+    <string name="backup_download_progress_action_button">完成時通知我！</string>
+    <string name="backup_download_details_choose_items_header">包含在這次下載中的項目</string>
+    <string name="gutenberg_native_uploading">上傳中…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重複使用區塊無法在 iOS 版 WordPress 中編輯</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">可重複使用區塊無法在 Android 版 WordPress 中編輯</string>
+    <string name="gutenberg_native_replace_file">取代檔案</string>
+    <string name="gutenberg_native_replace_audio">替換音訊</string>
+    <string name="gutenberg_native_problem_opening_the_audio">開啟音訊時發生問題</string>
+    <string name="gutenberg_native_open">開啟</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">沒有應用程式可以處理這項要求。</string>
+    <string name="gutenberg_native_lock_icon">鎖定圖示</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">無法插入音訊檔案。 請點選以顯示選項。</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">按兩下以選擇音訊檔案</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">按兩下以聆聽音訊檔案</string>
+    <string name="gutenberg_native_choose_audio">選擇音樂</string>
+    <string name="gutenberg_native_audio_player">音樂播放器</string>
+    <string name="gutenberg_native_audio_file">音訊檔案</string>
+    <string name="gutenberg_native_audio_caption_s">音訊字幕。 %s</string>
+    <string name="gutenberg_native_audio_caption_empty">音訊字幕。 清空</string>
+    <string name="gutenberg_native_add_audio">新增音訊</string>
+    <string name="continue_with_wpcom">登入或註冊 WordPress.com</string>
+    <string name="photo_picker_use_audio">使用這個音訊</string>
+    <string name="photo_picker_choose_audio">從裝置中選擇音訊</string>
+    <string name="people_optional_custom_message_helper_text">選填：輸入自訂訊息，連同你的邀請一併傳送。</string>
+    <string name="people_learn_more_about_roles">瞭解更多有關角色的資訊</string>
+    <string name="threat_status_fixed">固定</string>
+    <string name="threat_found_header">找到</string>
+    <string name="scan_here_to_help">隨時為你提供協助</string>
+    <string name="scan_idle_with_threats_description">掃瞄作業透過 %2s 找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
+    <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
+    <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
+    <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
+    <string name="scan_fixing_threats_description">我們正努力在背景修正此威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_scanning_description">掃瞄作業完成後，我們會傳送通知給你。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
+    <string name="scan_fixing_threats_title">正在修正威脅</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan 無法完成網站掃瞄作業。 請檢查你的網站是否已經關閉。若否，請再試一次。 如果網站已關閉，或 Jetpack Scan 仍無法順利掃瞄，請與我們的支援團隊聯絡。</string>
+    <string name="scan_request_failed_title">發生錯誤</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">正在備份網站</string>
+    <string name="activity_log_currently_backing_up_message">正在從 %1$s %2$s 備份網站</string>
+    <string name="activity_log_currently_backing_up_title">正在建立可下載的備份</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">你的網站已成功備份</string>
+    <string name="activity_log_backup_finished_snackbar_message">你的網站已成功備份\n已從 %1$s %2$s 備份</string>
+    <string name="activity_log_backup_started_snackbar_message">正在備份你的網站\n正在從 %1$s %2$s 備份</string>
+    <string name="pick_audio">設定音樂</string>
+    <string name="restore_another_process_running">有其他還原作業正在執行。</string>
     <string name="restore_complete_failed_icon_content_description">錯誤圖示</string>
     <string name="restore_complete_failed_action_button_content_description">「完成」按鈕</string>
     <string name="restore_complete_failed_title">還原失敗</string>
@@ -36,6 +108,7 @@ Language: zh_TW
     <string name="web_preview_mobile">行動裝置</string>
     <string name="quick_start_card_menu_remove">不要再顯示</string>
     <string name="quick_start_card_menu_hide">隱藏</string>
+    <string name="quick_start_card_menu_pin">釘選</string>
     <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
@@ -57,8 +130,10 @@ Language: zh_TW
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
     <string name="threat_ignore_success_message">已忽略威脅。</string>
+    <string name="threat_ignore_warning">除非徹底確認安全無害，否則請不要忽視安全性問題。 若你選擇忽略此威脅，該威脅會繼續存在於你的網站 &lt;b>%s&lt;/b>。</string>
     <string name="threat_fix_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_item_sub_header_status_ignored">威脅已忽略</string>
+    <string name="threat_item_sub_header_status_fixed_on">威脅已於 %s 修正</string>
     <string name="threat_fixing">正在修正威脅</string>
     <string name="scan_history_ignored_threats_tab">已忽略</string>
     <string name="scan_history_no_threats_found">找不到任何項目</string>
@@ -74,6 +149,7 @@ Language: zh_TW
     <string name="backup_empty_title">第一次備份即將準備就緒</string>
     <string name="request_failed_message">處理要求時發生問題。 請稍後再試一次。</string>
     <string name="gutenberg_native_move_to_bottom">移至底部</string>
+    <string name="gutenberg_native_change_block_position">變更區塊位置</string>
     <string name="label_control_upload">上傳</string>
     <string name="jetpack_icon_content_description">圖示</string>
     <string name="backup_download_complete_info">我們也已將檔案連結透過電子郵件傳送給你。</string>
@@ -135,6 +211,7 @@ Language: zh_TW
     <string name="scan_in_minutes_ago">%s 分鐘前</string>
     <string name="scan_in_hours_ago">%s 小時前</string>
     <string name="scan_this_site">此網站</string>
+    <string name="scan_idle_last_scan_description">最近一次 Jetpack 掃瞄已執行 %s，且未找到任何風險。 %s</string>
     <string name="scan_idle_threats_found_title">你的網站可能存在風險</string>
     <string name="scan_idle_no_threats_found_title">完全不必擔心</string>
     <string name="scan_again">重新掃瞄</string>
@@ -153,6 +230,8 @@ Language: zh_TW
     <string name="activity_log_active_filter_empty_subtitle">請嘗試調整日期範圍或活動類型篩選條件</string>
     <string name="activity_log_active_filter_empty_title">找不到符合的活動</string>
     <string name="rewind">還原</string>
+    <string name="backup_item_sqls">網站資料庫</string>
+    <string name="backup_item_roots_hint">(包括 wp-config.php 和任何非 WordPress 檔案)</string>
     <string name="backup_item_media_uploads">媒體上傳</string>
     <string name="backup_item_plugins">WordPress 外掛程式</string>
     <string name="backup_item_themes">WordPress 佈景主題</string>
