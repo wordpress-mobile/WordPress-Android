@@ -36,7 +36,6 @@ Language: it
     <string name="web_preview_mobile">Dispositivo mobile</string>
     <string name="quick_start_card_menu_remove">Non mostrare più</string>
     <string name="quick_start_card_menu_hide">Nascondi</string>
-    <string name="quick_start_card_menu_pin">Aggancialo</string>
     <string name="quick_start_dialog_review_pages_message_short">Seleziona %1$s Pagine %2$s per visualizzare l\'elenco delle tue pagine.</string>
     <string name="quick_start_dialog_review_pages_message">Modifica, aggiungi o rimuovi le pagine del tuo sito.</string>
     <string name="quick_start_dialog_review_pages_title">Verifica le pagine del sito</string>
@@ -58,7 +57,6 @@ Language: it
     <string name="threat_fix_all_warning_title">Risolvi tutte le minacce</string>
     <string name="threat_ignore_error_message">Errore mentre la minaccia veniva ignorata. Contatta il supporto.</string>
     <string name="threat_ignore_success_message">Minaccia ignorata.</string>
-    <string name="threat_ignore_warning">Non dovresti ignorare un elemento di sicurezza a meno che tu non sia assolutamente certo che sia innocuo. Se scegli di ignorare questa minaccia, rimarrà sul tuo sito &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Errore durante la risoluzione della minaccia. Contatta il nostro supporto.</string>
     <string name="threat_item_sub_header_status_ignored">Minaccia ignorata</string>
     <string name="threat_fixing">Risoluzione della minaccia</string>
@@ -431,7 +429,6 @@ Language: it
     <string name="send_link_by_email">Invia link tramite e-mail</string>
     <string name="reset_your_password">Reimposta la password</string>
     <string name="reader_error_request_failed_title">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento. La prima impressione conta.</string>
     <string name="quick_start_list_update_site_title_title">Imposta il titolo del sito</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b>%1$s&lt;/b> per impostare un nuovo titolo</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>

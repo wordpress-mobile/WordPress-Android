@@ -36,7 +36,6 @@ Language: zh_TW
     <string name="web_preview_mobile">行動裝置</string>
     <string name="quick_start_card_menu_remove">不要再顯示</string>
     <string name="quick_start_card_menu_hide">隱藏</string>
-    <string name="quick_start_card_menu_pin">釘選此項目</string>
     <string name="quick_start_dialog_review_pages_message_short">選取%1$s「頁面」%2$s以檢視頁面清單。</string>
     <string name="quick_start_dialog_review_pages_message">變更、新增或移除網站的頁面。</string>
     <string name="quick_start_dialog_review_pages_title">檢閱網站頁面</string>
@@ -58,7 +57,6 @@ Language: zh_TW
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
     <string name="threat_ignore_success_message">已忽略威脅。</string>
-    <string name="threat_ignore_warning">除非完全確認其安全無害，否則你不應忽略安全性問題。 若你選擇忽略此威脅，該威脅會繼續存在於你的網站 &lt;b>%s&lt;/b>。</string>
     <string name="threat_fix_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_item_sub_header_status_ignored">威脅已忽略</string>
     <string name="threat_fixing">正在修正威脅</string>
@@ -427,7 +425,6 @@ Language: zh_TW
     <string name="create_account">建立帳號</string>
     <string name="send_link_by_email">以電子郵件傳送連結</string>
     <string name="reset_your_password">重設密碼</string>
-    <string name="quick_start_list_update_site_title_subtitle">為網站取一個能反映出自我風格和主題的名稱。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">設定你的網站標題</string>
     <string name="quick_start_dialog_update_site_title_message_short">點選 &lt;b>%1$s&lt;/b> 以設定新標題</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">將這篇文章移至垃圾桶也會捨棄本機變更，確定要繼續此操作？</string>

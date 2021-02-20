@@ -273,7 +273,6 @@ Language: pl
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
     <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b>%1$s&lt;/b> aby nadać nowy tytuł</string>
-    <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedla jej osobowość i tematykę. Pierwsze wrażenie się liczy!</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
     <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>

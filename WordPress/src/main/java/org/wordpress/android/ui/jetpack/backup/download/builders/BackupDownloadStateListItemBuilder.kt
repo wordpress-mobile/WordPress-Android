@@ -83,7 +83,8 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                 buildFootnoteState(
                         iconRes = R.drawable.ic_info_outline_white_24dp,
                         iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
-                        textRes = R.string.backup_download_progress_footnote)
+                        textRes = R.string.backup_download_progress_footnote,
+                        isVisible = false)
         )
     }
 
@@ -183,18 +184,21 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
             }
     )
 
+    @Suppress("LongMethod", "LongParameterList")
     private fun buildActionButtonState(
         @StringRes titleRes: Int,
         @StringRes contentDescRes: Int,
         isSecondary: Boolean = false,
         @DrawableRes iconRes: Int? = null,
+        isVisible: Boolean = true,
         onClick: () -> Unit
     ) = ActionButtonState(
         text = UiStringRes(titleRes),
         contentDescription = UiStringRes(contentDescRes),
         isSecondary = isSecondary,
         iconRes = iconRes,
-        onClick = onClick
+        onClick = onClick,
+        isVisible = isVisible
     )
 
     private fun buildSubHeaderState(
@@ -210,12 +214,14 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
         @DrawableRes iconRes: Int? = null,
         @DimenRes textAlphaResId: Int? = null,
         @DimenRes iconSizeResId: Int? = null,
-        @StringRes textRes: Int
+        @StringRes textRes: Int,
+        isVisible: Boolean = true
     ) = FootnoteState(
             iconRes = iconRes,
             textAlphaResId = textAlphaResId,
             iconSizeResId = iconSizeResId,
-            text = UiStringRes(textRes)
+            text = UiStringRes(textRes),
+            isVisible = isVisible
     )
 
     private fun buildProgressState(progress: Int) = ProgressState(

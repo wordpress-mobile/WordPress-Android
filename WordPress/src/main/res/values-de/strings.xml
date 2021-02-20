@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:38:59+0000
+Translation-Revision-Date: 2021-02-12 07:49:47+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
@@ -15,6 +15,7 @@ Language: de
     <string name="restore_complete_icon_content_description">Wiederherstellen-Button</string>
     <string name="restore_complete_description_with_two_parameters">Alle deine ausgewählten Elemente werden jetzt auf den Stand von %1$s %2$s wiederhergestellt.</string>
     <string name="restore_complete_header">Deine Website wurde wiederhergestellt.</string>
+    <string name="restore_progress_label">%1$s%%</string>
     <string name="restore_progress_icon_content_description">Website wiederherstellen-Button</string>
     <string name="restore_progress_description_with_two_parameters">Wir stellen deine Website auf %1$s %2$s wieder her.</string>
     <string name="restore_progress_header">Website wird derzeit wiederhergestellt</string>
@@ -36,7 +37,6 @@ Language: de
     <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
     <string name="quick_start_card_menu_remove">Nicht erneut anzeigen</string>
     <string name="quick_start_card_menu_hide">Ausblenden</string>
-    <string name="quick_start_card_menu_pin">Anheften</string>
     <string name="quick_start_dialog_review_pages_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
     <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
     <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
@@ -58,7 +58,6 @@ Language: de
     <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
     <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
-    <string name="threat_ignore_warning">Eine Sicherheitsmeldung solltest du nicht ignorieren, sofern du dir nicht absolut sicher bist, dass sie harmlos ist. Wenn du diese Bedrohung ignorieren möchtest, wird sie auf deiner Website &lt;b>%s&lt;/b> verbleiben.</string>
     <string name="threat_fix_error_message">Fehler beim Beheben der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="scan_history_ignored_threats_tab">Ignoriert</string>
     <string name="threat_item_sub_header_status_ignored">Bedrohung ignoriert</string>
@@ -76,6 +75,7 @@ Language: de
     <string name="backup_empty_title">Dein erstes Backup ist bald fertig</string>
     <string name="request_failed_message">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
     <string name="gutenberg_native_move_to_bottom">Nach unten verschieben</string>
+    <string name="gutenberg_native_change_block_position">Block-Position ändern</string>
     <string name="jetpack_icon_content_description">Icon</string>
     <string name="backup_download_complete_info">Wir haben dir auch einen Link zu deiner Datei per E-Mail geschickt.</string>
     <string name="label_control_upload">Upload</string>
@@ -160,6 +160,8 @@ Language: de
     <string name="backup_item_themes">WordPress-Themes</string>
     <string name="backup_item_plugins">WordPress-Plugins</string>
     <string name="backup_download_details_icon_content_description">Herunterladbares Backup-Icon erstellen</string>
+    <string name="backup_item_sqls">Website-Datenbank</string>
+    <string name="backup_item_roots_hint">(beinhaltet wp-config.php und alle Nicht-WordPress-Dateien)</string>
     <string name="activity_log_activity_type_filter_label">Aktivitätstyp</string>
     <string name="activity_log_item_menu_download_backup_label">Backup herunterladen</string>
     <string name="gutenberg_native_choose_file">Datei auswählen</string>
@@ -185,6 +187,7 @@ Language: de
     <string name="gutenberg_native_copy_file_url">Datei-URL kopieren</string>
     <string name="gutenberg_native_choose_a_file">Datei auswählen</string>
     <string name="new_site_creation_domain_header_title">Domain auswählen</string>
+    <string name="my_site_btn_jetpack_settings">Jetpack-Einstellungen</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Abmeldung von den Kommentaren für diesen Beitrag fehlgeschlagen</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Abonnement für Kommentare in diesem Beitrag fehlgeschlagen</string>
@@ -432,7 +435,6 @@ Language: de
     <string name="send_link_by_email">Link per E-Mail senden</string>
     <string name="reset_your_password">Dein Passwort zurücksetzen</string>
     <string name="reader_error_request_failed_title">Bei der Bearbeitung der Anfrage ist ein Problem aufgetreten. Bitte versuche es später erneut.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Wähle einen Namen für deine Website, der am besten zu ihrer Persönlichkeit und Ausrichtung passt. Erste Eindrücke zählen!</string>
     <string name="quick_start_list_update_site_title_title">Lege deinen Website-Titel fest</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tippe auf &lt;b>%1$s&lt;/b>, um einen neuen Titel festzulegen.</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Wenn dieser Beitrag in den Papierkorb verschoben wird, werden auch lokale Änderungen verworfen. Möchtest du wirklich fortfahren?</string>
@@ -2067,7 +2069,9 @@ Language: de
     <string name="invite_error_invalid_usernames_multiple">Senden fehlgeschlagen: Es wurden ungültige Benutzernamen oder E-Mail-Adressen angegeben</string>
     <string name="invite_error_invalid_usernames_one">Senden fehlgeschlagen: Benutzername oder E-Mail-Adresse sind ungültig</string>
     <string name="invite_error_no_usernames">Bitte trage mindestens einen Benutzernamen ein</string>
+    <string name="invite_message_title">Individuelle Nachricht</string>
     <string name="invite">Einladen</string>
+    <string name="invite_names_title">Benutzernamen oder E-Mail-Adressen</string>
     <string name="send_link">Link senden</string>
     <string name="invite_people">Personen einladen</string>
     <string name="my_site_header_external">Extern</string>

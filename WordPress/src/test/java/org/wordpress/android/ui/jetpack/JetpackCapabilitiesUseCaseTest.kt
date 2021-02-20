@@ -67,15 +67,6 @@ class JetpackCapabilitiesUseCaseTest {
     }
 
     @Test
-    fun `useCase unsubscribes from event bus`() = test {
-        whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
-
-        useCase.getJetpackPurchasedProducts(SITE_ID).toList(mutableListOf())
-
-        verify(dispatcher).unregister(useCase)
-    }
-
-    @Test
     fun `when purchased products requested, then data from cache are returned first`() = test {
         whenever(dispatcher.dispatch(any())).then { useCase.onJetpackCapabilitiesFetched(event) }
         whenever(appPrefsWrapper.getSiteJetpackCapabilities(SITE_ID)).thenReturn(mutableListOf(SCAN))
