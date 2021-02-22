@@ -7,6 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.content.res.Resources
+import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
@@ -96,12 +97,16 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookm
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
+import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
+import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderWebView
@@ -132,6 +137,7 @@ import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
 import org.wordpress.android.widgets.WPScrollView
+import org.wordpress.android.widgets.WPScrollView.ScrollDirectionListener
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
 import java.util.EnumSet
@@ -139,6 +145,7 @@ import javax.inject.Inject
 
 class ReaderPostDetailFragment : ViewPagerFragment(),
         WPMainActivity.OnActivityBackPressedListener,
+        ScrollDirectionListener,
         ReaderCustomViewListener,
         ReaderWebViewPageFinishedListener,
         ReaderWebViewUrlClickListener,
@@ -170,10 +177,18 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private lateinit var appBar: AppBarLayout
     private lateinit var toolBar: Toolbar
 
+    private lateinit var globalRelatedPostsView: ReaderSimplePostContainerView
+    private lateinit var localRelatedPostsView: ReaderSimplePostContainerView
+
     private var postSlugsResolutionUnderway: Boolean = false
     private var hasAlreadyUpdatedPost: Boolean = false
     private var hasAlreadyRequestedPost: Boolean = false
     private var isWebViewPaused: Boolean = false
+
+    private var isRelatedPost: Boolean = false
+
+    private var hasTrackedGlobalRelatedPosts: Boolean = false
+    private var hasTrackedLocalRelatedPosts: Boolean = false
 
     private var errorMessage: String? = null
 
@@ -258,6 +273,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId = args.getLong(ReaderConstants.ARG_POST_ID)
             directOperation = args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
             commentId = args.getInt(ReaderConstants.ARG_COMMENT_ID)
+            isRelatedPost = args.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = args.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             if (args.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 this.postListType = args.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
@@ -293,6 +309,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         scrollView = view.findViewById(R.id.scroll_view_reader)
+        scrollView.setScrollDirectionListener(this)
 
         appBar = view.findViewById(R.id.appbar_with_collapsing_toolbar_layout)
         toolBar = appBar.findViewById(R.id.toolbar_main)
@@ -312,8 +329,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // Fixes viewpager not displaying menu items for first fragment
         toolBar.inflateMenu(R.menu.reader_detail)
 
-        toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
-        toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        // for related posts, show an X in the toolbar which closes the activity
+        if (isRelatedPost) {
+            toolBar.setNavigationIcon(R.drawable.ic_cross_white_24dp)
+            toolBar.setNavigationOnClickListener { requireActivity().finish() }
+            toolBar.setTitle(R.string.reader_title_related_post_detail)
+        } else {
+            toolBar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp)
+            toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
+        }
 
         featuredImageView = appBar.findViewById(R.id.featured_image)
         featuredImageView.setOnClickListener { showFullScreen() }
@@ -336,6 +360,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         // hide footer and scrollView until the post is loaded
         layoutFooter.visibility = View.INVISIBLE
         scrollView.visibility = View.INVISIBLE
+
+        val relatedPostsContainer = view.findViewById<View>(R.id.container_related_posts)
+        globalRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_global)
+        localRelatedPostsView = relatedPostsContainer.findViewById(R.id.related_posts_view_local)
 
         signInButton = view.findViewById(R.id.nux_sign_in_button)
         signInButton.setOnClickListener(mSignInClickListener)
@@ -366,7 +394,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         toolBar.setVisible(true)
         activity?.setSupportActionBar(toolBar)
 
-        activity?.supportActionBar?.setDisplayShowTitleEnabled(false)
+        activity?.supportActionBar?.setDisplayShowTitleEnabled(isRelatedPost)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -593,6 +621,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
 
+        outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
         outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
         outState.putBoolean(
                 ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
@@ -600,6 +629,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         )
         outState.putBoolean(ReaderConstants.KEY_ALREADY_UPDATED, hasAlreadyUpdatedPost)
         outState.putBoolean(ReaderConstants.KEY_ALREADY_REQUESTED, hasAlreadyRequestedPost)
+
+        outState.putBoolean(
+                ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS,
+                hasTrackedGlobalRelatedPosts
+        )
+        outState.putBoolean(
+                ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS,
+                hasTrackedLocalRelatedPosts
+        )
 
         outState.putSerializable(
                 ReaderConstants.ARG_POST_LIST_TYPE,
@@ -629,10 +667,13 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             directOperation = it
                     .getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
             commentId = it.getInt(ReaderConstants.ARG_COMMENT_ID)
+            isRelatedPost = it.getBoolean(ReaderConstants.ARG_IS_RELATED_POST)
             interceptedUri = it.getString(ReaderConstants.ARG_INTERCEPTED_URI)
             postSlugsResolutionUnderway = it.getBoolean(ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY)
             hasAlreadyUpdatedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_UPDATED)
             hasAlreadyRequestedPost = it.getBoolean(ReaderConstants.KEY_ALREADY_REQUESTED)
+            hasTrackedGlobalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_GLOBAL_RELATED_POSTS)
+            hasTrackedLocalRelatedPosts = it.getBoolean(ReaderConstants.KEY_ALREADY_TRACKED_LOCAL_RELATED_POSTS)
             if (it.containsKey(ReaderConstants.ARG_POST_LIST_TYPE)) {
                 this.postListType = it.getSerializable(ReaderConstants.ARG_POST_LIST_TYPE) as ReaderPostListType
             }
@@ -682,12 +723,133 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         hasAlreadyRequestedPost = false
         hasAlreadyUpdatedPost = false
+        hasTrackedGlobalRelatedPosts = false
+        hasTrackedLocalRelatedPosts = false
+
+        // hide views that would show info for the previous post - these will be re-displayed
+        // with the correct info once the new post loads
+        globalRelatedPostsView.visibility = View.GONE
+        localRelatedPostsView.visibility = View.GONE
 
         // clear the webView - otherwise it will remain scrolled to where the user scrolled to
         readerWebView.clearContent()
 
         // now show the passed post
         showPost()
+    }
+
+    /*
+     * request posts related to the current one - only available for wp.com
+     */
+    private fun requestRelatedPosts() {
+        if (hasPost() && post?.isWP == true) {
+            ReaderPostActions.requestRelatedPosts(post)
+        }
+    }
+
+    /*
+     * related posts were retrieved
+     */
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    fun onEventMainThread(event: ReaderEvents.RelatedPostsUpdated) {
+        val post = this.post
+        if (!isAdded || post == null) {
+            return
+        }
+
+        // make sure this event is for the current post
+        if (event.sourcePostId == post.postId && event.sourceSiteId == post.blogId) {
+            if (event.hasLocalRelatedPosts()) {
+                showRelatedPosts(event.localRelatedPosts, false)
+            }
+            if (event.hasGlobalRelatedPosts()) {
+                showRelatedPosts(event.globalRelatedPosts, true)
+            }
+        }
+    }
+
+    /*
+     * show the passed list of related posts - can be either global (related posts from
+     * across wp.com) or local (related posts from the same site as the current post)
+     */
+    private fun showRelatedPosts(relatedPosts: ReaderSimplePostList, isGlobal: Boolean) {
+        // tapping a related post should open the related post detail
+        val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
+            showRelatedPostDetail(
+                    siteId,
+                    postId,
+                    isGlobal
+            )
+        }
+
+        // different container views for global/local related posts
+        val relatedPostsView = if (isGlobal) globalRelatedPostsView else localRelatedPostsView
+        relatedPostsView.showPosts(relatedPosts, post!!.blogName, isGlobal, listener)
+
+        // fade in this related posts view
+        if (relatedPostsView.visibility != View.VISIBLE) {
+            AniUtils.fadeIn(relatedPostsView, AniUtils.Duration.MEDIUM)
+        }
+
+        trackRelatedPostsIfShowing()
+    }
+
+    /*
+     * track that related posts have loaded and are scrolled into view if we haven't
+     * already tracked it
+     */
+    private fun trackRelatedPostsIfShowing() {
+        if (!hasTrackedGlobalRelatedPosts && isVisibleAndScrolledIntoView(globalRelatedPostsView)) {
+            hasTrackedGlobalRelatedPosts = true
+            AppLog.d(T.READER, "reader post detail > global related posts rendered")
+            globalRelatedPostsView.trackRailcarRender()
+        }
+
+        if (!hasTrackedLocalRelatedPosts && isVisibleAndScrolledIntoView(localRelatedPostsView)) {
+            hasTrackedLocalRelatedPosts = true
+            AppLog.d(T.READER, "reader post detail > local related posts rendered")
+            localRelatedPostsView.trackRailcarRender()
+        }
+    }
+
+    /*
+     * returns True if the passed view is visible and has been scrolled into view - assumes
+     * that the view is a child of mScrollView
+     */
+    private fun isVisibleAndScrolledIntoView(view: View?): Boolean {
+        if (view != null && view.visibility == View.VISIBLE) {
+            val scrollBounds = Rect()
+            scrollView.getHitRect(scrollBounds)
+            return view.getLocalVisibleRect(scrollBounds)
+        }
+        return false
+    }
+
+    /*
+     * user clicked a single related post - if we're already viewing a related post, add it to the
+     * history stack so the user can back-button through the history - otherwise start a new detail
+     * activity for this related post
+     */
+    private fun showRelatedPostDetail(blogId: Long, postId: Long, isGlobal: Boolean) {
+        val stat = if (isGlobal)
+            Stat.READER_GLOBAL_RELATED_POST_CLICKED
+        else
+            Stat.READER_LOCAL_RELATED_POST_CLICKED
+        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
+
+        if (isRelatedPost) {
+            postHistory.push(ReaderBlogIdPostId(post!!.blogId, post!!.postId))
+            replacePost(blogId, postId, true)
+        } else {
+            ReaderActivityLauncher.showReaderPostDetail(
+                    activity,
+                    false,
+                    blogId,
+                    postId, null,
+                    0,
+                    true, null
+            )
+        }
     }
 
     /*
@@ -1178,6 +1340,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     hasAlreadyUpdatedPost = true
                     updatePost()
                 }
+                requestRelatedPosts()
             }, 300)
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url!!)
@@ -1344,6 +1507,16 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
+    override fun onScrollUp(distanceY: Float) {
+    }
+
+    override fun onScrollDown(distanceY: Float) {
+    }
+
+    override fun onScrollCompleted() {
+        trackRelatedPostsIfShowing()
+    }
+
     private fun setRefreshing(refreshing: Boolean) {
         swipeToRefreshHelper.isRefreshing = refreshing
     }
@@ -1365,7 +1538,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
 
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
-            return newInstance(false, blogId, postId, null, 0, null, null, false)
+            return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
 
         fun newInstance(
@@ -1374,6 +1547,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             postId: Long,
             directOperation: DirectOperation?,
             commentId: Int,
+            isRelatedPost: Boolean,
             interceptedUri: String?,
             postListType: ReaderPostListType?,
             postSlugsResolutionUnderway: Boolean
@@ -1384,6 +1558,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             args.putBoolean(ReaderConstants.ARG_IS_FEED, isFeed)
             args.putLong(ReaderConstants.ARG_BLOG_ID, blogId)
             args.putLong(ReaderConstants.ARG_POST_ID, postId)
+            args.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
             args.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
             args.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
             args.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
