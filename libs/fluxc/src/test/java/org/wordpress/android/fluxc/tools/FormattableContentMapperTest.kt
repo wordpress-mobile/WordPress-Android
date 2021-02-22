@@ -114,4 +114,12 @@ class FormattableContentMapperTest {
         val formattableJson = formattableContentMapper.mapFormattableContentListToJson(formattableList)
         assertEquals(jsonContentArray, formattableJson)
     }
+
+    @Test
+    fun mapsRewindDownloadReadyTypeToRewindDownloadReadyFormattableRangeType() {
+        val response = UnitTestUtils
+                .getStringFromResourceFile(this.javaClass, "notifications/rewind-download-ready.json")
+        val formattableContent = formattableContentMapper.mapToFormattableContent(response)
+        assertEquals(FormattableRangeType.REWIND_DOWNLOAD_READY, formattableContent.ranges!![0].rangeType())
+    }
 }
