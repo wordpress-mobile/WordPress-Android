@@ -387,10 +387,7 @@ class ScanViewModelTest : BaseUnitTest() {
             val threatFoundMessage = "1 potential threat found"
             whenever(
                 htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(
-                        R.string.scan_finished_threats_found_message_singular,
-                        "1"
-                    )
+                    .getHtmlMessageFromStringFormatResId(R.string.scan_finished_threats_found_message_singular)
             ).thenReturn(threatFoundMessage)
             val fakeScanStateModelWithThreat = fakeScanStateModel.copy(
                 threats = listOf(ThreatTestData.genericThreatModel)

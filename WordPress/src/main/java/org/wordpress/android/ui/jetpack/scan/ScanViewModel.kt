@@ -145,8 +145,7 @@ class ScanViewModel @Inject constructor(
                 )
 
                 1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.scan_finished_threats_found_message_singular,
-                    "$threatsCount"
+                    R.string.scan_finished_threats_found_message_singular
                 )
 
                 else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
