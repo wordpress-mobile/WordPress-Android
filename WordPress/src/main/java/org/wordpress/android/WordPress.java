@@ -134,7 +134,7 @@ import dagger.android.DispatchingAndroidInjector;
 import dagger.android.HasAndroidInjector;
 import kotlinx.coroutines.CoroutineScope;
 
-import static org.wordpress.android.modules.ThreadModuleKt.DEFAULT_SCOPE;
+import static org.wordpress.android.modules.ThreadModuleKt.APPLICATION_SCOPE;
 
 public class WordPress extends MultiDexApplication implements HasAndroidInjector, LifecycleObserver {
     public static final String SITE = "SITE";
@@ -181,7 +181,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
     @Inject EncryptedLogging mEncryptedLogging;
     @Inject AppConfig mAppConfig;
     @Inject ImageEditorFileUtils mImageEditorFileUtils;
-    @Inject @Named(DEFAULT_SCOPE) CoroutineScope mDefaultScope;
+    @Inject @Named(APPLICATION_SCOPE) CoroutineScope mAppScope;
 
     // For development and production `AnalyticsTrackerNosara`, for testing a mocked `Tracker` will be injected.
     @Inject Tracker mTracker;
@@ -355,7 +355,7 @@ public class WordPress extends MultiDexApplication implements HasAndroidInjector
                 mImageManager,
                 mImageEditorTracker,
                 mImageEditorFileUtils,
-                mDefaultScope
+                mAppScope
         );
 
         initEmojiCompat();

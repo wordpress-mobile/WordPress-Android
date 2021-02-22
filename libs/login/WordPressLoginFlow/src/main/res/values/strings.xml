@@ -92,7 +92,7 @@
     <string name="signup_with_email_button">Sign Up with Email</string>
     <string name="signup_with_google_button">Sign Up with Google</string>
     <string name="signup_with_google_progress">Signing up with Google&#8230;</string>
-    <string name="continue_with_wpcom">Continue with WordPress.com</string>
+    <string name="continue_with_wpcom">Log in or sign up with WordPress.com</string>
     <string name="enter_your_site_address">Enter your existing site address</string>
 
     <string name="google_error_timeout">Google took too long to respond. You may need to wait until you have a stronger internet connection.</string>
@@ -124,7 +124,6 @@
     <string name="login_discovery_error_ssl">We were unable to access your site because of a problem with the &lt;b>SSL Certificate&lt;/b>. You will need to reach out to your host to resolve this.</string>
     <string name="login_discovery_error_generic">We were unable to access your site. You will need to reach out to your host to resolve this.</string>
     <string name="enter_wpcom_or_jetpack_site">Please enter a WordPress.com or Jetpack-connected self-hosted WordPress site</string>
-    <string name="enter_wordpress_site">The website at this address is not a WordPress site. For us to connect to it, the site must have WordPress installed.</string>
     <string name="error_generic_network">A network error occurred. Please check your connection and try again.</string>
 
     <string name="notification_login_title_success">Logged in!</string>

@@ -35,6 +35,7 @@ class FetchDomainsUseCase @Inject constructor(
         query: String,
         segmentId: Long?,
         includeVendorDot: Boolean = FETCH_DOMAINS_SHOULD_INCLUDE_DOT_BLOG_VENDOR,
+        includeDotBlog: Boolean = false,
         size: Int = FETCH_DOMAINS_SIZE
     ): OnSuggestedDomains {
         val payload = SuggestDomainsPayload(
@@ -50,6 +51,7 @@ class FetchDomainsUseCase @Inject constructor(
          */
         payload.includeWordpressCom = true
         payload.onlyWordpressCom = true
+        payload.includeDotBlogSubdomain = includeDotBlog
 
         return suspendCancellableCoroutine { cont ->
             pair = Pair(payload.query, cont)

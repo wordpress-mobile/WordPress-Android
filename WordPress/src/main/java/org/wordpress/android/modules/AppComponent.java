@@ -46,11 +46,13 @@ import org.wordpress.android.ui.gif.GifPickerActivity;
 import org.wordpress.android.ui.history.HistoryAdapter;
 import org.wordpress.android.ui.history.HistoryDetailContainerFragment;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadActivity;
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteFragment;
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsFragment;
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressFragment;
+import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadFragment;
+import org.wordpress.android.ui.jetpack.restore.RestoreActivity;
+import org.wordpress.android.ui.jetpack.restore.RestoreFragment;
 import org.wordpress.android.ui.jetpack.scan.ScanFragment;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryFragment;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListFragment;
 import org.wordpress.android.ui.main.AddContentAdapter;
 import org.wordpress.android.ui.main.MainBottomSheetFragment;
 import org.wordpress.android.ui.main.MeFragment;
@@ -70,6 +72,7 @@ import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.mlp.LayoutsAdapter;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
 import org.wordpress.android.ui.notifications.NotificationsDetailActivity;
 import org.wordpress.android.ui.notifications.NotificationsDetailListFragment;
 import org.wordpress.android.ui.notifications.NotificationsListFragment;
@@ -471,6 +474,10 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(ScanFragment object);
 
+    void inject(ScanHistoryFragment object);
+
+    void inject(ScanHistoryListFragment object);
+
     void inject(ThreatDetailsFragment object);
 
     void inject(PluginListFragment object);
@@ -631,11 +638,13 @@ public interface AppComponent extends AndroidInjector<WordPress> {
 
     void inject(BackupDownloadActivity object);
 
-    void inject(BackupDownloadDetailsFragment object);
+    void inject(RestoreActivity object);
 
-    void inject(BackupDownloadProgressFragment object);
+    void inject(DynamicCardMenuFragment object);
 
-    void inject(BackupDownloadCompleteFragment object);
+    void inject(BackupDownloadFragment object);
+
+    void inject(RestoreFragment object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph

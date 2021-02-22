@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <dimen name="min_touch_target_sz">48dp</dimen>
 
@@ -155,12 +155,12 @@
 
     <!-- reader follow unfollow comments dimensions -->
     <dimen name="reader_follow_button_min_height">32dp</dimen>
-    <dimen name="reader_follow_button_skeleton_width">165dp</dimen>
+    <dimen name="reader_follow_button_skeleton_width">200dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
     <!-- collapsing toolbar scrim visible height trigger -->
-    <dimen name="scrim_visible_height_trigger">100dp</dimen>
+    <dimen name="scrim_visible_height_trigger">150dp</dimen>
 
     <item name="expandable_chips_view_chip_alpha" format="float" type="dimen">
         @dimen/emphasis_extra_low
@@ -355,6 +355,8 @@
     <dimen name="people_list_row_height">72dp</dimen>
     <dimen name="people_list_row_role_margin_top">20dp</dimen>
     <dimen name="people_list_divider_left_margin">72dp</dimen>
+    <dimen name="people_chips_min_target">40dp</dimen>
+    <dimen name="people_default_margin_top">5dp</dimen>
 
     <!-- photo picker -->
     <dimen name="photo_picker_item_padding">2dp</dimen>
@@ -408,13 +410,36 @@
     <dimen name="quick_start_focus_point_my_site_right_offset">24dp</dimen>
     <dimen name="quick_start_focus_point_bottom_nav_offset">4dp</dimen>
     <dimen name="quick_start_focus_point_size">40dp</dimen>
+    <dimen name="quick_start_focus_point_small_size">30dp</dimen>
+    <dimen name="quick_start_focus_point_small_offset_negative">-15dp</dimen>
+    <dimen name="quick_start_focus_point_elevation">100dp</dimen>
     <dimen name="quick_start_type_divider_margin_start">64dp</dimen>
     <dimen name="quick_start_type_icon">@dimen/blavatar_sz</dimen>
     <dimen name="quick_start_complete_tasks_header_height">48dp</dimen>
 
+    <dimen name="quick_start_card_progress_indicator_size">24dp</dimen>
+    <dimen name="quick_start_task_card_width">168dp</dimen>
+    <dimen name="quick_start_task_card_elevation">0dp</dimen>
+    <dimen name="quick_start_task_card_corner_radius">8dp</dimen>
+    <dimen name="quick_start_task_card_overlay_alpha" format="float" type="dimen">0.8</dimen>
+
     <!-- activity log -->
     <dimen name="activity_log_icon_size">40dp</dimen>
     <dimen name="activity_log_icon_margin">16dp</dimen>
+
+    <!-- jetpack -->
+    <dimen name="jetpack_icon_size">32dp</dimen>
+    <dimen name="jetpack_icon_margin">0dp</dimen>
+    <dimen name="jetpack_button_icon_size">16dp</dimen>
+
+    <!-- jetpack backup restore last bullet bottom margin-->
+    <dimen name="jetpack_backup_restore_last_bullet_bottom_margin">20dp</dimen>
+
+    <!-- scan -->
+    <dimen name="scan_list_threat_skeleton_text_height">20dp</dimen>
+    <dimen name="scan_icon_size">48dp</dimen>
+    <dimen name="scan_icon_margin">16dp</dimen>
+    <dimen name="scan_threat_item_icon_size">40dp</dimen>
 
     <!-- actionable empty view -->
     <dimen name="actionable_empty_view_text_margin_horizontal">30dp</dimen>
@@ -597,4 +622,22 @@
     <dimen name="login_prologue_content_area">320dp</dimen>
     <dimen name="login_prologue_background_circle_size">140dp</dimen>
     <dimen name="login_prologue_background_circle_size_large">160dp</dimen>
+
+    <!-- edit text with chips view -->
+    <dimen name="edit_text_with_chips_margin_top">5dp</dimen>
+    <dimen name="edit_text_with_chips_padding">12dp</dimen>
+    <dimen name="edit_text_with_chips_edit_view_min_height">32dp</dimen>
+    <dimen name="edit_text_with_chips_label_text_size">12sp</dimen>
+    <dimen name="edit_text_with_chips_hint_text_size">16sp</dimen>
+    <dimen name="edit_with_chips_outline_radius">4dp</dimen>
+    <dimen name="edit_with_chips_outline_default_width">1dp</dimen>
+    <dimen name="edit_with_chips_outline_focused_width">2dp</dimen>
+    <dimen name="edit_with_chips_outline_default_alpha" format="float" type="dimen">0.38</dimen>
+    <dimen name="edit_with_chips_outline_focused_alpha" format="float" type="dimen">1.0</dimen>
+    <dimen name="edit_with_chips_hint_label_default_alpha" format="float" type="dimen">0.6</dimen>
+
+    <!-- Hack to make snackbar padding smaller -->
+    <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
+        @dimen/design_snackbar_padding_vertical
+    </dimen>
 </resources>

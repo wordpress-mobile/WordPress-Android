@@ -31,6 +31,10 @@ import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.my_site_fragment.*
+import kotlinx.coroutines.CoroutineDispatcher
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
@@ -65,18 +69,18 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.STORY_SAVE_ERROR_SN
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.MediaModel
+import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHOOSE_THEME
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_NEW_PAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CUSTOMIZE_SITE
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.ENABLE_POST_SHARING
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.REVIEW_PAGES
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_SITE_ICON
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -86,6 +90,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
 import org.wordpress.android.fluxc.store.SiteStore.OnPlansFetched
 import org.wordpress.android.login.LoginMode.JETPACK_STATS
+import org.wordpress.android.modules.BG_THREAD
+import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullScreenDialogFragment
 import org.wordpress.android.ui.FullScreenDialogFragment.Builder
@@ -97,6 +103,8 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.accounts.LoginActivity
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
+import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.main.WPMainActivity.OnScrollToTopListener
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.SelectedSiteRepository
@@ -145,15 +153,16 @@ import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemin
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
-import org.wordpress.android.util.QuickStartUtils.Companion.stylizeQuickStartPrompt
-import org.wordpress.android.util.ScanFeatureConfig
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.image.BlavatarShape.SQUARE
 import org.wordpress.android.util.image.ImageManager
@@ -167,6 +176,7 @@ import java.io.File
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
+import javax.inject.Named
 
 @Deprecated("This class is being refactored, if you implement any change, please also update " +
         "{@link org.wordpress.android.ui.mysite.ImprovedMySiteFragment}")
@@ -184,6 +194,7 @@ class MySiteFragment : Fragment(),
     private var blavatarSz = 0
     private var isDomainCreditAvailable = false
     private var isDomainCreditChecked = false
+    private val job = Job()
 
     @Inject lateinit var accountStore: AccountStore
     @Inject lateinit var dispatcher: Dispatcher
@@ -196,11 +207,17 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var mediaPickerLauncher: MediaPickerLauncher
     @Inject lateinit var storiesMediaPickerResultHandler: StoriesMediaPickerResultHandler
     @Inject lateinit var consolidatedMediaPickerFeatureConfig: ConsolidatedMediaPickerFeatureConfig
-    @Inject lateinit var backupsFeatureConfig: BackupsFeatureConfig
-    @Inject lateinit var scanFeatureConfig: ScanFeatureConfig
+    @Inject lateinit var backupScreenFeatureConfig: BackupScreenFeatureConfig
+    @Inject lateinit var scanScreenFeatureConfig: ScanScreenFeatureConfig
     @Inject lateinit var selectedSiteRepository: SelectedSiteRepository
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var themeBrowserUtils: ThemeBrowserUtils
+    @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
+    @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
+    @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
+    @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
+    lateinit var uiScope: CoroutineScope
 
     private val selectedSite: SiteModel?
         get() {
@@ -211,6 +228,7 @@ class MySiteFragment : Fragment(),
         super.onCreate(savedInstanceState)
         setHasOptionsMenu(true)
         (requireActivity().application as WordPress).component().inject(this)
+        uiScope = CoroutineScope(uiDispatcher + job)
         if (savedInstanceState != null) {
             activeTutorialPrompt = savedInstanceState
                     .getSerializable(QuickStartMySitePrompts.KEY) as? QuickStartMySitePrompts
@@ -227,18 +245,19 @@ class MySiteFragment : Fragment(),
 
     override fun onDestroy() {
         selectedSiteRepository.clear()
+        job.cancel()
+        jetpackCapabilitiesUseCase.clear()
         super.onDestroy()
     }
 
     override fun onResume() {
         super.onResume()
         updateSiteSettingsIfNecessary()
-
+        completeQuickStartStepsIfNeeded()
         // Site details may have changed (e.g. via Settings and returning to this Fragment) so update the UI
         refreshSelectedSiteDetails(selectedSite)
         selectedSite?.let { site ->
-            updateBackupMenuVisibility()
-            updateScanMenuVisibility()
+            updateScanAndBackup(site)
 
             val isNotAdmin = !site.hasCapabilityManageOptions
             val isSelfHostedWithoutJetpack = !SiteUtils.isAccessedViaWPComRest(
@@ -259,14 +278,48 @@ class MySiteFragment : Fragment(),
         showQuickStartNoticeIfNecessary()
     }
 
-    private fun updateBackupMenuVisibility() {
-        row_backup.setVisible(backupsFeatureConfig.isEnabled())
+    private fun updateScanAndBackup(site: SiteModel) {
+        if (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled()) {
+            // Make sure that we load the cached value synchronously as we want to suppress the default animation
+            updateScanAndBackupVisibility(
+                    site = site,
+                    products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
+            )
+            uiScope.launch {
+                if (!jetpackCapabilitiesUseCase.hasValidCache(site.siteId)) {
+                    val products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+                    view?.let {
+                        updateScanAndBackupVisibility(
+                                site = site,
+                                products = products
+                        )
+                    }
+                }
+            }
+        }
     }
 
-    private fun updateScanMenuVisibility() {
-        row_scan.setVisible(scanFeatureConfig.isEnabled())
+    private fun updateScanAndBackupVisibility(site: SiteModel, products: JetpackPurchasedProducts) {
+        row_scan.setVisible(
+                siteUtilsWrapper.isScanEnabled(scanScreenFeatureConfig.isEnabled(), products.scan, site)
+        )
+        row_backup.setVisible(
+                siteUtilsWrapper.isBackupEnabled(backupScreenFeatureConfig.isEnabled(), products.backup)
+        )
     }
 
+    private fun completeQuickStartStepsIfNeeded() {
+        selectedSite?.let {
+            if (it.showOnFront == ShowOnFront.POSTS.value) {
+                completeTaskAndRemindNextOne(quickStartStore,
+                        EDIT_HOMEPAGE,
+                        dispatcher,
+                        it,
+                        null,
+                        requireContext())
+            }
+        }
+    }
     private fun showQuickStartNoticeIfNecessary() {
         if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return
@@ -381,10 +434,6 @@ class MySiteFragment : Fragment(),
             )
         }
         row_themes.setOnClickListener {
-            completeQuickStarTask(CHOOSE_THEME)
-            if (isQuickStartTaskActive(CUSTOMIZE_SITE)) {
-                requestNextStepOfActiveQuickStartTask()
-            }
             if (themeBrowserUtils.isAccessible(selectedSite)) {
                 ActivityLauncher.viewCurrentBlogThemes(activity, selectedSite)
             }
@@ -408,7 +457,10 @@ class MySiteFragment : Fragment(),
             )
         }
         row_backup.setOnClickListener {
-            // Do nothing. TODO: Launch 'Backups' screen.
+            ActivityLauncher.viewBackupList(
+                    activity,
+                    selectedSite
+            )
         }
         row_scan.setOnClickListener {
             ActivityLauncher.viewScan(
@@ -505,7 +557,11 @@ class MySiteFragment : Fragment(),
     }
 
     private fun viewPages() {
-        requestNextStepOfActiveQuickStartTask()
+        if (activeTutorialPrompt != null && activeTutorialPrompt == QuickStartMySitePrompts.EDIT_HOMEPAGE) {
+            requestNextStepOfActiveQuickStartTask()
+        } else {
+            completeQuickStarTask(REVIEW_PAGES)
+        }
         val selectedSite = selectedSite
         if (selectedSite != null) {
             ActivityLauncher.viewCurrentBlogPages(requireActivity(), selectedSite)
@@ -1132,7 +1188,7 @@ class MySiteFragment : Fragment(),
             if (event.post.localSiteId == site.id) {
                 uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                         activity,
-                        requireActivity().findViewById(R.id.coordinator), true,
+                        requireActivity().findViewById(R.id.coordinator), true, false,
                         event.post, event.errorMessage, site
                 )
             }
@@ -1388,7 +1444,9 @@ class MySiteFragment : Fragment(),
                 horizontalOffset = focusPointSize
                 verticalOffset = -focusPointSize / 2
             }
-            activeTutorialPrompt!!.task == CHECK_STATS || activeTutorialPrompt!!.task == CREATE_NEW_PAGE -> {
+            activeTutorialPrompt!!.task == CHECK_STATS ||
+                    activeTutorialPrompt!!.task == REVIEW_PAGES ||
+                    activeTutorialPrompt!!.task == EDIT_HOMEPAGE -> {
                 horizontalOffset = -focusPointSize / 4
                 verticalOffset = -focusPointSize / 4
             }
@@ -1509,8 +1567,7 @@ class MySiteFragment : Fragment(),
                             ), HtmlCompat.FROM_HTML_MODE_COMPACT
                     )
                 } else {
-                    stylizeQuickStartPrompt(
-                            requireActivity(),
+                    quickStartUtilsWrapper.stylizeQuickStartPrompt(
                             activeTutorialPrompt!!.shortMessagePrompt,
                             activeTutorialPrompt!!.iconId
                     )

@@ -45,8 +45,6 @@ Language: vi_VN
     <string name="quick_start_dialog_follow_sites_title">Theo dõi các site khác</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Nhấp %1$s Tìm kiếm %2$s để tìm các site với các quan tâm tương tự</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Nhấp %1$s Ngước đọc %2$s để tiếp tục</string>
-    <string name="quick_start_dialog_customize_site_title">Tùy chỉnh size của bạn</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Nhấp %1$s Chủ đề %2$s để tiếp tục</string>
     <string name="error_all_media_upload_canceled">Tất cả media tải lên đã bị hủy vì lỗi chưa rõ. Vui lòng thử tải lên lại</string>
     <string name="error_unknown_post_type">Định dạng bài viết chưa rõ</string>
     <string name="cannot_add_duplicate_site">Site này đã có trong ứng dụng, bạn không thể thêm nó.</string>
@@ -94,13 +92,7 @@ Language: vi_VN
     <string name="invite_error_invalid_usernames_multiple">Không thể gửi: Có tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_invalid_usernames_one">Không thể gửi: Một tên người dùng hoặc email không hợp lệ</string>
     <string name="invite_error_no_usernames">Vui lòng thêm ít nhất 1 tên người dùng</string>
-    <string name="invite_message_info">(Tùy chọn) Bạn có thể nhập một tin nhắn tùy chỉnh lên tới 500 kí tự mà sẽ được bao gồm trong lời mời tới người dùng.</string>
-    <string name="invite_message_remaining_other">%d kí tự còn lại</string>
-    <string name="invite_message_remaining_one">1 kí tự còn lại</string>
-    <string name="invite_message_remaining_zero">0 kí tự còn lại</string>
-    <string name="invite_message_title">Tin nhắn tùy chỉnh</string>
     <string name="invite">Mời</string>
-    <string name="invite_names_title">Tên người dùng hoặc Email</string>
     <string name="send_link">Gửi liên kết</string>
     <string name="invite_people">Mời mọi người</string>
     <string name="my_site_header_external">Mở rộng</string>

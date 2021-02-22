@@ -91,6 +91,7 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     private val singleSelectMediaPickerSetup = buildMediaPickerSetup(false, setOf(IMAGE))
     private val multiSelectMediaPickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO))
     private val singleSelectVideoPickerSetup = buildMediaPickerSetup(false, setOf(VIDEO))
+    private val singleSelectAudioPickerSetup = buildMediaPickerSetup(false, setOf(AUDIO))
     private val multiSelectFilePickerSetup = buildMediaPickerSetup(true, setOf(IMAGE, VIDEO, AUDIO, DOCUMENT))
     private val site = SiteModel()
     private lateinit var firstItem: MediaItem
@@ -346,6 +347,20 @@ class MediaPickerViewModelTest : BaseUnitTest() {
     }
 
     @Test
+    fun `action mode title is Use Audio when audio browser type`() = test {
+        setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(false, setOf(AUDIO)))
+
+        viewModel.refreshData(false)
+
+        selectItem(0)
+
+        assertActionModeVisible(
+                UiStringRes(R.string.photo_picker_use_audio),
+                EditActionUiModel(isVisible = true, isCounterBadgeVisible = false)
+        )
+    }
+
+    @Test
     fun `action mode title is Select N items when multi selection available`() = test {
         whenever(resourceProvider.getString(R.string.cab_selected)).thenReturn("%d selected")
         setupViewModel(listOf(firstItem, secondItem), buildMediaPickerSetup(true, setOf(IMAGE)))
@@ -496,6 +511,27 @@ class MediaPickerViewModelTest : BaseUnitTest() {
         assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
         assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext)
                 .isEqualTo(ChooserContext.PHOTO_OR_VIDEO)
+    }
+
+    @Test
+    fun `system picker opened for audio when allowed types is AUDIO only`() = test {
+        setupViewModel(listOf(), singleSelectAudioPickerSetup, true)
+
+        val iconClickEvents = mutableListOf<IconClickEvent>()
+
+        viewModel.onNavigate.observeForever {
+            it.peekContent().let { clickEvent ->
+                if (clickEvent is IconClickEvent) {
+                    iconClickEvents.add(clickEvent)
+                }
+            }
+        }
+
+        viewModel.onMenuItemClicked(SYSTEM_PICKER)
+
+        assertThat(iconClickEvents).hasSize(1)
+        assertThat(iconClickEvents[0].action is OpenSystemPicker).isTrue()
+        assertThat((iconClickEvents[0].action as OpenSystemPicker).chooserContext).isEqualTo(ChooserContext.AUDIO)
     }
 
     @Test

@@ -1,64 +1,112 @@
+<ar>
+16.7:
+- يمكن لعملاء Jetpack الآن استعادة موقع أو تنزيل نسخة احتياطية أو إجراء فحص والبحث عن التهديدات وإصلاحها
+- تحديثات متنوعة على محرِّر المكوِّن، بما في ذلك القدرة على تعيين رموز إرساء في مكوِّن العنوان
+- عامل تصفية جديد للمقالات غير المقروءة والقدرة على وضع علامة على المقالات بوصفها مرئية/غير مرئية في القارئ
+- النطاقات الفرعية .blog متاحة الآن
+</ar>
 <en-US>
-16.5:
-Blocks: We added cross-post support for P2, full-width and wide alignment support in the Columns block, the ability to pick a link in the Image block, and the ability to move a block by long-pressing the up/down buttons. We also addressed an issue in text-based blocks with custom font size.
-
-Activity Log: Track your site activity with filters that sort by date or type.
-
-Site Pages: Copy a page with the Duplicate button.
-
-
+16.7:
+- Jetpack customers can now restore a site or download a backup, scan, and fix threats
+- Various block editor updates, including the ability to set anchors in the Heading block
+- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
+- .blog subdomains now available
 </en-US>
-<ko-KR>
-16.5:
-블록: P2용 교차 글 지원, 컬럼 블록에서 전체 넓이와 넓은 정렬을 지원, 이미지 블록에서 링크 고르는 기능, 그리고 위/아래 버튼을 길게 눌러 블록이 이동하는 기능을 추가했습니다.
-
-활동 기록: 날짜나 유형으로 정렬하는 필터로 사이트 활동을 추적하세요.
-
-사이트 패이지: 복제 버튼으로 패이지를 복사하세요.
-
-
-</ko-KR>
-<ru-RU>
-16.5:
-Блоки: Добавлена поддержка кросс-постинга в P2, поддержка полной ширины и широкого выравнивания в блоке столбцов, возможность выбирать ссылку в блоке изображений и возможность перемещать блок, долгим нажатием кнопок вверх / вниз. Исправлена проблема блока текст с пользовательским шрифтом.
-
-Журнал активности: отслеживайте активность на сайте с помощью фильтров, которые сортируются по дате или типу.
-
-Страницы сайта: копируйте страницу с помощью кнопки «Дублировать».
-</ru-RU>
-
 <es-ES>
-16.5:
-Bloques: Hemos añadido compatibilidad para entradas cruzadas para P2, compatibilidad de alineación de ancho completo y amplia en el bloque de columnas, la capacidad de elegir un enlace en el bloque de imagen y la capacidad de mover un bloque manteniendo pulsados los botones arriba/abajo. 
-
-Registro de actividad: Rastrea la actividad de tu sitio con filtros que ordenan por fecha o por tipo.
-
-Páginas del sitio: Copia una página con el botón «Duplicar».
+16.7:
+- Ahora, los clientes de Jetpack pueden restaurar un sitio o descargar una copia de seguridad, explorarlo y corregir fallos de seguridad
+- Varias actualizaciones del editor de bloques, incluyendo la capacidad de establecer anclajes en el bloque de encabezado
+- Nuevo filtro de entradas no leidas y la capacidad de marcar las entradas como vistas/no vistas en el Lector
+- Ahora están disponibles los subdominios «.blog»
 </es-ES>
-
-<sv-SV>
-16.5:
-Block: Vi har lagt till stöd för korspublicering via P2, stöd för fullbred och bred justering i kolumnblocket, möjlighet att välja länk i bildblocket och att flytta ett block inom en sida med långt tryck på knapparna upp/ned. Dessutom har vi åtgärdat ett problem med anpassad textstorlek i textbaserade block.
-
-Aktivitetslogg: Följ händelserna på din webbplats med filter för sortering på datum eller aktivitetstyp.
-
-Sidor på webbplatsen: Skapa kopia av en sida med dupliceringsknappen.
-</sv-SV>
-
-<nl-NL>
-16.5:
-Blokken: we hebben cross-bericht-ondersteuning toegevoegd voor P2, ondersteuning voor volledige en brede uitlijning in het Kolommen blok, de mogelijkheid om een link te kiezen in het afbeelding-blok en de mogelijkheid om een blok te verplaatsen door lang op de knoppen omhoog/omlaag te drukken. 
-
-Activiteitenlog: houd je site activiteit bij met filters die op datum of type sorteren.
-
-Sitepagina's: kopieer een pagina met de knop Dupliceren.
-</nl-NL>
-
+<fr-CA>
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
+</fr-CA>
+<fr-FR>
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
+</fr-FR>
+<iw-IL>
+16.7:
+- לקוחות של Jetpack יכולים כעת לשחזר אתר או להוריד גיבוי, לסרוק את האתר ולתקן איומים
+- מספר עדכונים בעורך הבלוקים, כולל יכולת להגדיר נקודות עיגון בבלוק הכותרת
+- מסנן חדש של פוסטים שלא נקראו ויכולת לסמן פוסטים כ'נקרא' או כ'לא נקרא' ב-Reader
+- דומיינים משנה של ‎.blog זמינים כעת
+</iw-IL>
+<id>
+16.7:
+- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
+- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
+- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
+- Subdomain .blog sudah tersedia
+</id>
 <it-IT>
-16.5:
-Editor a blocchi: Abbiamo aggiunto il support per il cross-post nei P2, la possibilità di selezionare un link nel blocco immagine, e la possibilità di muovere un blocco premendo a lungo sui bottoni su/giù. 
-
-Activity Log: Ora puoi ordinare l'attività del tuo sito per data e tipo.
-
-Site Pages: Copia una pagina con il bottone Duplica.
+16.7:
+- I clienti di Jetpack possono ora ripristinare un sito o un scaricare un backup, scansionare e risolvere le minacce
+- Vari aggiornamenti dell'editor a blocchi, inclusa la possibilità di impostare le ancore nel blocco Titolo
+- Nuovo filtro di articoli non letti e possibilità di contrassegnare gli articoli come letti/non letti nel Reader
+- Sono ora disponibili i sottodomini .blog
 </it-IT>
+<ja-JP>
+16.7:
+- Jetpack をご利用のお客様は、サイトの復元やバックアップのダウンロード、スキャン、脅威の修正を実行できるようになりました
+- 見出しブロックにアンカーを設定する機能など、ブロックエディターの各種更新
+- 未読投稿の新しいフィルターと、リーダーで投稿に既読 / 未読のマークを付ける機能
+- .blog サブドメインが利用可能に
+</ja-JP>
+<ko-KR>
+16.7:
+- 이제 젯팩 고객이 사이트를 복원하거나 백업을 다운로드하고, 위협을 스캔 및 해결할 수 있습니다.
+- 헤딩요소 블록에 앵커를 설정하는 기능을 포함하여 블록 편집기의 다양한 기능 업데이트
+- 새로운 읽지 않은 글 필터 및 리더에 글을 읽음/안 읽음으로 표시하는 기능
+- 이제 .blog를 하위 도메인으로 사용 가능
+</ko-KR>
+<nl-NL>
+16.7:
+- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
+- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
+- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
+- .blog subdomeinen nu beschikbaar
+</nl-NL>
+<ru-RU>
+6.7:
+- Пользователи Jetpack теперь могут восстанавливать сайт или скачивать резервную копию, проверять и устранять угрозы.
+- Различные обновления редактора блоков, включая возможность устанавливать якоря в блоке заголовка.
+- Новый фильтр непрочитанных сообщений и возможность отмечать сообщения как (не)прочитанные в Чтиве
+- Теперь доступны поддомены .blog
+</ru-RU>
+<sv-SE>
+16.7:
+- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
+- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
+- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
+- Nu går det att välja underdomäner under .blog
+</sv-SE>
+<tr-TR>
+16.7:
+- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
+- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
+- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
+- .blog alt alan adları artık kullanılabilir
+</tr-TR>
+<zh-CN>
+16.7：
+- Jetpack 客户现在可以恢复站点或者下载备份、扫描和修复威胁
+- 一些区块编辑器更新，包括能够在标题区块中设置锚
+- 添加新的未读文章过滤器，并且能够在阅读器中将文章标记为“已读”/“未读”
+- .blog 子域现已可用
+</zh-CN>
+<zh-TW>
+16.7：
+- Jetpack 顧客現在可以還原網站或下載備份、掃描與修正威脅
+- 多種區塊編輯器更新，包括在標題區塊設定錨點的功能
+- 新的未讀文章篩選功能，且可以在閱讀器中將文章標註為已看過/未看過
+- 已可使用 .blog 子網域
+</zh-TW>

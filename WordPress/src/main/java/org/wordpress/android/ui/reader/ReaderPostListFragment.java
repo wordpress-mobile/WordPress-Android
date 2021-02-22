@@ -102,6 +102,7 @@ import org.wordpress.android.ui.reader.services.update.ReaderUpdateLogic.UpdateT
 import org.wordpress.android.ui.reader.services.update.ReaderUpdateServiceStarter;
 import org.wordpress.android.ui.reader.services.update.TagUpdateClientUtilsProvider;
 import org.wordpress.android.ui.reader.subfilter.ActionType.OpenSubsAtPage;
+import org.wordpress.android.ui.reader.subfilter.BottomSheetUiState.BottomSheetVisible;
 import org.wordpress.android.ui.reader.subfilter.SubFilterViewModel;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.Site;
 import org.wordpress.android.ui.reader.subfilter.SubfilterListItem.SiteAll;
@@ -118,10 +119,12 @@ import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.DisplayUtils;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
 import org.wordpress.android.widgets.AppRatingDialog;
@@ -219,6 +222,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject QuickStartStore mQuickStartStore;
     @Inject UiHelpers mUiHelpers;
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -251,14 +256,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    public static ReaderPostListFragment newInstance(boolean isTopLevel) {
-        ReaderTag tag = AppPrefs.getReaderTag();
-        if (tag == null) {
-            tag = ReaderUtils.getDefaultTag();
-        }
-        return newInstanceForTag(tag, ReaderPostListType.TAG_FOLLOWED, isTopLevel);
-    }
-
     /*
      * show posts with a specific tag (either TAG_FOLLOWED or TAG_PREVIEW)
      */
@@ -266,7 +263,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
         return newInstanceForTag(tag, listType, false);
     }
 
-    static ReaderPostListFragment newInstanceForTag(ReaderTag tag, ReaderPostListType listType, boolean isTopLevel) {
+    static ReaderPostListFragment newInstanceForTag(
+            ReaderTag tag,
+            ReaderPostListType listType,
+            boolean isTopLevel
+    ) {
         AppLog.d(T.READER, "reader post list > newInstance (tag)");
 
         Bundle args = new Bundle();
@@ -393,6 +394,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 mIsTopLevel = savedInstanceState.getBoolean(ReaderConstants.ARG_IS_TOP_LEVEL);
             }
 
+            if (savedInstanceState.containsKey(ReaderConstants.ARG_ORIGINAL_TAG)) {
+                mTagFragmentStartedWith =
+                        (ReaderTag) savedInstanceState.getSerializable(ReaderConstants.ARG_ORIGINAL_TAG);
+            }
+
             mRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_RESTORE_POSITION);
             mSiteSearchRestorePosition = savedInstanceState.getInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION);
             mWasPaused = savedInstanceState.getBoolean(ReaderConstants.KEY_WAS_PAUSED);
@@ -412,8 +418,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                                                  .get(ReaderViewModel.class);
         }
 
-        if (isFollowingScreen()) {
-            initSubFilterViewModel();
+        if (isFilterableScreen()) {
+            initSubFilterViewModel(savedInstanceState);
         }
 
         mViewModel.getNavigationEvents().observe(getViewLifecycleOwner(),
@@ -495,7 +501,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private void showSnackbar(SnackbarMessageHolder holder) {
-        WPSnackbar snackbar = WPSnackbar.make(
+        Snackbar snackbar = WPSnackbar.make(
                 getSnackbarParent(),
                 mUiHelpers.getTextOfUiString(requireContext(), holder.getMessage()),
                 Snackbar.LENGTH_LONG
@@ -519,11 +525,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
     }
 
-    private void initSubFilterViewModel() {
+    private void initSubFilterViewModel(@Nullable Bundle savedInstanceState) {
         WPMainActivityViewModel wpMainActivityViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
                                                      .get(WPMainActivityViewModel.class);
-        mSubFilterViewModel = new ViewModelProvider(requireActivity(), mViewModelFactory)
-                                                     .get(SubFilterViewModel.class);
+        mSubFilterViewModel = new ViewModelProvider(this, mViewModelFactory).get(
+                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
+                SubFilterViewModel.class
+        );
 
         mSubFilterViewModel.getCurrentSubFilter().observe(getViewLifecycleOwner(), subfilterListItem -> {
             if (getPostListType() != ReaderPostListType.SEARCH_RESULTS) {
@@ -556,17 +564,22 @@ public class ReaderPostListFragment extends ViewPagerFragment
             }
         });
 
-        mSubFilterViewModel.getChangeBottomSheetVisibility().observe(getViewLifecycleOwner(), event -> {
-            event.applyIfNotHandled(isShowing -> {
-                FragmentManager fm = getFragmentManager();
+        mSubFilterViewModel.getBottomSheetUiState().observe(getViewLifecycleOwner(), event -> {
+            event.applyIfNotHandled(uiState -> {
+                FragmentManager fm = getChildFragmentManager();
                 if (fm != null) {
                     SubfilterBottomSheetFragment bottomSheet =
                             (SubfilterBottomSheetFragment) fm.findFragmentByTag(SUBFILTER_BOTTOM_SHEET_TAG);
-                    if (isShowing && bottomSheet == null) {
+                    if (uiState.isVisible() && bottomSheet == null) {
                         mSubFilterViewModel.loadSubFilters();
-                        bottomSheet = new SubfilterBottomSheetFragment();
-                        bottomSheet.show(getFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
-                    } else if (!isShowing && bottomSheet != null) {
+                        BottomSheetVisible visibleState = (BottomSheetVisible) uiState;
+                        bottomSheet = SubfilterBottomSheetFragment.newInstance(
+                                SubFilterViewModel.SUBFILTER_VM_BASE_KEY + mTagFragmentStartedWith.getKeyString(),
+                                visibleState.getCategories(),
+                                mUiHelpers.getTextOfUiString(requireContext(), visibleState.getTitle())
+                        );
+                        bottomSheet.show(getChildFragmentManager(), SUBFILTER_BOTTOM_SHEET_TAG);
+                    } else if (!uiState.isVisible() && bottomSheet != null) {
                         bottomSheet.dismiss();
                     }
                 }
@@ -597,7 +610,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 return null;
             });
         });
-        mSubFilterViewModel.start(mCurrentTag);
+
+        mSubFilterViewModel.start(mTagFragmentStartedWith, mCurrentTag, savedInstanceState);
     }
 
     private void initSubFilterViews(ViewGroup rootView, LayoutInflater inflater) {
@@ -615,7 +629,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mRemoveFilterButton.setOnClickListener(v -> {
             mSubFilterViewModel.setDefaultSubfilter();
         });
-        mSubFilterComponent.setVisibility(isFollowingScreen() ? View.VISIBLE : View.GONE);
+        mSubFilterComponent.setVisibility(isFilterableScreen() ? View.VISIBLE : View.GONE);
 
         ElevationOverlayProvider elevationOverlayProvider = new ElevationOverlayProvider(mRecyclerView.getContext());
         float cardElevation = getResources().getDimension(R.dimen.card_elevation);
@@ -666,7 +680,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         mWasPaused = true;
 
         mViewModel.onFragmentPause(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFollowingScreen());
+                isFilterableScreen());
     }
 
     @Override
@@ -714,7 +728,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         }
 
         mViewModel.onFragmentResume(mIsTopLevel, getPostListType() == ReaderPostListType.SEARCH_RESULTS,
-                isFollowingScreen(), isFollowingScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
+                isFilterableScreen(), isFilterableScreen() ? mSubFilterViewModel.getCurrentSubfilterValue() : null);
     }
 
     /*
@@ -742,7 +756,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     private Site getSiteIfBlogPreview() {
         Site currentSite = null;
 
-        if (isFollowingScreen() && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
+        if (isFilterableScreen() && getPostListType() == ReaderPostListType.BLOG_PREVIEW) {
             currentSite = mSubFilterViewModel.getCurrentSubfilterValue() instanceof Site ? (Site) (mSubFilterViewModel
                     .getCurrentSubfilterValue()) : null;
         }
@@ -764,7 +778,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
         if (isSiteStillAvailable) {
             refreshPosts();
         } else {
-            if (isFollowingScreen()) {
+            if (isFilterableScreen()) {
                 mSubFilterViewModel.setDefaultSubfilter();
             }
         }
@@ -880,7 +894,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (mQuickStartEvent.getTask() == QuickStartTask.FOLLOW_SITE
             && isAdded() && getActivity() instanceof WPMainActivity) {
-            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(
                     R.string.quick_start_dialog_follow_sites_message_short_search,
                     R.drawable.ic_search_white_24dp);
 
@@ -902,6 +916,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         if (mCurrentTag != null) {
             outState.putSerializable(ReaderConstants.ARG_TAG, mCurrentTag);
+        }
+
+        if (mTagFragmentStartedWith != null) {
+            outState.putSerializable(ReaderConstants.ARG_ORIGINAL_TAG, mTagFragmentStartedWith);
         }
 
         if (getPostListType() == ReaderPostListType.TAG_PREVIEW) {
@@ -931,6 +949,10 @@ public class ReaderPostListFragment extends ViewPagerFragment
             outState.putInt(ReaderConstants.KEY_ACTIVE_SEARCH_TAB, tabPosition);
             int siteSearchPosition = tabPosition == TAB_SITES ? getCurrentPosition() : mSiteSearchAdapterPos;
             outState.putInt(ReaderConstants.KEY_SITE_SEARCH_RESTORE_POSITION, siteSearchPosition);
+        }
+
+        if (isFilterableTag(mTagFragmentStartedWith) && mSubFilterViewModel != null) {
+            mSubFilterViewModel.onSaveInstanceState(outState);
         }
 
         super.onSaveInstanceState(outState);
@@ -1111,7 +1133,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
 
 
-        if (isFollowingScreen()) {
+        if (isFilterableScreen()) {
             initSubFilterViews(rootView, inflater);
         }
 
@@ -1710,7 +1732,7 @@ public class ReaderPostListFragment extends ViewPagerFragment
     }
 
     private boolean shouldShowEmptyViewForSelfHostedCta() {
-        return isFollowingScreen() && !mAccountStore.hasAccessToken() && mSubFilterViewModel
+        return isFilterableScreen() && !mAccountStore.hasAccessToken() && mSubFilterViewModel
                 .getCurrentSubfilterValue() instanceof SiteAll;
     }
 
@@ -2002,8 +2024,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
         mCurrentTag = tag;
 
-        if (isFollowingScreen()) {
-            if (mCurrentTag.isFollowedSites() || mCurrentTag.isDefaultInMemoryTag()) {
+        if (isFilterableScreen()) {
+            if (isFilterableTag(mCurrentTag) || mCurrentTag.isDefaultInMemoryTag()) {
                 mSubFilterViewModel.onSubfilterReselected();
             } else {
                 changeReaderMode(new ReaderModeInfo(
@@ -2414,6 +2436,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             discoverData.getPostId());
                     return;
                 } else if (discoverData.hasPermalink()) {
+                    if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                        mViewModel.onExternalPostOpened(post);
+                    }
                     // if we don't have a blogId/postId, we sadly resort to showing the post
                     // in a WebView activity - this will happen for non-JP self-hosted
                     ReaderActivityLauncher.openUrl(getActivity(), discoverData.getPermaLink());
@@ -2481,10 +2506,6 @@ public class ReaderPostListFragment extends ViewPagerFragment
             stat = Stat.READER_TAG_LOADED;
         } else if (tag.isListTopic()) {
             stat = Stat.READER_LIST_LOADED;
-        } else if (tag.isP2()) {
-            stat = Stat.READER_P2_SHOWN;
-        } else if (tag.isA8C()) {
-            stat = Stat.READER_A8C_SHOWN;
         } else {
             return;
         }
@@ -2529,6 +2550,11 @@ public class ReaderPostListFragment extends ViewPagerFragment
                 break;
             case COMMENTS:
                 ReaderActivityLauncher.showReaderComments(requireContext(), post.blogId, post.postId);
+                break;
+            case TOGGLE_SEEN_STATUS:
+                if (mSeenUnseenWithCounterFeatureConfig.isEnabled()) {
+                    mViewModel.onToggleSeenStatusClicked(post, isBookmarksList());
+                }
                 break;
         }
     }
@@ -2619,5 +2645,13 @@ public class ReaderPostListFragment extends ViewPagerFragment
 
     private boolean isFollowingScreen() {
         return mTagFragmentStartedWith != null && mTagFragmentStartedWith.isFollowedSites();
+    }
+
+    private boolean isFilterableScreen() {
+        return isFilterableTag(mTagFragmentStartedWith);
+    }
+
+    private boolean isFilterableTag(ReaderTag tag) {
+        return tag != null && tag.isFilterable();
     }
 }

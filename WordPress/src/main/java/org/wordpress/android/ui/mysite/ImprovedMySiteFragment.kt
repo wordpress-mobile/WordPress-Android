@@ -17,6 +17,7 @@ import com.google.android.material.snackbar.Snackbar
 import com.yalantis.ucrop.UCrop
 import com.yalantis.ucrop.UCrop.Options
 import com.yalantis.ucrop.UCropActivity
+import kotlinx.android.synthetic.main.main_activity.*
 import kotlinx.android.synthetic.main.me_action_layout.*
 import kotlinx.android.synthetic.main.new_my_site_fragment.*
 import org.wordpress.android.R
@@ -28,6 +29,7 @@ import org.wordpress.android.ui.TextInputDialogFragment
 import org.wordpress.android.ui.domains.DomainRegistrationActivity.DomainRegistrationPurpose.CTA_DOMAIN_CREDIT_REDEMPTION
 import org.wordpress.android.ui.domains.DomainRegistrationResultFragment.Companion.RESULT_REGISTERED_DOMAIN_EMAIL
 import org.wordpress.android.ui.main.SitePickerActivity
+import org.wordpress.android.ui.main.WPMainActivity
 import org.wordpress.android.ui.main.utils.MeGravatarLoader
 import org.wordpress.android.ui.mysite.MySiteViewModel.State
 import org.wordpress.android.ui.mysite.SiteIconUploadHandler.ItemUploadedModel
@@ -60,6 +62,8 @@ import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStats
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenStories
 import org.wordpress.android.ui.mysite.SiteNavigationAction.OpenThemes
 import org.wordpress.android.ui.mysite.SiteNavigationAction.StartWPComLoginForJetpackStats
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.photopicker.MediaPickerConstants
 import org.wordpress.android.ui.photopicker.MediaPickerLauncher
@@ -95,6 +99,7 @@ class ImprovedMySiteFragment : Fragment(),
     @Inject lateinit var uploadUtilsWrapper: UploadUtilsWrapper
     private lateinit var viewModel: MySiteViewModel
     private lateinit var dialogViewModel: BasicDialogViewModel
+    private lateinit var dynamicCardMenuViewModel: DynamicCardMenuViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -102,6 +107,8 @@ class ImprovedMySiteFragment : Fragment(),
         viewModel = ViewModelProvider(this, viewModelFactory).get(MySiteViewModel::class.java)
         dialogViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(BasicDialogViewModel::class.java)
+        dynamicCardMenuViewModel = ViewModelProvider(requireActivity(), viewModelFactory)
+                .get(DynamicCardMenuViewModel::class.java)
     }
 
     override fun onCreateView(
@@ -156,6 +163,14 @@ class ImprovedMySiteFragment : Fragment(),
 
         recycler_view.layoutManager = layoutManager
 
+        val adapter = MySiteAdapter(imageManager, uiHelpers)
+
+        savedInstanceState?.getBundle(KEY_NESTED_LISTS_STATES)?.let {
+            adapter.onRestoreInstanceState(it)
+        }
+
+        recycler_view.adapter = adapter
+
         viewModel.uiModel.observe(viewLifecycleOwner, {
             it?.let { uiModel ->
                 loadGravatar(uiModel.accountAvatarUrl)
@@ -163,6 +178,11 @@ class ImprovedMySiteFragment : Fragment(),
                     is State.SiteSelected -> loadData(state.items)
                     is State.NoSites -> loadEmptyView(state.shouldShowImage)
                 }
+            }
+        })
+        viewModel.onScrollTo.observe(viewLifecycleOwner, {
+            it?.applyIfNotHandled {
+                (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this.second, 0)
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
@@ -192,6 +212,16 @@ class ImprovedMySiteFragment : Fragment(),
                 inputDialog.show(parentFragmentManager, TextInputDialogFragment.TAG)
             }
         })
+        viewModel.onDynamicCardMenuShown.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { dynamicCardMenuModel ->
+                ((parentFragmentManager.findFragmentByTag(dynamicCardMenuModel.id) as? DynamicCardMenuFragment)
+                        ?: DynamicCardMenuFragment.newInstance(
+                                dynamicCardMenuModel.cardType,
+                                dynamicCardMenuModel.isPinned
+                        ))
+                        .show(parentFragmentManager, dynamicCardMenuModel.id)
+            }
+        })
         viewModel.onNavigation.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { action ->
                 when (action) {
@@ -201,7 +231,7 @@ class ImprovedMySiteFragment : Fragment(),
                     is OpenMediaPicker -> mediaPickerLauncher.showSiteIconPicker(this, action.site)
                     is OpenCropActivity -> startCropActivity(action.imageUri)
                     is OpenActivityLog -> ActivityLauncher.viewActivityLogList(activity, action.site)
-                    is OpenBackup -> Unit // Do nothing. TODO: Launch 'Backups' screen.
+                    is OpenBackup -> ActivityLauncher.viewBackupList(activity, action.site)
                     is OpenScan -> ActivityLauncher.viewScan(activity, action.site)
                     is OpenPlan -> ActivityLauncher.viewBlogPlans(activity, action.site)
                     is OpenPosts -> ActivityLauncher.viewCurrentBlogPosts(requireActivity(), action.site)
@@ -261,13 +291,16 @@ class ImprovedMySiteFragment : Fragment(),
         dialogViewModel.onInteraction.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { interaction -> viewModel.onDialogInteraction(interaction) }
         })
+        dynamicCardMenuViewModel.onInteraction.observe(viewLifecycleOwner, {
+            it?.getContentIfNotHandled()?.let { interaction -> viewModel.onQuickStartMenuInteraction(interaction) }
+        })
         viewModel.onUploadedItem.observe(viewLifecycleOwner, {
             it?.getContentIfNotHandled()?.let { itemUploadedModel ->
                 when (itemUploadedModel) {
                     is ItemUploadedModel.PostUploaded -> {
                         uploadUtilsWrapper.onPostUploadedSnackbarHandler(
                                 activity,
-                                requireActivity().findViewById(R.id.coordinator), true,
+                                requireActivity().findViewById(R.id.coordinator), true, false,
                                 itemUploadedModel.post, itemUploadedModel.errorMessage, itemUploadedModel.site
                         )
                     }
@@ -307,6 +340,9 @@ class ImprovedMySiteFragment : Fragment(),
         super.onSaveInstanceState(outState)
         recycler_view.layoutManager?.let {
             outState.putParcelable(KEY_LIST_STATE, it.onSaveInstanceState())
+        }
+        (recycler_view.adapter as? MySiteAdapter)?.let {
+            outState.putBundle(KEY_NESTED_LISTS_STATES, it.onSaveInstanceState())
         }
     }
 
@@ -367,7 +403,7 @@ class ImprovedMySiteFragment : Fragment(),
                     AppLog.e(
                             MAIN,
                             "Image cropping failed!",
-                            UCrop.getError(data!!)
+                            UCrop.getError(data)
                     )
                 }
                 viewModel.handleCropResult(UCrop.getOutput(data), resultCode == Activity.RESULT_OK)
@@ -375,17 +411,21 @@ class ImprovedMySiteFragment : Fragment(),
             RequestCodes.DOMAIN_REGISTRATION -> if (resultCode == Activity.RESULT_OK) {
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
+            RequestCodes.CREATE_SITE -> {
+                viewModel.startQuickStart()
+            }
+            RequestCodes.SITE_PICKER -> {
+                if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
+                    viewModel.startQuickStart()
+                }
+            }
         }
     }
 
     private fun loadData(items: List<MySiteItem>) {
         recycler_view.setVisible(true)
         actionable_empty_view.setVisible(false)
-        if (recycler_view.adapter == null) {
-            recycler_view.adapter = MySiteAdapter(imageManager, uiHelpers)
-        }
-        val adapter = recycler_view.adapter as MySiteAdapter
-        adapter.loadData(items)
+        (recycler_view.adapter as? MySiteAdapter)?.loadData(items)
     }
 
     private fun loadEmptyView(shouldShowEmptyViewImage: Boolean) {
@@ -395,26 +435,29 @@ class ImprovedMySiteFragment : Fragment(),
     }
 
     private fun showSnackbar(holder: SnackbarMessageHolder) {
-        snackbarSequencer.enqueue(
-                SnackbarItem(
-                        Info(
-                                view = coordinator_layout,
-                                textRes = holder.message,
-                                duration = Snackbar.LENGTH_LONG
-                        ),
-                        holder.buttonTitle?.let {
-                            Action(
-                                    textRes = holder.buttonTitle,
-                                    clickListener = { holder.buttonAction() }
-                            )
-                        },
-                        dismissCallback = { _, _ -> holder.onDismissAction() }
-                )
-        )
+        activity?.let { parent ->
+            snackbarSequencer.enqueue(
+                    SnackbarItem(
+                            Info(
+                                    view = parent.coordinator,
+                                    textRes = holder.message,
+                                    duration = Snackbar.LENGTH_LONG
+                            ),
+                            holder.buttonTitle?.let {
+                                Action(
+                                        textRes = holder.buttonTitle,
+                                        clickListener = { holder.buttonAction() }
+                                )
+                            },
+                            dismissCallback = { _, _ -> holder.onDismissAction() }
+                    )
+            )
+        }
     }
 
     companion object {
         private const val KEY_LIST_STATE = "key_list_state"
+        private const val KEY_NESTED_LISTS_STATES = "key_nested_lists_states"
         fun newInstance(): ImprovedMySiteFragment {
             return ImprovedMySiteFragment()
         }

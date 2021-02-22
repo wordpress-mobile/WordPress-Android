@@ -111,7 +111,7 @@ class SiteCreationActivity : LocaleAwareActivity(),
             mainViewModel.onBackPressed()
         })
         hppViewModel.onDesignActionPressed.observe(this, Observer { design ->
-            mainViewModel.onSiteDesignSelected(design.template, design.segmentId)
+            mainViewModel.onSiteDesignSelected(design.template)
         })
     }
 

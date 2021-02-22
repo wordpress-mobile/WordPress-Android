@@ -79,6 +79,8 @@ import org.wordpress.android.util.WPPermissionUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.helpers.MediaFile
+import org.wordpress.android.util.ToastUtils
+import org.wordpress.android.util.ToastUtils.Duration
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.widgets.WPSnackbar
 import java.util.Objects
@@ -180,13 +182,19 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 .get(StoryComposerViewModel::class.java)
 
         site?.let {
-            viewModel.start(
+            val postInitialized = viewModel.start(
                     it,
                     editPostRepository,
                     LocalId(localPostId),
                     postEditorAnalyticsSession,
                     notificationType
             )
+
+            // Ensure we have a valid post
+            if (!postInitialized) {
+                showErrorAndFinish(R.string.post_not_found)
+                return@let
+            }
         }
 
         storyEditorMedia.start(requireNotNull(site), this)
@@ -247,6 +255,15 @@ class StoryComposerActivity : ComposeLoopFrameActivity(),
                 }
             }
         })
+    }
+
+    private fun showErrorAndFinish(errorMessageId: Int) {
+        ToastUtils.showToast(
+                this,
+                errorMessageId,
+                ToastUtils.Duration.LONG
+        )
+        finish()
     }
 
     override fun onLoadFromIntent(intent: Intent) {

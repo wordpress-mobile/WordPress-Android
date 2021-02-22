@@ -6,9 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: pl
 -->
 <resources>
-    <string name="backup_item_sqls">Baza danych witryny (SQL)</string>
-    <string name="backup_item_contents">Katalog WP-content (wyłączając themes, plugins, oraz uploads)</string>
-    <string name="backup_item_roots">Katalog główny WordPressa (zawiera wp-config.php oraz pliki nie należące do WordPressa)</string>
     <string name="backup_item_media_uploads">Wgrywanie plików</string>
     <string name="backup_item_plugins">Wtyczki WordPressa</string>
     <string name="backup_item_themes">Motywy WordPressa</string>
@@ -16,7 +13,6 @@ Language: pl
     <string name="gutenberg_native_error">Błąd</string>
     <string name="gutenberg_native_choose_file">Wybierz plik</string>
     <string name="backup_download_details_action_button">Utwórz plik do pobrania</string>
-    <string name="backup_download_details_choose_items_header">Wybierz elementy które powinny być umieszczone w pliku do pobrania:</string>
     <string name="backup_download_details_header">Utwórz kopię zapasową, która można pobrać</string>
     <string name="backup_download_details_page_title">Pobierz kopię zapasową</string>
     <string name="backup_download">Pobranie kopii zapasowej</string>
@@ -36,9 +32,7 @@ Language: pl
     <string name="gutenberg_native_copy_file_url">Kopiuj adres URL pliku</string>
     <string name="gutenberg_native_choose_a_file">WYBIERZ PLIK</string>
     <string name="new_site_creation_domain_header_title">Wybierz domenę</string>
-    <string name="my_site_btn_jetpack_settings">Ustawienia Jetpacka</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_follow_comments">Obserwuj konwersację</string>
     <string name="reader_follow_comments_could_not_unsubscribe_error">Nie można było cofnąć subskrypcji komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Nie można było subskrybować komentarzy dla tego wpisu</string>
     <string name="reader_follow_comments_get_status_error">Błąd pobierania statusu subskrypcji dla wpisu</string>
@@ -147,7 +141,6 @@ Language: pl
     <string name="gutenberg_native_add_this_telephone_link">Dodaj ten odnośnik do numeru telefonu</string>
     <string name="gutenberg_native_add_this_link">Dodaj ten odnośnik</string>
     <string name="gutenberg_native_add_this_email_link">Dodaj ten odnośnik adresu email</string>
-    <string name="suggestion_no_connection">\"Brak połączenia internetowego.\nSugestie nie są dostępne.\"</string>
     <string name="typeface_label_shrikhand">Pogrubiona</string>
     <string name="typeface_label_space_mono">Nowoczesna</string>
     <string name="typeface_label_pacifico">Zabawna</string>
@@ -169,7 +162,6 @@ Language: pl
     <string name="show_n_hidden_items_desc">%1$s więcej elementów</string>
     <string name="gutenberg_native_select_a_layout">Wybierz układ</string>
     <string name="gutenberg_native_note_column_layout_may_vary_between_themes_and_screen_sizes">Uwaga: Układ kolumny może różnić się pomiędzy motywami i różnymi wymiarami ekranów</string>
-    <string name="contact_fragment_title">\@string/contact_support</string>
     <string name="reader_discover_interests_header">Może polubisz</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ukryj</string>
     <string name="create_post_story_fab_tooltip">Utwórz wpis lub relację</string>
@@ -256,7 +248,6 @@ Language: pl
     <string name="gutenberg_native_choose_image_or_video">Wybierz zdjęcie lub film</string>
     <string name="gutenberg_native_choose_image">Wybierz obrazek</string>
     <string name="gutenberg_native_block_removed">Blok usunięto</string>
-    <string name="continue_with_wpcom">Kontynuuj z WordPress.com</string>
     <string name="signup_confirmation_title">Potwierdzenie rejestracji</string>
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
@@ -282,7 +273,6 @@ Language: pl
     <string name="reader_error_request_failed_title">Wystąpił błąd podczas obsługi tego zapytania. Proszę spróbować ponownie później.</string>
     <string name="quick_start_list_update_site_title_title">Ustaw tytuł witryny</string>
     <string name="quick_start_dialog_update_site_title_message_short">Stuknij &lt;b>%1$s&lt;/b> aby nadać nowy tytuł</string>
-    <string name="quick_start_list_update_site_title_subtitle">Nadaj witrynie nazwę, która odzwierciedla jej osobowość i tematykę. Pierwsze wrażenie się liczy!</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Usunięcie tego wpisu anuluje lokalne zmiany, czy jesteś pewien/pewna że chcesz kontynuować?</string>
     <string name="gutenberg_native_s_block_options">%s opcje bloku</string>
     <string name="gutenberg_native_duplicate_block">Duplikuj blok</string>
@@ -340,7 +330,6 @@ Language: pl
     <string name="status_and_visibility">Status i widoczność</string>
     <string name="update_now">Aktualizuj teraz</string>
     <string name="gutenberg_native_open_block_actions_menu">Otwórz menu działań na blokach</string>
-    <string name="gutenberg_native_try_a_starter_layout">Wypróbuj układ startowy</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć dolną zakładkę z dostępnymi opcjami</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Stuknij dwukrotnie aby otworzyć zakładkę akcji z dostępnymi opcjami</string>
     <string name="pages_cannot_be_started">Nie można było otworzyć stron w tej chwili. Proszę spróbować później</string>
@@ -366,7 +355,6 @@ Language: pl
     <string name="page_posts_page_successfully_updated">Strona z wpisami zaktualizowana</string>
     <string name="page_cannot_set_homepage">Aby ustawić Stronę główną włącz opcję \"Statyczna strona główna\" w ustawieniach witryny</string>
     <string name="gutenberg_native_select_a_color">Wybierz kolor</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">Witaj na nowym blogu</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Stuknij dwukrotnie, by przejść do ustawień kolorów</string>
     <string name="reader_empty_followed_blogs_description">Gdy zaczniesz śledzić inne witryny, zobaczysz tutaj ich treść</string>
     <string name="feature_announcement_find_out_mode">Dowiedz się więcej</string>
@@ -400,7 +388,6 @@ Language: pl
     <string name="gutenberg_native_move_block_right_from_position_1_s_to_position_2_s">Przesuń blok w prawo z pozycji %1$s na pozycję %2$s</string>
     <string name="gutenberg_native_move_block_left_from_position_1_s_to_position_2_s">Przesuń blok w lewo z pozycji %1$s na pozycję %2$s</string>
     <string name="new_site_creation_creating_site_loading_title">Hurra!\nPrawie gotowe</string>
-    <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_3">Ustawianie motywu</string>
     <string name="new_site_creation_creating_site_loading_4">Tworzenie kokpitu</string>
     <string name="new_site_creation_creating_site_loading_1">Pobieranie adresu URL witryny</string>
@@ -455,50 +442,14 @@ Language: pl
     <string name="editor_page_saved_online">Strona zapisana online</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Dokonałeś w ostatnim czasie zmian na tej stronie, ale nie zostały zapisane. Wybierz którą wersję wczytać:\n</string>
     <string name="quickpress_shortcut_activity_label">Wybierz blog dla skrótu QuickPress</string>
-    <string name="gutenberg_native_what_people_say">Co mówią ludzie</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Oferujemy zakres usług aby pomóc tobie w osiągnięciu wyników, które ciebie interesują. Nie masz pewności czego potrzebujesz, lub ile to kosztuje. Możemy wyjaśnić jakie usługi są dla ciebie właściwe i powiemy ci o naszych stawkach. Skontaktuj się z nami.</string>
-    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Jesteśmy małym zespołem utalentowanych profesjonalistów z szerokim zakresem umiejętności i doświadczeń. Kochamy to co robimy i robimy to z pasją. Czekamy z niecierpliwością aby rozpocząć współpracę z tobą. </string>
     <string name="gutenberg_native_warning_message">Ostrzeżenie</string>
-    <string name="gutenberg_native_want_to_work_with_us">Chcesz pracować z nami?</string>
-    <string name="gutenberg_native_walt_disney">Walt Disney</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Odwiedzający witrynę będą chcieli wiedzieć kto jest po drugiej stronie. Wykorzystaj tą przestrzeń aby napisać więcej o sobie, swojej witrynie, swoimi biznesie, lub cokolwiek innego chcesz . Użyj rekomendacji poniżej aby zacytować innych, mówiących o tej samej rzeczy - ich słowami.</string>
-    <string name="gutenberg_native_usa">USA</string>
-    <string name="gutenberg_native_team">Zespół</string>
-    <string name="gutenberg_native_strategy">Strategia</string>
     <string name="gutenberg_native_show_post_content">Pokaż treść wpisu</string>
-    <string name="gutenberg_native_services">Usługi</string>
-    <string name="gutenberg_native_samuel_the_dog">Pies Samuel</string>
-    <string name="gutenberg_native_sally_smith">Sally Smith</string>
-    <string name="gutenberg_native_project_name">Nazwa projektu</string>
-    <string name="gutenberg_native_position_or_job_title">Nazwa stanowiska</string>
-    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">Aby zacząć trzeba przestać gadać i zacząć robić.</string>
     <string name="gutenberg_native_success_message">Komunikat o pozytywnym zakończeniu</string>
-    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">To jest przykładowa treść, zawarta w szablonie, która ilustruje jego możliwości. Usuń ją i wstaw swoje słowa i media.</string>
-    <string name="gutenberg_native_portfolio">Portfolio</string>
     <string name="gutenberg_native_link_to">Odnośnik do</string>
     <string name="gutenberg_native_only_show_excerpt">Pokaż tylko zajawkę</string>
-    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Porozmawiajmy 👋 Nie wahaj się skontaktować z nami lub wysłać wiadomość przy pomocy formularza</string>
-    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">Moje portfolio prezentuje różne projekty stworzone w toku mojej kariery. Poniżej moje dane kontaktowe - skontaktuj się.</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Zbudujmy coś razem!</string>
-    <string name="gutenberg_native_let_s_build_something_together">Zbudujmy coś razem!</string>
-    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
-    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
-    <string name="gutenberg_native_inspiration">Inspiracja</string>
-    <string name="gutenberg_native_get_in_touch">Skontaktuj się</string>
-    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
     <string name="gutenberg_native_excerpt_length_words">Długość zajawki (ilość słów)</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Napisz do mnie email:  &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">To twój wybór Harry, który pokazyje kim naprawdę jesteśmy, dużo więcej niż nasze możliwości.</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Nie płacz bo się skończyło, śmiej się bo się zdarzyło.</string>
     <string name="gutenberg_native_customize">PERSONALIZUJ</string>
-    <string name="gutenberg_native_city_10100">Miasto, 10100</string>
     <string name="gutenberg_native_add_paragraph_block">Dodaj blok paragrafu</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Krótki opis usług które oferujesz.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Opis projektu i zaprezentowanych prac</string>
-    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Krótki życiorys z osobistą historią, kluczowe osiągnięcia lub interesujący fakt.</string>
-    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
-    <string name="gutenberg_native_10_street_road">10 Street Road</string>
     <string name="create_post_page_fab_tooltip_contributors">Stwórz wpis</string>
     <string name="post_list_tab_trashed_posts">Usunięto do kosza</string>
     <string name="post_list_tab_scheduled_posts">Zaplanowany</string>
@@ -524,7 +475,6 @@ Language: pl
     <string name="reader_title_subs">Zarządzaj Tematami i Witrynami</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Zaloguj się do WordPress.com aby zobaczyć ostatnie wpisy, z witryn które obserwujesz</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Zaloguj się do WordPress.com aby zobaczyć ostatnie wpisy dotyczące tematów, które obserwujesz</string>
-    <string name="gutenberg_native_template_preview">Podgląd szablonu</string>
     <string name="gutenberg_native_replace_current_block">Zamień aktualny blok</string>
     <string name="gutenberg_native_add_to_end">Dodaj zakończenie</string>
     <string name="gutenberg_native_add_to_beginning">Dodaj początek</string>
@@ -537,7 +487,6 @@ Language: pl
     <string name="reader_filter_main_title">Obserwowane</string>
     <string name="reader_filter_cta">Filtr</string>
     <string name="gutenberg_native_edit_video">Edytuj film</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">Stuknij dwukrotnie aby wybrać układ</string>
     <string name="gutenberg_native_add_a_shortcode">Dodaj krótki kod (shortcode)…</string>
     <string name="gutenberg_native_video_caption_s">Podpis pod filmem. %s</string>
     <string name="post_list_author">Autor wpisu</string>
@@ -597,6 +546,7 @@ Language: pl
     <string name="posts_cannot_be_started">Nie możemy w tym momencie otworzyć wpisów. Proszę spróbować ponownie później</string>
     <string name="reader_filter_tags_title">Tematy</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteka mediów WordPressa</string>
+    <string name="gutenberg_native_unsupported">Niewspierane</string>
     <string name="gutenberg_native_ungroup">Rozgrupuj</string>
     <string name="gutenberg_native_translate">Przetłumacz</string>
     <string name="gutenberg_native_title">Tytuł:</string>
@@ -763,7 +713,6 @@ Language: pl
     <string name="post_settings_notification">Powiadomienie</string>
     <string name="post_settings_time_and_date">Data i czas</string>
     <string name="login_need_help_finding_connected_email">Potrzebujesz pomocy w znalezieniu adresu email za pomocą połączyłe(a)ś się?</string>
-    <string name="enter_wordpress_site">Witryna znajdująca się pod tym adresem nie jest witryną WordPressową. Abyśmy mogli ją podłączyć, witryna musi mieć zainstalowanego WordPressa.</string>
     <string name="login_invalid_site_url">Proszę wprowadzić pełny adres witryny, na przykład example.com.</string>
     <string name="site_settings_editor">Edytor</string>
     <string name="enter_email_for_site">Zaloguj się z WordPress.com aby połączyć z %1$s</string>
@@ -952,25 +901,18 @@ Language: pl
     <string name="quick_start_dialog_upload_icon_title">Wczytaj ikonę witryny</string>
     <string name="quick_start_dialog_upload_icon_message">Przeglądający twoją witrynę zobaczą twoją witrynę w swoich przeglądarkach. Dodaj własną ikonę aby uzyskać profesjonalny wygląd.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Stuknij %1$s Plan %2$s aby sprawdzić swój aktualny plan sibskrypcji i inne dostępne plany. </string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Stuknij %1$s Dodaj stronę %2$s  aby stworzyć nową stronę. </string>
     <string name="quick_start_dialog_publish_post_message">Stwórz szkic i opublikuj swój pierwszy wpis.</string>
     <string name="quick_start_dialog_need_help_message">Przeprowadzimy cię przez podstawy budowy i rozwijania swojej witryny.</string>
     <string name="quick_start_dialog_migration_title">Dokonaliśmy kilku zmian na twojej liście</string>
     <string name="quick_start_dialog_check_stats_message_short">Stuknij%1$s Statystyki %2$s aby sprawdzić jak radzi sobie twoja witryna. </string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Stuknij %1$s Ikonę Twojej Witryny %2$s aby  wczytać nową </string>
-    <string name="quick_start_dialog_create_new_page_message_short">Stuknij %1$s Strony %2$s aby kontynuować. </string>
     <string name="quick_start_dialog_migration_message">Dodaliśmy więcej zadań aby rozwinąć twoją społeczność.</string>
     <string name="quick_start_dialog_explore_plans_title">Eksploruj plany subskrypcji</string>
     <string name="quick_start_dialog_explore_plans_message">Dowiedz się więcej o narzędziach SEO w naszych płatnych planach subskrypcji.</string>
     <string name="quick_start_dialog_enable_sharing_title">Uaktywnij udostępnianie wpisów</string>
     <string name="quick_start_dialog_enable_sharing_message">Automatycznie udostępniaj nowe wpisy na swoich kontach mediów społecznościowych.</string>
-    <string name="quick_start_dialog_customize_site_message">Dostosuj czcionki, dodaj obrazki i więcej.</string>
-    <string name="quick_start_dialog_create_page_title">Stwórz nową stronę</string>
-    <string name="quick_start_dialog_create_page_message">Dodaj stronę dla kluczowej treści - strona \"O nas\" to dobry początek.</string>
     <string name="quick_start_dialog_check_stats_title">Sprawdź statystyki swojej witryny</string>
     <string name="quick_start_dialog_check_stats_message">Bądź na bieżąco w temacie statystyk swojej witryny.</string>
-    <string name="quick_start_dialog_browse_themes_title">Przeglądaj motywy</string>
-    <string name="quick_start_dialog_browse_themes_message">Eksploruj dziesiątki opcji układu i znajdź dla siebie najlepsze rozwiązanie.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Usunięcie Kolejnych Kroków ukryje wszystkie przewodniki na tej witrynie. Nie można cofnąć tej czynności.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Usuń Kolejne Kroki</string>
     <string name="quick_start_remove_next_steps_menu_title">Usuń to</string>
@@ -1155,21 +1097,15 @@ Language: pl
     <string name="quick_start_dialog_need_help_button_positive">Akceptuj</string>
     <string name="quick_start_dialog_need_help_button_neutral">Nigdy</string>
     <string name="quick_start_dialog_follow_sites_title">Obserwuj inne witryny</string>
-    <string name="quick_start_dialog_customize_site_title">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_dialog_follow_sites_message_short_search">Stuknij %1$s Szukanie %2$s aby znaleźć witryny z podobnymi zainteresowaniami</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Stuknij %1$s Czytnik %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Stuknij %1$s Motywy %2$s aby kontynuować</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Stuknij %1$s Personalizuj %2$s aby rozpocząć personalizację swojej witryny</string>
     <string name="quick_start_dialog_need_help_button_negative">Nie, dziękuję</string>
     <string name="quick_start_dialog_follow_sites_message">Znajdź witryny które ciebie inspirują i obserwuj je aby otrzymywać aktualizacje kiedy te coś opublikują.</string>
-    <string name="quick_start_dialog_choose_theme_title">Wybierz szablon</string>
     <string name="quick_start_button_positive">Dalej</string>
     <string name="quick_start_button_negative_short">Anuluj</string>
     <string name="quick_start_button_negative">Nie teraz</string>
     <string name="my_site_create_new_site_title">Nie msz żadnych witryn</string>
-    <string name="quick_start_dialog_choose_theme_message">Przeglądaj wszystkie motywy i znajdź najlepiej dopasowany do swoich potrzeb. </string>
     <string name="content_description_more">Więcej</string>
-    <string name="quick_start_dialog_browse_themes_message_short">Stuknij %1$s Motywy %2$s aby odkryć nowe motywy</string>
     <string name="reader_empty_followed_tags_title">Nie obserwujesz żadnych tematów</string>
     <string name="reader_empty_followed_tags_subtitle">Dodaj tematy aby odnaleźć wpisy dotyczące tych które ciebie interesują</string>
     <string name="stats_jetpack_connection_faq">FAQ Jetpack</string>
@@ -1275,7 +1211,6 @@ Language: pl
     <string name="activity_log_event">Wydarzenie</string>
     <string name="activity_log_icon">Ikona aktywności</string>
     <string name="activity_log">Dziennik aktywności</string>
-    <string name="activity">Aktywność</string>
     <string name="privacy_policy_read">Przeczytaj politykę prywatności</string>
     <string name="third_party_policy_learn_more_caption">Korzystamy z narzędzi do śledzenia, w tym z narzędzi od podmiotów trzecich. Przeczytaj więcej i dowiedz się jak je kontrolować.</string>
     <string name="third_party_policy_learn_more_header">Polityka prywatności podmiotów trzecich</string>
@@ -1960,13 +1895,7 @@ Language: pl
     <string name="invite_error_invalid_usernames_multiple">Nie można wysłać: wystąpiły nieprawidłowe nazwy użytkownika lub adresy email</string>
     <string name="invite_error_invalid_usernames_one">Nie można wysłać: nieprawidłowa nazwa użytkownika lub email</string>
     <string name="invite_error_no_usernames">Proszę dodać przynajmniej jednego użytkownika</string>
-    <string name="invite_message_info">(Opcjonalnie) Możesz wprowadzić tekst wiadomości zawierającej do 500 znaków, która będzie załączona do zaproszenia do użytkownika(ów).</string>
-    <string name="invite_message_remaining_other">Pozostało %d znaków</string>
-    <string name="invite_message_remaining_one">Pozostał 1 znak</string>
-    <string name="invite_message_remaining_zero">Pozostało 0 znaków</string>
-    <string name="invite_message_title">Wiadomość spersonalizowana</string>
     <string name="invite">Zaproś</string>
-    <string name="invite_names_title">Nazwy użytkowników lub adresy e-mail</string>
     <string name="send_link">Wyślij odnośnik</string>
     <string name="invite_people">Zaproś ludzi</string>
     <string name="my_site_header_external">Na zewnątrz</string>

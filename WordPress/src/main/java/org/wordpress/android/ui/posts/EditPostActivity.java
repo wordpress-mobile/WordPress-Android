@@ -213,7 +213,6 @@ import org.wordpress.android.util.analytics.AnalyticsUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils.BlockEditorEnabledSource;
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig;
 import org.wordpress.android.util.config.GutenbergMentionsFeatureConfig;
-import org.wordpress.android.util.config.ModalLayoutPickerFeatureConfig;
 import org.wordpress.android.util.config.TenorFeatureConfig;
 import org.wordpress.android.util.config.WPStoriesFeatureConfig;
 import org.wordpress.android.util.helpers.MediaFile;
@@ -404,7 +403,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Inject TenorFeatureConfig mTenorFeatureConfig;
     @Inject GutenbergMentionsFeatureConfig mGutenbergMentionsFeatureConfig;
     @Inject XPostsCapabilityChecker mXpostsCapabilityChecker;
-    @Inject ModalLayoutPickerFeatureConfig mModalLayoutPickerFeatureConfig;
     @Inject ConsolidatedMediaPickerFeatureConfig mConsolidatedMediaPickerFeatureConfig;
     @Inject CrashLogging mCrashLogging;
     @Inject MediaPickerLauncher mMediaPickerLauncher;
@@ -419,6 +417,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private SiteModel mSite;
     private SiteSettingsInterface mSiteSettings;
     private boolean mIsJetpackSsoEnabled;
+    private boolean mStoryEditingCancelled = false;
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
 
@@ -688,8 +687,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void presentNewPageNoticeIfNeeded() {
         if (mIsPreview
             || !mIsPage
-            || !mIsNewPost
-            || !mModalLayoutPickerFeatureConfig.isEnabled()) {
+            || !mIsNewPost) {
             return;
         }
         String message = mEditPostRepository.getContent().isEmpty() ? getString(R.string.mlp_notice_blank_page_created)
@@ -1698,17 +1696,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         FluxCUtils.mediaFileFromMediaModel(media));
                 if (PostUtils.contentContainsWPStoryGutenbergBlocks(mEditPostRepository.getContent())) {
                     // make sure to sync the local post object with the UI and save
-                    updateAndSavePostAsync();
-                    // if this is a Story media item, then make sure to keep up with the StoriesPrefs serialized slides
-                    // this looks for the slide saved with the local id key (media.getId()), and re-converts it to
-                    // mediaId.
-                    // Also: we don't need to worry about checking if this mediaModel corresponds to a media upload
-                    // within a story block in this post: we will only replace items for which a local-keyed frame has
-                    // been created before, which can only happen when using the Story Creator.
-                    mStoriesPrefs.replaceLocalMediaIdKeyedSlideWithRemoteMediaIdKeyedSlide(
-                            media.getId(),
-                            media.getMediaId(),
-                            mSite.getId()
+                    // then post the event for StoriesEventListener to process
+                    updateAndSavePostAsync(
+                            updatePostResult -> mStoriesEventListener.postStoryMediaUploadedEvent(media)
                     );
                 }
             } else if (media.getMarkedLocallyAsFeatured() && media.getLocalPostId() == mEditPostRepository
@@ -2341,14 +2331,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
+        boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
+
         return new GutenbergPropsBuilder(
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
+                !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 mIsPreview,
-                mModalLayoutPickerFeatureConfig.isEnabled(),
                 wpcomLocaleSlug,
                 postType,
                 themeBundle
@@ -2607,6 +2599,9 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 case RequestCodes.STOCK_MEDIA_PICKER_SINGLE_SELECT_FOR_GUTENBERG_BLOCK:
                     mEditorFragment.mediaSelectionCancelled();
                     return;
+                case RequestCodes.EDIT_STORY:
+                    mStoryEditingCancelled = true;
+                    return;
                 default:
                     // noop
                     return;
@@ -2614,6 +2609,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (requestCode == RequestCodes.EDIT_STORY) {
+            mStoryEditingCancelled = false;
             if (mEditorFragment instanceof GutenbergEditorFragment) {
                 mEditorFragment.onActivityResult(requestCode, resultCode, data);
                 return;
@@ -2757,6 +2753,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                     }
                     break;
                 case RequestCodes.FILE_LIBRARY:
+                case RequestCodes.AUDIO_LIBRARY:
                     if (mConsolidatedMediaPickerFeatureConfig.isEnabled()) {
                         if (data.hasExtra(MediaPickerConstants.EXTRA_MEDIA_URIS)) {
                             List<Uri> uriResults = convertStringArrayIntoUrisList(
@@ -2768,7 +2765,16 @@ public class EditPostActivity extends LocaleAwareActivity implements
                         }
                     } else {
                         uris = WPMediaUtils.retrieveMediaUris(data);
-                        mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+
+                        switch (requestCode) {
+                            case RequestCodes.FILE_LIBRARY:
+                                mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_FILE_VIA_LIBRARY);
+                                break;
+                            case RequestCodes.AUDIO_LIBRARY:
+                                mAnalyticsTrackerWrapper.track(Stat.EDITOR_ADDED_AUDIO_FILE_VIA_LIBRARY);
+                                break;
+                        }
+
                         for (Uri item : uris) {
                             mEditorMedia.addNewMediaToEditorAsync(item, false);
                         }
@@ -2979,6 +2985,11 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_FILE_PICKER);
     }
 
+    @Override public void onAddLibraryAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher
+                .viewWPMediaLibraryPickerForResult(this, mSite, MediaBrowserType.GUTENBERG_SINGLE_AUDIO_FILE_PICKER);
+    }
+
     @Override
     public void onAddPhotoClicked(boolean allowMultipleSelection) {
         if (allowMultipleSelection) {
@@ -3030,6 +3041,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public void onAddFileClicked(boolean allowMultipleSelection) {
         mMediaPickerLauncher.showFilePicker(this, allowMultipleSelection);
+    }
+
+    @Override public void onAddAudioFileClicked(boolean allowMultipleSelection) {
+        mMediaPickerLauncher.showAudioFilePicker(this, allowMultipleSelection);
     }
 
     @Override
@@ -3256,13 +3271,35 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocksList) {
+    public void onEditorFragmentContentReady(
+            ArrayList<Object> unsupportedBlocksList,
+            boolean replaceBlockActionWaiting
+    ) {
         // Note that this method is also used to track startup performance
         // It assumes this is being called when the editor has finished loading
         // If you need to refactor this, please ensure that the startup_time_ms property
         // is still reflecting the actual startup time of the editor
         mPostEditorAnalyticsSession.start(unsupportedBlocksList);
         presentNewPageNoticeIfNeeded();
+
+        // don't start listening for Story events just now if we're waiting for a block to be replaced,
+        // unless the user cancelled editing in which case we should continue as normal and attach the listener
+        if (!replaceBlockActionWaiting || mStoryEditingCancelled) {
+            mStoriesEventListener.startListening();
+        }
+    }
+
+    @Override
+    public void onReplaceStoryEditedBlockActionSent() {
+        // when a replaceBlock signal has been sent, it uses the DeferredEventEmitter so we have to wait for
+        // the block replacement to be completed before we can start throwing block-related events at it
+        // otherwise these events will miss their target
+        mStoriesEventListener.pauseListening();
+    }
+
+    @Override
+    public void onReplaceStoryEditedBlockActionReceived() {
+        mStoriesEventListener.startListening();
     }
 
     private void logTemplateSelection() {
@@ -3298,14 +3335,6 @@ public class EditPostActivity extends LocaleAwareActivity implements
         ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
     }
 
-    @Override public void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown) {
-        AppPrefs.setGutenbergStarterPageTemplatesTooltipShown(tooltipShown);
-    }
-
-    @Override public boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown() {
-        return AppPrefs.getGutenbergStarterPageTemplatesTooltipShown();
-    }
-
     @Override
     public void onHtmlModeToggledInToolbar() {
         toggleHtmlModeOnMenu();
@@ -3334,18 +3363,21 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override public void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId) {
-        boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
-                this,
-                new LocalId(mEditPostRepository.getId()),
-                mNetworkErrorOnLastMediaFetchAttempt,
-                mediaFiles,
-                blockId
-        );
+        // we need to save the latest before editing
+        updateAndSavePostAsync(updatePostResult -> {
+            boolean noSlidesLoaded = mStoriesEventListener.onRequestMediaFilesEditorLoad(
+                    EditPostActivity.this,
+                    new LocalId(mEditPostRepository.getId()),
+                    mNetworkErrorOnLastMediaFetchAttempt,
+                    mediaFiles,
+                    blockId
+            );
 
-        if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
-            // try another fetchMedia request
-            fetchMediaList();
-        }
+            if (mNetworkErrorOnLastMediaFetchAttempt && noSlidesLoaded) {
+                // try another fetchMedia request
+                fetchMediaList();
+            }
+        });
     }
 
     @Override public void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles) {
@@ -3376,6 +3408,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
         }
 
         if (event.isError()) {
+            View view = mEditorFragment.getView();
+            if (view != null) {
+                mUploadUtilsWrapper.showSnackbarError(
+                        view,
+                        getString(R.string.error_media_upload_failed_for_reason,
+                                UploadUtils.getErrorMessageFromMedia(this, event.media))
+                );
+            }
             mEditorMedia.onMediaUploadError(mEditorMediaUploadListener, event.media, event.error);
         } else if (event.completed) {
             // if the remote url on completed is null, we consider this upload wasn't successful
@@ -3481,8 +3521,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
             if (!isRemotePreviewingFromEditor()) {
                 // We are not remote previewing a post: show snackbar and update post status if needed
                 View snackbarAttachView = findViewById(R.id.editor_activity);
-                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(), post,
-                        event.isError() ? event.error.message : null, getSite());
+                mUploadUtilsWrapper.onPostUploadedSnackbarHandler(this, snackbarAttachView, event.isError(),
+                        event.isFirstTimePublish, post, event.isError() ? event.error.message : null, getSite());
                 if (!event.isError()) {
                     mEditPostRepository.set(() -> {
                         updateOnSuccessfulUpload();
