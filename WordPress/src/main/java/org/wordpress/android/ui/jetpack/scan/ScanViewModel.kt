@@ -32,6 +32,7 @@ import org.wordpress.android.ui.jetpack.scan.usecases.FixThreatsUseCase.FixThrea
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase
 import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScanState
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
@@ -55,6 +56,7 @@ class ScanViewModel @Inject constructor(
     private val fetchFixThreatsStatusUseCase: FetchFixThreatsStatusUseCase,
     private val scanStore: ScanStore,
     private val scanTracker: ScanTracker,
+    private val htmlMessageUtils: HtmlMessageUtils,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
@@ -97,12 +99,12 @@ class ScanViewModel @Inject constructor(
         }
     }
 
-    private fun fetchScanState(startWithDelay: Boolean = false, isRetry: Boolean = false) {
+    private fun fetchScanState(invokedByUser: Boolean = false, isRetry: Boolean = false) {
         launch {
             if (scanStateModel == null) updateUiState(FullScreenLoadingUiState)
             if (isRetry) delay(RETRY_DELAY)
 
-            fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = startWithDelay)
+            fetchScanStateUseCase.fetchScanState(site = site, startWithDelay = invokedByUser)
                 .collect { state ->
                     when (state) {
                         is FetchScanState.Success -> {
@@ -111,6 +113,8 @@ class ScanViewModel @Inject constructor(
                             if (state.scanStateModel.state in listOf(State.UNAVAILABLE, State.UNKNOWN)) {
                                 scanTracker.trackOnError(ErrorAction.FETCH_SCAN_STATE, ErrorCause.OTHER)
                                 updateUiState(ErrorUiState.ScanRequestFailed(::onContactSupportClicked))
+                            } else if (invokedByUser && state.scanStateModel.state == State.IDLE) {
+                                showScanFinishedMessage(state.scanStateModel)
                             }
                         }
 
@@ -132,6 +136,28 @@ class ScanViewModel @Inject constructor(
         }
     }
 
+    private fun showScanFinishedMessage(scanStateModel: ScanStateModel) {
+        val threatsCount = scanStateModel.threats?.size ?: 0
+        val message = UiStringText(
+            when (threatsCount) {
+                0 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_no_threats_found_message
+                )
+
+                1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_threats_found_message_singular,
+                    "$threatsCount"
+                )
+
+                else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.scan_finished_threats_found_message_plural,
+                    "$threatsCount"
+                )
+            }
+        )
+        updateSnackbarMessageEvent(message)
+    }
+
     private fun startScan() {
         launch {
             startScanUseCase.startScan(site)
@@ -139,7 +165,7 @@ class ScanViewModel @Inject constructor(
                     when (state) {
                         is StartScanState.ScanningStateUpdatedInDb -> updateUiState(buildContentUiState(state.model))
 
-                        is StartScanState.Success -> fetchScanState(startWithDelay = true)
+                        is StartScanState.Success -> fetchScanState(invokedByUser = true)
 
                         is StartScanState.Failure.NetworkUnavailable -> {
                             scanTracker.trackOnError(ErrorAction.SCAN, ErrorCause.OFFLINE)

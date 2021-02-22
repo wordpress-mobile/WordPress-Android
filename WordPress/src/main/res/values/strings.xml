@@ -1097,6 +1097,9 @@
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threat found</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
