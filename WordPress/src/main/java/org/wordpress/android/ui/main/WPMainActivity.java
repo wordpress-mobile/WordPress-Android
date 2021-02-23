@@ -1102,7 +1102,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                         QuickStartUtils.cancelQuickStartReminder(this);
                         AppPrefs.setQuickStartNoticeRequired(false);
                         AppPrefs.setLastSkippedQuickStartTask(null);
-                        AppPrefs.setCommentsStatusFilter(ALL); // reset comments status filter
                         mPrivateAtomicCookie.clearCookie();
                     }
                 }
