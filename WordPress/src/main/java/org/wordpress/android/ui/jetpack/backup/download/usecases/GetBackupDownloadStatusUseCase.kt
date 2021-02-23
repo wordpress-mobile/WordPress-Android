@@ -68,7 +68,7 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     ): Boolean {
         val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
         return if (status.progress == null) {
-            emit(Complete(status.rewindId, status.downloadId, status.url, published))
+            emit(Complete(status.rewindId, status.downloadId, status.url, published, status.validUntil))
             true
         } else {
             emit(Progress(status.rewindId, status.progress, published))
