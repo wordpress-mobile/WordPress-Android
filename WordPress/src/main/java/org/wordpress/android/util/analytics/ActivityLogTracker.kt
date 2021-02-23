@@ -78,7 +78,7 @@ class ActivityLogTracker @Inject constructor(
             AnalyticsUtils.trackWithSiteDetails(Stat.ACTIVITY_LOG_REWIND_STARTED, site, properties)
         }
     }
-    
+
     fun trackDownloadBackupDownloadButtonClicked(rewindableOnly: Boolean) {
         if (rewindableOnly) {
             tracker.track(Stat.JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED)
