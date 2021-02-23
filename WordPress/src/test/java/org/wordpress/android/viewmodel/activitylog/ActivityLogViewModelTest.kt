@@ -44,6 +44,7 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurchasedProducts
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
+import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBackupDownloadUseCase
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -88,6 +89,7 @@ private const val BACKING_UP_DATE_TIME = "Backing up site from date time"
 private const val BACKING_UP_NO_DATE = "Backing up site"
 private const val BACKED_UP_DATE_TIME = "Your site has been successfully backed up\nBacked up from date time"
 private const val BACKED_UP_NO_DATE = "Your site has been successfully backed up"
+private const val BACKUP_NOTICE = "We successfully created a backup of your site from date time"
 
 private const val REWIND_ID = "rewindId"
 private const val RESTORE_ID = 123456789L
@@ -110,6 +112,7 @@ class ActivityLogViewModelTest {
     @Mock private lateinit var activityLogTracker: ActivityLogTracker
     @Mock private lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Mock private lateinit var restoreFeatureConfig: RestoreFeatureConfig
+    @Mock private lateinit var postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 
     private lateinit var fetchActivityLogCaptor: KArgumentCaptor<FetchActivityLogPayload>
     private lateinit var formatDateRangeTimezoneCaptor: KArgumentCaptor<String>
@@ -139,7 +142,8 @@ class ActivityLogViewModelTest {
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
-                restoreFeatureConfig
+                restoreFeatureConfig,
+                postDismissBackupDownloadUseCase
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
@@ -806,10 +810,14 @@ class ActivityLogViewModelTest {
     @Test
     fun `given no backup progress item, when reloading events, then the menu items are visible`() {
         val displayBackupProgressItem = false
+        val displayNoticeItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem
+                )
         )
 
         assertEquals(
@@ -831,10 +839,14 @@ class ActivityLogViewModelTest {
     @Test
     fun `given no backup progress item, when reloading events, then item is not visible`() {
         val displayBackupProgressItem = false
+        val displayNoticeItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem
+                )
         )
 
         assertEquals(
@@ -856,10 +868,14 @@ class ActivityLogViewModelTest {
     @Test
     fun `given no backup progress item, when reloading events, then move to top is not triggered`() {
         val displayBackupProgressItem = false
+        val displayNoticeItem = false
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem
+                )
         )
 
         assertTrue(moveToTopEvents.isEmpty())
@@ -869,11 +885,15 @@ class ActivityLogViewModelTest {
     fun `given backup progress item, when reloading events, then the menu items are not visible`() {
         val displayBackupProgressItem = true
         val displayBackupProgressWithDate = false
+        val displayNoticeItem = false
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem
+                )
         )
 
         assertEquals(
@@ -896,12 +916,14 @@ class ActivityLogViewModelTest {
     fun `given backup progress item with date, when reloading events, then item is visible with date`() {
         val displayBackupProgressItem = true
         val displayBackupProgressWithDate = true
+        val displayNoticeItem = false
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
                 backupDownloadEvent = BackupDownloadEvent(
                         displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem,
                         rewindId = REWIND_ID
                 )
         )
@@ -926,11 +948,15 @@ class ActivityLogViewModelTest {
     fun `given backup progress item without date, when reloading events, then item is visible without date`() {
         val displayBackupProgressItem = true
         val displayBackupProgressWithDate = false
+        val displayNoticeItem = false
         initBackupProgressMocks(displayBackupProgressWithDate)
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = displayBackupProgressItem)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem
+                )
         )
 
         assertEquals(
@@ -955,7 +981,11 @@ class ActivityLogViewModelTest {
 
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = true,
+                        displayNotice = false,
+                        rewindId = REWIND_ID
+                )
         )
 
         assertTrue(moveToTopEvents.isNotEmpty())
@@ -964,15 +994,31 @@ class ActivityLogViewModelTest {
     @Test
     fun `given backup finished with date, when reloading events, then show backup finished message with date`() {
         val date = activity().published
+        val url = "www.wordpress.com"
+        val validUntil = activity().published
+        val downloadId = 10L
         initBackupProgressFinishedMocks(date, true)
+
+        whenever(
+                resourceProvider.getString(
+                        eq(R.string.activity_log_backup_download_notice_description_with_two_params),
+                        any(),
+                        any()
+                )
+        )
+                .thenReturn(BACKUP_NOTICE)
 
         viewModel.reloadEvents(
                 done = false,
                 backupDownloadEvent = BackupDownloadEvent(
                         displayProgress = false,
+                        displayNotice = true,
                         isCompleted = true,
                         rewindId = REWIND_ID,
-                        published = date
+                        published = date,
+                        downloadId = downloadId,
+                        url = url,
+                        validUntil = validUntil
                 )
         )
 
@@ -988,6 +1034,7 @@ class ActivityLogViewModelTest {
                 done = false,
                 backupDownloadEvent = BackupDownloadEvent(
                         displayProgress = false,
+                        displayNotice = true,
                         isCompleted = true,
                         rewindId = REWIND_ID,
                         published = date
@@ -1005,6 +1052,7 @@ class ActivityLogViewModelTest {
         val displayRestoreProgressWithDate = true
         val displayBackupProgressItem = true
         val displayBackupProgressWithDate = true
+        val displayNoticeItem = false
         initRestoreProgressMocks(displayRestoreProgressWithDate)
         initBackupProgressMocks(displayBackupProgressWithDate)
 
@@ -1016,6 +1064,7 @@ class ActivityLogViewModelTest {
                 ),
                 backupDownloadEvent = BackupDownloadEvent(
                         displayProgress = displayBackupProgressItem,
+                        displayNotice = displayNoticeItem,
                         rewindId = REWIND_ID
                 )
         )
@@ -1610,7 +1659,11 @@ class ActivityLogViewModelTest {
         initBackupProgressMocks(displayProgressWithDate)
         viewModel.reloadEvents(
                 done = false,
-                backupDownloadEvent = BackupDownloadEvent(displayProgress = true, rewindId = REWIND_ID)
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = true,
+                        displayNotice = false,
+                        rewindId = REWIND_ID
+                )
         )
         if (date != null) {
             whenever(
