@@ -4,5 +4,4 @@
     <!-- login -->
     <dimen name="prologue_promo_title_size">24sp</dimen>
     <dimen name="prologue_promo_illustration_margin_bottom">48dp</dimen>
-    <dimen name="jetpack_button_max_width">244dp</dimen>
 </resources>
