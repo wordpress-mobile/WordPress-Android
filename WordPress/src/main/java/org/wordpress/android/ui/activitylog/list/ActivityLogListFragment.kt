@@ -322,7 +322,11 @@ class ActivityLogListFragment : Fragment() {
     private fun setEvents(events: List<ActivityLogListItem>) {
         val adapter: ActivityLogAdapter
         if (log_list_view.adapter == null) {
-            adapter = ActivityLogAdapter(this::onItemClicked, this::onItemButtonClicked, this::onSecondaryActionClicked)
+            adapter = ActivityLogAdapter(
+                    this::onItemClicked,
+                    this::onItemButtonClicked,
+                    this::onSecondaryActionClicked,
+                    uiHelpers)
             log_list_view.adapter = adapter
         } else {
             adapter = log_list_view.adapter as ActivityLogAdapter
