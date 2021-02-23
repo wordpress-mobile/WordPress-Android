@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.comments;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.TextUtils;
@@ -44,7 +43,6 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
-import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
@@ -53,12 +51,12 @@ import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout;
 
 import javax.inject.Inject;
 
-import static android.app.Activity.RESULT_OK;
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
 public class CommentsListFragment extends Fragment {
     static final int COMMENTS_PER_PAGE = 30;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
+    static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId, CommentStatus statusFilter);
@@ -93,10 +91,7 @@ public class CommentsListFragment extends Fragment {
     }
 
     private boolean mIsUpdatingComments = false;
-    private boolean mCanLoadMoreComments = true;
-    boolean mHasAutoRefreshedComments = false;
 
-    private EmptyViewMessageType mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
     private RecyclerView mFilteredCommentsView;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
@@ -156,55 +151,48 @@ public class CommentsListFragment extends Fragment {
     }
 
     private void showEmptyView(EmptyViewMessageType messageType) {
+        int emptyViewMessageStringId = 0;
         if (messageType == EmptyViewMessageType.NO_CONTENT) {
-            String title;
-            if (mCommentStatusFilter == CommentStatusCriteria.ALL) {
-                title = getString(R.string.comments_empty_list);
-            } else {
-                switch (mCommentStatusFilter) {
-                    case APPROVED:
-                        title = getString(R.string.comments_empty_list_filtered_approved);
-                        break;
-                    case UNAPPROVED:
-                        title = getString(R.string.comments_empty_list_filtered_pending);
-                        break;
-                    case SPAM:
-                        title = getString(R.string.comments_empty_list_filtered_spam);
-                        break;
-                    case TRASH:
-                        title = getString(R.string.comments_empty_list_filtered_trashed);
-                        break;
-                    case DELETE:
-                    default:
-                        title = getString(R.string.comments_empty_list);
-                        break;
-                }
+            switch (mCommentStatusFilter) {
+                case APPROVED:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_approved;
+                    break;
+                case UNAPPROVED:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_pending;
+                    break;
+                case SPAM:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_spam;
+                    break;
+                case TRASH:
+                    emptyViewMessageStringId = R.string.comments_empty_list_filtered_trashed;
+                    break;
+                case DELETE:
+                case ALL:
+                default:
+                    emptyViewMessageStringId = R.string.comments_empty_list;
+                    break;
             }
-
-            mActionableEmptyView.title.setText(title);
-            mActionableEmptyView.setVisibility(View.VISIBLE);
-//                    mFilteredCommentsView.setToolbarScrollFlags(0);
+            mActionableEmptyView.image.setVisibility(View.VISIBLE);
         } else {
-            int stringId = 0;
             switch (messageType) {
                 case LOADING:
-                    stringId = R.string.comments_fetching;
+                    emptyViewMessageStringId = R.string.comments_fetching;
                     break;
                 case NETWORK_ERROR:
-                    stringId = R.string.no_network_message;
+                    emptyViewMessageStringId = R.string.no_network_message;
                     break;
                 case PERMISSION_ERROR:
-                    stringId = R.string.error_refresh_unauthorized_comments;
+                    emptyViewMessageStringId = R.string.error_refresh_unauthorized_comments;
                     break;
                 case GENERIC_ERROR:
-                    stringId = R.string.error_refresh_comments;
+                    emptyViewMessageStringId = R.string.error_refresh_comments;
                     break;
             }
-//            mActionableEmptyView.setVisibility(View.VISIBLE);
-//            mActionableEmptyView.title.setText(stringId);
 
-//                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
+            mActionableEmptyView.image.setVisibility(View.GONE);
         }
+        mActionableEmptyView.title.setText(emptyViewMessageStringId);
+        mActionableEmptyView.setVisibility(View.VISIBLE);
     }
 
 
@@ -219,7 +207,6 @@ public class CommentsListFragment extends Fragment {
                 if (!isEmpty) {
                     // Hide the empty view if there are already some displayed comments
                     mActionableEmptyView.setVisibility(View.GONE);
-//                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
                 } else if (!mIsUpdatingComments) {
                     // Change LOADING to NO_CONTENT message
                     showEmptyView(EmptyViewMessageType.NO_CONTENT);
@@ -228,9 +215,7 @@ public class CommentsListFragment extends Fragment {
 
             // adapter calls this to request more comments from server when it reaches the end
             CommentAdapter.OnLoadMoreListener loadMoreListener = () -> {
-                if (mCanLoadMoreComments && !mIsUpdatingComments) {
-                    updateComments(true);
-                }
+                updateComments(true);
             };
 
             // adapter calls this when selected comments have changed (CAB)
@@ -303,8 +288,6 @@ public class CommentsListFragment extends Fragment {
         if (hasAdapter() && comment != null) {
             getAdapter().removeComment(comment);
         }
-        // Show the empty view if the comment count drop to zero
-//        updateEmptyView();
     }
 
     @Override
@@ -315,6 +298,16 @@ public class CommentsListFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mIsUpdatingComments = savedInstanceState.getBoolean(LOADING_IN_PROGRESS_KEY, false);
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+        } else {
+            updateComments(false);
+        }
     }
 
     @Override
@@ -335,9 +328,6 @@ public class CommentsListFragment extends Fragment {
         mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
                 mSwipeRefreshLayout,
                 () -> {
-                    if (!isAdded()) {
-                        return;
-                    }
                     if (!NetworkUtils.checkConnection(getContext())) {
                         showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
                         mSwipeToRefreshHelper.setRefreshing(false);
@@ -346,124 +336,6 @@ public class CommentsListFragment extends Fragment {
                     updateComments(false);
                 }
         );
-
-        Bundle extras = getActivity().getIntent().getExtras();
-        if (extras != null) {
-            mHasAutoRefreshedComments = extras.getBoolean(CommentsActivity.KEY_AUTO_REFRESHED);
-            mEmptyViewMessageType = EmptyViewMessageType.getEnumFromString(extras.getString(
-                    CommentsActivity.KEY_EMPTY_VIEW_MESSAGE));
-        } else {
-            mHasAutoRefreshedComments = false;
-            mEmptyViewMessageType = EmptyViewMessageType.NO_CONTENT;
-        }
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-        } else {
-            // Restore the empty view's message
-            showEmptyView(mEmptyViewMessageType);
-
-            if (!mHasAutoRefreshedComments) {
-                updateComments(false);
-                mHasAutoRefreshedComments = true;
-            }
-        }
-
-//        mFilteredCommentsView.setLogT(AppLog.T.COMMENTS);
-//        mFilteredCommentsView.setFilterListener(new FilteredRecyclerView.FilterListener() {
-//            @Override
-//            public List<FilterCriteria> onLoadFilterCriteriaOptions(boolean refresh) {
-//                @SuppressWarnings("unchecked")
-//                ArrayList<FilterCriteria> criteria = new ArrayList();
-//                Collections.addAll(criteria, mCommentStatuses);
-//                return criteria;
-//            }
-//
-//            @Override
-//            public void onLoadFilterCriteriaOptionsAsync(
-//                    FilteredRecyclerView.FilterCriteriaAsyncLoaderListener listener,
-//                    boolean refresh) {
-//            }
-//
-//            @Override
-//            public void onLoadData(boolean forced) {
-//                updateComments(false);
-//            }
-//
-//            @Override
-//            public void onFilterSelected(int position, FilterCriteria criteria) {
-//                AppPrefs.setCommentsStatusFilter((CommentStatusCriteria) criteria);
-//                mCommentStatusFilter = (CommentStatusCriteria) criteria;
-//            }
-//
-//            @Override
-//            public FilterCriteria onRecallSelection() {
-//                mCommentStatusFilter = AppPrefs.getCommentsStatusFilter();
-//                return mCommentStatusFilter;
-//            }
-//
-//            @Override
-//            public String onShowEmptyViewMessage(EmptyViewMessageType emptyViewMsgType) {
-//                if (emptyViewMsgType == EmptyViewMessageType.NO_CONTENT) {
-//                    FilterCriteria filter = mFilteredCommentsView.getCurrentFilter();
-//                    String title;
-//
-//                    if (filter == null || filter == CommentStatusCriteria.ALL) {
-//                        title = getString(R.string.comments_empty_list);
-//                    } else {
-//                        switch (mCommentStatusFilter) {
-//                            case APPROVED:
-//                                title = getString(R.string.comments_empty_list_filtered_approved);
-//                                break;
-//                            case UNAPPROVED:
-//                                title = getString(R.string.comments_empty_list_filtered_pending);
-//                                break;
-//                            case SPAM:
-//                                title = getString(R.string.comments_empty_list_filtered_spam);
-//                                break;
-//                            case TRASH:
-//                                title = getString(R.string.comments_empty_list_filtered_trashed);
-//                                break;
-//                            default:
-//                                title = getString(R.string.comments_empty_list);
-//                        }
-//                    }
-//
-//                    mActionableEmptyView.title.setText(title);
-//                    mActionableEmptyView.setVisibility(View.VISIBLE);
-////                    mFilteredCommentsView.setToolbarScrollFlags(0);
-//                    return "";
-//                } else {
-//                    int stringId = 0;
-//                    switch (emptyViewMsgType) {
-//                        case LOADING:
-//                            stringId = R.string.comments_fetching;
-//                            break;
-//                        case NETWORK_ERROR:
-//                            stringId = R.string.no_network_message;
-//                            break;
-//                        case PERMISSION_ERROR:
-//                            stringId = R.string.error_refresh_unauthorized_comments;
-//                            break;
-//                        case GENERIC_ERROR:
-//                            stringId = R.string.error_refresh_comments;
-//                            break;
-//                    }
-//
-//                    mActionableEmptyView.setVisibility(View.GONE);
-////                    mFilteredCommentsView.setToolbarScrollFlags(AppBarLayout.LayoutParams.SCROLL_FLAG_SCROLL);
-//                    return getString(stringId);
-//                }
-//            }
-//
-//            @Override
-//            public void onShowCustomEmptyView(EmptyViewMessageType emptyViewMsgType) {
-//            }
-//        });
-
-//        mFilteredCommentsView.setToolbarLeftAndRightPadding(
-//                getResources().getDimensionPixelSize(R.dimen.margin_filter_spinner),
-//                getResources().getDimensionPixelSize(R.dimen.margin_none));
 
         return view;
     }
@@ -477,20 +349,6 @@ public class CommentsListFragment extends Fragment {
         } catch (IllegalArgumentException e) {
             // raised when dialog wasn't created
         }
-    }
-
-    @Override public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == RESULT_OK) {
-//            val commentId = data!!.getLongExtra(COMMENT_MODERATE_ID_EXTRA, -1)
-//            val newStatus = data.getStringExtra(COMMENT_MODERATE_STATUS_EXTRA)
-//            if (commentId >= 0 && !TextUtils.isEmpty(newStatus)) {
-//                onModerateComment(
-//                        commentStore.getCommentBySiteAndRemoteId(site, commentId),
-//                        CommentStatus.fromString(newStatus)
-//                )
-//            }
-//        }
     }
 
     private void moderateSelectedComments(final CommentStatus newStatus) {
@@ -626,24 +484,12 @@ public class CommentsListFragment extends Fragment {
         getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
     }
 
-    void updateEmptyView() {
-        // this is called from CommentsActivity in the case the last moment for a given type has been changed from that
-        // status, leaving the list empty, so we need to update the empty view. The method inside FilteredRecyclerView
-        // does the handling itself, so we only check for null here.
-        if (mFilteredCommentsView != null) {
-            showEmptyView(EmptyViewMessageType.NO_CONTENT);
-        }
-    }
-
     /*
      * get latest comments from server, or pass loadMore=true to get comments beyond the
      * existing ones
      */
     private void updateComments(boolean loadMore) {
-        if (mIsUpdatingComments) {
-            AppLog.w(AppLog.T.COMMENTS, "update comments task already running");
-            return;
-        } else if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
             showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
             mSwipeRefreshLayout.setRefreshing(false);
             ToastUtils.showToast(getActivity(), getString(R.string.error_refresh_comments_showing_older));
@@ -652,32 +498,35 @@ public class CommentsListFragment extends Fragment {
             return;
         }
 
+        mSwipeRefreshLayout.setRefreshing(true);
+
         // immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
         if (!loadMore) {
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
 
-        showEmptyView(EmptyViewMessageType.LOADING);
+        if (getAdapter().getItemCount() == 0) {
+            showEmptyView(EmptyViewMessageType.LOADING);
+        }
 
         int offset = 0;
         if (loadMore) {
             offset = getAdapter().getItemCount();
             mLoadMoreProgress.setVisibility(View.VISIBLE);
         }
-        mSwipeRefreshLayout.setRefreshing(true);
-        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE, offset)));
-    }
-
-
-    String getEmptyViewMessage() {
-        return mEmptyViewMessageType.name();
+        if (!mIsUpdatingComments) {
+            mIsUpdatingComments = true;
+            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                    new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
+                            offset)));
+        }
     }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
-        outState.putSerializable(WordPress.SITE, mSite);
         super.onSaveInstanceState(outState);
+        outState.putSerializable(WordPress.SITE, mSite);
+        outState.putSerializable(LOADING_IN_PROGRESS_KEY, mIsUpdatingComments);
     }
 
     /****
@@ -708,7 +557,6 @@ public class CommentsListFragment extends Fragment {
             MenuInflater inflater = actionMode.getMenuInflater();
             inflater.inflate(R.menu.menu_comments_cab, menu);
             mSwipeRefreshLayout.setEnabled(false);
-//            mFilteredCommentsView.setSwipeToRefreshEnabled(false);
             SmartToast.disableSmartToast(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
             return true;
         }
@@ -789,11 +637,11 @@ public class CommentsListFragment extends Fragment {
         }
     }
 
-    @SuppressWarnings("unused")
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onCommentChanged(OnCommentChanged event) {
         mLoadMoreProgress.setVisibility(View.GONE);
         mSwipeRefreshLayout.setRefreshing(false);
+        mIsUpdatingComments = false;
 
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
@@ -802,7 +650,6 @@ public class CommentsListFragment extends Fragment {
                 return;
             }
         }
-
 
         if (event.isError()) {
             if (!TextUtils.isEmpty(event.error.message)) {

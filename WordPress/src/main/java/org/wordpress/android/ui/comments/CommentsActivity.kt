@@ -36,7 +36,6 @@ import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCrite
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener
 import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickListener
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.prefs.AppPrefs
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNAPPROVED
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.APPROVED
@@ -58,8 +57,8 @@ class CommentsActivity : LocaleAwareActivity(),
     private lateinit var viewPager: ViewPager
     private lateinit var site: SiteModel
 
-    val COMMENT_LIST_FILTERS = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
-//    val COMMENT_LIST_FILTERS = listOf(ALL)
+    private val  COMMENT_LIST_FILTERS = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
+//    private val  COMMENT_LIST_FILTERS = listOf(ALL)
 
     private lateinit var pagerAdapter: CommentsListPagerAdapter
 
@@ -81,33 +80,12 @@ class CommentsActivity : LocaleAwareActivity(),
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
+        CommentSqlUtils.removeComments(site)
         setupActionBar()
 
-        CommentSqlUtils.removeComments(site)
         viewPager = findViewById(R.id.view_pager)
         tabLayout = findViewById(id.tab_layout)
         tabLayout.setupWithViewPager(viewPager)
-
-        val currentCommentStatusType: CommentStatus = if (intent != null && intent.hasExtra(SAVED_COMMENTS_STATUS_TYPE)) {
-            intent.getSerializableExtra(SAVED_COMMENTS_STATUS_TYPE) as CommentStatus
-        } else {
-            // Read the value from app preferences here. Default to 0 - All
-            AppPrefs.getCommentsStatusFilter().toCommentStatus()
-        }
-        if (savedInstanceState == null) {
-//            val commentsListFragment = CommentsListFragment()
-//            // initialize comment status filter first time
-//            commentsListFragment.setCommentStatusFilter(currentCommentStatusType)
-//            supportFragmentManager.beginTransaction()
-//                    .add(
-//                            id.layout_fragment_container, commentsListFragment,
-//                            getString(string.fragment_tag_comment_list)
-//                    )
-//                    .commitAllowingStateLoss()
-        } else {
-            intent.putExtra(KEY_AUTO_REFRESHED, savedInstanceState.getBoolean(KEY_AUTO_REFRESHED))
-            intent.putExtra(KEY_EMPTY_VIEW_MESSAGE, savedInstanceState.getString(KEY_EMPTY_VIEW_MESSAGE))
-        }
 
         pagerAdapter = CommentsListPagerAdapter(COMMENT_LIST_FILTERS, site, supportFragmentManager)
         viewPager.adapter = pagerAdapter
@@ -139,31 +117,8 @@ class CommentsActivity : LocaleAwareActivity(),
         AppLog.d(T.COMMENTS, "comment activity new intent")
     }
 
-//    private val listFragment: CommentsListFragment?
-//        get() {
-//            val fragment = supportFragmentManager.findFragmentByTag(
-//                    getString(
-//                            string.fragment_tag_comment_list
-//                    )
-//            ) ?: return null
-//            return fragment as CommentsListFragment
-//        }
-
-//    private fun hasListFragment(): Boolean {
-//        return listFragment != null
-//    }
-
-    private fun showReaderFragment(remoteBlogId: Long, postId: Long) {
+    private fun showReaderPost(remoteBlogId: Long, postId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId)
-//        val fm = supportFragmentManager
-//        fm.executePendingTransactions()
-//        val fragment: Fragment = newInstance(remoteBlogId, postId)
-//        val ft = fm.beginTransaction()
-//        val tagForFragment = getString(string.fragment_tag_reader_post_detail)
-//        ft.add(id.layout_fragment_container, fragment, tagForFragment)
-//                .addToBackStack(tagForFragment)
-//                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-//        ft.commit()
     }
 
     /*
@@ -182,17 +137,11 @@ class CommentsActivity : LocaleAwareActivity(),
      * reader detail fragment
      */
     override fun onPostClicked(note: Note, remoteBlogId: Long, postId: Int) {
-        showReaderFragment(remoteBlogId, postId.toLong())
+        showReaderPost(remoteBlogId, postId.toLong())
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
         outState.putSerializable(WordPress.SITE, site)
-
-        // retain the id of the highlighted comments
-//        if (hasListFragment()) {
-//            outState.putBoolean(KEY_AUTO_REFRESHED, listFragment!!.mHasAutoRefreshedComments)
-//            outState.putString(KEY_EMPTY_VIEW_MESSAGE, listFragment!!.emptyViewMessage)
-//        }
         super.onSaveInstanceState(outState)
     }
 
@@ -215,7 +164,7 @@ class CommentsActivity : LocaleAwareActivity(),
         }
     }
 
-    fun onModerateComment(
+    private fun onModerateComment(
         comment: CommentModel,
         newStatus: CommentStatus
     ) {
@@ -228,7 +177,6 @@ class CommentsActivity : LocaleAwareActivity(),
             val oldStatus = CommentStatus.fromString(comment.status)
 
             val fragments: ArrayList<CommentsListFragment?> = ArrayList()
-
             if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
                 fragments.add(pagerAdapter.getItemAtPosition(COMMENT_LIST_FILTERS.indexOf(ALL)))
                 fragments.add(pagerAdapter.getItemAtPosition(COMMENT_LIST_FILTERS.indexOf(APPROVED)))
@@ -303,8 +251,6 @@ class CommentsActivity : LocaleAwareActivity(),
     }
 
     companion object {
-        const val KEY_AUTO_REFRESHED = "has_auto_refreshed"
-        const val KEY_EMPTY_VIEW_MESSAGE = "empty_view_message"
         private const val SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type"
         const val COMMENT_MODERATE_ID_EXTRA = "commentModerateId"
         const val COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus"
