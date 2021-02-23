@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 137
+        return 138
     }
 
     override fun getDbName(): String {
@@ -1492,6 +1492,10 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("ALTER TABLE WCProductAttributeModel RENAME TO WCGlobalAttributeModel")
                 }
                 136 -> migrate(version) {
+                    db.execSQL("CREATE TABLE DynamicCard (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER," +
+                            "DYNAMIC_CARD_TYPE TEXT,STATE TEXT)")
+                }
+                137 -> migrate(version) {
                     db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutModel")
                     db.execSQL(
                             "CREATE TABLE GutenbergLayoutModel (" +
