@@ -75,6 +75,7 @@
     <ID>EmptyFunctionBlock:PrepublishingAddCategoryFragment.kt$PrepublishingAddCategoryFragment.&lt;no name provided&gt;${ }</ID>
     <ID>EmptyFunctionBlock:QuickStartFocusPoint.kt$QuickStartFocusPoint.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider${ }</ID>
+    <ID>EmptyFunctionBlock:ReaderPostDetailFragment.kt$ReaderPostDetailFragment${ }</ID>
     <ID>EmptyFunctionBlock:ScanHistoryFragment.kt$ScanHistoryFragment.&lt;no name provided&gt;${ }</ID>
     <ID>EmptyFunctionBlock:SearchInputWithHeader.kt$SearchInputWithHeader.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:SettingsUsernameChangerFragment.kt$SettingsUsernameChangerFragment.&lt;no name provided&gt;${ }</ID>
@@ -100,7 +101,7 @@
     <ID>FunctionParameterNaming:WizardManager.kt$WizardManager$T: WizardStep</ID>
     <ID>LargeClass:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>LargeClass:PagesViewModel.kt$PagesViewModel : ScopedViewModel</ID>
-    <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
+    <ID>LargeClass:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
     <ID>LongMethod:ActivityLogDetailFragment.kt$ActivityLogDetailFragment$override fun onActivityCreated(savedInstanceState: Bundle?)</ID>
     <ID>LongMethod:ActivityLogListFragment.kt$ActivityLogListFragment$private fun setupObservers()</ID>
     <ID>LongMethod:AuthorsUseCase.kt$AuthorsUseCase$override fun buildUiModel(domainModel: AuthorsModel, uiState: SelectedAuthor): List&lt;BlockListItem&gt;</ID>
@@ -126,6 +127,7 @@
     <ID>LongMethod:PrepublishingHomeViewModel.kt$PrepublishingHomeViewModel$private fun setupHomeUiState( editPostRepository: EditPostRepository, site: SiteModel, isStoryPost: Boolean )</ID>
     <ID>LongMethod:PublishSettingsFragment.kt$PublishSettingsFragment$override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?</ID>
     <ID>LongMethod:ReaderDiscoverFragment.kt$ReaderDiscoverFragment$private fun initViewModel()</ID>
+    <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View?</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun initViewModel()</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun onPostExecute(result: Boolean)</ID>
     <ID>LongMethod:ReaderPostMoreButtonUiStateBuilder.kt$ReaderPostMoreButtonUiStateBuilder$fun buildMoreMenuItemsBlocking( post: ReaderPost, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit ): MutableList&lt;SecondaryAction&gt;</ID>
@@ -228,7 +230,7 @@
     <ID>LongParameterList:ReaderDiscoverDataProvider.kt$ReaderDiscoverDataProvider$( @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, private val eventBusWrapper: EventBusWrapper, private val readerTagWrapper: ReaderTagWrapper, private val getDiscoverCardsUseCase: GetDiscoverCardsUseCase, private val shouldAutoUpdateTagUseCase: ShouldAutoUpdateTagUseCase, private val fetchDiscoverCardsUseCase: FetchDiscoverCardsUseCase )</ID>
     <ID>LongParameterList:ReaderDiscoverViewModel.kt$ReaderDiscoverViewModel$( private val postUiStateBuilder: ReaderPostUiStateBuilder, private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder, private val readerPostCardActionsHandler: ReaderPostCardActionsHandler, private val readerDiscoverDataProvider: ReaderDiscoverDataProvider, private val reblogUseCase: ReblogUseCase, private val readerUtilsWrapper: ReaderUtilsWrapper, private val appPrefsWrapper: AppPrefsWrapper, private val analyticsTrackerWrapper: AnalyticsTrackerWrapper, displayUtilsWrapper: DisplayUtilsWrapper, private val getFollowedTagsUseCase: GetFollowedTagsUseCase, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher )</ID>
     <ID>LongParameterList:ReaderPostCardActionsHandler.kt$ReaderPostCardActionsHandler$( private val analyticsTrackerWrapper: AnalyticsTrackerWrapper, private val reblogUseCase: ReblogUseCase, private val bookmarkUseCase: ReaderPostBookmarkUseCase, private val followUseCase: ReaderSiteFollowUseCase, private val blockBlogUseCase: BlockBlogUseCase, private val likeUseCase: PostLikeUseCase, private val siteNotificationsUseCase: ReaderSiteNotificationsUseCase, private val undoBlockBlogUseCase: UndoBlockBlogUseCase, private val fetchSiteUseCase: ReaderFetchSiteUseCase, private val appPrefsWrapper: AppPrefsWrapper, private val dispatcher: Dispatcher, private val resourceProvider: ResourceProvider, private val htmlMessageUtils: HtmlMessageUtils, private val appRatingDialogWrapper: AppRatingDialogWrapper, private val seenStatusToggleUseCase: ReaderSeenStatusToggleUseCase, private val readerBlogTableWrapper: ReaderBlogTableWrapper, @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher )</ID>
-    <ID>LongParameterList:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.Companion$( isFeed: Boolean, blogId: Long, postId: Long, directOperation: DirectOperation?, commentId: Int, interceptedUri: String?, postListType: ReaderPostListType?, postSlugsResolutionUnderway: Boolean )</ID>
+    <ID>LongParameterList:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.Companion$( isFeed: Boolean, blogId: Long, postId: Long, directOperation: DirectOperation?, commentId: Int, isRelatedPost: Boolean, interceptedUri: String?, postListType: ReaderPostListType?, postSlugsResolutionUnderway: Boolean )</ID>
     <ID>LongParameterList:ReaderPostDetailUiStateBuilder.kt$ReaderPostDetailUiStateBuilder$( post: ReaderPost, moreMenuItems: List&lt;SecondaryAction&gt;? = null, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onBlogSectionClicked: (Long, Long) -&gt; Unit, onFollowClicked: () -&gt; Unit, onTagItemClicked: (String) -&gt; Unit )</ID>
     <ID>LongParameterList:ReaderPostDetailViewModel.kt$ReaderPostDetailViewModel$( private val readerPostCardActionsHandler: ReaderPostCardActionsHandler, private val readerUtilsWrapper: ReaderUtilsWrapper, private val readerPostTableWrapper: ReaderPostTableWrapper, private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder, private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder, private val reblogUseCase: ReblogUseCase, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher )</ID>
     <ID>LongParameterList:ReaderPostUiStateBuilder.kt$ReaderPostUiStateBuilder$( post: ReaderPost, isDiscover: Boolean = false, photonWidth: Int, photonHeight: Int, postListType: ReaderPostListType, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onItemClicked: (Long, Long) -&gt; Unit, onItemRendered: (ReaderCardUiState) -&gt; Unit, onDiscoverSectionClicked: (Long, Long) -&gt; Unit, onMoreButtonClicked: (ReaderPostUiState) -&gt; Unit, onMoreDismissed: (ReaderPostUiState) -&gt; Unit, onVideoOverlayClicked: (Long, Long) -&gt; Unit, onPostHeaderViewClicked: (Long, Long) -&gt; Unit, onTagItemClicked: (String) -&gt; Unit, moreMenuItems: List&lt;SecondaryAction&gt;? = null )</ID>
@@ -424,12 +426,14 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostsListActivity.kt:295</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1002</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1004</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:874</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:876</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:880</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:882</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1036</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1038</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1042</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1044</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1164</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1166</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:835</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:837</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:251</ID>
@@ -635,7 +639,7 @@
     <ID>TooManyFunctions:ReaderInterestsFragment.kt$ReaderInterestsFragment : Fragment</ID>
     <ID>TooManyFunctions:ReaderInterestsViewModel.kt$ReaderInterestsViewModel : ViewModel</ID>
     <ID>TooManyFunctions:ReaderPostCardActionsHandler.kt$ReaderPostCardActionsHandler</ID>
-    <ID>TooManyFunctions:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
+    <ID>TooManyFunctions:ReaderPostDetailFragment.kt$ReaderPostDetailFragment : ViewPagerFragmentOnActivityBackPressedListenerScrollDirectionListenerReaderCustomViewListenerReaderWebViewPageFinishedListenerReaderWebViewUrlClickListenerPrivateAtCookieProgressDialogOnDismissListenerAutoHideToolbarListener</ID>
     <ID>TooManyFunctions:ReaderPostDetailViewModel.kt$ReaderPostDetailViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ReaderPostListViewModel.kt$ReaderPostListViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ReaderPostUiStateBuilder.kt$ReaderPostUiStateBuilder</ID>
