@@ -22,6 +22,7 @@ import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
@@ -224,6 +225,7 @@ class ActivityLogListFragment : Fragment() {
                             trackingSource
                     )
                     is ShowRewindDialog -> displayRewindDialog(event)
+                    is DownloadBackupFile -> ActivityLauncher.downloadBackupDownloadFile(requireActivity(), url)
                 }
             }
         })
