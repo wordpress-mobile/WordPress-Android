@@ -76,7 +76,6 @@ class QuickStartRepository
     val activeTask = _activeTask as LiveData<QuickStartTask?>
 
     private var pendingTask: QuickStartTask? = null
-    private var pendingCategoryCompletion: QuickStartTaskType? = null
 
     private fun buildQuickStartCategory(siteId: Int, quickStartTaskType: QuickStartTaskType) = QuickStartCategory(
             quickStartTaskType,
@@ -94,7 +93,11 @@ class QuickStartRepository
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
-            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }
+            dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }.onEach { taskType ->
+                if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
+                    onCategoryCompleted(taskType)
+                }
+            }
         }
         return merge(quickStartTaskTypes, activeTask) { types, activeTask ->
             val categories = if (quickStartUtils.isQuickStartInProgress(siteId)) {
@@ -115,7 +118,6 @@ class QuickStartRepository
 
     fun refresh() {
         refresh.postValue(true)
-        showCategoryCompletionMessageIfNeeded()
     }
 
     fun setActiveTask(task: QuickStartTask) {
@@ -154,9 +156,6 @@ class QuickStartRepository
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
             quickStartStore.setDoneTask(site.id.toLong(), task, true)
             analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
-            if (quickStartUtils.isEveryQuickStartTaskDoneForType(site.id, task.taskType)) {
-                pendingCategoryCompletion = task.taskType
-            }
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
                 refresh()
@@ -180,9 +179,8 @@ class QuickStartRepository
         job.cancel()
     }
 
-    private fun showCategoryCompletionMessageIfNeeded() = pendingCategoryCompletion?.let { taskType ->
-        pendingCategoryCompletion = null
-        val completionMessage = getCategoryCompletionMessage(taskType)
+    private fun onCategoryCompleted(categoryType: QuickStartTaskType) {
+        val completionMessage = getCategoryCompletionMessage(categoryType)
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
     }
 
