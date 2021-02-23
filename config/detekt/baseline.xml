@@ -373,7 +373,6 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewHolder.kt:37</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:54</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:56</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.kt:140</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:309</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:343</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:354</ID>
@@ -520,7 +519,7 @@
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
     <ID>TooManyFunctions:ModalLayoutPickerFragment.kt$ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment</ID>
-    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : ScopedViewModel</ID>
+    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
