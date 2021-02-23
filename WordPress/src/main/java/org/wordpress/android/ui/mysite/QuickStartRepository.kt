@@ -95,7 +95,7 @@ class QuickStartRepository
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
             dynamicCardStore.getCards(siteId).dynamicCardTypes.map { it.toQuickStartTaskType() }.onEach { taskType ->
                 if (quickStartUtils.isEveryQuickStartTaskDoneForType(siteId, taskType)) {
-                    onCategoryCompleted(taskType)
+                    onCategoryCompleted(siteId, taskType)
                 }
             }
         }
@@ -179,9 +179,10 @@ class QuickStartRepository
         job.cancel()
     }
 
-    private fun onCategoryCompleted(categoryType: QuickStartTaskType) {
+    private suspend fun onCategoryCompleted(siteId: Int, categoryType: QuickStartTaskType) {
         val completionMessage = getCategoryCompletionMessage(categoryType)
         _onSnackbar.postValue(Event(SnackbarMessageHolder(UiStringText(completionMessage.asHtml()))))
+        dynamicCardStore.removeCard(siteId, categoryType.toDynamicCardType())
     }
 
     private fun getCategoryCompletionMessage(taskType: QuickStartTaskType) = when (taskType) {
@@ -196,6 +197,14 @@ class QuickStartRepository
         return when (this) {
             CUSTOMIZE_QUICK_START -> CUSTOMIZE
             GROW_QUICK_START -> GROW
+        }
+    }
+
+    private fun QuickStartTaskType.toDynamicCardType(): DynamicCardType {
+        return when (this) {
+            CUSTOMIZE -> CUSTOMIZE_QUICK_START
+            GROW -> GROW_QUICK_START
+            UNKNOWN -> throw IllegalArgumentException("Unexpected quick start type")
         }
     }
 
