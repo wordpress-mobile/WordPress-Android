@@ -99,7 +99,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    _uiState.value = convertPostToUiState(post)
+                    updatePostActions(post)
                 }
             }
         }
@@ -247,6 +247,15 @@ class ReaderPostDetailViewModel @Inject constructor(
                 .copy(followButtonUiState = updatedFollowButtonUiState)
 
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
+    }
+
+    private fun updatePostActions(post: ReaderPost) {
+        _uiState.value = _uiState.value?.copy(
+                actions = postDetailUiStateBuilder.buildPostActions(
+                        post,
+                        this@ReaderPostDetailViewModel::onButtonClicked
+                )
+        )
     }
 
     private fun updateRelatedPostsUiState(state: FetchRelatedPostsState.Success) {
