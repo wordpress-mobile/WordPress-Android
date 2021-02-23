@@ -425,7 +425,7 @@ public class CommentStore extends Store {
         if (!payload.isError()) {
             // Clear existing comments in case some were deleted on the server. Only remove them if we request the
             // first comments (offset == 0).
-            if (payload.offset == 0 && payload.requestedStatus == CommentStatus.ALL) {
+            if (payload.offset == 0) {
                 CommentSqlUtils.removeCommentsWithFilters(payload.site, payload.requestedStatus);
             }
 
