@@ -9,6 +9,7 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.EV
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.FOOTER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.HEADER
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.LOADING
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.NOTICE
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType.PROGRESS
 import org.wordpress.android.util.toFormattedDateString
 import org.wordpress.android.util.toFormattedTimeString
@@ -81,12 +82,21 @@ sealed class ActivityLogListItem(val type: ViewType) {
 
     object Loading : ActivityLogListItem(LOADING)
 
+    data class Notice(
+        val label: String,
+        val primaryActionButtonClickListener: (String) -> Unit,
+        val secondaryActionButtonClickListener: (Long) -> Unit,
+        val url: String,
+        val downloadId: Long
+    ) : ActivityLogListItem(NOTICE)
+
     enum class ViewType(val id: Int) {
         EVENT(0),
         PROGRESS(1),
         HEADER(2),
         FOOTER(3),
-        LOADING(4)
+        LOADING(4),
+        NOTICE(5)
     }
 
     enum class Status(val value: String, @DrawableRes val color: Int) {
