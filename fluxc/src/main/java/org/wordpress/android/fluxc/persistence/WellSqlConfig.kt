@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 136
+        return 137
     }
 
     override fun getDbName(): String {
@@ -1490,6 +1490,10 @@ open class WellSqlConfig : DefaultWellConfig {
                 }
                 135 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("ALTER TABLE WCProductAttributeModel RENAME TO WCGlobalAttributeModel")
+                }
+                136 -> migrate(version) {
+                    db.execSQL("CREATE TABLE DynamicCard (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER," +
+                            "DYNAMIC_CARD_TYPE TEXT,STATE TEXT)")
                 }
             }
         }
