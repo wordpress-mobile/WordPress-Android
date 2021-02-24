@@ -134,34 +134,29 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `uiState updated on post show`() = test {
-        // Arrange + Act
+    fun `when post show is triggered, then ui is updated`() = test {
         val uiStates = init().uiStates
 
-        // Assert
         Assertions.assertThat(uiStates.size).isEqualTo(1)
         Assertions.assertThat(uiStates.first()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
-    fun `uiState updated when post is updated`() = test {
-        // Arrange
+    fun `when post is updated, then ui is updated`() = test {
         val uiStates = init().uiStates
-        // Act
+
         viewModel.onUpdatePost(readerPost)
-        // Assert
+
         Assertions.assertThat(uiStates.size).isEqualTo(2)
         Assertions.assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
-    fun `When user clicks on like button postActionHandler is invoked`() = test {
-        // Arrange
+    fun `when like button is clicked, then like action is invoked`() = test {
         val uiStates = init().uiStates
 
-        // Act
         uiStates.last().actions.likeAction.onClicked!!.invoke(readerPost.postId, 200, LIKE)
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(LIKE),
@@ -171,13 +166,11 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user clicks on comments button postActionHandler is invoked`() = test {
-        // Arrange
+    fun `when comments button is clicked, then comments action is invoked`() = test {
         val uiStates = init().uiStates
 
-        // Act
         uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, COMMENTS)
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(COMMENTS),
@@ -187,13 +180,11 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user clicks on reblog button postActionHandler is invoked`() = test {
-        // Arrange
+    fun `when reblog button is clicked, then reblog action is invoked`() = test {
         val uiStates = init().uiStates
 
-        // Act
         uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, REBLOG)
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(REBLOG),
@@ -203,24 +194,21 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user picks a site for reblog action the app shows the editor`() {
-        // Arrange
+    fun `when site is picked for reblog action, then editor is opened for reblog`() {
         val navigaitonObserver = init().navigation
         fakeNavigationFeed.value = Event(ShowSitePickerForResult(mock(), mock(), mock()))
-        // Act
+
         viewModel.onReblogSiteSelected(1)
-        // Assert
+
         Assertions.assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
     @Test
-    fun `When user clicks on bookmark button postActionHandler is invoked`() = test {
-        // Arrange
+    fun `when bookmark button is clicked, then bookmark action is invoked`() = test {
         val uiStates = init().uiStates
 
-        // Act
         uiStates.last().actions.commentsAction.onClicked!!.invoke(readerPost.postId, 200, BOOKMARK)
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(BOOKMARK),
@@ -230,23 +218,21 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user clicks on a tag, a list of posts for that tag is shown`() = test {
-        // Arrange
+    fun `when tag is clicked, then posts for tag are shown`() = test {
         val observers = init()
-        // Act
+
         observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
-        // Assert
+
         Assertions.assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
-    fun `When user clicks on header's blog section post action handler is invoked`() = test {
-        // Arrange
+    fun `when header blog section is clicked, then selected blog's header click action is invoked`() = test {
         val uiStates = init().uiStates
-        // Act
+
         uiStates.last().headerUiState.blogSectionUiState.blogSectionClickData!!.onBlogSectionClicked!!
                 .invoke(readerPost.postId, readerPost.blogId)
-        // Assert
+
         verify(readerPostCardActionsHandler).handleHeaderClicked(
                 eq(readerPost.blogId),
                 eq(readerPost.feedId)
@@ -254,33 +240,29 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user clicks on more button menu is shown`() = test {
-        // Arrange
+    fun `when more button is clicked, then more menu is shown`() = test {
         val uiStates = init().uiStates
 
-        // Act
         viewModel.onMoreButtonClicked()
-        // Assert
+
         Assertions.assertThat(uiStates.last().moreMenuItems).isNotNull
     }
 
     @Test
-    fun `When user dismisses the menu the ui state is updated`() = test {
-        // Arrange
+    fun `when user dismisses the menu, then more menu is not shown`() = test {
         val uiStates = init().uiStates
-        // Act
+
         viewModel.onMoreMenuDismissed()
-        // Assert
+
         Assertions.assertThat(uiStates.last().moreMenuItems).isNull()
     }
 
     @Test
-    fun `When user clicks more menu list item post action handler is invoked`() = test {
-        // Arrange
+    fun `when more menu list item is clicked, then corresponding action is invoked`() = test {
         init().uiStates
-        // Act
+
         viewModel.onMoreMenuItemClicked(FOLLOW)
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(FOLLOW),
@@ -290,12 +272,11 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `When user clicks follow button in the header, post action handler is invoked`() = test {
-        // Arrange
+    fun `when header follow button is clicked, then follow action is invoked`() = test {
         val uiStates = init().uiStates
-        // Act
+
         uiStates.last().headerUiState.followButtonUiState.onFollowButtonClicked!!.invoke()
-        // Assert
+
         verify(readerPostCardActionsHandler).onAction(
                 eq(readerPost),
                 eq(FOLLOW),
