@@ -37,7 +37,9 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayloa
 import org.wordpress.android.fluxc.store.ActivityLogStore.OnActivityLogFetched
 import org.wordpress.android.test
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.DownloadBackupFile
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Notice
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress.Type.RESTORE
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
@@ -45,6 +47,7 @@ import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase.JetpackPurcha
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
 import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBackupDownloadUseCase
+import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -992,58 +995,47 @@ class ActivityLogViewModelTest {
     }
 
     @Test
-    fun `given backup finished with date, when reloading events, then show backup finished message with date`() {
-        val date = activity().published
-        val url = "www.wordpress.com"
-        val validUntil = activity().published
-        val downloadId = 10L
-        initBackupProgressFinishedMocks(date, true)
+    fun `given backup complete, when reloading events, then move to top is triggered`() {
+        initBackupDownloadCompleteMocks()
 
-        whenever(
-                resourceProvider.getString(
-                        eq(R.string.activity_log_backup_download_notice_description_with_two_params),
-                        any(),
-                        any()
-                )
-        )
-                .thenReturn(BACKUP_NOTICE)
+        viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
 
-        viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = false,
-                        displayNotice = true,
-                        isCompleted = true,
-                        rewindId = REWIND_ID,
-                        published = date,
-                        downloadId = downloadId,
-                        url = url,
-                        validUntil = validUntil
-                )
-        )
-
-        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_DATE_TIME)
+        assertTrue(moveToTopEvents.isNotEmpty())
     }
 
     @Test
-    fun `given backup finished without date, when reloading events, then show backup finished msg without date`() {
-        val date = null
-        initBackupProgressFinishedMocks(date, false)
+    fun `given backup finished, when reloading events, then list contains notice item`() {
+        initBackupDownloadCompleteMocks()
 
-        viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = false,
-                        displayNotice = true,
-                        isCompleted = true,
-                        rewindId = REWIND_ID,
-                        published = date
-                )
-        )
+        viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
 
-        assertEquals(snackbarMessages.firstOrNull(), BACKED_UP_NO_DATE)
+        assertThat(events.first()?.first()).isInstanceOf(Notice::class.java)
     }
 
+    @Test
+    fun `given notice shown, when download clicked, then a navigationEvent is posted`() {
+        initBackupDownloadCompleteMocks()
+
+        viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
+
+        val notice = events.first()?.filterIsInstance<Notice>()
+        notice?.first()?.primaryActionButtonClickListener?.invoke(backupDownloadCompleteEvent().url as String)
+        assertThat(navigationEvents.last().peekContent()).isInstanceOf(DownloadBackupFile::class.java)
+    }
+
+    @Test
+    fun `given notice shown, when dismiss clicked, then item is removed from list`() {
+        initBackupDownloadCompleteMocks()
+
+        viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
+
+        events.first()
+                ?.filterIsInstance<Notice>()
+                ?.first()
+                ?.secondaryActionButtonClickListener
+                ?.invoke(backupDownloadCompleteEvent().downloadId as Long)
+        assertThat(events.last()?.filterIsInstance<Notice>()).isEmpty()
+    }
     /* RELOAD EVENTS - RESTORE AND BACKUP DOWNLOAD */
 
     @Test
@@ -1395,7 +1387,7 @@ class ActivityLogViewModelTest {
 
     @Test
     fun `when query backup status, then trigger get backup download status`() = test {
-        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.PROGRESS.id)
 
         verify(getBackupDownloadStatusUseCase).getBackupDownloadStatus(site, DOWNLOAD_ID)
     }
@@ -1407,7 +1399,7 @@ class ActivityLogViewModelTest {
                 .thenReturn(flow { emit(progress) })
         initBackupProgressMocks()
 
-        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.PROGRESS.id)
 
         assertEquals(
                 viewModel.events.value,
@@ -1435,7 +1427,7 @@ class ActivityLogViewModelTest {
         whenever(store.fetchActivities(anyOrNull()))
                 .thenReturn(OnActivityLogFetched(10, false, ActivityLogAction.FETCH_ACTIVITIES))
 
-        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.COMPLETE.id)
 
         assertEquals(
                 viewModel.events.value,
@@ -1453,13 +1445,14 @@ class ActivityLogViewModelTest {
         )
     }
 
+    // todo: annmarie this might not be the case anymore
     @Test
     fun `given status is something else, when query backup status, then do not trigger anything`() = test {
         val success = BackupDownloadRequestState.Success(REWIND_ID, REWIND_ID, DOWNLOAD_ID)
         whenever(getBackupDownloadStatusUseCase.getBackupDownloadStatus(site, DOWNLOAD_ID))
                 .thenReturn(flow { emit(success) })
 
-        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.CANCEL.id)
 
         assertNull(viewModel.events.value)
     }
@@ -1470,7 +1463,7 @@ class ActivityLogViewModelTest {
         whenever(resourceProvider.getString(eq(R.string.activity_log_backup_started_snackbar_message), any(), any()))
                 .thenReturn(BACKUP_STARTED)
 
-        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID)
+        viewModel.onQueryBackupDownloadStatus(REWIND_ID, DOWNLOAD_ID, JetpackBackupDownloadActionState.PROGRESS.id)
 
         assertEquals(snackbarMessages.firstOrNull(), BACKUP_STARTED)
     }
@@ -1603,6 +1596,17 @@ class ActivityLogViewModelTest {
             isProgressBarVisible = false
     )
 
+    private fun backupDownloadCompleteEvent() = BackupDownloadEvent(
+            displayProgress = false,
+            displayNotice = true,
+            isCompleted = true,
+            rewindId = REWIND_ID,
+            published = activity().published,
+            url = "www.wordpress.com",
+            validUntil = activity().published,
+            downloadId = 10L
+    )
+
     private fun initRestoreProgressMocks(displayProgressWithDate: Boolean = true) {
         if (displayProgressWithDate) {
             whenever(store.getActivityLogItemByRewindId(REWIND_ID)).thenReturn(activity())
@@ -1655,27 +1659,14 @@ class ActivityLogViewModelTest {
         }
     }
 
-    private fun initBackupProgressFinishedMocks(date: Date?, displayProgressWithDate: Boolean) {
-        initBackupProgressMocks(displayProgressWithDate)
-        viewModel.reloadEvents(
-                done = false,
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = true,
-                        displayNotice = false,
-                        rewindId = REWIND_ID
+    private fun initBackupDownloadCompleteMocks() {
+        whenever(
+                resourceProvider.getString(
+                        eq(R.string.activity_log_backup_download_notice_description_with_two_params),
+                        any(),
+                        any()
                 )
         )
-        if (date != null) {
-            whenever(
-                    resourceProvider.getString(
-                            eq(R.string.activity_log_backup_finished_snackbar_message),
-                            any(),
-                            any()
-                    )
-            ).thenReturn(BACKED_UP_DATE_TIME)
-        } else {
-            whenever(resourceProvider.getString(R.string.activity_log_backup_finished_snackbar_message_no_dates))
-                    .thenReturn(BACKED_UP_NO_DATE)
-        }
+                .thenReturn(BACKUP_NOTICE)
     }
 }
