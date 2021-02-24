@@ -230,6 +230,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
     private val downloadId = 100L
     private val progress = 50
     private val published = Date()
+    private val validUntil = Date()
 
     private val statusModel = BackupDownloadStatusModel(
             downloadId = downloadId,
@@ -238,7 +239,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             startedAt = Date(1609690147756),
             progress = null,
             downloadCount = 0,
-            validUntil = Date(1609690147756),
+            validUntil = validUntil,
             url = url
     )
 
@@ -249,7 +250,7 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             startedAt = Date(1609690147756),
             progress = progress,
             downloadCount = 0,
-            validUntil = Date(1609690147756),
+            validUntil = validUntil,
             url = url
     )
 
@@ -267,6 +268,6 @@ class GetBackupDownloadStatusUseCaseTest : BaseUnitTest() {
             actor = null
     )
 
-    private val completeStatus = Complete(rewindId, downloadId, url, published)
+    private val completeStatus = Complete(rewindId, downloadId, url, published, validUntil)
     private val progressStatus = Progress(rewindId, progress, published)
 }
