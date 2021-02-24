@@ -194,6 +194,9 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {
+        /* Related posts only available for wp.com */
+        if (!sourcePost.isWP) return
+
         launch {
             when (val fetchRelatedPostsState = readerFetchRelatedPostsUseCase.fetchRelatedPosts(sourcePost)) {
                 is FetchRelatedPostsState.AlreadyRunning -> { // Do Nothing

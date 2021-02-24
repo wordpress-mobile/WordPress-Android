@@ -742,15 +742,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /*
-     * request posts related to the current one - only available for wp.com
-     */
-    private fun requestRelatedPosts() {
-        if (hasPost() && post?.isWP == true) {
-            viewModel.onRelatedPostsRequested(post as ReaderPost)
-        }
-    }
-
-    /*
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
@@ -1322,7 +1313,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     hasAlreadyUpdatedPost = true
                     updatePost()
                 }
-                requestRelatedPosts()
+                post?.let { viewModel.onRelatedPostsRequested(it) }
             }, 300)
         } else {
             AppLog.w(T.READER, "reader post detail > page finished - " + url!!)
