@@ -42,6 +42,7 @@ import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
 import org.wordpress.android.ui.EmptyViewMessageType;
+import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.SmartToast;
 import org.wordpress.android.util.ToastUtils;
@@ -52,11 +53,17 @@ import javax.inject.Inject;
 
 import static org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper;
 
-public class CommentsListFragment extends Fragment {
+public class CommentsListFragment extends ViewPagerFragment {
     static final int COMMENTS_PER_PAGE = 30;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
     static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
     static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
+
+    @Nullable
+    @Override
+    public View getScrollableViewForUniqueIdProvision() {
+        return mRecyclerView;
+    }
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId, CommentStatus statusFilter);

@@ -8,6 +8,7 @@ import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.Callback
 import com.google.android.material.tabs.TabLayout
@@ -29,6 +30,7 @@ import org.wordpress.android.models.Note
 import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityId.COMMENTS
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.APPROVED
@@ -40,16 +42,19 @@ import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickLi
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
 class CommentsActivity : LocaleAwareActivity(),
         OnCommentSelectedListener,
-        OnPostClickListener {
+        OnPostClickListener,
+        ScrollableViewInitializedListener {
     private val mTrashedComments = CommentList()
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
+    private lateinit var appBar: AppBarLayout
     private lateinit var site: SiteModel
 
     private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
@@ -70,6 +75,8 @@ class CommentsActivity : LocaleAwareActivity(),
         site = checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
             "SiteModel cannot be null, check the PendingIntent starting CommentsActivity"
         }
+
+        appBar = findViewById(id.appbar_main)
 
         val toolbar = findViewById<Toolbar>(id.toolbar_main)
         setSupportActionBar(toolbar)
@@ -248,5 +255,10 @@ class CommentsActivity : LocaleAwareActivity(),
     companion object {
         const val COMMENT_MODERATE_ID_EXTRA = "commentModerateId"
         const val COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus"
+    }
+
+    override fun onScrollableViewInitialized(containerId: Int) {
+        appBar.setLiftOnScrollTargetViewIdAndRequestLayout(containerId)
+        appBar.setTag(id.posts_non_search_recycler_view_id_tag_key, containerId)
     }
 }
