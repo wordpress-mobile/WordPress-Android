@@ -38,6 +38,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
@@ -46,6 +47,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 
@@ -69,6 +71,8 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerPostTableWrapper: ReaderPostTableWrapper
     @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
     @Mock private lateinit var reblogUseCase: ReblogUseCase
+    @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
+    @Mock private lateinit var eventBusWrapper: EventBusWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -86,6 +90,8 @@ class ReaderPostDetailViewModelTest {
                 menuUiStateBuilder,
                 postDetailsUiStateBuilder,
                 reblogUseCase,
+                readerFetchRelatedPostsUseCase,
+                eventBusWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
