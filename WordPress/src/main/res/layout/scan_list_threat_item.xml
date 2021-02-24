@@ -13,8 +13,8 @@
         style="@style/Scan.Threat.Icon"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/icon_group"
-        app:layout_constraintStart_toStartOf="@id/icon_group"
+        app:layout_constraintEnd_toEndOf="@id/icon_wrapper"
+        app:layout_constraintStart_toStartOf="@id/icon_wrapper"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ProgressBar
@@ -22,12 +22,12 @@
         style="@style/Scan.Threat.Icon"
         android:importantForAccessibility="no"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@id/icon_group"
-        app:layout_constraintStart_toStartOf="@id/icon_group"
+        app:layout_constraintEnd_toEndOf="@id/icon_wrapper"
+        app:layout_constraintStart_toStartOf="@id/icon_wrapper"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.constraintlayout.widget.Group
-        android:id="@id/icon_group"
+    <View
+        android:id="@id/icon_wrapper"
         style="@style/Scan.Threat.Icon"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/threat_header"
@@ -39,7 +39,7 @@
         style="@style/Scan.Threat.Header"
         app:layout_constraintBottom_toTopOf="@id/threat_sub_header"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/icon_group"
+        app:layout_constraintStart_toEndOf="@+id/icon_wrapper"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@string/threat_item_header_vulnerable_plugin" />

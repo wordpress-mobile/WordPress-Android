@@ -122,12 +122,14 @@ class ScanFragment : Fragment(R.layout.scan_fragment) {
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(
-            scan_state_layout,
-            uiHelpers.getTextOfUiString(requireContext(), message),
-            Snackbar.LENGTH_LONG
-        )
-        snackbar.show()
+        view?.let {
+            val snackbar = WPSnackbar.make(
+                it,
+                uiHelpers.getTextOfUiString(requireContext(), message),
+                Snackbar.LENGTH_LONG
+            )
+            snackbar.show()
+        }
     }
 
     private fun showFixThreatsConfirmationDialog(holder: OpenFixThreatsConfirmationDialog) {

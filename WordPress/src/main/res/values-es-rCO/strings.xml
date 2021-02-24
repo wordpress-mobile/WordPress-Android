@@ -276,7 +276,6 @@ Language: es_CO
     <string name="send_link_by_email">Enviar el enlace por correo electrónico</string>
     <string name="reset_your_password">Restablecer tu contraseña</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>
     <string name="quick_start_list_update_site_title_title">Configura el título de tu sitio</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un nuevo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>

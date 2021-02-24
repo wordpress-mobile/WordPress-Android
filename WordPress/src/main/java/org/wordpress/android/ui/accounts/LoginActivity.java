@@ -526,8 +526,7 @@ public class LoginActivity extends LocaleAwareActivity implements ConnectionCall
 
     @Override
     public void gotUnregisteredEmail(String email) {
-        SignupConfirmationFragment signupConfirmationFragment = SignupConfirmationFragment.newInstance(email);
-        slideInFragment(signupConfirmationFragment, true, SignupConfirmationFragment.TAG);
+        showSignupMagicLink(email);
     }
 
     @Override

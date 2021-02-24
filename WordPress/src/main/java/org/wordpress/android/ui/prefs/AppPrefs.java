@@ -14,7 +14,6 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat;
 import org.wordpress.android.fluxc.model.JetpackCapability;
 import org.wordpress.android.fluxc.model.PostModel;
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask;
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType;
 import org.wordpress.android.models.PeopleListFilter;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
@@ -28,7 +27,6 @@ import org.wordpress.android.util.WPMediaUtils;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -126,6 +124,7 @@ public class AppPrefs {
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS,
         SHOULD_AUTO_ENABLE_GUTENBERG_FOR_THE_NEW_POSTS_PHASE_2,
         GUTENBERG_OPT_IN_DIALOG_SHOWN,
+        GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN,
 
         IS_QUICK_START_NOTICE_REQUIRED,
         LAST_SKIPPED_QUICK_START_TASK,
@@ -156,7 +155,6 @@ public class AppPrefs {
         READER_DISCOVER_WELCOME_BANNER_SHOWN,
         MANUAL_FEATURE_CONFIG,
         SITE_JETPACK_CAPABILITIES,
-        SITE_JETPACK_CAPABILITIES_LAST_UPDATED,
         REMOVED_QUICK_START_CARD_TYPE,
         PINNED_DYNAMIC_CARD
     }
@@ -865,6 +863,14 @@ public class AppPrefs {
         remove(DeletablePrefKey.SUPPORT_NAME);
     }
 
+    public static void setGutenbergFocalPointPickerTooltipShown(boolean tooltipShown) {
+        setBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, tooltipShown);
+    }
+
+    public static boolean getGutenbergFocalPointPickerTooltipShown() {
+        return getBoolean(DeletablePrefKey.GUTENBERG_FOCAL_POINT_PICKER_TOOLTIP_SHOWN, false);
+    }
+
     /*
      * returns a list of local IDs of sites recently chosen in the site picker
      */
@@ -953,30 +959,6 @@ public class AppPrefs {
 
     public static boolean isQuickStartDisabled() {
         return getBoolean(UndeletablePrefKey.IS_QUICK_START_DISABLED, false);
-    }
-
-    public static void removeQuickStartTaskType(QuickStartTaskType quickStartTaskType) {
-        prefs().edit().putBoolean(getQuickStartTaskTypeKey(quickStartTaskType), true).apply();
-    }
-
-    public static boolean isQuickStartTaskTypeRemoved(QuickStartTaskType quickStartTaskType) {
-        return prefs().getBoolean(getQuickStartTaskTypeKey(quickStartTaskType), false);
-    }
-
-    @NonNull private static String getQuickStartTaskTypeKey(QuickStartTaskType quickStartTaskType) {
-        return DeletablePrefKey.REMOVED_QUICK_START_CARD_TYPE.name() + quickStartTaskType.toString();
-    }
-
-    public static void setPinnedDynamicCardType(String dynamicCardType) {
-        setString(DeletablePrefKey.PINNED_DYNAMIC_CARD, dynamicCardType);
-    }
-
-    public static void removePinnedDynamicCardType() {
-        remove(DeletablePrefKey.PINNED_DYNAMIC_CARD);
-    }
-
-    public static String getPinnedDynamicCardType() {
-        return getString(DeletablePrefKey.PINNED_DYNAMIC_CARD);
     }
 
     public static void setMainFabTooltipDisabled(Boolean disable) {
@@ -1270,10 +1252,6 @@ public class AppPrefs {
         }
 
         Editor editor = prefs().edit();
-        editor.putLong(
-                DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId),
-                new Date().getTime()
-        );
         editor.putStringSet(
                 DeletablePrefKey.SITE_JETPACK_CAPABILITIES + String.valueOf(remoteSiteId),
                 capabilitiesSet
@@ -1291,10 +1269,5 @@ public class AppPrefs {
             capabilities.add(JetpackCapability.Companion.fromString(item));
         }
         return capabilities;
-    }
-
-    public static long getSiteJetpackCapabilitiesLastUpdated(long remoteSiteId) {
-        return prefs()
-                .getLong(DeletablePrefKey.SITE_JETPACK_CAPABILITIES_LAST_UPDATED + String.valueOf(remoteSiteId), 0);
     }
 }

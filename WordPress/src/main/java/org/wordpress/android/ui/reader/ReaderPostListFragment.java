@@ -77,6 +77,9 @@ import org.wordpress.android.ui.ViewPagerFragment;
 import org.wordpress.android.ui.main.BottomNavController;
 import org.wordpress.android.ui.main.SitePickerActivity;
 import org.wordpress.android.ui.main.WPMainActivity;
+import org.wordpress.android.ui.main.WPMainNavigationView;
+import org.wordpress.android.ui.main.WPMainNavigationView.PageType;
+import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.pages.SnackbarMessageHolder;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
@@ -124,6 +127,7 @@ import org.wordpress.android.util.StringUtils;
 import org.wordpress.android.util.ToastUtils;
 import org.wordpress.android.util.WPActivityUtils;
 import org.wordpress.android.util.analytics.AnalyticsUtils;
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.viewmodel.main.WPMainActivityViewModel;
@@ -224,6 +228,8 @@ public class ReaderPostListFragment extends ViewPagerFragment
     @Inject TagUpdateClientUtilsProvider mTagUpdateClientUtilsProvider;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject SeenUnseenWithCounterFeatureConfig mSeenUnseenWithCounterFeatureConfig;
+    @Inject QuickStartRepository mQuickStartRepository;
+    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
 
     private enum ActionableEmptyViewButtonType {
         DISCOVER,
@@ -595,7 +601,9 @@ public class ReaderPostListFragment extends ViewPagerFragment
                             ((OpenSubsAtPage) action).getTabIndex()
                     );
                 } else {
-                    wpMainActivityViewModel.onOpenLoginPage();
+                    wpMainActivityViewModel.onOpenLoginPage(
+                            WPMainNavigationView.Companion.getPosition(PageType.MY_SITE)
+                    );
                 }
 
                 return null;
@@ -905,8 +913,12 @@ public class ReaderPostListFragment extends ViewPagerFragment
             ((WPMainActivity) getActivity()).showQuickStartSnackBar(snackbar);
 
             if (getSelectedSite() != null) {
-                QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
-                        mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
+                if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+                    mQuickStartRepository.completeTask(QuickStartTask.FOLLOW_SITE);
+                } else {
+                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, QuickStartTask.FOLLOW_SITE,
+                            mDispatcher, getSelectedSite(), mQuickStartEvent, getContext());
+                }
             }
         }
     }

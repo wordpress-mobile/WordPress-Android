@@ -5,6 +5,8 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R
+import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
+import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.PUBLISH_POST
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
@@ -13,8 +15,6 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.GROW
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard.QuickStartTaskCard
 import org.wordpress.android.ui.mysite.QuickStartRepository.QuickStartCategory
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment.DynamicCardMenuModel
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.CUSTOMIZE_QUICK_START
-import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.PUBLISH_POST_TUTORIAL
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.UPDATE_SITE_TITLE
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails.VIEW_SITE_TUTORIAL

@@ -23,6 +23,7 @@ public class PostSettingsListDialogFragment extends DialogFragment {
     public static final String TAG = "post_list_settings_dialog_fragment";
 
     enum DialogType {
+        HOMEPAGE_STATUS,
         POST_STATUS,
         POST_FORMAT
     }
@@ -82,6 +83,13 @@ public class PostSettingsListDialogFragment extends DialogFragment {
         };
 
         switch (mDialogType) {
+            case HOMEPAGE_STATUS:
+                builder.setTitle(R.string.post_settings_status);
+                builder.setSingleChoiceItems(
+                        R.array.post_settings_homepage_statuses,
+                        mCheckedIndex,
+                        clickListener);
+                break;
             case POST_STATUS:
                 builder.setTitle(R.string.post_settings_status);
                 builder.setSingleChoiceItems(

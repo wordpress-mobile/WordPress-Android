@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-03 11:54:08+0000
+Translation-Revision-Date: 2021-02-18 11:54:10+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">ピンを外す</string>
+    <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
+    <string name="quick_start_list_view_site_title">サイトを表示</string>
+    <string name="quick_start_list_upload_icon_subtitle">センスのよいサイトアイコンを追加しましょう。</string>
+    <string name="quick_start_list_follow_site_subtitle">参考になるサイトを探してフォローしましょう。</string>
+    <string name="quick_start_list_enable_sharing_title">シェアを有効化</string>
+    <string name="quick_start_list_enable_sharing_subtitle">新しい投稿を自分のソーシャルメディアと自動的に共有しましょう。</string>
+    <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。</string>
+    <string name="quick_start_list_check_stats_title">統計情報を確認</string>
+    <string name="backup_download_status_failure_bullet2">ダウンロード可能なバックアップファイルの作成を試みます。</string>
+    <string name="backup_download_status_failure_bullet1">ダウンロード可能なバックアップにかかる時間を示すステータスが見つかりませんでした。</string>
+    <string name="backup_download_status_failure_heading">ダウンロード可能なバックアップのステータスが見つかりませんでした</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">チェックマークアイコン</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">時計アイコン</string>
+    <string name="restore_status_failure_bullet3">終了時には通知が表示されます。</string>
+    <string name="restore_status_failure_bullet2">引き続きサイトの復元を試みています。</string>
+    <string name="restore_status_failure_bullet1">復元にかかる時間を示すステータスが見つかりませんでした。</string>
+    <string name="restore_status_failure_heading">復元のステータスが見つかりませんでした</string>
+    <string name="restore_complete_failed_description">サイトを復元できませんでした</string>
+    <string name="restore_warning_action_button">確認</string>
+    <string name="restore_warning_description_with_two_parameters">お使いのサイトを%2$sの%1$sに戻しますか ?\n        それ以降の変更はすべて失われます。</string>
+    <string name="backup_download_complete_failed_description">バックアップを作成できませんでした</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(テーマ、プラグイン、アップロードを除く)</string>
+    <string name="backup_item_contents">WP-content ディレクトリ</string>
+    <string name="backup_item_roots">WordPress ルート</string>
+    <string name="backup_download_progress_action_button_content_description">完了時間を知らせるボタン</string>
+    <string name="backup_download_progress_action_button">完了時間を知らせてください !</string>
+    <string name="backup_download_details_choose_items_header">このダウンロードに含まれるアイテム</string>
+    <string name="gutenberg_native_uploading">アップロード中…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">WordPress for iOS では再利用可能ブロックを編集できません</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">WordPress for Android では再利用可能ブロックを編集できません</string>
+    <string name="gutenberg_native_replace_file">ファイルを置換</string>
+    <string name="gutenberg_native_replace_audio">音声ファイルを置換</string>
+    <string name="gutenberg_native_problem_opening_the_audio">音声を開く際にエラーが発生しました</string>
+    <string name="gutenberg_native_open">開く</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">このリクエストを処理できるアプリケーションはありません。</string>
+    <string name="gutenberg_native_lock_icon">錠のアイコン</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">音声ファイルの挿入に失敗しました。 タップすると、オプションが表示されます。</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">ダブルタップして音声ファイルを選択</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">ダブルタップして音声ファイルを再生</string>
+    <string name="gutenberg_native_choose_audio">音声ファイルを選択</string>
+    <string name="gutenberg_native_audio_player">音声プレーヤー</string>
+    <string name="gutenberg_native_audio_file">音声ファイル</string>
+    <string name="gutenberg_native_audio_caption_s">音声キャプション。 %s</string>
+    <string name="gutenberg_native_audio_caption_empty">音声キャプション。 空</string>
+    <string name="gutenberg_native_add_audio">音声を追加</string>
+    <string name="continue_with_wpcom">WordPress.com でログインまたは登録</string>
+    <string name="photo_picker_use_audio">この音声を使用</string>
+    <string name="photo_picker_choose_audio">端末から音声を選択</string>
+    <string name="people_optional_custom_message_helper_text">オプション: 招待状と一緒に送信するカスタムメッセージを入力します。</string>
+    <string name="people_learn_more_about_roles">権限グループの詳細</string>
+    <string name="threat_status_fixed">固定</string>
+    <string name="threat_found_header">検出</string>
+    <string name="scan_here_to_help">サポートはこちら</string>
+    <string name="scan_idle_with_threats_description">スキャンで %2s に%1s個の潜在的な脅威が見つかりました。 以下の内容を確認して操作するか、すべて修正ボタンをタップしてください。 必要な場合は、%3$sにご連絡ください。</string>
+    <string name="scan_idle_manual_scan_description">サイトを再度確認するには、手動スキャンを実行するか、本日中に行われる Jetpack のサイトスキャンをお待ちください。</string>
+    <string name="scan_provisioning_description">Jetpack Scan へようこそ ! お客様のサイトを調査し、フルスキャンを実行するための設定を行います。 スキャンに影響する可能性のある問題を見つけたらお知らせします。その後、最初のフルスキャンが開始されます。</string>
+    <string name="scan_scanning_is_initial_description">Jetpack Scan へようこそ。現在サイトの初回チェックを行っており、結果はすぐに表示されます。</string>
+    <string name="scan_fixing_threats_description">バックグラウンドでこれらの脅威を修正しています。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
+    <string name="scan_scanning_description">スキャンが完了したら、通知が送信されます。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
+    <string name="scan_fixing_threats_title">脅威の修正</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan はサイトのスキャンを完了できませんでした。 サイトがダウンしていないか確認してください。ダウンしていない場合、再度実行してください。 ダウンしている場合、または Jetpack Scan に問題がある場合、サポートチームまでご連絡ください。</string>
+    <string name="scan_request_failed_title">問題が発生しました。</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">サイトのバックアップ</string>
+    <string name="activity_log_currently_backing_up_message">%1$s %2$sからサイトをバックアップしています</string>
+    <string name="activity_log_currently_backing_up_title">ダウンロード可能なバックアップの作成</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">サイトは正常にバックアップされました</string>
+    <string name="activity_log_backup_finished_snackbar_message">サイトは正常にバックアップされました\n%1$s %2$sからバックアップ</string>
+    <string name="activity_log_backup_started_snackbar_message">サイトをバックアップしています\n%1$s %2$sからバックアップしています</string>
+    <string name="pick_audio">音声ファイルを選択</string>
     <string name="restore_complete_failed_icon_content_description">エラーアイコン</string>
     <string name="restore_complete_failed_action_button_content_description">完了ボタン</string>
     <string name="restore_complete_failed_title">復元失敗</string>
@@ -37,7 +108,7 @@ Language: ja_JP
     <string name="web_preview_mobile">モバイル</string>
     <string name="quick_start_card_menu_remove">二度と表示しない</string>
     <string name="quick_start_card_menu_hide">非表示</string>
-    <string name="quick_start_card_menu_pin">上部固定</string>
+    <string name="quick_start_card_menu_pin">ピン</string>
     <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
@@ -59,9 +130,10 @@ Language: ja_JP
     <string name="threat_fix_all_warning_title">すべての脅威を修正</string>
     <string name="threat_ignore_error_message">脅威を無視する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_ignore_success_message">脅威を無視しました。</string>
-    <string name="threat_ignore_warning">安全であるという確信がない限り、セキュリティを無視しないでください。 この脅威を無視した場合、この脅威はサイト &lt;b>%s&lt;/b> に残ります。</string>
+    <string name="threat_ignore_warning">安全であるという確信がない限り、セキュリティの問題を無視しないでください。 この脅威を無視した場合、この脅威はサイト &lt;b>%s&lt;/b> に残ります。</string>
     <string name="threat_fix_error_message">脅威を修正する際にエラーが発生しました。 サポートにご連絡ください。</string>
     <string name="threat_item_sub_header_status_ignored">脅威を無視しました</string>
+    <string name="threat_item_sub_header_status_fixed_on">次の日時に脅威を修正済み %s</string>
     <string name="threat_fixing">脅威を修正</string>
     <string name="scan_history_ignored_threats_tab">無視済み</string>
     <string name="scan_history_no_threats_found">項目が見つかりませんでした</string>
@@ -77,6 +149,7 @@ Language: ja_JP
     <string name="backup_empty_title">最初のバックアップがもうすぐ完了します</string>
     <string name="request_failed_message">リクエストの処理中に問題が発生しました。 後ほどもう一度お試しください。</string>
     <string name="gutenberg_native_move_to_bottom">一番下へ</string>
+    <string name="gutenberg_native_change_block_position">ブロックの位置を変更</string>
     <string name="label_control_upload">アップロード</string>
     <string name="jetpack_icon_content_description">アイコン</string>
     <string name="backup_download_complete_info">ファイルへのリンクはメールでも送信されました。</string>
@@ -139,6 +212,7 @@ Language: ja_JP
     <string name="scan_in_minutes_ago">%s分前</string>
     <string name="scan_in_hours_ago">%s時間前</string>
     <string name="scan_this_site">このサイト</string>
+    <string name="scan_idle_last_scan_description">前回の Jetpack スキャンは%sに実行され、リスクは見つかりませんでした。 %s</string>
     <string name="scan_idle_threats_found_title">サイトが危険にさらされている可能性があります</string>
     <string name="scan_idle_no_threats_found_title">ご心配は無用です</string>
     <string name="scan_again">再スキャン</string>
@@ -157,6 +231,8 @@ Language: ja_JP
     <string name="activity_log_active_filter_empty_subtitle">データ範囲またはアクティビティタイプフィルターを調整してみてください</string>
     <string name="activity_log_active_filter_empty_title">一致するイベントは見つかりませんでした</string>
     <string name="rewind">復元</string>
+    <string name="backup_item_sqls">サイトデータベース</string>
+    <string name="backup_item_roots_hint">(wp-config.php と WordPress 以外のすべてのファイルを含む)</string>
     <string name="backup_item_media_uploads">メディアのアップロード</string>
     <string name="backup_item_plugins">WordPress プラグイン</string>
     <string name="backup_item_themes">WordPress テーマ</string>
@@ -433,7 +509,6 @@ Language: ja_JP
     <string name="send_link_by_email">リンクをメールで送信</string>
     <string name="reset_your_password">パスワードをリセット</string>
     <string name="reader_error_request_failed_title">リクエストの処理中に問題が発生しました。 後ほど、もう一度お試しください。</string>
-    <string name="quick_start_list_update_site_title_subtitle">サイトにその特徴とトピックがわかるような名前を付けてください。 第一印象が大事です。</string>
     <string name="quick_start_list_update_site_title_title">サイトのタイトルを設定</string>
     <string name="quick_start_dialog_update_site_title_message_short">新しいタイトルを設定するには&lt;b>%1$s&lt;/b>をタップしてください</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">この投稿をゴミ箱に移動するとローカルの変更も破棄されます。続行してもよいですか ?</string>

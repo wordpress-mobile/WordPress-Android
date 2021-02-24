@@ -65,7 +65,6 @@ interface LoginAnalyticsListener {
     fun trackPickEmailFromHint()
     fun trackShowEmailHints()
     fun emailFormScreenResumed()
-    fun trackEmailSignupConfirmationViewed()
     fun trackSocialSignupConfirmationViewed()
     fun trackCreateAccountClick()
     fun emailPasswordFormScreenResumed()

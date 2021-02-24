@@ -2331,12 +2331,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
         boolean unsupportedBlockEditorSwitch = !mIsJetpackSsoEnabled && "gutenberg".equals(mSite.getWebEditor());
 
+        boolean isFreeWPCom = mSite.isWPCom() && SiteUtils.onFreePlan(mSite);
+
         return new GutenbergPropsBuilder(
                 mWPStoriesFeatureConfig.isEnabled() && SiteUtils.supportsStoriesFeature(mSite),
                 enableMentions,
                 enableXPosts,
                 isUnsupportedBlockEditorEnabled,
                 unsupportedBlockEditorSwitch,
+                !isFreeWPCom, // Disable audio block until it's usable on free sites via "Insert from URL" capability
                 mIsPreview,
                 wpcomLocaleSlug,
                 postType,
@@ -3330,6 +3333,14 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private void showSuggestions(SuggestionType type, Consumer<String> onResult) {
         mOnGetSuggestionResult = onResult;
         ActivityLauncher.viewSuggestionsForResult(this, mSite, type);
+    }
+
+    @Override public void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown) {
+        AppPrefs.setGutenbergFocalPointPickerTooltipShown(tooltipShown);
+    }
+
+    @Override public boolean onGutenbergEditorRequestFocalPointPickerTooltipShown() {
+        return AppPrefs.getGutenbergFocalPointPickerTooltipShown();
     }
 
     @Override

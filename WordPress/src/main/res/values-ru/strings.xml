@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 14:21:44+0000
+Translation-Revision-Date: 2021-02-11 06:44:13+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">Открепить</string>
+    <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
+    <string name="quick_start_list_view_site_title">Перейдите на свой сайт</string>
+    <string name="quick_start_list_upload_icon_subtitle">Добавьте значок сайта, чтобы сайт выглядел качественно и профессионально.</string>
+    <string name="quick_start_list_follow_site_subtitle">Находите и подписывайтесь на сайты вдохновляющие вас.</string>
+    <string name="quick_start_list_enable_sharing_title">Включить возможности поделиться</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Автоматически делитесь вашими новыми записями в социальных сетях.</string>
+    <string name="quick_start_list_update_site_title_subtitle">Задайте вашему сайту название отражающее его суть и тематику.</string>
+    <string name="quick_start_list_check_stats_title">Посмотрите статистику сайта</string>
     <string name="backup_download_status_failure_bullet2">Мы всё еще пытаемся создать файл скачиваемой резервной копии.</string>
     <string name="backup_download_status_failure_bullet1">Мы пока не можем оценить как долго займет создание резервной копии сайта.</string>
     <string name="backup_download_status_failure_heading">Хм, не удается получить статус создания скачиваемой резервной копии</string>
@@ -101,7 +110,7 @@ Language: ru
     <string name="web_preview_mobile">Мобильное устройство</string>
     <string name="quick_start_card_menu_remove">Не показывать снова</string>
     <string name="quick_start_card_menu_hide">Скрыть</string>
-    <string name="quick_start_card_menu_pin">Прикрепить это</string>
+    <string name="quick_start_card_menu_pin">Закрепить</string>
     <string name="quick_start_dialog_review_pages_message_short">Выберите %1$s страницы %2$s для просмотра списка страниц.</string>
     <string name="quick_start_dialog_review_pages_message">Изменить, добавить или удалить страницы вашего сайта.</string>
     <string name="quick_start_dialog_review_pages_title">Обзор страниц сайта</string>
@@ -505,7 +514,6 @@ Language: ru
     <string name="send_link_by_email">Прислать ссылку по электронной почте</string>
     <string name="reset_your_password">Сбросить пароль</string>
     <string name="reader_error_request_failed_title">При выполнении запроса возникла проблема. Повторите попытку позже.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Первое впечатление важно! Назовите свой сайт так, как это отразит его индивидуальность и содержание.</string>
     <string name="quick_start_list_update_site_title_title">Задайте название сайта</string>
     <string name="quick_start_dialog_update_site_title_message_short">Нажмите &lt;b>%1$s&lt;/b> для установки нового названия</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Удаление в корзину этой записи отменит локальные изменения, вы точно хотите продолжить?</string>
