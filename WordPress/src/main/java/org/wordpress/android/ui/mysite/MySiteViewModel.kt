@@ -118,7 +118,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
-@Suppress("LongMethod", "LongParameterList")
+@Suppress("LongMethod")
 class MySiteViewModel
 @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,

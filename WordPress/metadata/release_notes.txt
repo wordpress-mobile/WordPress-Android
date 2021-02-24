@@ -1,4 +1,6 @@
-- Jetpack customers can now restore a site or download a backup, scan, and fix threats
-- Various block editor updates, including the ability to set anchors in the Heading block
-- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
-- .blog subdomains now available
+* [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
+* [**] Block Editor: Add support for setting Cover block focal point. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3028]
+* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
+* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
+* [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
+

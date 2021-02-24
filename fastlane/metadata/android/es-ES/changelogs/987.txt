@@ -1,7 +1,0 @@
-16.6:
-¿Qué novedades hay?
-Creación del sitio: al explorar los diseños de la página de inicio, puedes ver y cambiar entre las previsualizaciones para móvil, tableta y ordenador.
-Lector: para mejorar la organización, hemos añadido una función de filtro a la pestaña de sitios P2 que sigues.
-Inicio rápido: hemos mejorado el recorrido guiado por la aplicación, la adición de pasos a las páginas de revisión y la edición de tu página de inicio.
-
-

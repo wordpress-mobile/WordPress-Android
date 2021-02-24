@@ -1,7 +1,0 @@
-16.6:
-Wat is er nieuw?
-Site aanmaak: Bij het bladeren door homepage-ontwerpen, kan je bekijken en schakelen tussen mobiele, tablet en desktop voorbeelden.
-Reader: Voor een betere organisatie hebben we een filterfunctie toegevoegd aan je tab met gevolgde P2 sites.
-Snelstart: we hebben de tour verbeterd die je door de app leidt, door stappen toe te voegen om pagina's te bekijken en je homepage te bewerken.
-
-
