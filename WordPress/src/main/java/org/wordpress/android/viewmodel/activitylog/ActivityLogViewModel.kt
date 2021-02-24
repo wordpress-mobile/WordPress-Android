@@ -21,6 +21,8 @@ import org.wordpress.android.ui.activitylog.list.ActivityLogListItem
 import org.wordpress.android.ui.jetpack.JetpackCapabilitiesUseCase
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestState
 import org.wordpress.android.ui.jetpack.backup.download.usecases.GetBackupDownloadStatusUseCase
+import org.wordpress.android.ui.jetpack.backup.download.usecases.PostDismissBackupDownloadUseCase
+import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState.PROGRESS
 import org.wordpress.android.ui.jetpack.restore.RestoreRequestState
 import org.wordpress.android.ui.jetpack.restore.usecases.GetRestoreStatusUseCase
 import org.wordpress.android.ui.jetpack.restore.usecases.PostRestoreUseCase
@@ -41,6 +43,7 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
+import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -62,6 +65,7 @@ typealias DateRange = Pair<Long, Long>
  * necessity to split those features in separate screens in order not to increase further the complexity of this
  * screen's architecture.
  */
+@Suppress("LargeClass")
 class ActivityLogViewModel @Inject constructor(
     private val activityLogStore: ActivityLogStore,
     private val postRestoreUseCase: PostRestoreUseCase,
@@ -73,7 +77,8 @@ class ActivityLogViewModel @Inject constructor(
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val restoreFeatureConfig: RestoreFeatureConfig
+    private val restoreFeatureConfig: RestoreFeatureConfig,
+    private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,
@@ -130,6 +135,7 @@ class ActivityLogViewModel @Inject constructor(
             it is ActivityLogListItem.Progress &&
                     it.progressType == ActivityLogListItem.Progress.Type.RESTORE
         } != null
+
     private val isBackupDownloadProgressItemShown: Boolean
         get() = events.value?.find {
             it is ActivityLogListItem.Progress &&
@@ -142,6 +148,7 @@ class ActivityLogViewModel @Inject constructor(
     private var fetchActivitiesJob: Job? = null
     private var restoreStatusJob: Job? = null
     private var backupDownloadStatusJob: Job? = null
+    private var dismissBackupDownloadJob: Job? = null
 
     private var currentDateRangeFilter: DateRange? = null
     private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
@@ -150,7 +157,7 @@ class ActivityLogViewModel @Inject constructor(
     var rewindableOnly: Boolean = false
 
     private var currentRestoreEvent = RestoreEvent(false)
-    private var currentBackupDownloadEvent = BackupDownloadEvent(false)
+    private var currentBackupDownloadEvent = BackupDownloadEvent(false, displayNotice = false)
 
     fun start(site: SiteModel, rewindableOnly: Boolean) {
         if (isStarted) {
@@ -167,6 +174,7 @@ class ActivityLogViewModel @Inject constructor(
         showFiltersIfSupported()
     }
 
+    @Suppress("LongMethod", "ComplexMethod")
     @VisibleForTesting
     fun reloadEvents(
         done: Boolean = isDone,
@@ -184,6 +192,7 @@ class ActivityLogViewModel @Inject constructor(
         var moveToTop = false
         val withRestoreProgressItem = restoreEvent.displayProgress && !restoreEvent.isCompleted
         val withBackupDownloadProgressItem = backupDownloadEvent.displayProgress && !backupDownloadEvent.isCompleted
+        val withBackupDownloadNoticeItem = backupDownloadEvent.displayNotice
         if (withRestoreProgressItem || withBackupDownloadProgressItem) {
             items.add(ActivityLogListItem.Header(resourceProvider.getString(R.string.now)))
             moveToTop = eventListStatus.value != ActivityLogListStatus.LOADING_MORE
@@ -193,6 +202,12 @@ class ActivityLogViewModel @Inject constructor(
         }
         if (withBackupDownloadProgressItem) {
             items.add(getBackupDownloadProgressItem(backupDownloadEvent.rewindId, backupDownloadEvent.published))
+        }
+        if (withBackupDownloadNoticeItem) {
+            getBackupDownloadNoticeItem(backupDownloadEvent)?.let {
+                items.add(it)
+                moveToTop = true
+            }
         }
         eventList.forEach { model ->
             val currentItem = ActivityLogListItem.Event(
@@ -223,8 +238,7 @@ class ActivityLogViewModel @Inject constructor(
             currentRestoreEvent = RestoreEvent(false)
         }
         if (backupDownloadEvent.isCompleted) {
-            showBackupDownloadFinishedMessage(backupDownloadEvent.rewindId, backupDownloadEvent.published)
-            currentBackupDownloadEvent = BackupDownloadEvent(false)
+            currentBackupDownloadEvent = currentBackupDownloadEvent.copy(displayProgress = false)
         }
     }
 
@@ -263,6 +277,23 @@ class ActivityLogViewModel @Inject constructor(
                 resourceProvider.getString(R.string.activity_log_currently_backing_up_message_no_dates),
                 ActivityLogListItem.Progress.Type.BACKUP_DOWNLOAD
         )
+    }
+
+    private fun getBackupDownloadNoticeItem(backupDownloadEvent: BackupDownloadEvent): ActivityLogListItem.Notice? {
+        val rewindDate = backupDownloadEvent.published
+                ?: backupDownloadEvent.rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+        return rewindDate?.let {
+            ActivityLogListItem.Notice(
+                    label = resourceProvider.getString(
+                            R.string.activity_log_backup_download_notice_description_with_two_params,
+                            rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
+                    ),
+                    primaryActionButtonClickListener = this@ActivityLogViewModel::onDownloadBackupFileClicked,
+                    secondaryActionButtonClickListener = this@ActivityLogViewModel::dismissNoticeClicked,
+                    url = backupDownloadEvent.url as String,
+                    downloadId = backupDownloadEvent.downloadId as Long
+            )
+        }
     }
 
     private fun showRestoreFinishedMessage(rewindId: String?, published: Date?) {
@@ -477,7 +508,7 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    // todo: annmarie - Remove once the feature exclusively uses the more menu
+    // todo: This code block should be removed once the restore feature exclusively uses the more menu
     fun onActionButtonClicked(item: ActivityLogListItem) {
         if (item is ActivityLogListItem.Event) {
             val navigationEvent = if (item.launchRestoreWizard) {
@@ -509,6 +540,21 @@ class ActivityLogViewModel @Inject constructor(
             _navigationEvents.value = Event(navigationEvent)
         }
         return true
+    }
+
+    private fun onDownloadBackupFileClicked(url: String) {
+        activityLogTracker.trackDownloadBackupDownloadButtonClicked(rewindableOnly)
+        _navigationEvents.value = Event(ActivityLogNavigationEvents.DownloadBackupFile(url))
+    }
+
+    private fun dismissNoticeClicked(downloadId: Long) {
+        activityLogTracker.trackDownloadBackupDismissButtonClicked(rewindableOnly)
+        dismissBackupDownloadJob?.cancel()
+        dismissBackupDownloadJob = viewModelScope.launch {
+            postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site)
+            // Always optimistic on a dismiss. If it doesn't work, the banner returns on the next PTR
+            reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
+        }
     }
 
     fun dateRangePickerClicked() {
@@ -628,9 +674,14 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long, actionState: Int) {
         queryBackupDownloadStatus(downloadId)
-        showBackupDownloadStartedMessage(rewindId)
+
+        if (actionState == PROGRESS.id) {
+            showBackupDownloadStartedMessage(rewindId)
+        } else {
+            showBackupDownloadFinishedMessage(rewindId, null)
+        }
     }
 
     private fun queryBackupDownloadStatus(downloadId: Long? = null) {
@@ -650,29 +701,32 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun handleBackupDownloadStatusForProgress(state: BackupDownloadRequestState.Progress) {
-        if (!isBackupDownloadProgressItemShown) {
-            reloadEvents(
-                    backupDownloadEvent = BackupDownloadEvent(
-                            displayProgress = true,
-                            isCompleted = false,
-                            rewindId = state.rewindId,
-                            published = state.published
-                    )
-            )
-        }
+        reloadEvents(
+                backupDownloadEvent = BackupDownloadEvent(
+                        displayProgress = true,
+                        displayNotice = false,
+                        isCompleted = false,
+                        rewindId = state.rewindId,
+                        published = state.published
+                )
+        )
     }
 
     private fun handleBackupDownloadStatusForComplete(state: BackupDownloadRequestState.Complete) {
+        val backupDownloadEvent = BackupDownloadEvent(
+                displayProgress = false,
+                displayNotice = isBackupDownloadFileValid(state.url, state.validUntil, state.downloadId),
+                isCompleted = true,
+                rewindId = state.rewindId,
+                published = state.published,
+                url = state.url,
+                validUntil = state.validUntil,
+                downloadId = state.downloadId
+        )
         if (isBackupDownloadProgressItemShown) {
-            requestEventsUpdate(
-                    loadMore = false,
-                    backupDownloadEvent = BackupDownloadEvent(
-                            displayProgress = false,
-                            isCompleted = true,
-                            rewindId = state.rewindId,
-                            published = state.published
-                    )
-            )
+            requestEventsUpdate(loadMore = false, backupDownloadEvent = backupDownloadEvent)
+        } else {
+            reloadEvents(backupDownloadEvent = backupDownloadEvent)
         }
     }
 
@@ -684,6 +738,14 @@ class ActivityLogViewModel @Inject constructor(
                     it.toFormattedTimeString()
             )
         }
+    }
+
+    private fun isBackupDownloadFileValid(url: String?, validUntil: Date?, downloadId: Long?): Boolean {
+        if (validUntil == null || url == null || downloadId == null) return false
+        // Now represents the current time using the current locale and timezone
+        val now = Calendar.getInstance().apply { time = Date() }
+        val expires = Calendar.getInstance().apply { time = validUntil }
+        return now.before(expires)
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)
@@ -702,9 +764,13 @@ class ActivityLogViewModel @Inject constructor(
 
     data class BackupDownloadEvent(
         val displayProgress: Boolean,
+        val displayNotice: Boolean,
         val isCompleted: Boolean = false,
         val rewindId: String? = null,
-        val published: Date? = null
+        val published: Date? = null,
+        val downloadId: Long? = null,
+        val url: String? = null,
+        val validUntil: Date? = null
     )
 
     sealed class FiltersUiState(val visibility: Boolean) {
