@@ -33,6 +33,17 @@
             android:text="@string/comment_read_source_post"
             android:textColor="@color/primary_40"
             android:visibility="gone"/>
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/note_material_button"
+            style="@style/Widget.LoginFlow.Button.Primary"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:layout_marginEnd="@dimen/margin_extra_large"
+            android:layout_marginStart="@dimen/margin_extra_large"
+            android:text="@string/comment_read_source_post"
+            android:visibility="gone"/>
     </LinearLayout>
 
     <View

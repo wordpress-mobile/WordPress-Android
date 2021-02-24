@@ -40,6 +40,18 @@ fun FormattableContent?.getMediaOrNull(mediaIndex: Int): FormattableMedia? {
     }
 }
 
+fun FormattableContent?.isButton(): Boolean {
+    return this?.meta?.isButton == true
+}
+
+fun FormattableContent?.getButtonRange(): FormattableRange? {
+    return if (isButton()) {
+        this?.ranges?.firstOrNull()
+    } else {
+        null
+    }
+}
+
 fun FormattableContent?.getMetaTitlesHomeOrEmpty(): String {
     return this?.meta?.titles?.home ?: ""
 }
