@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
-import org.assertj.core.api.Assertions
+import org.assertj.core.api.Assertions.assertThat
 
 import org.junit.Before
 import org.junit.Rule
@@ -122,10 +122,10 @@ class ReaderPostDetailViewModelTest {
             // propagate some of the arguments
             createDummyReaderPostDetailsUiState(
                     post,
-                    it.getArgument<(String) -> Unit>(ON_TAG_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long, ReaderPostCardActionType) -> Unit>(ON_BUTTON_CLICKED_PARAM_POSITION),
-                    it.getArgument<(Long, Long) -> Unit>(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
-                    it.getArgument<() -> Unit>(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
+                    it.getArgument(ON_TAG_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
             )
         }
 
@@ -137,8 +137,8 @@ class ReaderPostDetailViewModelTest {
     fun `when post show is triggered, then ui is updated`() = test {
         val uiStates = init().uiStates
 
-        Assertions.assertThat(uiStates.size).isEqualTo(1)
-        Assertions.assertThat(uiStates.first()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(uiStates.size).isEqualTo(1)
+        assertThat(uiStates.first()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
@@ -147,8 +147,8 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onUpdatePost(readerPost)
 
-        Assertions.assertThat(uiStates.size).isEqualTo(2)
-        Assertions.assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
+        assertThat(uiStates.size).isEqualTo(2)
+        assertThat(uiStates.last()).isInstanceOf(ReaderPostDetailsUiState::class.java)
     }
 
     @Test
@@ -200,7 +200,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onReblogSiteSelected(1)
 
-        Assertions.assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
+        assertThat(navigaitonObserver.last().peekContent()).isInstanceOf(OpenEditorForReblog::class.java)
     }
 
     @Test
@@ -223,7 +223,7 @@ class ReaderPostDetailViewModelTest {
 
         observers.uiStates.last().headerUiState.tagItems[0].onClick!!.invoke("t")
 
-        Assertions.assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
+        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
 
     @Test
@@ -245,7 +245,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onMoreButtonClicked()
 
-        Assertions.assertThat(uiStates.last().moreMenuItems).isNotNull
+        assertThat(uiStates.last().moreMenuItems).isNotNull
     }
 
     @Test
@@ -254,7 +254,7 @@ class ReaderPostDetailViewModelTest {
 
         viewModel.onMoreMenuDismissed()
 
-        Assertions.assertThat(uiStates.last().moreMenuItems).isNull()
+        assertThat(uiStates.last().moreMenuItems).isNull()
     }
 
     @Test
