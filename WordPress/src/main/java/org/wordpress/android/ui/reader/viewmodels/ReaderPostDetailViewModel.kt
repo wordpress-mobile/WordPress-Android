@@ -87,7 +87,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
                     post.isFollowedByCurrentUser = data.following
-                    _uiState.value = convertPostToUiState(post)
+                    updateFollowButtonUiState(
+                            currentUiState = currentUiState,
+                            isFollowed = post.isFollowedByCurrentUser
+                    )
                 }
             }
         }
@@ -200,11 +203,11 @@ class ReaderPostDetailViewModel @Inject constructor(
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(fetchRelatedPostsState)
 
                 is FetchRelatedPostsState.Failed.NoNetwork -> _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
                 )
 
                 is FetchRelatedPostsState.Failed.RequestFailed -> _snackbarEvents.postValue(
-                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
                 )
             }
         }
@@ -228,6 +231,22 @@ class ReaderPostDetailViewModel @Inject constructor(
                 onFollowClicked = { onButtonClicked(post.postId, post.blogId, FOLLOW) },
                 onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
         )
+    }
+
+    private fun updateFollowButtonUiState(
+        currentUiState: ReaderPostDetailsUiState,
+        isFollowed: Boolean
+    ) {
+        val updatedFollowButtonUiState = currentUiState
+                .headerUiState
+                .followButtonUiState
+                .copy(isFollowed = isFollowed)
+
+        val updatedHeaderUiState = currentUiState
+                .headerUiState
+                .copy(followButtonUiState = updatedFollowButtonUiState)
+
+        _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
     }
 
     private fun updateRelatedPostsUiState(state: FetchRelatedPostsState.Success) {
