@@ -15,7 +15,7 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.StarterDesignModel
+import org.wordpress.android.fluxc.model.StarterDesign
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
@@ -67,22 +67,26 @@ class HomePagePickerViewModelTest {
     }
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
-        val response = if (isError) OnStarterDesignsFetched(emptyList(), ThemesError(ThemeErrorType.GENERIC_ERROR))
+        val response = if (isError) OnStarterDesignsFetched(
+                emptyList(),
+                emptyList(),
+                ThemesError(ThemeErrorType.GENERIC_ERROR)
+        )
         else OnStarterDesignsFetched(
                 listOf(
-                        StarterDesignModel(
-                                0,
+                        StarterDesign(
                                 mockedDesignSlug,
                                 "title",
-                                "site",
+                                mockedDesignSegmentId,
+                                listOf(), // categories
                                 mockedDesignDemoUrl,
                                 "theme",
-                                mockedDesignSegmentId,
                                 "desktopThumbnail",
-                                "mobileThumbnail",
-                                "tabletThumbnail"
+                                "tabletThumbnail",
+                                "mobileThumbnail"
                         )
                 ),
+                emptyList(),
                 null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)

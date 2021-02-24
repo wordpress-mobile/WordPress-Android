@@ -12,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.StarterDesignModel
+import org.wordpress.android.fluxc.model.StarterDesign
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PreviewMode
@@ -49,7 +49,7 @@ class HomePagePickerViewModel @Inject constructor(
     override val coroutineContext: CoroutineContext
         get() = bgDispatcher + fetchHomePageLayoutsJob
 
-    lateinit var layouts: List<StarterDesignModel>
+    lateinit var layouts: List<StarterDesign>
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -127,18 +127,18 @@ class HomePagePickerViewModel @Inject constructor(
     private fun loadLayouts() {
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         launch(bgDispatcher) {
-            val designs = layouts.filter { it.slug != null && it.screenshot != null }.map {
+            val designs = layouts.map {
                 LayoutGridItemUiState(
-                        slug = it.slug!!,
-                        title = it.title ?: "",
+                        slug = it.slug,
+                        title = it.title,
                         preview = when (_previewMode.value) {
-                            MOBILE -> it.mobileScreenshot!!
-                            TABLET -> it.tabletScreenshot!!
-                            else -> it.screenshot!!
+                            MOBILE -> it.previewMobile
+                            TABLET -> it.previewTablet
+                            else -> it.preview
                         },
                         selected = it.slug == state.selectedLayoutSlug,
-                        onItemTapped = { onLayoutTapped(layoutSlug = it.slug!!) },
-                        onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug!!) }
+                        onItemTapped = { onLayoutTapped(layoutSlug = it.slug) },
+                        onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug) }
                 )
             }
             withContext(mainDispatcher) {
@@ -158,12 +158,10 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onPreviewTapped() {
         (uiState.value as? UiState.Content)?.let { state ->
-            layouts.firstOrNull {
-                it.slug != null && it.slug == state.selectedLayoutSlug && it.demoUrl != null
-            }?.let { layout ->
-                val template = layout.slug!!
+            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val template = layout.slug
                 analyticsTracker.trackSiteDesignPreviewViewed(template, selectedPreviewMode().key)
-                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl!!)
+                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)
                 return
             }
         }
@@ -202,8 +200,8 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun onChooseTapped() {
         (uiState.value as? UiState.Content)?.let { state ->
-            layouts.firstOrNull { it.slug != null && it.slug == state.selectedLayoutSlug }?.let { layout ->
-                val template = layout.slug!!
+            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val template = layout.slug
                 analyticsTracker.trackSiteDesignSelected(template)
                 _onDesignActionPressed.value = DesignSelectionAction.Choose(template)
                 return
@@ -243,7 +241,7 @@ class HomePagePickerViewModel @Inject constructor(
 
     fun loadSavedState(savedInstanceState: Bundle?) {
         if (savedInstanceState == null) return
-        val layouts = savedInstanceState.getParcelableArrayList<StarterDesignModel>(FETCHED_LAYOUTS)
+        val layouts = savedInstanceState.getParcelableArrayList<StarterDesign>(FETCHED_LAYOUTS)
         val selected = savedInstanceState.getString(SELECTED_LAYOUT)
         val previewMode = savedInstanceState.getString(PREVIEW_MODE, MOBILE.name)
         if (layouts == null || layouts.isEmpty()) {

@@ -32,7 +32,7 @@ class FetchHomePageLayoutsUseCaseTest {
 
     private lateinit var useCase: FetchHomePageLayoutsUseCase
     private lateinit var dispatchCaptor: KArgumentCaptor<Action<SuggestDomainsPayload>>
-    private val event = OnStarterDesignsFetched(emptyList(), null)
+    private val event = OnStarterDesignsFetched(emptyList(), emptyList(), null)
 
     @Before
     fun setUp() {
