@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.R
 import org.wordpress.android.R.string
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -20,10 +21,15 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -36,6 +42,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerPostMoreButtonUiStateBuilder: ReaderPostMoreButtonUiStateBuilder,
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
+    private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -57,6 +65,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
+
+    init {
+        eventBusWrapper.register(readerFetchRelatedPostsUseCase)
+    }
 
     fun start() {
         if (isStarted) {
@@ -179,6 +191,25 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onRelatedPostsRequested(sourcePost: ReaderPost) {
+        launch {
+            when (val fetchRelatedPostsState = readerFetchRelatedPostsUseCase.fetchRelatedPosts(sourcePost)) {
+                is FetchRelatedPostsState.AlreadyRunning -> { // Do Nothing
+                }
+
+                is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(fetchRelatedPostsState)
+
+                is FetchRelatedPostsState.Failed.NoNetwork -> _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
+                )
+
+                is FetchRelatedPostsState.Failed.RequestFailed -> _snackbarEvents.postValue(
+                    Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
+                )
+            }
+        }
+    }
+
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
         return readerPostTableWrapper.getBlogPost(
                 blogId,
@@ -199,16 +230,29 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
+    private fun updateRelatedPostsUiState(state: FetchRelatedPostsState.Success) {
+        _uiState.value = _uiState.value?.copy(
+                localRelatedPosts = RelatedPosts(posts = state.localRelatedPosts, isGlobal = false),
+                globalRelatedPosts = RelatedPosts(posts = state.globalRelatedPosts, isGlobal = true)
+        )
+    }
     data class ReaderPostDetailsUiState(
         val postId: Long,
         val blogId: Long,
         val headerUiState: ReaderPostDetailsHeaderUiState,
         val moreMenuItems: List<SecondaryAction>? = null,
-        val actions: ReaderPostActions
-    )
+        val actions: ReaderPostActions,
+        /* related posts from the same site as the current post */
+        val localRelatedPosts: RelatedPosts? = null,
+        /* related posts from across wp.com */
+        val globalRelatedPosts: RelatedPosts? = null
+    ) {
+        data class RelatedPosts(val posts: ReaderSimplePostList?, val isGlobal: Boolean)
+    }
 
     override fun onCleared() {
         super.onCleared()
         readerPostCardActionsHandler.onCleared()
+        eventBusWrapper.unregister(readerFetchRelatedPostsUseCase)
     }
 }

@@ -98,13 +98,13 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryActi
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -415,6 +415,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
                     updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
                     updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+
+                    state.localRelatedPosts?.let { showRelatedPosts(it) }
+                    state.globalRelatedPosts?.let { showRelatedPosts(it) }
                 }
         )
 
@@ -743,28 +746,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      */
     private fun requestRelatedPosts() {
         if (hasPost() && post?.isWP == true) {
-            ReaderPostActions.requestRelatedPosts(post)
-        }
-    }
-
-    /*
-     * related posts were retrieved
-     */
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    fun onEventMainThread(event: ReaderEvents.RelatedPostsUpdated) {
-        val post = this.post
-        if (!isAdded || post == null) {
-            return
-        }
-
-        // make sure this event is for the current post
-        if (event.sourcePostId == post.postId && event.sourceSiteId == post.blogId) {
-            if (event.hasLocalRelatedPosts()) {
-                showRelatedPosts(event.localRelatedPosts, false)
-            }
-            if (event.hasGlobalRelatedPosts()) {
-                showRelatedPosts(event.globalRelatedPosts, true)
-            }
+            viewModel.onRelatedPostsRequested(post as ReaderPost)
         }
     }
 
@@ -772,19 +754,19 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private fun showRelatedPosts(relatedPosts: ReaderSimplePostList, isGlobal: Boolean) {
+    private fun showRelatedPosts(relatedPosts: RelatedPosts) {
         // tapping a related post should open the related post detail
         val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
             showRelatedPostDetail(
                     siteId,
                     postId,
-                    isGlobal
+                    relatedPosts.isGlobal
             )
         }
 
         // different container views for global/local related posts
-        val relatedPostsView = if (isGlobal) globalRelatedPostsView else localRelatedPostsView
-        relatedPostsView.showPosts(relatedPosts, post!!.blogName, isGlobal, listener)
+        val relatedPostsView = if (relatedPosts.isGlobal) globalRelatedPostsView else localRelatedPostsView
+        relatedPostsView.showPosts(relatedPosts.posts, post!!.blogName, relatedPosts.isGlobal, listener)
 
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {
@@ -1322,7 +1304,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     /*
-     * called by the web view when the content finishes loading - likes aren't displayed
+     * called by the web view when the content finishes loading - related posts aren't displayed
      * until this is triggered, to avoid having them appear before the webView content
      */
     override fun onPageFinished(view: WebView, url: String?) {
@@ -1331,7 +1313,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         if (url != null && url == "about:blank") {
-            // brief delay before showing comments/likes to give page time to render
+            // brief delay before showing related posts to give page time to render
             view.postDelayed(Runnable {
                 if (!isAdded) {
                     return@Runnable
