@@ -168,7 +168,6 @@ class CommentsActivity : LocaleAwareActivity(),
         outState.putSerializable(WordPress.SITE, site)
     }
 
-
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == RESULT_OK) {
@@ -187,22 +186,23 @@ class CommentsActivity : LocaleAwareActivity(),
     fun onModerateComment(
         comment: CommentModel,
         newStatus: CommentStatus,
-        allowUndo: Boolean = true,
+        allowUndo: Boolean = true
     ) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
             comment.status = newStatus.toString()
             dispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment))
             dispatcher.dispatch(CommentActionBuilder.newPushCommentAction(RemoteCommentPayload(site, comment)))
-        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH || newStatus == CommentStatus.DELETED) {
+        } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH ||
+                newStatus == CommentStatus.DELETED) {
             val oldStatus = CommentStatus.fromString(comment.status)
 
-            val fragments: ArrayList<CommentsListFragment?> = ArrayList()
+            val targetFragments: ArrayList<CommentsListFragment?> = ArrayList()
             if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
-                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
-                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
-                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
+                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
+                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
+                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
             } else {
-                fragments.add(
+                targetFragments.add(
                         pagerAdapter.getItemAtPosition(
                                 commentListFilters.indexOf(
                                         CommentStatusCriteria.fromCommentStatus(
@@ -212,7 +212,7 @@ class CommentsActivity : LocaleAwareActivity(),
                         )
                 )
             }
-            fragments.forEach { it?.removeComment(comment) }
+            targetFragments.forEach { it?.removeComment(comment) }
             val message = when (newStatus) {
                 CommentStatus.TRASH -> getString(string.comment_trashed)
                 CommentStatus.SPAM -> getString(
@@ -224,7 +224,7 @@ class CommentsActivity : LocaleAwareActivity(),
                 mTrashedComments.add(comment)
                 val undoListener = View.OnClickListener { _: View? ->
                     mTrashedComments.remove(comment)
-                    fragments.forEach { it?.loadComments() }
+                    targetFragments.forEach { it?.loadComments() }
                 }
                 val view = findViewById<View>(id.coordinator_layout)
                 if (view != null) {

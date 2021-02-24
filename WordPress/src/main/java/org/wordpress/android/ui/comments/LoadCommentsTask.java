@@ -47,10 +47,10 @@ class LoadCommentsTask extends AsyncTask<Void, Void, CommentList> {
         List<CommentModel> comments;
         if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
             // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-            comments = mCommentStore.getCommentsForSite(mSite, false, 0, 0,
+            comments = mCommentStore.getCommentsForSite(mSite, false, 0,
                                                         CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
         } else {
-            comments = mCommentStore.getCommentsForSite(mSite, false, 0,0, mStatusFilter);
+            comments = mCommentStore.getCommentsForSite(mSite, false, 0, mStatusFilter);
         }
 
         CommentList tmpComments = new CommentList();

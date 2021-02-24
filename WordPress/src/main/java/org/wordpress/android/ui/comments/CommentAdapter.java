@@ -432,12 +432,16 @@ public class CommentAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
         @Override
         protected Boolean doInBackground(Void... params) {
             List<CommentModel> comments;
+            int commentsRequestLimit = CommentsListFragment.COMMENTS_PER_PAGE + mComments.size();
             if (mStatusFilter == null || mStatusFilter == CommentStatus.ALL) {
                 // The "all" filter actually means "approved" + "unapproved" (but not "spam", "trash" or "deleted")
-                comments = mCommentStore.getCommentsForSite(mSite, false, 29 + mComments.size(), 0,
-                        CommentStatus.APPROVED, CommentStatus.UNAPPROVED);
+                comments = mCommentStore
+                        .getCommentsForSite(mSite, false, commentsRequestLimit, CommentStatus.APPROVED,
+                                CommentStatus.UNAPPROVED);
             } else {
-                comments = mCommentStore.getCommentsForSite(mSite, false, 29 + mComments.size(), 0, mStatusFilter);
+                comments = mCommentStore
+                        .getCommentsForSite(mSite, false, commentsRequestLimit,
+                                mStatusFilter);
             }
 
             mTmpComments = new CommentList();
