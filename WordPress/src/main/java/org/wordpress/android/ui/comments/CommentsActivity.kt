@@ -1,20 +1,21 @@
 package org.wordpress.android.ui.comments
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentStatePagerAdapter
-import androidx.viewpager.widget.ViewPager
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.Callback
 import com.google.android.material.tabs.TabLayout
-import org.wordpress.android.R
+import com.google.android.material.tabs.TabLayoutMediator
+import org.wordpress.android.R.dimen
 import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
@@ -24,7 +25,6 @@ import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
 import org.wordpress.android.fluxc.model.CommentStatus
 import org.wordpress.android.fluxc.model.SiteModel
-import org.wordpress.android.fluxc.persistence.CommentSqlUtils
 import org.wordpress.android.fluxc.store.CommentStore
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload
 import org.wordpress.android.models.CommentList
@@ -33,14 +33,13 @@ import org.wordpress.android.ui.ActivityId
 import org.wordpress.android.ui.ActivityId.COMMENTS
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.APPROVED
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.SPAM
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.TRASH
+import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNAPPROVED
 import org.wordpress.android.ui.comments.CommentsListFragment.OnCommentSelectedListener
 import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickListener
-import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.ALL
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.UNAPPROVED
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.APPROVED
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.TRASH
-import org.wordpress.android.ui.comments.CommentsListFragment.CommentStatusCriteria.SPAM
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
@@ -50,21 +49,20 @@ import javax.inject.Inject
 
 class CommentsActivity : LocaleAwareActivity(),
         OnCommentSelectedListener,
-        OnPostClickListener,
-        BasicDialogPositiveClickInterface {
+        OnPostClickListener {
     private val mTrashedComments = CommentList()
     private lateinit var tabLayout: TabLayout
-    private lateinit var viewPager: ViewPager
+    private lateinit var viewPager: ViewPager2
     private lateinit var site: SiteModel
 
-    private val  COMMENT_LIST_FILTERS = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
-//    private val  COMMENT_LIST_FILTERS = listOf(ALL)
+    private val commentListFilters = listOf(ALL, UNAPPROVED, APPROVED, TRASH, SPAM)
+
+    private var disabledTabsOpacity: Float = 0F
 
     private lateinit var pagerAdapter: CommentsListPagerAdapter
 
-
     @Inject internal lateinit var dispatcher: Dispatcher
-    @Inject internal lateinit var  commentStore: CommentStore
+    @Inject internal lateinit var commentStore: CommentStore
 
     public override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,19 +78,44 @@ class CommentsActivity : LocaleAwareActivity(),
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
 
-        CommentSqlUtils.removeComments(site)
         setupActionBar()
 
-        viewPager = findViewById(R.id.view_pager)
+        viewPager = findViewById(id.view_pager)
+        viewPager.offscreenPageLimit = 1
         tabLayout = findViewById(id.tab_layout)
-        tabLayout.setupWithViewPager(viewPager)
 
-        pagerAdapter = CommentsListPagerAdapter(COMMENT_LIST_FILTERS, site, supportFragmentManager)
+        pagerAdapter = CommentsListPagerAdapter(commentListFilters, this)
         viewPager.adapter = pagerAdapter
+
+        TabLayoutMediator(tabLayout, viewPager) { tab, position ->
+            tab.setText(commentListFilters[position].mLabelResId)
+        }.attach()
+
+        val disabledAlpha = TypedValue()
+        resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
+        disabledTabsOpacity = disabledAlpha.float
+    }
+
+    fun onActionModeStarted() {
+        viewPager.isUserInputEnabled = false
+        for (i in 0 until tabLayout.tabCount) {
+            tabLayout.getTabAt(i)?.view?.isEnabled = false
+            tabLayout.getTabAt(i)?.view?.isClickable = false
+            tabLayout.getTabAt(i)?.view?.alpha = disabledTabsOpacity
+        }
+    }
+
+    fun onActionModeStopped() {
+        viewPager.isUserInputEnabled = true
+        for (i in 0 until tabLayout.tabCount) {
+            tabLayout.getTabAt(i)?.view?.isEnabled = true
+            tabLayout.getTabAt(i)?.view?.isClickable = true
+            tabLayout.getTabAt(i)?.view?.alpha = 1F
+        }
     }
 
     private fun setupActionBar() {
-        val toolbar = findViewById<Toolbar>(R.id.toolbar_main)
+        val toolbar = findViewById<Toolbar>(id.toolbar_main)
         setSupportActionBar(toolbar)
 
         supportActionBar?.setDisplayShowTitleEnabled(true)
@@ -141,14 +164,10 @@ class CommentsActivity : LocaleAwareActivity(),
     }
 
     public override fun onSaveInstanceState(outState: Bundle) {
-        outState.putSerializable(WordPress.SITE, site)
         super.onSaveInstanceState(outState)
+        outState.putSerializable(WordPress.SITE, site)
     }
 
-    override fun onCreateDialog(id: Int): Dialog {
-        val dialog = CommentDialogs.createCommentDialog(this, id)
-        return dialog ?: super.onCreateDialog(id)
-    }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -164,12 +183,13 @@ class CommentsActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun onModerateComment(
+    @JvmOverloads
+    fun onModerateComment(
         comment: CommentModel,
-        newStatus: CommentStatus
+        newStatus: CommentStatus,
+        allowUndo: Boolean = true,
     ) {
         if (newStatus == CommentStatus.APPROVED || newStatus == CommentStatus.UNAPPROVED) {
-//            listFragment!!.updateEmptyView()
             comment.status = newStatus.toString()
             dispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment))
             dispatcher.dispatch(CommentActionBuilder.newPushCommentAction(RemoteCommentPayload(site, comment)))
@@ -178,47 +198,56 @@ class CommentsActivity : LocaleAwareActivity(),
 
             val fragments: ArrayList<CommentsListFragment?> = ArrayList()
             if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
-                fragments.add(pagerAdapter.getItemAtPosition(COMMENT_LIST_FILTERS.indexOf(ALL)))
-                fragments.add(pagerAdapter.getItemAtPosition(COMMENT_LIST_FILTERS.indexOf(APPROVED)))
-                fragments.add(pagerAdapter.getItemAtPosition(COMMENT_LIST_FILTERS.indexOf(UNAPPROVED)))
+                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
+                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
+                fragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
             } else {
-                fragments.add(pagerAdapter.getItemAtPosition(
-                        COMMENT_LIST_FILTERS.indexOf(
-                                CommentStatusCriteria.fromCommentStatus(
-                                        oldStatus
+                fragments.add(
+                        pagerAdapter.getItemAtPosition(
+                                commentListFilters.indexOf(
+                                        CommentStatusCriteria.fromCommentStatus(
+                                                oldStatus
+                                        )
                                 )
-                        )))
+                        )
+                )
             }
-
-            mTrashedComments.add(comment)
             fragments.forEach { it?.removeComment(comment) }
-
-            val message = if (newStatus == CommentStatus.TRASH) getString(string.comment_trashed) else if (newStatus == CommentStatus.SPAM) getString(
-                    string.comment_spammed
-            ) else getString(string.comment_deleted_permanently)
-            val undoListener = View.OnClickListener { v: View? ->
-                mTrashedComments.remove(comment)
-                fragments.forEach { it?.loadComments() }
+            val message = when (newStatus) {
+                CommentStatus.TRASH -> getString(string.comment_trashed)
+                CommentStatus.SPAM -> getString(
+                        string.comment_spammed
+                )
+                else -> getString(string.comment_deleted_permanently)
             }
-            val view = findViewById<View>(R.id.coordinator_layout)
-            if (view != null) {
-                val snackbar = make(view, message, Snackbar.LENGTH_LONG)
-                        .setAction(string.undo, undoListener)
+            if (allowUndo) {
+                mTrashedComments.add(comment)
+                val undoListener = View.OnClickListener { _: View? ->
+                    mTrashedComments.remove(comment)
+                    fragments.forEach { it?.loadComments() }
+                }
+                val view = findViewById<View>(id.coordinator_layout)
+                if (view != null) {
+                    val snackbar = make(view, message, Snackbar.LENGTH_LONG)
+                            .setAction(string.undo, undoListener)
 
-                // do the actual moderation once the undo bar has been hidden
-                snackbar.addCallback(object : Callback() {
-                    override fun onDismissed(snackbar: Snackbar, event: Int) {
-                        super.onDismissed(snackbar, event)
+                    // do the actual moderation once the undo bar has been hidden
+                    snackbar.addCallback(object : Callback() {
+                        override fun onDismissed(snackbar: Snackbar, event: Int) {
+                            super.onDismissed(snackbar, event)
 
-                        // comment will no longer exist in moderating list if action was undone
-                        if (!mTrashedComments.contains(comment)) {
-                            return
+                            // comment will no longer exist in moderating list if action was undone
+                            if (!mTrashedComments.contains(comment)) {
+                                return
+                            }
+                            mTrashedComments.remove(comment)
+                            moderateComment(comment, newStatus)
                         }
-                        mTrashedComments.remove(comment)
-                        moderateComment(comment, newStatus)
-                    }
-                })
-                snackbar.show()
+                    })
+                    snackbar.show()
+                }
+            } else {
+                moderateComment(comment, newStatus)
             }
         }
     }
@@ -226,12 +255,12 @@ class CommentsActivity : LocaleAwareActivity(),
     private fun moderateComment(comment: CommentModel, newStatus: CommentStatus) {
         if (newStatus == CommentStatus.DELETED) {
             // For deletion, we need to dispatch a specific action.
-            dispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(RemoteCommentPayload(site!!, comment)))
+            dispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(RemoteCommentPayload(site, comment)))
         } else {
             // Actual moderation (push the modified comment).
             comment.status = newStatus.toString()
             dispatcher.dispatch(CommentActionBuilder.newUpdateCommentAction(comment))
-            dispatcher.dispatch(CommentActionBuilder.newPushCommentAction(RemoteCommentPayload(site!!, comment)))
+            dispatcher.dispatch(CommentActionBuilder.newPushCommentAction(RemoteCommentPayload(site, comment)))
         }
     }
 
@@ -243,42 +272,27 @@ class CommentsActivity : LocaleAwareActivity(),
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onPositiveClicked(instanceTag: String) {
-//        val fragmentById = supportFragmentManager.findFragmentById(id.layout_fragment_container)
-//        if (fragmentById is BasicDialogPositiveClickInterface) {
-//            (fragmentById as BasicDialogPositiveClickInterface).onPositiveClicked(instanceTag)
-//        }
-    }
-
     companion object {
-        private const val SAVED_COMMENTS_STATUS_TYPE = "saved_comments_status_type"
         const val COMMENT_MODERATE_ID_EXTRA = "commentModerateId"
         const val COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus"
     }
 
     class CommentsListPagerAdapter(
         private val pages: List<CommentStatusCriteria>,
-        private val site: SiteModel,
-        val fm: FragmentManager
-    ) : FragmentStatePagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
+        fragmentActivity: FragmentActivity
+    ) : FragmentStateAdapter(fragmentActivity) {
         private val listFragments = mutableMapOf<Int, WeakReference<CommentsListFragment>>()
-
-        override fun getCount(): Int = pages.size
-
-        override fun getItem(position: Int): CommentsListFragment =
-                CommentsListFragment.newInstance(pages[position])
-
-        override fun instantiateItem(container: ViewGroup, position: Int): Any {
-            val fragment = super.instantiateItem(container, position) as CommentsListFragment
-            listFragments[position] = WeakReference(fragment)
-            return fragment
-        }
-
-        override fun getPageTitle(position: Int): CharSequence =
-                WordPress.getContext().getString(pages[position].mLabelResId)
 
         fun getItemAtPosition(position: Int): CommentsListFragment? {
             return listFragments[position]?.get()
+        }
+
+        override fun getItemCount(): Int = pages.size
+
+        override fun createFragment(position: Int): Fragment {
+            val fragment = CommentsListFragment.newInstance(pages[position])
+            listFragments[position] = WeakReference(fragment)
+            return fragment
         }
     }
 }
