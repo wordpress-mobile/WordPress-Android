@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
 
+@Suppress("TooManyFunctions")
 class CommentsActivity : LocaleAwareActivity(),
         OnCommentSelectedListener,
         OnPostClickListener {
