@@ -537,7 +537,7 @@ public class CommentsListFragment extends Fragment {
             SmartToast.disableSmartToast(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
 
             if (getActivity() instanceof CommentsActivity) {
-                ((CommentsActivity) getActivity()).onActionModeStarted();
+                ((CommentsActivity) getActivity()).onActionModeToggled(true);
             }
 
             return true;
@@ -617,7 +617,7 @@ public class CommentsListFragment extends Fragment {
             mSwipeRefreshLayout.setEnabled(true);
             mActionMode = null;
             if (getActivity() instanceof CommentsActivity) {
-                ((CommentsActivity) getActivity()).onActionModeStopped();
+                ((CommentsActivity) getActivity()).onActionModeToggled(false);
             }
         }
     }

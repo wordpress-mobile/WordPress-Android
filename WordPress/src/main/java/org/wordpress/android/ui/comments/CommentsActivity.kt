@@ -66,15 +66,15 @@ class CommentsActivity : LocaleAwareActivity(),
 
         setContentView(layout.comment_activity)
 
-        site = if (savedInstanceState == null) {
-            checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-                "SiteModel cannot be null, check the PendingIntent starting CommentsActivity"
-            }
-        } else {
-            savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+        site = checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
+            "SiteModel cannot be null, check the PendingIntent starting CommentsActivity"
         }
 
-        setupActionBar()
+        val toolbar = findViewById<Toolbar>(id.toolbar_main)
+        setSupportActionBar(toolbar)
+
+        supportActionBar?.setDisplayShowTitleEnabled(true)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewPager = findViewById(id.view_pager)
         viewPager.offscreenPageLimit = 1
@@ -92,30 +92,17 @@ class CommentsActivity : LocaleAwareActivity(),
         disabledTabsOpacity = disabledAlpha.float
     }
 
-    fun onActionModeStarted() {
-        viewPager.isUserInputEnabled = false
+    fun onActionModeToggled(isActive: Boolean) {
+        viewPager.isUserInputEnabled = !isActive
         for (i in 0 until tabLayout.tabCount) {
-            tabLayout.getTabAt(i)?.view?.isEnabled = false
-            tabLayout.getTabAt(i)?.view?.isClickable = false
-            tabLayout.getTabAt(i)?.view?.alpha = disabledTabsOpacity
+            tabLayout.getTabAt(i)?.view?.isEnabled = !isActive
+            tabLayout.getTabAt(i)?.view?.isClickable = !isActive
+            if (isActive) {
+                tabLayout.getTabAt(i)?.view?.alpha = disabledTabsOpacity
+            } else {
+                tabLayout.getTabAt(i)?.view?.alpha = 1F
+            }
         }
-    }
-
-    fun onActionModeStopped() {
-        viewPager.isUserInputEnabled = true
-        for (i in 0 until tabLayout.tabCount) {
-            tabLayout.getTabAt(i)?.view?.isEnabled = true
-            tabLayout.getTabAt(i)?.view?.isClickable = true
-            tabLayout.getTabAt(i)?.view?.alpha = 1F
-        }
-    }
-
-    private fun setupActionBar() {
-        val toolbar = findViewById<Toolbar>(id.toolbar_main)
-        setSupportActionBar(toolbar)
-
-        supportActionBar?.setDisplayShowTitleEnabled(true)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 
     public override fun onResume() {
@@ -126,10 +113,6 @@ class CommentsActivity : LocaleAwareActivity(),
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         AppLog.d(T.COMMENTS, "comment activity new intent")
-    }
-
-    private fun showReaderPost(remoteBlogId: Long, postId: Long) {
-        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId)
     }
 
     /*
@@ -148,12 +131,7 @@ class CommentsActivity : LocaleAwareActivity(),
      * reader detail fragment
      */
     override fun onPostClicked(note: Note, remoteBlogId: Long, postId: Int) {
-        showReaderPost(remoteBlogId, postId.toLong())
-    }
-
-    public override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable(WordPress.SITE, site)
+        ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId.toLong())
     }
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
