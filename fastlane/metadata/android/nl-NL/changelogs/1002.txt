@@ -1,0 +1,5 @@
+16.7:
+- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
+- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
+- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
+- .blog subdomeinen nu beschikbaar

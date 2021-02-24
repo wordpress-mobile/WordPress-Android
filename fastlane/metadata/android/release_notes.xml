@@ -1,134 +1,112 @@
 <ar>
-16.6:
-ما الجديد؟
-إنشاء الموقع: عند تصفح تصميمات الصفحة الرئيسية، يمكنك عرض معاينات الهاتف والجهاز اللوحي وسطح المكتب والتبديل بينها.
-القارئ: للاستمتاع بتنظيم أفضل، أضفنا ميزة عامل التصفية إلى علامة تبويب مواقع P2 التي قمت بمتابعتها.
-البدء السريع: قمنا بتحسين الجولة التي توجهك خلال التطبيق، مع إضافة خطوات لاستعراض الصفحات وتحرير صفحتك الرئيسية.
-
-
+16.7:
+- يمكن لعملاء Jetpack الآن استعادة موقع أو تنزيل نسخة احتياطية أو إجراء فحص والبحث عن التهديدات وإصلاحها
+- تحديثات متنوعة على محرِّر المكوِّن، بما في ذلك القدرة على تعيين رموز إرساء في مكوِّن العنوان
+- عامل تصفية جديد للمقالات غير المقروءة والقدرة على وضع علامة على المقالات بوصفها مرئية/غير مرئية في القارئ
+- النطاقات الفرعية .blog متاحة الآن
 </ar>
-<de-DE>
-16.6:
-Neuerungen
-Websiteerstellung: Beim Durchsuchen von Homepage-Designs kannst du eine Vorschau für Mobiltelefone, Tablets und Desktops anzeigen und zwischen diesen wechseln.
-Reader: Für mehr Übersichtlichkeit haben wir eine Filterfunktion zu deinem Tab abonnierter P2-Seiten hinzugefügt.
-Schnellstart: Wir haben die Tour verbessert, die dich durch die App führt, und Schritte zum Prüfen von Seiten und Bearbeiten deiner Homepage hinzugefügt.
-
-
-</de-DE>
 <en-US>
-16.6:
-What’s new?
-Site Creation: When browsing homepage designs, you can view and switch between mobile, tablet, and desktop previews.
-Reader: For better organization, we added a filter feature to your tab of followed P2 sites.
-Quick Start: We improved the tour that guides you through the app, adding steps to review pages and edit your homepage.
-
-
+16.7:
+- Jetpack customers can now restore a site or download a backup, scan, and fix threats
+- Various block editor updates, including the ability to set anchors in the Heading block
+- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
+- .blog subdomains now available
 </en-US>
 <es-ES>
-16.6:
-¿Qué novedades hay?
-Creación del sitio: al explorar los diseños de la página de inicio, puedes ver y cambiar entre las previsualizaciones para móvil, tableta y ordenador.
-Lector: para mejorar la organización, hemos añadido una función de filtro a la pestaña de sitios P2 que sigues.
-Inicio rápido: hemos mejorado el recorrido guiado por la aplicación, la adición de pasos a las páginas de revisión y la edición de tu página de inicio.
-
-
+16.7:
+- Ahora, los clientes de Jetpack pueden restaurar un sitio o descargar una copia de seguridad, explorarlo y corregir fallos de seguridad
+- Varias actualizaciones del editor de bloques, incluyendo la capacidad de establecer anclajes en el bloque de encabezado
+- Nuevo filtro de entradas no leidas y la capacidad de marcar las entradas como vistas/no vistas en el Lector
+- Ahora están disponibles los subdominios «.blog»
 </es-ES>
+<fr-CA>
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
+</fr-CA>
+<fr-FR>
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
+</fr-FR>
 <iw-IL>
-16.6:
-מה חדש?
-יצירת אתר: כאשר מעיינים בעיצובים לעמוד הבית, אפשר להציג אותם ולהחליף בין תצוגה במכשירים ניידים, בטאבלטים ובמחשבים שולחניים.
-Reader: לצורך שיפור הארגון, הוספנו אפשרות מיון ללשונית של אתרי P2 שנמצאים במעקב שלך.
-התחלה מהירה: שיפרנו את סיור ההדרכה על השימוש באפליקציה והוספנו שלבים לבדיקת הדפים ולעריכה של עמוד הבית.
-
-
+16.7:
+- לקוחות של Jetpack יכולים כעת לשחזר אתר או להוריד גיבוי, לסרוק את האתר ולתקן איומים
+- מספר עדכונים בעורך הבלוקים, כולל יכולת להגדיר נקודות עיגון בבלוק הכותרת
+- מסנן חדש של פוסטים שלא נקראו ויכולת לסמן פוסטים כ'נקרא' או כ'לא נקרא' ב-Reader
+- דומיינים משנה של ‎.blog זמינים כעת
 </iw-IL>
 <id>
-16.6:
-Apa yang baru?
-Pembuatan Situs: Saat menjelajahi desain beranda, Anda dapat melihat dan beralih antara pratinjau seluler, tablet, dan desktop.
-Pembaca: Untuk pengaturan yang lebih baik, kami menambahkan fitur penyaring ke tab Anda dari situs P2 yang diikuti.
-Mulai Cepat: Kami memperbarui tur yang memandu Anda menggunakan aplikasi, menambahkan langkah-langkah untuk meninjau halaman dan mengedit beranda Anda.
-
-
+16.7:
+- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
+- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
+- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
+- Subdomain .blog sudah tersedia
 </id>
 <it-IT>
-16.6:
-Novità.
-Creazione del sito: quando esplori i design per la homepage, puoi passare dalla visualizzazione in anteprima per dispositivi mobili a quella per tablet e per desktop. 
-Reader: per una migliore organizzazione, abbiamo aggiunto una funzionalità di filtraggio alla scheda di siti P2 seguiti.
-Avvio rapido: abbiamo migliorato il tour che ti guida attraverso l'app aggiungendo dei passaggi alla revisione delle pagine e alla modifica della homepage.
-
-
+16.7:
+- I clienti di Jetpack possono ora ripristinare un sito o un scaricare un backup, scansionare e risolvere le minacce
+- Vari aggiornamenti dell'editor a blocchi, inclusa la possibilità di impostare le ancore nel blocco Titolo
+- Nuovo filtro di articoli non letti e possibilità di contrassegnare gli articoli come letti/non letti nel Reader
+- Sono ora disponibili i sottodomini .blog
 </it-IT>
 <ja-JP>
-16.6:
- 最新情報
-サイト作成: ホームページのデザインをブラウジングする際、モバイル、タブレット、デスクトップのプレビューを表示して切り替えることができます。
-Reader: さらに整理できるよう、フォローした P2サイトのタブにフィルター機能を追加しました。
-クイックスタート: ページの確認とホームページの編集手順を追加して、アプリをガイドするツアーを改善しました。
-
-
+16.7:
+- Jetpack をご利用のお客様は、サイトの復元やバックアップのダウンロード、スキャン、脅威の修正を実行できるようになりました
+- 見出しブロックにアンカーを設定する機能など、ブロックエディターの各種更新
+- 未読投稿の新しいフィルターと、リーダーで投稿に既読 / 未読のマークを付ける機能
+- .blog サブドメインが利用可能に
 </ja-JP>
 <ko-KR>
-16.6:
-새로운 기능
-사이트 생성: 홈페이지 디자인을 찾아볼 때 모바일, 태블릿 및 데스크톱 미리보기를 전환하면서 볼 수 있습니다.
-뉴스피드: 팔로우된 P2 사이트를 더 잘 정리할 수 있도록 탭에 필터 기능을 추가했습니다.
-퀵 스타트: 페이지를 검토하고 홈페이지를 편집하는 단계를 추가하여 앱을 안내하는 둘러보기를 개선했습니다.
-
-
+16.7:
+- 이제 젯팩 고객이 사이트를 복원하거나 백업을 다운로드하고, 위협을 스캔 및 해결할 수 있습니다.
+- 헤딩요소 블록에 앵커를 설정하는 기능을 포함하여 블록 편집기의 다양한 기능 업데이트
+- 새로운 읽지 않은 글 필터 및 리더에 글을 읽음/안 읽음으로 표시하는 기능
+- 이제 .blog를 하위 도메인으로 사용 가능
 </ko-KR>
 <nl-NL>
-16.6:
-Wat is er nieuw?
-Site aanmaak: Bij het bladeren door homepage-ontwerpen, kan je bekijken en schakelen tussen mobiele, tablet en desktop voorbeelden.
-Reader: Voor een betere organisatie hebben we een filterfunctie toegevoegd aan je tab met gevolgde P2 sites.
-Snelstart: we hebben de tour verbeterd die je door de app leidt, door stappen toe te voegen om pagina's te bekijken en je homepage te bewerken.
-
-
+16.7:
+- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
+- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
+- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
+- .blog subdomeinen nu beschikbaar
 </nl-NL>
 <ru-RU>
-16.6:
-Что нового?
-Создание сайта: при просмотре дизайнов домашней страницы вы можете просматривать и переключаться между превью на телефоне, планшете и компьютере.
-Чтиво: Для лучшей организации мы добавили функцию фильтрации на вкладку отслеживаемых P2-сайтов.
-Быстрый старт: мы улучшили гид, который проведет вас по приложению, добавив шаги для просмотра страниц и редактирования вашей домашней страницы.
-
+6.7:
+- Пользователи Jetpack теперь могут восстанавливать сайт или скачивать резервную копию, проверять и устранять угрозы.
+- Различные обновления редактора блоков, включая возможность устанавливать якоря в блоке заголовка.
+- Новый фильтр непрочитанных сообщений и возможность отмечать сообщения как (не)прочитанные в Чтиве
+- Теперь доступны поддомены .blog
 </ru-RU>
 <sv-SE>
-16.6:
-Vad är nytt?
-Skapa webbplats: När du letar efter startsidedesigner kan du visa och växla mellan förhandsgranskningar för mobil, surfplatta och skrivbord.
-Läsare: För bättre organisering har vi lagt till en filterfunktion på din flik med P2-sidor som följs.
-Snabbstart: Vi har förbättrat turen som guidar dig genom appen och lagt till steg för att granska sidor och redigera din startsida.
-
-
+16.7:
+- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
+- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
+- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
+- Nu går det att välja underdomäner under .blog
 </sv-SE>
 <tr-TR>
-16.6:
-Yenilikler
-Site Oluşturma: Ana sayfa tasarımlarına göz atarken mobil, tablet ve masaüstü önizlemelerini görüntüleyebilir ve aralarında geçiş yapabilirsiniz. 
-Okuyucu: Daha iyi bir organizasyon için, takip edilen P2 siteleri sekmenize bir filtre özelliği ekledik.
-Hızlı Başlangıç: Sayfaları incelemeniz ve ana sayfanızı düzenlemeniz için adımlar ekleyerek, uygulama içinde size rehberlik eden turu iyileştirdik.
-
-
+16.7:
+- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
+- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
+- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
+- .blog alt alan adları artık kullanılabilir
 </tr-TR>
 <zh-CN>
-16.6：
-新增功能
-站点创建：浏览主页设计时，您可以查看并切换移动设备、平板电脑和桌面设备预览效果。
-阅读器：为方便整理，我们在以下 P2 站点的选项卡中添加了过滤器功能。
-快速入门：我们改进了指引您使用应用程序的导览，添加了检查页面和编辑主页的步骤。
-
-
+16.7：
+- Jetpack 客户现在可以恢复站点或者下载备份、扫描和修复威胁
+- 一些区块编辑器更新，包括能够在标题区块中设置锚
+- 添加新的未读文章过滤器，并且能够在阅读器中将文章标记为“已读”/“未读”
+- .blog 子域现已可用
 </zh-CN>
 <zh-TW>
-16.6：
-新功能
-建立網站：你瀏覽首頁設計時，可以檢視並切換在手機、平板電腦和桌上型電腦上的預覽畫面。
-閱讀器：為了更方便你整理，我們在你追蹤的 P2 網站的索引標籤中新增了篩選功能。
-快速入門：我們改良了引導你完成應用程式設定的導覽，新增了檢閱頁面和編輯首頁的步驟。
-
-
+16.7：
+- Jetpack 顧客現在可以還原網站或下載備份、掃描與修正威脅
+- 多種區塊編輯器更新，包括在標題區塊設定錨點的功能
+- 新的未讀文章篩選功能，且可以在閱讀器中將文章標註為已看過/未看過
+- 已可使用 .blog 子網域
 </zh-TW>
