@@ -3194,7 +3194,7 @@
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>
