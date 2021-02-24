@@ -4,7 +4,7 @@
     android:viewportWidth="168"
     android:viewportHeight="94">
     <path
-        android:fillColor="#F6F7F7"
+        android:fillColor="@color/quick_start_task_card_illustration_background"
         android:pathData="M0 0h168v94H0z" />
     <path
         android:fillColor="#64D2FF"
