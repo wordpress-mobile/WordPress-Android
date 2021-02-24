@@ -7,9 +7,6 @@ import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import androidx.appcompat.widget.Toolbar
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
-import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.snackbar.Snackbar.Callback
@@ -173,7 +170,7 @@ class CommentsActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun getCommentFragments(comment: CommentModel): List<CommentsListFragment>{
+    private fun getCommentFragments(comment: CommentModel): List<CommentsListFragment> {
         val oldStatus = CommentStatus.fromString(comment.status)
 
         val targetFragments: ArrayList<CommentsListFragment?> = ArrayList()
