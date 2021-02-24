@@ -38,7 +38,6 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.CommentStore;
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsPayload;
 import org.wordpress.android.fluxc.store.CommentStore.OnCommentChanged;
-import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentPayload;
 import org.wordpress.android.models.CommentList;
 import org.wordpress.android.models.FilterCriteria;
 import org.wordpress.android.ui.ActionableEmptyView;
@@ -57,6 +56,7 @@ public class CommentsListFragment extends Fragment {
     static final int COMMENTS_PER_PAGE = 30;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
     static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
+    static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
 
     interface OnCommentSelectedListener {
         void onCommentSelected(long commentId, CommentStatus statusFilter);
@@ -91,8 +91,9 @@ public class CommentsListFragment extends Fragment {
     }
 
     private boolean mIsUpdatingComments = false;
+    private boolean mHasAutoRefreshedComments = false;
 
-    private RecyclerView mFilteredCommentsView;
+    private RecyclerView mRecyclerView;
     private CommentAdapter mAdapter;
     private ActionMode mActionMode;
     private CommentStatusCriteria mCommentStatusFilter = CommentStatusCriteria.ALL;
@@ -132,23 +133,72 @@ public class CommentsListFragment extends Fragment {
         super.onDestroy();
     }
 
+
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
         if (savedInstanceState == null) {
-//            if (getArguments() != null) {
-//                mSite = (SiteModel) getArguments().getSerializable(WordPress.SITE);
-//            } else {
             mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-//            }
         } else {
             mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
         }
-
         mCommentStatusFilter = (CommentStatusCriteria) getArguments().getSerializable(COMMENT_FILTER_KEY);
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
             getActivity().finish();
         }
     }
+
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
+
+        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
+
+        mRecyclerView = view.findViewById(R.id.comments_recycler_view);
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        mRecyclerView.addItemDecoration(
+                new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
+
+        mRecyclerView.swapAdapter(getAdapter(), true);
+
+        mLoadMoreProgress = view.findViewById(R.id.progress);
+
+        mSwipeRefreshLayout = view.findViewById(R.id.ptr_layout);
+        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
+                mSwipeRefreshLayout,
+                () -> {
+                    if (!NetworkUtils.checkConnection(getContext())) {
+                        showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+                        mSwipeToRefreshHelper.setRefreshing(false);
+                        return;
+                    }
+                    updateComments(false);
+                }
+        );
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        if (savedInstanceState != null) {
+            mIsUpdatingComments = savedInstanceState.getBoolean(LOADING_IN_PROGRESS_KEY, false);
+            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED, false);
+        }
+
+        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
+            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
+        } else {
+            if (!mHasAutoRefreshedComments) {
+                updateComments(false);
+                mHasAutoRefreshedComments = true;
+            } else {
+                getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
+            }
+        }
+    }
+
 
     private void showEmptyView(EmptyViewMessageType messageType) {
         int emptyViewMessageStringId = 0;
@@ -240,7 +290,7 @@ public class CommentsListFragment extends Fragment {
                         return;
                     }
                     if (mActionMode == null) {
-                        mFilteredCommentsView.invalidate();
+                        mRecyclerView.invalidate();
                         if (getActivity() instanceof OnCommentSelectedListener) {
                             ((OnCommentSelectedListener) getActivity()).onCommentSelected(comment.getRemoteCommentId(),
                                     mCommentStatusFilter
@@ -295,50 +345,6 @@ public class CommentsListFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        if (savedInstanceState != null) {
-            mIsUpdatingComments = savedInstanceState.getBoolean(LOADING_IN_PROGRESS_KEY, false);
-        }
-
-        if (!NetworkUtils.isNetworkAvailable(getActivity())) {
-            showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-        } else {
-            updateComments(false);
-        }
-    }
-
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.comment_list_fragment, container, false);
-
-        mActionableEmptyView = view.findViewById(R.id.actionable_empty_view);
-        mFilteredCommentsView = view.findViewById(R.id.comments_recycler_view);
-        mFilteredCommentsView.setLayoutManager(new LinearLayoutManager(getContext()));
-        mFilteredCommentsView.addItemDecoration(
-                new DividerItemDecoration(view.getContext(), DividerItemDecoration.VERTICAL));
-
-        mFilteredCommentsView.setAdapter(getAdapter());
-
-        mLoadMoreProgress = view.findViewById(R.id.progress);
-
-        mSwipeRefreshLayout = view.findViewById(R.id.ptr_layout);
-        mSwipeToRefreshHelper = buildSwipeToRefreshHelper(
-                mSwipeRefreshLayout,
-                () -> {
-                    if (!NetworkUtils.checkConnection(getContext())) {
-                        showEmptyView(EmptyViewMessageType.NETWORK_ERROR);
-                        mSwipeToRefreshHelper.setRefreshing(false);
-                        return;
-                    }
-                    updateComments(false);
-                }
-        );
-
-        return view;
-    }
 
     private void dismissDialog(int id) {
         if (!isAdded()) {
@@ -416,24 +422,6 @@ public class CommentsListFragment extends Fragment {
         moderateComments(selectedComments, newStatus);
     }
 
-    private boolean shouldRemoveCommentFromList(CommentModel comment) {
-        CommentStatus status = CommentStatus.fromString(comment.getStatus());
-        switch (mCommentStatusFilter) {
-            case ALL:
-                return status != CommentStatus.APPROVED && status != CommentStatus.UNAPPROVED;
-            case UNAPPROVED:
-                return status != CommentStatus.UNAPPROVED;
-            case APPROVED:
-                return status != CommentStatus.APPROVED;
-            case TRASH:
-                return status != CommentStatus.TRASH;
-            case SPAM:
-                return status != CommentStatus.SPAM;
-            case DELETE:
-            default:
-                return true;
-        }
-    }
 
     private void moderateComments(CommentList comments, CommentStatus status) {
         // track batch actions
@@ -460,19 +448,8 @@ public class CommentsListFragment extends Fragment {
         }
 
         for (CommentModel comment : comments) {
-            // Preemptive update
-            comment.setStatus(status.toString());
-            if (shouldRemoveCommentFromList(comment)) {
-                removeComment(comment);
-            }
-            if (status == CommentStatus.DELETED) {
-                // For deletion, we need to dispatch a specific action.
-                mDispatcher.dispatch(CommentActionBuilder.newDeleteCommentAction(
-                        new RemoteCommentPayload(mSite, comment)));
-            } else {
-                // Dispatch the update
-                mDispatcher.dispatch(CommentActionBuilder.newPushCommentAction(
-                        new RemoteCommentPayload(mSite, comment)));
+            if (getActivity() instanceof CommentsActivity) {
+                ((CommentsActivity) getActivity()).onModerateComment(comment, status);
             }
         }
     }
@@ -500,26 +477,25 @@ public class CommentsListFragment extends Fragment {
 
         mSwipeRefreshLayout.setRefreshing(true);
 
+        if (getAdapter().getItemCount() == 0) {
+            showEmptyView(EmptyViewMessageType.LOADING);
+        }
+
         // immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
         if (!loadMore) {
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
 
-        if (getAdapter().getItemCount() == 0) {
-            showEmptyView(EmptyViewMessageType.LOADING);
-        }
 
         int offset = 0;
         if (loadMore) {
             offset = getAdapter().getItemCount();
             mLoadMoreProgress.setVisibility(View.VISIBLE);
         }
-        if (!mIsUpdatingComments) {
-            mIsUpdatingComments = true;
-            mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
-                    new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
-                            offset)));
-        }
+        mIsUpdatingComments = true;
+        mDispatcher.dispatch(CommentActionBuilder.newFetchCommentsAction(
+                new FetchCommentsPayload(mSite, mCommentStatusFilter.toCommentStatus(), COMMENTS_PER_PAGE,
+                        offset)));
     }
 
     @Override
@@ -527,6 +503,7 @@ public class CommentsListFragment extends Fragment {
         super.onSaveInstanceState(outState);
         outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(LOADING_IN_PROGRESS_KEY, mIsUpdatingComments);
+        outState.putSerializable(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
     }
 
     /****
@@ -558,6 +535,11 @@ public class CommentsListFragment extends Fragment {
             inflater.inflate(R.menu.menu_comments_cab, menu);
             mSwipeRefreshLayout.setEnabled(false);
             SmartToast.disableSmartToast(SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
+
+            if (getActivity() instanceof CommentsActivity) {
+                ((CommentsActivity) getActivity()).onActionModeStarted();
+            }
+
             return true;
         }
 
@@ -634,6 +616,9 @@ public class CommentsListFragment extends Fragment {
             getAdapter().setEnableSelection(false);
             mSwipeRefreshLayout.setEnabled(true);
             mActionMode = null;
+            if (getActivity() instanceof CommentsActivity) {
+                ((CommentsActivity) getActivity()).onActionModeStopped();
+            }
         }
     }
 
