@@ -186,6 +186,22 @@ public class CommentStore extends Store {
     // Getters
 
     /**
+     * Get a limited list of comment for a specific site.
+     *
+     * @param site Site model to get comment for.
+     * @param orderByDateAscending If true order the results by ascending published date.
+     *                             If false, order the results by descending published date.
+     * @param statuses Array of status or CommentStatus.ALL to get all of them.
+     * @param limit Maximum number of comments to return. 0 is unlimited.
+     */
+    @SuppressLint("WrongConstant")
+    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit,
+                                                 CommentStatus... statuses) {
+        @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
+        return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
+    }
+
+    /**
      * Get a list of comment for a specific site.
      *
      * @param site Site model to get comment for.
@@ -193,13 +209,6 @@ public class CommentStore extends Store {
      *                             If false, order the results by descending published date.
      * @param statuses Array of status or CommentStatus.ALL to get all of them.
      */
-    @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending, int limit, int offset,
-                                                 CommentStatus... statuses) {
-        @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
-        return CommentSqlUtils.getCommentsForSite(site, order, limit, offset, statuses);
-    }
-
     @SuppressLint("WrongConstant")
     public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
                                                  CommentStatus... statuses) {

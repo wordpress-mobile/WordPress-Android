@@ -118,10 +118,10 @@ public class CommentSqlUtils {
     }
 
     private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, CommentStatus... statuses) {
-        return getCommentsQueryForSite(site, 0, 0, statuses);
+        return getCommentsQueryForSite(site, 0, statuses);
     }
 
-    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, int limit, int offset,
+    private static SelectQuery<CommentModel> getCommentsQueryForSite(SiteModel site, int limit,
                                                                      CommentStatus... statuses) {
         if (site == null) {
             return null;
@@ -145,16 +145,16 @@ public class CommentSqlUtils {
     }
 
     public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, CommentStatus... statuses) {
-        return getCommentsForSite(site, order, 0, 0, statuses);
+        return getCommentsForSite(site, order, 0, statuses);
     }
 
-    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, int limit, int offset,
+    public static List<CommentModel> getCommentsForSite(SiteModel site, @Order int order, int limit,
                                                         CommentStatus... statuses) {
         if (site == null) {
             return Collections.emptyList();
         }
 
-        return getCommentsQueryForSite(site, limit, offset, statuses)
+        return getCommentsQueryForSite(site, limit, statuses)
                 .orderBy(CommentModelTable.DATE_PUBLISHED, order)
                 .getAsModel();
     }
