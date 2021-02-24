@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -37,15 +39,19 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
+import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
@@ -73,6 +79,8 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
+    @Mock private lateinit var localRelatedPosts: ReaderSimplePostList
+    @Mock private lateinit var globalRelatedPosts: ReaderSimplePostList
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -285,12 +293,100 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
-    private fun createDummyReaderPost(id: Long): ReaderPost = ReaderPost().apply {
+    @Test
+    fun `given related posts fetch succeeds, when related posts are requested, then related posts are shown`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = localRelatedPosts,
+                                        globalRelatedPosts = globalRelatedPosts
+                                )
+                        )
+                val uiStates = init().uiStates
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                with(uiStates.last()) {
+                    assertThat(localRelatedPosts).isEqualTo(
+                            RelatedPosts(posts = this@ReaderPostDetailViewModelTest.localRelatedPosts, isGlobal = false)
+                    )
+                    assertThat(globalRelatedPosts).isEqualTo(
+                            RelatedPosts(posts = this@ReaderPostDetailViewModelTest.globalRelatedPosts, isGlobal = true)
+                    )
+                }
+            }
+
+    @Test
+    fun `given related posts fetch fails, when related posts are requested, then request failed message is shown`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(FetchRelatedPostsState.Failed.RequestFailed)
+                val observers = init()
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                val snackBarMsg = observers.snackbarMsgs.last().peekContent()
+                assertThat(snackBarMsg)
+                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+            }
+
+    @Test
+    fun `given no network, when related posts are requested, then no network failed message is shown`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(FetchRelatedPostsState.Failed.NoNetwork)
+                val observers = init()
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                val snackBarMsg = observers.snackbarMsgs.last().peekContent()
+                assertThat(snackBarMsg)
+                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
+            }
+
+    @Test
+    fun `given related posts fetch in progress, when related posts are requested, then related posts are not shown`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(FetchRelatedPostsState.AlreadyRunning)
+                val uiStates = init().uiStates
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                with(uiStates.last()) {
+                    assertThat(localRelatedPosts).isNull()
+                    assertThat(globalRelatedPosts).isNull()
+                }
+            }
+
+    @Test
+    fun `given wp com post, when related posts are requested, then related posts are fetched`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost)).thenReturn(mock())
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                verify(readerFetchRelatedPostsUseCase).fetchRelatedPosts(readerPost)
+            }
+
+    @Test
+    fun `given non wp com post, when related posts are requested, then related posts are not fetched`() =
+            test {
+                val nonWpComPost = createDummyReaderPost(id = 1, isWpComPost = false)
+
+                viewModel.onRelatedPostsRequested(nonWpComPost)
+
+                verify(readerFetchRelatedPostsUseCase, times(0)).fetchRelatedPosts(readerPost)
+            }
+
+    private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
         this.postId = id
         this.blogId = id * 100
         this.feedId = id * 1000
         this.title = "DummyPost"
         this.featuredVideo = id.toString()
+        this.isExternal = !isWpComPost
     }
 
     private fun createDummyReaderPostDetailsUiState(
