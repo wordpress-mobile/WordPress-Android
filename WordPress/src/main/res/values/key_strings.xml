@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- layout tags - do not translate -->
-    <string name="fragment_tag_comment_list" translatable="false">fragment_comment_list</string>
-    <string name="fragment_tag_comment_detail" translatable="false" tools:ignore="UnusedResources">fragment_comment_detail</string>
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
     <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
