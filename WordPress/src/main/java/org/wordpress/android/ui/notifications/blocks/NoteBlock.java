@@ -5,6 +5,7 @@ import android.media.MediaPlayer;
 import android.net.Uri;
 import android.text.Spannable;
 import android.text.TextUtils;
+import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -48,6 +49,7 @@ public class NoteBlock {
     private boolean mIsBadge;
     private boolean mIsPingback;
     private boolean mHasAnimatedBadge;
+    private boolean mIsViewMilestone;
 
     public interface OnNoteBlockTextClickListener {
         void onNoteBlockTextClicked(NoteBlockClickableSpan clickedSpan);
@@ -113,6 +115,9 @@ public class NoteBlock {
         mIsBadge = true;
     }
 
+    public void setIsViewMilestone() {
+        mIsViewMilestone = true;
+    }
 
     public int getLayoutResourceId() {
         return R.layout.note_block_basic;
@@ -218,11 +223,22 @@ public class NoteBlock {
                     params.gravity = Gravity.CENTER_HORIZONTAL;
                     noteBlockHolder.getTextView().setLayoutParams(params);
                     noteBlockHolder.getTextView().setGravity(Gravity.CENTER_HORIZONTAL);
-                    noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), 8), 0, 0);
+                    int padding;
+                    if (mIsViewMilestone) {
+                        padding = 40;
+                    } else {
+                        padding = 8;
+                    }
+                    noteBlockHolder.getTextView().setPadding(0, DisplayUtils.dpToPx(view.getContext(), padding), 0, 0);
 
                     if (AccessibilityUtils.isAccessibilityEnabled(noteBlockHolder.getTextView().getContext())) {
                         noteBlockHolder.getTextView().setClickable(false);
                         noteBlockHolder.getTextView().setLongClickable(false);
+                    }
+                    if (mIsViewMilestone) {
+                        noteBlockHolder.getTextView().setTextSize(28);
+                        TypefaceSpan typefaceSpan = new TypefaceSpan("serif");
+                        noteText.setSpan(typefaceSpan, 0, noteText.length(), Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
                     }
                 } else {
                     noteBlockHolder.getTextView().setGravity(Gravity.NO_GRAVITY);

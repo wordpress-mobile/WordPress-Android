@@ -441,6 +441,10 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             noteBlock.setIsBadge();
                         }
 
+                        if (mNote.isViewMilestoneType()) {
+                            noteBlock.setIsViewMilestone();
+                        }
+
                         if (isPingback) {
                             noteBlock.setIsPingback();
                         }
