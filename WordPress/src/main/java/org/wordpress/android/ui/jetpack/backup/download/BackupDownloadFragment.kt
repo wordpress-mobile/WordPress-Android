@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.recycler_view
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -20,6 +20,7 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadNavigation
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCanceled
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadCompleted
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel.BackupDownloadWizardState.BackupDownloadInProgress
+import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.common.adapters.JetpackBackupRestoreAdapter
 import org.wordpress.android.ui.jetpack.scan.adapters.HorizontalMarginItemDecoration
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -32,6 +33,7 @@ import javax.inject.Inject
 
 const val KEY_BACKUP_DOWNLOAD_REWIND_ID = "key_backup_download_rewind_id"
 const val KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID = "key_backup_download_download_id"
+const val KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID = "key_backup_download_action_state_id"
 
 class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
@@ -126,13 +128,22 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         viewModel.wizardFinishedObservable.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 val intent = Intent()
-                val (backupDownloadCreated, ids) = when (this) {
-                    is BackupDownloadCanceled -> Pair(false, null)
-                    is BackupDownloadInProgress -> Pair(true, Pair(rewindId, downloadId))
-                    is BackupDownloadCompleted -> Pair(true, null)
+                val (backupDownloadCreated, ids, actionType) = when (this) {
+                    is BackupDownloadCanceled -> Triple(false, null, JetpackBackupDownloadActionState.CANCEL)
+                    is BackupDownloadInProgress -> Triple(
+                            true,
+                            Pair(rewindId, downloadId),
+                            JetpackBackupDownloadActionState.PROGRESS
+                    )
+                    is BackupDownloadCompleted -> Triple(
+                            true,
+                            Pair(rewindId, downloadId),
+                            JetpackBackupDownloadActionState.COMPLETE
+                    )
                 }
                 intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
                 intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, ids?.second)
+                intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, actionType.id)
                 requireActivity().let { activity ->
                     activity.setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
                     activity.finish()

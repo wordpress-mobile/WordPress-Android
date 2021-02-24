@@ -45,6 +45,7 @@ private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
 private const val ACTIVITY_LOG_TRACKING_SOURCE = "activity_log"
 private const val BACKUP_TRACKING_SOURCE = "backup"
+
 /**
  * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
  * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
@@ -137,8 +138,8 @@ class ActivityLogListFragment : Fragment() {
         viewModel.onQueryRestoreStatus(rewindId, restoreId)
     }
 
-    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
-        viewModel.onQueryBackupDownloadStatus(rewindId, downloadId)
+    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long, actionState: Int) {
+        viewModel.onQueryBackupDownloadStatus(rewindId, downloadId, actionState)
     }
 
     private fun setupObservers() {
@@ -201,9 +202,10 @@ class ActivityLogListFragment : Fragment() {
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
                 val trackingSource = when {
-                        requireNotNull(
-                            requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)) ->
-                                BACKUP_TRACKING_SOURCE
+                    requireNotNull(
+                            requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)
+                    ) ->
+                        BACKUP_TRACKING_SOURCE
                     else -> {
                         ACTIVITY_LOG_TRACKING_SOURCE
                     }
@@ -328,7 +330,8 @@ class ActivityLogListFragment : Fragment() {
                     this::onItemClicked,
                     this::onItemButtonClicked,
                     this::onSecondaryActionClicked,
-                    uiHelpers)
+                    uiHelpers
+            )
             log_list_view.adapter = adapter
         } else {
             adapter = log_list_view.adapter as ActivityLogAdapter

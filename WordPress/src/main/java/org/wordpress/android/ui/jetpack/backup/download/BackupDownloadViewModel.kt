@@ -151,7 +151,7 @@ class BackupDownloadViewModel @Inject constructor(
         when (wizardManager.currentStep) {
             DETAILS.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
             PROGRESS.id -> constructProgressEvent()
-            COMPLETE.id -> _wizardFinishedObservable.value = Event(BackupDownloadCompleted)
+            COMPLETE.id -> constructCompleteEvent()
             ERROR.id -> _wizardFinishedObservable.value = Event(BackupDownloadCanceled)
         }
     }
@@ -160,6 +160,19 @@ class BackupDownloadViewModel @Inject constructor(
         _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
             Event(
                     BackupDownloadInProgress(
+                            backupDownloadState.rewindId as String,
+                            backupDownloadState.downloadId as Long
+                    )
+            )
+        } else {
+            Event(BackupDownloadCanceled)
+        }
+    }
+
+    private fun constructCompleteEvent() {
+        _wizardFinishedObservable.value = if (backupDownloadState.downloadId != null) {
+            Event(
+                    BackupDownloadCompleted(
                             backupDownloadState.rewindId as String,
                             backupDownloadState.downloadId as Long
                     )
@@ -441,10 +454,15 @@ class BackupDownloadViewModel @Inject constructor(
         @Parcelize
         data class BackupDownloadInProgress(
             val rewindId: String,
-            val downloadId: Long
+            val downloadId: Long,
+            val inProgress: Boolean = true
         ) : BackupDownloadWizardState()
 
         @Parcelize
-        object BackupDownloadCompleted : BackupDownloadWizardState()
+        data class BackupDownloadCompleted(
+            val rewindId: String,
+            val downloadId: Long,
+            val inProgress: Boolean = false
+        ) : BackupDownloadWizardState()
     }
 }
