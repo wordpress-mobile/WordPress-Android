@@ -44,7 +44,6 @@ import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
-import java.lang.ref.WeakReference
 import javax.inject.Inject
 
 class CommentsActivity : LocaleAwareActivity(),
@@ -127,14 +126,6 @@ class CommentsActivity : LocaleAwareActivity(),
         ActivityId.trackLastActivity(COMMENTS)
     }
 
-    override fun onBackPressed() {
-        if (supportFragmentManager.backStackEntryCount > 0) {
-            supportFragmentManager.popBackStack()
-        } else {
-            super.onBackPressed()
-        }
-    }
-
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         AppLog.d(T.COMMENTS, "comment activity new intent")
@@ -182,6 +173,28 @@ class CommentsActivity : LocaleAwareActivity(),
         }
     }
 
+    private fun getCommentFragments(comment: CommentModel): List<CommentsListFragment>{
+        val oldStatus = CommentStatus.fromString(comment.status)
+
+        val targetFragments: ArrayList<CommentsListFragment?> = ArrayList()
+        if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
+            targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
+            targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
+            targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
+        } else {
+            targetFragments.add(
+                    pagerAdapter.getItemAtPosition(
+                            commentListFilters.indexOf(
+                                    CommentStatusCriteria.fromCommentStatus(
+                                            oldStatus
+                                    )
+                            )
+                    )
+            )
+        }
+        return targetFragments.filterNotNull()
+    }
+
     @JvmOverloads
     fun onModerateComment(
         comment: CommentModel,
@@ -194,25 +207,9 @@ class CommentsActivity : LocaleAwareActivity(),
             dispatcher.dispatch(CommentActionBuilder.newPushCommentAction(RemoteCommentPayload(site, comment)))
         } else if (newStatus == CommentStatus.SPAM || newStatus == CommentStatus.TRASH ||
                 newStatus == CommentStatus.DELETED) {
-            val oldStatus = CommentStatus.fromString(comment.status)
+            val targetFragments = getCommentFragments(comment)
+            targetFragments.forEach { it.removeComment(comment) }
 
-            val targetFragments: ArrayList<CommentsListFragment?> = ArrayList()
-            if (oldStatus == CommentStatus.APPROVED || oldStatus == CommentStatus.UNAPPROVED) {
-                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(ALL)))
-                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(APPROVED)))
-                targetFragments.add(pagerAdapter.getItemAtPosition(commentListFilters.indexOf(UNAPPROVED)))
-            } else {
-                targetFragments.add(
-                        pagerAdapter.getItemAtPosition(
-                                commentListFilters.indexOf(
-                                        CommentStatusCriteria.fromCommentStatus(
-                                                oldStatus
-                                        )
-                                )
-                        )
-                )
-            }
-            targetFragments.forEach { it?.removeComment(comment) }
             val message = when (newStatus) {
                 CommentStatus.TRASH -> getString(string.comment_trashed)
                 CommentStatus.SPAM -> getString(
@@ -224,7 +221,7 @@ class CommentsActivity : LocaleAwareActivity(),
                 mTrashedComments.add(comment)
                 val undoListener = View.OnClickListener { _: View? ->
                     mTrashedComments.remove(comment)
-                    targetFragments.forEach { it?.loadComments() }
+                    targetFragments.forEach { it.loadComments() }
                 }
                 val view = findViewById<View>(id.coordinator_layout)
                 if (view != null) {
@@ -275,24 +272,5 @@ class CommentsActivity : LocaleAwareActivity(),
     companion object {
         const val COMMENT_MODERATE_ID_EXTRA = "commentModerateId"
         const val COMMENT_MODERATE_STATUS_EXTRA = "commentModerateStatus"
-    }
-
-    class CommentsListPagerAdapter(
-        private val pages: List<CommentStatusCriteria>,
-        fragmentActivity: FragmentActivity
-    ) : FragmentStateAdapter(fragmentActivity) {
-        private val listFragments = mutableMapOf<Int, WeakReference<CommentsListFragment>>()
-
-        fun getItemAtPosition(position: Int): CommentsListFragment? {
-            return listFragments[position]?.get()
-        }
-
-        override fun getItemCount(): Int = pages.size
-
-        override fun createFragment(position: Int): Fragment {
-            val fragment = CommentsListFragment.newInstance(pages[position])
-            listFragments[position] = WeakReference(fragment)
-            return fragment
-        }
     }
 }
