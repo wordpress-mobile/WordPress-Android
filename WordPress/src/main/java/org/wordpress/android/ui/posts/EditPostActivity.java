@@ -556,7 +556,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
                 if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
-                    newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE), extras.getString(EXTRA_PAGE_CONTENT));
+                    newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
+                            extras.getString(EXTRA_PAGE_CONTENT));
                 } else {
                     newPostSetup();
                 }
