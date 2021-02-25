@@ -148,7 +148,6 @@ class ActivityLogViewModel @Inject constructor(
     private var fetchActivitiesJob: Job? = null
     private var restoreStatusJob: Job? = null
     private var backupDownloadStatusJob: Job? = null
-    private var dismissBackupDownloadJob: Job? = null
 
     private var currentDateRangeFilter: DateRange? = null
     private var currentActivityTypeFilter: List<ActivityTypeModel> = listOf()
@@ -236,9 +235,6 @@ class ActivityLogViewModel @Inject constructor(
         if (restoreEvent.isCompleted) {
             showRestoreFinishedMessage(restoreEvent.rewindId, restoreEvent.published)
             currentRestoreEvent = RestoreEvent(false)
-        }
-        if (backupDownloadEvent.isCompleted) {
-            currentBackupDownloadEvent = currentBackupDownloadEvent.copy(displayProgress = false)
         }
     }
 
@@ -549,8 +545,8 @@ class ActivityLogViewModel @Inject constructor(
 
     private fun dismissNoticeClicked(downloadId: Long) {
         activityLogTracker.trackDownloadBackupDismissButtonClicked(rewindableOnly)
-        dismissBackupDownloadJob?.cancel()
-        dismissBackupDownloadJob = viewModelScope.launch {
+        viewModelScope.launch {
+            // todo annmarie disable dismiss button first
             postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site)
             // Always optimistic on a dismiss. If it doesn't work, the banner returns on the next PTR
             reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
@@ -701,6 +697,7 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun handleBackupDownloadStatusForProgress(state: BackupDownloadRequestState.Progress) {
+        // todo: annmarie add back the check for !isShown
         reloadEvents(
                 backupDownloadEvent = BackupDownloadEvent(
                         displayProgress = true,
@@ -715,7 +712,7 @@ class ActivityLogViewModel @Inject constructor(
     private fun handleBackupDownloadStatusForComplete(state: BackupDownloadRequestState.Complete) {
         val backupDownloadEvent = BackupDownloadEvent(
                 displayProgress = false,
-                displayNotice = isBackupDownloadFileValid(state.url, state.validUntil, state.downloadId),
+                displayNotice = state.isValid,
                 isCompleted = true,
                 rewindId = state.rewindId,
                 published = state.published,
@@ -739,14 +736,6 @@ class ActivityLogViewModel @Inject constructor(
                     it.toFormattedTimeString()
             )
         }
-    }
-
-    private fun isBackupDownloadFileValid(url: String?, validUntil: Date?, downloadId: Long?): Boolean {
-        if (validUntil == null || url == null || downloadId == null) return false
-        // Now represents the current time using the current locale and timezone
-        val now = Calendar.getInstance().apply { time = Date() }
-        val expires = Calendar.getInstance().apply { time = validUntil }
-        return now.before(expires)
     }
 
     data class ShowDateRangePicker(val initialSelection: DateRange?)

@@ -20,6 +20,8 @@ import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadRequestSta
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.NetworkUtilsWrapper
+import java.util.Calendar
+import java.util.Date
 import javax.inject.Inject
 import javax.inject.Named
 import kotlin.math.max
@@ -68,7 +70,8 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
     ): Boolean {
         val published = activityLogStore.getActivityLogItemByRewindId(status.rewindId)?.published
         return if (status.progress == null) {
-            emit(Complete(status.rewindId, status.downloadId, status.url, published, status.validUntil))
+            val isValid = isValid(status.url, status.validUntil, status.downloadId)
+            emit(Complete(status.rewindId, status.downloadId, status.url, published, status.validUntil, isValid))
             true
         } else {
             emit(Progress(status.rewindId, status.progress, published))
@@ -88,5 +91,13 @@ class GetBackupDownloadStatusUseCase @Inject constructor(
             delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
             false
         }
+    }
+
+    private fun isValid(url: String?, validUntil: Date?, downloadId: Long?): Boolean {
+        if (validUntil == null || url == null || downloadId == null) return false
+        // Now represents the current time using the current locale and timezone
+        val now = Calendar.getInstance().apply { time = Date() }
+        val expires = Calendar.getInstance().apply { time = validUntil }
+        return now.before(expires)
     }
 }
