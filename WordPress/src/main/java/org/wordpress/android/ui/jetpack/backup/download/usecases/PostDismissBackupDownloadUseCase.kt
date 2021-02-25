@@ -39,16 +39,12 @@ class PostDismissBackupDownloadUseCase @Inject constructor(
         }
         dismissed
     }
-
-    private suspend fun handleError(
-        retryAttempts: Int
-    ): Boolean {
-        return if (retryAttempts >= MAX_RETRY) {
-            AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while dismiss download backup file")
-            true
-        } else {
-            delay(DELAY_MILLIS * (max(1, DELAY_FACTOR * retryAttempts)))
-            false
-        }
+    
+    private suspend fun handleError(retryAttempts: Int) = if (retryAttempts >= MAX_RETRY) {
+        AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while dismiss download backup file")
+        true
+    } else {
+        delay(DELAY_MILLIS * max(1, DELAY_FACTOR * retryAttempts))
+        false
     }
 }
