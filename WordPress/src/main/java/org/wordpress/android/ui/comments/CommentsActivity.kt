@@ -6,7 +6,6 @@ import android.text.TextUtils
 import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
-import androidx.appcompat.widget.Toolbar
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.snackbar.Snackbar
@@ -42,6 +41,8 @@ import org.wordpress.android.ui.notifications.NotificationFragment.OnPostClickLi
 import org.wordpress.android.ui.reader.ReaderActivityLauncher
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
+import org.wordpress.android.util.SmartToast
+import org.wordpress.android.util.SmartToast.SmartToastType.COMMENTS_LONG_PRESS
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
@@ -51,7 +52,7 @@ class CommentsActivity : LocaleAwareActivity(),
         OnCommentSelectedListener,
         OnPostClickListener,
         ScrollableViewInitializedListener {
-    private val mTrashedComments = CommentList()
+    private val tempTrashedComments = CommentList()
     private lateinit var tabLayout: TabLayout
     private lateinit var viewPager: ViewPager2
     private lateinit var appBar: AppBarLayout
@@ -78,19 +79,17 @@ class CommentsActivity : LocaleAwareActivity(),
 
         appBar = findViewById(id.appbar_main)
 
-        val toolbar = findViewById<Toolbar>(id.toolbar_main)
-        setSupportActionBar(toolbar)
-
+        setSupportActionBar(findViewById(id.toolbar_main))
         supportActionBar?.setDisplayShowTitleEnabled(true)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
         viewPager = findViewById(id.view_pager)
         viewPager.offscreenPageLimit = 1
-        tabLayout = findViewById(id.tab_layout)
 
         pagerAdapter = CommentsListPagerAdapter(commentListFilters, this)
         viewPager.adapter = pagerAdapter
 
+        tabLayout = findViewById(id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
             tab.setText(commentListFilters[position].mLabelResId)
         }.attach()
@@ -98,6 +97,10 @@ class CommentsActivity : LocaleAwareActivity(),
         val disabledAlpha = TypedValue()
         resources.getValue(dimen.material_emphasis_disabled, disabledAlpha, true)
         disabledTabsOpacity = disabledAlpha.float
+
+        if (savedInstanceState == null) {
+            SmartToast.show(this, COMMENTS_LONG_PRESS)
+        }
     }
 
     fun onActionModeToggled(isActive: Boolean) {
@@ -135,8 +138,7 @@ class CommentsActivity : LocaleAwareActivity(),
     }
 
     /*
-     * called from comment detail when user taps a link to a post - show the post in a
-     * reader detail fragment
+     * called from comment detail when user taps a link to a post - show the post in a ReaderPostPagerActivity
      */
     override fun onPostClicked(note: Note, remoteBlogId: Long, postId: Int) {
         ReaderActivityLauncher.showReaderPostDetail(this, remoteBlogId, postId.toLong())
@@ -167,11 +169,7 @@ class CommentsActivity : LocaleAwareActivity(),
         } else {
             targetFragments.add(
                     pagerAdapter.getItemAtPosition(
-                            commentListFilters.indexOf(
-                                    CommentStatusCriteria.fromCommentStatus(
-                                            oldStatus
-                                    )
-                            )
+                            commentListFilters.indexOf(CommentStatusCriteria.fromCommentStatus(oldStatus))
                     )
             )
         }
@@ -201,9 +199,9 @@ class CommentsActivity : LocaleAwareActivity(),
                 else -> getString(string.comment_deleted_permanently)
             }
             if (allowUndo) {
-                mTrashedComments.add(comment)
+                tempTrashedComments.add(comment)
                 val undoListener = View.OnClickListener { _: View? ->
-                    mTrashedComments.remove(comment)
+                    tempTrashedComments.remove(comment)
                     targetFragments.forEach { it.loadComments() }
                 }
                 val view = findViewById<View>(id.coordinator_layout)
@@ -217,10 +215,10 @@ class CommentsActivity : LocaleAwareActivity(),
                             super.onDismissed(snackbar, event)
 
                             // comment will no longer exist in moderating list if action was undone
-                            if (!mTrashedComments.contains(comment)) {
+                            if (!tempTrashedComments.contains(comment)) {
                                 return
                             }
-                            mTrashedComments.remove(comment)
+                            tempTrashedComments.remove(comment)
                             moderateComment(comment, newStatus)
                         }
                     })

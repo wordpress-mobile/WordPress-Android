@@ -115,7 +115,6 @@ public class CommentsListFragment extends ViewPagerFragment {
 
     public static CommentsListFragment newInstance(CommentStatusCriteria commentStatusFilter) {
         Bundle args = new Bundle();
-
         CommentsListFragment fragment = new CommentsListFragment();
         args.putSerializable(COMMENT_FILTER_KEY, commentStatusFilter);
         fragment.setArguments(args);
@@ -128,9 +127,6 @@ public class CommentsListFragment extends ViewPagerFragment {
         ((WordPress) getActivity().getApplication()).component().inject(this);
         mDispatcher.register(this);
         updateSiteOrFinishActivity(savedInstanceState);
-        if (savedInstanceState == null) {
-            SmartToast.show(getActivity(), SmartToast.SmartToastType.COMMENTS_LONG_PRESS);
-        }
     }
 
     @Override
@@ -139,13 +135,8 @@ public class CommentsListFragment extends ViewPagerFragment {
         super.onDestroy();
     }
 
-
     private void updateSiteOrFinishActivity(Bundle savedInstanceState) {
-        if (savedInstanceState == null) {
-            mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
-        } else {
-            mSite = (SiteModel) savedInstanceState.getSerializable(WordPress.SITE);
-        }
+        mSite = (SiteModel) getActivity().getIntent().getSerializableExtra(WordPress.SITE);
         mCommentStatusFilter = (CommentStatusCriteria) getArguments().getSerializable(COMMENT_FILTER_KEY);
         if (mSite == null) {
             ToastUtils.showToast(getActivity(), R.string.blog_not_found, ToastUtils.Duration.SHORT);
@@ -507,7 +498,6 @@ public class CommentsListFragment extends ViewPagerFragment {
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(WordPress.SITE, mSite);
         outState.putSerializable(LOADING_IN_PROGRESS_KEY, mIsUpdatingComments);
         outState.putSerializable(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
     }
