@@ -10,7 +10,6 @@ import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
-
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -18,7 +17,6 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
-import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -51,7 +49,6 @@ import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
-import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
@@ -318,31 +315,33 @@ class ReaderPostDetailViewModelTest {
             }
 
     @Test
-    fun `given related posts fetch fails, when related posts are requested, then request failed message is shown`() =
+    fun `given related posts fetch fails, when related posts are requested, then related posts are not shown`() =
             test {
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(FetchRelatedPostsState.Failed.RequestFailed)
-                val observers = init()
+                val uiStates = init().uiStates
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                val snackBarMsg = observers.snackbarMsgs.last().peekContent()
-                assertThat(snackBarMsg)
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                with(uiStates.last()) {
+                    assertThat(localRelatedPosts).isNull()
+                    assertThat(globalRelatedPosts).isNull()
+                }
             }
 
     @Test
-    fun `given no network, when related posts are requested, then no network failed message is shown`() =
+    fun `given no network, when related posts are requested, then related posts are not shown`() =
             test {
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(FetchRelatedPostsState.Failed.NoNetwork)
-                val observers = init()
+                val uiStates = init().uiStates
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                val snackBarMsg = observers.snackbarMsgs.last().peekContent()
-                assertThat(snackBarMsg)
-                        .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.error_network_connection)))
+                with(uiStates.last()) {
+                    assertThat(localRelatedPosts).isNull()
+                    assertThat(globalRelatedPosts).isNull()
+                }
             }
 
     @Test

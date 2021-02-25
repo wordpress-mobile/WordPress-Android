@@ -199,18 +199,12 @@ class ReaderPostDetailViewModel @Inject constructor(
 
         launch {
             when (val fetchRelatedPostsState = readerFetchRelatedPostsUseCase.fetchRelatedPosts(sourcePost)) {
-                is FetchRelatedPostsState.AlreadyRunning -> { // Do Nothing
+                is FetchRelatedPostsState.AlreadyRunning,
+                is FetchRelatedPostsState.Failed.NoNetwork,
+                is FetchRelatedPostsState.Failed.RequestFailed -> { // Do Nothing
                 }
 
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(fetchRelatedPostsState)
-
-                is FetchRelatedPostsState.Failed.NoNetwork -> _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.error_network_connection))))
-                )
-
-                is FetchRelatedPostsState.Failed.RequestFailed -> _snackbarEvents.postValue(
-                        Event(SnackbarMessageHolder((UiStringRes(R.string.reader_error_request_failed_title))))
-                )
             }
         }
     }
