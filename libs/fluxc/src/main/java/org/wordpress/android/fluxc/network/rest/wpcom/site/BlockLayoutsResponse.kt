@@ -27,5 +27,5 @@ data class GutenbergLayoutCategory(
     val slug: String,
     val title: String,
     val description: String,
-    val emoji: String
+    val emoji: String?
 ) : Parcelable
