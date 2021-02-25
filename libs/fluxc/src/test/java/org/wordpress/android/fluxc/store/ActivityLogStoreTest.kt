@@ -450,7 +450,7 @@ class ActivityLogStoreTest {
 
         verify(activityLogSqlUtils).deleteBackupDownloadStatus(siteModel)
     }
-    
+
     @Test
     fun onDismissBackupDownloadActionCallRestClient() = test {
         whenever(activityLogRestClient.dismissBackupDownload(eq(siteModel), any())).thenReturn(
