@@ -21,7 +21,7 @@ class SelectedSiteRepository
     private val _selectedSiteChange = MutableLiveData<SiteModel>()
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
     val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel>
-    val siteSelected: LiveData<Int> by lazy {
+    val siteSelected: LiveData<Int?> by lazy {
         val result = MediatorLiveData<Int>()
         result.addSource(_selectedSiteChange) { site -> result.value = site?.id }
         result.value = null
