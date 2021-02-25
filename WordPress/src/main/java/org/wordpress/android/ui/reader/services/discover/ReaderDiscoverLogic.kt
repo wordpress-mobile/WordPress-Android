@@ -41,6 +41,7 @@ import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.HAS_NE
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResult.UNCHANGED
 import org.wordpress.android.ui.reader.actions.ReaderActions.UpdateResultListener
 import org.wordpress.android.ui.reader.discover.DiscoverSortingType
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.NONE
 import org.wordpress.android.ui.reader.repository.usecases.GetDiscoverCardsUseCase
 import org.wordpress.android.ui.reader.repository.usecases.ParseDiscoverCardsJsonUseCase
 import org.wordpress.android.ui.reader.repository.usecases.tags.GetFollowedTagsUseCase
@@ -64,23 +65,17 @@ class ReaderDiscoverLogic(
         appComponent.inject(this)
     }
 
-    @Inject
-    lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
+    @Inject lateinit var parseDiscoverCardsJsonUseCase: ParseDiscoverCardsJsonUseCase
 
-    @Inject
-    lateinit var appPrefsWrapper: AppPrefsWrapper
+    @Inject lateinit var appPrefsWrapper: AppPrefsWrapper
 
-    @Inject
-    lateinit var readerTagTableWrapper: ReaderTagTableWrapper
+    @Inject lateinit var readerTagTableWrapper: ReaderTagTableWrapper
 
-    @Inject
-    lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
+    @Inject lateinit var getFollowedTagsUseCase: GetFollowedTagsUseCase
 
-    @Inject
-    lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
+    @Inject lateinit var readerBlogTableWrapper: ReaderBlogTableWrapper
 
-    @Inject
-    lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
+    @Inject lateinit var getDiscoverCardsUseCase: GetDiscoverCardsUseCase
 
     enum class DiscoverTasks {
         REQUEST_MORE, REQUEST_FIRST_PAGE
@@ -104,7 +99,9 @@ class ReaderDiscoverLogic(
         coroutineScope.launch {
             val params = HashMap<String, String>()
             params["tags"] = getFollowedTagsUseCase.get().joinToString { it.tagSlug }
-            params["sort"] = sortingType.sortedBy
+            if (sortingType != NONE) {
+                params["sort"] = sortingType.sortedBy
+            }
 
             when (taskType) {
                 REQUEST_FIRST_PAGE -> {
@@ -298,12 +295,18 @@ class ReaderDiscoverLogic(
         ReaderDiscoverCardsTable.addCardsPage(simplifiedCardsJson.toString(), sortingType)
     }
 
+    /**
+     * Clear the saved data
+     *
+     * - Delete the Blogs that are not subscribed / interested by user
+     * - Delete card sequences for given sorting type
+     * - Posts are not deleted because they are used in other sorting type and they will be deleted on purging.
+     */
     private suspend fun clearCache(sortingType: DiscoverSortingType) {
         val blogIds = getRecommendedBlogsToBeDeleted(sortingType).map { it.blogId }
         ReaderBlogTable.deleteBlogsWithIds(blogIds)
 
         ReaderDiscoverCardsTable.clear(sortingType)
-        ReaderPostTable.deletePostsWithTag(ReaderTag.createDiscoverPostCardsTag())
     }
 
     private suspend fun getRecommendedBlogsToBeDeleted(sortingType: DiscoverSortingType): List<ReaderBlog> {
