@@ -21,7 +21,7 @@ import org.wordpress.android.util.AppLog.T.READER
 */
 object ReaderDiscoverServiceStarter {
     const val ARG_DISCOVER_TASK = "discover_task"
-    const val ARG_SORTING_TYPE = "sortingType"
+    const val ARG_SORTING_TYPE = "sorting_type"
 
     fun startService(context: Context, task: DiscoverTasks, sortingType: DiscoverSortingType): Boolean {
         if (VERSION.SDK_INT < VERSION_CODES.O) {
@@ -35,7 +35,7 @@ object ReaderDiscoverServiceStarter {
             val componentName = ComponentName(context, ReaderDiscoverJobService::class.java)
             val extras = PersistableBundle()
             extras.putInt(ARG_DISCOVER_TASK, task.ordinal)
-            extras.putInt(ARG_SORTING_TYPE, task.ordinal)
+            extras.putInt(ARG_SORTING_TYPE, sortingType.ordinal)
 
             val jobInfo = Builder(JobServiceId.JOB_READER_DISCOVER_SERVICE_ID, componentName)
                     .setRequiresCharging(false)
