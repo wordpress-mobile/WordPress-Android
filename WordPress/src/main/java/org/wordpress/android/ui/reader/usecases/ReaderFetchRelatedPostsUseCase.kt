@@ -26,12 +26,10 @@ class ReaderFetchRelatedPostsUseCase @Inject constructor(
         val request = RelatedPostsRequest(postId = sourcePost.postId, blogId = sourcePost.blogId)
 
         return when {
-            continuations[request] != null -> {
-                AlreadyRunning
-            }
-            !networkUtilsWrapper.isNetworkAvailable() -> {
-                NoNetwork
-            }
+            continuations[request] != null -> AlreadyRunning
+
+            !networkUtilsWrapper.isNetworkAvailable() -> NoNetwork
+
             else -> {
                 suspendCancellableCoroutine { cont ->
                     continuations[request] = cont
