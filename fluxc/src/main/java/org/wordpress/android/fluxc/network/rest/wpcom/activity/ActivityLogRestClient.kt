@@ -235,7 +235,10 @@ class ActivityLogRestClient(
                 request,
                 DismissBackupDownloadResponse::class.java)
         return when (response) {
-            is Success -> DismissBackupDownloadResultPayload(site.siteId, downloadId, response.data.isDimissed)
+            is Success -> DismissBackupDownloadResultPayload(
+                    site.siteId,
+                    response.data.downloadId,
+                    response.data.isDismissed)
             is Error -> {
                 val errorType = NetworkErrorMapper.map(response.error,
                         DismissBackupDownloadErrorType.GENERIC_ERROR,
@@ -512,9 +515,9 @@ class ActivityLogRestClient(
             val count: Int?
         )
     }
-    
+
     class DismissBackupDownloadResponse(
         val downloadId: Long,
-        val isDimissed: Boolean
+        val isDismissed: Boolean
     )
 }
