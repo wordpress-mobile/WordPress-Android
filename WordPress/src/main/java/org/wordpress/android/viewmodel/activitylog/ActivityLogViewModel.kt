@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -43,7 +44,6 @@ import org.wordpress.android.viewmodel.ResourceProvider
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersHidden
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.FiltersUiState.FiltersShown
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 
@@ -284,8 +284,8 @@ class ActivityLogViewModel @Inject constructor(
                             R.string.activity_log_backup_download_notice_description_with_two_params,
                             rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
                     ),
-                    primaryActionButtonClickListener = this@ActivityLogViewModel::onDownloadBackupFileClicked,
-                    secondaryActionButtonClickListener = this@ActivityLogViewModel::dismissNoticeClicked,
+                    primaryAction = { onDownloadBackupFileClicked(backupDownloadEvent.url as String) },
+                    secondaryAction = { dismissNoticeClicked(backupDownloadEvent.downloadId as Long) },
                     url = backupDownloadEvent.url as String,
                     downloadId = backupDownloadEvent.downloadId as Long
             )
@@ -546,10 +546,10 @@ class ActivityLogViewModel @Inject constructor(
     private fun dismissNoticeClicked(downloadId: Long) {
         activityLogTracker.trackDownloadBackupDismissButtonClicked(rewindableOnly)
         viewModelScope.launch {
-            // todo annmarie disable dismiss button first
-            postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site)
-            // Always optimistic on a dismiss. If it doesn't work, the banner returns on the next PTR
+            // reload events first to remove item - convey progress
             reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
+            // Always optimistic on a dismiss. If it doesn't work, the banner returns on the next PTR
+            postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site)
         }
     }
 
@@ -697,16 +697,17 @@ class ActivityLogViewModel @Inject constructor(
     }
 
     private fun handleBackupDownloadStatusForProgress(state: BackupDownloadRequestState.Progress) {
-        // todo: annmarie add back the check for !isShown
-        reloadEvents(
-                backupDownloadEvent = BackupDownloadEvent(
-                        displayProgress = true,
-                        displayNotice = false,
-                        isCompleted = false,
-                        rewindId = state.rewindId,
-                        published = state.published
-                )
-        )
+        if (!isBackupDownloadProgressItemShown) {
+            reloadEvents(
+                    backupDownloadEvent = BackupDownloadEvent(
+                            displayProgress = true,
+                            displayNotice = false,
+                            isCompleted = false,
+                            rewindId = state.rewindId,
+                            published = state.published
+                    )
+            )
+        }
     }
 
     private fun handleBackupDownloadStatusForComplete(state: BackupDownloadRequestState.Complete) {

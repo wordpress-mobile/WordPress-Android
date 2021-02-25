@@ -1019,7 +1019,7 @@ class ActivityLogViewModelTest {
         viewModel.reloadEvents(done = false, backupDownloadEvent = backupDownloadCompleteEvent())
 
         val notice = events.first()?.filterIsInstance<Notice>()
-        notice?.first()?.primaryActionButtonClickListener?.invoke(backupDownloadCompleteEvent().url as String)
+        notice?.first()?.primaryAction?.invoke()
         assertThat(navigationEvents.last().peekContent()).isInstanceOf(DownloadBackupFile::class.java)
     }
 
@@ -1032,8 +1032,8 @@ class ActivityLogViewModelTest {
         events.first()
                 ?.filterIsInstance<Notice>()
                 ?.first()
-                ?.secondaryActionButtonClickListener
-                ?.invoke(backupDownloadCompleteEvent().downloadId as Long)
+                ?.secondaryAction
+                ?.invoke()
         assertThat(events.last()?.filterIsInstance<Notice>()).isEmpty()
     }
     /* RELOAD EVENTS - RESTORE AND BACKUP DOWNLOAD */

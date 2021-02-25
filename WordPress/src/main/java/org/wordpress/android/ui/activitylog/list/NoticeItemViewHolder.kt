@@ -13,7 +13,7 @@ class NoticeItemViewHolder(parent: ViewGroup) :
 
     fun bind(item: ActivityLogListItem.Notice, uiHelpers: UiHelpers) {
         uiHelpers.setTextOrHide(label, item.label)
-        primaryButton.setOnClickListener { item.primaryActionButtonClickListener(item.url) }
-        secondaryButton.setOnClickListener { item.secondaryActionButtonClickListener(item.downloadId) }
+        primaryButton.setOnClickListener { item.primaryAction() }
+        secondaryButton.setOnClickListener { item.secondaryAction() }
     }
 }
