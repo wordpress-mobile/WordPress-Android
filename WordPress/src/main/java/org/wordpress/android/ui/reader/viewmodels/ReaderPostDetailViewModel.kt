@@ -201,8 +201,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             when (val fetchRelatedPostsState = readerFetchRelatedPostsUseCase.fetchRelatedPosts(sourcePost)) {
                 is FetchRelatedPostsState.AlreadyRunning,
                 is FetchRelatedPostsState.Failed.NoNetwork,
-                is FetchRelatedPostsState.Failed.RequestFailed -> { // Do Nothing
-                }
+                is FetchRelatedPostsState.Failed.RequestFailed -> Unit // Do Nothing
 
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(fetchRelatedPostsState)
             }
