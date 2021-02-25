@@ -85,10 +85,7 @@ sealed class ActivityLogListItem(val type: ViewType) {
     data class Notice(
         val label: String,
         val primaryAction: () -> Unit,
-        val primaryActionEnabled: Boolean = true,
-        val secondaryAction: () -> Unit,
-        val url: String,
-        val downloadId: Long
+        val secondaryAction: () -> Unit
     ) : ActivityLogListItem(NOTICE)
 
     enum class ViewType(val id: Int) {

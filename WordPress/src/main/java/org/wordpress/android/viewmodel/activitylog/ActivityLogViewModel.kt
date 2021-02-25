@@ -7,7 +7,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
@@ -285,9 +284,7 @@ class ActivityLogViewModel @Inject constructor(
                             rewindDate.toFormattedDateString(), rewindDate.toFormattedTimeString()
                     ),
                     primaryAction = { onDownloadBackupFileClicked(backupDownloadEvent.url as String) },
-                    secondaryAction = { dismissNoticeClicked(backupDownloadEvent.downloadId as Long) },
-                    url = backupDownloadEvent.url as String,
-                    downloadId = backupDownloadEvent.downloadId as Long
+                    secondaryAction = { dismissNoticeClicked(backupDownloadEvent.downloadId as Long) }
             )
         }
     }
