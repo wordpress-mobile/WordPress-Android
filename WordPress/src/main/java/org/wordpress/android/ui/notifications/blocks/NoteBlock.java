@@ -241,7 +241,6 @@ public class NoteBlock {
                             noteBlockHolder.getButton().setVisibility(View.GONE);
                             noteBlockHolder.getMaterialButton().setVisibility(View.VISIBLE);
                             noteBlockHolder.getMaterialButton().setText(noteText.toString());
-                            noteBlockHolder.getMaterialButton().setGravity(Gravity.CENTER_HORIZONTAL);
                             noteBlockHolder.getMaterialButton().setOnClickListener(v -> {
                                 FormattableRange buttonRange = FormattableContentUtilsKt.getButtonRange(mNoteData);
                                 if (getOnNoteBlockTextClickListener() != null && buttonRange != null) {
