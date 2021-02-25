@@ -26,6 +26,8 @@ import org.wordpress.android.fluxc.persistence.ActivityLogSqlUtils
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestTypes
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadResultPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadPayload
+import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchBackupDownloadStatePayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchRewindStatePayload
@@ -447,6 +449,46 @@ class ActivityLogStoreTest {
         activityLogStore.onAction(fetchAction)
 
         verify(activityLogSqlUtils).deleteBackupDownloadStatus(siteModel)
+    }
+    
+    @Test
+    fun onDismissBackupDownloadActionCallRestClient() = test {
+        whenever(activityLogRestClient.dismissBackupDownload(eq(siteModel), any())).thenReturn(
+                DismissBackupDownloadResultPayload(
+                        100L,
+                        10L,
+                        true
+                )
+        )
+
+        val downloadId = 10L
+        val payload = DismissBackupDownloadPayload(siteModel, downloadId)
+        val action = ActivityLogActionBuilder.newDismissBackupDownloadAction(payload)
+        activityLogStore.onAction(action)
+
+        verify(activityLogRestClient).dismissBackupDownload(siteModel, downloadId)
+    }
+
+    @Test
+    fun emitsDismissBackupDownloadResult() = test {
+        val downloadId = 10L
+        val isDismissed = true
+
+        val payload = DismissBackupDownloadResultPayload(
+                siteModel.siteId,
+                downloadId,
+                isDismissed)
+        whenever(activityLogRestClient.dismissBackupDownload(siteModel, downloadId)).thenReturn(payload)
+
+        activityLogStore.onAction(ActivityLogActionBuilder.newDismissBackupDownloadAction(DismissBackupDownloadPayload(
+                siteModel,
+                downloadId)))
+
+        val expectedChangeEvent = ActivityLogStore.OnDismissBackupDownload(
+                downloadId,
+                isDismissed,
+                ActivityLogAction.DISMISS_BACKUP_DOWNLOAD)
+        verify(dispatcher).emitChange(eq(expectedChangeEvent))
     }
 
     private suspend fun initRestClient(
