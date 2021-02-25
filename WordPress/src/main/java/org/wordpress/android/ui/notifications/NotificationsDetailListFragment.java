@@ -16,6 +16,8 @@ import android.widget.ListView;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.ListFragment;
 
+import com.airbnb.lottie.LottieAnimationView;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -67,6 +69,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
     private Note mNote;
     private LinearLayout mRootLayout;
     private ViewGroup mFooterView;
+    private Boolean mConfettiShown = false;
 
     private String mRestoredNoteId;
     private int mCommentListPosition = ListView.INVALID_POSITION;
@@ -120,6 +123,12 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
             listView.addFooterView(mFooterView);
         }
 
+        if (mNote != null && mNote.isViewMilestoneType() && !mConfettiShown) {
+            LottieAnimationView confetti = requireActivity().findViewById(R.id.confetti);
+            confetti.playAnimation();
+            mConfettiShown = true;
+        }
+
         reloadNoteBlocks();
     }
 
@@ -169,6 +178,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
         if (note == null) {
             showErrorToastAndFinish();
             return;
+        }
+        if (mNote == null || !noteId.equals(mNote.getId())) {
+            mConfettiShown = false;
         }
         mNote = note;
     }
