@@ -39,7 +39,7 @@ class PostDismissBackupDownloadUseCase @Inject constructor(
         }
         dismissed
     }
-    
+
     private suspend fun handleError(retryAttempts: Int) = if (retryAttempts >= MAX_RETRY) {
         AppLog.d(T.JETPACK_BACKUP, "$tag: Exceeded $MAX_RETRY retries while dismiss download backup file")
         true
