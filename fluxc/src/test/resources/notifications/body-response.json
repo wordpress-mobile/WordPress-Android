@@ -50,7 +50,8 @@
     },
     "titles": {
       "home": "Title"
-    }
+    },
+    "button": true
   },
   "type": "user"
 }
