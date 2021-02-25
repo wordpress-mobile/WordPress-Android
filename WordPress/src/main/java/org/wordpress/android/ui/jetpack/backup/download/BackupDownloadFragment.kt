@@ -10,7 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.recycler_view
+import kotlinx.android.synthetic.main.jetpack_backup_restore_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.SiteModel
@@ -129,7 +129,11 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
             it.applyIfNotHandled {
                 val intent = Intent()
                 val (backupDownloadCreated, ids, actionType) = when (this) {
-                    is BackupDownloadCanceled -> Triple(false, null, JetpackBackupDownloadActionState.CANCEL)
+                    is BackupDownloadCanceled -> Triple(
+                            false,
+                            null,
+                            JetpackBackupDownloadActionState.CANCEL
+                    )
                     is BackupDownloadInProgress -> Triple(
                             true,
                             Pair(rewindId, downloadId),
