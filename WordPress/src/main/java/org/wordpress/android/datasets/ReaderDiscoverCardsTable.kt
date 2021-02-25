@@ -15,8 +15,8 @@ object ReaderDiscoverCardsTable {
         db.execSQL(
                 "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE (" +
                         "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                        " $CARDS_JSON_COLUMN TEXT" +
-                        " $CARDS_SORTING_TYPE_COLUMN TEXT" +
+                        " $CARDS_JSON_COLUMN TEXT," +
+                        " $CARDS_SORTING_TYPE_COLUMN TEXT DEFAULT ${DiscoverSortingType.NONE.sortedBy};" +
                         ")"
         )
     }
@@ -24,7 +24,7 @@ object ReaderDiscoverCardsTable {
     fun addSortingTypeColumnToTable(db: SQLiteDatabase) {
         db.execSQL(
                 "ALTER TABLE $DISCOVER_CARDS_TABLE ADD " +
-                        "$CARDS_SORTING_TYPE_COLUMN TEXT;"
+                        "$CARDS_SORTING_TYPE_COLUMN TEXT DEFAULT ${DiscoverSortingType.NONE.sortedBy};"
         )
     }
 
@@ -32,10 +32,10 @@ object ReaderDiscoverCardsTable {
         db.execSQL("DROP TABLE IF EXISTS tbl_discover_cards")
     }
 
-    fun clear(DiscoverSortingType: DiscoverSortingType) {
-        val args = arrayOf(DiscoverSortingType.sortedBy)
-        val whereClause = "WHERE $CARDS_SORTING_TYPE_COLUMN = ?" +
-                AppLog.i(AppLog.T.READER, "clearing ReaderDiscoverCardsTable")
+    fun clear(sortingType: DiscoverSortingType) {
+        val args = arrayOf(sortingType.sortedBy)
+        val whereClause = "$CARDS_SORTING_TYPE_COLUMN = ?"
+        AppLog.i(AppLog.T.READER, "clearing ReaderDiscoverCardsTable")
         getWritableDb().delete(DISCOVER_CARDS_TABLE, whereClause, args)
     }
 
@@ -55,8 +55,8 @@ object ReaderDiscoverCardsTable {
         getWritableDb().insert(DISCOVER_CARDS_TABLE, null, values)
     }
 
-    fun loadDiscoverCardsJsons(DiscoverSortingType: DiscoverSortingType): List<String> {
-        val args = arrayOf(DiscoverSortingType.sortedBy)
+    fun loadDiscoverCardsJsons(discoverSortingType: DiscoverSortingType): List<String> {
+        val args = arrayOf(discoverSortingType.sortedBy)
         val c = getReadableDb()
                 .rawQuery("SELECT * FROM $DISCOVER_CARDS_TABLE " +
                         "WHERE $CARDS_SORTING_TYPE_COLUMN = ?" +
