@@ -746,7 +746,7 @@ public class SiteStoreUnitTest {
         GutenbergLayoutCategory cat1 = new GutenbergLayoutCategory("a", "About", "About", "👋");
         GutenbergLayoutCategory cat2 = new GutenbergLayoutCategory("b", "Blog", "Blog", "📰");
         List<GutenbergLayoutCategory> categories = Arrays.asList(cat1, cat2);
-        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "content", categories);
+        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
         List<GutenbergLayout> layouts = Collections.singletonList(layout);
         // Store
         SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
