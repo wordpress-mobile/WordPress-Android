@@ -16,11 +16,14 @@ class SiteItemsBuilder
     fun buildSiteItems(
         site: SiteModel,
         onClick: (ListItemAction) -> Unit,
-        isBackupsAvailable: Boolean = false,
-        isScanAvailable: Boolean = false
+        isBackupAvailable: Boolean = false,
+        isScanAvailable: Boolean = false,
+        showViewSiteFocusPoint: Boolean = false,
+        showEnablePostSharingFocusPoint: Boolean = false,
+        showExplorePlansFocusPoint: Boolean = false
     ): List<MySiteItem> {
         return listOfNotNull(
-                siteListItemBuilder.buildPlanItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildPlanItemIfAvailable(site, showExplorePlansFocusPoint, onClick),
                 siteCategoryItemBuilder.buildJetpackCategoryIfAvailable(site),
                 ListItem(
                         R.drawable.ic_stats_alt_white_24dp,
@@ -28,7 +31,7 @@ class SiteItemsBuilder
                         onClick = ListItemInteraction.create(ListItemAction.STATS, onClick)
                 ),
                 siteListItemBuilder.buildActivityLogItemIfAvailable(site, onClick),
-                siteListItemBuilder.buildBackupItemIfAvailable(onClick, isBackupsAvailable),
+                siteListItemBuilder.buildBackupItemIfAvailable(onClick, isBackupAvailable),
                 siteListItemBuilder.buildScanItemIfAvailable(onClick, isScanAvailable),
                 siteListItemBuilder.buildJetpackItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_publish)),
@@ -53,14 +56,15 @@ class SiteItemsBuilder
                 siteCategoryItemBuilder.buildConfigurationHeaderIfAvailable(site),
                 siteListItemBuilder.buildPeopleItemIfAvailable(site, onClick),
                 siteListItemBuilder.buildPluginItemIfAvailable(site, onClick),
-                siteListItemBuilder.buildShareItemIfAvailable(site, onClick),
+                siteListItemBuilder.buildShareItemIfAvailable(site, onClick, showEnablePostSharingFocusPoint),
                 siteListItemBuilder.buildSiteSettingsItemIfAvailable(site, onClick),
                 CategoryHeader(UiStringRes(R.string.my_site_header_external)),
                 ListItem(
                         R.drawable.ic_globe_white_24dp,
                         UiStringRes(R.string.my_site_btn_view_site),
                         secondaryIcon = R.drawable.ic_external_white_24dp,
-                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick)
+                        onClick = ListItemInteraction.create(ListItemAction.VIEW_SITE, onClick),
+                        showFocusPoint = showViewSiteFocusPoint
                 ),
                 siteListItemBuilder.buildAdminItemIfAvailable(site, onClick)
         )

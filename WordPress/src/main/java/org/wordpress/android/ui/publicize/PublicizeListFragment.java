@@ -23,14 +23,17 @@ import org.wordpress.android.fluxc.model.SiteModel;
 import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.fluxc.store.QuickStartStore;
 import org.wordpress.android.ui.ScrollableViewInitializedListener;
+import org.wordpress.android.ui.mysite.QuickStartRepository;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnAdapterLoadedListener;
 import org.wordpress.android.ui.publicize.adapters.PublicizeServiceAdapter.OnServiceClickListener;
 import org.wordpress.android.ui.quickstart.QuickStartEvent;
 import org.wordpress.android.util.NetworkUtils;
 import org.wordpress.android.util.QuickStartUtils;
+import org.wordpress.android.util.QuickStartUtilsWrapper;
 import org.wordpress.android.util.SiteUtils;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig;
 import org.wordpress.android.widgets.WPDialogSnackbar;
 
 import javax.inject.Inject;
@@ -54,6 +57,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     @Inject AccountStore mAccountStore;
     @Inject QuickStartStore mQuickStartStore;
     @Inject Dispatcher mDispatcher;
+    @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
+    @Inject QuickStartRepository mQuickStartRepository;
+    @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
 
     public static PublicizeListFragment newInstance(@NonNull SiteModel site) {
         Bundle args = new Bundle();
@@ -94,7 +100,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         setNavigationIcon(R.drawable.ic_arrow_left_white_24dp);
 
         if (getActivity() instanceof ScrollableViewInitializedListener) {
-           ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
+            ((ScrollableViewInitializedListener) getActivity()).onScrollableViewInitialized(mNestedScrollView.getId());
         }
     }
 
@@ -140,7 +146,7 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
         if (mQuickStartEvent.getTask() == ENABLE_POST_SHARING) {
             showQuickStartFocusPoint();
 
-            Spannable title = QuickStartUtils.stylizeQuickStartPrompt(getActivity(),
+            Spannable title = mQuickStartUtilsWrapper.stylizeQuickStartPrompt(requireContext(),
                     R.string.quick_start_dialog_enable_sharing_message_short_connections);
 
             WPDialogSnackbar.make(getView(), title,
@@ -227,8 +233,12 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
             mAdapter.setOnAdapterLoadedListener(mAdapterLoadedListener);
             if (getActivity() instanceof OnServiceClickListener) {
                 mAdapter.setOnServiceClickListener(service -> {
-                    QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
-                            mDispatcher, mSite, mQuickStartEvent, getContext());
+                    if (mMySiteImprovementsFeatureConfig.isEnabled()) {
+                        mQuickStartRepository.completeTask(ENABLE_POST_SHARING);
+                    } else {
+                        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
+                                mDispatcher, mSite, mQuickStartEvent, getContext());
+                    }
                     if (getView() != null) {
                         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
                     }

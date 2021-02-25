@@ -10,6 +10,7 @@ import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -428,15 +429,36 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         ReaderActivityLauncher.showReaderPostDetail(this, siteId, postId);
     }
 
+     public void showScanActivityForSite(long siteId) {
+         SiteModel site = getSiteOrToast(siteId);
+         if (site != null) {
+            ActivityLauncher.viewScan(this, site);
+         }
+    }
+
     public void showStatsActivityForSite(long siteId, FormattableRangeType rangeType) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            showStatsActivityForSite(site, rangeType);
+        }
+    }
+
+    public void showBackupForSite(long siteId) {
+        SiteModel site = getSiteOrToast(siteId);
+        if (site != null) {
+            showBackupActivityForSite(site);
+        }
+    }
+
+    @Nullable
+    private SiteModel getSiteOrToast(long siteId) {
         SiteModel site = mSiteStore.getSiteBySiteId(siteId);
         if (site == null) {
             // One way the site can be null: new site created, receive a notification from this site,
             // but the site list is not yet updated in the app.
             ToastUtils.showToast(this, R.string.blog_not_found);
-            return;
         }
-        showStatsActivityForSite(site, rangeType);
+        return site;
     }
 
     private void showStatsActivityForSite(@NonNull SiteModel site, FormattableRangeType rangeType) {
@@ -450,6 +472,14 @@ public class NotificationsDetailActivity extends LocaleAwareActivity implements
         } else {
             ActivityLauncher.viewBlogStats(this, site);
         }
+    }
+
+    private void showBackupActivityForSite(@NonNull SiteModel site) {
+        if (isFinishing()) {
+            return;
+        }
+
+         ActivityLauncher.viewBackupList(this, site);
     }
 
     public void showWebViewActivityForUrl(String url) {

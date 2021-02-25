@@ -6,16 +6,11 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: nb_NO
 -->
 <resources>
-    <string name="backup_item_sqls">Nettstedsdatabase (SQL)</string>
-    <string name="backup_item_contents">Mappen WP-content (unntatt temaer, utvidelser og opplastinger)</string>
-    <string name="backup_item_roots">WordPress-roten (inkludert wp-config.php og filer som ikke tilhærer WordPress)</string>
     <string name="backup_item_media_uploads">Media-opplastinger</string>
     <string name="backup_item_plugins">WordPress-utvidelser</string>
     <string name="backup_item_themes">WordPress-temaer</string>
     <string name="backup_download_details_icon_content_description">Lag ikon for nedlastbar sikkerhetskopi</string>
     <string name="backup_download_details_action_button">Lag nedlastbar fil</string>
-    <string name="backup_download_details_choose_items_header">Velg elementene du ønsker å ha med i nedlastingen:</string>
-    <string name="backup_download_details_description">%1$s er det valgte tidspunktet for å lage en nedlastbar sikkerhetskopi.</string>
     <string name="backup_download_details_header">Lag nedlastbar sikkerhetskopi</string>
     <string name="backup_download_details_page_title">Last ned sikkerhetskopi</string>
     <string name="backup_download">Nedlasting av sikkerhetskopi</string>
@@ -23,15 +18,12 @@ Language: nb_NO
     <string name="gutenberg_native_choose_file">Velg fil</string>
     <string name="activity_log_item_menu_download_backup_label">Last  ned sikkerhetskopi</string>
     <string name="activity_log_item_menu_restore_label">Gjenopprett til dette tidspunktet</string>
-    <string name="activity_log_activity_type_filter_label">Aktivitetstype</string>
-    <string name="activity_log_date_range_filter_label">Datointervall</string>
     <string name="activity_log_activity_type_filter_header">Filtrer på aktivitetstype</string>
     <string name="dialog_confirm_copy_local_copy_button">Kopier versjonen fra denne appen</string>
     <string name="dialog_confirm_copy_local_edit_button">Rediger innlegget først</string>
     <string name="button_copy">Dupliser</string>
     <string name="gutenberg_native_file_name">Filnavn</string>
     <string name="gutenberg_native_edit_file">Rediger fil</string>
-    <string name="my_site_btn_jetpack_settings">Jetpack-innstillinger</string>
     <string name="my_site_header_jetpack">Jetpack</string>
     <string name="activity_log_activity_type_filter_clear">Tøm</string>
     <string name="activity_log_activity_type_filter_apply">Bruk</string>
@@ -161,7 +153,6 @@ Language: nb_NO
     <string name="gutenberg_native_choose_image">Velg bilde</string>
     <string name="gutenberg_native_block_removed">Blokk fjernet</string>
     <string name="enter_your_site_address">Oppgi din eksisterende nettstedsadresse</string>
-    <string name="continue_with_wpcom">Fortsett med WordPress.com</string>
     <string name="signup_confirmation_title">Registreringsbekreftelse</string>
     <string name="signup_confirmation_magic_link_message">Vi vil sende deg en registreringslenke for å opprette din nye WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi vil bruke denne e-postadressen til å lage din nye WordPress.com-konto.</string>
@@ -178,7 +169,6 @@ Language: nb_NO
     <string name="create_account">Opprett konto</string>
     <string name="send_link_by_email">Send lenke med e-post</string>
     <string name="reset_your_password">Tilbakestill ditt passord</string>
-    <string name="quick_start_list_update_site_title_subtitle">Gi ditt nettsted et navn som reflekterer des personlighet og emne Førsteinntrykket teller!</string>
     <string name="quick_start_list_update_site_title_title">Bestem din nettstedstittel</string>
     <string name="quick_start_dialog_update_site_title_message_short">Trykk &lt;b>%1$s&lt;/b> for å angi en ny tittel</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Å kaste dette innlegget vil også forkaste lokale endringer. Er du sikker på at du vil fortsette?</string>
@@ -197,7 +187,6 @@ Language: nb_NO
     <string name="gutenberg_native_gradient_type">Gradienttype</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Dobbelttrykk for å velge alternativet</string>
     <string name="gutenberg_native_customize_gradient">Tilpass gradienten</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Sideforfatter</string>
     <string name="photo_picker_use_gif">Bruk denne GIFen</string>
     <string name="everyone">Alle</string>
@@ -227,13 +216,10 @@ Language: nb_NO
     <string name="publish_date">Publiseringsdato</string>
     <string name="status_and_visibility">Status og synlighet</string>
     <string name="update_now">Oppdater nå</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_try_a_starter_layout">Prøv et startoppsett</string>
     <string name="gutenberg_native_open_block_actions_menu">Åpne handlingsmenyen for blokker</string>
     <string name="pages_cannot_be_started">Vi kan for tiden ikke åpne sider. Vennligst prøv igjen senere.</string>
     <string name="pages_set_as_posts_page">Sett som innleggsside</string>
     <string name="pages_set_as_homepage">Sett som forside</string>
-    <string name="suggestion_invalid_user">\"%s er ikke en gyldig bruker\"</string>
     <string name="site_settings_select_page">Velg side</string>
     <string name="site_settings_posts_page">Innleggsside</string>
     <string name="site_settings_static_homepage">Statisk hjemmeside</string>
@@ -244,7 +230,6 @@ Language: nb_NO
     <string name="site_settings_homepage">Hjemmeside</string>
     <string name="page_posts_page_successfully_updated">Innleggside oppdatert</string>
     <string name="page_homepage_successfully_updated">Hjemmeside oppdatert</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">Velkommen til vår nye blogg</string>
     <string name="gutenberg_native_select_a_color">Velg en farge</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Dobbelttrykk for å gå til fargeinnstillinger</string>
     <string name="reader_empty_followed_blogs_description">Når du følger nettsteder vil du se innholdet her</string>
@@ -275,7 +260,6 @@ Language: nb_NO
     <string name="gutenberg_native_move_block_left">Flytt blokken mot venstre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Dobbelttrykk for å flytte blokken mot høyre</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Dobbelttrykk for å flytte blokken mot venstre</string>
-    <string name="gutenberg_native_blog">Blogg</string>
     <string name="new_site_creation_creating_site_loading_4">Oppretter kontrollpanel</string>
     <string name="new_site_creation_creating_site_loading_3">Setter opp tema</string>
     <string name="new_site_creation_creating_site_loading_2">Legger til funksjoner på nettstedet</string>
@@ -327,40 +311,14 @@ Language: nb_NO
     <string name="app_theme_light">Lys</string>
     <string name="app_theme">Utseende</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Du gjorde nylig endringer på denne siden, men lagret dem ikke. Velg en versjon å laste:\n</string>
-    <string name="gutenberg_native_what_people_say">Hva folk sier</string>
     <string name="gutenberg_native_warning_message">Advarselsmelding</string>
-    <string name="gutenberg_native_want_to_work_with_us">Vil du arbeide for oss?</string>
-    <string name="gutenberg_native_walt_disney">Walt Disney</string>
-    <string name="gutenberg_native_usa">USA</string>
-    <string name="gutenberg_native_team">Arbeidslag</string>
     <string name="gutenberg_native_success_message">Vellykketmelding</string>
-    <string name="gutenberg_native_strategy">Strategi</string>
     <string name="gutenberg_native_show_post_content">Vis innhold av innlegg</string>
-    <string name="gutenberg_native_services">Tjenester</string>
-    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
-    <string name="gutenberg_native_sally_smith">Sally Smith</string>
-    <string name="gutenberg_native_project_name">Prosjektnavn</string>
-    <string name="gutenberg_native_position_or_job_title">Stilling eller yrkestittel</string>
-    <string name="gutenberg_native_portfolio">Portefølje</string>
     <string name="gutenberg_native_only_show_excerpt">Vis bare utdrag</string>
     <string name="gutenberg_native_link_to">Lenke til</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">La oss bygge noe sammen!</string>
-    <string name="gutenberg_native_let_s_build_something_together">La oss bygge noe sammen!</string>
-    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
-    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
-    <string name="gutenberg_native_inspiration">Inspirasjon</string>
-    <string name="gutenberg_native_get_in_touch">Ta kontakt</string>
     <string name="gutenberg_native_excerpt_length_words">Lengde på utdrag (ord)</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Send meg e-post: &lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Gråt ikke fordi det er forbi, smil fordi det skjedde.</string>
     <string name="gutenberg_native_customize">TILPASS</string>
-    <string name="gutenberg_native_city_10100">1000 Sted</string>
     <string name="gutenberg_native_add_paragraph_block">Legg til avsnittsblokk</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Et kort beskrivelse av tjenestene du tilbyr.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:mail@example.com\">mail@example.com&lt;/a></string>
-    <string name="gutenberg_native_555_555_1234">98765432</string>
-    <string name="gutenberg_native_10_street_road">Gateveien 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Lag et innlegg</string>
     <string name="post_list_tab_trashed_posts">Kastet</string>
     <string name="post_list_tab_scheduled_posts">Planlagt</string>
@@ -377,14 +335,12 @@ Language: nb_NO
     <string name="stats_insights_management_general">Generelt</string>
     <string name="stats_management_screen_title">Legg til nytt kort</string>
     <string name="stats_management_add_new_stats_card">Legg til nytt statistikkort</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Valgt</string>
     <string name="reader_btn_select_filter_content_description">Velg nettsted eller nøkkelord for å filtrere innlegg</string>
     <string name="reader_btn_remove_filter_content_description">Fjern nåværende filter</string>
     <string name="reader_title_subs">Behandle emner og nettsteder</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Logge inn på WordPress.com?</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Logg inn på WordPress.com for å se de siste innleggene fra emner du følger</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Logg inn på WordPress.com for å se siste innlegg fra nettsteder du følger</string>
-    <string name="gutenberg_native_template_preview">Forhåndsvisning av mal</string>
     <string name="gutenberg_native_replace_current_block">Erstatt nåværende blokk</string>
     <string name="gutenberg_native_add_to_end">Legg til på slutten</string>
     <string name="gutenberg_native_add_to_beginning">Legg til i begynnelsen</string>
@@ -397,7 +353,6 @@ Language: nb_NO
     <string name="reader_filter_main_title">Følger</string>
     <string name="reader_filter_cta">Filter</string>
     <string name="gutenberg_native_edit_video">Rediger video</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">Dobbelttrykk for å velge oppsett</string>
     <string name="gutenberg_native_add_a_shortcode">Legg til en kortkode…</string>
     <string name="post_list_author">Innleggsforfatter</string>
     <string name="fab_create_desc">Lag et innlegg</string>
@@ -447,7 +402,6 @@ Language: nb_NO
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sB</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Vi kan ikke åpne innlegget akkurat nå. Vennligst prøv igjen senere</string>
     <string name="site_cannot_be_loaded">Vi kan ikke laste data for ditt nettsted akkurat nå. Vennligst prøv igjen senere.</string>
     <string name="gutenberg_native_wordpress_media_library">WordPress mediebibliotek</string>
@@ -615,7 +569,6 @@ Language: nb_NO
     <string name="post_settings_notification">Varsling</string>
     <string name="post_settings_time_and_date">Dato og tid</string>
     <string name="login_need_help_finding_connected_email">Trenger du hjelp til å finne den e-postadressen du koblet til med?</string>
-    <string name="enter_wordpress_site">Nettstedet på denne adressen er ikke et WordPress-nettsted. For at vi skal kunne koble til det må det ha WordPress installert.</string>
     <string name="login_invalid_site_url">Vennligst oppgi en fullstendig nettstedsadresse, f.eks example.com.</string>
     <string name="enter_email_for_site">Logg inn med WordPress.com for å koble til %1$s</string>
     <string name="stats_post_views_label">Visninger</string>
@@ -802,8 +755,6 @@ Language: nb_NO
     <string name="quick_start_dialog_upload_icon_title">Last opp nettstedsikon</string>
     <string name="quick_start_dialog_upload_icon_message">Dine besøkende vil se ditt ikon i nettleseren. Legg til et tilpasset ikon for et polert og proft utseende.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Trykk %1$s pakke %2$s for å se din nåværende pakke og andre tilgjengelige pakker</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Trykk %1$s Legg til side %2$s for å lage en ny side.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Trykk %1$s sider %2$s for å fortsette.</string>
     <string name="quick_start_dialog_check_stats_message_short">Trykk %1$s Statistkk %2$s for å se hvordan nettstedet ditt gjør det.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Trykk %1$s Ditt nettstedsikon %2$s for å laste opp et nytt</string>
     <string name="quick_start_dialog_publish_post_message">Kladd og publiser ditt første innlegg.</string>
@@ -813,13 +764,8 @@ Language: nb_NO
     <string name="quick_start_dialog_explore_plans_message">Lær om våre markedsførings- og SEO-verktøy i våre betalte pakker.</string>
     <string name="quick_start_dialog_enable_sharing_title">Aktiver deling av innlegg</string>
     <string name="quick_start_dialog_enable_sharing_message">Del dine innlegg automatisk på sosiale media.</string>
-    <string name="quick_start_dialog_customize_site_message">Juster skrifttyper, legg til bilder og mer.</string>
-    <string name="quick_start_dialog_create_page_title">Lag en ny side</string>
-    <string name="quick_start_dialog_create_page_message">Legg til en side for nøkkelinnhold — en \"Om\"-side er en god start.</string>
     <string name="quick_start_dialog_check_stats_title">Sjekk din besøksstatistikk</string>
     <string name="quick_start_dialog_check_stats_message">Hold deg oppdatert om ytelsen til ditt nettsted.</string>
-    <string name="quick_start_dialog_browse_themes_title">Bla gjennom temaer</string>
-    <string name="quick_start_dialog_browse_themes_message">Utforsk dusinvis med utformingsalternativer og finn din perfekte passform.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Fjern de neste trinn</string>
     <string name="quick_start_remove_next_steps_menu_title">Fjern dette</string>
     <string name="quick_start_complete_view_subtitle">Gratulerer med fullført liste. Godt jobbet.</string>
@@ -1007,12 +953,6 @@ Language: nb_NO
     <string name="quick_start_dialog_follow_sites_message_short_search">Trykk %1$s Søk %2$s for å se etter nettsteder med liknende interesser</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Trykk %1$s Leser %2$s for å fortsette</string>
     <string name="quick_start_dialog_follow_sites_message">Finn nettsteder som inspirerer deg og følg dem for å få oppdateringer når de publiserer.</string>
-    <string name="quick_start_dialog_customize_site_title">Tilpass ditt nettsted</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Trykk %1$s Tema %2$s for å fortsette</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Trykk %1$s Tilpass %2$s for å starte personliggjøring av ditt nettsted</string>
-    <string name="quick_start_dialog_choose_theme_title">Velg et tema</string>
-    <string name="quick_start_dialog_browse_themes_message_short">Trykk %1$s Temaer %2$s for å oppdage nye temaer</string>
-    <string name="quick_start_dialog_choose_theme_message">Bla gjennom alle våre tema for å finne et som passer perfekt.</string>
     <string name="quick_start_button_positive">Gå</string>
     <string name="quick_start_button_negative_short">Avbryt</string>
     <string name="quick_start_button_negative">Ikke nå</string>
@@ -1076,12 +1016,8 @@ Language: nb_NO
     <string name="support_contact_email">Epost for kontakt</string>
     <string name="application_log_button">Appllikasjonslogg</string>
     <string name="my_tickets">Mine saker</string>
-    <string name="activity_log_rewind_site">Tilbakestill nettsted</string>
-    <string name="activity_log_currently_restoring_message">Tilbakestiller til %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Ditt nettsted tilbakestilles nå</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">Ditt nettsted er tilbakestilt</string>
-    <string name="activity_log_rewind_finished_snackbar_message">Ditt nettsted er gjenopprettet\nTilbakestilt til %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">Ditt nettsted gjenopprettes\nTilbakestiller til %1$s %2$s</string>
     <string name="activity_log_button">Handlingsknapp for aktivitetslogg</string>
     <string name="plugin_auto_managed">Automatisk behandlet</string>
     <string name="reader_save_posts_locally_dialog_message">Lagre dette innlegget og kom tilbake for å lese det når som helst. Det vil bare bli lagret på denne enheten — lagrede innlegg synkroniseres ikke til andre enheter.</string>
@@ -1124,11 +1060,9 @@ Language: nb_NO
     <string name="reader_btn_notifications_on">Skru på varsler for nettstedet</string>
     <string name="reader_btn_notifications_off">Skru av varsler for nettstedet</string>
     <string name="activity_log_jetpack_icon">Jetpack-ikon</string>
-    <string name="rewind">Tilbakestill</string>
     <string name="activity_log_event">Hendelse</string>
     <string name="activity_log_icon">Aktivtitetsikon</string>
     <string name="activity_log">Aktivitetslogg</string>
-    <string name="activity">Aktivitet</string>
     <string name="privacy_policy_read">Les personvernerklæringen</string>
     <string name="privacy_policy_learn_more_header">Personvernerklæring</string>
     <string name="cookie_policy_learn_more_header">Policy for informasjonskapsler</string>
@@ -1791,13 +1725,7 @@ Language: nb_NO
     <string name="invite_error_invalid_usernames_multiple">Kan ikke sende: Det er ugyldige brukernavn eller E-poster</string>
     <string name="invite_error_invalid_usernames_one">Kan ikke sende: Et brukernavn eller en E-postadresse er ugyldig</string>
     <string name="invite_error_no_usernames">Vennligst legg til minst ett brukernavn</string>
-    <string name="invite_message_info">(Valgfritt) Du kan skrive inn en tilpasset melding på opptil 500 tegn, som vil bli inkludert i invitasjonen til brukeren(e).</string>
-    <string name="invite_message_remaining_other">%d tegn igjen</string>
-    <string name="invite_message_remaining_one">1 tegn igjen</string>
-    <string name="invite_message_remaining_zero">0 tegn igjen</string>
-    <string name="invite_message_title">Tilpasset melding</string>
     <string name="invite">Inviter</string>
-    <string name="invite_names_title">Brukernavn eller E-poster</string>
     <string name="invite_people">Inviter folk</string>
     <string name="my_site_header_external">Eksternt</string>
     <string name="send_link">Send lenke</string>

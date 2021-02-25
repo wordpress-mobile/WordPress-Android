@@ -11,7 +11,9 @@ import org.wordpress.android.ui.jetpack.common.viewholders.JetpackHeaderViewHold
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackIconViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackProgressViewHolder
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatLoadingSkeletonViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatViewHolder
+import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsDateHeaderViewHolder
 import org.wordpress.android.ui.jetpack.scan.adapters.viewholders.ThreatsHeaderViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
@@ -32,9 +34,12 @@ class ScanAdapter(
             ViewType.HEADER.id -> JetpackHeaderViewHolder(uiHelpers, parent)
             ViewType.DESCRIPTION.id -> JetpackDescriptionViewHolder(uiHelpers, parent)
             ViewType.PROGRESS.id -> JetpackProgressViewHolder(uiHelpers, parent)
-            ViewType.ACTION_BUTTON.id -> JetpackButtonViewHolder(uiHelpers, parent)
+            ViewType.PRIMARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Primary(uiHelpers, parent)
+            ViewType.SECONDARY_ACTION_BUTTON.id -> JetpackButtonViewHolder.Secondary(uiHelpers, parent)
             ViewType.THREATS_HEADER.id -> ThreatsHeaderViewHolder(uiHelpers, parent)
             ViewType.THREAT_ITEM.id -> ThreatViewHolder(uiHelpers, parent)
+            ViewType.THREAT_ITEM_LOADING_SKELETON.id -> ThreatLoadingSkeletonViewHolder(parent)
+            ViewType.THREAT_DETECTED_DATE.id -> ThreatsDateHeaderViewHolder(uiHelpers, parent)
             else -> throw IllegalArgumentException("Unexpected view type in ${this::class.java.simpleName}")
         }
     }

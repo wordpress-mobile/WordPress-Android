@@ -7,14 +7,16 @@ import org.wordpress.android.ui.JetpackRemoteInstallViewModel;
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterViewModel;
 import org.wordpress.android.ui.domains.DomainRegistrationMainViewModel;
 import org.wordpress.android.ui.jetpack.backup.download.BackupDownloadViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.complete.BackupDownloadCompleteViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.details.BackupDownloadDetailsViewModel;
-import org.wordpress.android.ui.jetpack.backup.download.progress.BackupDownloadProgressViewModel;
+import org.wordpress.android.ui.jetpack.restore.RestoreViewModel;
 import org.wordpress.android.ui.jetpack.scan.ScanViewModel;
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsViewModel;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel;
+import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel;
 import org.wordpress.android.ui.main.MeViewModel;
 import org.wordpress.android.ui.mediapicker.MediaPickerViewModel;
 import org.wordpress.android.ui.mysite.MySiteViewModel;
+import org.wordpress.android.ui.people.PeopleInviteViewModel;
+import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuViewModel;
 import org.wordpress.android.ui.photopicker.PhotoPickerViewModel;
 import org.wordpress.android.ui.plans.PlansViewModel;
 import org.wordpress.android.ui.posts.BasicDialogViewModel;
@@ -441,6 +443,16 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
+    @ViewModelKey(ScanHistoryViewModel.class)
+    abstract ViewModel scanHistoryViewModel(ScanHistoryViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ScanHistoryListViewModel.class)
+    abstract ViewModel scanHistoryListViewModel(ScanHistoryListViewModel viewModel);
+
+    @Binds
+    @IntoMap
     @ViewModelKey(ThreatDetailsViewModel.class)
     abstract ViewModel threatDetailsViewModel(ThreatDetailsViewModel viewModel);
 
@@ -461,18 +473,18 @@ abstract class ViewModelModule {
 
     @Binds
     @IntoMap
-    @ViewModelKey(BackupDownloadDetailsViewModel.class)
-    abstract ViewModel backupDownloadDetailsViewModel(BackupDownloadDetailsViewModel viewModel);
+    @ViewModelKey(RestoreViewModel.class)
+    abstract ViewModel restoreViewModel(RestoreViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(BackupDownloadProgressViewModel.class)
-    abstract ViewModel backupDownloadProgressViewModel(BackupDownloadProgressViewModel viewModel);
+    @ViewModelKey(DynamicCardMenuViewModel.class)
+    abstract ViewModel dynamicCardMenuViewModel(DynamicCardMenuViewModel viewModel);
 
     @Binds
     @IntoMap
-    @ViewModelKey(BackupDownloadCompleteViewModel.class)
-    abstract ViewModel backupDownloadCompleteViewModel(BackupDownloadCompleteViewModel viewModel);
+    @ViewModelKey(PeopleInviteViewModel.class)
+    abstract ViewModel peopleInviteViewModel(PeopleInviteViewModel viewModel);
 
     @Binds
     abstract ViewModelProvider.Factory provideViewModelFactory(ViewModelFactory viewModelFactory);

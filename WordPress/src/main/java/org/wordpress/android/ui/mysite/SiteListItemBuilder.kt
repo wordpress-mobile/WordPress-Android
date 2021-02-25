@@ -12,9 +12,9 @@ import org.wordpress.android.ui.utils.ListItemInteraction
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DateTimeUtils
-import org.wordpress.android.util.ScanFeatureConfig
 import org.wordpress.android.util.SiteUtilsWrapper
-import org.wordpress.android.util.config.BackupsFeatureConfig
+import org.wordpress.android.util.config.BackupScreenFeatureConfig
+import org.wordpress.android.util.config.ScanScreenFeatureConfig
 import java.util.GregorianCalendar
 import java.util.TimeZone
 import javax.inject.Inject
@@ -24,8 +24,8 @@ class SiteListItemBuilder
     private val accountStore: AccountStore,
     private val pluginUtilsWrapper: PluginUtilsWrapper,
     private val siteUtilsWrapper: SiteUtilsWrapper,
-    private val backupsFeatureConfig: BackupsFeatureConfig,
-    private val scanFeatureConfig: ScanFeatureConfig,
+    private val backupScreenFeatureConfig: BackupScreenFeatureConfig,
+    private val scanScreenFeatureConfig: ScanScreenFeatureConfig,
     private val themeBrowserUtils: ThemeBrowserUtils
 ) {
     fun buildActivityLogItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
@@ -34,17 +34,17 @@ class SiteListItemBuilder
         ) || site.isJetpackConnected
         return if (site.hasCapabilityManageOptions && isWpComOrJetpack && !site.isWpForTeamsSite) {
             ListItem(
-                    R.drawable.ic_history_alt_white_24dp,
-                    UiStringRes(R.string.activity),
+                    R.drawable.ic_gridicons_clipboard_white_24dp,
+                    UiStringRes(R.string.activity_log),
                     onClick = ListItemInteraction.create(ListItemAction.ACTIVITY_LOG, onClick)
             )
         } else null
     }
 
-    fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupsAvailable: Boolean = false): ListItem? {
-        return if (backupsFeatureConfig.isEnabled() && isBackupsAvailable) {
+    fun buildBackupItemIfAvailable(onClick: (ListItemAction) -> Unit, isBackupAvailable: Boolean = false): ListItem? {
+        return if (backupScreenFeatureConfig.isEnabled() && isBackupAvailable) {
             ListItem(
-                    R.drawable.ic_backup_alt_white_24dp,
+                    R.drawable.ic_gridicons_cloud_upload_white_24dp,
                     UiStringRes(R.string.backup),
                     onClick = ListItemInteraction.create(ListItemAction.BACKUP, onClick)
             )
@@ -52,9 +52,9 @@ class SiteListItemBuilder
     }
 
     fun buildScanItemIfAvailable(onClick: (ListItemAction) -> Unit, isScanAvailable: Boolean = false): ListItem? {
-        return if (scanFeatureConfig.isEnabled() && isScanAvailable) {
+        return if (scanScreenFeatureConfig.isEnabled() && isScanAvailable) {
             ListItem(
-                    R.drawable.ic_scan_alt_white_24dp,
+                    R.drawable.ic_baseline_security_white_24dp,
                     UiStringRes(R.string.scan),
                     onClick = ListItemInteraction.create(ListItemAction.SCAN, onClick)
             )
@@ -75,7 +75,11 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildPlanItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildPlanItemIfAvailable(
+        site: SiteModel,
+        showFocusPoint: Boolean,
+        onClick: (ListItemAction) -> Unit
+    ): ListItem? {
         val planShortName = site.planShortName
         return if (!TextUtils.isEmpty(planShortName) &&
                 site.hasCapabilityManageOptions &&
@@ -85,7 +89,8 @@ class SiteListItemBuilder
                     R.drawable.ic_plans_white_24dp,
                     UiStringRes(R.string.plan),
                     secondaryText = UiStringText(planShortName),
-                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick)
+                    onClick = ListItemInteraction.create(ListItemAction.PLAN, onClick),
+                    showFocusPoint = showFocusPoint
             )
         } else null
     }
@@ -131,11 +136,16 @@ class SiteListItemBuilder
         } else null
     }
 
-    fun buildShareItemIfAvailable(site: SiteModel, onClick: (ListItemAction) -> Unit): ListItem? {
+    fun buildShareItemIfAvailable(
+        site: SiteModel,
+        onClick: (ListItemAction) -> Unit,
+        showFocusPoint: Boolean = false
+    ): ListItem? {
         return if (siteUtilsWrapper.isAccessedViaWPComRest(site)) {
             ListItem(
                     R.drawable.ic_share_white_24dp,
                     UiStringRes(R.string.my_site_btn_sharing),
+                    showFocusPoint = showFocusPoint,
                     onClick = ListItemInteraction.create(ListItemAction.SHARING, onClick)
             )
         } else null

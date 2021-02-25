@@ -32,30 +32,34 @@ class JetpackAvailableItemsProvider @Inject constructor() {
                 ),
                 JetpackAvailableItem(
                         SQLS,
-                        R.string.backup_item_sqls
+                        R.string.backup_item_sqls,
+                        R.string.backup_item_sqls_hint
                 ),
                 JetpackAvailableItem(
                         ROOTS,
-                        R.string.backup_item_roots
+                        R.string.backup_item_roots,
+                        R.string.backup_item_roots_hint
                 ),
                 JetpackAvailableItem(
                         CONTENTS,
-                        R.string.backup_item_contents
+                        R.string.backup_item_contents,
+                        R.string.backup_item_content_hint
                 )
         )
     }
 
     data class JetpackAvailableItem(
         val availableItemType: JetpackAvailableItemType,
-        @StringRes val labelResId: Int
+        @StringRes val labelResId: Int,
+        @StringRes val labelHintResId: Int? = null
     )
 
-    enum class JetpackAvailableItemType {
-        THEMES,
-        PLUGINS,
-        MEDIA_UPLOADS,
-        SQLS,
-        ROOTS,
-        CONTENTS
+    enum class JetpackAvailableItemType(val id: Int) {
+        THEMES(0),
+        PLUGINS(1),
+        MEDIA_UPLOADS(2),
+        SQLS(3),
+        ROOTS(4),
+        CONTENTS(5)
     }
 }

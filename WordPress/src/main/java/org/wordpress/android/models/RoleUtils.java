@@ -1,6 +1,6 @@
 package org.wordpress.android.models;
 
-import androidx.fragment.app.Fragment;
+import android.content.Context;
 
 import org.wordpress.android.R;
 import org.wordpress.android.fluxc.model.RoleModel;
@@ -22,7 +22,7 @@ public class RoleUtils {
         return StringUtils.capitalize(userRole);
     }
 
-    public static List<RoleModel> getInviteRoles(SiteStore siteStore, SiteModel siteModel, Fragment fragment) {
+    public static List<RoleModel> getInviteRoles(SiteStore siteStore, SiteModel siteModel, Context context) {
         // Setup invite roles
         List<RoleModel> inviteRoles = siteStore.getUserRoles(siteModel);
         // The API doesn't return the follower/viewer role, so we need to manually add it for invites
@@ -30,7 +30,7 @@ public class RoleUtils {
         // the remote expects "follower" as the role parameter even if the role is "viewer"
         viewerOrFollowerRole.setName("follower");
         int displayNameRes = siteModel.isPrivate() ? R.string.role_viewer : R.string.role_follower;
-        viewerOrFollowerRole.setDisplayName(fragment.getString(displayNameRes));
+        viewerOrFollowerRole.setDisplayName(context.getString(displayNameRes));
         inviteRoles.add(viewerOrFollowerRole);
         return inviteRoles;
     }

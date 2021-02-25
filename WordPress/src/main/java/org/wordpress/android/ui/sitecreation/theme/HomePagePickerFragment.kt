@@ -11,13 +11,16 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
+import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.chooseButton
 import kotlinx.android.synthetic.main.home_page_picker_fragment.*
+import kotlinx.android.synthetic.main.home_page_picker_fragment.errorView
 import kotlinx.android.synthetic.main.home_page_picker_loading_skeleton.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
@@ -39,6 +42,7 @@ class HomePagePickerFragment : Fragment() {
     @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
+    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -66,6 +70,7 @@ class HomePagePickerFragment : Fragment() {
         setupUi()
         setupViewModel()
         setupActionListeners()
+        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
     }
 
     override fun onAttach(context: Context) {
@@ -110,7 +115,11 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.start()
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+            previewModeSelectorPopup.show(viewModel)
+        })
+
+        viewModel.start(displayUtils.isTablet())
     }
 
     private fun setupUi() {
@@ -125,6 +134,7 @@ class HomePagePickerFragment : Fragment() {
         skipButton.setOnClickListener { viewModel.onSkippedTapped() }
         errorView.button.setOnClickListener { viewModel.onRetryClicked() }
         backButton.setOnClickListener { viewModel.onBackPressed() }
+        previewTypeSelectorButton.setOnClickListener { viewModel.onThumbnailModePressed() }
         setScrollListener()
     }
 

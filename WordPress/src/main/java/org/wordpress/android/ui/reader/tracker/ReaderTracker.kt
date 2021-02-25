@@ -1,17 +1,21 @@
 package org.wordpress.android.ui.reader.tracker
 
 import androidx.annotation.MainThread
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_A8C_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_CUSTOM_TAB_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_DISCOVER_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_FOLLOWING_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_LIKED_SHOWN
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_P2_SHOWN
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_SAVED_LIST_SHOWN
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.tracker.ReaderTab.A8C
 import org.wordpress.android.ui.reader.tracker.ReaderTab.CUSTOM
 import org.wordpress.android.ui.reader.tracker.ReaderTab.DISCOVER
 import org.wordpress.android.ui.reader.tracker.ReaderTab.FOLLOWING
 import org.wordpress.android.ui.reader.tracker.ReaderTab.LIKED
+import org.wordpress.android.ui.reader.tracker.ReaderTab.P2
 import org.wordpress.android.ui.reader.tracker.ReaderTab.SAVED
 import org.wordpress.android.ui.reader.utils.DateProvider
 import org.wordpress.android.util.AppLog
@@ -84,6 +88,8 @@ class ReaderTracker @Inject constructor(
                 DISCOVER -> analyticsTrackerWrapper.track(READER_DISCOVER_SHOWN)
                 LIKED -> analyticsTrackerWrapper.track(READER_LIKED_SHOWN)
                 SAVED -> analyticsTrackerWrapper.track(READER_SAVED_LIST_SHOWN, mapOf("source" to "reader_filter"))
+                A8C -> analyticsTrackerWrapper.track(READER_A8C_SHOWN)
+                P2 -> analyticsTrackerWrapper.track(READER_P2_SHOWN)
                 CUSTOM -> analyticsTrackerWrapper.track(READER_CUSTOM_TAB_SHOWN)
             }
             appPrefsWrapper.setReaderActiveTab(readerTab)
@@ -100,7 +106,7 @@ class ReaderTracker @Inject constructor(
 }
 
 enum class ReaderTab(val id: Int) {
-    FOLLOWING(1), DISCOVER(2), LIKED(3), SAVED(4), CUSTOM(5);
+    FOLLOWING(1), DISCOVER(2), LIKED(3), SAVED(4), CUSTOM(5), A8C(6), P2(7);
 
     companion object {
         fun fromId(id: Int): ReaderTab {
@@ -109,6 +115,8 @@ enum class ReaderTab(val id: Int) {
                 DISCOVER.id -> DISCOVER
                 LIKED.id -> LIKED
                 SAVED.id -> SAVED
+                A8C.id -> A8C
+                P2.id -> P2
                 CUSTOM.id -> CUSTOM
                 else -> throw RuntimeException("Unexpected ReaderTab id")
             }
@@ -120,6 +128,8 @@ enum class ReaderTab(val id: Int) {
                 readerTag.isPostsILike -> LIKED
                 readerTag.isBookmarked -> SAVED
                 readerTag.isDiscover -> DISCOVER
+                readerTag.isA8C -> A8C
+                readerTag.isP2 -> P2
                 else -> CUSTOM
             }
         }

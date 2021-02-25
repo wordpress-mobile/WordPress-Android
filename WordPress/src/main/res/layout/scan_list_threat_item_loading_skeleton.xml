@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    app:shimmer_base_alpha="@dimen/skeleton_shimmer_base_alpha"
+    app:shimmer_highlight_alpha="@dimen/skeleton_shimmer_highlight_alpha">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:minHeight="?attr/listPreferredItemHeight"
+        tools:layout_height="?attr/listPreferredItemHeightLarge">
+
+        <View
+            android:id="@+id/skeleton_icon"
+            style="@style/Scan.Threat.Icon"
+            android:background="@color/gray_30"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/skeleton_title"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/skeleton_title"
+            style="@style/Scan.Threat.Header"
+            android:layout_height="@dimen/scan_list_threat_skeleton_text_height"
+            android:layout_marginEnd="@dimen/margin_extra_extra_medium_large"
+            android:background="@color/gray_30"
+            app:layout_constraintBottom_toTopOf="@+id/skeleton_subtitle"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/skeleton_icon"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <View
+            android:id="@+id/skeleton_subtitle"
+            style="@style/Scan.Threat.SecondaryHeader"
+            android:layout_height="@dimen/scan_list_threat_skeleton_text_height"
+            android:layout_marginEnd="@dimen/margin_extra_extra_extra_large"
+            android:background="@color/gray_30"
+            android:layout_marginTop="@dimen/margin_medium"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/skeleton_title"
+            app:layout_constraintTop_toBottomOf="@+id/skeleton_title"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</com.facebook.shimmer.ShimmerFrameLayout>

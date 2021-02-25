@@ -7,24 +7,31 @@ import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.FileThreatModel
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.Fixable.FixType
 import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.CURRENT
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.FIXED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.IGNORED
+import org.wordpress.android.fluxc.model.scan.threat.ThreatModel.ThreatStatus.UNKNOWN
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.ActionButtonState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.DescriptionState
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState.HeaderState
-import org.wordpress.android.ui.jetpack.common.JetpackListItemState.IconState
 import org.wordpress.android.ui.jetpack.scan.builders.ThreatItemBuilder
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatContextLinesItemState
+import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatDetailHeaderState
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatFileNameState
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DateFormatWrapper
+import java.util.Date
 import javax.inject.Inject
 
 @Reusable
 class ThreatDetailsListItemsBuilder @Inject constructor(
     private val htmlMessageUtils: HtmlMessageUtils,
-    private val threatItemBuilder: ThreatItemBuilder
+    private val threatItemBuilder: ThreatItemBuilder,
+    private val dateFormatWrapper: DateFormatWrapper
 ) {
     fun buildThreatDetailsListItems(
         threatModel: ThreatModel,
@@ -47,7 +54,12 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
 
     private fun buildBasicThreatDetailsListItems(threatModel: ThreatModel) =
         mutableListOf<JetpackListItemState>().apply {
-            add(buildThreatDetailsIcon())
+            add(buildThreatDetailHeader(threatModel))
+            // show both Fixed and Found rows for threats in Fixed state
+            if (threatModel.baseThreatModel.status == FIXED) {
+                add(buildThreatFoundHeaderItem())
+                add(buildThreatFoundDateSubHeaderItem(threatModel))
+            }
             add(buildThreatHeaderItem(threatModel))
             add(buildThreatSubHeaderItem(threatModel))
             add(buildProblemHeaderItem())
@@ -120,18 +132,38 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
         }
     }
 
-    private fun buildThreatDetailsIcon() = IconState(
-        icon = R.drawable.ic_scan_idle_threats_found,
-        contentDescription = UiStringRes(R.string.threat_details_icon)
+    private fun buildThreatDetailHeader(threatModel: ThreatModel) = ThreatDetailHeaderState(
+        icon = threatItemBuilder.buildThreatItemIcon(threatModel),
+        iconBackground = threatItemBuilder.buildThreatItemIconBackground(threatModel),
+        header = when (threatModel.baseThreatModel.status) {
+            FIXED -> UiStringRes(R.string.threat_status_fixed)
+            IGNORED, CURRENT, UNKNOWN -> UiStringRes(R.string.threat_found_header)
+        },
+        description = when (threatModel.baseThreatModel.status) {
+            FIXED -> getThreatFoundString(threatModel.baseThreatModel.fixedOn)
+            IGNORED, CURRENT, UNKNOWN -> getThreatFoundString(threatModel.baseThreatModel.firstDetected)
+        }
     )
 
+    private fun buildThreatFoundHeaderItem() = HeaderState(text = UiStringRes(R.string.threat_found_header))
+
+    private fun buildThreatFoundDateSubHeaderItem(threatModel: ThreatModel): DescriptionState {
+        return DescriptionState(text = getThreatFoundString(threatModel.baseThreatModel.firstDetected))
+    }
+
+    private fun getThreatFoundString(date: Date?): UiStringText {
+        return date?.let {
+            val dateFormat = dateFormatWrapper.getLongDateFormat()
+            return UiStringText(dateFormat.format(date))
+        } ?: UiStringText("")
+    }
+
     private fun buildThreatHeaderItem(threatModel: ThreatModel) = HeaderState(
-        text = threatItemBuilder.buildThreatItemHeader(threatModel),
-        textColorRes = R.attr.colorError
+        text = threatItemBuilder.buildThreatItemHeader(threatModel)
     )
 
     private fun buildThreatSubHeaderItem(threatModel: ThreatModel) =
-        DescriptionState(threatItemBuilder.buildThreatItemSubHeader(threatModel))
+        DescriptionState(threatItemBuilder.buildThreatItemDescription(threatModel))
 
     private fun buildProblemHeaderItem() = HeaderState(UiStringRes(R.string.threat_problem_header))
 
@@ -152,16 +184,20 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     ): ThreatContextLinesItemState.ThreatContextLineItemState {
         val isHighlighted = line.highlights?.isNotEmpty() == true
 
-        val lineNumberBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_20
-        val contentBackgroundColorRes = if (isHighlighted) R.color.pink_5 else R.color.gray_5
+        val lineNumberBackgroundColorRes = if (isHighlighted) {
+            R.color.context_line_highlighted_row_background
+        } else R.color.material_on_surface_disabled
+
+        val contentBackgroundColorRes = if (isHighlighted) {
+            R.color.context_line_highlighted_row_background
+        } else R.color.on_surface_emphasis_lowest
 
         return ThreatContextLinesItemState.ThreatContextLineItemState(
             line = line,
             lineNumberBackgroundColorRes = lineNumberBackgroundColorRes,
             contentBackgroundColorRes = contentBackgroundColorRes,
-            highlightedBackgroundColorRes = R.color.red,
-            highlightedTextColorRes = R.color.white,
-            normalTextColorRes = R.color.black
+            highlightedBackgroundColorRes = R.color.red_60,
+            highlightedTextColorRes = R.color.white
         )
     }
 
@@ -184,7 +220,7 @@ class ThreatDetailsListItemsBuilder @Inject constructor(
     private fun buildFixDescription(fixable: Fixable?) = fixable?.let { buildFixableThreatDescription(it) }
         ?: buildNotFixableThreatDescription()
 
-    private fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
+    fun buildFixableThreatDescription(fixable: Fixable) = DescriptionState(
         when (fixable.fixer) {
             FixType.REPLACE -> UiStringRes(R.string.threat_fix_fixable_replace)
 

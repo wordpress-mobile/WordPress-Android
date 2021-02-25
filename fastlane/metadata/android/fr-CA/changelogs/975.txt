@@ -1,9 +1,0 @@
-16.4 :
-Nouveautés :
-
-Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
-
-Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
-
-Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
-

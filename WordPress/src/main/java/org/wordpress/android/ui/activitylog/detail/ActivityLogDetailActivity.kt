@@ -1,10 +1,12 @@
 package org.wordpress.android.ui.activitylog.detail
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.MenuItem
 import kotlinx.android.synthetic.main.toolbar_main.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.LocaleAwareActivity
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogNegativeClickInterface
 import org.wordpress.android.ui.posts.BasicFragmentDialog.BasicDialogPositiveClickInterface
 
@@ -38,5 +40,32 @@ class ActivityLogDetailActivity : LocaleAwareActivity(), BasicDialogPositiveClic
     }
 
     override fun onNegativeClicked(instanceTag: String) {
+        // Do nothing.
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        when (requestCode) {
+            RequestCodes.RESTORE -> if (resultCode == RESULT_OK) onActivityResultForRestore(data)
+            RequestCodes.BACKUP_DOWNLOAD -> if (resultCode == RESULT_OK) onActivityResultForBackupDownload(data)
+        }
+    }
+
+    private fun onActivityResultForRestore(data: Intent?) {
+        data?.putExtra(EXTRA_INNER_FLOW, EXTRA_RESTORE_FLOW)
+        setResult(RESULT_OK, data)
+        finish()
+    }
+
+    private fun onActivityResultForBackupDownload(data: Intent?) {
+        data?.putExtra(EXTRA_INNER_FLOW, EXTRA_BACKUP_DOWNLOAD_FLOW)
+        setResult(RESULT_OK, data)
+        finish()
+    }
+
+    companion object {
+        const val EXTRA_INNER_FLOW = "extra_inner_flow"
+        const val EXTRA_RESTORE_FLOW = "extra_restore_inner_flow"
+        const val EXTRA_BACKUP_DOWNLOAD_FLOW = "extra_backup_download_inner_flow"
     }
 }

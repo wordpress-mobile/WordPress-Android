@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: eu_ES
 -->
 <resources>
-    <string name="suffix_1_000">%sk</string>
     <string name="suffix_1_000_000">%sM</string>
     <string name="suffix_1_000_000_000_000_000">%sQa</string>
     <string name="suffix_1_000_000_000">%sB</string>
@@ -69,13 +68,7 @@ Language: eu_ES
     <string name="invite_error_invalid_usernames_multiple">Ezin bidali: erabiltzaile-izen edo e-posta baliogabeak daude</string>
     <string name="invite_error_invalid_usernames_one">Ezin bidali: erabiltzaile-izen edo e-posta bat baliogabea da</string>
     <string name="invite_error_no_usernames">Mesedez, gehitu gutxienez erabiltzaile-izen bat</string>
-    <string name="invite_message_info">(Hautazkoa) Erabiltzaileari/ei bidaliko zaion/en 500 hizki arteko mezu pertsonalizatu bat idatz dezakezu.</string>
-    <string name="invite_message_remaining_other">%d hizki falta dira</string>
-    <string name="invite_message_remaining_one">Hizki 1 falta da</string>
-    <string name="invite_message_remaining_zero">0 hizki falta dira</string>
-    <string name="invite_message_title">Mezu pertsonalizatua</string>
     <string name="invite">Gonbidatu</string>
-    <string name="invite_names_title">Erabiltzaile-izenak edo e-postak</string>
     <string name="my_site_header_external">Kanpokoak</string>
     <string name="send_link">Bidali esteka</string>
     <string name="invite_people">Gonbidatu jendea</string>

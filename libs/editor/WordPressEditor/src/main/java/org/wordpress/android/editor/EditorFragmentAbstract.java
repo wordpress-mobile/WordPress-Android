@@ -177,12 +177,13 @@ public abstract class EditorFragmentAbstract extends Fragment {
      */
     public interface EditorFragmentListener extends DialogVisibilityProvider {
         void onEditorFragmentInitialized();
-        void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks);
+        void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
         void onAddMediaClicked();
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
         void onAddLibraryMediaClicked(boolean allowMultipleSelection);
         void onAddLibraryFileClicked(boolean allowMultipleSelection);
+        void onAddLibraryAudioFileClicked(boolean allowMultipleSelection);
         void onAddPhotoClicked(boolean allowMultipleSelection);
         void onCapturePhotoClicked();
         void onAddVideoClicked(boolean allowMultipleSelection);
@@ -201,19 +202,22 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onAddStockMediaClicked(boolean allowMultipleSelection);
         void onAddGifClicked(boolean allowMultipleSelection);
         void onAddFileClicked(boolean allowMultipleSelection);
+        void onAddAudioFileClicked(boolean allowMultipleSelection);
         void onPerformFetch(String path, Consumer<String> onResult, Consumer<Bundle> onError);
         void onGutenbergEditorSessionTemplateApplyTracked(String template);
         void onGutenbergEditorSessionTemplatePreviewTracked(String template);
         void showUserSuggestions(Consumer<String> onResult);
         void showXpostSuggestions(Consumer<String> onResult);
-        void onGutenbergEditorSetStarterPageTemplatesTooltipShown(boolean tooltipShown);
-        boolean onGutenbergEditorRequestStarterPageTemplatesTooltipShown();
+        void onGutenbergEditorSetFocalPointPickerTooltipShown(boolean tooltipShown);
+        boolean onGutenbergEditorRequestFocalPointPickerTooltipShown();
         String getErrorMessageFromMedia(int mediaId);
         void showJetpackSettings();
         void onStoryComposerLoadRequested(ArrayList<Object> mediaFiles, String blockId);
         void onRetryUploadForMediaCollection(ArrayList<Object> mediaFiles);
         void onCancelUploadForMediaCollection(ArrayList<Object> mediaFiles);
         void onCancelSaveForMediaCollection(ArrayList<Object> mediaFiles);
+        void onReplaceStoryEditedBlockActionSent();
+        void onReplaceStoryEditedBlockActionReceived();
     }
 
     /**

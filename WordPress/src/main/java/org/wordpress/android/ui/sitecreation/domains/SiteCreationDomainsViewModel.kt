@@ -36,6 +36,7 @@ import org.wordpress.android.ui.sitecreation.usecases.FetchDomainsUseCase
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.util.config.HomePagePickerFeatureConfig
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -51,6 +52,7 @@ class SiteCreationDomainsViewModel @Inject constructor(
     private val domainSanitizer: SiteCreationDomainSanitizer,
     private val fetchDomainsUseCase: FetchDomainsUseCase,
     private val tracker: SiteCreationTracker,
+    private val homePagePickerFeatureConfig: HomePagePickerFeatureConfig,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
 ) : ViewModel(), CoroutineScope {
@@ -140,7 +142,16 @@ class SiteCreationDomainsViewModel @Inject constructor(
             updateUiStateToContent(query, Loading(Ready(emptyList()), false))
             fetchDomainsJob = launch {
                 delay(THROTTLE_DELAY)
-                val onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value, segmentId)
+                val onSuggestedDomains: OnSuggestedDomains
+                if (homePagePickerFeatureConfig.isEnabled()) {
+                    onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value,
+                            null,
+                            includeVendorDot = true,
+                            includeDotBlog = true)
+                } else {
+                    onSuggestedDomains = fetchDomainsUseCase.fetchDomains(query.value, segmentId)
+                }
+
                 withContext(mainDispatcher) {
                     onDomainsFetched(query, onSuggestedDomains)
                 }
@@ -329,20 +340,24 @@ class SiteCreationDomainsViewModel @Inject constructor(
     ) {
         sealed class DomainsUiContentState(
             val emptyViewVisibility: Boolean,
+            val exampleViewVisibility: Boolean,
             val items: List<DomainsListItemUiState>
         ) {
             object Initial : DomainsUiContentState(
                     emptyViewVisibility = false,
+                    exampleViewVisibility = true,
                     items = emptyList()
             )
 
             object Empty : DomainsUiContentState(
                     emptyViewVisibility = true,
+                    exampleViewVisibility = false,
                     items = emptyList()
             )
 
             class VisibleItems(items: List<DomainsListItemUiState>) : DomainsUiContentState(
                     emptyViewVisibility = false,
+                    exampleViewVisibility = false,
                     items = items
             )
         }

@@ -346,7 +346,12 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     showInfoSnackbar(getString(R.string.reader_label_added_tag, tag.getLabel()));
                     mLastAddedTagName = tag.getTagSlug();
                     AnalyticsTracker.track(AnalyticsTracker.Stat.READER_TAG_FOLLOWED,
-                            new HashMap<String, String>() { { put("tag", mLastAddedTagName); }});
+                            new HashMap<String, String>() {
+                                {
+                                    put("tag", mLastAddedTagName);
+                                    put("source", "unknown");
+                                }
+                            });
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_add_tag));
                     mLastAddedTagName = null;
@@ -418,7 +423,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                     showInfoSnackbar(getString(R.string.reader_label_followed_blog));
                     getPageAdapter().refreshBlogFragments(ReaderBlogType.FOLLOWED);
                     // update tags if the site we added belongs to a tag we don't yet have
-                    performUpdate(EnumSet.of(UpdateTask.TAGS));
+                    // also update followed blogs so lists are ready in case we need to present them
+                    // in bottom sheet reader filtering
+                    performUpdate(EnumSet.of(UpdateTask.TAGS, UpdateTask.FOLLOWED_BLOGS));
                 } else {
                     showInfoSnackbar(getString(R.string.reader_toast_err_follow_blog));
                 }
@@ -456,7 +463,7 @@ public class ReaderSubsActivity extends LocaleAwareActivity
     private void showInfoSnackbar(String text) {
         View bottomView = findViewById(R.id.layout_bottom);
 
-        WPSnackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
+        Snackbar snackbar = WPSnackbar.make(bottomView, text, Snackbar.LENGTH_LONG);
         snackbar.setAnchorView(bottomView);
         snackbar.show();
     }

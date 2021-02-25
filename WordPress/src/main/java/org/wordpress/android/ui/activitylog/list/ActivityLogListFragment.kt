@@ -21,14 +21,17 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.model.LocalOrRemoteId.RemoteId
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
+import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowBackupDownload
 import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.ActivityLogNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.activitylog.list.filter.ActivityLogTypeFilterFragment
 import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWINDABLE_ONLY_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.FETCHING
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel.ActivityLogListStatus.LOADING_MORE
@@ -39,8 +42,18 @@ import javax.inject.Inject
 
 private const val ACTIVITY_TYPE_FILTER_TAG = "activity_log_type_filter_tag"
 private const val DATE_PICKER_TAG = "activity_log_date_picker_tag"
-private const val BACKUP_DOWNLOAD_REQUEST_CODE = 1710
-
+private const val ACTIVITY_LOG_TRACKING_SOURCE = "activity_log"
+private const val BACKUP_TRACKING_SOURCE = "backup"
+/**
+ * It was decided to reuse the 'Activity Log' screen instead of creating a new 'Backup' screen. This was due to the
+ * fact that there will be lots of code that would need to be duplicated for the new 'Backup' screen. On the other
+ * hand, not much more complexity would be introduced if the 'Activity Log' screen is reused (mainly some 'if/else'
+ * code branches here and there).
+ *
+ * However, should more 'Backup' related additions are added to the 'Activity Log' screen, then it should become a
+ * necessity to split those features in separate screens in order not to increase further the complexity of this
+ * screen's architecture.
+ */
 class ActivityLogListFragment : Fragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
@@ -76,6 +89,7 @@ class ActivityLogListFragment : Fragment() {
         } else {
             savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
         }
+        val rewindableOnly = nonNullActivity.intent.getBooleanExtra(ACTIVITY_LOG_REWINDABLE_ONLY_KEY, false)
 
         log_list_view.setEmptyView(actionable_empty_view)
         log_list_view.addOnScrollListener(object : RecyclerView.OnScrollListener() {
@@ -88,7 +102,7 @@ class ActivityLogListFragment : Fragment() {
 
         setupObservers()
 
-        viewModel.start(site)
+        viewModel.start(site, rewindableOnly)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -114,8 +128,16 @@ class ActivityLogListFragment : Fragment() {
         super.onSaveInstanceState(outState)
     }
 
-    fun onRewindConfirmed(activityId: String) {
-        viewModel.onRewindConfirmed(activityId)
+    fun onRestoreConfirmed(activityId: String) {
+        viewModel.onRestoreConfirmed(activityId)
+    }
+
+    fun onQueryRestoreStatus(rewindId: String, restoreId: Long) {
+        viewModel.onQueryRestoreStatus(rewindId, restoreId)
+    }
+
+    fun onQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+        viewModel.onQueryBackupDownloadStatus(rewindId, downloadId)
     }
 
     private fun setupObservers() {
@@ -130,7 +152,7 @@ class ActivityLogListFragment : Fragment() {
         viewModel.filtersUiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(requireActivity().filters_bar, uiState.visibility)
             uiHelpers.updateVisibility(requireActivity().filters_bar_divider, uiState.visibility)
-            if (uiState is FiltersShown) { updateFilters(uiState) }
+            if (uiState is FiltersShown) updateFilters(uiState)
         })
 
         viewModel.emptyUiState.observe(viewLifecycleOwner, { emptyState ->
@@ -154,13 +176,13 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.showItemDetail.observe(viewLifecycleOwner, {
             if (it is ActivityLogListItem.Event) {
-                ActivityLauncher.viewActivityLogDetailForResult(activity, viewModel.site, it.activityId)
-            }
-        })
-
-        viewModel.showRewindDialog.observe(viewLifecycleOwner, {
-            if (it is ActivityLogListItem.Event) {
-                displayRewindDialog(it)
+                ActivityLauncher.viewActivityLogDetailForResult(
+                        activity,
+                        viewModel.site,
+                        it.activityId,
+                        it.isButtonVisible,
+                        viewModel.rewindableOnly
+                )
             }
         })
 
@@ -177,26 +199,46 @@ class ActivityLogListFragment : Fragment() {
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, {
             it.applyIfNotHandled {
+                val trackingSource = when {
+                        requireNotNull(
+                            requireActivity().intent.extras?.containsKey(ACTIVITY_LOG_REWINDABLE_ONLY_KEY)) ->
+                                BACKUP_TRACKING_SOURCE
+                    else -> {
+                        ACTIVITY_LOG_TRACKING_SOURCE
+                    }
+                }
+
                 when (this) {
                     is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
                             requireActivity(),
                             viewModel.site,
                             event.activityId,
-                            BACKUP_DOWNLOAD_REQUEST_CODE)
-                    // todo: annmarie replace with the ActivityLauncher for showing restore details
-                    is ShowRestore -> displayRewindDialog(event) }
+                            RequestCodes.BACKUP_DOWNLOAD,
+                            trackingSource
+                    )
+                    is ShowRestore -> ActivityLauncher.showRestoreForResult(
+                            requireActivity(),
+                            viewModel.site,
+                            event.activityId,
+                            RequestCodes.RESTORE,
+                            trackingSource
+                    )
+                    is ShowRewindDialog -> displayRewindDialog(event)
                 }
-            })
+            }
+        })
     }
 
     private fun displayRewindDialog(item: ActivityLogListItem.Event) {
         val dialog = BasicFragmentDialog()
         item.rewindId?.let {
-            dialog.initialize(it,
+            dialog.initialize(
+                    it,
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.activity_log_rewind_dialog_message, item.formattedDate, item.formattedTime),
                     getString(R.string.activity_log_rewind_site),
-                    getString(R.string.cancel))
+                    getString(R.string.cancel)
+            )
             dialog.show(requireFragmentManager(), it)
         }
     }

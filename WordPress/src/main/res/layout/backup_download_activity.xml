@@ -6,12 +6,13 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <FrameLayout
+    <fragment
         android:id="@+id/fragment_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:name="org.wordpress.android.ui.jetpack.backup.download.BackupDownloadFragment"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    </FrameLayout>
+    </fragment>
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar_main"
@@ -24,6 +25,11 @@
             android:layout_height="wrap_content"
             app:theme="@style/WordPress.ActionBar"
             app:layout_scrollFlags="scroll|enterAlways"/>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/list_divider_height"
+            android:background="?attr/wpColorSurfaceSecondary"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 

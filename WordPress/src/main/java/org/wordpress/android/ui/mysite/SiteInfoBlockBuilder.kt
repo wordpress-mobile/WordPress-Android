@@ -14,10 +14,12 @@ class SiteInfoBlockBuilder
     fun buildSiteInfoBlock(
         site: SiteModel,
         showSiteIconProgressBar: Boolean,
-        titleClick: (SiteModel) -> Unit,
-        iconClick: (SiteModel) -> Unit,
-        urlClick: (SiteModel) -> Unit,
-        switchSiteClick: (SiteModel) -> Unit
+        titleClick: () -> Unit,
+        iconClick: () -> Unit,
+        urlClick: () -> Unit,
+        switchSiteClick: () -> Unit,
+        showUpdateSiteTitleFocusPoint: Boolean,
+        showUploadSiteIconFocusPoint: Boolean
     ): SiteInfoBlock {
         val homeUrl = SiteUtils.getHomeURLOrHostName(site)
         val blogTitle = SiteUtils.getSiteNameOrHomeURL(site)
@@ -35,16 +37,18 @@ class SiteInfoBlockBuilder
                 blogTitle,
                 homeUrl,
                 siteIcon,
+                showUpdateSiteTitleFocusPoint,
+                showUploadSiteIconFocusPoint,
                 buildTitleClick(site, titleClick),
-                ListItemInteraction.create(site, iconClick),
-                ListItemInteraction.create(site, urlClick),
-                ListItemInteraction.create(site, switchSiteClick)
+                ListItemInteraction.create(iconClick),
+                ListItemInteraction.create(urlClick),
+                ListItemInteraction.create(switchSiteClick)
         )
     }
 
-    private fun buildTitleClick(site: SiteModel, titleClick: (SiteModel) -> Unit): ListItemInteraction? {
+    private fun buildTitleClick(site: SiteModel, titleClick: () -> Unit): ListItemInteraction? {
         return if (SiteUtils.isAccessedViaWPComRest(site)) {
-            ListItemInteraction.create(site, titleClick)
+            ListItemInteraction.create(titleClick)
         } else {
             null
         }

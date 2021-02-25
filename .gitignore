@@ -29,7 +29,7 @@ local.properties
 *.iml
 *.ipr
 *.iws
-/.idea/*
+.idea/
 
 # IntelliJ/Android Studio exceptions
 !/.idea/codeStyles/
@@ -39,7 +39,6 @@ local.properties
 !/.idea/codeStyleSettings.xml
 !/.idea/encodings.xml
 !/.idea/copyright/
-!/.idea/compiler.xml
 # Enforce plugins
 !/.idea/externalDependencies.xml
 # Checkstyle configuration

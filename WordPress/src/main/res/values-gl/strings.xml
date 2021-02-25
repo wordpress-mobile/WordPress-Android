@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: gl_ES
 -->
 <resources>
-    <string name="backup_item_sqls">Base de datos do sitio (SQL)</string>
     <string name="backup_item_media_uploads">Subidas de medios</string>
     <string name="backup_item_plugins">Plugins de WordPress</string>
     <string name="backup_item_themes">Temas de WordPress</string>
@@ -19,8 +18,6 @@ Language: gl_ES
     <string name="gutenberg_native_choose_file">Elixir arquivo</string>
     <string name="activity_log_item_menu_download_backup_label">Descargar copia de seguridade</string>
     <string name="activity_log_item_menu_restore_label">Restaurar até este punto</string>
-    <string name="activity_log_activity_type_filter_label">Tipo de actividade</string>
-    <string name="activity_log_date_range_filter_label">Rango de datas</string>
     <string name="activity_log_activity_type_filter_header">Filtrar por tipo de actividade</string>
     <string name="dialog_confirm_copy_local_copy_button">Copiar a versión desta aplicación</string>
     <string name="dialog_confirm_copy_local_edit_button">Editar a entrada primeiro</string>
@@ -33,10 +30,7 @@ Language: gl_ES
     <string name="gutenberg_native_copy_file_url">Copiar a URL do arquivo </string>
     <string name="gutenberg_native_choose_a_file">ELIXIR UN ARQUIVO</string>
     <string name="new_site_creation_domain_header_title">Elixe un dominio</string>
-    <string name="my_site_btn_jetpack_settings">Axustes de Jetpack</string>
     <string name="my_site_header_jetpack">Jetpack</string>
-    <string name="reader_btn_following_comments">Seguindo a conversa</string>
-    <string name="reader_btn_follow_comments">Seguir a conversa</string>
     <string name="reader_follow_comments_could_not_subscribe_error">Non se puido crear a subscrición aos comentarios desta entrada</string>
     <string name="reader_follow_comments_get_status_error">Erro ao recuperar o estado da subscrición para a entrada</string>
     <string name="reader_follow_comments_unsubscribe_success">Cancelada correctamente a subscrición aos comentarios</string>
@@ -149,7 +143,6 @@ Language: gl_ES
     <string name="create_post_story_fab_tooltip">Crear unha entrada ou historia</string>
     <string name="create_page_fab_tooltip">Crear unha páxina</string>
     <string name="create_post_fab_tooltip">Crear unha entrada</string>
-    <string name="contact_fragment_title">\@string/contact_support</string>
     <string name="reader_discover_interests_header">Pode que che guste</string>
     <string name="reader_expandable_tags_view_overflow_indicator_collapse_title">Ocultar</string>
     <string name="gutenberg_native_video_caption_empty">Lenda do vídeo. Baleira</string>
@@ -228,7 +221,6 @@ Language: gl_ES
     <string name="gutenberg_native_choose_image">Elixir unha imaxe</string>
     <string name="gutenberg_native_block_removed">Bloque eliminado</string>
     <string name="enter_your_site_address">Introduce o enderezo do teu sitio existente</string>
-    <string name="continue_with_wpcom">Continuar con WordPress.com</string>
     <string name="signup_confirmation_title">Confirmación do rexistro</string>
     <string name="enter_account_info_for_site">Introduce a información da túa conta para %1$s.</string>
     <string name="login_or">ou</string>
@@ -241,7 +233,6 @@ Language: gl_ES
     <string name="create_account">Crear unha conta</string>
     <string name="send_link_by_email">Enviar o enlace por correo electrónico</string>
     <string name="reset_your_password">Restablecer o teu contrasinal</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dalle ao teu sitio un nome que reflicte a súa personalidade e temática. As primeiras impresións contan!</string>
     <string name="quick_start_list_update_site_title_title">Configura o título do teu sitio</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Ao enviar esta entrada á papeleira tamén se descartarán os cambios locais. Estás seguro de que queres seguir?</string>
@@ -262,7 +253,6 @@ Language: gl_ES
     <string name="gutenberg_native_gradient_type">Tipo de degradado</string>
     <string name="gutenberg_native_double_tap_to_select_the_option">Toca dúas veces para seleccionar a opción</string>
     <string name="gutenberg_native_customize_gradient">Personalizar gradiente</string>
-    <string name="pages_item_subtitle_date_author">%1$s · %2$s · %3$s</string>
     <string name="pages_list_author">Autor da páxina</string>
     <string name="photo_picker_use_gif">Usar este GIF</string>
     <string name="error_media_thumbnail_not_loaded">A miniatura do medio non se puido cargar</string>
@@ -296,16 +286,12 @@ Language: gl_ES
     <string name="ccpa_privacy_notice_header">Aviso de privacidade para usuarios de California</string>
     <string name="status_and_visibility">Estado e visibilidade</string>
     <string name="update_now">Actualizar agora</string>
-    <string name="pages_item_subtitle">%1$s · %2$s</string>
-    <string name="gutenberg_native_try_a_starter_layout">Proba un deseño de inicio</string>
     <string name="gutenberg_native_open_block_actions_menu">Abrir o menú de accións de bloques</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options">Toca dúas veces para abrir a folla inferior coas opcións dispoñibles</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options">Toca dúas veces pata abrir a folla de acción coas opcións dispoñibles</string>
     <string name="pages_cannot_be_started">No podemos abrir as páxinas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="pages_set_as_posts_page">Establecer como páxina de entradas</string>
     <string name="pages_set_as_homepage">Establecer como páxina de inicio</string>
-    <string name="suggestion_no_matching_users">«Non hai usuarios que coincidan.»</string>
-    <string name="suggestion_invalid_user">«%s non é un usuario válido»</string>
     <string name="site_settings_select_page">Seleccionar a páxina</string>
     <string name="site_settings_posts_page">Páxina de entradas</string>
     <string name="site_settings_static_homepage">Páxina de inicio estática</string>
@@ -325,7 +311,6 @@ Language: gl_ES
     <string name="page_homepage_successfully_updated">Páxina de inicio actualizada correctamente</string>
     <string name="page_cannot_set_posts_page">Para establecer a páxina de entradas, activa «Páxina de inicio estática» nos axustes do sitio</string>
     <string name="page_cannot_set_homepage">Para establecer a páxina de inicio, activa «Páxina de inicio estática» nos axustes do sitio</string>
-    <string name="gutenberg_native_welcome_to_our_new_blog">Benvido ao noso novo blog</string>
     <string name="gutenberg_native_select_a_color">Seleccionar unha cor</string>
     <string name="gutenberg_native_double_tap_to_go_to_color_settings">Toca dúas veces para ir aos axustes da cor</string>
     <string name="reader_empty_followed_blogs_description">Cando sigas sitios, verás aquí o seu contido</string>
@@ -359,7 +344,6 @@ Language: gl_ES
     <string name="gutenberg_native_move_block_left">Mover bloque á esquerda</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right">Toca dúas veces para mover o bloque cara a dereita</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left">Toca dúas veces para mover o bloque cara a esquerda</string>
-    <string name="gutenberg_native_blog">Blog</string>
     <string name="new_site_creation_creating_site_loading_4">Creando o escritorio</string>
     <string name="new_site_creation_creating_site_loading_3">Configurar o tema</string>
     <string name="new_site_creation_creating_site_loading_2">Engadindo as características do sitio</string>
@@ -415,50 +399,14 @@ Language: gl_ES
     <string name="app_theme_light">Claro</string>
     <string name="app_theme">Apariencia</string>
     <string name="dialog_confirm_autosave_body_first_part_for_page">Recentemente fixeches cambios nesta páxina, pero non os gardaches. Elixe unha versión para cargar:\n\n</string>
-    <string name="gutenberg_native_what_people_say">O que di a xente</string>
-    <string name="gutenberg_native_we_offer_a_range_of_services_to_help_you_achieve_the_results_you">Ofrecemos unha gama de servizos para axudarche a conseguir os resultados que buscas. Non estás seguro do que necesitas ou do que custa? Podemos explicarche que servizos son os adecuados para ti e decirche os nosos honorarios. Ponte en contacto con nós a continuación.</string>
-    <string name="gutenberg_native_we_are_a_small_team_of_talented_professionals_with_a_wide_range_o">Somos un pequeno equipo de profesionais con talento cunha ampla gama de habilidades e experiencia. Encántanos o que facemos e facémolo con paixón. Esperamos poder traballar contigo.</string>
     <string name="gutenberg_native_warning_message">Mensaxe de advertencia</string>
-    <string name="gutenberg_native_want_to_work_with_us">Queres traballar con nós?</string>
-    <string name="gutenberg_native_walt_disney">Walt Disney</string>
-    <string name="gutenberg_native_visitors_will_want_to_know_who_is_on_the_other_side_of_the_page_u">Os visitantes quererán saber quen está ao outro lado da páxina. Usa este espazo para escribir sobre ti, o teu sitio, o teu negocio ou sobre calquera cousa que queiras. Usa as recomendacións que aparecen a continuación para citar a outros falando do mesmo - coas súas propias palabras.</string>
-    <string name="gutenberg_native_usa">EE.UU.</string>
-    <string name="gutenberg_native_this_is_sample_content_included_with_the_template_to_illustrate_i">Este é un contido de exemplo, incluído co modelo, para ilustrar as súas características. Elimínao o substitúeo coas túas propias palabras e medios.</string>
-    <string name="gutenberg_native_the_way_to_get_started_is_to_quit_talking_and_begin_doing">A forma de comezar é deixar de falar e empezar a facer.</string>
-    <string name="gutenberg_native_team">Equipo</string>
     <string name="gutenberg_native_success_message">Mensaxe de éxito</string>
-    <string name="gutenberg_native_strategy">Estratexia</string>
     <string name="gutenberg_native_show_post_content">Amosar o contido da entrada</string>
-    <string name="gutenberg_native_services">Servizos</string>
-    <string name="gutenberg_native_samuel_the_dog">Samuel the Dog</string>
-    <string name="gutenberg_native_sally_smith">Sally Smith</string>
-    <string name="gutenberg_native_project_name">Nome do proxecto</string>
-    <string name="gutenberg_native_position_or_job_title">Posto ou título do traballo</string>
-    <string name="gutenberg_native_portfolio">Porfolio</string>
     <string name="gutenberg_native_only_show_excerpt">Amosar só o extracto</string>
-    <string name="gutenberg_native_my_portfolio_showcases_various_projects_created_throughout_my_car">O meu porfolio presenta varios proxectos creados ao longo da miña carreira. Mira a continuación a miña información de contacto e ponte en contacto.</string>
     <string name="gutenberg_native_link_to">Enlazar a</string>
-    <string name="gutenberg_native_let_s_talk_don_t_hesitate_to_reach_out_with_the_contact_informati">Falemos 👋 Non dubides en contactar na seguinte información de contacto ou envía unha mensaxe usando o formulario.</string>
-    <string name="gutenberg_native_let_s_build_something_together_7019bfe3">Imos a construír algo xuntos!</string>
-    <string name="gutenberg_native_let_s_build_something_together">Imos a construír algo xuntos!</string>
-    <string name="gutenberg_native_juan_p_rez">Juan Pérez</string>
-    <string name="gutenberg_native_j_k_rowling">J.K. Rowling</string>
-    <string name="gutenberg_native_it_is_our_choices_harry_that_show_what_we_truly_are_far_more_than">Son as nosas eleccións, Harry, as que mostran o que realmente somos, moito máis que as nosas habilidades.</string>
-    <string name="gutenberg_native_inspiration">Inspiración</string>
-    <string name="gutenberg_native_get_in_touch">Ponte en contacto</string>
     <string name="gutenberg_native_excerpt_length_words">Lonxitude do extracto (palabras)</string>
-    <string name="gutenberg_native_email_me_a_href_mailto_mail_example_com_mail_example_com_a">Envíame un correo electrónico: &lt;a href=\"mailto:correo@exemplo.gal\">correo@exemplo.gal&lt;/a></string>
-    <string name="gutenberg_native_dr_seuss">Dr. Seuss</string>
-    <string name="gutenberg_native_don_t_cry_because_it_s_over_smile_because_it_happened">Non chores porque se acabou, sorrí porque ocorreu.</string>
     <string name="gutenberg_native_customize">PERSONALIZAR</string>
-    <string name="gutenberg_native_city_10100">00000, Cidade</string>
     <string name="gutenberg_native_add_paragraph_block">Engadir un bloque de parágrafo</string>
-    <string name="gutenberg_native_a_short_description_of_the_services_you_offer">Unha breve descrición dos servizos que ofreces.</string>
-    <string name="gutenberg_native_a_short_bio_with_personal_history_key_achievements_or_an_interest">Unha breve biografía sobre o teu historial personal, os teus logros clave ou un feito interesante.</string>
-    <string name="gutenberg_native_a_href_mailto_mail_example_com_mail_example_com_a">&lt;a href=\"mailto:correo@exemplo.gal\">correo@exemplo.gal&lt;/a></string>
-    <string name="gutenberg_native_a_description_of_the_project_and_the_works_presented">Unha descrición do proxecto e dos traballos presentados.</string>
-    <string name="gutenberg_native_555_555_1234">(555)555–1234</string>
-    <string name="gutenberg_native_10_street_road">Rúa Maior, 10</string>
     <string name="create_post_page_fab_tooltip_contributors">Crear unha entrada</string>
     <string name="post_list_tab_trashed_posts">Na papeleira</string>
     <string name="post_list_tab_scheduled_posts">Programada</string>
@@ -478,14 +426,12 @@ Language: gl_ES
     <string name="stats_management_add_new_stats_card">Engadir unha nova tarxeta de estatísticas</string>
     <string name="reader_self_hosted_select_filter">Usa o botón de filtro para encontrar entradas sobre temas específicos</string>
     <string name="reader_bottom_sheet_content_description">Selecciona unha etiqueta ou un sitio, ventá emergente</string>
-    <string name="reader_btn_selected_filter_tick_content_description">Seleccionado</string>
     <string name="reader_btn_select_filter_content_description">Selecciona un sitio ou etiqueta para filtrar entradas</string>
     <string name="reader_btn_remove_filter_content_description">Quitar o filtro actual</string>
     <string name="reader_title_subs">Xestionar etiquetas e sitios</string>
     <string name="reader_filter_self_hosted_empty_sites_tags_action">Acceder a WordPress.com</string>
     <string name="reader_filter_self_hosted_empty_tagss_list">Accede a WordPress.com para ver as últimas entradas dos temas que segues</string>
     <string name="reader_filter_self_hosted_empty_sites_list">Accede a WordPress.com para ver as últimas entradas dos sitios que segues</string>
-    <string name="gutenberg_native_template_preview">Vista previa do modelo</string>
     <string name="gutenberg_native_replace_current_block">Substituír o bloque actual</string>
     <string name="gutenberg_native_add_to_end">Engadir ao final</string>
     <string name="gutenberg_native_add_to_beginning">Engadir ao principio</string>
@@ -499,7 +445,6 @@ Language: gl_ES
     <string name="reader_filter_cta">Filtrar</string>
     <string name="gutenberg_native_video_caption_s">Lenda do vídeo. %s</string>
     <string name="gutenberg_native_edit_video">Editar o vídeo</string>
-    <string name="gutenberg_native_double_tap_to_select_layout">Toca dúas veces para seleccionar o deseño</string>
     <string name="gutenberg_native_add_a_shortcode">Engadir un shortcode…</string>
     <string name="post_list_author">Autor da entrada</string>
     <string name="fab_create_desc">Crear unha entrada</string>
@@ -555,7 +500,6 @@ Language: gl_ES
     <string name="suffix_1_000_000_000_000">%sT</string>
     <string name="suffix_1_000_000_000">%sG</string>
     <string name="suffix_1_000_000">%sM</string>
-    <string name="suffix_1_000">%sk</string>
     <string name="posts_cannot_be_started">Non podemos abrir as entradas neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="site_cannot_be_loaded">Non puidemos cargar os datos para o teu sitio neste momento. Por favor, inténtao de novo máis tarde</string>
     <string name="gutenberg_native_wordpress_media_library">Biblioteca de medios de WordPress</string>
@@ -725,7 +669,6 @@ Language: gl_ES
     <string name="post_settings_notification">Aviso</string>
     <string name="post_settings_time_and_date">Data e hora</string>
     <string name="login_need_help_finding_connected_email">Necesitas axuda para encontrar o correo electrónico co que te conectaches?</string>
-    <string name="enter_wordpress_site">A web neste enderezo non é un sitio WordPress. Para conectarnos a el, o sitio debe ter instalado WordPress.</string>
     <string name="login_invalid_site_url">Por favor, introduce un enderezo completo dunha web, como exemplo.gal.</string>
     <string name="enter_email_for_site">Accede con WordPress.com para conectar con %1$s</string>
     <string name="stats_post_views_label">Visitas</string>
@@ -914,8 +857,6 @@ Language: gl_ES
     <string name="quick_start_dialog_upload_icon_title">Sube un icona do sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Os teus visitantes verán a túa icona no seu navegador. Engade unha icona personalizada para conseguir un aspecto profesional e refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver o teu plan actual e outros plans dispoñibles</string>
-    <string name="quick_start_dialog_create_new_page_message_short_pages">Toca en %1$s Engadir páxina %2$s para crear unha nova páxina.</string>
-    <string name="quick_start_dialog_create_new_page_message_short">Toca en %1$s Páxinas do sitio %2$s para continuar.</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estatísticas %2$s para ver como está rendendo o teu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icona do teu sitio %2$s para subir un novo</string>
     <string name="quick_start_dialog_publish_post_message">Garda en borrador e publica a túa primeira entrada.</string>
@@ -926,13 +867,8 @@ Language: gl_ES
     <string name="quick_start_dialog_explore_plans_message">Aprende sobre as ferramentas de marketing e SEO dos nosos plans de pagamento.</string>
     <string name="quick_start_dialog_enable_sharing_title">Activar compartir entradas</string>
     <string name="quick_start_dialog_enable_sharing_message">Comparte automaticamente as novas entradas nas túas contas de medios sociais.</string>
-    <string name="quick_start_dialog_customize_site_message">Configura fontes, engade imaxes e máis.</string>
-    <string name="quick_start_dialog_create_page_title">Crea unha nova páxina</string>
-    <string name="quick_start_dialog_create_page_message">Engade unha páxina con contido clave - unha páxina «Acerca de» é un gran comezo.</string>
     <string name="quick_start_dialog_check_stats_title">Revisa as estatísticas do teu sitio</string>
     <string name="quick_start_dialog_check_stats_message">Mantente ao día sobre o rendemento do teu sitio.</string>
-    <string name="quick_start_dialog_browse_themes_title">Explorar temas</string>
-    <string name="quick_start_dialog_browse_themes_message">Explora ducias de opcións de deseño e descobre a que se axuste a ti.</string>
     <string name="quick_start_dialog_remove_next_steps_message">Eliminar os seguintes pasos ocultará todas as visitas guiadas deste sitio. Esta acción é irreversible.</string>
     <string name="quick_start_dialog_remove_next_steps_title">Quitar os seguintes pasos</string>
     <string name="quick_start_remove_next_steps_menu_title">Quitar isto</string>
@@ -1121,12 +1057,6 @@ Language: gl_ES
     <string name="quick_start_dialog_follow_sites_message_short_search">Toca en %1$s Buscar %2$s para buscar sitios con intereses similares</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader">Toca en %1$s Lector %2$s para seguir</string>
     <string name="quick_start_dialog_follow_sites_message">Descubre sitios que te inspiren, e sígueos para obter actualizacións cando publiquen.</string>
-    <string name="quick_start_dialog_customize_site_title">Personaliza o teu sitio</string>
-    <string name="quick_start_dialog_customize_site_message_short_themes">Toca en %1$s Temas %2$s para seguir</string>
-    <string name="quick_start_dialog_customize_site_message_short_customize">Toca en %1$s Personalizar %2$s para empezar a personalizar o teu sitio</string>
-    <string name="quick_start_dialog_choose_theme_title">Elixe un tema</string>
-    <string name="quick_start_dialog_browse_themes_message_short">Toca en %1$s Temas %2$s para descubrir novos temas</string>
-    <string name="quick_start_dialog_choose_theme_message">Revisa todos os nosos temas para encontrar o que se che axuste á perfección</string>
     <string name="quick_start_button_positive">Ir</string>
     <string name="quick_start_button_negative_short">Cancelar</string>
     <string name="quick_start_button_negative">Agora non</string>
@@ -1190,14 +1120,8 @@ Language: gl_ES
     <string name="support_contact_email">Correo electrónico de contacto</string>
     <string name="application_log_button">Rexistro da aplicación</string>
     <string name="my_tickets">Os meus tickets</string>
-    <string name="activity_log_rewind_dialog_message">Queres rebobinar o teu sitio ao %1$s ás %2$s? Isto borrará todo o contido e opcións creadas ou cambiadas desde entón.</string>
-    <string name="activity_log_rewind_site">Rebobinar sitio</string>
-    <string name="activity_log_currently_restoring_message_no_dates">Rebobinado en curso</string>
-    <string name="activity_log_currently_restoring_message">Rebobinando a %1$s %2$s</string>
     <string name="activity_log_currently_restoring_title">Actualmente restaurando o teu sitio</string>
     <string name="activity_log_rewind_finished_snackbar_message_no_dates">O teu sitio restaurouse satisfactoriamente</string>
-    <string name="activity_log_rewind_finished_snackbar_message">O teu sitio restaurouse con éxito\nRebobinado a %1$s %2$s</string>
-    <string name="activity_log_rewind_started_snackbar_message">O teu sitio está a ser restaurado\nRebobinando a %1$s %2$s</string>
     <string name="activity_log_button">Botón de acción do rexistro de actividade</string>
     <string name="plugin_auto_managed">Xestionado automaticamente</string>
     <string name="reader_save_posts_locally_dialog_message">Garda esta entrada e volve cando queiras para lela. Só estará dispoñible neste dispositivo — as entradas gardadas non se sincronizan con outros dispositivos.</string>
@@ -1240,11 +1164,9 @@ Language: gl_ES
     <string name="reader_btn_notifications_on">Activar os avisos do sitio</string>
     <string name="reader_btn_notifications_off">Desactivar os avisos do sitio</string>
     <string name="activity_log_jetpack_icon">Icona de Jetpack</string>
-    <string name="rewind">Rebobinar</string>
     <string name="activity_log_event">Evento</string>
     <string name="activity_log_icon">Icona de actividade</string>
     <string name="activity_log">Rexistro de actividade</string>
-    <string name="activity">Actividade</string>
     <string name="privacy_policy_read">Le a política de privacidade</string>
     <string name="third_party_policy_learn_more_caption">Usamos outras ferramentas de seguimento, incluídas algunhas de terceiros. Le acerca destas e como controlalas.</string>
     <string name="third_party_policy_learn_more_header">Política de terceiros</string>
@@ -1929,13 +1851,7 @@ Language: gl_ES
     <string name="invite_error_invalid_usernames_multiple">Non se pode enviar: Hai nomes de usuario ou enderezos de correo non válidos.</string>
     <string name="invite_error_invalid_usernames_one">Fallou o envío: un nome de usuario ou un enderezo non é válido.</string>
     <string name="invite_error_no_usernames">Introduce como mínimo un nome de usuario</string>
-    <string name="invite_message_info">(Opcional) Podes escribir unha mensaxe persoal de ata 500 caracteres para incluíla na invitación ao/s usuario/s.</string>
-    <string name="invite_message_remaining_other">quedan %d caracteres</string>
-    <string name="invite_message_remaining_one">queda 1 carácter</string>
-    <string name="invite_message_remaining_zero">quedan 0 caracteres</string>
-    <string name="invite_message_title">Mensaxe persoal</string>
     <string name="invite">Invitar</string>
-    <string name="invite_names_title">Nomes de usuario ou enderezos de correo</string>
     <string name="invite_people">Invitar xente</string>
     <string name="my_site_header_external">Externo</string>
     <string name="send_link">Enviar o enlace</string>

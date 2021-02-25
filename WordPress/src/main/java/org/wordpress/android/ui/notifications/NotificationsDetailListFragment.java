@@ -49,6 +49,7 @@ import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.AppLog.T;
 import org.wordpress.android.util.FormattableContentUtilsKt;
 import org.wordpress.android.util.ToastUtils;
+import org.wordpress.android.util.config.ScanScreenFeatureConfig;
 import org.wordpress.android.util.image.ImageManager;
 import org.wordpress.android.util.image.ImageType;
 
@@ -75,6 +76,7 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
 
     @Inject ImageManager mImageManager;
     @Inject NotificationsUtilsWrapper mNotificationsUtilsWrapper;
+    @Inject ScanScreenFeatureConfig mScanScreenFeatureConfig;
 
     public NotificationsDetailListFragment() {
     }
@@ -281,6 +283,15 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                                 activity.showWebViewActivityForUrl(clickedSpan.getUrl());
                             }
                             break;
+                        case SCAN:
+                            if (mScanScreenFeatureConfig.isEnabled()) {
+                                activity.showScanActivityForSite(clickedSpan.getSiteId());
+                            } else {
+                                if (!TextUtils.isEmpty(clickedSpan.getUrl())) {
+                                    activity.showWebViewActivityForUrl(clickedSpan.getUrl());
+                                }
+                            }
+                            break;
                         case STAT:
                         case FOLLOW:
                             // We can open native stats if the site is a wpcom or Jetpack sites
@@ -292,6 +303,9 @@ public class NotificationsDetailListFragment extends ListFragment implements Not
                             } else {
                                 activity.showPostActivity(clickedSpan.getSiteId(), clickedSpan.getId());
                             }
+                            break;
+                        case REWIND_DOWNLOAD_READY:
+                            activity.showBackupForSite(clickedSpan.getSiteId());
                             break;
                         default:
                             // We don't know what type of id this is, let's see if it has a URL and push a webview

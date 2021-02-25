@@ -32,7 +32,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
     @Mock lateinit var scanStore: ScanStore
 
     @Before
-    fun setup() {
+    fun setup() = test {
         useCase = StartScanUseCase(networkUtilsWrapper, scanStore, TEST_DISPATCHER)
         whenever(networkUtilsWrapper.isNetworkAvailable()).thenReturn(true)
         whenever(scanStore.getScanStateForSite(site)).thenReturn(scanStateModel)
@@ -63,7 +63,7 @@ class StartScanUseCaseTest : BaseUnitTest() {
 
             val result = useCase.startScan(site).toList(mutableListOf())
 
-            verify(scanStore).addOrUpdateScanStateModelForSite(site, expectedScanStateModel)
+            verify(scanStore).addOrUpdateScanStateModelForSite(START_SCAN, site, expectedScanStateModel)
             assertThat(result).contains(StartScanState.ScanningStateUpdatedInDb(expectedScanStateModel))
         }
 

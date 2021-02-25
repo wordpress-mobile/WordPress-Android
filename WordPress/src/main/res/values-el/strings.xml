@@ -169,14 +169,11 @@ Language: el_GR
     <string name="quick_start_dialog_need_help_button_positive">Αποδοχή</string>
     <string name="quick_start_dialog_need_help_button_neutral">Ποτέ</string>
     <string name="quick_start_dialog_follow_sites_title">Ακολουθήστε άλλους ιστότοπους</string>
-    <string name="quick_start_dialog_customize_site_title">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="quick_start_dialog_follow_sites_message">Βρείτε ιστοτόπους που σας ενδιαφέρουν και ακολουθήστε τους ώστε να λαμβάνετε ενημερώσεις όταν δημοσιεύουν.</string>
     <string name="quick_start_button_negative_short">Άκυρο</string>
     <string name="quick_start_button_positive">Μετάβαση</string>
-    <string name="quick_start_dialog_choose_theme_title">Επιλέξτε θέμα εμφάνισης</string>
     <string name="quick_start_button_negative">Οχι τώρα</string>
     <string name="my_site_create_new_site_title">Δεν έχετε ιστότοπους</string>
-    <string name="quick_start_dialog_choose_theme_message">Περιηγηθείτε σε όλα μας τα θέματα για να βρείτε το ιδανικό για εσάς.</string>
     <string name="content_description_more">Περισσότερα</string>
     <string name="reader_empty_followed_tags_title">Μη ακολουθούμενα θέματα</string>
     <string name="install_jetpack">Εγκατάσταση Jetpack</string>
@@ -233,7 +230,6 @@ Language: el_GR
     <string name="reader_followed_blog_notifications_action">Ενεργοποίηση</string>
     <string name="my_site_icon_content_description">Αλλαγή εικονιδίου ιστότοπου</string>
     <string name="my_site_icon_dialog_add_message">Θα θέλατε να προσθέσετε ένα εικονίδιο ιστότοπου;</string>
-    <string name="activity">Δραστηριότητα</string>
     <string name="cookie_policy_learn_more_header">Πολιτική Cookies</string>
     <string name="privacy_policy_learn_more_header">Πολιτική Απορρήτου</string>
     <string name="activity_log_jetpack_icon">Εικονίδιο Jetpack</string>
@@ -670,13 +666,7 @@ Language: el_GR
     <string name="invite_error_invalid_usernames_multiple">Αδυναμία αποστολής: Υπάρχουν μη έγκυρα ονόματα χρήστη ή ηλ. διευθύνσεις</string>
     <string name="invite_error_invalid_usernames_one">Αδυναμία αποστολής: Μη έγκυρο όνομα χρήστη ή ηλ. διεύθυνση</string>
     <string name="invite_error_no_usernames">Παρακαλώ προσθέστε τουλάχιστον ένα όνομα χρήστη</string>
-    <string name="invite_message_info">(Προαιρετικό) Μπορείτε να εισάγετε ένα προσαρμοσμένο μήνυμα με έως 500 χαρακτήρες που θα συμπεριλαμβάνεται στην πρόσκληση των χρηστών.</string>
-    <string name="invite_message_remaining_other">Απομένουν %d χαρακτήρες</string>
-    <string name="invite_message_remaining_one">Απομένει 1 χαρακτήρας</string>
-    <string name="invite_message_remaining_zero">Απομένουν 0 χαρακτήρες</string>
-    <string name="invite_message_title">Προσαρμοσμένο Μήνυμα</string>
     <string name="invite">Πρόσκληση</string>
-    <string name="invite_names_title">Ονόματα Χρήστη ή Ηλ. Διευθύνσεις</string>
     <string name="send_link">Αποστολή συνδέσμου</string>
     <string name="my_site_header_external">Εξωτερική</string>
     <string name="invite_people">Πρόσκαλέστε Άτομα</string>

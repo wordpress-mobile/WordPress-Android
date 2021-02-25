@@ -1,186 +1,112 @@
 <ar>
-16.4:
-ما الجديد:
-
-محرِّر المكوِّنات: يمكنك الآن إدراج مكوِّن الملف الذي يقوم بوضع زر تنزيل للملفات مثل المستندات. عالجنا أيضًا مشكلات في مكوِّنات العناوين والمعرض.
-
-قائمة المقالات: يمكنك الآن نسخ مقالة باستخدام الزر "تكرار" الموجود في قائمة مقالات مدونتك.
-
-موقعي: أصلحنا أيضًا العطل الذي يحدث أثناء تحرير عنوان موقعك.
-
+16.7:
+- يمكن لعملاء Jetpack الآن استعادة موقع أو تنزيل نسخة احتياطية أو إجراء فحص والبحث عن التهديدات وإصلاحها
+- تحديثات متنوعة على محرِّر المكوِّن، بما في ذلك القدرة على تعيين رموز إرساء في مكوِّن العنوان
+- عامل تصفية جديد للمقالات غير المقروءة والقدرة على وضع علامة على المقالات بوصفها مرئية/غير مرئية في القارئ
+- النطاقات الفرعية .blog متاحة الآن
 </ar>
-<de-DE>
-16.4:
-Neuerungen:
-
-Block-Editor: Du kannst jetzt einen Dateiblock einfügen, der einen Download-Button für Dateien wie Dokumente bereitstellt. Außerdem haben wir Probleme beim Überschrifts- und Galerieblock behoben.
-
-Beitragsliste: Du kannst einen Beitrag jetzt mit dem Button „Duplizieren“ in deiner Blogbeitragsliste kopieren.
-
-Meine Website: Wir haben auch einen Absturz behoben, der beim Bearbeiten des Websitetitels auftrat.
-
-</de-DE>
 <en-US>
-16.4:
-What’s New:
-
-Block Editor: You now can insert a File block, which places a download button for files like documents. We also addressed issues with the Heading and Gallery blocks.
-
-Posts List: You can now copy a post with the “Duplicate” button in your Blog Posts list.
-
-My Site: We also fixed a crash that occurred while editing your site title.
-
+16.7:
+- Jetpack customers can now restore a site or download a backup, scan, and fix threats
+- Various block editor updates, including the ability to set anchors in the Heading block
+- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
+- .blog subdomains now available
 </en-US>
 <es-ES>
-16.4:
-Novedades:
-
-Editor de bloques: Ahora puedes insertar un bloque de archivo, que pone un botón de descarga para archivos como documentos. También hemos resuelto problemas con los bloques de encabezado y galería.
-
-Lista de entradas: Ahora puedes copiar una entrada con el botón de «Duplicar» en la lista de tus entradas de blog.
-
-Mi sitio: También hemos corregido una caída que ocurría mientras editabas el título de tu sitio.
-
+16.7:
+- Ahora, los clientes de Jetpack pueden restaurar un sitio o descargar una copia de seguridad, explorarlo y corregir fallos de seguridad
+- Varias actualizaciones del editor de bloques, incluyendo la capacidad de establecer anclajes en el bloque de encabezado
+- Nuevo filtro de entradas no leidas y la capacidad de marcar las entradas como vistas/no vistas en el Lector
+- Ahora están disponibles los subdominios «.blog»
 </es-ES>
 <fr-CA>
-16.4 :
-Nouveautés :
-
-Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
-
-Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
-
-Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
-
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
 </fr-CA>
 <fr-FR>
-16.4 :
-Nouveautés :
-
-Éditeur de blocs : vous pouvez désormais insérer un bloc Fichier afin d’ajouter un bouton de téléchargement de fichiers comme des documents. Nous avons également résolu des problèmes inhérents aux blocs En-tête et Galerie.
-
-Liste d’articles : vous pouvez désormais copier un article à l’aide du bouton « Dupliquer » dans votre liste d’articles de blog.
-
-Mon site : nous avons également résolu une défaillance qui se produisait lors de l’édition du titre de votre site.
-
+16.7 :
+- Les clients Jetpack peuvent désormais restaurer un site ou télécharger une sauvegarde, analyser et résoudre les menaces
+- Plusieurs mises à jour de l’éditeur de blocs, dont la possibilité d’ajouter des ancres dans le bloc En-tête
+- Nouveau filtre des articles non lus et possibilité de marquer des articles comme étant lus/non lus dans le Lecteur
+- Sous-domaines .blog désormais disponibles
 </fr-FR>
 <iw-IL>
-16.4:
-מה חדש:
-
-עורך הבלוקים: כעת אפשר להוסיף בלוק קובץ שממקם כפתור 'הורדה' למסמכים ששמורים כקבצים. בנוסף, טיפלנו בכמה בעיות בבלוקים 'כותרת' ו'גלריה'.
-
-רשימת פוסטים: כעת אפשר להעתיק פוסט עם הכפתור 'שכפול' ברשימת הפוסטים בבלוג שלך.
-
-האתר שלי: תיקנו גם קריסה שאירעה במהלך העריכה של שם האתר.
-
+16.7:
+- לקוחות של Jetpack יכולים כעת לשחזר אתר או להוריד גיבוי, לסרוק את האתר ולתקן איומים
+- מספר עדכונים בעורך הבלוקים, כולל יכולת להגדיר נקודות עיגון בבלוק הכותרת
+- מסנן חדש של פוסטים שלא נקראו ויכולת לסמן פוסטים כ'נקרא' או כ'לא נקרא' ב-Reader
+- דומיינים משנה של ‎.blog זמינים כעת
 </iw-IL>
 <id>
-16,4:
-Yang Baru:
-
-Editor Blok: Kini Anda dapat memasukkan Blok File, yang menyediakan tombol unduh untuk berbagai file seperti dokumen. Kami juga telah memperbaiki kesalahan yang ada pada blok Judul dan Galeri.
-
-Daftar Pos: Dengan tombol “Duplikat”, Anda sekarang dapat menyalin sebuah pos di daftar Pos Blog.
-
-Situs Saya: Kami juga telah memperbaiki crash yang terjadi ketika menyunting judul situs Anda.
-
+16.7:
+- Pelanggan Jetpack kini dapat memulihkan situs atau mengunduh cadangan, memindai, dan memperbaiki ancaman
+- Berbagai pembaruan editor blok, termasuk kemampuan untuk memasang jangkar di blok Judul
+- Penyaring baru untuk pos yang belum dibaca dan kemampuan untuk menandai pos sebagai dilihat/belum dilihat di Pembaca
+- Subdomain .blog sudah tersedia
 </id>
 <it-IT>
-16.4:
-Novità:
-
-Editor a blocchi: ora puoi inserire un blocco file che colloca un pulsante di scaricamento per file come documenti.  Abbiamo anche risolto i problemi relativi ai blocchi Titolo e Galleria.
-
-Elenco di articoli: ora puoi copiare un articolo nel tuo elenco di articoli del blog con il pulsante "Duplica".
-
-Il mio sito: abbiamo anche risolto un arresto anomalo che si verificava durante la modifica del titolo del sito.
-
+16.7:
+- I clienti di Jetpack possono ora ripristinare un sito o un scaricare un backup, scansionare e risolvere le minacce
+- Vari aggiornamenti dell'editor a blocchi, inclusa la possibilità di impostare le ancore nel blocco Titolo
+- Nuovo filtro di articoli non letti e possibilità di contrassegnare gli articoli come letti/non letti nel Reader
+- Sono ora disponibili i sottodomini .blog
 </it-IT>
 <ja-JP>
-16.4:
-最新情報 :
-
-ブロックエディター : ドキュメントなどのファイルのダウンロードボタンを配置するファイルブロックを挿入できるようになりました。 また、Heading ブロックと Gallery ブロックの問題に対応しました。
-
-投稿リスト : ブログ投稿リストの 「複製」 ボタンを使用して投稿をコピーできるようになりました。
-
-参加サイト : サイトタイトルの編集中に発生するクラッシュを修正しました。
-
+16.7:
+- Jetpack をご利用のお客様は、サイトの復元やバックアップのダウンロード、スキャン、脅威の修正を実行できるようになりました
+- 見出しブロックにアンカーを設定する機能など、ブロックエディターの各種更新
+- 未読投稿の新しいフィルターと、リーダーで投稿に既読 / 未読のマークを付ける機能
+- .blog サブドメインが利用可能に
 </ja-JP>
 <ko-KR>
-16.4:
-새소식:
-
-블록 편집기: 이 문서와 같은 파일을 배치할 수 있는 파일 블록을 삽입할 수 있습니다. 헤딩과 갤러리 블록의 문제도 해결했습니다.
-
-글 목록: 이제 블로그 글 목록의 “복제” 버튼으로 글을 복사할 수 있습니다.
-
-내 사이트: 사이트 제목을 편집하는 동안 일어나는 충돌도 고쳤습니다.
-
+16.7:
+- 이제 젯팩 고객이 사이트를 복원하거나 백업을 다운로드하고, 위협을 스캔 및 해결할 수 있습니다.
+- 헤딩요소 블록에 앵커를 설정하는 기능을 포함하여 블록 편집기의 다양한 기능 업데이트
+- 새로운 읽지 않은 글 필터 및 리더에 글을 읽음/안 읽음으로 표시하는 기능
+- 이제 .blog를 하위 도메인으로 사용 가능
 </ko-KR>
 <nl-NL>
-16.4:
-Wat is er nieuw:
-
-Blok-editor: je kan nu een bestandsblok invoegen, welke een downloadknop plaatst voor bestanden zoals documenten. We hebben ook problemen met de blokken heading en galerij aangepakt.
-
-Berichtenlijst: je kan nu een bericht kopiëren met de knop "Dupliceren" in je lijst met blogberichten.
-
-Mijn site: we hebben ook een crash verholpen die optrad tijdens het bewerken van je sitetitel.
-
+16.7:
+- Jetpack klanten kunnen nu een site terugzetten of een back-up downloaden, scannen, en bedreigingen oplossen
+- Verschillende blok-editor updates, inclusief de mogelijkheid om ankers in het heading-blok in te stellen
+- Nieuw filter voor ongelezen berichten en de mogelijkheid om berichten te markeren als gezien/niet gezien in de reader
+- .blog subdomeinen nu beschikbaar
 </nl-NL>
 <ru-RU>
-16.4:
-Что нового:
-
-Редактор блоков: теперь вы можете вставить блок файлов, который помещает кнопку загрузки для файлов, таких как документы. Мы также решили проблемы с блоками "Заголовок" и "Галерея".
-
-Список записей: теперь вы можете скопировать запись с помощью кнопки «Дублировать» в списке записей блога.
-
-Мой сайт: мы также исправили сбой, который мог произойти при редактировании заголовка вашего сайта.
+6.7:
+- Пользователи Jetpack теперь могут восстанавливать сайт или скачивать резервную копию, проверять и устранять угрозы.
+- Различные обновления редактора блоков, включая возможность устанавливать якоря в блоке заголовка.
+- Новый фильтр непрочитанных сообщений и возможность отмечать сообщения как (не)прочитанные в Чтиве
+- Теперь доступны поддомены .blog
 </ru-RU>
 <sv-SE>
-16.4:
-Nyheter:
-
-Blockredigeraren: Nu kan du infoga ett filblock som visar en nedladdningsknapp för t.ex. dokumentfiler. Vi har även löst problem med rubrik- och galleriblock.
-
-Inläggslistan: Nu går det att kopiera ett inlägg med knappen ”duplicera” i inläggslistan för din blogg.
-
-Min webbplats: När du redigerade webbplatsrubriken kunde appen krascha. Nu är det löst.
-
+16.7:
+- Nu kan Jetpack-kunder återställa en webbplats eller ladda hem en säkerhetskopia samt söka efter och åtgärda hot
+- En rad uppdateringar i blockredigeraren och bland annat möjligheten att ange länkmål i rubrikblocket
+- Nytt filter för ej lästa inlägg och möjlighet att ange inlägg som lästa/ej lästa i läsaren
+- Nu går det att välja underdomäner under .blog
 </sv-SE>
 <tr-TR>
-16.4:
-Yenilikler:
-
-Blok Düzenleyici: Artık, belgeler gibi dosyalar için indirme düğmesi yerleştiren bir Dosya bloğu ekleyebilirsiniz. Başlık ve Galeri bloklarıyla ilgili sorunları da giderdik.
-
-Gönderi Listesi: Artık Blog Gönderileri listenizdeki "Çoğalt" düğmesiyle bir gönderiyi kopyalayabilirsiniz
-
-Sitem: Site başlığınızı düzenlerken meydana gelen bir kilitlenme durumunu da düzelttik.
-
+16.7:
+- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
+- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
+- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
+- .blog alt alan adları artık kullanılabilir
 </tr-TR>
 <zh-CN>
-16.4：
-新增功能：
-
-区块编辑器：您现在可以插入文件区块，在此区块中为文档等文件添加下载按钮。 我们还解决了标题区块和画廊区块的问题。
-
-文章列表：您现在可以使用博文列表中的“复制”按钮来复制文章。
-
-我的站点：我们还修复了在编辑站点标题时发生崩溃的问题。
-
+16.7：
+- Jetpack 客户现在可以恢复站点或者下载备份、扫描和修复威胁
+- 一些区块编辑器更新，包括能够在标题区块中设置锚
+- 添加新的未读文章过滤器，并且能够在阅读器中将文章标记为“已读”/“未读”
+- .blog 子域现已可用
 </zh-CN>
 <zh-TW>
-16.4：
-新功能：
-
-區塊編輯器：你現在可以插入檔案區塊，內含文件等檔案的下載按鈕。 我們也解決了標題和圖庫區塊的問題。
-
-文章清單：你現在可以使用「網誌文章」清單的「複製」按鈕複製文章。
-
-我的網站：我們也修正了編輯網站標題時發生的當機問題。
-
+16.7：
+- Jetpack 顧客現在可以還原網站或下載備份、掃描與修正威脅
+- 多種區塊編輯器更新，包括在標題區塊設定錨點的功能
+- 新的未讀文章篩選功能，且可以在閱讀器中將文章標註為已看過/未看過
+- 已可使用 .blog 子網域
 </zh-TW>
