@@ -198,7 +198,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 CategoryListItemUiState(
                         it.slug,
                         it.title,
-                        it.emoji,
+                        it.emoji ?: "",
                         state.selectedCategoriesSlugs.contains(it.slug)
                 ) { onCategoryTapped(it.slug) }
             }
