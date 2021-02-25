@@ -18,7 +18,6 @@ repositories {
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
-    maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
     maven { url "https://dl.bintray.com/wordpress-mobile/maven/" }
 }
 
@@ -32,6 +31,8 @@ apply plugin: 'kotlin-android-extensions'
 // import the `submoduleGitHash()` function
 apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
 
+def buildGutenbergFromSource = gradle.ext.includedBuildGutenbergMobilePath != null
+
 android {
     compileSdkVersion 29
 
@@ -40,7 +41,7 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 29
-        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", "false"
+        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", buildGutenbergFromSource.toString()
     }
     compileOptions {
         sourceCompatibility 1.8
@@ -73,6 +74,13 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.25'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
+    implementation "com.facebook.react:react-native:0.61.5"  // From node_modules
+    implementation('com.google.android.exoplayer:exoplayer:2.9.3') {
+        exclude group: 'com.android.support'
+    }
+    implementation('com.google.android.exoplayer:extension-okhttp:2.9.3') {
+        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
+    }
 
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
         exclude group: "com.android.volley"
@@ -98,9 +106,11 @@ dependencies {
     // A starting point might be the fact that the
     // @wordpress_react-native-bridge-release AAR contains only an empty file
     // named hermes-release.aar in its libs folder.
-    def hermesPath = './libs/hermes/'
-    debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
-    releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
+    if (!buildGutenbergFromSource) {
+        def hermesPath = './libs/hermes/'
+        debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
+        releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
+    }
 }
 
 signing {

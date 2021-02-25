@@ -7,8 +7,8 @@
     <item
         android:id="@+id/debugmenu"
         android:title="@string/menu_debug"
-        android:orderInCategory="0"
-        android:icon="@drawable/ic_launcher">
+        android:orderInCategory="0">
+        //android:icon="@drawable/ic_launcher">
     </item>
 
 </menu>

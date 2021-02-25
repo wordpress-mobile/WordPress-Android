@@ -7,7 +7,7 @@ buildscript {
     ext.kotlin_ktx_version = '1.2.0'
     ext.wordPressUtilsVersion = '1.30.3-beta.3'
     ext.detektVersion = '1.15.0'
-    ext.gutenbergMobileVersion = 'd8e250e06eff12b44995e3e594ddf10a6b000a55-built-locally'
+    ext.gutenbergMobileVersion = 'locally-built-by-oguz-50'
 
     repositories {
         google()
@@ -36,7 +36,15 @@ allprojects {
         jcenter()
         maven { url "https://dl.bintray.com/wordpress-mobile/maven" }
         maven { url "https://jitpack.io" }
-        maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
+
+        if (gradle.ext.includedBuildGutenbergMobilePath) {
+            maven {
+                // All of React Native (JS, Obj-C sources, Android binaries) is installed from npm
+                url "$rootDir/$gradle.ext.includedBuildGutenbergMobilePath/gutenberg/node_modules/react-native/android"
+            }
+        } else {
+            maven { url "https://dl.bintray.com/wordpress-mobile/react-native-mirror/" }
+        }
 
         flatDir {
             dirs '../aars'

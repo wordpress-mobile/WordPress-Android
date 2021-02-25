@@ -24,6 +24,7 @@ project(':WordPressMocks').projectDir = new File(rootProject.projectDir, propert
 gradle.ext.fluxCBinaryPath = "com.github.wordpress-mobile.WordPress-FluxC-Android"
 gradle.ext.wputilsBinaryPath = "org.wordpress:utils"
 gradle.ext.gutenbergMobileBinaryPath = "com.github.wordpress-mobile.gutenberg-mobile:react-native-gutenberg-bridge"
+gradle.ext.includedBuildGutenbergMobilePath = null
 
 def localBuilds = new File('local-builds.gradle')
 if (localBuilds.exists()) {
@@ -59,11 +60,11 @@ if (localBuilds.exists()) {
     }
 
     if (ext.has("localGutenbergMobilePath")) {
+        gradle.ext.includedBuildGutenbergMobilePath = ext.localGutenbergMobilePath
         includeBuild("$ext.localGutenbergMobilePath/gutenberg/packages/react-native-bridge/android") {
-            name = "react-native-bridge"
             dependencySubstitution {
                 println "Substituting gutenberg-mobile with the local build"
-                substitute module("$gradle.ext.gutenbergMobileBinaryPath") with project(':')
+                substitute module("$gradle.ext.gutenbergMobileBinaryPath") with project(':react-native-bridge')
             }
         }
     }
