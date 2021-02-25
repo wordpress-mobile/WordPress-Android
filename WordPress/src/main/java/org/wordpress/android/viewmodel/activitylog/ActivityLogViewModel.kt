@@ -71,14 +71,14 @@ class ActivityLogViewModel @Inject constructor(
     private val postRestoreUseCase: PostRestoreUseCase,
     private val getRestoreStatusUseCase: GetRestoreStatusUseCase,
     private val getBackupDownloadStatusUseCase: GetBackupDownloadStatusUseCase,
+    private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase,
     private val resourceProvider: ResourceProvider,
     private val activityLogFiltersFeatureConfig: ActivityLogFiltersFeatureConfig,
     private val backupDownloadFeatureConfig: BackupDownloadFeatureConfig,
     private val dateUtils: DateUtils,
     private val activityLogTracker: ActivityLogTracker,
     private val jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase,
-    private val restoreFeatureConfig: RestoreFeatureConfig,
-    private val postDismissBackupDownloadUseCase: PostDismissBackupDownloadUseCase
+    private val restoreFeatureConfig: RestoreFeatureConfig
 ) : ViewModel() {
     enum class ActivityLogListStatus {
         CAN_LOAD_MORE,

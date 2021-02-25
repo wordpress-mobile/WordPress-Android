@@ -26,6 +26,8 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     @Mock lateinit var activityLogStore: ActivityLogStore
     @Mock lateinit var siteModel: SiteModel
 
+    private val downloadId = 100L
+
     @Before
     fun setup() = test {
         useCase = PostDismissBackupDownloadUseCase(networkUtilsWrapper, activityLogStore, TEST_DISPATCHER)
@@ -45,9 +47,8 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
     fun `given invalid response, when dismiss is triggered, then false is returned`() = test {
         whenever(activityLogStore.dismissBackupDownload(any())).thenReturn(
                 OnDismissBackupDownload(
-                        downloadId, DismissBackupDownloadError(
-                        INVALID_RESPONSE
-                ), DISMISS_BACKUP_DOWNLOAD
+                        downloadId, DismissBackupDownloadError(INVALID_RESPONSE),
+                        DISMISS_BACKUP_DOWNLOAD
                 )
         )
 
@@ -61,9 +62,8 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
         whenever(activityLogStore.dismissBackupDownload(any()))
                 .thenReturn(
                         OnDismissBackupDownload(
-                                downloadId, DismissBackupDownloadError(
-                                GENERIC_ERROR
-                        ), DISMISS_BACKUP_DOWNLOAD
+                                downloadId, DismissBackupDownloadError(GENERIC_ERROR),
+                                DISMISS_BACKUP_DOWNLOAD
                         )
                 )
 
@@ -86,6 +86,4 @@ class PostDismissBackupDownloadUseCaseTest : BaseUnitTest() {
 
         assertThat(result).isEqualTo(true)
     }
-
-    private val downloadId = 100L
 }

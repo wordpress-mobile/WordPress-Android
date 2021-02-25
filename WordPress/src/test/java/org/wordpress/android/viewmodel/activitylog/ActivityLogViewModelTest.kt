@@ -139,14 +139,14 @@ class ActivityLogViewModelTest {
                 postRestoreUseCase,
                 getRestoreStatusUseCase,
                 getBackupDownloadStatusUseCase,
+                postDismissBackupDownloadUseCase,
                 resourceProvider,
                 activityLogFiltersFeatureConfig,
                 backupDownloadFeatureConfig,
                 dateUtils,
                 activityLogTracker,
                 jetpackCapabilitiesUseCase,
-                restoreFeatureConfig,
-                postDismissBackupDownloadUseCase
+                restoreFeatureConfig
         )
         viewModel.site = site
         viewModel.rewindableOnly = rewindableOnly
@@ -1666,7 +1666,6 @@ class ActivityLogViewModelTest {
                         any(),
                         any()
                 )
-        )
-                .thenReturn(BACKUP_NOTICE)
+        ).thenReturn(BACKUP_NOTICE)
     }
 }
