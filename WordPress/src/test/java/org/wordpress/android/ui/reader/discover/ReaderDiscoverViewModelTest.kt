@@ -7,6 +7,7 @@ import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.never
+import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
@@ -33,6 +34,7 @@ import org.wordpress.android.models.discover.ReaderDiscoverCards
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.POPULARITY
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -113,7 +115,6 @@ class ReaderDiscoverViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private lateinit var viewModel: ReaderDiscoverViewModel
-    private val defaultSortingType = DiscoverSortingType.POPULARITY
 
     @Before
     fun setUp() = test {
@@ -266,17 +267,17 @@ class ReaderDiscoverViewModelTest {
 
     @Test
     fun `if ReaderRecommendedBlogsCard exist then ReaderRecommendedBlogsCardUiState will be present`() =
-        test {
-            // Arrange
-            val uiStates = init(autoUpdateFeed = false).uiStates
+            test {
+                // Arrange
+                val uiStates = init(autoUpdateFeed = false).uiStates
 
-            // Act
-            fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
+                // Act
+                fakeDiscoverFeed.value = ReaderDiscoverCards(createReaderRecommendedBlogsCardList())
 
-            // Assert
-            val contentUiState = uiStates[1] as ContentUiState
-            assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
-        }
+                // Assert
+                val contentUiState = uiStates[1] as ContentUiState
+                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+            }
 
     @Test
     fun `if ReaderPostCard exist then ReaderPostUiState will be present in the ContentUIState`() = test {
@@ -522,25 +523,46 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
-        val navigaitonObserver = init()
-        viewModel.sortingType.observeForever(mock())
-        val currentSortingType = viewModel.sortingType.value
+        val currentSortingType = viewModel.sortingType
+
         // Act
         viewModel.swipeToRefresh()
+
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
     }
 
     @Test
     fun `Data are refreshed when the user clicks on retry`() = test {
         // Arrange
-        val navigaitonObserver = init()
-        viewModel.sortingType.observeForever(mock())
-        val currentSortingType = viewModel.sortingType.value
+        val currentSortingType = viewModel.sortingType
         // Act
         viewModel.onRetryButtonClick()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
+    }
+
+    @Test
+    fun `Data is refreshed when user changes sorting type`() = test {
+        // Arrange
+        val sortingType = POPULARITY
+        // Act
+        viewModel.onSortingTypeChanged(sortingType)
+        // Assert
+        verify(readerDiscoverDataProvider).refreshCards(sortingType)
+    }
+
+    @Test
+    fun `Data is not refreshed for successive change the sorting type`() = test {
+        // Arrange
+        val sortingType = POPULARITY
+
+        // Act
+        viewModel.onSortingTypeChanged(sortingType)
+        viewModel.onSortingTypeChanged(sortingType)
+
+        // Assert
+        verify(readerDiscoverDataProvider, times(1)).refreshCards(sortingType)
     }
 
     @Test
@@ -596,15 +618,14 @@ class ReaderDiscoverViewModelTest {
     fun `Action button on error empty screen invokes refresh cards`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
-        viewModel.sortingType.observeForever(mock())
-        val currentSortingType = viewModel.sortingType.value
+        val currentSortingType = viewModel.sortingType
 
         viewModel.start(parentViewModel)
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Act
         (viewModel.uiState.value as RequestFailedUiState).action.invoke()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
