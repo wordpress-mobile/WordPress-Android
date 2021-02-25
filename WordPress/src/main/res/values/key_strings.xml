@@ -2,7 +2,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!-- layout tags - do not translate -->
     <string name="fragment_tag_reader_post_list" translatable="false">fragment_reader_post_list</string>
-    <string name="fragment_tag_reader_post_detail" translatable="false">fragment_reader_post_detail</string>
     <string name="fragment_tag_publicize_list" translatable="false">fragment_publicize_list</string>
     <string name="fragment_tag_publicize_detail" translatable="false">fragment_publicize_detail</string>
     <string name="fragment_tag_publicize_webview" translatable="false">fragment_publicize_webview</string>
