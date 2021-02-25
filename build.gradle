@@ -156,7 +156,6 @@ ext {
     daggerVersion = '2.29.1'
     fluxCVersion = 'd46880b76'
 
-
     appCompatVersion = '1.0.2'
     coreVersion = '1.2.0'
     constraintLayoutVersion = '1.1.3'

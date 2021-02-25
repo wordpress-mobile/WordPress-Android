@@ -118,6 +118,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongMethod")
 class MySiteViewModel
 @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -135,7 +136,7 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    scanAndBackupSource: ScanAndBackupSource,
+    private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
@@ -553,6 +554,7 @@ class MySiteViewModel
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
         quickStartRepository.clear()
+        scanAndBackupSource.clear()
         super.onCleared()
     }
 

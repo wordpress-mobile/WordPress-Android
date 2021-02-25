@@ -246,6 +246,7 @@ class MySiteFragment : Fragment(),
     override fun onDestroy() {
         selectedSiteRepository.clear()
         job.cancel()
+        jetpackCapabilitiesUseCase.clear()
         super.onDestroy()
     }
 

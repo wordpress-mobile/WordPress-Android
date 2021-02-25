@@ -1014,7 +1014,6 @@
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
-    <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_title">No activity yet</string>
@@ -1098,6 +1097,9 @@
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; 1 potential threat found</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
@@ -3273,7 +3275,9 @@
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Double tap to move the block to the left</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Double tap to move the block to the right</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Double tap to move the block up</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Double tap to open Action Sheet to edit, replace, or clear the image</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">Double tap to open Action Sheet with available options</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Double tap to open Bottom Sheet with available options</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Double tap to redo last change</string>
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
@@ -3287,6 +3291,7 @@
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edit focal point</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>

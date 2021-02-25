@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:38:05+0000
+Translation-Revision-Date: 2021-02-19 17:23:44+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">取消钉选</string>
+    <string name="quick_start_list_review_pages_subtitle">查看您的页面并进行更改，或者添加或移除页面。</string>
+    <string name="quick_start_list_view_site_title">访问您的站点</string>
+    <string name="quick_start_list_upload_icon_subtitle">添加站点图标，打造精美的专业外观。</string>
+    <string name="quick_start_list_follow_site_subtitle">发现并关注能激发您灵感的站点。</string>
+    <string name="quick_start_list_enable_sharing_title">启用共享</string>
+    <string name="quick_start_list_enable_sharing_subtitle">自动将新文章共享到您的社交媒体</string>
+    <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。</string>
+    <string name="quick_start_list_check_stats_title">查看您的统计信息</string>
+    <string name="backup_download_status_failure_bullet2">我们仍会尝试创建您的可下载备份文件。</string>
+    <string name="backup_download_status_failure_bullet1">我们找不到可说明您的可下载备份所需时长的状态。</string>
+    <string name="backup_download_status_failure_heading">呃，我们找不到您的可下载备份状态</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">复选标记图标</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">时钟图标</string>
+    <string name="restore_status_failure_bullet3">我们将在完成时通知您。</string>
+    <string name="restore_status_failure_bullet2">我们仍会尝试恢复您的站点。</string>
+    <string name="restore_status_failure_bullet1">我们找不到可说明您的恢复所需时长的状态。</string>
+    <string name="restore_status_failure_heading">呃，我们找不到您的恢复状态</string>
+    <string name="restore_complete_failed_description">我们无法恢复您的站点</string>
+    <string name="restore_warning_action_button">确认</string>
+    <string name="restore_warning_description_with_two_parameters">是否确定要将您的站点恢复到 %1$s %2$s？\n        您在此之后的所有更改都将丢失。</string>
+    <string name="backup_download_complete_failed_description">我们无法为您创建备份</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">（不包括主题、插件和上传）</string>
+    <string name="backup_item_contents">WP-content 目录</string>
+    <string name="backup_item_roots">WordPress 根</string>
+    <string name="backup_download_progress_action_button_content_description">“完成时通知我”按钮</string>
+    <string name="backup_download_progress_action_button">完成时通知我！</string>
+    <string name="backup_download_details_choose_items_header">此下载包含的项目</string>
+    <string name="gutenberg_native_uploading">正在上传…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重用区块在 iOS 版 WordPress 上不可编辑</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">可重用区块在 Android 版 WordPress 上不可编辑</string>
+    <string name="gutenberg_native_replace_file">替换文件</string>
+    <string name="gutenberg_native_replace_audio">替换音频</string>
+    <string name="gutenberg_native_problem_opening_the_audio">打开音频时出现问题</string>
+    <string name="gutenberg_native_open">打开</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">没有可以处理此请求的应用程序。</string>
+    <string name="gutenberg_native_lock_icon">锁形图标</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">无法插入音频文件。 请轻点以查看选项。</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">轻点两次以选择音频文件</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">轻点两次以倾听音频文件</string>
+    <string name="gutenberg_native_choose_audio">选择音频</string>
+    <string name="gutenberg_native_audio_player">音频播放器</string>
+    <string name="gutenberg_native_audio_file">音频文件</string>
+    <string name="gutenberg_native_audio_caption_s">音频说明。 %s</string>
+    <string name="gutenberg_native_audio_caption_empty">音频说明。 空</string>
+    <string name="gutenberg_native_add_audio">添加音频</string>
+    <string name="continue_with_wpcom">使用 WordPress.com 登录或注册</string>
+    <string name="photo_picker_use_audio">使用此音频</string>
+    <string name="photo_picker_choose_audio">从设备中选择音频</string>
+    <string name="people_optional_custom_message_helper_text">可选：输入一条自定义消息，与您的邀请一起发送。</string>
+    <string name="people_learn_more_about_roles">了解更多关于角色的信息</string>
+    <string name="threat_status_fixed">固定</string>
+    <string name="threat_found_header">找到</string>
+    <string name="scan_here_to_help">此处可获取帮助</string>
+    <string name="scan_idle_with_threats_description">扫描发现 %2s 存在 %1s 项潜在威胁。 请在下面查看这些威胁并采取行动，或者轻点“全部修复”按钮。 如果您需要，我们%3$s。</string>
+    <string name="scan_idle_manual_scan_description">要重新审查您的站点，请手动进行扫描或等待 Jetpack 今日稍后扫描您的站点。</string>
+    <string name="scan_provisioning_description">欢迎使用 Jetpack Scan！ 我们正在检查您的站点，准备执行完整扫描。 如果发现任何可能影响扫描的问题，我们将向您发送通知，然后开始您的第一次完整扫描。</string>
+    <string name="scan_scanning_is_initial_description">欢迎使用 Jetpack Scan，我们会立即优先浏览您的站点并很快给您结果。</string>
+    <string name="scan_fixing_threats_description">我们正在后台努力修复这些威胁。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
+    <string name="scan_scanning_description">扫描完成后，我们会向您发送通知。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
+    <string name="scan_fixing_threats_title">修复威胁</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan 无法完成站点扫描。 请检查您的站点是否已经关闭。如果没有，请再试一次。 如果已经关闭，或 Jetpack Scan 仍然有问题，请联系我们的支持团队。</string>
+    <string name="scan_request_failed_title">出错了</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">备份站点</string>
+    <string name="activity_log_currently_backing_up_message">通过 %1$s %2$s 备份站点</string>
+    <string name="activity_log_currently_backing_up_title">创建可下载备份</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">您的站点已成功备份</string>
+    <string name="activity_log_backup_finished_snackbar_message">您的站点已成功备份\n已通过 %1$s %2$s 备份</string>
+    <string name="activity_log_backup_started_snackbar_message">您的站点正在备份\n通过 %1$s %2$s 备份</string>
+    <string name="pick_audio">选择音频</string>
     <string name="restore_complete_failed_icon_content_description">“错误”图标</string>
     <string name="restore_complete_failed_action_button_content_description">“完成”按钮</string>
     <string name="restore_complete_failed_title">恢复失败</string>
@@ -36,12 +107,12 @@ Language: zh_CN
     <string name="web_preview_mobile">移动设备</string>
     <string name="quick_start_card_menu_remove">请勿再次显示</string>
     <string name="quick_start_card_menu_hide">隐藏</string>
-    <string name="quick_start_card_menu_pin">固定此项</string>
     <string name="quick_start_dialog_review_pages_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
     <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
     <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
     <string name="quick_start_dialog_edit_homepage_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
+    <string name="quick_start_card_menu_pin">置顶</string>
     <string name="quick_start_dialog_edit_homepage_message">在您站点的主页上更改、添加或删除内容。</string>
     <string name="quick_start_dialog_edit_homepage_title">编辑您的主页</string>
     <string name="reader_menu_mark_as_unseen">标记为未读</string>
@@ -58,7 +129,6 @@ Language: zh_CN
     <string name="threat_fix_all_warning_title">修复所有威胁</string>
     <string name="threat_ignore_error_message">忽略威胁时出错。 请联系支持人员。</string>
     <string name="threat_ignore_success_message">已忽略威胁。</string>
-    <string name="threat_ignore_warning">您不应忽视安全性问题，除非您确信该问题不会带来负面影响。 如果您选择忽略此威胁，它将继续存留在您的站点 &lt;b>%s&lt;/b>。</string>
     <string name="threat_fix_error_message">修复威胁时出错。 请联系我们的支持人员。</string>
     <string name="threat_item_sub_header_status_ignored">已忽略威胁</string>
     <string name="threat_fixing">修复威胁</string>
@@ -73,6 +143,7 @@ Language: zh_CN
     <string name="backup_active_filter_empty_subtitle">尝试调整您的日期范围</string>
     <string name="backup_active_filter_empty_title">未找到匹配的备份</string>
     <string name="backup_empty_subtitle">您的第一个备份将在 24 小时显示在此处，备份完成后，您会收到通知。</string>
+    <string name="threat_item_sub_header_status_fixed_on">威胁已于 %s 修复</string>
     <string name="backup_empty_title">您的第一个备份即将准备就绪</string>
     <string name="request_failed_message">处理请求时出现问题。 请稍后重试。</string>
     <string name="gutenberg_native_move_to_bottom">移到底部</string>
@@ -137,6 +208,7 @@ Language: zh_CN
     <string name="scan_in_minutes_ago">%s 分钟以前</string>
     <string name="scan_in_hours_ago">%s 小时以前</string>
     <string name="scan_this_site">此站点</string>
+    <string name="scan_idle_last_scan_description">上次 Jetpack 扫描运行了 %s，没有发现任何风险。 %s</string>
     <string name="scan_idle_threats_found_title">您的站点可能存在风险</string>
     <string name="scan_idle_no_threats_found_title">不必担心</string>
     <string name="scan_again">重新扫描</string>
@@ -409,7 +481,6 @@ Language: zh_CN
     <string name="send_link_by_email">通过电子邮件发送链接</string>
     <string name="reset_your_password">重置密码</string>
     <string name="reader_error_request_failed_title">处理请求时出现问题。 请稍后重试。</string>
-    <string name="quick_start_list_update_site_title_subtitle">为您的站点提供一个反映其个性和主题的名称。 第一印象很重要！</string>
     <string name="quick_start_list_update_site_title_title">设置您的站点标题</string>
     <string name="quick_start_dialog_update_site_title_message_short">轻点 &lt;b>%1$s&lt;/b> 以设置新标题</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">将此文章放入回收站还将放弃本地更改，是否确定要继续？</string>
@@ -2045,6 +2116,7 @@ Language: zh_CN
     <string name="invite_error_invalid_usernames_one">无法发送: 用户名或邮箱地址无效</string>
     <string name="invite_error_no_usernames">请添加至少一个用户名</string>
     <string name="invite">邀请</string>
+    <string name="invite_names_title">用户名或邮箱</string>
     <string name="send_link">发送链接</string>
     <string name="my_site_header_external">外部</string>
     <string name="invite_people">邀请用户</string>

@@ -230,7 +230,6 @@ Language: ku_TR
     <string name="send_link_by_email">Girêdanê bi emailê re bişîne</string>
     <string name="reset_your_password">Pêborîna xwe nûsaz bike</string>
     <string name="reader_error_request_failed_title">Di hêrana daxwazê de pirsgirêkek derket. Ji kerema xwe paşê dîsa biceribîne.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Nevekî bide malpera xwe bila li kesayet û mijara wê were. Dîtina ewil girîng e!</string>
     <string name="quick_start_list_update_site_title_title">Sernavê malpera xwe saz bike</string>
     <string name="quick_start_dialog_update_site_title_message_short">Ji bo sazkirina sernavekî nû, li &lt;b>%1$s&lt;/b>ê bitikîne</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Jêbirina vê şandiyê ew ê guhertinên derhêlî jî rake. Tu bi rastî jî dixwazî dewam bikî?</string>

@@ -97,12 +97,14 @@ class ThreatDetailsFragment : Fragment(R.layout.threat_details_fragment) {
     }
 
     private fun SnackbarMessageHolder.showSnackbar() {
-        val snackbar = WPSnackbar.make(
-            threat_details_layout,
-            uiHelpers.getTextOfUiString(requireContext(), message),
-            Snackbar.LENGTH_LONG
-        )
-        snackbar.show()
+        view?.let {
+            val snackbar = WPSnackbar.make(
+                    it,
+                    uiHelpers.getTextOfUiString(requireContext(), message),
+                    Snackbar.LENGTH_LONG
+            )
+            snackbar.show()
+        }
     }
 
     private fun showThreatActionDialog(holder: OpenThreatActionDialog) {

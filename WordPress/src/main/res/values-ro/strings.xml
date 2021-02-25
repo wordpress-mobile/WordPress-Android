@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 15:58:03+0000
+Translation-Revision-Date: 2021-02-11 17:38:01+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="quick_start_list_review_pages_subtitle">Verifică-ți paginile și fă modificări sau adaugă ori înlătură pagini.</string>
+    <string name="quick_start_card_menu_unpin">Anulează fixarea</string>
+    <string name="quick_start_list_view_site_title">Vizitează-ți situl</string>
+    <string name="quick_start_list_upload_icon_subtitle">Adaugă un icon sit pentru un aspect rafinat și profesionist.</string>
+    <string name="quick_start_list_follow_site_subtitle">Descoperă și urmărește siturile care te inspiră.</string>
+    <string name="quick_start_list_enable_sharing_title">Activează partajarea</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Partajezi automat articole noi în media socială.</string>
+    <string name="quick_start_list_update_site_title_subtitle">Dă-i sitului un nume care să-ți reflecte personalitatea și prin care să arăți la ce se referă.</string>
+    <string name="quick_start_list_check_stats_title">Vezi statisticile</string>
     <string name="backup_download_status_failure_bullet2">Vom încerca oricum să creăm fișierul cu copia de siguranță care poate fi descărcată.</string>
     <string name="backup_download_status_failure_bullet1">Nu am putut găsi starea pentru a spune cât timp va dura crearea copiei de siguranță care poate fi descărcată.</string>
     <string name="backup_download_status_failure_heading">Nu am putut găsi starea pentru copia de siguranță care poate fi descărcată</string>
@@ -101,12 +110,12 @@ Language: ro
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Nu arăta din nou</string>
     <string name="quick_start_card_menu_hide">Ascunde</string>
-    <string name="quick_start_card_menu_pin">Fixează asta</string>
     <string name="quick_start_dialog_review_pages_message">Modifică paginile, adaugă sau înlătură pagini pe sit.</string>
     <string name="quick_start_dialog_review_pages_title">Revizuiește paginile sitului</string>
     <string name="quick_start_dialog_review_pages_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Selectează %1$s Prima pagină %2$s pentru a edita prima pagină.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Selectează %1$s Pagini %2$s pentru a vedea lista cu pagini.</string>
+    <string name="quick_start_card_menu_pin">Fixează</string>
     <string name="quick_start_dialog_edit_homepage_title">Editează prima pagină</string>
     <string name="quick_start_dialog_edit_homepage_message">Modifică conținutul, adaugă sau înlătură conținut, pe prima pagină a sitului tău.</string>
     <string name="reader_marked_post_as_seen">Articolul a fost marcat ca văzut</string>
@@ -123,7 +132,7 @@ Language: ro
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>
     <string name="threat_ignore_success_message">Amenințarea a fost ignorată.</string>
-    <string name="threat_ignore_warning">Nu ar trebui să ignori o alertă de securitate decât dacă ești sigur că ea este inofensivă. Dacă alegi să ignori această amenințare, ea va rămâne pe situl tău &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_warning">Nu ar trebui să ignori o problemă de securitate decât dacă ești absolut sigur că ea este inofensivă. Dacă alegi să ignori această amenințare, ea va rămâne pe situl tău &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Eroare la înlăturarea amenințării. Te rog contactează suportul.</string>
     <string name="scan_history_ignored_threats_tab">Ignorate</string>
     <string name="scan_history_no_threats_found">Niciun element găsit</string>
@@ -505,7 +514,6 @@ Language: ro
     <string name="send_link_by_email">Trimite legătura prin email</string>
     <string name="check_email">Verifică emailurile primite</string>
     <string name="reader_error_request_failed_title">A fost o problemă la gestionarea cererii. Te rog reîncearcă mai târziu.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dă-i sitului un nume care să-i reflecte personalitatea și subiectul (tema). Prima impresie este foarte importantă!</string>
     <string name="quick_start_list_update_site_title_title">Setează titlul sitului</string>
     <string name="quick_start_dialog_update_site_title_message_short">Atinge &lt;b>%1$s&lt;/b> pentru a seta un nou titlu</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Aruncarea acestui articol la gunoi va anula și modificările locale, sigur vrei să continui?</string>

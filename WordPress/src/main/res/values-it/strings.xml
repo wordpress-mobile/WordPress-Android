@@ -1,11 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-05 15:57:41+0000
+Translation-Revision-Date: 2021-02-19 17:23:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="quick_start_card_menu_unpin">Rimuovi</string>
+    <string name="quick_start_list_review_pages_subtitle">Controlla le pagine e apporta modifiche oppure aggiungi o rimuovi le pagine.</string>
+    <string name="quick_start_list_view_site_title">Visita il tuo sito</string>
+    <string name="quick_start_list_upload_icon_subtitle">Aggiungi un\'icona al sito per un aspetto professionale e raffinato.</string>
+    <string name="quick_start_list_follow_site_subtitle">Scopri e segui i siti che ti ispirano.</string>
+    <string name="quick_start_list_enable_sharing_title">Abilita condivisione</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Condividi automaticamente nuovi articoli sui tuoi social media.</string>
+    <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento.</string>
+    <string name="quick_start_list_check_stats_title">Controlla le statistiche</string>
+    <string name="backup_download_status_failure_bullet2">Tenteremo ancora la creazione del tuo file di backup scaricabile.</string>
+    <string name="backup_download_status_failure_bullet1">Non è stato possibile trovare lo stato che indica quanto tempo richiederà il backup scaricabile.</string>
+    <string name="backup_download_status_failure_heading">Siamo spiacenti, non è possibile trovare lo stato del backup scaricabile</string>
+    <string name="restore_status_bullet_checkmark_icon_content_desc">Icona segno di spunta</string>
+    <string name="restore_status_bullet_clock_icon_content_desc">Icona orologio</string>
+    <string name="restore_status_failure_bullet3">Ti invieremo una notifica una volta completata l\'operazione.</string>
+    <string name="restore_status_failure_bullet2">Tenteremo ancora di ripristinare il sito.</string>
+    <string name="restore_status_failure_bullet1">Non è stato possibile trovare lo stato che indica quanto tempo richiederà il ripristino.</string>
+    <string name="restore_status_failure_heading">Siamo spiacenti, non è stato possibile trovare lo stato del ripristino</string>
+    <string name="restore_complete_failed_description">Impossibile ripristinare il sito</string>
+    <string name="restore_warning_action_button">Conferma</string>
+    <string name="restore_warning_description_with_two_parameters">Desideri ripristinare il sito al giorno %1$s alle ore %2$s?\n        Qualsiasi modifica apportata da quel momento andrà persa.</string>
+    <string name="backup_download_complete_failed_description">Impossibile creare il backup</string>
+    <string name="backup_item_sqls_hint">(SQL)</string>
+    <string name="backup_item_content_hint">(esclude temi, plugin e caricamenti)</string>
+    <string name="backup_item_contents">Directory wp-content</string>
+    <string name="backup_item_roots">Root WordPress</string>
+    <string name="backup_download_progress_action_button_content_description">Pulsante Informami una volta terminata l\'operazione</string>
+    <string name="backup_download_progress_action_button">Informami una volta terminata l\'operazione.</string>
+    <string name="backup_download_details_choose_items_header">Elementi inclusi in questo download</string>
+    <string name="gutenberg_native_uploading">Caricamento in corso…</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">I blocchi riutilizzabili non sono modificabili su WordPress per iOS</string>
+    <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">I blocchi riutilizzabili non sono modificabili su WordPress per Android</string>
+    <string name="gutenberg_native_replace_file">Sostituisci file</string>
+    <string name="gutenberg_native_replace_audio">Sostituisci</string>
+    <string name="gutenberg_native_problem_opening_the_audio">Problema durante l\'apertura dell\'audio</string>
+    <string name="gutenberg_native_open">APERTO</string>
+    <string name="gutenberg_native_no_application_can_handle_this_request">Nessuna applicazione può gestire questa richiesta.</string>
+    <string name="gutenberg_native_lock_icon">Icona di blocco</string>
+    <string name="gutenberg_native_failed_to_insert_audio_file_please_tap_for_options">Inserimento del file audio non riuscito. Tocca per le opzioni.</string>
+    <string name="gutenberg_native_double_tap_to_select_an_audio_file">Tocca due volte per selezionare un file audio</string>
+    <string name="gutenberg_native_double_tap_to_listen_the_audio_file">Tocca due volte per ascoltare il file audio</string>
+    <string name="gutenberg_native_choose_audio">Scegli audio</string>
+    <string name="gutenberg_native_audio_player">Audio Player</string>
+    <string name="gutenberg_native_audio_file">file audio</string>
+    <string name="gutenberg_native_audio_caption_s">Didascalia audio. %s</string>
+    <string name="gutenberg_native_audio_caption_empty">Didascalia audio. Vuota</string>
+    <string name="gutenberg_native_add_audio">AGGIUNGI AUDIO</string>
+    <string name="continue_with_wpcom">Accedi o iscriviti con WordPress.com</string>
+    <string name="photo_picker_use_audio">Usa questo audio</string>
+    <string name="photo_picker_choose_audio">Scegli l\'audio dal dispositivo</string>
+    <string name="people_optional_custom_message_helper_text">Facoltativo: inserisci un messaggio personalizzato da inviare insieme all\'invito.</string>
+    <string name="people_learn_more_about_roles">Scopri di più sui ruoli</string>
+    <string name="threat_status_fixed">Corretto</string>
+    <string name="threat_found_header">Trovato</string>
+    <string name="scan_here_to_help">qui per aiutare</string>
+    <string name="scan_idle_with_threats_description">La scansione ha trovato %1s potenziali minacce con %2s. Esamina questi elementi di seguito oppure tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
+    <string name="scan_idle_manual_scan_description">Per esaminare il sito nuovamente, esegui una scansione manuale o attendi che Jetpack scansioni il sito più tardi in giornata.</string>
+    <string name="scan_provisioning_description">Jetpack Scan ti dà il benvenuto! Stiamo esaminando l\'ambito del tuo sito, impostando l\'esecuzione di una scansione completa. Ti avviseremo se riscontreremo problemi che possono influire su una scansione, quindi verrà avviata la tua prima scansione completa.</string>
+    <string name="scan_scanning_is_initial_description">Jetpack Scan ti dà il benvenuto. Stiamo analizzando il tuo sito per la prima volta e presto riceverai i risultati.</string>
+    <string name="scan_fixing_threats_description">Stiamo facendo il possibile per risolvere queste minacce in background. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
+    <string name="scan_scanning_description">Ti invieremo una notifica al completamento della scansione. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
+    <string name="scan_fixing_threats_title">Risoluzione delle minacce</string>
+    <string name="scan_start_request_failed_subtitle">Jetpack Scan non ha potuto completare una scansione del sito. Verifica se il tuo sito non è attivo, in caso contrario riprova. Se lo è, o se Jetpack Scan continua ad avere problemi, contatta il nostro team di supporto.</string>
+    <string name="scan_request_failed_title">Si è verificato un problema.</string>
+    <string name="activity_log_currently_backing_up_message_no_dates">Backup del sito in corso</string>
+    <string name="activity_log_currently_backing_up_message">Backup del sito in corso da %1$s %2$s</string>
+    <string name="activity_log_currently_backing_up_title">Creazione di un backup scaricabile in corso</string>
+    <string name="activity_log_backup_finished_snackbar_message_no_dates">Il backup del tuo sito è stato eseguito correttamente</string>
+    <string name="activity_log_backup_finished_snackbar_message">Il backup del tuo sito è stato eseguito correttamente\nBackup eseguito da %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">È stato eseguito il backup del sito\nBackup in corso da %1$s %2$s</string>
+    <string name="pick_audio">Seleziona audio</string>
     <string name="restore_complete_failed_icon_content_description">Icona Errore</string>
     <string name="restore_complete_failed_action_button_content_description">Pulsante Fatto</string>
     <string name="restore_complete_failed_title">Ripristino non riuscito</string>
@@ -36,7 +107,7 @@ Language: it
     <string name="web_preview_mobile">Dispositivo mobile</string>
     <string name="quick_start_card_menu_remove">Non mostrare più</string>
     <string name="quick_start_card_menu_hide">Nascondi</string>
-    <string name="quick_start_card_menu_pin">Aggancialo</string>
+    <string name="quick_start_card_menu_pin">Aggancia</string>
     <string name="quick_start_dialog_review_pages_message_short">Seleziona %1$s Pagine %2$s per visualizzare l\'elenco delle tue pagine.</string>
     <string name="quick_start_dialog_review_pages_message">Modifica, aggiungi o rimuovi le pagine del tuo sito.</string>
     <string name="quick_start_dialog_review_pages_title">Verifica le pagine del sito</string>
@@ -58,9 +129,10 @@ Language: it
     <string name="threat_fix_all_warning_title">Risolvi tutte le minacce</string>
     <string name="threat_ignore_error_message">Errore mentre la minaccia veniva ignorata. Contatta il supporto.</string>
     <string name="threat_ignore_success_message">Minaccia ignorata.</string>
-    <string name="threat_ignore_warning">Non dovresti ignorare un elemento di sicurezza a meno che tu non sia assolutamente certo che sia innocuo. Se scegli di ignorare questa minaccia, rimarrà sul tuo sito &lt;b>%s&lt;/b>.</string>
+    <string name="threat_ignore_warning">Non dovresti ignorare un problema di sicurezza a meno che tu non sia assolutamente certo che sia innocuo. Se scegli di ignorare questa minaccia, rimarrà sul tuo sito &lt;b>%s&lt;/b>.</string>
     <string name="threat_fix_error_message">Errore durante la risoluzione della minaccia. Contatta il nostro supporto.</string>
     <string name="threat_item_sub_header_status_ignored">Minaccia ignorata</string>
+    <string name="threat_item_sub_header_status_fixed_on">Minaccia risolta su %s</string>
     <string name="threat_fixing">Risoluzione della minaccia</string>
     <string name="scan_history_ignored_threats_tab">Ignorata</string>
     <string name="scan_history_no_threats_found">Nessun elemento trovato</string>
@@ -137,6 +209,7 @@ Language: it
     <string name="scan_in_minutes_ago">%s minuti fa</string>
     <string name="scan_in_hours_ago">%s ore fa</string>
     <string name="scan_this_site">questo sito</string>
+    <string name="scan_idle_last_scan_description">L\'ultima scansione di Jetpack è stata eseguita il %s e non abbiamo trovato alcun rischio. %s</string>
     <string name="scan_idle_threats_found_title">Il sito potrebbe essere a rischio</string>
     <string name="scan_idle_no_threats_found_title">Non preoccuparti di nulla</string>
     <string name="scan_again">Esegui di nuovo la scansione</string>
@@ -155,6 +228,8 @@ Language: it
     <string name="activity_log_active_filter_empty_subtitle">Prova a regolare l’intervallo di date o i filtri del tipo attività</string>
     <string name="activity_log_active_filter_empty_title">Non è stato trovato alcun evento corrispondente</string>
     <string name="rewind">Ripristina</string>
+    <string name="backup_item_sqls">Database sito</string>
+    <string name="backup_item_roots_hint">(include file wp-config.php e qualsiasi file non WordPress)</string>
     <string name="backup_item_media_uploads">Caricamento di contenuti multimediali</string>
     <string name="backup_item_plugins">Plugin WordPress</string>
     <string name="backup_item_themes">Temi WordPress</string>
@@ -431,7 +506,6 @@ Language: it
     <string name="send_link_by_email">Invia link tramite e-mail</string>
     <string name="reset_your_password">Reimposta la password</string>
     <string name="reader_error_request_failed_title">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dai al tuo sito un nome che rifletta la tua personalità e l\'argomento. La prima impressione conta.</string>
     <string name="quick_start_list_update_site_title_title">Imposta il titolo del sito</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tocca &lt;b>%1$s&lt;/b> per impostare un nuovo titolo</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">L\'eliminazione di questo articolo comporterà anche l\'eliminazione delle modifiche apportate in locale. Continuare?</string>
@@ -2067,6 +2141,7 @@ Language: it
     <string name="invite_error_invalid_usernames_one">Non è possibile inviare l\'email: c\'è un nomi utente o un indirizzo non valido. </string>
     <string name="invite_error_no_usernames">Aggiungi almeno un nome utente</string>
     <string name="invite">Invita</string>
+    <string name="invite_names_title">Nome utente o e-mail</string>
     <string name="invite_people">Invita delle persone</string>
     <string name="my_site_header_external">Esterno</string>
     <string name="send_link">Invia link</string>

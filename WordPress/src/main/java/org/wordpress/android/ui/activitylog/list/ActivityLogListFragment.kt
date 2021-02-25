@@ -180,6 +180,7 @@ class ActivityLogListFragment : Fragment() {
                         activity,
                         viewModel.site,
                         it.activityId,
+                        it.isButtonVisible,
                         viewModel.rewindableOnly
                 )
             }

@@ -20,11 +20,14 @@ import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
-import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.backButton
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.previewTypeSelectorButton
+import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
+import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -44,6 +47,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
     @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ModalLayoutPickerViewModel
+    private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     companion object {
         const val MODAL_LAYOUT_PICKER_TAG = "MODAL_LAYOUT_PICKER_TAG"
@@ -95,10 +99,15 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         retryButton.setOnClickListener {
             viewModel.onRetryClicked()
         }
+        previewTypeSelectorButton.setOnClickListener {
+            viewModel.onThumbnailModePressed()
+        }
 
         setScrollListener()
 
         setupViewModel(savedInstanceState)
+
+        previewModeSelectorPopup = PreviewModeSelectorPopup(requireActivity(), previewTypeSelectorButton)
     }
 
     private fun setScrollListener() {
@@ -183,6 +192,10 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
                     actionableEmptyView.subtitle.setText(uiState.subtitle)
                 }
             }
+        })
+
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+            previewModeSelectorPopup.show(viewModel)
         })
 
         viewModel.onPreviewPageRequested.observe(this, Observer { request ->

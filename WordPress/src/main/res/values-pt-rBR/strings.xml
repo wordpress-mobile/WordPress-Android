@@ -276,7 +276,6 @@ Language: pt_BR
     <string name="send_link_by_email">Enviar link por e-mail</string>
     <string name="reset_your_password">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e tópico. As primeiras impressões contam!</string>
     <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>

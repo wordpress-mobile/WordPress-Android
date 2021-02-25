@@ -17,7 +17,8 @@ sealed class JetpackBackupRestoreListItemState(override val type: ViewType) : Je
         @DrawableRes val iconRes: Int? = null,
         @DimenRes val iconSizeResId: Int? = null,
         @DimenRes val textAlphaResId: Int? = null,
-        val text: UiString
+        val text: UiString,
+        val isVisible: Boolean = true
     ) : JetpackListItemState(ViewType.BACKUP_RESTORE_FOOTNOTE)
 
     data class BulletState(

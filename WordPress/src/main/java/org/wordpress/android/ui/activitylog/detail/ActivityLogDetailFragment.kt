@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.activitylog.detail
 
 import android.app.Activity.RESULT_OK
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,6 +15,9 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.ActivityLauncher.SOURCE_TRACK_EVENT_PROPERTY_KEY
 import org.wordpress.android.ui.RequestCodes
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowBackupDownload
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRestore
+import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailNavigationEvents.ShowRewindDialog
 import org.wordpress.android.ui.notifications.blocks.NoteBlockClickableSpan
 import org.wordpress.android.ui.notifications.utils.FormattableContentClickHandler
 import org.wordpress.android.ui.notifications.utils.NotificationsUtilsWrapper
@@ -21,6 +25,7 @@ import org.wordpress.android.ui.posts.BasicFragmentDialog
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.AVATAR_WITH_BACKGROUND
+import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ACTIVITY_LOG_REWIND_ID_KEY
 import org.wordpress.android.viewmodel.activitylog.ActivityLogDetailViewModel
@@ -53,26 +58,10 @@ class ActivityLogDetailFragment : Fragment() {
         super.onActivityCreated(savedInstanceState)
         activity?.let { activity ->
             viewModel = ViewModelProvider(activity, viewModelFactory)
-                    .get<ActivityLogDetailViewModel>(ActivityLogDetailViewModel::class.java)
+                    .get(ActivityLogDetailViewModel::class.java)
 
-            val intent = activity.intent
-            val (site, activityLogId) = when {
-                savedInstanceState != null -> {
-                    val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
-                    val activityLogId = requireNotNull(
-                            savedInstanceState.getString(
-                                    ACTIVITY_LOG_ID_KEY
-                            )
-                    )
-                    site to activityLogId
-                }
-                intent != null -> {
-                    val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
-                    val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY)
-                    site to activityLogId
-                }
-                else -> throw Throwable("Couldn't initialize Activity Log view model")
-            }
+            val (site, activityLogId) = sideAndActivityId(savedInstanceState, activity.intent)
+            val areButtonsVisible = areButtonsVisible(savedInstanceState, activity.intent)
 
             viewModel.activityLogItem.observe(viewLifecycleOwner, { activityLogModel ->
                 setActorIcon(activityLogModel?.actorIconUrl, activityLogModel?.showJetpackIcon)
@@ -107,27 +96,40 @@ class ActivityLogDetailFragment : Fragment() {
                 activityCreatedTime.text = activityLogModel?.createdTime
 
                 if (activityLogModel != null) {
-                    activityRewindButton.setOnClickListener {
-                        viewModel.onRewindClicked(activityLogModel)
+                    activityRestoreButton.setOnClickListener {
+                        viewModel.onRestoreClicked(activityLogModel)
+                    }
+                    activityDownloadBackupButton.setOnClickListener {
+                        viewModel.onDownloadBackupClicked(activityLogModel)
                     }
                 }
             })
 
-            viewModel.rewindAvailable.observe(viewLifecycleOwner, { available ->
-                activityRewindButton.visibility = if (available == true) View.VISIBLE else View.GONE
+            viewModel.restoreVisible.observe(viewLifecycleOwner, { available ->
+                activityRestoreButton.visibility = if (available == true) View.VISIBLE else View.GONE
+            })
+            viewModel.downloadBackupVisible.observe(viewLifecycleOwner, { available ->
+                activityDownloadBackupButton.visibility = if (available == true) View.VISIBLE else View.GONE
             })
 
             viewModel.navigationEvents.observe(viewLifecycleOwner, {
                 it.applyIfNotHandled {
                     when (this) {
-                        is ActivityLogDetailNavigationEvents.ShowRestore -> ActivityLauncher.showRestoreForResult(
+                        is ShowBackupDownload -> ActivityLauncher.showBackupDownloadForResult(
+                                requireActivity(),
+                                viewModel.site,
+                                model.activityID,
+                                RequestCodes.BACKUP_DOWNLOAD,
+                                buildTrackingSource()
+                        )
+                        is ShowRestore -> ActivityLauncher.showRestoreForResult(
                                 requireActivity(),
                                 viewModel.site,
                                 model.activityID,
                                 RequestCodes.RESTORE,
                                 buildTrackingSource()
                         )
-                        is ActivityLogDetailNavigationEvents.ShowRewindDialog -> onRewindButtonClicked(
+                        is ShowRewindDialog -> onRewindButtonClicked(
                                 model
                         )
                     }
@@ -140,8 +142,34 @@ class ActivityLogDetailFragment : Fragment() {
                 }
             })
 
-            viewModel.start(site, activityLogId)
+            viewModel.start(site, activityLogId, areButtonsVisible)
         }
+    }
+
+    private fun sideAndActivityId(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null -> {
+            val site = savedInstanceState.getSerializable(WordPress.SITE) as SiteModel
+            val activityLogId = requireNotNull(
+                    savedInstanceState.getString(
+                            ACTIVITY_LOG_ID_KEY
+                    )
+            )
+            site to activityLogId
+        }
+        intent != null -> {
+            val site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
+            val activityLogId = intent.getStringExtra(ACTIVITY_LOG_ID_KEY) as String
+            site to activityLogId
+        }
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
+    }
+
+    private fun areButtonsVisible(savedInstanceState: Bundle?, intent: Intent?) = when {
+        savedInstanceState != null ->
+            requireNotNull(savedInstanceState.getBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, true))
+        intent != null ->
+            intent.getBooleanExtra(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, true)
+        else -> throw Throwable("Couldn't initialize Activity Log view model")
     }
 
     override fun onCreateView(
@@ -156,6 +184,7 @@ class ActivityLogDetailFragment : Fragment() {
         super.onSaveInstanceState(outState)
         outState.putSerializable(WordPress.SITE, viewModel.site)
         outState.putString(ACTIVITY_LOG_ID_KEY, viewModel.activityLogId)
+        outState.putBoolean(ACTIVITY_LOG_ARE_BUTTONS_VISIBLE_KEY, viewModel.areButtonsVisible)
     }
 
     fun onRewindConfirmed(rewindId: String) {
@@ -197,15 +226,15 @@ class ActivityLogDetailFragment : Fragment() {
                     getString(R.string.activity_log_rewind_site),
                     getString(R.string.cancel)
             )
-            dialog.show(requireFragmentManager(), it)
+            dialog.show(parentFragmentManager, it)
         }
     }
 
     private fun buildTrackingSource() = requireActivity().intent?.extras?.let {
         val source = it.getString(SOURCE_TRACK_EVENT_PROPERTY_KEY)
-            when {
-                source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
-                else -> DETAIL_TRACKING_SOURCE
-            }
+        when {
+            source != null -> source + FORWARD_SLASH + DETAIL_TRACKING_SOURCE
+            else -> DETAIL_TRACKING_SOURCE
         }
+    }
 }
