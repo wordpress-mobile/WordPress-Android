@@ -2,7 +2,7 @@
 
 16.9
 -----
-
+* [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
 
 16.8
 -----
