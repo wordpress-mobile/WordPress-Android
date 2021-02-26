@@ -156,7 +156,10 @@ class ReaderInterestsViewModel @Inject constructor(
             updateUiState(
                     currentUiState.copy(
                             interestsUiState = updatedInterestsUiState,
-                            doneButtonUiState = currentUiState.getDoneButtonState(isInterestChecked = isChecked)
+                            doneButtonUiState = currentUiState.getDoneButtonState(
+                                    entryPoint = entryPoint,
+                                    isInterestChecked = isChecked
+                            )
                     )
             )
         }
@@ -298,13 +301,17 @@ class ReaderInterestsViewModel @Inject constructor(
         }
 
         fun getDoneButtonState(
+            entryPoint: EntryPoint,
             isInterestChecked: Boolean = false
         ): DoneButtonUiState {
             return if (this is ContentUiState) {
                 val disableDoneButton = interests.isEmpty() ||
                         (getCheckedInterestsUiState().size == 1 && !isInterestChecked)
                 if (disableDoneButton) {
-                    DoneButtonDisabledUiState()
+                    when (entryPoint) {
+                        EntryPoint.DISCOVER -> DoneButtonDisabledUiState()
+                        EntryPoint.SETTINGS -> DoneButtonDisabledUiState(R.string.reader_btn_done)
+                    }
                 } else {
                     DoneButtonEnabledUiState()
                 }
