@@ -543,6 +543,28 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
             }
 
+    @Test
+    fun `discover close reader screen on back button click`() {
+        // When
+        initViewModel()
+        viewModel.onBackButtonClick()
+
+        // Then
+        verify(parentViewModel, times(1)).onCloseReaderInterests()
+    }
+
+    @Test
+    fun `settings close reader screen on back button click`() {
+        // When
+        initViewModel(
+                entryPoint = EntryPoint.SETTINGS
+        )
+        viewModel.onBackButtonClick()
+
+        // Then
+        assertThat(viewModel.closeReaderInterests.value).isNotNull
+    }
+
     private fun initViewModel(
         entryPoint: EntryPoint = EntryPoint.DISCOVER
     ) = viewModel.start(
