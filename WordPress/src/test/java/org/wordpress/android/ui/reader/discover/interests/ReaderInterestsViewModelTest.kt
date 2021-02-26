@@ -64,8 +64,8 @@ class ReaderInterestsViewModelTest {
     fun `getUserTags invoked on start`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
                 initViewModel()
@@ -78,8 +78,8 @@ class ReaderInterestsViewModelTest {
     fun `getInterests invoked if empty user tags received from repo`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
                 initViewModel()
@@ -102,8 +102,8 @@ class ReaderInterestsViewModelTest {
     fun `progress bar shown on start hides on successful interests data load`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify progress bar initial state
                 coroutineScope.pauseDispatcher()
@@ -123,8 +123,8 @@ class ReaderInterestsViewModelTest {
     fun `title hidden on start become visible on successful interests data load`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify title initial state
                 coroutineScope.pauseDispatcher()
@@ -144,8 +144,8 @@ class ReaderInterestsViewModelTest {
     fun `interests correctly shown on successful interests data load`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
                 initViewModel()
@@ -153,20 +153,20 @@ class ReaderInterestsViewModelTest {
                 // Then
                 assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
                 assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
-                        .isEqualTo(mockInterests)
+                        .isEqualTo(interests)
 
                 val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
-                assertThat(uiState.interests).isEqualTo(mockInterests)
+                assertThat(uiState.interests).isEqualTo(interests)
                 assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
-                assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
+                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
             }
 
     @Test
     fun `done button hidden on start switches to disabled state when interests tags received from repo`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // Pause dispatcher so we can verify done button initial state
                 coroutineScope.pauseDispatcher()
@@ -188,8 +188,8 @@ class ReaderInterestsViewModelTest {
     fun `interest selected if onInterestAtIndexToggled invoked on a deselected interest`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 val selectedIndex = 0
 
                 // When
@@ -208,8 +208,8 @@ class ReaderInterestsViewModelTest {
     fun `interest deselected if onInterestAtIndexToggled invoked on a selected interest`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 val selectedIndex = 0
 
                 // When
@@ -229,8 +229,8 @@ class ReaderInterestsViewModelTest {
     fun `done button shown in enabled state if an interest is in selected state`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
                 initViewModel()
@@ -249,8 +249,8 @@ class ReaderInterestsViewModelTest {
     fun `done button shown in disabled state if no interests are in selected state`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
                 initViewModel()
@@ -264,8 +264,8 @@ class ReaderInterestsViewModelTest {
     fun `close reader interests screen triggered when interests are saved successfully`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
                 // When
@@ -280,8 +280,8 @@ class ReaderInterestsViewModelTest {
     fun `selected interests saved on done button click`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 val selectInterestAtIndex = 2
 
                 // When
@@ -290,7 +290,7 @@ class ReaderInterestsViewModelTest {
                 viewModel.onDoneButtonClick()
 
                 // Then
-                verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
+                verify(readerTagRepository, times(1)).saveInterests(eq(listOf(interests[selectInterestAtIndex])))
             }
 
     @Test
@@ -373,8 +373,8 @@ class ReaderInterestsViewModelTest {
     fun `snackbar is shown on save interests error`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
                 // When
@@ -389,8 +389,8 @@ class ReaderInterestsViewModelTest {
     fun `snackbar is not shown when interests are saved successfully`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
                 // When
@@ -405,8 +405,8 @@ class ReaderInterestsViewModelTest {
     fun `network error shown when internet access not available on save interests`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(NetworkUnavailable)
 
                 // When
@@ -422,8 +422,8 @@ class ReaderInterestsViewModelTest {
     fun `request failed error shown on save interests remote request failure`() =
             testWithEmptyUserTags {
                 // Given
-                val mockInterests = getMockInterests()
-                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(mockInterests))
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(RemoteRequestFailure)
 
                 // When
@@ -465,7 +465,7 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    private fun getMockInterests() =
+    private fun getInterests() =
             ReaderTagList().apply {
                 for (c in 'A'..'Z')
                     (add(
