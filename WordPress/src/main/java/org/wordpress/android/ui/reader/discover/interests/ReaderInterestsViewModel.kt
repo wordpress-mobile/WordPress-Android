@@ -73,12 +73,7 @@ class ReaderInterestsViewModel @Inject constructor(
             when (val result = readerTagRepository.getUserTags()) {
                 is SuccessWithData<*> -> {
                     userTagsFetchedSuccessfully = true
-                    val userTags = result.data as ReaderTagList
-                    if (userTags.isEmpty()) {
-                        loadInterests()
-                    } else {
-                        parentViewModel.onCloseReaderInterests()
-                    }
+                    checkAndLoadInterests(result.data as ReaderTagList)
                 }
                 is Error -> {
                     if (result is NetworkUnavailable) {
@@ -88,6 +83,14 @@ class ReaderInterestsViewModel @Inject constructor(
                     }
                 }
             }
+        }
+    }
+
+    private fun checkAndLoadInterests(userTags: ReaderTagList) {
+        if (userTags.isEmpty()) {
+            loadInterests()
+        } else {
+            parentViewModel.onCloseReaderInterests()
         }
     }
 
