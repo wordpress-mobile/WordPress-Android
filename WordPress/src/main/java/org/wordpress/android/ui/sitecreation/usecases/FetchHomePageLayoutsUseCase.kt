@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.FetchStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
-import org.wordpress.android.ui.sitecreation.theme.ThumbDimensionProvider
+import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume
@@ -25,7 +25,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
             throw IllegalStateException("Fetch already in progress.")
         }
         val payload = FetchStarterDesignsPayload(
-                thumbDimensionProvider.width.toFloat(),
+                thumbDimensionProvider.previewWidth.toFloat(),
                 thumbDimensionProvider.scale.toFloat()
         )
         return suspendCoroutine { cont ->

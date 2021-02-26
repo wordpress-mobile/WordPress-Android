@@ -9,7 +9,6 @@ import android.view.ViewGroup
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
@@ -19,16 +18,16 @@ import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_fragment.categoriesRecyclerView
 import kotlinx.android.synthetic.main.home_page_picker_fragment.errorView
 import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
-import kotlinx.android.synthetic.main.home_page_picker_loading_skeleton.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
-import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
+import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.mlp.CategoriesAdapter
+import org.wordpress.android.ui.mlp.LayoutCategoryAdapter
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
@@ -47,7 +46,6 @@ import javax.inject.Inject
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
-    @Inject lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
@@ -57,14 +55,7 @@ class HomePagePickerFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.home_page_picker_fragment, container, false)
-        val skeletonCardView = view.findViewById<View>(R.id.skeletonCardView)
-        skeletonCardView.minimumHeight = thumbDimensionProvider.height
-        skeletonCardView.minimumWidth = thumbDimensionProvider.width
-        (skeletonCardView.layoutParams as? ViewGroup.MarginLayoutParams)?.let {
-            it.marginStart = thumbDimensionProvider.calculatedStartMargin
-        }
-        return view
+        return inflater.inflate(R.layout.home_page_picker_fragment, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -82,8 +73,8 @@ class HomePagePickerFragment : Fragment() {
         }
 
         layoutsRecyclerView.apply {
-            adapter = HomePagePickerAdapter(imageManager, thumbDimensionProvider)
-            layoutManager = GridLayoutManager(activity, thumbDimensionProvider.columns)
+            layoutManager = LinearLayoutManager(requireActivity())
+            adapter = LayoutCategoryAdapter()
         }
 
         setupUi()
@@ -97,6 +88,14 @@ class HomePagePickerFragment : Fragment() {
         (requireActivity().applicationContext as WordPress).component().inject(this)
     }
 
+    private fun setContentVisibility(skeleton: Boolean, error: Boolean) {
+        categoriesSkeleton.setVisible(skeleton)
+        categoriesRecyclerView.setVisible(!skeleton && !error)
+        layoutsSkeleton.setVisible(skeleton)
+        layoutsRecyclerView.setVisible(!skeleton && !error)
+        errorView.setVisible(error)
+    }
+
     private fun setupViewModel() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
@@ -104,18 +103,14 @@ class HomePagePickerFragment : Fragment() {
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
             setTitleVisibility(uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
-            loadingIndicator.setVisible(uiState.loadingIndicatorVisible)
-            errorView.setVisible(uiState.errorViewVisible)
-            categoriesSkeleton.setVisible(uiState.loadingIndicatorVisible)
-            categoriesRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
-            layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
+            setContentVisibility(uiState.loadingIndicatorVisible, uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
                 is UiState.Loading -> { // Nothing more to do here
                 }
                 is UiState.Content -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
-                    (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
+                    (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
                 is UiState.Error -> {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
