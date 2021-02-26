@@ -191,7 +191,7 @@
     <ID>LongParameterList:PostsAndPagesUseCase.kt$PostsAndPagesUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val postsAndPageViewsStore: PostAndPageViewsStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode )</ID>
     <ID>LongParameterList:PromoDialog.kt$PromoDialog$( tag: String, title: String, message: String, positiveButtonLabel: String, @DrawableRes drawableResId: Int = UNDEFINED_RES_ID, negativeButtonLabel: String = "", linkLabel: String = "", neutralButtonLabel: String = "" )</ID>
     <ID>LongParameterList:QuickStartUtils.kt$QuickStartUtils.Companion$( quickStartStore: QuickStartStore, task: QuickStartTask, dispatcher: Dispatcher, site: SiteModel, quickStartEvent: QuickStartEvent? = null, context: Context? )</ID>
-    <ID>LongParameterList:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.Companion$( isFeed: Boolean, blogId: Long, postId: Long, directOperation: DirectOperation?, commentId: Int, interceptedUri: String?, postListType: ReaderPostListType?, postSlugsResolutionUnderway: Boolean )</ID>
+    <ID>LongParameterList:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.Companion$( isFeed: Boolean, blogId: Long, postId: Long, directOperation: DirectOperation?, commentId: Int, isRelatedPost: Boolean, interceptedUri: String?, postListType: ReaderPostListType?, postSlugsResolutionUnderway: Boolean )</ID>
     <ID>LongParameterList:ReaderPostDetailUiStateBuilder.kt$ReaderPostDetailUiStateBuilder$( post: ReaderPost, moreMenuItems: List&lt;SecondaryAction&gt;? = null, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onBlogSectionClicked: (Long, Long) -&gt; Unit, onFollowClicked: () -&gt; Unit, onTagItemClicked: (String) -&gt; Unit )</ID>
     <ID>LongParameterList:ReaderPostUiStateBuilder.kt$ReaderPostUiStateBuilder$( post: ReaderPost, isDiscover: Boolean = false, photonWidth: Int, photonHeight: Int, postListType: ReaderPostListType, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit, onItemClicked: (Long, Long) -&gt; Unit, onItemRendered: (ReaderCardUiState) -&gt; Unit, onDiscoverSectionClicked: (Long, Long) -&gt; Unit, onMoreButtonClicked: (ReaderPostUiState) -&gt; Unit, onMoreDismissed: (ReaderPostUiState) -&gt; Unit, onVideoOverlayClicked: (Long, Long) -&gt; Unit, onPostHeaderViewClicked: (Long, Long) -&gt; Unit, onTagItemClicked: (String) -&gt; Unit, moreMenuItems: List&lt;SecondaryAction&gt;? = null )</ID>
     <ID>LongParameterList:ReferrersUseCase.kt$ReferrersUseCase$( statsGranularity: StatsGranularity, @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher, @Named(BG_THREAD) private val backgroundDispatcher: CoroutineDispatcher, private val referrersStore: ReferrersStore, statsSiteProvider: StatsSiteProvider, selectedDateProvider: SelectedDateProvider, private val analyticsTracker: AnalyticsTrackerWrapper, private val contentDescriptionHelper: ContentDescriptionHelper, private val statsUtils: StatsUtils, private val useCaseMode: UseCaseMode, private val popupMenuHandler: ReferrerPopupMenuHandler )</ID>
@@ -360,12 +360,14 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostsListActivity.kt:295</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1002</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1004</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:874</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:876</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:880</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:882</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1009</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1011</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1015</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1017</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1137</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1139</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:808</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:810</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:251</ID>
@@ -375,14 +377,6 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewHolder.kt:37</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:54</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:56</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1036</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1038</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1042</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1044</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1164</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1166</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:835</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:837</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.kt:140</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:309</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:343</ID>

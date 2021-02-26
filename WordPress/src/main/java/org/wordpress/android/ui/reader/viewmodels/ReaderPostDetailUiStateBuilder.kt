@@ -52,7 +52,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         )
     }
 
-    private fun buildPostActions(
+    fun buildPostActions(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ): ReaderPostActions {
