@@ -51,6 +51,9 @@ class ReaderInterestsViewModel @Inject constructor(
     private val _snackbarEvents = MediatorLiveData<Event<SnackbarMessageHolder>>()
     val snackbarEvents: LiveData<Event<SnackbarMessageHolder>> = _snackbarEvents
 
+    private val _closeReaderInterests = MutableLiveData<Event<Unit>>()
+    val closeReaderInterests: LiveData<Event<Unit>> = _closeReaderInterests
+
     private var userTagsFetchedSuccessfully = false
 
     fun start(

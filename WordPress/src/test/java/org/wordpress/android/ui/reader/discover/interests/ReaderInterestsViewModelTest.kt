@@ -330,7 +330,7 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
-    fun `close reader interests screen triggered when interests are saved successfully`() =
+    fun `discover close reader interests screen triggered when interests are saved successfully`() =
             testWithEmptyUserTags {
                 // Given
                 val interests = getInterests()
@@ -343,6 +343,24 @@ class ReaderInterestsViewModelTest {
 
                 // Then
                 verify(parentViewModel, times(1)).onCloseReaderInterests()
+            }
+
+    @Test
+    fun `settings close reader interests screen triggered when interests are saved successfully`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+                whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
+
+                // When
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
+                viewModel.onDoneButtonClick()
+
+                // Then
+                assertThat(viewModel.closeReaderInterests.value).isNotNull
             }
 
     @Test
