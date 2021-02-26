@@ -5,10 +5,10 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
@@ -39,12 +39,14 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReade
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
+import org.wordpress.android.ui.reader.discover.SortingDialogUiState.DialogVisible
 import org.wordpress.android.ui.reader.usecases.BookmarkPostState.PreLoadPostContent
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.FilterDiscoverFeatureConfig
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.RecyclerItemDecoration
 import org.wordpress.android.widgets.WPSnackbar
@@ -58,6 +60,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     private lateinit var viewModel: ReaderDiscoverViewModel
     @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Inject lateinit var sortingTypeConfig: FilterDiscoverFeatureConfig
     private lateinit var parentViewModel: ReaderViewModel
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -82,12 +85,15 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
         }
+        btnSortingType.setOnClickListener {
+            viewModel.onSortingTypeButtonClicked()
+        }
     }
 
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             when (it) {
                 is ContentUiState -> {
                     (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
@@ -112,8 +118,8 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             uiHelpers.updateVisibility(actionable_empty_view, it.fullscreenEmptyVisibility)
             ptr_layout.isEnabled = it.swipeToRefreshEnabled
             ptr_layout.isRefreshing = it.reloadProgressVisibility
-        })
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.navigationEvents.observe(viewLifecycleOwner) {
             it.applyIfNotHandled {
                 when (this) {
                     is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
@@ -148,19 +154,44 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     }
                 }
             }
-        })
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.snackbarEvents.observe(viewLifecycleOwner) {
             it?.applyIfNotHandled {
                 showSnackbar()
             }
-        })
-        viewModel.preloadPostEvents.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.preloadPostEvents.observe(viewLifecycleOwner) {
             it?.applyIfNotHandled {
                 addWebViewCachingFragment()
             }
-        })
+        }
+
+        viewModel.sortingDialogUiState.observe(viewLifecycleOwner) { event ->
+            val uiState = event.getContentIfNotHandled()
+            val bottomSheet = getOrCreateDialogForSorting()
+            when (uiState) {
+                DialogVisible -> bottomSheet.show(childFragmentManager, SortingTypeBottomSheetFragment.TAG)
+                else -> bottomSheet.dismiss()
+            }
+        }
+
+        viewModel.mDiscoverSortingButtonUiState.observe(viewLifecycleOwner) { event ->
+            event.getContentIfNotHandled()?.let { uiState ->
+                uiHelpers.updateVisibility(btnSortingType, uiState.canShow)
+                uiHelpers.setTextOrHide(btnSortingType, uiState.title)
+                if (uiState.icon != null) {
+                    btnSortingType.setIconResource(uiState.icon)
+                }
+            }
+        }
+
         viewModel.start(parentViewModel)
     }
+
+    private fun getOrCreateDialogForSorting() =
+            childFragmentManager.findFragmentByTag(SortingTypeBottomSheetFragment.TAG)
+                    as? BottomSheetDialogFragment
+                    ?: SortingTypeBottomSheetFragment.getInstance()
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
         if (bookmarksSavedLocallyDialog == null) {

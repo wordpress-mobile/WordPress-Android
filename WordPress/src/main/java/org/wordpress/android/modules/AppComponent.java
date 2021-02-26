@@ -161,6 +161,7 @@ import org.wordpress.android.ui.reader.adapters.ReaderPostAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderTagAdapter;
 import org.wordpress.android.ui.reader.adapters.ReaderUserAdapter;
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverFragment;
+import org.wordpress.android.ui.reader.discover.SortingTypeBottomSheetFragment;
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverJobService;
 import org.wordpress.android.ui.reader.services.discover.ReaderDiscoverLogic;
@@ -597,6 +598,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(ReaderFragment object);
 
     void inject(ReaderDiscoverFragment object);
+
+    void inject(SortingTypeBottomSheetFragment object);
 
     void inject(ReaderSearchActivity object);
 
