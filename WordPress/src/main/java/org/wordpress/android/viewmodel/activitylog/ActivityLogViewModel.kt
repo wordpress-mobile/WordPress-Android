@@ -539,15 +539,15 @@ class ActivityLogViewModel @Inject constructor(
         activityLogTracker.trackDownloadBackupDownloadButtonClicked(rewindableOnly)
         _navigationEvents.value = Event(ActivityLogNavigationEvents.DownloadBackupFile(url))
     }
-
+    /**
+    Reload events first to remove the notice item, as it shows progress to the user. Then
+    trigger the dismiss (this is an optimistic call). If the dismiss fails it will show
+    again on the next reload.
+    */
     private fun dismissNoticeClicked(downloadId: Long) {
         activityLogTracker.trackDownloadBackupDismissButtonClicked(rewindableOnly)
-        viewModelScope.launch {
-            // reload events first to remove item - convey progress
-            reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
-            // Always optimistic on a dismiss. If it doesn't work, the banner returns on the next PTR
-            postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site)
-        }
+        reloadEvents(backupDownloadEvent = BackupDownloadEvent(displayNotice = false, displayProgress = false))
+        viewModelScope.launch { postDismissBackupDownloadUseCase.dismissBackupDownload(downloadId, site) }
     }
 
     fun dateRangePickerClicked() {
