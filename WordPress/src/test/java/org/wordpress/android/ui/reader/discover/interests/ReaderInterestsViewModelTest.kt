@@ -222,6 +222,35 @@ class ReaderInterestsViewModelTest {
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_select_few_interests)
+            }
+
+    @Test
+    fun `settings done button hidden on start switches to disabled state when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonHiddenUiState::class.java)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_done)
             }
 
     @Test
