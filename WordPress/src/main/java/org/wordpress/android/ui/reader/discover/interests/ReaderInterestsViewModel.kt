@@ -245,7 +245,10 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     fun onBackButtonClick() {
-        parentViewModel.onCloseReaderInterests()
+        when (entryPoint) {
+            EntryPoint.DISCOVER -> parentViewModel.onCloseReaderInterests()
+            EntryPoint.SETTINGS -> _closeReaderInterests.value = Event(Unit)
+        }
     }
 
     sealed class UiState(
