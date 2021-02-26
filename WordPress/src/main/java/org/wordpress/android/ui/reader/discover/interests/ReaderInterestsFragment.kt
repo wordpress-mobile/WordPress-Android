@@ -105,7 +105,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     private fun updateInterests(interestsUiState: List<TagUiState>) {
         interestsUiState.forEachIndexed { index, interestTagUiState ->
             val chip = interests_chip_group.findViewWithTag(interestTagUiState.slug)
-                ?: createChipView(interestTagUiState.slug, index)
+                    ?: createChipView(interestTagUiState.slug, index)
             with(chip) {
                 text = interestTagUiState.title
                 isChecked = interestTagUiState.isChecked
@@ -130,15 +130,15 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 this.buttonAction.invoke()
             }
         }
-        snackbar.setAnchorView(bottom_bar)
+        snackbar.anchorView = bottom_bar
         snackbar.show()
     }
 
     private fun createChipView(slug: String, index: Int): Chip {
         val chip = layoutInflater.inflate(
-            R.layout.reader_interest_filter_chip,
-            interests_chip_group,
-            false
+                R.layout.reader_interest_filter_chip,
+                interests_chip_group,
+                false
         ) as Chip
         with(chip) {
             tag = slug
