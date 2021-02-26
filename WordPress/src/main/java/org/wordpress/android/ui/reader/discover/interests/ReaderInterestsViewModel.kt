@@ -43,6 +43,7 @@ class ReaderInterestsViewModel @Inject constructor(
     private lateinit var parentViewModel: ReaderViewModel
 
     private var entryPoint = EntryPoint.DISCOVER
+    private var userTags = ReaderTagList()
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -73,9 +74,10 @@ class ReaderInterestsViewModel @Inject constructor(
             when (val result = readerTagRepository.getUserTags()) {
                 is SuccessWithData<*> -> {
                     userTagsFetchedSuccessfully = true
+                    userTags = result.data as ReaderTagList
                     when (entryPoint) {
-                        EntryPoint.DISCOVER -> checkAndLoadInterests(result.data as ReaderTagList)
-                        EntryPoint.SETTINGS -> loadInterests()
+                        EntryPoint.DISCOVER -> checkAndLoadInterests(userTags)
+                        EntryPoint.SETTINGS -> loadInterests(userTags)
                     }
                 }
                 is Error -> {
@@ -91,20 +93,20 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private fun checkAndLoadInterests(userTags: ReaderTagList) {
         if (userTags.isEmpty()) {
-            loadInterests()
+            loadInterests(userTags)
         } else {
             parentViewModel.onCloseReaderInterests()
         }
     }
 
-    private fun loadInterests() {
+    private fun loadInterests(userTags: ReaderTagList) {
         updateUiState(InitialLoadingUiState)
         viewModelScope.launch {
             val newUiState: UiState? = when (val result = readerTagRepository.getInterests()) {
                 is SuccessWithData<*> -> {
                     trackerWrapper.track(Stat.SELECT_INTERESTS_SHOWN)
 
-                    val tags = result.data as ReaderTagList
+                    val tags = (result.data as ReaderTagList).filter { checkAndExcludeTag(userTags, it) }
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
                     ContentUiState(
                             interestsUiState = transformToInterestsUiState(distinctTags),
@@ -126,6 +128,17 @@ class ReaderInterestsViewModel @Inject constructor(
                 updateUiState(it)
             }
         }
+    }
+
+    private fun checkAndExcludeTag(userTags: ReaderTagList, tag: ReaderTag): Boolean {
+        var contain = false
+        userTags.forEach { excludedTag ->
+            if (excludedTag.tagSlug.equals(tag.tagSlug)) {
+                contain = true
+                return@forEach
+            }
+        }
+        return !contain
     }
 
     fun onInterestAtIndexToggled(index: Int, isChecked: Boolean) {
@@ -185,7 +198,7 @@ class ReaderInterestsViewModel @Inject constructor(
         if (!userTagsFetchedSuccessfully) {
             loadUserTags()
         } else {
-            loadInterests()
+            loadInterests(userTags)
         }
     }
 
