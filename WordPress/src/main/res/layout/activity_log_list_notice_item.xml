@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -12,7 +11,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/button_wrapper"
-        tools:text="We successfully created a backup download file from October 21, 2020 at 3:40 AM."
         android:text="@string/activity_log_backup_download_notice_description_with_two_params"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -30,7 +28,6 @@
             app:layout_constraintHorizontal_chainStyle="packed"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_chainStyle="packed"
-            tools:text="@string/activity_log_backup_download_notice_download_action"
             android:text="@string/activity_log_backup_download_notice_download_action"/>
 
         <com.google.android.material.button.MaterialButton
@@ -39,7 +36,6 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/primary_button"
             app:layout_constraintTop_toTopOf="parent"
-            tools:text="@string/activity_log_backup_download_notice_dismiss_action"
             android:text="@string/activity_log_backup_download_notice_dismiss_action"/>
     </androidx.constraintlayout.widget.ConstraintLayout>
 
