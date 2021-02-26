@@ -73,7 +73,10 @@ class ReaderInterestsViewModel @Inject constructor(
             when (val result = readerTagRepository.getUserTags()) {
                 is SuccessWithData<*> -> {
                     userTagsFetchedSuccessfully = true
-                    checkAndLoadInterests(result.data as ReaderTagList)
+                    when (entryPoint) {
+                        EntryPoint.DISCOVER -> checkAndLoadInterests(result.data as ReaderTagList)
+                        EntryPoint.SETTINGS -> loadInterests()
+                    }
                 }
                 is Error -> {
                     if (result is NetworkUnavailable) {
