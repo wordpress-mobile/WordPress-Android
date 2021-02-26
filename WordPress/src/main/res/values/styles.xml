@@ -98,20 +98,32 @@
 
         <!-- Material Date Range Picker -->
         <item name="materialCalendarStyle">@style/Widget.MaterialComponents.MaterialCalendar</item>
-        <item name="materialCalendarFullscreenTheme">@style/WordPress.MaterialCalendarFullscreenTheme</item>
+        <item name="materialCalendarFullscreenTheme">
+            @style/WordPress.MaterialCalendarFullscreenTheme
+        </item>
         <item name="materialCalendarTheme">@style/WordPress.MaterialCalendarTheme</item>
     </style>
 
     <style name="WordPress.MaterialCalendarFullscreenTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar.Fullscreen">
         <item name="materialCalendarStyle">@style/WordPress.MaterialCalendarStyle</item>
         <item name="materialCalendarHeaderTitle">@style/WordPress.MaterialCalendarHeaderTitle</item>
-        <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout</item>
-        <item name="materialCalendarHeaderSelection">@style/WordPress.MaterialCalendarHeaderSelection</item>
-        <item name="materialCalendarHeaderToggleButton">@style/WordPress.MaterialCalendarHeaderToggleButton</item>
-        <item name="materialCalendarHeaderConfirmButton">@style/WordPress.MaterialCalendarHeaderConfirmButton</item>
-        <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider</item>
+        <item name="materialCalendarHeaderLayout">@style/WordPress.MaterialCalendarHeaderLayout
+        </item>
+        <item name="materialCalendarHeaderSelection">
+            @style/WordPress.MaterialCalendarHeaderSelection
+        </item>
+        <item name="materialCalendarHeaderToggleButton">
+            @style/WordPress.MaterialCalendarHeaderToggleButton
+        </item>
+        <item name="materialCalendarHeaderConfirmButton">
+            @style/WordPress.MaterialCalendarHeaderConfirmButton
+        </item>
+        <item name="materialCalendarHeaderDivider">@style/WordPress.MaterialCalendarHeaderDivider
+        </item>
         <!--    Days of week header    -->
-        <item name="textAppearanceBody2">@style/WordPress.TextAppearance.MaterialCalendarDaysOfWeek</item>
+        <item name="textAppearanceBody2">
+            @style/WordPress.TextAppearance.MaterialCalendarDaysOfWeek
+        </item>
         <!-- Grid day items  -->
         <item name="materialCalendarDay">@style/WordPress.MaterialCalendarDayTextView</item>
         <!-- Used to color the cancel button which doesn't use any overridable styles -->
@@ -124,8 +136,7 @@
         <item name="daySelectedStyle">@style/WordPress.MaterialCalendarSelectedDay</item>
     </style>
 
-    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar">
-    </style>
+    <style name="WordPress.MaterialCalendarTheme" parent="ThemeOverlay.MaterialComponents.MaterialCalendar"></style>
 
     <style name="WordPress.MaterialCalendarHeaderTitle" parent="Widget.MaterialComponents.MaterialCalendar.HeaderTitle">
         <item name="android:textColor">?attr/colorOnSurface</item>
@@ -656,7 +667,8 @@
     </style>
 
     <style name="MySiteBlavatarImageView">
-        <item name="android:background">@drawable/bg_rectangle_placeholder_with_border_radius_4dp</item>
+        <item name="android:background">@drawable/bg_rectangle_placeholder_with_border_radius_4dp
+        </item>
     </style>
 
     <!-- Used in Notifications and Site settings to animate nested preference screens -->
@@ -1303,6 +1315,17 @@
         <item name="android:layout_width">@dimen/main_fab_tooltip_arrow_size</item>
         <item name="android:layout_height">@dimen/main_fab_tooltip_arrow_size</item>
         <item name="android:elevation">@dimen/main_fab_tooltip_elevation</item>
+    </style>
+
+    <style name="SortingTypeRadioButton" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:button">@drawable/selector_check_mark</item>
+        <item name="android:paddingStart">@dimen/margin_extra_large</item>
+        <item name="android:paddingEnd">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginStart">@dimen/margin_extra_large</item>
+        <item name="android:layout_marginEnd">@dimen/margin_extra_large</item>
+        <item name="android:drawablePadding">@dimen/margin_medium_large</item>
+        <item name="android:layout_marginTop">@dimen/margin_extra_medium_large</item>
+        <item name="android:textAppearance">?attr/textAppearanceSubtitle1</item>
     </style>
 
     <!--Publicize styles -->
