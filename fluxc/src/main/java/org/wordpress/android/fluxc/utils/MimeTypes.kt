@@ -169,8 +169,10 @@ class MimeTypes {
         return isSupportedMimeType(documentTypes, type)
     }
 
-    fun getAllTypes(): Array<String> {
-        return (audioTypes.toStrings() + videoTypes.toStrings() + imageTypes.toStrings() + documentTypes.toStrings())
+    fun getAllTypes(plan: Plan = NO_PLAN_SPECIFIED): Array<String> {
+        return (getAudioMimeTypesOnly(plan).toStrings() + videoTypes.toStrings() + imageTypes.toStrings() + getDocumentMimeTypesOnly(
+                plan
+        ).toStrings())
                 .toSet()
                 .toTypedArray()
     }
@@ -193,10 +195,20 @@ class MimeTypes {
                 .toTypedArray()
     }
 
-    fun getAudioTypesOnly(): Array<String> {
-        return (audioTypes.toStrings())
-                .toSet()
-                .toTypedArray()
+    fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) = getAudioMimeTypesOnly(plan).toSet().toTypedArray()
+
+    private fun getAudioMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
+        return when (plan) {
+            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> audioTypes
+            WP_COM_FREE -> listOf()
+        }
+    }
+
+    private fun getDocumentMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
+        return when (plan) {
+            WP_COM_PAID, SELF_HOSTED, NO_PLAN_SPECIFIED -> wpComPaidAndSelfHostedDocumentTypes
+            WP_COM_FREE -> wpComFreeDocumentTypes
+        }
     }
 
     private fun List<MimeType>.toStrings(): List<String> {
