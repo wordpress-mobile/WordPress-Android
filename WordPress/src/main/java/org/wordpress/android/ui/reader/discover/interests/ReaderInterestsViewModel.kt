@@ -200,7 +200,7 @@ class ReaderInterestsViewModel @Inject constructor(
     }
 
     private fun trackInterests(tags: List<ReaderTag>) {
-        tags.forEach { it ->
+        tags.forEach {
             trackerWrapper.track(
                     READER_TAG_FOLLOWED,
                     mapOf(
