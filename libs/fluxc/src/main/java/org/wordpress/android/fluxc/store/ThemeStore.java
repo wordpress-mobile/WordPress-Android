@@ -13,7 +13,8 @@ import org.wordpress.android.fluxc.action.ThemeAction;
 import org.wordpress.android.fluxc.annotations.action.Action;
 import org.wordpress.android.fluxc.annotations.action.IAction;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.StarterDesignModel;
+import org.wordpress.android.fluxc.model.StarterDesign;
+import org.wordpress.android.fluxc.model.StarterDesignCategory;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.BaseRequest.BaseNetworkError;
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.ThemeRestClient;
@@ -87,22 +88,28 @@ public class ThemeStore extends Store {
     public static class FetchStarterDesignsPayload extends Payload<BaseNetworkError> {
         @Nullable public Float previewWidth;
         @Nullable public Float scale;
+        @Nullable public String[] groups;
 
-        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float scale) {
+        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float scale,
+                                          @Nullable String... groups) {
             this.previewWidth = previewWidth;
             this.scale = scale;
+            this.groups = groups;
         }
     }
 
     public static class FetchedStarterDesignsPayload extends Payload<ThemesError> {
-        public List<StarterDesignModel> designs;
+        public List<StarterDesign> designs;
+        public List<StarterDesignCategory> categories;
 
         public FetchedStarterDesignsPayload(@NonNull ThemesError error) {
             this.error = error;
         }
 
-        public FetchedStarterDesignsPayload(@NonNull List<StarterDesignModel> designs) {
+        public FetchedStarterDesignsPayload(@NonNull List<StarterDesign> designs,
+                                            @NonNull List<StarterDesignCategory> categories) {
             this.designs = designs;
+            this.categories = categories;
         }
     }
 
@@ -213,10 +220,13 @@ public class ThemeStore extends Store {
     }
 
     public static class OnStarterDesignsFetched extends OnChanged<ThemesError> {
-        public List<StarterDesignModel> designs;
+        public List<StarterDesign> designs;
+        public List<StarterDesignCategory> categories;
 
-        public OnStarterDesignsFetched(List<StarterDesignModel> designs, ThemesError error) {
+        public OnStarterDesignsFetched(List<StarterDesign> designs, List<StarterDesignCategory> categories,
+                                       ThemesError error) {
             this.designs = designs;
+            this.categories = categories;
             this.error = error;
         }
     }
@@ -331,7 +341,7 @@ public class ThemeStore extends Store {
     }
 
     private void fetchStarterDesigns(FetchStarterDesignsPayload payload) {
-        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.scale);
+        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.scale, payload.groups);
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
@@ -456,7 +466,7 @@ public class ThemeStore extends Store {
     }
 
     private void handleStarterDesignsFetched(@NonNull FetchedStarterDesignsPayload payload) {
-        OnStarterDesignsFetched event = new OnStarterDesignsFetched(payload.designs, payload.error);
+        OnStarterDesignsFetched event = new OnStarterDesignsFetched(payload.designs, payload.categories, payload.error);
         emitChange(event);
     }
 }
