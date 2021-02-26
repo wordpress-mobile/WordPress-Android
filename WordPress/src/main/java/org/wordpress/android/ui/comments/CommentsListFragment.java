@@ -446,7 +446,7 @@ public class CommentsListFragment extends ViewPagerFragment {
 
         for (CommentModel comment : comments) {
             if (getActivity() instanceof CommentsActivity) {
-                ((CommentsActivity) getActivity()).onModerateComment(comment, status);
+                ((CommentsActivity) getActivity()).onModerateComment(comment, status, false);
             }
         }
     }
