@@ -56,7 +56,7 @@ public class CommentsListFragment extends ViewPagerFragment {
     static final int COMMENTS_PER_PAGE = 30;
     static final String COMMENT_FILTER_KEY = "COMMENT_FILTER_KEY";
     static final String LOADING_IN_PROGRESS_KEY = "LOADING_IN_PROGRESS_KEY";
-    static final String KEY_AUTO_REFRESHED = "has_auto_refreshed";
+    static final String AUTO_REFRESHED_KEY = "has_auto_refreshed";
 
     @Nullable
     @Override
@@ -76,10 +76,15 @@ public class CommentsListFragment extends ViewPagerFragment {
         SPAM(R.string.comment_status_spam),
         DELETE(R.string.comment_status_trash);
 
-        public final int mLabelResId;
+        private final int mLabelResId;
 
         CommentStatusCriteria(@StringRes int labelResId) {
             mLabelResId = labelResId;
+        }
+
+        @StringRes
+        public int getLabelResId() {
+            return mLabelResId;
         }
 
         @Override
@@ -181,7 +186,7 @@ public class CommentsListFragment extends ViewPagerFragment {
 
         if (savedInstanceState != null) {
             mIsUpdatingComments = savedInstanceState.getBoolean(LOADING_IN_PROGRESS_KEY, false);
-            mHasAutoRefreshedComments = savedInstanceState.getBoolean(KEY_AUTO_REFRESHED, false);
+            mHasAutoRefreshedComments = savedInstanceState.getBoolean(AUTO_REFRESHED_KEY, false);
         }
 
         if (!NetworkUtils.isNetworkAvailable(getActivity())) {
@@ -497,7 +502,7 @@ public class CommentsListFragment extends ViewPagerFragment {
     public void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(LOADING_IN_PROGRESS_KEY, mIsUpdatingComments);
-        outState.putSerializable(KEY_AUTO_REFRESHED, mHasAutoRefreshedComments);
+        outState.putSerializable(AUTO_REFRESHED_KEY, mHasAutoRefreshedComments);
     }
 
     /****

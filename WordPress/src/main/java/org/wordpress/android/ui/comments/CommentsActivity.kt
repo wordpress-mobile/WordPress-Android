@@ -96,7 +96,7 @@ class CommentsActivity : LocaleAwareActivity(),
 
         tabLayout = findViewById(id.tab_layout)
         TabLayoutMediator(tabLayout, viewPager) { tab, position ->
-            tab.setText(commentListFilters[position].mLabelResId)
+            tab.setText(commentListFilters[position].labelResId)
         }.attach()
 
         val disabledAlpha = TypedValue()
