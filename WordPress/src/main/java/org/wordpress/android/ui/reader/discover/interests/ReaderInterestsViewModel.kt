@@ -152,11 +152,11 @@ class ReaderInterestsViewModel @Inject constructor(
                 is Error -> {
                     if (result is NetworkUnavailable) {
                         _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                                Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
                         )
                     } else if (result is RemoteRequestFailure) {
                         _snackbarEvents.postValue(
-                            Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
                         )
                     }
                     updateUiState(
