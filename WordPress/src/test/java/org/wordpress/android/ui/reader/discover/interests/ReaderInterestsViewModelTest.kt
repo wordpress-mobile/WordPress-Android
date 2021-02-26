@@ -40,12 +40,12 @@ import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 
 private const val CURRENT_LANGUAGE = "en"
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class ReaderInterestsViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
-    @ExperimentalCoroutinesApi
     @Rule
     @JvmField val coroutineScope = MainCoroutineScopeRule()
 
@@ -60,7 +60,6 @@ class ReaderInterestsViewModelTest {
         viewModel = ReaderInterestsViewModel(readerTagRepository, trackerWrapper)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `getUserTags invoked on start`() =
             testWithEmptyUserTags {
@@ -75,7 +74,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(1)).getUserTags()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `getInterests invoked if empty user tags received from repo`() =
             testWithEmptyUserTags {
@@ -90,7 +88,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(1)).getInterests()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `close reader screen triggered if non empty user tags are received from repo`() =
             testWithNonEmptyUserTags {
@@ -101,7 +98,6 @@ class ReaderInterestsViewModelTest {
                 verify(parentViewModel, times(1)).onCloseReaderInterests()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `progress bar shown on start hides on successful interests data load`() =
             testWithEmptyUserTags {
@@ -123,7 +119,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(requireNotNull(viewModel.uiState.value).progressBarVisible).isEqualTo(false)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `title hidden on start become visible on successful interests data load`() =
             testWithEmptyUserTags {
@@ -145,7 +140,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isEqualTo(true)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `interests correctly shown on successful interests data load`() =
             testWithEmptyUserTags {
@@ -167,7 +161,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(uiState.interestsUiState[0].title).isEqualTo(mockInterests[0].tagTitle)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `done button hidden on start switches to disabled state when interests tags received from repo`() =
             testWithEmptyUserTags {
@@ -191,7 +184,6 @@ class ReaderInterestsViewModelTest {
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `interest selected if onInterestAtIndexToggled invoked on a deselected interest`() =
             testWithEmptyUserTags {
@@ -212,7 +204,6 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(true)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `interest deselected if onInterestAtIndexToggled invoked on a selected interest`() =
             testWithEmptyUserTags {
@@ -234,7 +225,6 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(false)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `done button shown in enabled state if an interest is in selected state`() =
             testWithEmptyUserTags {
@@ -255,7 +245,6 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(true)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `done button shown in disabled state if no interests are in selected state`() =
             testWithEmptyUserTags {
@@ -271,7 +260,6 @@ class ReaderInterestsViewModelTest {
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `close reader interests screen triggered when interests are saved successfully`() =
             testWithEmptyUserTags {
@@ -288,7 +276,6 @@ class ReaderInterestsViewModelTest {
                 verify(parentViewModel, times(1)).onCloseReaderInterests()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `selected interests saved on done button click`() =
             testWithEmptyUserTags {
@@ -306,7 +293,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(1)).saveInterests(eq(listOf(mockInterests[selectInterestAtIndex])))
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get interests triggered on retry`() =
             testWithEmptyUserTags {
@@ -317,7 +303,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(1)).getInterests()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get user tags re-triggered on retry if user tags request had failed earlier`() =
             testWithFailedUserTags {
@@ -329,7 +314,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(2)).getUserTags()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `get user tags not re-triggered on retry if user tags request had not failed earlier`() =
             testWithEmptyUserTags {
@@ -341,7 +325,6 @@ class ReaderInterestsViewModelTest {
                 verify(readerTagRepository, times(1)).getUserTags()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `error layout is shown on interests load error`() =
             testWithEmptyUserTags {
@@ -356,7 +339,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(contentLoadFailedUiState.errorLayoutVisible).isEqualTo(true)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `network error shown when internet access not available on interests load`() =
             testWithEmptyUserTags {
@@ -372,7 +354,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(errorUiState.titleResId).isEqualTo(R.string.no_network_message)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `request failed error shown on load interests remote request failure`() =
             testWithEmptyUserTags {
@@ -388,7 +369,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(errorUiState.titleResId).isEqualTo(R.string.reader_error_request_failed_title)
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `snackbar is shown on save interests error`() =
             testWithEmptyUserTags {
@@ -405,7 +385,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(viewModel.snackbarEvents.value).isNotNull
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `snackbar is not shown when interests are saved successfully`() =
             testWithEmptyUserTags {
@@ -422,7 +401,6 @@ class ReaderInterestsViewModelTest {
                 assertThat(viewModel.snackbarEvents.value).isNull()
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `network error shown when internet access not available on save interests`() =
             testWithEmptyUserTags {
@@ -440,7 +418,6 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
             }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun `request failed error shown on save interests remote request failure`() =
             testWithEmptyUserTags {
@@ -463,7 +440,6 @@ class ReaderInterestsViewModelTest {
             currentLanguage = CURRENT_LANGUAGE
     )
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
@@ -471,7 +447,6 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithFailedUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             whenever(readerTagRepository.getUserTags()).thenReturn(NetworkUnavailable)
@@ -479,7 +454,6 @@ class ReaderInterestsViewModelTest {
         }
     }
 
-    @ExperimentalCoroutinesApi
     private fun <T> testWithNonEmptyUserTags(block: suspend CoroutineScope.() -> T) {
         coroutineScope.runBlockingTest {
             val nonEmptyUserTags = ReaderTagList().apply {
