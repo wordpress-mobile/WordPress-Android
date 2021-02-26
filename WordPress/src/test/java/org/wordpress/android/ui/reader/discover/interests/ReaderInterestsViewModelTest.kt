@@ -420,7 +420,7 @@ class ReaderInterestsViewModelTest {
                 // Then
                 assertThat(viewModel.uiState.value).isInstanceOf(ConnectionErrorUiState::class.java)
                 val errorUiState = requireNotNull(viewModel.uiState.value) as ConnectionErrorUiState
-                assertThat(errorUiState.titleResId).isEqualTo(R.string.no_network_message)
+                assertThat(errorUiState.titleRes).isEqualTo(R.string.no_network_message)
             }
 
     @Test
@@ -435,7 +435,7 @@ class ReaderInterestsViewModelTest {
                 // Then
                 assertThat(viewModel.uiState.value).isInstanceOf(RequestFailedErrorUiState::class.java)
                 val errorUiState = requireNotNull(viewModel.uiState.value) as RequestFailedErrorUiState
-                assertThat(errorUiState.titleResId).isEqualTo(R.string.reader_error_request_failed_title)
+                assertThat(errorUiState.titleRes).isEqualTo(R.string.reader_error_request_failed_title)
             }
 
     @Test

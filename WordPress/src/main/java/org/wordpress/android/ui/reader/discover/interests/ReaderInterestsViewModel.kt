@@ -165,7 +165,7 @@ class ReaderInterestsViewModel @Inject constructor(
         updateUiState(
                 contentUiState.copy(
                         progressBarVisible = true,
-                        doneButtonUiState = DoneButtonDisabledUiState(titleRes = R.string.reader_btn_done)
+                        doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done)
                 )
         )
 
@@ -190,7 +190,7 @@ class ReaderInterestsViewModel @Inject constructor(
                     updateUiState(
                             contentUiState.copy(
                                     progressBarVisible = false,
-                                    doneButtonUiState = DoneButtonEnabledUiState(titleRes = R.string.reader_btn_done)
+                                    doneButtonUiState = DoneButtonEnabledUiState(R.string.reader_btn_done)
                             )
                     )
                 }
@@ -261,18 +261,14 @@ class ReaderInterestsViewModel @Inject constructor(
         )
 
         sealed class ErrorUiState constructor(
-            val titleResId: Int
+            val titleRes: Int
         ) : UiState(
                 progressBarVisible = false,
                 errorLayoutVisible = true
         ) {
-            object ConnectionErrorUiState : ErrorUiState(
-                    titleResId = R.string.no_network_message
-            )
+            object ConnectionErrorUiState : ErrorUiState(R.string.no_network_message)
 
-            object RequestFailedErrorUiState : ErrorUiState(
-                    titleResId = R.string.reader_error_request_failed_title
-            )
+            object RequestFailedErrorUiState : ErrorUiState(R.string.reader_error_request_failed_title)
         }
 
         private fun getCheckedInterestsUiState(): List<TagUiState> {

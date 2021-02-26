@@ -118,7 +118,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun updateErrorLayout(uiState: ErrorUiState) {
         with(uiHelpers) {
-            setTextOrHide(error_title, uiState.titleResId)
+            setTextOrHide(error_title, uiState.titleRes)
         }
     }
 
