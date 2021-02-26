@@ -93,7 +93,7 @@ class ReaderInterestsViewModelTest {
     fun `discover close reader screen triggered if non empty user tags are received from repo`() =
             testWithNonEmptyUserTags {
                 // When
-                initViewModel()
+                initViewModel(EntryPoint.DISCOVER)
 
                 // Then
                 verify(parentViewModel, times(1)).onCloseReaderInterests()
@@ -103,9 +103,7 @@ class ReaderInterestsViewModelTest {
     fun `settings does not close reader screen triggered if non empty user tags are received from repo`() =
             testWithNonEmptyUserTags {
                 // When
-                initViewModel(
-                        entryPoint = EntryPoint.SETTINGS
-                )
+                initViewModel(EntryPoint.SETTINGS)
 
                 // Then
                 verify(parentViewModel, times(0)).onCloseReaderInterests()
@@ -212,7 +210,7 @@ class ReaderInterestsViewModelTest {
                 coroutineScope.pauseDispatcher()
 
                 // Trigger data load
-                initViewModel()
+                initViewModel(EntryPoint.DISCOVER)
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonHiddenUiState::class.java)
@@ -237,9 +235,7 @@ class ReaderInterestsViewModelTest {
                 coroutineScope.pauseDispatcher()
 
                 // Trigger data load
-                initViewModel(
-                        entryPoint = EntryPoint.SETTINGS
-                )
+                initViewModel(EntryPoint.SETTINGS)
 
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonHiddenUiState::class.java)
@@ -322,7 +318,7 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
-                initViewModel()
+                initViewModel(EntryPoint.DISCOVER)
 
                 // Then
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
@@ -339,9 +335,7 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
-                initViewModel(
-                        entryPoint = EntryPoint.SETTINGS
-                )
+                initViewModel(EntryPoint.SETTINGS)
 
                 // Then
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
@@ -359,7 +353,7 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
                 // When
-                initViewModel()
+                initViewModel(EntryPoint.DISCOVER)
                 viewModel.onDoneButtonClick()
 
                 // Then
@@ -375,9 +369,7 @@ class ReaderInterestsViewModelTest {
                 whenever(readerTagRepository.saveInterests(any())).thenReturn(Success)
 
                 // When
-                initViewModel(
-                        entryPoint = EntryPoint.SETTINGS
-                )
+                initViewModel(EntryPoint.SETTINGS)
                 viewModel.onDoneButtonClick()
 
                 // Then
@@ -546,7 +538,8 @@ class ReaderInterestsViewModelTest {
     @Test
     fun `discover close reader screen on back button click`() {
         // When
-        initViewModel()
+        initViewModel(EntryPoint.DISCOVER)
+
         viewModel.onBackButtonClick()
 
         // Then
@@ -556,9 +549,8 @@ class ReaderInterestsViewModelTest {
     @Test
     fun `settings close reader screen on back button click`() {
         // When
-        initViewModel(
-                entryPoint = EntryPoint.SETTINGS
-        )
+        initViewModel(EntryPoint.SETTINGS)
+
         viewModel.onBackButtonClick()
 
         // Then
@@ -568,9 +560,9 @@ class ReaderInterestsViewModelTest {
     private fun initViewModel(
         entryPoint: EntryPoint = EntryPoint.DISCOVER
     ) = viewModel.start(
+            entryPoint = entryPoint,
             currentLanguage = CURRENT_LANGUAGE,
-            parentViewModel = parentViewModel,
-            entryPoint = entryPoint
+            parentViewModel = parentViewModel
     )
 
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {
