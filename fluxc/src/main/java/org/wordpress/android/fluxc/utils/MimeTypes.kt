@@ -5,8 +5,19 @@ import org.wordpress.android.fluxc.utils.MimeType.Type.APPLICATION
 import org.wordpress.android.fluxc.utils.MimeType.Type.AUDIO
 import org.wordpress.android.fluxc.utils.MimeType.Type.IMAGE
 import org.wordpress.android.fluxc.utils.MimeType.Type.VIDEO
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.NO_PLAN_SPECIFIED
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.SELF_HOSTED
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.WP_COM_FREE
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan.WP_COM_PAID
 
 class MimeTypes {
+    enum class Plan {
+        NO_PLAN_SPECIFIED,
+        SELF_HOSTED,
+        WP_COM_FREE,
+        WP_COM_PAID
+    }
+
     /*
      * The WordPress supported audio types based on https://wordpress.com/support/accepted-filetypes/ are:
      * .mp3, .m4a, .ogg, .wav
