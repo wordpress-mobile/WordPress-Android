@@ -97,6 +97,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
+        viewModel.closeReaderInterests.observe(viewLifecycleOwner, { event ->
+            event?.getContentIfNotHandled()?.let {
+                requireActivity().finish()
+            }
+        })
+
         viewModel.start(
                 LocaleManager.getLanguage(WordPress.getContext()),
                 parentViewModel,
