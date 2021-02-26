@@ -10,6 +10,7 @@ import com.nhaarman.mockitokotlin2.never
 import com.nhaarman.mockitokotlin2.times
 import com.nhaarman.mockitokotlin2.verify
 import com.nhaarman.mockitokotlin2.whenever
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.Before
@@ -20,6 +21,7 @@ import org.mockito.ArgumentMatchers.anyBoolean
 import org.mockito.ArgumentMatchers.anyInt
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.MainCoroutineScopeRule
 import org.wordpress.android.R
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.models.ReaderBlog
@@ -35,6 +37,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.discover.DiscoverSortingType.POPULARITY
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.TIME
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
@@ -57,6 +60,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMAR
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.COMMENTS
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
+import org.wordpress.android.ui.reader.discover.SortingDialogUiState.DialogVisible
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
@@ -73,6 +77,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.FilterDiscoverFeatureConfig
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ReactiveMutableLiveData
@@ -97,6 +102,11 @@ class ReaderDiscoverViewModelTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
+    @ExperimentalCoroutinesApi
+    @Rule
+    @JvmField
+    val coroutineScope = MainCoroutineScopeRule()
+
     @Mock private lateinit var readerDiscoverDataProvider: ReaderDiscoverDataProvider
     @Mock private lateinit var uiStateBuilder: ReaderPostUiStateBuilder
     @Mock private lateinit var menuUiStateBuilder: ReaderPostMoreButtonUiStateBuilder
@@ -108,6 +118,7 @@ class ReaderDiscoverViewModelTest {
     @Mock private lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock private lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock private lateinit var parentViewModel: ReaderViewModel
+    @Mock lateinit var filterDiscoverFeatureConfig: FilterDiscoverFeatureConfig
 
     private val fakeDiscoverFeed = ReactiveMutableLiveData<ReaderDiscoverCards>()
     private val fakeCommunicationChannel = MutableLiveData<Event<ReaderDiscoverCommunication>>()
@@ -130,7 +141,8 @@ class ReaderDiscoverViewModelTest {
                 displayUtilsWrapper,
                 getFollowedTagsUseCase,
                 TEST_DISPATCHER,
-                TEST_DISPATCHER
+                TEST_DISPATCHER,
+                filterDiscoverFeatureConfig
         )
         whenever(readerDiscoverDataProvider.discoverFeed).thenReturn(fakeDiscoverFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
@@ -182,6 +194,7 @@ class ReaderDiscoverViewModelTest {
         whenever(reblogUseCase.onReblogSiteSelected(anyInt(), anyOrNull())).thenReturn(mock())
         whenever(reblogUseCase.convertReblogStateToNavigationEvent(anyOrNull())).thenReturn(mock<OpenEditorForReblog>())
         whenever(getFollowedTagsUseCase.get()).thenReturn(ReaderTagList().apply { add(mock()) })
+        toggleFilterFeature(isEnable = true)
     }
 
     @Test
@@ -523,23 +536,25 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `Data are refreshed when the user swipes down to refresh`() = test {
         // Arrange
-        val currentSortingType = viewModel.sortingType
+        viewModel.start(parentViewModel)
+        val currentSortingType = viewModel.sortingType.value
 
         // Act
         viewModel.swipeToRefresh()
 
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     @Test
     fun `Data are refreshed when the user clicks on retry`() = test {
         // Arrange
-        val currentSortingType = viewModel.sortingType
+        viewModel.start(parentViewModel)
+        val currentSortingType = viewModel.sortingType.value
         // Act
         viewModel.onRetryButtonClick()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     @Test
@@ -547,7 +562,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val sortingType = POPULARITY
         // Act
-        viewModel.onSortingTypeChanged(sortingType)
+        viewModel.onSortingTypeChose(sortingType)
         // Assert
         verify(readerDiscoverDataProvider).refreshCards(sortingType)
     }
@@ -558,11 +573,59 @@ class ReaderDiscoverViewModelTest {
         val sortingType = POPULARITY
 
         // Act
-        viewModel.onSortingTypeChanged(sortingType)
-        viewModel.onSortingTypeChanged(sortingType)
+        viewModel.onSortingTypeChose(sortingType)
+        viewModel.onSortingTypeChose(sortingType)
 
         // Assert
         verify(readerDiscoverDataProvider, times(1)).refreshCards(sortingType)
+    }
+
+    @Test
+    fun `When sorting feature is disable, Filter button is hide`() {
+        // arrange
+        toggleFilterFeature(isEnable = false)
+        viewModel.start(parentViewModel)
+        viewModel.mDiscoverSortingButtonUiState.observeForever { }
+
+        // act
+
+        val sortingTypeUiState = viewModel.mDiscoverSortingButtonUiState.value
+        val canShow = sortingTypeUiState?.getContentIfNotHandled()?.canShow
+
+        // assert
+        assertThat(canShow).isFalse()
+    }
+
+    @Test
+    fun `When sorting button is clicked, dialog is shown`() = test {
+        // arrange
+        viewModel.sortingDialogUiState.observeForever { }
+
+        // act
+        viewModel.onSortingTypeButtonClicked()
+
+        val dialogUiState = viewModel.sortingDialogUiState.value
+        // assert
+        assertThat(dialogUiState!!.peekContent()).isEqualTo(DialogVisible)
+    }
+
+    @ExperimentalCoroutinesApi
+    @Test
+    fun `When data is refreshing and sorting button is clicked, dialog is not shown`() = test {
+        // arrange
+        viewModel.start(parentViewModel)
+        viewModel.sortingDialogUiState.observeForever { }
+
+        // act
+        viewModel.onSortingTypeChose(TIME)
+        coroutineScope.pauseDispatcher()
+        viewModel.onSortingTypeButtonClicked()
+        val dialogUiState = viewModel.sortingDialogUiState.value!!
+
+        // assert
+        assertThat(dialogUiState.peekContent().isVisible).isFalse()
+
+        coroutineScope.resumeDispatcher()
     }
 
     @Test
@@ -618,14 +681,14 @@ class ReaderDiscoverViewModelTest {
     fun `Action button on error empty screen invokes refresh cards`() = test {
         // Arrange
         val uiStates = init(autoUpdateFeed = false).uiStates
-        val currentSortingType = viewModel.sortingType
+        val currentSortingType = viewModel.sortingType.value
 
         viewModel.start(parentViewModel)
         fakeCommunicationChannel.postValue(Event(NetworkUnavailable(mock())))
         // Act
         (viewModel.uiState.value as RequestFailedUiState).action.invoke()
         // Assert
-        verify(readerDiscoverDataProvider).refreshCards(currentSortingType)
+        verify(readerDiscoverDataProvider).refreshCards(currentSortingType!!)
     }
 
     private fun init(autoUpdateFeed: Boolean = true): Observers {
@@ -782,6 +845,10 @@ class ReaderDiscoverViewModelTest {
     private fun createWelcomeBannerCard() = listOf(WelcomeBannerCard)
     private fun createReaderRecommendedBlogsCardList(): List<ReaderRecommendedBlogsCard> {
         return listOf(ReaderRecommendedBlogsCard(createRecommendedBlogsList()))
+    }
+
+    private fun toggleFilterFeature(isEnable: Boolean) {
+        whenever(filterDiscoverFeatureConfig.isEnabled()).thenAnswer { isEnable }
     }
 
     private data class Observers(
