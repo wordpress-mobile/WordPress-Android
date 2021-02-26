@@ -23,6 +23,7 @@ import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.models.ReaderTagType
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
@@ -435,9 +436,12 @@ class ReaderInterestsViewModelTest {
                         .isEqualTo(SnackbarMessageHolder(UiStringRes(R.string.reader_error_request_failed_title)))
             }
 
-    private fun initViewModel() = viewModel.start(
+    private fun initViewModel(
+        entryPoint: EntryPoint = EntryPoint.DISCOVER
+    ) = viewModel.start(
+            currentLanguage = CURRENT_LANGUAGE,
             parentViewModel = parentViewModel,
-            currentLanguage = CURRENT_LANGUAGE
+            entryPoint = entryPoint
     )
 
     private fun <T> testWithEmptyUserTags(block: suspend CoroutineScope.() -> T) {

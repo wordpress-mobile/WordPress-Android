@@ -15,6 +15,7 @@ import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PI
 import org.wordpress.android.models.ReaderTag
 import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonDisabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonEnabledUiState
 import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsViewModel.DoneButtonUiState.DoneButtonHiddenUiState
@@ -42,6 +43,8 @@ class ReaderInterestsViewModel @Inject constructor(
     private lateinit var currentLanguage: String
     private lateinit var parentViewModel: ReaderViewModel
 
+    private var entryPoint = EntryPoint.DISCOVER
+
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
@@ -50,13 +53,18 @@ class ReaderInterestsViewModel @Inject constructor(
 
     private var userTagsFetchedSuccessfully = false
 
-    fun start(parentViewModel: ReaderViewModel, currentLanguage: String) {
+    fun start(
+        parentViewModel: ReaderViewModel,
+        currentLanguage: String,
+        entryPoint: EntryPoint
+    ) {
         this.parentViewModel = parentViewModel
         if (isStarted && isLanguageSame(currentLanguage)) {
             return
         }
         loadUserTags()
         this.currentLanguage = currentLanguage
+        this.entryPoint = entryPoint
         isStarted = true
     }
 

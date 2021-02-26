@@ -91,7 +91,11 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.start(parentViewModel, LocaleManager.getLanguage(WordPress.getContext()))
+        viewModel.start(
+                parentViewModel,
+                LocaleManager.getLanguage(WordPress.getContext()),
+                EntryPoint.DISCOVER
+        )
     }
 
     private fun updateDoneButton(doneButtonUiState: DoneButtonUiState) {
@@ -154,5 +158,10 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     companion object {
         const val TAG = "reader_interests_fragment_tag"
+    }
+
+    enum class EntryPoint {
+        DISCOVER,
+        SETTINGS
     }
 }
