@@ -10,12 +10,14 @@
 
     <RelativeLayout
         android:id="@+id/back_button"
+        android:visibility="gone"
         android:layout_width="@dimen/min_touch_target_sz"
         android:layout_height="@dimen/min_touch_target_sz"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintRight_toLeftOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintBottom_toTopOf="@+id/scroll_view">
+        app:layout_constraintBottom_toTopOf="@+id/scroll_view"
+        tools:visibility="visible">
 
         <ImageView
             android:layout_width="wrap_content"

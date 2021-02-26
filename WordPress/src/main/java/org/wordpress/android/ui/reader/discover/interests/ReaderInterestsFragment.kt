@@ -38,7 +38,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
                 ?: EntryPoint.DISCOVER
         initDoneButton()
         initRetryButton()
-        initBackButton()
+        initBackButton(entryPoint)
         initViewModel(entryPoint)
     }
 
@@ -54,9 +54,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun initBackButton() {
-        back_button.setOnClickListener {
-            viewModel.onBackButtonClick()
+    private fun initBackButton(entryPoint: EntryPoint) {
+        if (entryPoint == EntryPoint.DISCOVER) {
+            back_button.visibility = View.VISIBLE
+            back_button.setOnClickListener {
+                viewModel.onBackButtonClick()
+            }
         }
     }
 
