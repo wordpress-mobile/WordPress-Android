@@ -80,7 +80,7 @@
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/interests_chip_group"
                 android:layout_width="0dp"
-                android:layout_height="wrap_content"
+                android:layout_height="match_parent"
                 android:layout_marginBottom="@dimen/margin_extra_large"
                 android:layoutDirection="locale"
                 app:chipSpacing="@dimen/margin_small_medium"
