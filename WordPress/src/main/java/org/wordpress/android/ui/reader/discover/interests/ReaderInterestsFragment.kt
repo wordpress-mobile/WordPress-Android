@@ -34,10 +34,12 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val entryPoint = requireActivity().intent.getSerializableExtra(READER_INTEREST_ENTRY_POINT) as? EntryPoint
+                ?: EntryPoint.DISCOVER
         initDoneButton()
         initRetryButton()
         initBackButton()
-        initViewModel()
+        initViewModel(entryPoint)
     }
 
     private fun initDoneButton() {
@@ -58,13 +60,13 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(entryPoint: EntryPoint) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        startObserving()
+        startObserving(entryPoint)
     }
 
-    private fun startObserving() {
+    private fun startObserving(entryPoint: EntryPoint) {
         viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             when (uiState) {
                 is InitialLoadingUiState -> {
@@ -93,7 +95,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
         viewModel.start(
                 LocaleManager.getLanguage(WordPress.getContext()),
                 parentViewModel,
-                EntryPoint.DISCOVER
+                entryPoint
         )
     }
 
