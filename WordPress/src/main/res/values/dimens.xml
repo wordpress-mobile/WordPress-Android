@@ -619,10 +619,6 @@
     <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
-    <dimen name="hpp_card_width">160dp</dimen>
-    <dimen name="hpp_card_padding">16dp</dimen>
-    <dimen name="hpp_card_margin_outer">40dp</dimen>
-    <dimen name="hpp_maximum_container_width">728dp</dimen>
     <dimen name="hpp_subtitle_width">350dp</dimen>
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>

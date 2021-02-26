@@ -25,6 +25,8 @@ import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.ui.PreviewMode.valueOf
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
+import org.wordpress.android.ui.mlp.LayoutCategoryUiState
+import org.wordpress.android.ui.mlp.LayoutListItemUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
@@ -150,28 +152,47 @@ class HomePagePickerViewModel @Inject constructor(
         }
     }
 
+    fun List<StarterDesign>.getFilteredLayouts(categorySlug: String) =
+            layouts.filter { l -> l.categories.any { c -> c.slug == categorySlug } }
+
     private fun loadLayouts() {
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         launch(bgDispatcher) {
-            val designs = layouts.filter {
-                state.selectedCategoriesSlugs.isEmpty() ||
-                        it.categories.map { it.slug }.intersect(state.selectedCategoriesSlugs).isNotEmpty()
-            }.map {
-                LayoutGridItemUiState(
-                        slug = it.slug,
-                        title = it.title,
-                        preview = when (_previewMode.value) {
-                            MOBILE -> it.previewMobile
-                            TABLET -> it.previewTablet
-                            else -> it.preview
-                        },
-                        selected = it.slug == state.selectedLayoutSlug,
-                        onItemTapped = { onLayoutTapped(layoutSlug = it.slug) },
-                        onThumbnailReady = { onThumbnailReady(layoutSlug = it.slug) }
+            val listItems = ArrayList<LayoutCategoryUiState>()
+
+            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty()) {
+                categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
+            } else {
+                categories
+            }
+
+            selectedCategories.sortedBy { it.title }.forEach { category ->
+
+                val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
+                    LayoutListItemUiState(
+                            slug = layout.slug,
+                            title = layout.title,
+                            preview = when (_previewMode.value) {
+                                MOBILE -> layout.previewMobile
+                                TABLET -> layout.previewTablet
+                                else -> layout.preview
+                            },
+                            selected = layout.slug == state.selectedLayoutSlug,
+                            onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
+                            onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
+                    )
+                }
+                listItems.add(
+                        LayoutCategoryUiState(
+                                category.slug,
+                                category.title,
+                                category.description,
+                                layouts
+                        )
                 )
             }
             withContext(mainDispatcher) {
-                updateUiState(state.copy(layouts = designs))
+                updateUiState(state.copy(layoutCategories = listItems))
             }
         }
     }
@@ -377,7 +398,7 @@ class HomePagePickerViewModel @Inject constructor(
             val selectedLayoutSlug: String? = null,
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
             val categories: List<CategoryListItemUiState> = listOf(),
-            val layouts: List<LayoutGridItemUiState> = listOf()
+            val layoutCategories: List<LayoutCategoryUiState> = listOf()
         ) : UiState()
 
         class Error(@StringRes val toast: Int? = null) :

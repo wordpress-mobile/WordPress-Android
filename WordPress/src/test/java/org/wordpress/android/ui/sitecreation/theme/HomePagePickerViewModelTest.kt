@@ -16,6 +16,7 @@ import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesign
+import org.wordpress.android.fluxc.model.StarterDesignCategory
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
@@ -50,6 +51,13 @@ class HomePagePickerViewModelTest {
 
     private lateinit var viewModel: HomePagePickerViewModel
 
+    val mockCategory = StarterDesignCategory(
+            slug = "about",
+            title = "About",
+            description = "About pages",
+            emoji = "👋"
+    )
+
     @Before
     fun setUp() {
         viewModel = HomePagePickerViewModel(
@@ -78,7 +86,7 @@ class HomePagePickerViewModelTest {
                                 mockedDesignSlug,
                                 "title",
                                 mockedDesignSegmentId,
-                                listOf(), // categories
+                                listOf(mockCategory),
                                 mockedDesignDemoUrl,
                                 "theme",
                                 "desktopThumbnail",
@@ -86,7 +94,7 @@ class HomePagePickerViewModelTest {
                                 "mobileThumbnail"
                         )
                 ),
-                emptyList(),
+                listOf(mockCategory),
                 null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
@@ -97,9 +105,9 @@ class HomePagePickerViewModelTest {
     fun `when the picker starts the content is loaded`() = mockResponse {
         viewModel.start()
         val captor = ArgumentCaptor.forClass(UiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
         assertThat(captor.value is UiState.Content)
-        assertThat((captor.value as UiState.Content).layouts.size).isGreaterThan(0)
+        assertThat((captor.value as UiState.Content).layoutCategories.size).isGreaterThan(0)
     }
 
     @Test
