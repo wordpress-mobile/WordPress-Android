@@ -304,8 +304,8 @@ class ActivityLogViewModel @Inject constructor(
         }
     }
 
-    private fun showBackupDownloadFinishedMessage(rewindId: String?, published: Date?) {
-        val rewindDate = published ?: rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
+    private fun showBackupDownloadFinishedMessage(rewindId: String?) {
+        val rewindDate = rewindId?.let { activityLogStore.getActivityLogItemByRewindId(it)?.published }
         if (rewindDate != null) {
             _showSnackbarMessage.value =
                     resourceProvider.getString(
@@ -673,7 +673,7 @@ class ActivityLogViewModel @Inject constructor(
         if (actionState == PROGRESS.id) {
             showBackupDownloadStartedMessage(rewindId)
         } else {
-            showBackupDownloadFinishedMessage(rewindId, null)
+            showBackupDownloadFinishedMessage(rewindId)
         }
     }
 
