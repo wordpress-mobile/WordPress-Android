@@ -91,7 +91,7 @@ class MimeTypes {
      * .key - missing - "application/keynote"
      * .zip (Archive File Format)
      */
-    private val documentTypes = listOf(
+    private val wpComPaidAndSelfHostedDocumentTypes = listOf(
             MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
             MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
             MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
@@ -113,6 +113,29 @@ class MimeTypes {
             MimeType(APPLICATION, Subtype.KEYNOTE, listOf("key")),
             MimeType(APPLICATION, Subtype.ZIP, listOf("zip"))
     )
+
+    private val wpComFreeDocumentTypes = listOf(
+            MimeType(APPLICATION, Subtype.PDF, listOf("pdf")),
+            MimeType(APPLICATION, listOf(Subtype.MSWORD, Subtype.DOC, Subtype.MSDOC), listOf("doc")),
+            MimeType(APPLICATION, Subtype.DOCX, listOf("docx")),
+            MimeType(
+                    APPLICATION,
+                    listOf(Subtype.POWERPOINT, Subtype.MSPOWERPOINT, Subtype.X_MSPOWERPOINT),
+                    listOf("ppt")
+            ),
+            MimeType(APPLICATION, Subtype.VND_MSPOWERPOINT, listOf("pps")),
+            MimeType(APPLICATION, Subtype.PPTX, listOf("pptx")),
+            MimeType(APPLICATION, Subtype.PPSX, listOf("ppsx")),
+            MimeType(APPLICATION, Subtype.ODT, listOf("odt")),
+            MimeType(
+                    APPLICATION,
+                    listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
+                    listOf("xls")
+            ),
+            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
+    )
+
+    private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
 
     fun isAudioType(type: String?): Boolean {
         return isExpectedMimeType(audioTypes, type)
