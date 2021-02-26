@@ -157,6 +157,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     companion object {
         const val TAG = "reader_interests_fragment_tag"
+        const val READER_INTEREST_ENTRY_POINT = "reader_interest_entry_point"
     }
 
     enum class EntryPoint {
