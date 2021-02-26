@@ -67,13 +67,15 @@
                 style="@style/ReaderTextView.Interests.Title"
                 android:id="@+id/title"
                 android:text="@string/reader_label_choose_your_interests"
+                android:visibility="gone"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="@id/guideline_beginning"
                 app:layout_constraintEnd_toEndOf="@id/guideline_end"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toTopOf="@+id/interests_chip_group"
                 app:layout_constraintVertical_chainStyle="packed"
-                tools:text="Choose your interests" />
+                tools:text="Choose your interests"
+                tools:visibility="visible" />
 
             <com.google.android.material.chip.ChipGroup
                 android:id="@+id/interests_chip_group"
