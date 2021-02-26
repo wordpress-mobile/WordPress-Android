@@ -8,7 +8,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
-import org.wordpress.android.R.string
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_TAG_FOLLOWED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SELECT_INTERESTS_PICKED
@@ -158,7 +157,7 @@ class ReaderInterestsViewModel @Inject constructor(
                 is Error -> {
                     if (result is NetworkUnavailable) {
                         _snackbarEvents.postValue(
-                                Event(SnackbarMessageHolder(UiStringRes(string.no_network_message)))
+                                Event(SnackbarMessageHolder(UiStringRes(R.string.no_network_message)))
                         )
                     } else if (result is RemoteRequestFailure) {
                         _snackbarEvents.postValue(
