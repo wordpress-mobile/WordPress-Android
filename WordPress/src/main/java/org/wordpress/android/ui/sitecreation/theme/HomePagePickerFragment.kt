@@ -6,21 +6,29 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.appbar.AppBarLayout
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.*
 import kotlinx.android.synthetic.main.home_page_picker_bottom_toolbar.chooseButton
-import kotlinx.android.synthetic.main.home_page_picker_fragment.*
+import kotlinx.android.synthetic.main.home_page_picker_fragment.appBarLayout
+import kotlinx.android.synthetic.main.home_page_picker_fragment.categoriesRecyclerView
 import kotlinx.android.synthetic.main.home_page_picker_fragment.errorView
+import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
 import kotlinx.android.synthetic.main.home_page_picker_loading_skeleton.*
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
+import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
+import kotlinx.android.synthetic.main.modal_layout_picker_fragment.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.PreviewModeSelectorPopup
+import org.wordpress.android.ui.mlp.CategoriesAdapter
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
@@ -62,6 +70,17 @@ class HomePagePickerFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        categoriesRecyclerView.apply {
+            layoutManager = LinearLayoutManager(
+                    context,
+                    RecyclerView.HORIZONTAL,
+                    false
+            )
+            setRecycledViewPool(RecyclerView.RecycledViewPool())
+            adapter = CategoriesAdapter()
+            ViewCompat.setNestedScrollingEnabled(this, false)
+        }
+
         layoutsRecyclerView.apply {
             adapter = HomePagePickerAdapter(imageManager, thumbDimensionProvider)
             layoutManager = GridLayoutManager(activity, thumbDimensionProvider.columns)
@@ -87,12 +106,15 @@ class HomePagePickerFragment : Fragment() {
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
             loadingIndicator.setVisible(uiState.loadingIndicatorVisible)
             errorView.setVisible(uiState.errorViewVisible)
+            categoriesSkeleton.setVisible(uiState.loadingIndicatorVisible)
+            categoriesRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             layoutsRecyclerView.setVisible(!uiState.loadingIndicatorVisible && !uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
                 is UiState.Loading -> { // Nothing more to do here
                 }
                 is UiState.Content -> {
+                    (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView.adapter as? HomePagePickerAdapter)?.setData(uiState.layouts)
                 }
                 is UiState.Error -> {
@@ -117,6 +139,12 @@ class HomePagePickerFragment : Fragment() {
 
         viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
             previewModeSelectorPopup.show(viewModel)
+        })
+
+        viewModel.onCategorySelected.observe(viewLifecycleOwner, Observer {
+            it?.applyIfNotHandled {
+                layoutsRecyclerView?.smoothScrollToPosition(0)
+            }
         })
 
         viewModel.start(displayUtils.isTablet())
