@@ -141,13 +141,6 @@ class QuickStartRepository
 
     @JvmOverloads fun completeTask(task: QuickStartTask, refreshImmediately: Boolean = false) {
         selectedSiteRepository.getSelectedSite()?.let { site ->
-            // TODO Remove this before the feature is done
-            // Uncomment this code to mark a task as not completed for testing purposes
-//            if (quickStartStore.hasDoneTask(site.id.toLong(), task)) {
-//                quickStartStore.setDoneTask(site.id.toLong(), task, false)
-//                refresh.value = false
-//                return
-//            }
             if (task != activeTask.value && task != pendingTask) return
             _activeTask.value = null
             pendingTask = null
