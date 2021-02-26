@@ -8,7 +8,6 @@ import android.text.TextUtils;
 import android.text.style.TypefaceSpan;
 import android.view.Gravity;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
@@ -244,7 +243,8 @@ public class NoteBlock {
                             noteBlockHolder.getMaterialButton().setOnClickListener(v -> {
                                 FormattableRange buttonRange = FormattableContentUtilsKt.getButtonRange(mNoteData);
                                 if (getOnNoteBlockTextClickListener() != null && buttonRange != null) {
-                                    NoteBlockClickableSpan clickableSpan = new NoteBlockClickableSpan(buttonRange, true, false);
+                                    NoteBlockClickableSpan clickableSpan =
+                                            new NoteBlockClickableSpan(buttonRange, true, false);
                                     getOnNoteBlockTextClickListener().onNoteBlockTextClicked(clickableSpan);
                                 }
                             });
