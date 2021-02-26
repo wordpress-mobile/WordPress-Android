@@ -43,6 +43,7 @@ import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.SmartToast
 import org.wordpress.android.util.SmartToast.SmartToastType.COMMENTS_LONG_PRESS
+import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
 import javax.inject.Inject
@@ -73,9 +74,13 @@ class CommentsActivity : LocaleAwareActivity(),
 
         setContentView(layout.comment_activity)
 
-        site = checkNotNull(intent.getSerializableExtra(WordPress.SITE) as? SiteModel) {
-            "SiteModel cannot be null, check the PendingIntent starting CommentsActivity"
+        if (!intent.hasExtra(WordPress.SITE)) {
+            ToastUtils.showToast(this, string.blog_not_found, ToastUtils.Duration.SHORT)
+            finish()
+            return
         }
+
+        site = intent.getSerializableExtra(WordPress.SITE) as SiteModel
 
         appBar = findViewById(id.appbar_main)
 
