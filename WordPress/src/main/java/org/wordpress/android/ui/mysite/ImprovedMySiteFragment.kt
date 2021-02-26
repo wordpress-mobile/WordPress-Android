@@ -185,7 +185,7 @@ class ImprovedMySiteFragment : Fragment(),
         })
         viewModel.onScrollTo.observe(viewLifecycleOwner, {
             it?.applyIfNotHandled {
-                (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this.second, 0)
+                (recycler_view.layoutManager as LinearLayoutManager).scrollToPositionWithOffset(this, 0)
             }
         })
         viewModel.onBasicDialogShown.observe(viewLifecycleOwner, {
