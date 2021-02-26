@@ -265,9 +265,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val headerUiState: ReaderPostDetailsHeaderUiState,
         val moreMenuItems: List<SecondaryAction>? = null,
         val actions: ReaderPostActions,
-        /* related posts from the same site as the current post */
         val localRelatedPosts: RelatedPosts? = null,
-        /* related posts from across wp.com */
         val globalRelatedPosts: RelatedPosts? = null
     ) {
         data class RelatedPosts(val posts: ReaderSimplePostList?, val isGlobal: Boolean)
