@@ -195,7 +195,8 @@ class MimeTypes {
                 .toTypedArray()
     }
 
-    fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) = getAudioMimeTypesOnly(plan).toSet().toTypedArray()
+    fun getAudioTypesOnly(plan: Plan = NO_PLAN_SPECIFIED) =
+            (getAudioMimeTypesOnly(plan).toStrings()).toSet().toTypedArray()
 
     private fun getAudioMimeTypesOnly(plan: Plan = NO_PLAN_SPECIFIED): List<MimeType> {
         return when (plan) {
