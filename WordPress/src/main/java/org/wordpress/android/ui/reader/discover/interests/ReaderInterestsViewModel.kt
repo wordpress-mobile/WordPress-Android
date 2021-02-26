@@ -178,7 +178,10 @@ class ReaderInterestsViewModel @Inject constructor(
             readerTagRepository.clearTagLastUpdated(ReaderTag.createDiscoverPostCardsTag())
             when (val result = readerTagRepository.saveInterests(contentUiState.getSelectedInterests())) {
                 is Success -> {
-                    parentViewModel.onCloseReaderInterests()
+                    when (entryPoint) {
+                        EntryPoint.DISCOVER -> parentViewModel.onCloseReaderInterests()
+                        EntryPoint.SETTINGS -> _closeReaderInterests.value = Event(Unit)
+                    }
                 }
                 is Error -> {
                     if (result is NetworkUnavailable) {
