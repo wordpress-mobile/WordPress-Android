@@ -315,7 +315,7 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
-    fun `done button shown in disabled state if no interests are in selected state`() =
+    fun `discover done button shown in disabled state if no interests are in selected state`() =
             testWithEmptyUserTags {
                 // Given
                 val interests = getInterests()
@@ -327,6 +327,27 @@ class ReaderInterestsViewModelTest {
                 // Then
                 assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
                         .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_select_few_interests)
+            }
+
+    @Test
+    fun `settings done button shown in disabled state if no interests are in selected state`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // When
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
+
+                // Then
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState)
+                        .isInstanceOf(DoneButtonDisabledUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value).doneButtonUiState.titleRes)
+                        .isEqualTo(R.string.reader_btn_done)
             }
 
     @Test
