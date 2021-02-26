@@ -349,4 +349,23 @@
     <!-- Scan Threat Context Line Custom Colors -->
     <color name="context_line_highlighted_row_background">@color/red_5</color>
 
+    <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_illustration_background">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_surface">@color/white</color>
+    <color name="quick_start_task_card_illustration_details">@color/gray_30</color>
+    <color name="quick_start_task_card_illustration_line">@color/blue_5</color>
+    <color name="quick_start_task_card_illustration_area">@color/blue_0</color>
+    <color name="quick_start_task_card_illustration_mountain">@color/gray_5</color>
+    <color name="quick_start_task_card_illustration_sun_fill">#F5E6B3</color>
+    <color name="quick_start_task_card_illustration_sun_stroke">#F0C930</color>
+
+    <color name="quick_start_task_card_illustration_check_site_stats_stroke">@color/pink_5</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_area">@color/blue_0</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_fill">@color/gray_5</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_stroke">@color/gray_40</color>
+    <color name="quick_start_task_card_illustration_follow_other_sites_fill">@color/blue_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_header">@color/blue_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_body">@color/white</color>
+    <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/blue_5</color>
+    <color name="quick_start_task_card_illustration_visit_your_site_star">#FFD60A</color>
 </resources>
