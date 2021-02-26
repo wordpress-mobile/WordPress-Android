@@ -90,13 +90,25 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
-    fun `close reader screen triggered if non empty user tags are received from repo`() =
+    fun `discover close reader screen triggered if non empty user tags are received from repo`() =
             testWithNonEmptyUserTags {
                 // When
                 initViewModel()
 
                 // Then
                 verify(parentViewModel, times(1)).onCloseReaderInterests()
+            }
+
+    @Test
+    fun `settings does not close reader screen triggered if non empty user tags are received from repo`() =
+            testWithNonEmptyUserTags {
+                // When
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
+
+                // Then
+                verify(parentViewModel, times(0)).onCloseReaderInterests()
             }
 
     @Test
