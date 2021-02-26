@@ -54,21 +54,19 @@ class ReaderInterestsViewModel @Inject constructor(
     private var userTagsFetchedSuccessfully = false
 
     fun start(
-        parentViewModel: ReaderViewModel,
         currentLanguage: String,
+        parentViewModel: ReaderViewModel,
         entryPoint: EntryPoint
     ) {
-        this.parentViewModel = parentViewModel
-        if (isStarted && isLanguageSame(currentLanguage)) {
+        if (isStarted && this.currentLanguage == currentLanguage) {
             return
         }
-        loadUserTags()
-        this.currentLanguage = currentLanguage
-        this.entryPoint = entryPoint
         isStarted = true
+        this.currentLanguage = currentLanguage
+        this.parentViewModel = parentViewModel
+        this.entryPoint = entryPoint
+        loadUserTags()
     }
-
-    private fun isLanguageSame(currentLanguage: String) = this.currentLanguage == currentLanguage
 
     private fun loadUserTags() {
         updateUiState(InitialLoadingUiState)
