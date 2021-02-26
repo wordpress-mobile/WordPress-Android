@@ -110,7 +110,11 @@ class ReaderInterestsViewModel @Inject constructor(
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
                     ContentUiState(
                             interestsUiState = transformToInterestsUiState(distinctTags),
-                            interests = distinctTags
+                            interests = distinctTags,
+                            doneButtonUiState = when (entryPoint) {
+                                EntryPoint.DISCOVER -> DoneButtonDisabledUiState()
+                                EntryPoint.SETTINGS -> DoneButtonDisabledUiState(R.string.reader_btn_done)
+                            }
                     )
                 }
                 is NetworkUnavailable -> {
@@ -249,7 +253,7 @@ class ReaderInterestsViewModel @Inject constructor(
             val interestsUiState: List<TagUiState>,
             val interests: ReaderTagList,
             override val progressBarVisible: Boolean = false,
-            override val doneButtonUiState: DoneButtonUiState = DoneButtonDisabledUiState()
+            override val doneButtonUiState: DoneButtonUiState
         ) : UiState(
                 progressBarVisible = false,
                 titleVisible = true,
