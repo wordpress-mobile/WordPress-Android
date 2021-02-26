@@ -54,6 +54,23 @@
 
         </com.google.android.material.appbar.CollapsingToolbarLayout>
 
+        <include
+            layout="@layout/modal_layout_picker_categories_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/categoriesRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="@dimen/mlp_categories_bar_height"
+            android:background="?attr/layoutPickerBackground"
+            android:clipToPadding="false"
+            android:descendantFocusability="beforeDescendants"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/mlp_layout_card_margin_end"
+            android:paddingStart="@dimen/mlp_layout_card_margin_start"
+            android:scrollbars="none" />
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <include

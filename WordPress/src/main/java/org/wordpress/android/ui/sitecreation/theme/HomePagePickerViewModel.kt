@@ -13,6 +13,7 @@ import kotlinx.coroutines.withContext
 import org.wordpress.android.R
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.model.StarterDesign
+import org.wordpress.android.fluxc.model.StarterDesignCategory
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.PreviewMode
@@ -23,8 +24,10 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.ui.PreviewMode.valueOf
+import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
+import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.SingleLiveEvent
 import javax.inject.Inject
 import javax.inject.Named
@@ -50,6 +53,7 @@ class HomePagePickerViewModel @Inject constructor(
         get() = bgDispatcher + fetchHomePageLayoutsJob
 
     lateinit var layouts: List<StarterDesign>
+    lateinit var categories: List<StarterDesignCategory>
 
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
@@ -59,6 +63,9 @@ class HomePagePickerViewModel @Inject constructor(
 
     private val _onDesignActionPressed = SingleLiveEvent<DesignSelectionAction>()
     val onDesignActionPressed: LiveData<DesignSelectionAction> = _onDesignActionPressed
+
+    private val _onCategorySelected = MutableLiveData<Event<Unit>>()
+    val onCategorySelected: LiveData<Event<Unit>> = _onCategorySelected
 
     private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
     val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
@@ -117,17 +124,39 @@ class HomePagePickerViewModel @Inject constructor(
                     analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, "Error fetching designs")
                     updateUiState(UiState.Error())
                 } else {
+                    categories = event.categories
                     layouts = event.designs
-                    loadLayouts()
+                    loadCategories()
                 }
             }
+        }
+    }
+
+    private fun loadCategories() {
+        val state = uiState.value as? UiState.Content ?: UiState.Content()
+        launch(bgDispatcher) {
+            val listItems: List<CategoryListItemUiState> = categories.sortedBy { it.title }.map {
+                CategoryListItemUiState(
+                        it.slug,
+                        it.title,
+                        it.emoji ?: "",
+                        state.selectedCategoriesSlugs.contains(it.slug)
+                ) { onCategoryTapped(it.slug) }
+            }
+            withContext(mainDispatcher) {
+                updateUiState(state.copy(categories = listItems))
+            }
+            loadLayouts()
         }
     }
 
     private fun loadLayouts() {
         val state = uiState.value as? UiState.Content ?: UiState.Content()
         launch(bgDispatcher) {
-            val designs = layouts.map {
+            val designs = layouts.filter {
+                state.selectedCategoriesSlugs.isEmpty() ||
+                        it.categories.map { it.slug }.intersect(state.selectedCategoriesSlugs).isNotEmpty()
+            }.map {
                 LayoutGridItemUiState(
                         slug = it.slug,
                         title = it.title,
@@ -268,6 +297,28 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     /**
+     * Category tapped
+     * @param categorySlug the slug of the tapped category
+     */
+    fun onCategoryTapped(categorySlug: String) {
+        (uiState.value as? UiState.Content)?.let { state ->
+            if (state.selectedCategoriesSlugs.contains(categorySlug)) { // deselect
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply {
+                            remove(categorySlug)
+                        })
+                )
+            } else {
+                updateUiState(
+                        state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
+                )
+            }
+            loadCategories()
+            _onCategorySelected.postValue(Event(Unit))
+        }
+    }
+
+    /**
      * Layout tapped
      * @param layoutSlug the slug of the tapped layout
      */
@@ -322,8 +373,10 @@ class HomePagePickerViewModel @Inject constructor(
         data class Content(
             override val isHeaderVisible: Boolean = false,
             override val isToolbarVisible: Boolean = false,
+            val selectedCategoriesSlugs: ArrayList<String> = arrayListOf(),
             val selectedLayoutSlug: String? = null,
             val loadedThumbnailSlugs: ArrayList<String> = arrayListOf(),
+            val categories: List<CategoryListItemUiState> = listOf(),
             val layouts: List<LayoutGridItemUiState> = listOf()
         ) : UiState()
 
