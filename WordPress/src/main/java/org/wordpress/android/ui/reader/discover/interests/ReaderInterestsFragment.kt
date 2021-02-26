@@ -25,7 +25,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: ReaderInterestsViewModel
-    private lateinit var parentViewModel: ReaderViewModel
+    private var parentViewModel: ReaderViewModel? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +62,9 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
 
     private fun initViewModel(entryPoint: EntryPoint) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderInterestsViewModel::class.java)
-        parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
+        if (entryPoint == EntryPoint.DISCOVER) {
+            parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
+        }
         startObserving(entryPoint)
     }
 

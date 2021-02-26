@@ -40,7 +40,7 @@ class ReaderInterestsViewModel @Inject constructor(
 ) : ViewModel() {
     private var isStarted = false
     private lateinit var currentLanguage: String
-    private lateinit var parentViewModel: ReaderViewModel
+    private var parentViewModel: ReaderViewModel? = null
 
     private var entryPoint = EntryPoint.DISCOVER
     private var userTags = ReaderTagList()
@@ -58,7 +58,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun start(
         currentLanguage: String,
-        parentViewModel: ReaderViewModel,
+        parentViewModel: ReaderViewModel?,
         entryPoint: EntryPoint
     ) {
         if (isStarted && this.currentLanguage == currentLanguage) {
@@ -98,7 +98,7 @@ class ReaderInterestsViewModel @Inject constructor(
         if (userTags.isEmpty()) {
             loadInterests(userTags)
         } else {
-            parentViewModel.onCloseReaderInterests()
+            parentViewModel?.onCloseReaderInterests()
         }
     }
 
@@ -182,7 +182,7 @@ class ReaderInterestsViewModel @Inject constructor(
             when (val result = readerTagRepository.saveInterests(contentUiState.getSelectedInterests())) {
                 is Success -> {
                     when (entryPoint) {
-                        EntryPoint.DISCOVER -> parentViewModel.onCloseReaderInterests()
+                        EntryPoint.DISCOVER -> parentViewModel?.onCloseReaderInterests()
                         EntryPoint.SETTINGS -> _closeReaderInterests.value = Event(Unit)
                     }
                 }
@@ -246,7 +246,7 @@ class ReaderInterestsViewModel @Inject constructor(
 
     fun onBackButtonClick() {
         when (entryPoint) {
-            EntryPoint.DISCOVER -> parentViewModel.onCloseReaderInterests()
+            EntryPoint.DISCOVER -> parentViewModel?.onCloseReaderInterests()
             EntryPoint.SETTINGS -> _closeReaderInterests.value = Event(Unit)
         }
     }
