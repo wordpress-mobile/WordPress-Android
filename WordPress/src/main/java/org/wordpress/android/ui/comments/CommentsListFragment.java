@@ -472,17 +472,15 @@ public class CommentsListFragment extends ViewPagerFragment {
             return;
         }
 
-        mSwipeRefreshLayout.setRefreshing(true);
-
         if (getAdapter().getItemCount() == 0) {
             showEmptyView(EmptyViewMessageType.LOADING);
         }
 
         // immediately load/refresh whatever we have in our local db as we wait for the API call to get latest results
         if (!loadMore) {
+            mSwipeRefreshLayout.setRefreshing(true);
             getAdapter().loadComments(mCommentStatusFilter.toCommentStatus());
         }
-
 
         int offset = 0;
         if (loadMore) {
