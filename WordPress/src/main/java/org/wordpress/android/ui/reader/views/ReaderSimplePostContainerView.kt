@@ -5,6 +5,7 @@ import android.util.AttributeSet
 import android.widget.LinearLayout
 import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
+import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView.OnSimplePostClickListener
@@ -23,6 +24,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     private val simplePostList = ReaderSimplePostList()
 
     init {
+        (context.applicationContext as WordPress).component().inject(this)
         initView(context)
     }
 
