@@ -3,7 +3,6 @@ package org.wordpress.android.ui.reader.discover.interests
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.chip.Chip
 import com.google.android.material.snackbar.Snackbar
@@ -66,7 +65,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
     }
 
     private fun startObserving() {
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             when (uiState) {
                 is InitialLoadingUiState -> {
                 }
@@ -85,7 +84,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             }
         })
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, {
             it?.applyIfNotHandled {
                 showSnackbar()
             }
