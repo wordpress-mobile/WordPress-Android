@@ -154,10 +154,11 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
-    fun `interests correctly shown on successful interests data load`() =
+    fun `interests correctly shown on successful interests data load without excluded interests`() =
             testWithEmptyUserTags {
                 // Given
                 val interests = getInterests()
+                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(ReaderTagList()))
                 whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
 
                 // When
@@ -175,7 +176,33 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
-    fun `done button hidden on start switches to disabled state when interests tags received from repo`() =
+    fun `interests correctly shown on successful interests data load with excluded interests`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                val excludedInterests = getExcludedInterests()
+                whenever(readerTagRepository.getUserTags()).thenReturn(SuccessWithData(excludedInterests))
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // When
+                initViewModel(
+                        entryPoint = EntryPoint.SETTINGS
+                )
+
+                // Then
+                interests.removeAll(excludedInterests)
+                assertThat(viewModel.uiState.value).isInstanceOf(ContentUiState::class.java)
+                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).interests)
+                        .isEqualTo(interests)
+
+                val uiState = requireNotNull(viewModel.uiState.value) as ContentUiState
+                assertThat(uiState.interests).isEqualTo(interests)
+                assertThat(uiState.interestsUiState[0]).isInstanceOf(TagUiState::class.java)
+                assertThat(uiState.interestsUiState[0].title).isEqualTo(interests[0].tagTitle)
+            }
+
+    @Test
+    fun `discover done button hidden on start switches to disabled state when interests tags received from repo`() =
             testWithEmptyUserTags {
                 // Given
                 val interests = getInterests()
@@ -484,6 +511,18 @@ class ReaderInterestsViewModelTest {
     private fun getInterests() =
             ReaderTagList().apply {
                 for (c in 'A'..'Z')
+                    (add(
+                            ReaderTag(
+                                    c.toString(), c.toString(), c.toString(),
+                                    "https://public-api.wordpress.com/rest/v1.2/read/tags/$c/posts",
+                                    ReaderTagType.DEFAULT
+                            )
+                    ))
+            }
+
+    private fun getExcludedInterests() =
+            ReaderTagList().apply {
+                for (c in 'A'..'C')
                     (add(
                             ReaderTag(
                                     c.toString(), c.toString(), c.toString(),
