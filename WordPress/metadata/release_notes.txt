@@ -1,6 +1,1 @@
-* [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
-* [**] Block Editor: Add support for setting Cover block focal point. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3028]
-* [**] Prevent deleting published homepages which would have the effect of breaking a site. [#14061]
-* [**] Prevent converting published homepage to a draft in the page list and settings which would have the effect of breaking a site. [#14061]
-* [**] People management on P2s: adds capability to generate, share and disable invite links for roles on your P2 site [https://github.com/wordpress-mobile/WordPress-Android/pull/14044]
-
+The latest updates to the WordPress.com Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.
