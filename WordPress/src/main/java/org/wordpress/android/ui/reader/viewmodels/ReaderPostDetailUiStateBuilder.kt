@@ -7,7 +7,9 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAc
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
+import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
@@ -40,7 +42,29 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             actions = buildPostActions(post, onButtonClicked)
     )
 
-    fun mapRelatedPostToUiState(
+    fun mapRelatedPostsToUiState(
+        sourcePost: ReaderPost,
+        relatedPosts: ReaderSimplePostList,
+        isGlobal: Boolean
+    ) = RelatedPostsUiState(
+            cards = relatedPosts.map {
+                mapRelatedPostToUiState(
+                        post = it,
+                        isGlobal = isGlobal,
+                        followButtonUiState = if (isGlobal) {
+                            FollowButtonUiState(
+                                    onFollowButtonClicked = null, // TODO: ashiagr implement follow button action
+                                    isFollowed = it.isFollowing,
+                                    isEnabled = true
+                            )
+                        } else null
+                )
+            },
+            isGlobal = isGlobal,
+            siteName = sourcePost.blogName
+    )
+
+    private fun mapRelatedPostToUiState(
         post: ReaderSimplePost,
         isGlobal: Boolean,
         followButtonUiState: FollowButtonUiState?

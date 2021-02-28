@@ -25,7 +25,6 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
@@ -231,22 +230,15 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun convertRelatedPostToUiState(
+    private fun convertRelatedPostsToUiState(
+        sourcePost: ReaderPost,
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean
-    ) = relatedPosts.map {
-        postDetailUiStateBuilder.mapRelatedPostToUiState(
-                post = it,
-                isGlobal = isGlobal,
-                followButtonUiState = if (isGlobal) {
-                    FollowButtonUiState(
-                            onFollowButtonClicked = null, // TODO: ashiagr implement follow action
-                            isFollowed = it.isFollowing,
-                            isEnabled = true
-                    )
-                } else null
-        )
-    }
+    ) = postDetailUiStateBuilder.mapRelatedPostsToUiState(
+            sourcePost = sourcePost,
+            relatedPosts = relatedPosts,
+            isGlobal = isGlobal
+    )
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
@@ -275,15 +267,15 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
         _uiState.value = _uiState.value?.copy(
-                localRelatedPosts = RelatedPostsUiState(
-                        cards = convertRelatedPostToUiState(state.localRelatedPosts, isGlobal = false),
-                        isGlobal = false,
-                        siteName = sourcePost.blogName
+                localRelatedPosts = convertRelatedPostsToUiState(
+                        sourcePost = sourcePost,
+                        relatedPosts = state.localRelatedPosts,
+                        isGlobal = false
                 ),
-                globalRelatedPosts = RelatedPostsUiState(
-                        cards = convertRelatedPostToUiState(state.globalRelatedPosts, isGlobal = true),
-                        isGlobal = true,
-                        siteName = sourcePost.blogName
+                globalRelatedPosts = convertRelatedPostsToUiState(
+                        sourcePost = sourcePost,
+                        relatedPosts = state.globalRelatedPosts,
+                        isGlobal = true
                 )
         )
     }
