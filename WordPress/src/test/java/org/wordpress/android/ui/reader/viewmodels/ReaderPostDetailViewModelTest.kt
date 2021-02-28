@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -301,7 +302,9 @@ class ReaderPostDetailViewModelTest {
                         postDetailsUiStateBuilder.mapRelatedPostsToUiState(
                                 sourcePost = eq(readerPost),
                                 relatedPosts = eq(localRelatedPosts),
-                                isGlobal = eq(false)
+                                isGlobal = eq(false),
+                                onRelatedPostFollowClicked = any(),
+                                onRelatedPostItemClicked = any()
                         )
                 ).thenReturn(localRelatedPostsUiState)
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
@@ -326,7 +329,9 @@ class ReaderPostDetailViewModelTest {
                         postDetailsUiStateBuilder.mapRelatedPostsToUiState(
                                 sourcePost = eq(readerPost),
                                 relatedPosts = eq(globalRelatedPosts),
-                                isGlobal = eq(true)
+                                isGlobal = eq(true),
+                                onRelatedPostFollowClicked = any(),
+                                onRelatedPostItemClicked = any()
                         )
                 ).thenReturn(globalRelatedPostsUiState)
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
