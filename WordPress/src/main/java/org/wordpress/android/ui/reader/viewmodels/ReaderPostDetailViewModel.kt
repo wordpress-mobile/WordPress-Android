@@ -195,6 +195,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    private fun onRelatedPostItemClicked(blogId: Long, postId: Long, isGlobal: Boolean) {
+        // TODO: ashiagr implement
+    }
+
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {
         /* Related posts only available for wp.com */
         if (!sourcePost.isWP) return
@@ -237,7 +241,8 @@ class ReaderPostDetailViewModel @Inject constructor(
     ) = postDetailUiStateBuilder.mapRelatedPostsToUiState(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
-            isGlobal = isGlobal
+            isGlobal = isGlobal,
+            onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
     private fun updateFollowButtonUiState(
@@ -301,7 +306,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val title: UiString?,
                 val featuredImageUrl: String?,
                 val featuredImageCornerRadius: UiDimen,
-                val followButtonUiState: FollowButtonUiState?
+                val followButtonUiState: FollowButtonUiState?,
+                val onItemClicked: (Long, Long, Boolean) -> Unit
             )
         }
     }

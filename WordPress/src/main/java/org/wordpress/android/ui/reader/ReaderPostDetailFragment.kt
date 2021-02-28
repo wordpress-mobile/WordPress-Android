@@ -106,7 +106,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
-import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderWebView
@@ -746,14 +745,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * across wp.com) or local (related posts from the same site as the current post)
      */
     private fun showRelatedPosts(state: RelatedPostsUiState) {
-        // tapping a related post should open the related post detail
-        val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
-            showRelatedPostDetail(siteId, postId, state.isGlobal)
-        }
-
         // different container views for global/local related posts
         val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
-        relatedPostsView.showPosts(state, listener)
+        relatedPostsView.showPosts(state)
 
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {

@@ -12,7 +12,6 @@ import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
-import org.wordpress.android.ui.reader.views.ReaderSimplePostView.OnSimplePostClickListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.image.ImageManager
@@ -54,7 +53,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         recycler_view.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
-    fun showPosts(state: RelatedPostsUiState, listener: OnSimplePostClickListener?) {
+    fun showPosts(state: RelatedPostsUiState) {
         if (state.cards?.size == 0) return
 
         state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
