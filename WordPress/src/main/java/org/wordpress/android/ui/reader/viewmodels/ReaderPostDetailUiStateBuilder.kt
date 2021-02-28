@@ -46,7 +46,8 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         sourcePost: ReaderPost,
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean,
-        onItemClicked: (Long, Long, Boolean) -> Unit
+        onRelatedPostFollowClicked: (ReaderSimplePost) -> Unit,
+        onRelatedPostItemClicked: (Long, Long, Boolean) -> Unit
     ) = RelatedPostsUiState(
             cards = relatedPosts.map {
                 mapRelatedPostToUiState(
@@ -54,12 +55,12 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         isGlobal = isGlobal,
                         followButtonUiState = if (isGlobal) {
                             FollowButtonUiState(
-                                    onFollowButtonClicked = null, // TODO: ashiagr implement follow button action
+                                    onFollowButtonClicked = { onRelatedPostFollowClicked(it) },
                                     isFollowed = it.isFollowing,
                                     isEnabled = true
                             )
                         } else null,
-                        onItemClicked = onItemClicked
+                        onItemClicked = onRelatedPostItemClicked
                 )
             },
             isGlobal = isGlobal,

@@ -259,7 +259,8 @@ class ReaderPostDetailViewModel @Inject constructor(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
-            onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
+            onRelatedPostFollowClicked = this@ReaderPostDetailViewModel::onRelatedPostFollowClicked,
+            onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
     private fun updateSelectedPostFollowButton(
