@@ -20,10 +20,10 @@
         android:layout_marginBottom="@dimen/margin_extra_large"
         tools:text="@string/reader_label_global_related_posts" />
 
-    <LinearLayout
-        android:id="@+id/container_related_posts"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" />
+        style="@style/ReaderRecyclerView" />
 
 </LinearLayout>
