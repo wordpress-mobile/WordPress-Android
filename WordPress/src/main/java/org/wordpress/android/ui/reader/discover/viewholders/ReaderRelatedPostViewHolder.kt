@@ -13,6 +13,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Read
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.image.ImageType.PHOTO
+import org.wordpress.android.util.setVisible
 
 class ReaderRelatedPostViewHolder(
     private val uiHelpers: UiHelpers,
@@ -24,9 +25,10 @@ class ReaderRelatedPostViewHolder(
             false
     )
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
-    fun onBind(uiState: ReaderRelatedPostUiState) {
-        updateFeaturedImage(uiState)
-        uiHelpers.setTextOrHide(text_title, uiState.title)
+    fun onBind(state: ReaderRelatedPostUiState) {
+        updateFeaturedImage(state)
+        updateFollowButton(state)
+        uiHelpers.setTextOrHide(text_title, state.title)
     }
 
     private fun updateFeaturedImage(state: ReaderRelatedPostUiState) {
@@ -40,5 +42,14 @@ class ReaderRelatedPostViewHolder(
                     uiHelpers.getPxOfUiDimen(WordPress.getContext(), state.featuredImageCornerRadius)
             )
         }
+    }
+
+    private fun updateFollowButton(state: ReaderRelatedPostUiState) {
+        state.followButtonUiState?.let { followButtonState ->
+            follow_button.setIsFollowed(followButtonState.isFollowed)
+            follow_button.isEnabled = followButtonState.isEnabled
+            follow_button.setVisible(followButtonState.isVisible)
+            follow_button.setOnClickListener { followButtonState.onFollowButtonClicked?.invoke() }
+        } ?: follow_button.setVisible(false)
     }
 }

@@ -26,6 +26,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
+import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -230,8 +231,22 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun convertRelatedPostToUiState(relatedPosts: ReaderSimplePostList, isGlobal: Boolean) =
-            relatedPosts.map { postDetailUiStateBuilder.mapRelatedPostToUiState(post = it, isGlobal = isGlobal) }
+    private fun convertRelatedPostToUiState(
+        relatedPosts: ReaderSimplePostList,
+        isGlobal: Boolean
+    ) = relatedPosts.map {
+        postDetailUiStateBuilder.mapRelatedPostToUiState(
+                post = it,
+                isGlobal = isGlobal,
+                followButtonUiState = if (isGlobal) {
+                    FollowButtonUiState(
+                            onFollowButtonClicked = null, // TODO: ashiagr implement follow action
+                            isFollowed = it.isFollowing,
+                            isEnabled = true
+                    )
+                } else null
+        )
+    }
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
@@ -293,7 +308,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val isGlobal: Boolean,
                 val title: UiString?,
                 val featuredImageUrl: String?,
-                val featuredImageCornerRadius: UiDimen
+                val featuredImageCornerRadius: UiDimen,
+                val followButtonUiState: FollowButtonUiState?
             )
         }
     }
