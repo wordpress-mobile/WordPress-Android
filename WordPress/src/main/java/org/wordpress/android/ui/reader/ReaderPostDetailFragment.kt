@@ -104,7 +104,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -745,19 +745,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * show the passed list of related posts - can be either global (related posts from
      * across wp.com) or local (related posts from the same site as the current post)
      */
-    private fun showRelatedPosts(relatedPosts: RelatedPosts) {
+    private fun showRelatedPosts(state: RelatedPostsUiState) {
         // tapping a related post should open the related post detail
         val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
-            showRelatedPostDetail(
-                    siteId,
-                    postId,
-                    relatedPosts.isGlobal
-            )
+            showRelatedPostDetail(siteId, postId, state.isGlobal)
         }
 
         // different container views for global/local related posts
-        val relatedPostsView = if (relatedPosts.isGlobal) globalRelatedPostsView else localRelatedPostsView
-        relatedPostsView.showPosts(relatedPosts.posts, post!!.blogName, relatedPosts.isGlobal, listener)
+        val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
+        relatedPostsView.showPosts(state, listener)
 
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {

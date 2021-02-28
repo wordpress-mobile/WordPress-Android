@@ -8,6 +8,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderSimplePostView.OnSimplePostClickListener
 import org.wordpress.android.util.analytics.AnalyticsUtils
 
@@ -19,7 +20,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
-) : LinearLayout(context, attrs, defStyleAttr)  {
+) : LinearLayout(context, attrs, defStyleAttr) {
     private var followListener: OnFollowListener? = null
     private val simplePostList = ReaderSimplePostList()
 
@@ -32,13 +33,9 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         inflate(context, R.layout.reader_simple_posts_container_view, this)
     }
 
-    fun showPosts(
-        posts: ReaderSimplePostList,
-        siteName: String?,
-        isGlobal: Boolean,
-        listener: OnSimplePostClickListener?
-    ) {
-        simplePostList.clear()
+    fun showPosts(state: RelatedPostsUiState, listener: OnSimplePostClickListener?) {
+        // TODO: ashiagr show posts from RelatedPostsUiState
+        /*simplePostList.clear()
         simplePostList.addAll(posts)
         container_related_posts.removeAllViews()
 
@@ -53,15 +50,15 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
             val postView = ReaderSimplePostView(context)
             postView.setOnFollowListener(followListener)
             postView.showPost(relatedPost, container_related_posts, isGlobal, listener)
-        }
+        }*/
 
         // make sure the label for these posts has the correct caption
-        if (isGlobal) {
+        if (state.isGlobal) {
             text_related_posts_label.text = context.getString(R.string.reader_label_global_related_posts)
         } else {
             text_related_posts_label.text = String.format(
                     context.getString(R.string.reader_label_local_related_posts),
-                    siteName
+                    state.siteName
             )
         }
     }
