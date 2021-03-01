@@ -16,7 +16,7 @@ object ReaderDiscoverCardsTable {
                 "CREATE TABLE IF NOT EXISTS $DISCOVER_CARDS_TABLE (" +
                         "  _id INTEGER PRIMARY KEY AUTOINCREMENT," +
                         " $CARDS_JSON_COLUMN TEXT," +
-                        " $CARDS_SORTING_TYPE_COLUMN TEXT DEFAULT ${DiscoverSortingType.NONE.sortedBy};" +
+                        " $CARDS_SORTING_TYPE_COLUMN TEXT DEFAULT ${DiscoverSortingType.NONE.sortedBy}" +
                         ")"
         )
     }
