@@ -20,12 +20,17 @@ import org.wordpress.android.models.ReaderTagList
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.ReaderConstants
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestChipStyleColor
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleBlue
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ReaderInterestUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.DiscoverLayoutUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState.GalleryThumbnailStripData
-
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -181,13 +186,12 @@ class ReaderPostUiStateBuilder @Inject constructor(
             } else {
                 READER_INTEREST_LIST_SIZE_LIMIT
             }
-            val lastIndex = listSize - 1
 
             return@withContext ReaderInterestsCardUiState(interests.take(listSize).map { interest ->
                 ReaderInterestUiState(
-                        interest.tagTitle,
-                        buildIsDividerVisible(interest, interests, lastIndex),
-                        onClicked
+                        interest = interest.tagTitle,
+                        onClicked = onClicked,
+                        chipStyle = buildChipStyle(interest, interests)
                 )
             })
         }
@@ -244,8 +248,8 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    private fun buildIsDividerVisible(readerTag: ReaderTag, readerTagList: ReaderTagList, lastIndex: Int) =
-            readerTagList.indexOf(readerTag) != lastIndex
+    private fun buildIsStartingChip(readerTag: ReaderTag, readerTagList: ReaderTagList, firstIndex: Int) =
+            readerTagList.indexOf(readerTag) == firstIndex
 
     private fun buildOnBlogSectionClicked(
         onBlogSectionClicked: (Long, Long) -> Unit,
@@ -445,6 +449,19 @@ class ReaderPostUiStateBuilder @Inject constructor(
                     contentDescription = contentDescription,
                     type = ReaderPostCardActionType.COMMENTS
             )
+        }
+    }
+
+    private fun buildChipStyle(readerTag: ReaderTag, readerTagList: ReaderTagList): ChipStyle {
+        val colorCount = ReaderInterestChipStyleColor.values().size
+        val index = readerTagList.indexOf(readerTag)
+
+        return when (index % colorCount) {
+            ReaderInterestChipStyleColor.GREEN.id -> ChipStyleGreen
+            ReaderInterestChipStyleColor.BLUE.id -> ChipStyleBlue
+            ReaderInterestChipStyleColor.YELLOW.id -> ChipStyleYellow
+            ReaderInterestChipStyleColor.ORANGE.id -> ChipStyleOrange
+            else -> ChipStyleGreen
         }
     }
 }
