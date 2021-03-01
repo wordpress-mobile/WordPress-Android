@@ -463,13 +463,20 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     is ReaderNavigationEvents.ShowRelatedPostDetails ->
                         showRelatedPostDetail(postId = this.postId, blogId = this.blogId, isGlobal = this.isGlobal)
 
+                    is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
+                        replaceRelatedPostDetailWithHistory(
+                                postId = this.postId,
+                                blogId = this.blogId,
+                                isGlobal = this.isGlobal
+                        )
+
                     is ReaderNavigationEvents.ShowPostDetail,
                     is ReaderNavigationEvents.ShowVideoViewer,
                     is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
                 }
             }
         })
-        viewModel.start()
+        viewModel.start(isRelatedPost)
     }
 
     private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
@@ -786,24 +793,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return false
     }
 
-    /*
-     * user clicked a single related post - if we're already viewing a related post, add it to the
-     * history stack so the user can back-button through the history - otherwise start a new detail
-     * activity for this related post
-     */
     private fun showRelatedPostDetail(postId: Long, blogId: Long, isGlobal: Boolean) {
-        if (isRelatedPost) {
-            postHistory.push(ReaderBlogIdPostId(post!!.blogId, post!!.postId))
+        ReaderActivityLauncher.showReaderPostDetail(
+                activity,
+                false,
+                blogId,
+                postId, null,
+                0,
+                true, null
+        )
+    }
+
+    private fun replaceRelatedPostDetailWithHistory(postId: Long, blogId: Long, isGlobal: Boolean) {
+        post?.let {
+            postHistory.push(ReaderBlogIdPostId(it.blogId, it.postId))
             replacePost(blogId, postId, true)
-        } else {
-            ReaderActivityLauncher.showReaderPostDetail(
-                    activity,
-                    false,
-                    blogId,
-                    postId, null,
-                    0,
-                    true, null
-            )
         }
     }
 

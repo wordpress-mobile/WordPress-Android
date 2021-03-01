@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
-import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -13,6 +13,7 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -34,8 +35,8 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -72,16 +73,18 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
+    var isRelatedPost: Boolean = false
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
 
-    fun start() {
+    fun start(isRelatedPost: Boolean) {
         if (isStarted) {
             return
         }
         isStarted = true
+        this.isRelatedPost = isRelatedPost
 
         init()
     }
@@ -208,7 +211,11 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
         trackRelatedPostClickAction(postId, blogId, isGlobal)
-        _navigationEvents.value = Event(ShowRelatedPostDetails(postId = postId, blogId = blogId, isGlobal = isGlobal))
+        _navigationEvents.value = if (isRelatedPost) {
+            Event(ReplaceRelatedPostDetailsWithHistory(postId = postId, blogId = blogId, isGlobal = isGlobal))
+        } else {
+            Event(ShowRelatedPostDetails(postId = postId, blogId = blogId, isGlobal = isGlobal))
+        }
     }
 
     private fun onRelatedPostFollowClicked(relatedPost: ReaderSimplePost) {
