@@ -40,6 +40,10 @@ import org.wordpress.android.ui.Organization.P2
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.BLOG_PREVIEW
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleBlue
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BOOKMARK
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.LIKE
@@ -824,30 +828,36 @@ class ReaderPostUiStateBuilderTest {
     }
 
     @Test
-    fun `Ensures that the first InterestUiState has isDividerVisible set to true`() = test {
+    fun `given a tag list with 4 elements, then the uiState contains each style`() = test {
         // arrange
-        val currentReaderTagListSize = 2
+        val currentReaderTagListSize = 4
+        val expectedListStyles = listOf(ChipStyleGreen, ChipStyleBlue, ChipStyleYellow, ChipStyleOrange)
+
         val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
         // assert
-        assertThat(result.interest.first().isDividerVisible).isTrue()
+        for ((index, interest) in result.interest.withIndex()) {
+            assertThat(interest.chipStyle).isEqualTo(expectedListStyles[index])
+        }
     }
 
     @Test
-    fun `Ensures that the last InterestUiState has isDividerVisible set to false`() = test {
+    fun `given a tag list with 5 elements, then the 5th interest within the uiState is styled green`() = test {
         // arrange
-        val currentReaderTagListSize = 2
+        val currentReaderTagListSize = 5
+
         val readerTagList = createReaderTagList(currentReaderTagListSize)
 
         // act
         val result = builder.mapTagListToReaderInterestUiState(readerTagList, mock())
 
         // assert
-        assertThat(result.interest.last().isDividerVisible).isFalse()
+        assertThat(result.interest.last().chipStyle).isInstanceOf(ChipStyleGreen::class.java)
     }
+
     // endregion
 
     @Test
