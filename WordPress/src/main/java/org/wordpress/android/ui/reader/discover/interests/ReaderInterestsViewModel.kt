@@ -111,14 +111,20 @@ class ReaderInterestsViewModel @Inject constructor(
 
                     val tags = (result.data as ReaderTagList).filter { checkAndExcludeTag(userTags, it) }
                     val distinctTags = ReaderTagList().apply { addAll(tags.distinctBy { it.tagSlug }) }
-                    ContentUiState(
-                            interestsUiState = transformToInterestsUiState(distinctTags),
-                            interests = distinctTags,
-                            doneButtonUiState = when (entryPoint) {
-                                EntryPoint.DISCOVER -> DoneButtonDisabledUiState()
-                                EntryPoint.SETTINGS -> DoneButtonDisabledUiState(R.string.reader_btn_done)
-                            }
-                    )
+                    when (entryPoint) {
+                        EntryPoint.DISCOVER -> ContentUiState(
+                                interestsUiState = transformToInterestsUiState(distinctTags),
+                                interests = distinctTags,
+                                doneButtonUiState = DoneButtonDisabledUiState(),
+                                titleVisible = true
+                        )
+                        EntryPoint.SETTINGS -> ContentUiState(
+                                interestsUiState = transformToInterestsUiState(distinctTags),
+                                interests = distinctTags,
+                                doneButtonUiState = DoneButtonDisabledUiState(R.string.reader_btn_done),
+                                titleVisible = false
+                        )
+                    }
                 }
                 is NetworkUnavailable -> {
                     ConnectionErrorUiState
@@ -254,7 +260,7 @@ class ReaderInterestsViewModel @Inject constructor(
     sealed class UiState(
         open val doneButtonUiState: DoneButtonUiState = DoneButtonHiddenUiState,
         open val progressBarVisible: Boolean = false,
-        val titleVisible: Boolean = false,
+        open val titleVisible: Boolean = false,
         val errorLayoutVisible: Boolean = false
     ) {
         object InitialLoadingUiState : UiState(
@@ -265,10 +271,11 @@ class ReaderInterestsViewModel @Inject constructor(
             val interestsUiState: List<TagUiState>,
             val interests: ReaderTagList,
             override val progressBarVisible: Boolean = false,
-            override val doneButtonUiState: DoneButtonUiState
+            override val doneButtonUiState: DoneButtonUiState,
+            override val titleVisible: Boolean,
         ) : UiState(
                 progressBarVisible = false,
-                titleVisible = true,
+                titleVisible = titleVisible,
                 errorLayoutVisible = false
         )
 

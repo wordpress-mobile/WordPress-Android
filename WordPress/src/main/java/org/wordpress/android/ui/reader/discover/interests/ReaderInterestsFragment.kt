@@ -86,7 +86,7 @@ class ReaderInterestsFragment : Fragment(R.layout.reader_interests_fragment_layo
             updateDoneButton(uiState.doneButtonUiState)
             with(uiHelpers) {
                 updateVisibility(progress_bar, uiState.progressBarVisible)
-                updateVisibility(title, if (entryPoint == EntryPoint.DISCOVER) uiState.titleVisible else false)
+                updateVisibility(title, uiState.titleVisible)
                 updateVisibility(error_layout, uiState.errorLayoutVisible)
             }
         })
