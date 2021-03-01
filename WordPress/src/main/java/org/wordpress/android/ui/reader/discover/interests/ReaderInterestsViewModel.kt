@@ -272,7 +272,7 @@ class ReaderInterestsViewModel @Inject constructor(
             val interests: ReaderTagList,
             override val progressBarVisible: Boolean = false,
             override val doneButtonUiState: DoneButtonUiState,
-            override val titleVisible: Boolean,
+            override val titleVisible: Boolean
         ) : UiState(
                 progressBarVisible = false,
                 titleVisible = titleVisible,
