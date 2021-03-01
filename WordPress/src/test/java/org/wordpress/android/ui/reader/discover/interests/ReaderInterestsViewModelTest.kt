@@ -200,6 +200,44 @@ class ReaderInterestsViewModelTest {
             }
 
     @Test
+    fun `discover title shown on start when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(EntryPoint.DISCOVER)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isTrue
+            }
+
+    @Test
+    fun `settings title hidden on start when interests tags received from repo`() =
+            testWithEmptyUserTags {
+                // Given
+                val interests = getInterests()
+                whenever(readerTagRepository.getInterests()).thenReturn(SuccessWithData(interests))
+
+                // Pause dispatcher so we can verify done button initial state
+                coroutineScope.pauseDispatcher()
+
+                // Trigger data load
+                initViewModel(EntryPoint.SETTINGS)
+
+                // Resume pending coroutines execution
+                coroutineScope.resumeDispatcher()
+
+                assertThat(requireNotNull(viewModel.uiState.value).titleVisible).isFalse
+            }
+
+    @Test
     fun `discover done button hidden on start switches to disabled state when interests tags received from repo`() =
             testWithEmptyUserTags {
                 // Given
