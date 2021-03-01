@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import android.text.Spanned
 import androidx.annotation.AttrRes
+import androidx.annotation.ColorRes
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
@@ -64,9 +65,43 @@ sealed class ReaderCardUiState {
     data class ReaderInterestsCardUiState(val interest: List<ReaderInterestUiState>) : ReaderCardUiState() {
         data class ReaderInterestUiState(
             val interest: String,
-            val isDividerVisible: Boolean,
-            val onClicked: ((String) -> Unit)
+            val onClicked: ((String) -> Unit),
+            val chipStyle: ChipStyle
         )
+
+        sealed class ChipStyle(
+            @ColorRes val chipStrokeColorResId: Int,
+            @ColorRes val chipFontColorResId: Int,
+            @ColorRes val chipFillColorResId: Int
+        ) {
+            object ChipStyleGreen : ChipStyle(
+                    chipStrokeColorResId = R.color.green_5,
+                    chipFontColorResId = R.color.green_50,
+                    chipFillColorResId = R.color.green_0
+            )
+            object ChipStyleBlue : ChipStyle(
+                    chipStrokeColorResId = R.color.blue_5,
+                    chipFontColorResId = R.color.blue_50,
+                    chipFillColorResId = R.color.blue_0
+            )
+            object ChipStyleYellow : ChipStyle(
+                    chipStrokeColorResId = R.color.yellow_5,
+                    chipFontColorResId = R.color.yellow_50,
+                    chipFillColorResId = R.color.yellow_0
+            )
+            object ChipStyleOrange : ChipStyle(
+                    chipStrokeColorResId = R.color.orange_5,
+                    chipFontColorResId = R.color.orange_50,
+                    chipFillColorResId = R.color.orange_0
+            )
+        }
+    }
+
+    enum class ReaderInterestChipStyleColor(val id: Int) {
+        GREEN(0),
+        BLUE(1),
+        YELLOW(2),
+        ORANGE(3)
     }
 
     data class ReaderRecommendedBlogsCardUiState(
