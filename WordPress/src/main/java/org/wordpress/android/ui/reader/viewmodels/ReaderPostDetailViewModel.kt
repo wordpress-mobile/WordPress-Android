@@ -13,6 +13,7 @@ import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
@@ -195,8 +196,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onRelatedPostItemClicked(blogId: Long, postId: Long, isGlobal: Boolean) {
-        // TODO: ashiagr implement
+    private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
+        _navigationEvents.value = Event(ShowRelatedPostDetails(postId = postId, blogId = blogId, isGlobal = isGlobal))
     }
 
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {

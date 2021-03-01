@@ -470,6 +470,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     is ShowBookmarkedSavedOnlyLocallyDialog -> {
                         showBookmarkSavedLocallyDialog(this)
                     }
+                    is ReaderNavigationEvents.ShowRelatedPostDetails ->
+                        showRelatedPostDetail(postId = this.postId, blogId = this.blogId, isGlobal = this.isGlobal)
                 }
             }
         })
@@ -793,7 +795,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * history stack so the user can back-button through the history - otherwise start a new detail
      * activity for this related post
      */
-    private fun showRelatedPostDetail(blogId: Long, postId: Long, isGlobal: Boolean) {
+    private fun showRelatedPostDetail(postId: Long, blogId: Long, isGlobal: Boolean) {
         val stat = if (isGlobal)
             Stat.READER_GLOBAL_RELATED_POST_CLICKED
         else
