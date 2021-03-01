@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
@@ -26,7 +25,6 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private var followListener: OnFollowListener? = null
     private val simplePostList = ReaderSimplePostList()
 
     @Inject lateinit var uiHelpers: UiHelpers
@@ -67,10 +65,6 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
                     state.siteName
             )
         }
-    }
-
-    fun setOnFollowListener(listener: OnFollowListener?) {
-        followListener = listener
     }
 
     /*
