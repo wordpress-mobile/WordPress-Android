@@ -146,6 +146,13 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
+    suspend fun onFollowRelatedPostBlog(blogId: Long, siteName: String) {
+        withContext(bgDispatcher) {
+            if (!preFetchSite(blogId = blogId, feedId = 0)) return@withContext
+            handleFollowClicked(blogId = blogId, feedId = 0, blogName = siteName)
+        }
+    }
+
     private suspend fun preFetchSite(blogId: Long, feedId: Long): Boolean {
         var isSiteFetched = false
         when (fetchSiteUseCase.fetchSite(blogId = blogId, feedId = feedId, blogUrl = null)) {
