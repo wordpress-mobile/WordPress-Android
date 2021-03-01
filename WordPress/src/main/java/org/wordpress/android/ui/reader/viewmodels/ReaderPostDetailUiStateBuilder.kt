@@ -72,7 +72,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             postId = post.postId,
             blogId = post.siteId,
             isGlobal = isGlobal,
-            title = UiStringText(post.title),
+            title = post.title?.let { UiStringText(it) },
             featuredImageUrl = post.featuredImageUrl,
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
             followButtonUiState = followButtonUiState
