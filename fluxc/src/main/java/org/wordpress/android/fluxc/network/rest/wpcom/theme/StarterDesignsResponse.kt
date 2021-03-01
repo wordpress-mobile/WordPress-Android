@@ -1,4 +1,4 @@
-package org.wordpress.android.fluxc.model
+package org.wordpress.android.fluxc.network.rest.wpcom.theme
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
