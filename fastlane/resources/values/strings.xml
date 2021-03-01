@@ -1054,6 +1054,11 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- activity log list backup download notice -->
+    <string name="activity_log_backup_download_notice_description_with_two_params" translatable="false">@string/backup_download_complete_description_with_two_parameters</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+
     <!-- backup -->
     <string name="backup">Backup</string>
     <string name="backup_empty_title">Your first backup will be ready soon</string>
