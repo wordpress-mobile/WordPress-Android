@@ -26,6 +26,7 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -57,6 +58,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 
@@ -88,6 +90,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
+    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -109,6 +112,7 @@ class ReaderPostDetailViewModelTest {
                 postDetailsUiStateBuilder,
                 reblogUseCase,
                 readerFetchRelatedPostsUseCase,
+                analyticsUtilsWrapper,
                 eventBusWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
@@ -451,7 +455,7 @@ class ReaderPostDetailViewModelTest {
             }
 
     @Test
-    fun `when related post is clicked, then related post details are shown`() =
+    fun `when related post is clicked from non related post details screen, then related post details screen shown`() =
             test {
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(
@@ -460,13 +464,33 @@ class ReaderPostDetailViewModelTest {
                                         globalRelatedPosts = globalRelatedPosts
                                 )
                         )
-                val observers = init()
+                val observers = init(isRelatedPost = false)
 
                 viewModel.onRelatedPostsRequested(readerPost)
                 val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
                 relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
 
                 assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
+            }
+
+    @Test
+    fun `when related post is clicked from related post screen, then related post replaced with history`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
+                                        globalRelatedPosts = globalRelatedPosts
+                                )
+                        )
+                val observers = init(isRelatedPost = true)
+
+                viewModel.onRelatedPostsRequested(readerPost)
+                val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
+                relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
+
+                assertThat(observers.navigation[0].peekContent())
+                        .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
             }
 
     @Test
@@ -609,7 +633,7 @@ class ReaderPostDetailViewModelTest {
             siteName = "site name"
     )
 
-    private fun init(showPost: Boolean = true): Observers {
+    private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {
         val uiStates = mutableListOf<ReaderPostDetailsUiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -622,7 +646,7 @@ class ReaderPostDetailViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start()
+        viewModel.start(isRelatedPost)
 
         if (showPost) {
             viewModel.onShowPost(readerPost)
