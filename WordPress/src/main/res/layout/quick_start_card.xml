@@ -56,7 +56,5 @@
         android:id="@+id/quick_start_card_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:clipToPadding="false"
-        android:paddingEnd="@dimen/margin_medium_large"
-        android:paddingStart="@dimen/margin_medium_large" />
+        android:clipToPadding="false" />
 </LinearLayout>
