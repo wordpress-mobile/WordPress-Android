@@ -503,7 +503,7 @@
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
     <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
-    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : ViewModelCoroutineScopePreviewModeHandler</ID>
+    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
     <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>

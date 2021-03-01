@@ -29,7 +29,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SiteError
 import org.wordpress.android.fluxc.store.SiteStore.SiteErrorType.GENERIC_ERROR
 import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
-import org.wordpress.android.ui.mlp.ThumbDimensionProvider
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -38,8 +38,8 @@ import org.wordpress.android.util.SiteUtils.GB_EDITOR_NAME
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Blank
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Preview
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ContentUiState
-import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.UiState.ErrorUiState
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 
 @RunWith(MockitoJUnitRunner::class)
 class ModalLayoutPickerViewModelTest {
@@ -138,7 +138,7 @@ class ModalLayoutPickerViewModelTest {
     fun `when the user scroll beyond a threshold the title becomes visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
         viewModel.onAppBarOffsetChanged(9, 10)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(true)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).isHeaderVisible).isEqualTo(true)
     }
 
     @ExperimentalCoroutinesApi
@@ -146,28 +146,28 @@ class ModalLayoutPickerViewModelTest {
     fun `when the user scroll bellow a threshold the title remains hidden`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
         viewModel.onAppBarOffsetChanged(11, 10)
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).isHeaderVisible).isEqualTo(false)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).isHeaderVisible).isEqualTo(false)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `when modal layout picker starts the categories are loaded`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).categories.size).isGreaterThan(0)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).categories.size).isGreaterThan(0)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `when modal layout picker starts the layouts are loaded`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).layoutCategories.size).isGreaterThan(0)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).layoutCategories.size).isGreaterThan(0)
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `when modal layout picker starts fetch errors are handled`() = mockFetchingSelectedSite(true) {
         viewModel.createPageFlowTriggered()
-        assertThat(viewModel.uiState.value is ErrorUiState).isEqualTo(true)
+        assertThat(viewModel.uiState.value is Error).isEqualTo(true)
     }
 
     @ExperimentalCoroutinesApi
@@ -226,7 +226,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when modal layout picker starts no layout is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedLayoutSlug).isNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -236,7 +236,7 @@ class ModalLayoutPickerViewModelTest {
                 viewModel.createPageFlowTriggered()
                 viewModel.onThumbnailReady("about-1")
                 viewModel.onLayoutTapped("about-1")
-                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
+                assertThat(requireNotNull(viewModel.uiState.value as Content).selectedLayoutSlug)
                         .isEqualTo("about-1")
             }
 
@@ -246,7 +246,7 @@ class ModalLayoutPickerViewModelTest {
             mockFetchingSelectedSite {
                 viewModel.createPageFlowTriggered()
                 viewModel.onLayoutTapped("about-1")
-                assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug)
+                assertThat(requireNotNull(viewModel.uiState.value as Content).selectedLayoutSlug)
                         .isNotEqualTo("about-1")
             }
 
@@ -256,7 +256,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onLayoutTapped("about-1")
         viewModel.onLayoutTapped("about-1")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedLayoutSlug).isNull()
     }
 
     @ExperimentalCoroutinesApi
@@ -265,14 +265,14 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onLayoutTapped("about-1")
         viewModel.dismiss()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedLayoutSlug).isNull()
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `when modal layout picker starts no category is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedCategoriesSlugs).isEmpty()
     }
 
     @ExperimentalCoroutinesApi
@@ -280,7 +280,7 @@ class ModalLayoutPickerViewModelTest {
     fun `when the user taps on a category the category is selected`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
         viewModel.onCategoryTapped("about")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedCategoriesSlugs)
                 .contains("about")
     }
 
@@ -290,7 +290,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onCategoryTapped("about")
         viewModel.onCategoryTapped("about")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedCategoriesSlugs)
                 .doesNotContain("about")
     }
 
@@ -300,14 +300,14 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onCategoryTapped("about")
         viewModel.dismiss()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).selectedCategoriesSlugs).isEmpty()
+        assertThat(requireNotNull(viewModel.uiState.value as Content).selectedCategoriesSlugs).isEmpty()
     }
 
     @ExperimentalCoroutinesApi
     @Test
     fun `when no layout is selected the create blank page button is visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.createBlankPageVisible)
                 .isEqualTo(true)
     }
 
@@ -317,7 +317,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createBlankPageVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.createBlankPageVisible)
                 .isEqualTo(false)
     }
 
@@ -325,7 +325,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when no layout is selected the create page button is not visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.createPageVisible)
                 .isEqualTo(false)
     }
 
@@ -335,7 +335,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.createPageVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.createPageVisible)
                 .isEqualTo(true)
     }
 
@@ -343,7 +343,7 @@ class ModalLayoutPickerViewModelTest {
     @Test
     fun `when no layout is selected the preview button is not visible`() = mockFetchingSelectedSite {
         viewModel.createPageFlowTriggered()
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.previewVisible)
                 .isEqualTo(false)
     }
 
@@ -353,7 +353,7 @@ class ModalLayoutPickerViewModelTest {
         viewModel.createPageFlowTriggered()
         viewModel.onThumbnailReady("about-1")
         viewModel.onLayoutTapped("about-1")
-        assertThat(requireNotNull(viewModel.uiState.value as ContentUiState).buttonsUiState.previewVisible)
+        assertThat(requireNotNull(viewModel.uiState.value as Content).buttonsUiState.previewVisible)
                 .isEqualTo(true)
     }
 }

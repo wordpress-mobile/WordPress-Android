@@ -19,7 +19,7 @@ import org.wordpress.android.fluxc.store.SiteStore.SuggestDomainsPayload
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.test
-import org.wordpress.android.ui.mlp.ThumbDimensionProvider
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 
 @RunWith(MockitoJUnitRunner::class)

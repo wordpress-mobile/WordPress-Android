@@ -19,6 +19,9 @@ import kotlinx.android.synthetic.main.home_page_picker_fragment.categoriesRecycl
 import kotlinx.android.synthetic.main.home_page_picker_fragment.errorView
 import kotlinx.android.synthetic.main.home_page_picker_fragment.layoutsRecyclerView
 import kotlinx.android.synthetic.main.home_page_picker_titlebar.*
+import kotlinx.android.synthetic.main.home_page_picker_titlebar.backButton
+import kotlinx.android.synthetic.main.home_page_picker_titlebar.previewTypeSelectorButton
+import kotlinx.android.synthetic.main.home_page_picker_titlebar.title
 import kotlinx.android.synthetic.main.modal_layout_picker_categories_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_layouts_skeleton.*
 import kotlinx.android.synthetic.main.modal_layout_picker_subtitle_row.*
@@ -26,14 +29,14 @@ import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.PreviewModeSelectorPopup
-import org.wordpress.android.ui.mlp.CategoriesAdapter
-import org.wordpress.android.ui.mlp.LayoutCategoryAdapter
+import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
+import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
+import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
-import org.wordpress.android.util.AniUtils.Duration
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
@@ -46,6 +49,7 @@ import javax.inject.Inject
 class HomePagePickerFragment : Fragment() {
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var displayUtils: DisplayUtilsWrapper
+    @Inject internal lateinit var uiHelper: UiHelpers
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     private lateinit var viewModel: HomePagePickerViewModel
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
@@ -101,18 +105,18 @@ class HomePagePickerFragment : Fragment() {
                 .get(HomePagePickerViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
-            setTitleVisibility(uiState.isHeaderVisible)
+            uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
-            setContentVisibility(uiState.loadingIndicatorVisible, uiState.errorViewVisible)
+            setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
             AniUtils.animateBottomBar(bottomToolbar, uiState.isToolbarVisible)
             when (uiState) {
-                is UiState.Loading -> { // Nothing more to do here
+                is LayoutPickerUiState.Loading -> { // Nothing more to do here
                 }
-                is UiState.Content -> {
+                is LayoutPickerUiState.Content -> {
                     (categoriesRecyclerView.adapter as CategoriesAdapter).setData(uiState.categories)
                     (layoutsRecyclerView?.adapter as? LayoutCategoryAdapter)?.update(uiState.layoutCategories)
                 }
-                is UiState.Error -> {
+                is LayoutPickerUiState.Error -> {
                     uiState.toast?.let { ToastUtils.showToast(requireContext(), it) }
                 }
             }
@@ -168,17 +172,6 @@ class HomePagePickerFragment : Fragment() {
             viewModel.onAppBarOffsetChanged(verticalOffset, scrollThreshold)
         })
         viewModel.onAppBarOffsetChanged(0, scrollThreshold)
-    }
-
-    private fun setTitleVisibility(visible: Boolean) {
-        if (title == null || header == null || visible == (title.visibility == View.VISIBLE)) return // No change
-        if (visible) {
-            AniUtils.fadeIn(title, Duration.SHORT)
-            AniUtils.fadeOut(header, Duration.SHORT, View.INVISIBLE)
-        } else {
-            AniUtils.fadeIn(header, Duration.SHORT)
-            AniUtils.fadeOut(title, Duration.SHORT, View.INVISIBLE)
-        }
     }
 
     private fun isPhoneLandscape() = displayUtils.isLandscapeBySize() && !displayUtils.isTablet()
