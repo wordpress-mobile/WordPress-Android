@@ -37,6 +37,8 @@ class ReaderPostDetailsUiStateBuilderTest {
         this.feedId = 2L
         this.blogName = "blog name"
     }
+    private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
+    private val dummyOnRelatedPostFollowClicked: (ReaderSimplePost) -> Unit = { _ -> }
 
     @Before
     fun setUp() = test {
@@ -122,6 +124,8 @@ class ReaderPostDetailsUiStateBuilderTest {
     ) = builder.mapRelatedPostsToUiState(
             sourcePost = dummyReaderPost,
             relatedPosts = relatedPosts,
-            isGlobal = isGlobal
+            isGlobal = isGlobal,
+            onRelatedPostItemClicked = dummyOnRelatedPostItemClicked,
+            onRelatedPostFollowClicked = dummyOnRelatedPostFollowClicked
     )
 }
