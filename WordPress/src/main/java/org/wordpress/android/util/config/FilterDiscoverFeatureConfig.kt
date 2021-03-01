@@ -11,10 +11,5 @@ import javax.inject.Inject
 class FilterDiscoverFeatureConfig
 @Inject constructor(appConfig: AppConfig) : FeatureConfig(
         appConfig,
-        BuildConfig.ENABLE_FILTER_FOR_DISCOVER,
-        FILTER_DISCOVER
-) {
-    companion object {
-        const val FILTER_DISCOVER = "filter_discover"
-    }
-}
+        BuildConfig.ENABLE_FILTER_FOR_DISCOVER
+)
