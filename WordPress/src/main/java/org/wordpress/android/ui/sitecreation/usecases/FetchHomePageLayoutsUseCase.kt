@@ -7,7 +7,7 @@ import org.wordpress.android.fluxc.generated.ThemeActionBuilder
 import org.wordpress.android.fluxc.store.ThemeStore
 import org.wordpress.android.fluxc.store.ThemeStore.FetchStarterDesignsPayload
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
-import org.wordpress.android.ui.mlp.ThumbDimensionProvider
+import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import javax.inject.Inject
 import kotlin.coroutines.Continuation
 import kotlin.coroutines.resume

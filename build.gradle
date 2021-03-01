@@ -154,7 +154,7 @@ ext {
     androidxWorkVersion = "2.4.0"
 
     daggerVersion = '2.29.1'
-    fluxCVersion = 'a4dcb2390c6c089449272de32c525829104d8860'
+    fluxCVersion = '79eaf5b99a684065ea9b7cbad2c577d94b0a9cb8'
 
     appCompatVersion = '1.0.2'
     coreVersion = '1.2.0'

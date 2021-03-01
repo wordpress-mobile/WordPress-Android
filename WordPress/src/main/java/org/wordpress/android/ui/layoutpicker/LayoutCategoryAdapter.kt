@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mlp
+package org.wordpress.android.ui.layoutpicker
 
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
