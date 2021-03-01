@@ -27,10 +27,6 @@ apply plugin: 'signing'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-
-// import the `submoduleGitHash()` function
-apply from: 'https://gist.githubusercontent.com/hypest/e06f6097065728b6db7b7c462f8fef1a/raw/3b91756fca76e4c2a9b573313e186c47842e1f7d/submoduleGitHash.gradle'
-
 def buildGutenbergFromSource = gradle.ext.includedBuildGutenbergMobilePath != null
 
 android {
@@ -74,14 +70,6 @@ dependencies {
     implementation 'com.android.volley:volley:1.1.1'
     implementation 'org.wordpress:utils:1.25'
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlinVersion"
-    implementation "com.facebook.react:react-native:0.61.5"  // From node_modules
-    implementation('com.google.android.exoplayer:exoplayer:2.9.3') {
-        exclude group: 'com.android.support'
-    }
-    implementation('com.google.android.exoplayer:extension-okhttp:2.9.3') {
-        exclude group: 'com.squareup.okhttp3', module: 'okhttp'
-    }
-
     api ("com.github.wordpress-mobile.WordPress-Aztec-Android:aztec:$aztecVersion") {
         exclude group: "com.android.volley"
     }
@@ -98,14 +86,9 @@ dependencies {
 
     lintChecks 'org.wordpress:lint:1.0.1'
 
-    // Hermes is a React Native dependency that we somehow lost at runtime
-    // since moving to the Bintray binary for Gutenberg.
-    //
-    // FIXME: In the long run, we'll want to read this from the Gutenberg AAR.
-    //
-    // A starting point might be the fact that the
-    // @wordpress_react-native-bridge-release AAR contains only an empty file
-    // named hermes-release.aar in its libs folder.
+    // We need to add the hermes library manually for binary dependency.
+    // There doesn't seem to be a good way to integrate an aar into a library dependency, and it's
+    // not something Google wants to support, so this is a necessary workaround.
     if (!buildGutenbergFromSource) {
         def hermesPath = './libs/hermes/'
         debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
