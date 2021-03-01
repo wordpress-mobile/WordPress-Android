@@ -472,6 +472,10 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     }
                     is ReaderNavigationEvents.ShowRelatedPostDetails ->
                         showRelatedPostDetail(postId = this.postId, blogId = this.blogId, isGlobal = this.isGlobal)
+
+                    is ReaderNavigationEvents.ShowPostDetail,
+                    is ReaderNavigationEvents.ShowVideoViewer,
+                    is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
                 }
             }
         })
