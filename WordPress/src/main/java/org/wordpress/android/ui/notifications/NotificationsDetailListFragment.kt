@@ -66,6 +66,12 @@ import org.wordpress.android.util.image.ImageType.BLAVATAR
 import java.util.ArrayList
 import javax.inject.Inject
 
+// This file was ported from java and there were many complains from linter,
+// fixed all of them but for the "TooManyFunctions" the total number of functions was reduced
+// but seemed not easily fully avoidable.
+// Skipping it for now since there will be probably more work around this area
+// and so further opportunity to iterate for review/refactor
+@Suppress("TooManyFunctions")
 class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var mRestoredListPosition = 0
     private var mNote: Note? = null
@@ -76,14 +82,11 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
     private var mOnCommentStatusChangeListener: OnCommentStatusChangeListener? = null
     private var mNoteBlockAdapter: NoteBlockAdapter? = null
 
-    @Inject
-    lateinit var mImageManager: ImageManager
+    @Inject lateinit var mImageManager: ImageManager
 
-    @Inject
-    lateinit var  mNotificationsUtilsWrapper: NotificationsUtilsWrapper
+    @Inject lateinit var mNotificationsUtilsWrapper: NotificationsUtilsWrapper
 
-    @Inject
-    lateinit var  mScanScreenFeatureConfig: ScanScreenFeatureConfig
+    @Inject lateinit var mScanScreenFeatureConfig: ScanScreenFeatureConfig
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -302,15 +305,138 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
         }
     }
 
-    private fun hasNoteBlockAdapter(): Boolean {
-        return mNoteBlockAdapter != null
-    }
+    private data class ManageUserBlockResults(val index: Int, val noteBlock: NoteBlock, val pingbackUrl: String?)
 
     // Loop through the 'body' items in this note, and create blocks for each.
     // TODO replace this inner async task with a coroutine
     @SuppressLint("StaticFieldLeak")
     private inner class LoadNoteBlocksTask : AsyncTask<Void, Void, List<NoteBlock>?>() {
         private var mIsBadgeView = false
+
+        private fun addHeaderNoteBlock(note: Note, noteList: MutableList<NoteBlock>) {
+            val imageType = if (note.isFollowType) BLAVATAR else AVATAR_WITH_BACKGROUND
+            val headerNoteBlock = HeaderNoteBlock(
+                    activity,
+                    transformToFormattableContentList(note.header),
+                    imageType,
+                    mOnNoteBlockTextClickListener,
+                    mOnGravatarClickedListener,
+                    mImageManager,
+                    mNotificationsUtilsWrapper
+            )
+            headerNoteBlock.setIsComment(note.isCommentType)
+            noteList.add(headerNoteBlock)
+        }
+
+        private fun manageUserBlock(
+            note: Note,
+            bodyArray: JSONArray,
+            listSize: Int,
+            initialIndex: Int,
+            noteObject: FormattableContent
+        ): ManageUserBlockResults {
+            var index = initialIndex
+            var noteBlock: NoteBlock
+            var pingbackUrl: String? = null
+            if (note.isCommentType) {
+                // Set comment position so we can target it later
+                // See refreshBlocksForCommentStatus()
+                mCommentListPosition = index + listSize
+                var commentTextBlock: FormattableContent? = null
+                // Next item in the bodyArray is comment text
+                if (index + 1 < bodyArray.length()) {
+                    commentTextBlock = mNotificationsUtilsWrapper
+                            .mapJsonToFormattableContent(bodyArray.getJSONObject(index + 1))
+                    index++
+                }
+                noteBlock = CommentUserNoteBlock(
+                        activity,
+                        noteObject,
+                        commentTextBlock,
+                        note.timestamp,
+                        mOnNoteBlockTextClickListener,
+                        mOnGravatarClickedListener,
+                        mImageManager,
+                        mNotificationsUtilsWrapper
+                )
+                pingbackUrl = noteBlock.getMetaSiteUrl()
+
+                // Set listener for comment status changes, so we can update bg and text colors
+                val commentUserNoteBlock: CommentUserNoteBlock = noteBlock
+                mOnCommentStatusChangeListener = commentUserNoteBlock.onCommentChangeListener
+                commentUserNoteBlock.setCommentStatus(note.commentStatus)
+                commentUserNoteBlock.configureResources(activity)
+            } else {
+                noteBlock = UserNoteBlock(
+                        activity,
+                        noteObject,
+                        mOnNoteBlockTextClickListener,
+                        mOnGravatarClickedListener,
+                        mImageManager,
+                        mNotificationsUtilsWrapper
+                )
+            }
+
+            return ManageUserBlockResults(index, noteBlock, pingbackUrl)
+        }
+
+        private fun addNotesBlock(
+            note: Note,
+            noteList: MutableList<NoteBlock>,
+            bodyArray: JSONArray,
+            isPingback: Boolean
+        ): String? {
+            var pingbackUrl: String? = null
+            var i = 0
+            while (i < bodyArray.length()) {
+                try {
+                    val noteObject = mNotificationsUtilsWrapper
+                            .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
+
+                    // Determine NoteBlock type and add it to the array
+                    var noteBlock: NoteBlock
+
+                    if (BlockType.fromString(noteObject.type) == BlockType.USER) {
+                        val manageUserBlockResults = manageUserBlock(note, bodyArray, noteList.size, i, noteObject)
+                        i = manageUserBlockResults.index
+                        noteBlock = manageUserBlockResults.noteBlock
+                        pingbackUrl = manageUserBlockResults.pingbackUrl
+                    } else if (isFooterBlock(noteObject)) {
+                        noteBlock = FooterNoteBlock(
+                                noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                mOnNoteBlockTextClickListener
+                        ).also {
+                            if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
+                                val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
+                                it.setClickableSpan(range, note.type)
+                            }
+                        }
+                    } else {
+                        noteBlock = NoteBlock(
+                                noteObject, mImageManager, mNotificationsUtilsWrapper,
+                                mOnNoteBlockTextClickListener
+                        )
+                    }
+
+                    // Badge notifications apply different colors and formatting
+                    if (isAdded && noteBlock.containsBadgeMediaType()) {
+                        mIsBadgeView = true
+                    }
+                    if (mIsBadgeView) {
+                        noteBlock.setIsBadge()
+                    }
+                    if (isPingback) {
+                        noteBlock.setIsPingback()
+                    }
+                    noteList.add(noteBlock)
+                } catch (e: JSONException) {
+                    AppLog.e(NOTIFS, "Invalid note data, could not parse.")
+                }
+                i++
+            }
+
+            return pingbackUrl
+        }
 
         override fun doInBackground(vararg params: Void): List<NoteBlock>? {
             if (mNote == null) {
@@ -324,100 +450,12 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
                 // Add the note header if one was provided
                 if (note.header != null) {
-                    val imageType = if (note.isFollowType) BLAVATAR else AVATAR_WITH_BACKGROUND
-                    val headerNoteBlock = HeaderNoteBlock(
-                            activity,
-                            transformToFormattableContentList(note.header),
-                            imageType,
-                            mOnNoteBlockTextClickListener,
-                            mOnGravatarClickedListener,
-                            mImageManager,
-                            mNotificationsUtilsWrapper
-                    )
-                    headerNoteBlock.setIsComment(note.isCommentType)
-                    noteList.add(headerNoteBlock)
+                    addHeaderNoteBlock(note, noteList)
                 }
                 var pingbackUrl: String? = null
                 val isPingback = isPingback(note)
                 if (bodyArray != null && bodyArray.length() > 0) {
-                    var i = 0
-                    while (i < bodyArray.length()) {
-                        try {
-                            val noteObject = mNotificationsUtilsWrapper
-                                    .mapJsonToFormattableContent(bodyArray.getJSONObject(i))
-                            // Determine NoteBlock type and add it to the array
-                            var noteBlock: NoteBlock
-                            if (BlockType.fromString(noteObject.type) == BlockType.USER) {
-                                if (note.isCommentType) {
-                                    // Set comment position so we can target it later
-                                    // See refreshBlocksForCommentStatus()
-                                    mCommentListPosition = i + noteList.size
-                                    var commentTextBlock: FormattableContent? = null
-                                    // Next item in the bodyArray is comment text
-                                    if (i + 1 < bodyArray.length()) {
-                                        commentTextBlock = mNotificationsUtilsWrapper
-                                                .mapJsonToFormattableContent(bodyArray.getJSONObject(i + 1))
-                                        i++
-                                    }
-                                    noteBlock = CommentUserNoteBlock(
-                                            activity,
-                                            noteObject,
-                                            commentTextBlock,
-                                            note.timestamp,
-                                            mOnNoteBlockTextClickListener,
-                                            mOnGravatarClickedListener,
-                                            mImageManager,
-                                            mNotificationsUtilsWrapper
-                                    )
-                                    pingbackUrl = noteBlock.getMetaSiteUrl()
-
-                                    // Set listener for comment status changes, so we can update bg and text colors
-                                    val commentUserNoteBlock: CommentUserNoteBlock = noteBlock
-                                    mOnCommentStatusChangeListener = commentUserNoteBlock.onCommentChangeListener
-                                    commentUserNoteBlock.setCommentStatus(note.commentStatus)
-                                    commentUserNoteBlock.configureResources(activity)
-                                } else {
-                                    noteBlock = UserNoteBlock(
-                                            activity,
-                                            noteObject,
-                                            mOnNoteBlockTextClickListener,
-                                            mOnGravatarClickedListener,
-                                            mImageManager,
-                                            mNotificationsUtilsWrapper
-                                    )
-                                }
-                            } else if (isFooterBlock(noteObject)) {
-                                noteBlock = FooterNoteBlock(
-                                        noteObject, mImageManager, mNotificationsUtilsWrapper,
-                                        mOnNoteBlockTextClickListener
-                                )
-                                if (noteObject.ranges != null && noteObject.ranges!!.isNotEmpty()) {
-                                    val range = noteObject.ranges!![noteObject.ranges!!.size - 1]
-                                    noteBlock.setClickableSpan(range, note.type)
-                                }
-                            } else {
-                                noteBlock = NoteBlock(
-                                        noteObject, mImageManager, mNotificationsUtilsWrapper,
-                                        mOnNoteBlockTextClickListener
-                                )
-                            }
-
-                            // Badge notifications apply different colors and formatting
-                            if (isAdded && noteBlock.containsBadgeMediaType()) {
-                                mIsBadgeView = true
-                            }
-                            if (mIsBadgeView) {
-                                noteBlock.setIsBadge()
-                            }
-                            if (isPingback) {
-                                noteBlock.setIsPingback()
-                            }
-                            noteList.add(noteBlock)
-                        } catch (e: JSONException) {
-                            AppLog.e(NOTIFS, "Invalid note data, could not parse.")
-                        }
-                        i++
-                    }
+                    pingbackUrl = addNotesBlock(note, noteList, bodyArray, isPingback)
                 }
                 if (isPingback) {
                     // Remove this when we start receiving "Read the source post block" from the backend
@@ -488,7 +526,7 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             if (mIsBadgeView) {
                 mRootLayout!!.gravity = Gravity.CENTER_VERTICAL
             }
-            if (!hasNoteBlockAdapter()) {
+            if (mNoteBlockAdapter == null) {
                 mNoteBlockAdapter = NoteBlockAdapter(activity, noteList)
                 listAdapter = mNoteBlockAdapter
             } else {
@@ -506,21 +544,20 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
             return false
         }
 
-        requireNotNull(mNote).let { note ->
+        return requireNotNull(mNote).let { note ->
             if (note.isCommentType) {
                 val commentReplyId = blockObject.getRangeIdOrZero(1)
                 // Check if this is a comment notification that has been replied to
                 // The block will not have a type, and its id will match the comment reply id in the Note.
-                return (blockObject.type == null
-                        && note.commentReplyId == commentReplyId)
+                (blockObject.type == null && note.commentReplyId == commentReplyId)
             } else if (note.isFollowType || note.isLikeType || note.isReblogType) {
                 // User list notifications have a footer if they have 10 or more users in the body
                 // The last block will not have a type, so we can use that to determine if it is the footer
-                return blockObject.type == null
+                blockObject.type == null
+            } else {
+                false
             }
         }
-
-        return false
     }
 
     fun refreshBlocksForCommentStatus(newStatus: CommentStatus) {
@@ -558,19 +595,20 @@ class NotificationsDetailListFragment : ListFragment(), NotificationFragment {
 
         requireNotNull(mNote).let { note ->
             // Request reader comments until we retrieve the comment for this note
-            if ((note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply)
-                    && !ReaderCommentTable.commentExists(
-                            note.siteId.toLong(),
-                            note.postId.toLong(),
-                            note.commentId
-                    )) {
-                ReaderCommentService
-                        .startServiceForComment(
-                                activity,
-                                note.siteId.toLong(),
-                                note.postId.toLong(),
-                                note.commentId
-                        )
+            val isReplyOrCommentLike = note.isCommentLikeType || note.isCommentReplyType || note.isCommentWithUserReply
+            val commentNotExists = !ReaderCommentTable.commentExists(
+                    note.siteId.toLong(),
+                    note.postId.toLong(),
+                    note.commentId
+            )
+
+            if (isReplyOrCommentLike && commentNotExists) {
+                ReaderCommentService.startServiceForComment(
+                        activity,
+                        note.siteId.toLong(),
+                        note.postId.toLong(),
+                        note.commentId
+                )
             }
         }
     }
