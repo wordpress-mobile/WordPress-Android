@@ -792,12 +792,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * activity for this related post
      */
     private fun showRelatedPostDetail(postId: Long, blogId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal)
-            Stat.READER_GLOBAL_RELATED_POST_CLICKED
-        else
-            Stat.READER_LOCAL_RELATED_POST_CLICKED
-        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
-
         if (isRelatedPost) {
             postHistory.push(ReaderBlogIdPostId(post!!.blogId, post!!.postId))
             replacePost(blogId, postId, true)

@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.R
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -33,6 +34,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -47,6 +49,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -204,6 +207,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
+        trackRelatedPostClickAction(postId, blogId, isGlobal)
         _navigationEvents.value = Event(ShowRelatedPostDetails(postId = postId, blogId = blogId, isGlobal = isGlobal))
     }
 
@@ -229,6 +233,11 @@ class ReaderPostDetailViewModel @Inject constructor(
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(sourcePost, fetchRelatedPostsState)
             }
         }
+    }
+
+    private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
+        val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
+        analyticsUtilsWrapper.trackWithReaderPostDetails(stat = stat, blogId = blogId, postId = postId)
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
