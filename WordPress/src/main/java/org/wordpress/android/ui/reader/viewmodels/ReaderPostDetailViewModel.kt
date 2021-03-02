@@ -25,8 +25,10 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
+import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiDimen
+import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.EventBusWrapper
 import org.wordpress.android.viewmodel.Event
@@ -202,8 +204,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 is FetchRelatedPostsState.AlreadyRunning,
                 is FetchRelatedPostsState.Failed.NoNetwork,
                 is FetchRelatedPostsState.Failed.RequestFailed -> Unit // Do Nothing
-
-                is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(fetchRelatedPostsState)
+                is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(sourcePost, fetchRelatedPostsState)
             }
         }
     }
@@ -227,6 +228,16 @@ class ReaderPostDetailViewModel @Inject constructor(
                 onTagItemClicked = this@ReaderPostDetailViewModel::onTagItemClicked
         )
     }
+
+    private fun convertRelatedPostsToUiState(
+        sourcePost: ReaderPost,
+        relatedPosts: ReaderSimplePostList,
+        isGlobal: Boolean
+    ) = postDetailUiStateBuilder.mapRelatedPostsToUiState(
+            sourcePost = sourcePost,
+            relatedPosts = relatedPosts,
+            isGlobal = isGlobal
+    )
 
     private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
@@ -253,22 +264,45 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    private fun updateRelatedPostsUiState(state: FetchRelatedPostsState.Success) {
+    private fun updateRelatedPostsUiState(sourcePost: ReaderPost, state: FetchRelatedPostsState.Success) {
         _uiState.value = _uiState.value?.copy(
-                localRelatedPosts = RelatedPosts(posts = state.localRelatedPosts, isGlobal = false),
-                globalRelatedPosts = RelatedPosts(posts = state.globalRelatedPosts, isGlobal = true)
+                localRelatedPosts = convertRelatedPostsToUiState(
+                        sourcePost = sourcePost,
+                        relatedPosts = state.localRelatedPosts,
+                        isGlobal = false
+                ),
+                globalRelatedPosts = convertRelatedPostsToUiState(
+                        sourcePost = sourcePost,
+                        relatedPosts = state.globalRelatedPosts,
+                        isGlobal = true
+                )
         )
     }
+
     data class ReaderPostDetailsUiState(
         val postId: Long,
         val blogId: Long,
         val headerUiState: ReaderPostDetailsHeaderUiState,
         val moreMenuItems: List<SecondaryAction>? = null,
         val actions: ReaderPostActions,
-        val localRelatedPosts: RelatedPosts? = null,
-        val globalRelatedPosts: RelatedPosts? = null
+        val localRelatedPosts: RelatedPostsUiState? = null,
+        val globalRelatedPosts: RelatedPostsUiState? = null
     ) {
-        data class RelatedPosts(val posts: ReaderSimplePostList?, val isGlobal: Boolean)
+        data class RelatedPostsUiState(
+            val cards: List<ReaderRelatedPostUiState>?,
+            val isGlobal: Boolean,
+            val siteName: String?
+        ) {
+            data class ReaderRelatedPostUiState(
+                val postId: Long,
+                val blogId: Long,
+                val isGlobal: Boolean,
+                val title: UiString?,
+                val featuredImageUrl: String?,
+                val featuredImageCornerRadius: UiDimen,
+                val followButtonUiState: FollowButtonUiState?
+            )
+        }
     }
 
     override fun onCleared() {

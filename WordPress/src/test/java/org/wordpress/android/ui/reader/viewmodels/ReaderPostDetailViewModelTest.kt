@@ -37,6 +37,7 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REBLOG
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
+import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
@@ -44,7 +45,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.F
 import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPosts
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
@@ -76,8 +77,6 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
-    @Mock private lateinit var localRelatedPosts: ReaderSimplePostList
-    @Mock private lateinit var globalRelatedPosts: ReaderSimplePostList
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -85,6 +84,10 @@ class ReaderPostDetailViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
+    private val readerSimplePost = ReaderSimplePost()
+
+    private val localRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
+    private val globalRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
     @Before
     fun setUp() = test {
@@ -291,12 +294,45 @@ class ReaderPostDetailViewModelTest {
     }
 
     @Test
-    fun `given related posts fetch succeeds, when related posts are requested, then related posts are shown`() =
+    fun `given local related posts fetch succeeds, when related posts are requested, then local related posts shown`() =
             test {
+                val localRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
+                whenever(
+                        postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                                sourcePost = eq(readerPost),
+                                relatedPosts = eq(localRelatedPosts),
+                                isGlobal = eq(false)
+                        )
+                ).thenReturn(localRelatedPostsUiState)
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(
                                 FetchRelatedPostsState.Success(
                                         localRelatedPosts = localRelatedPosts,
+                                        globalRelatedPosts = ReaderSimplePostList()
+                                )
+                        )
+                val uiStates = init().uiStates
+
+                viewModel.onRelatedPostsRequested(readerPost)
+
+                assertThat(uiStates.last().localRelatedPosts).isEqualTo(localRelatedPostsUiState)
+            }
+
+    @Test
+    fun `given global related posts fetch succeeds, when related posts requested, then global related posts shown`() =
+            test {
+                val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = true)
+                whenever(
+                        postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                                sourcePost = eq(readerPost),
+                                relatedPosts = eq(globalRelatedPosts),
+                                isGlobal = eq(true)
+                        )
+                ).thenReturn(globalRelatedPostsUiState)
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
                                         globalRelatedPosts = globalRelatedPosts
                                 )
                         )
@@ -304,14 +340,7 @@ class ReaderPostDetailViewModelTest {
 
                 viewModel.onRelatedPostsRequested(readerPost)
 
-                with(uiStates.last()) {
-                    assertThat(localRelatedPosts).isEqualTo(
-                            RelatedPosts(posts = this@ReaderPostDetailViewModelTest.localRelatedPosts, isGlobal = false)
-                    )
-                    assertThat(globalRelatedPosts).isEqualTo(
-                            RelatedPosts(posts = this@ReaderPostDetailViewModelTest.globalRelatedPosts, isGlobal = true)
-                    )
-                }
+                assertThat(uiStates.last().globalRelatedPosts).isEqualTo(globalRelatedPostsUiState)
             }
 
     @Test
@@ -432,6 +461,9 @@ class ReaderPostDetailViewModelTest {
                 )
         )
     }
+
+    private fun createDummyRelatedPostsUiState(isGlobal: Boolean) =
+            RelatedPostsUiState(cards = mock(), isGlobal = isGlobal, siteName = readerPost.blogName)
 
     private fun init(showPost: Boolean = true): Observers {
         val uiStates = mutableListOf<ReaderPostDetailsUiState>()

@@ -360,14 +360,14 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostsListActivity.kt:295</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1009</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1005</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1007</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1011</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1015</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1017</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1137</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1139</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:808</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:810</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1013</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1133</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1135</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:804</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:806</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:251</ID>
