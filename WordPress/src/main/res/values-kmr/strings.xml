@@ -211,7 +211,6 @@ Language: ku_TR
     <string name="signup_confirmation_title">Pejirandina tomarbûnê</string>
     <string name="continue_with_google_terms_of_service_text">Heke tu bi Googleê re dewam bikî û hesabê te yê WordPress\'ê tune be, dema tu ajimêrekê biafirînî tu pê re %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
     <string name="continue_terms_of_service_text">Bi domandinê re tu %1$sMercên Xizmetê%2$s yên me qebûl dikî.</string>
-    <string name="signup_confirmation_magic_link_message">Em ê girêdaneke tomarbûnê bi emailê ji te re bişînin da ku tu hesabê xwe yê nû yê WordPress.com\'ê biafirînî.</string>
     <string name="signup_confirmation_message">Em ê vê navnîşana emailê ji bo afirandina hesabê te yê nû yê WordPress.com\'ê bi kar bînin.</string>
     <string name="signup_magic_link_message">Me girêdaneke tomarbûnê ji te re şand ji bo ku tu hesabê xwe yê WordPress.com\'ê biafirînî. Li ser vê cîhazê emaila xwe kontrol bike û li girêdana ji WordPress.com\'ê hatiye, bitikîne.</string>
     <string name="enter_account_info_for_site">Ji bo %1$sê agahiyên hesabê xwe bikevê.</string>
@@ -894,7 +893,6 @@ Language: ku_TR
     <string name="notification_new_site_creation_failed">Pirsgirêkek hebû</string>
     <string name="notification_new_site_creation_title">Malperê Biafirîne</string>
     <string name="new_site_creation_create_site_button">Malperê Biafirîne</string>
-    <string name="new_site_creation_search_domain_input_hint">Li Domainan Bigere</string>
     <string name="new_site_creation_domain_header_subtitle">Mirov di înternetê de ew ê te li vir bibînin.</string>
     <string name="new_site_creation_empty_domain_list_message">Li gorî lêgerîna te ti navnîşan nehat dîtin</string>
     <string name="site_creation_error_generic_subtitle">Di têkîliya bi serverê re çewtî derket, ji kerema xwe dîsa biceribîne</string>

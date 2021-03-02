@@ -892,7 +892,6 @@ Language: gl_ES
     <string name="notification_new_site_creation_failed">Houbo un problema</string>
     <string name="notification_new_site_creation_title">Crear sitio</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí é onde a xente te encontra en Internet.</string>
     <string name="new_site_creation_empty_domain_list_message">Non hai direccións dispoñibles que coincidan coa túa busca</string>
     <string name="site_creation_error_generic_subtitle">Erro durante a comunicación co servidor. Inténtao de novo</string>
