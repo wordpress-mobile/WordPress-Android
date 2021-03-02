@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|exitUntilCollapsed">
 
             <include
-                layout="@layout/home_page_picker_header_section"
+                layout="@layout/modal_layout_picker_header_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_gravity="bottom"
