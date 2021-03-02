@@ -23,6 +23,7 @@
             android:layout_height="wrap_content"
             android:drawableStart="@drawable/ic_trending_up_24dp"
             android:text="@string/reader_discover_sorting_type_popular"
+            app:drawableTint="?attr/wpColorOnSurfaceMedium"
             tools:checked="true" />
 
         <com.google.android.material.radiobutton.MaterialRadioButton
@@ -32,7 +33,8 @@
             android:layout_height="wrap_content"
             android:button="@drawable/selector_check_mark"
             android:drawableStart="@drawable/ic_new_releases_24"
-            android:text="@string/reader_discover_sorting_type_recent" />
+            android:text="@string/reader_discover_sorting_type_recent"
+            app:drawableTint="?attr/wpColorOnSurfaceMedium" />
 
     </RadioGroup>
 
