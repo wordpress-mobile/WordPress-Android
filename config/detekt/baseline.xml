@@ -46,6 +46,7 @@
     <ID>ComplexMethod:PostPageListLabelColorUseCase.kt$PostPageListLabelColorUseCase$@ColorRes private fun getLabelColor( postStatus: PostStatus, isLocalDraft: Boolean, isLocallyChanged: Boolean, uploadUiState: PostUploadUiState, hasUnhandledConflicts: Boolean, hasAutoSave: Boolean ): Int?</ID>
     <ID>ComplexMethod:ReaderDiscoverFragment.kt$ReaderDiscoverFragment$private fun initViewModel()</ID>
     <ID>ComplexMethod:ReaderPostBookmarkUseCase.kt$ReaderPostBookmarkUseCase$private fun trackEvent(bookmarked: Boolean, isBookmarkList: Boolean, fromPostDetails: Boolean)</ID>
+    <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun ReaderNavigationEvents.handleNavigationEvent()</ID>
     <ID>ComplexMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun onPostExecute(result: Boolean)</ID>
     <ID>ComplexMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem&gt;</ID>
     <ID>ComplexMethod:StatsFragment.kt$StatsFragment$private fun setupObservers(activity: FragmentActivity)</ID>
@@ -128,7 +129,6 @@
     <ID>LongMethod:PublishSettingsFragment.kt$PublishSettingsFragment$override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View?</ID>
     <ID>LongMethod:ReaderDiscoverFragment.kt$ReaderDiscoverFragment$private fun initViewModel()</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$override fun onCreateView( inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle? ): View?</ID>
-    <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun initViewModel()</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun onPostExecute(result: Boolean)</ID>
     <ID>LongMethod:ReaderPostMoreButtonUiStateBuilder.kt$ReaderPostMoreButtonUiStateBuilder$fun buildMoreMenuItemsBlocking( post: ReaderPost, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit ): MutableList&lt;SecondaryAction&gt;</ID>
     <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem&gt;</ID>
@@ -360,14 +360,12 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PostsListActivity.kt:295</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.PrepublishingHomeViewModel.kt:138</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.posts.prepublishing.visibility.usecases.UpdatePostStatusUseCase.kt:25</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1005</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1007</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1011</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1013</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1133</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1135</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:804</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:806</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1000</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1120</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:1122</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:992</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:994</ID>
+    <ID>MultiLineIfElse:org.wordpress.android.ui.reader.ReaderPostDetailFragment.kt:998</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:26</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.repository.usecases.FetchDiscoverCardsUseCase.kt:28</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:251</ID>
