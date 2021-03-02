@@ -399,84 +399,81 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
-        viewModel.uiState.observe(
-                viewLifecycleOwner, { state ->
-                    header_view.updatePost(state.headerUiState)
-                    showOrHideMoreMenu(state)
-
-                    updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
-                    updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-                    updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
-                    updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
-
-                    state.localRelatedPosts?.let { showRelatedPosts(it) }
-                    state.globalRelatedPosts?.let { showRelatedPosts(it) }
-                }
-        )
+        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
 
         viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
 
         viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, {
-            it.applyIfNotHandled {
-                when (this) {
-                    is ReaderNavigationEvents.ShowPostsByTag ->
-                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+        viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
 
-                    is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            context,
-                            this.siteId,
-                            this.feedId
-                    )
-
-                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
-
-                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
-
-                    is ReaderNavigationEvents.ShowReportPost ->
-                        ReaderActivityLauncher.openUrl(
-                                context,
-                                readerUtilsWrapper.getReportPostUrl(url),
-                                OpenUrlType.INTERNAL
-                        )
-
-                    is ReaderNavigationEvents.ShowReaderComments ->
-                        ReaderActivityLauncher.showReaderComments(context, blogId, postId)
-
-                    is ReaderNavigationEvents.ShowNoSitesToReblog ->
-                        ReaderActivityLauncher.showNoSiteToReblog(activity)
-
-                    is ReaderNavigationEvents.ShowSitePickerForResult ->
-                        ActivityLauncher
-                                .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
-
-                    is ReaderNavigationEvents.OpenEditorForReblog ->
-                        ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
-
-                    is ReaderNavigationEvents.ShowBookmarkedTab ->
-                        ActivityLauncher.viewSavedPostsListInReader(activity)
-
-                    is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog ->
-                        showBookmarkSavedLocallyDialog(this)
-
-                    is ReaderNavigationEvents.ShowRelatedPostDetails ->
-                        showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
-
-                    is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
-                        replaceRelatedPostDetailWithHistory(
-                                postId = this.postId,
-                                blogId = this.blogId,
-                                isGlobal = this.isGlobal
-                        )
-
-                    is ReaderNavigationEvents.ShowPostDetail,
-                    is ReaderNavigationEvents.ShowVideoViewer,
-                    is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
-                }
-            }
-        })
         viewModel.start(isRelatedPost)
+    }
+
+    private fun renderUiState(state: ReaderPostDetailsUiState) {
+        header_view.updatePost(state.headerUiState)
+        showOrHideMoreMenu(state)
+
+        updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
+        updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+        updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
+        updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+
+        state.localRelatedPosts?.let { showRelatedPosts(it) }
+        state.globalRelatedPosts?.let { showRelatedPosts(it) }
+    }
+
+    private fun ReaderNavigationEvents.handleNavigationEvent() {
+        when (this) {
+            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+
+            is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    context,
+                    this.siteId,
+                    this.feedId
+            )
+
+            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+
+            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+
+            is ReaderNavigationEvents.ShowReportPost ->
+                ReaderActivityLauncher.openUrl(
+                        context,
+                        readerUtilsWrapper.getReportPostUrl(url),
+                        OpenUrlType.INTERNAL
+                )
+
+            is ReaderNavigationEvents.ShowReaderComments ->
+                ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+
+            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+
+            is ReaderNavigationEvents.ShowSitePickerForResult ->
+                ActivityLauncher
+                        .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
+
+            is ReaderNavigationEvents.OpenEditorForReblog ->
+                ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+
+            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+
+            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+
+            is ReaderNavigationEvents.ShowRelatedPostDetails ->
+                showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
+
+            is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
+                replaceRelatedPostDetailWithHistory(
+                        postId = this.postId,
+                        blogId = this.blogId,
+                        isGlobal = this.isGlobal
+                )
+
+            is ReaderNavigationEvents.ShowPostDetail,
+            is ReaderNavigationEvents.ShowVideoViewer,
+            is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
+        }
     }
 
     private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
