@@ -137,6 +137,7 @@ import org.wordpress.android.ui.prefs.SiteSettingsTagDetailFragment;
 import org.wordpress.android.ui.prefs.SiteSettingsTagListActivity;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
 import org.wordpress.android.ui.prefs.notifications.NotificationsSettingsFragment;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.ui.publicize.PublicizeAccountChooserListAdapter;
 import org.wordpress.android.ui.publicize.PublicizeButtonPrefsFragment;
 import org.wordpress.android.ui.publicize.PublicizeDetailFragment;
@@ -648,6 +649,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(BackupDownloadFragment object);
 
     void inject(RestoreFragment object);
+
+    void inject(SiteSettingsTimezoneBottomSheet object);
 
     // Allows us to inject the application without having to instantiate any modules, and provides the Application
     // in the app graph
