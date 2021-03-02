@@ -26,6 +26,10 @@
 /products/tags/<id>/
 /products/tags/batch/
 
+/customers/<id>
+/customers/
+/customers/<id>/downloads
+
 /reports/orders/totals/
 /reports/revenue/stats/
 
