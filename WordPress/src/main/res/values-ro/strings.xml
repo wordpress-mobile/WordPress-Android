@@ -158,7 +158,7 @@ Language: ro
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
     <string name="threat_fix_all_status_error_message">Eroare la primirea stării pentru înlăturarea amenințărilor. Te rog contactează suportul.</string>
     <string name="threat_fix_all_error_message">Eroare la înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_warning_message_singular">Te rog confirmă că vrei să înlături o amenințare activă.</string>
+    <string name="threat_fix_all_warning_message_singular">Te rog confirmă că vrei să înlături %s amenințare activă.</string>
     <string name="threat_fix_all_status_success_message_singular">Amenințarea a fost înlăturată cu succes.</string>
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>

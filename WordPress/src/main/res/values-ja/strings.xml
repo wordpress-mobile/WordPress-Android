@@ -1,20 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-26 02:07:00+0000
+Translation-Revision-Date: 2021-03-02 04:27:51+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">脅威の修正に成功しました。</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="new_site_creation_search_domain_input_hint">サイトの名前を入力してください</string>
+    <string name="quick_start_card_menu_hide">今は非表示にする</string>
     <string name="invite_links_disable_dialog_title">招待リンクを無効化</string>
+    <string name="invite_links_bad_format_response">無効な応答を受信しました</string>
     <string name="invite_links_null_response">応答がありませんでした</string>
+    <string name="invite_links_cannot_get_role_data_error">権限グループ「%1$s」のデータ取得中にエラーが発生しました</string>
+    <string name="invite_links_cannot_get_roles_error">権限グループの取得中にエラーが発生しました</string>
+    <string name="invite_links_generic_get_data_error">招待リンクデータの取得中に不明なエラーが発生しました</string>
     <string name="invite_links_disable_invite_link">招待リンクを無効化</string>
     <string name="invite_links_share_invite_link">招待リンクを共有</string>
+    <string name="invite_links_generate">新規リンクを作成</string>
+    <string name="invite_links_get_status_retry">リンクのステータスを更新</string>
     <string name="invite_links_section_title">招待リンク</string>
     <string name="threats_found_singular">検出された脅威</string>
     <string name="threats_found_plural">検出された脅威</string>
+    <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="disable">無効化</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_list_view_site_title">サイトを表示</string>
