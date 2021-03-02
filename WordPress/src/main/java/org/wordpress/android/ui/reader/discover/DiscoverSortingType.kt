@@ -1,5 +1,7 @@
 package org.wordpress.android.ui.reader.discover
 
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.NONE
+
 /**
  * Use for filtering posts in Discover tab
  *

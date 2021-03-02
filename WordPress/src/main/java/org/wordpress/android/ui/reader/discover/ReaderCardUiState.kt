@@ -91,6 +91,12 @@ sealed class ReaderCardUiState {
             }
         }
     }
+
+    data class ReaderSortingTypeUiState(
+        @DrawableRes val icon: Int?,
+        val title: UiString?,
+        val onFilterClicked: () -> Unit
+    ) : ReaderCardUiState()
 }
 
 data class ReaderPostActions(

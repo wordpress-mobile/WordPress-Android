@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.discover
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
@@ -23,8 +24,11 @@ import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType.TAG_FOLLOWED
 import org.wordpress.android.ui.reader.discover.DiscoverSortingType.NONE
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.POPULARITY
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.TIME
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderSortingTypeUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
@@ -35,6 +39,8 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogP
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
+import org.wordpress.android.ui.reader.discover.SortingDialogUiState.DialogHidden
+import org.wordpress.android.ui.reader.discover.SortingDialogUiState.DialogVisible
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication
 import org.wordpress.android.ui.reader.repository.ReaderDiscoverCommunication.Error
@@ -50,6 +56,7 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderViewModel
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.FilterDiscoverFeatureConfig
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -71,7 +78,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     displayUtilsWrapper: DisplayUtilsWrapper,
     private val getFollowedTagsUseCase: GetFollowedTagsUseCase,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
-    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
+    @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher,
+    private val sortingConfig: FilterDiscoverFeatureConfig
 ) : ScopedViewModel(mainDispatcher) {
     private var isStarted = false
 
@@ -79,6 +87,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     private val _uiState = MediatorLiveData<DiscoverUiState>()
     val uiState: LiveData<DiscoverUiState> = _uiState
+
+    private val _sortingDialogUiState = MutableLiveData<Event<SortingDialogUiState>>()
+    val sortingDialogUiState: LiveData<Event<SortingDialogUiState>> = _sortingDialogUiState
 
     private val _navigationEvents = MediatorLiveData<Event<ReaderNavigationEvents>>()
     val navigationEvents: LiveData<Event<ReaderNavigationEvents>> = _navigationEvents
@@ -89,8 +100,8 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val _preloadPostEvents = MediatorLiveData<Event<PreLoadPostContent>>()
     val preloadPostEvents: LiveData<Event<PreLoadPostContent>> = _preloadPostEvents
 
-    var sortingType = NONE
-        private set
+    private val _sortingType = MutableLiveData<DiscoverSortingType>()
+    val sortingType: LiveData<DiscoverSortingType> = _sortingType
 
     /**
      * Post which is about to be reblogged after the user selects a target site.
@@ -114,6 +125,13 @@ class ReaderDiscoverViewModel @Inject constructor(
         }
     }
 
+    private fun getDefaultSortingType() =
+            if (sortingConfig.isEnabled()) {
+                POPULARITY
+            } else {
+                NONE
+            }
+
     fun start(parentViewModel: ReaderViewModel) {
         if (isStarted) return
         isStarted = true
@@ -124,6 +142,9 @@ class ReaderDiscoverViewModel @Inject constructor(
     private fun init() {
         // Start with loading state
         _uiState.value = LoadingUiState
+
+        // set default sorting type
+        _sortingType.value = getDefaultSortingType()
 
         readerPostCardActionsHandler.initScope(this)
 
@@ -138,8 +159,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _uiState.value = ShowNoFollowedTagsUiState { parentViewModel.onShowReaderInterests() }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
+                        val cardUiStates = convertCardsToUiStates(posts)
+                        val cardUiStatesWithSortingButton = addSortingTypeButton(cardUiStates)
+
                         _uiState.value = ContentUiState(
-                                convertCardsToUiStates(posts),
+                                cardUiStatesWithSortingButton,
                                 reloadProgressVisibility = false,
                                 loadMoreProgressVisibility = false,
                                 scrollToTop = swipeToRefreshTriggered
@@ -211,6 +235,29 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun addSortingTypeButton(uiStateList: List<ReaderCardUiState>): List<ReaderCardUiState> {
+        val hasWelcomeCard = uiStateList.firstOrNull() is ReaderWelcomeBannerCardUiState
+        val sortingTypeButtonIndex = if (hasWelcomeCard) 1 else 0
+        val sortingTypeUiState = when (_sortingType.value) {
+            POPULARITY -> ReaderSortingTypeUiState(
+                    icon = R.drawable.ic_trending_up_24dp,
+                    title = UiStringRes(R.string.reader_discover_sorting_type_popular),
+                    onFilterClicked = this::onSortingTypeButtonClicked
+            )
+            TIME -> ReaderSortingTypeUiState(
+                    icon = R.drawable.ic_new_releases_24,
+                    title = UiStringRes(R.string.reader_discover_sorting_type_recent),
+                    onFilterClicked = this::onSortingTypeButtonClicked
+            )
+            else -> null
+        }
+        val mutableUiStateList = uiStateList.toMutableList()
+        if (sortingTypeUiState != null) {
+            mutableUiStateList.add(sortingTypeButtonIndex, sortingTypeUiState)
+        }
+        return mutableUiStateList
     }
 
     private fun handleDataProviderEvent(it: ReaderDiscoverCommunication) {
@@ -416,11 +463,35 @@ class ReaderDiscoverViewModel @Inject constructor(
         appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
     }
 
+    fun onSortingTypeButtonClicked() {
+        val isRefreshing = _uiState.value?.fullscreenProgressVisibility == true
+        if (!isRefreshing) {
+            _sortingDialogUiState.postValue(Event(DialogVisible))
+        }
+    }
+
+    fun onSortingTypeChose(sortingType: DiscoverSortingType) {
+        _sortingDialogUiState.postValue(Event(DialogHidden))
+        val currentSortingType = _sortingType.value
+        if (currentSortingType != sortingType) {
+            _sortingType.postValue(sortingType)
+            launch {
+                readerDiscoverDataProvider.refreshCards(sortingType)
+            }
+        }
+    }
+
+    fun onSortingDialogCancel() {
+        _sortingDialogUiState.postValue(Event(DialogHidden))
+    }
+
     fun swipeToRefresh() {
         analyticsTrackerWrapper.track(READER_PULL_TO_REFRESH)
         swipeToRefreshTriggered = true
         launch {
-            readerDiscoverDataProvider.refreshCards(sortingType)
+            _sortingType.value?.let { sortingType ->
+                readerDiscoverDataProvider.refreshCards(sortingType)
+            }
         }
 
         appPrefsWrapper.readerDiscoverWelcomeBannerShown = true
@@ -428,18 +499,9 @@ class ReaderDiscoverViewModel @Inject constructor(
 
     fun onRetryButtonClick() {
         launch {
-            readerDiscoverDataProvider.refreshCards(sortingType)
-        }
-    }
-
-    fun onSortingTypeChanged(sortingType: DiscoverSortingType) {
-        // TODO consider adding analysis for sorting type
-        if (this.sortingType == sortingType) {
-            return
-        }
-        this.sortingType = sortingType
-        launch {
-            readerDiscoverDataProvider.refreshCards(sortingType)
+            _sortingType.value?.let { sortingType ->
+                readerDiscoverDataProvider.refreshCards(sortingType)
+            }
         }
     }
 
