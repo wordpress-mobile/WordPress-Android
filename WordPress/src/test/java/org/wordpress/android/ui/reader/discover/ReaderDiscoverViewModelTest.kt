@@ -43,6 +43,7 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterest
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderSortingTypeUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
@@ -244,10 +245,14 @@ class ReaderDiscoverViewModelTest {
     @Test
     fun `load more action is initiated when we are close to the end of the list`() = test {
         // Arrange
-        val closeToEndIndex = NUMBER_OF_ITEMS.toInt() - INITIATE_LOAD_MORE_OFFSET
         init()
+        val uiStateList = viewModel.uiState.value as ContentUiState
+        val itemCount = uiStateList.cards.size
+        val closeToEndIndex = itemCount - INITIATE_LOAD_MORE_OFFSET
+
         // Act
-        ((viewModel.uiState.value as ContentUiState).cards[closeToEndIndex] as ReaderPostUiState).let {
+
+        (uiStateList.cards[closeToEndIndex] as ReaderPostUiState).let {
             it.onItemRendered.invoke(it)
         }
         // Assert
@@ -275,7 +280,7 @@ class ReaderDiscoverViewModelTest {
         fakeDiscoverFeed.value = ReaderDiscoverCards(createInterestsYouMayLikeCardList())
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderInterestsCardUiState::class.java)
+        assertThat(contentUiState.cards[1]).isInstanceOf(ReaderInterestsCardUiState::class.java)
     }
 
     @Test
@@ -289,7 +294,7 @@ class ReaderDiscoverViewModelTest {
 
                 // Assert
                 val contentUiState = uiStates[1] as ContentUiState
-                assertThat(contentUiState.cards.first()).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
+                assertThat(contentUiState.cards[1]).isInstanceOf(ReaderRecommendedBlogsCardUiState::class.java)
             }
 
     @Test
@@ -300,7 +305,7 @@ class ReaderDiscoverViewModelTest {
         fakeDiscoverFeed.value = ReaderDiscoverCards(createDummyReaderPostCardList())
         // Assert
         val contentUiState = uiStates[1] as ContentUiState
-        assertThat(contentUiState.cards.first()).isInstanceOf(ReaderPostUiState::class.java)
+        assertThat(contentUiState.cards[1]).isInstanceOf(ReaderPostUiState::class.java)
     }
 
     @Test
@@ -405,7 +410,7 @@ class ReaderDiscoverViewModelTest {
         // Arrange
         val observers = init()
         // Act
-        ((observers.uiStates.last() as ContentUiState).cards[1] as ReaderPostUiState).tagItems[0].onClick!!.invoke("t")
+        ((observers.uiStates.last() as ContentUiState).cards[2] as ReaderPostUiState).tagItems[0].onClick!!.invoke("t")
         // Assert
         assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowPostsByTag::class.java)
     }
@@ -507,7 +512,7 @@ class ReaderDiscoverViewModelTest {
 
         // Act
         (uiStates.last() as ContentUiState).let {
-            (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
+            (it.cards[1] as ReaderRecommendedBlogsCardUiState).let { card ->
                 card.blogs[0].onItemClicked.invoke(1, 0L)
             }
         }
@@ -524,7 +529,7 @@ class ReaderDiscoverViewModelTest {
 
         // Act
         val blog = (uiStates.last() as ContentUiState).let {
-            (it.cards.first() as ReaderRecommendedBlogsCardUiState).let { card ->
+            (it.cards.get(1) as ReaderRecommendedBlogsCardUiState).let { card ->
                 card.blogs[0].apply { onFollowClicked(this) }
             }
         }
@@ -581,19 +586,15 @@ class ReaderDiscoverViewModelTest {
     }
 
     @Test
-    fun `When sorting feature is disable, Filter button is hide`() {
+    fun `When sorting feature is disable, Filter button is hide`() = test {
         // arrange
         toggleFilterFeature(isEnable = false)
-        viewModel.start(parentViewModel)
-        viewModel.mDiscoverSortingButtonUiState.observeForever { }
+        val uiStates = init().uiStates
 
         // act
 
-        val sortingTypeUiState = viewModel.mDiscoverSortingButtonUiState.value
-        val canShow = sortingTypeUiState?.getContentIfNotHandled()?.canShow
-
         // assert
-        assertThat(canShow).isFalse()
+        assertThat(uiStates.filterIsInstance(ReaderSortingTypeUiState::class.java)).isEmpty()
     }
 
     @Test
