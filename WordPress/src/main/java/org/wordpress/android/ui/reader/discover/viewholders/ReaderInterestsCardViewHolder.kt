@@ -22,6 +22,9 @@ class ReaderInterestsCardViewHolder(
             val readerInterestAdapter = ReaderInterestAdapter(uiHelpers)
             interests_list.adapter = readerInterestAdapter
         }
+    }
+
+    private fun setOnTouchItemListener() {
         interests_list.addOnItemTouchListener(object : OnItemTouchListener {
             override fun onInterceptTouchEvent(recyclerView: RecyclerView, e: MotionEvent): Boolean {
                 val action = e.action
@@ -53,6 +56,7 @@ class ReaderInterestsCardViewHolder(
 
     override fun onBind(uiState: ReaderCardUiState) {
         uiState as ReaderInterestsCardUiState
+        setOnTouchItemListener()
         (interests_list.adapter as ReaderInterestAdapter).update(uiState.interest)
     }
 }
