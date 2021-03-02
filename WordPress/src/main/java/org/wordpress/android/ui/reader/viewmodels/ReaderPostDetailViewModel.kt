@@ -204,7 +204,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 is FetchRelatedPostsState.AlreadyRunning,
                 is FetchRelatedPostsState.Failed.NoNetwork,
                 is FetchRelatedPostsState.Failed.RequestFailed -> Unit // Do Nothing
-
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(sourcePost, fetchRelatedPostsState)
             }
         }
