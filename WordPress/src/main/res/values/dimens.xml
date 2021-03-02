@@ -593,13 +593,13 @@
     <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
-    <dimen name="mlp_layouts_row_height">281dp</dimen>
+    <dimen name="mlp_layouts_row_height">351dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_categories_bar_height">44dp</dimen>
-    <dimen name="mlp_layout_card_height">204dp</dimen>
-    <dimen name="mlp_layout_card_width">153dp</dimen>
+    <dimen name="mlp_layout_card_height">274dp</dimen>
+    <dimen name="mlp_layout_card_width">175dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>

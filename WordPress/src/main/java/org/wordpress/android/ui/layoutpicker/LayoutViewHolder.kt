@@ -32,7 +32,7 @@ class LayoutViewHolder(internal val parent: ViewGroup) :
         uiState: LayoutListItemUiState,
         imageManager: ImageManager
     ) {
-        imageManager.loadWithResultListener(preview, MShot(uiState.preview),
+        imageManager.loadWithResultListener(preview, MShot(uiState.previewTweaked),
                 object : RequestListener<Drawable> {
                     override fun onLoadFailed(e: Exception?, model: Any?) {
                     }
