@@ -53,6 +53,7 @@ import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.text.StringEscapeUtils;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -76,6 +77,7 @@ import org.wordpress.android.ui.plans.PlansConstants;
 import org.wordpress.android.ui.prefs.EditTextPreferenceWithValidation.ValidationType;
 import org.wordpress.android.ui.prefs.SiteSettingsFormatDialog.FormatType;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsDialog;
+import org.wordpress.android.ui.prefs.timezone.SiteSettingsTimezoneBottomSheet;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.ContextExtensionsKt;
 import org.wordpress.android.util.ContextUtilsKt;
@@ -114,7 +116,8 @@ public class SiteSettingsFragment extends PreferenceFragment
         Preference.OnPreferenceClickListener,
         AdapterView.OnItemLongClickListener,
         Dialog.OnDismissListener,
-        SiteSettingsInterface.SiteSettingsListener {
+        SiteSettingsInterface.SiteSettingsListener,
+        SiteSettingsTimezoneBottomSheet.TimezoneSelectionCallback {
     /**
      * When the user removes a site (by selecting Delete Site) the parent {@link Activity} result
      * is set to this value and {@link Activity#finish()} is invoked.
@@ -539,7 +542,9 @@ public class SiteSettingsFragment extends PreferenceFragment
         } else if (preference == mPostsPerPagePref) {
             showPostsPerPageDialog();
         } else if (preference == mTimezonePref) {
-            showTimezoneDialog();
+            // TODO: Remove all realted before raising PR
+//            showTimezoneDialog();
+            showTimezoneBottomSheet();
         } else if (preference == mHomepagePref) {
             showHomepageSettings();
         }
@@ -1142,6 +1147,13 @@ public class SiteSettingsFragment extends PreferenceFragment
         SiteSettingsTimezoneDialog dialog = SiteSettingsTimezoneDialog.newInstance(mSiteSettings.getTimezone());
         dialog.setTargetFragment(this, TIMEZONE_REQUEST_CODE);
         dialog.show(getFragmentManager(), "timezone-dialog-tag");
+    }
+
+    private void showTimezoneBottomSheet() {
+        SiteSettingsTimezoneBottomSheet bottomSheet =
+                SiteSettingsTimezoneBottomSheet.newInstance(mSiteSettings.getTimezone());
+        bottomSheet.setTimezoneSettingCallback(this);
+        bottomSheet.show(((AppCompatActivity) getActivity()).getSupportFragmentManager(), "timezone-dialog-tag");
     }
 
     private void showHomepageSettings() {
@@ -1975,6 +1987,13 @@ public class SiteSettingsFragment extends PreferenceFragment
             mSite = mSiteStore.getSiteByLocalId(mSite.getId());
             updateHomepageSummary();
         }
+    }
+
+    // Using an interface callback, cause this SiteSettingsFragment is a extending deprecated PreferenceFragment.  So,
+    // can't use neither setTargetFragment nor onActivityResult before re-writing this!
+    @Override public void onSelectTimezone(@NotNull String timezone) {
+        mSiteSettings.setTimezone(timezone);
+        onPreferenceChange(mTimezonePref, timezone);
     }
 
     private final class ActionModeCallback implements ActionMode.Callback {
