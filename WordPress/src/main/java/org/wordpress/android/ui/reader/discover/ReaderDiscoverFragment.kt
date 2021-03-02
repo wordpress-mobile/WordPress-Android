@@ -85,9 +85,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
         WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
             viewModel.swipeToRefresh()
         }
-        btnSortingType.setOnClickListener {
-            viewModel.onSortingTypeButtonClicked()
-        }
     }
 
     private fun initViewModel() {
@@ -172,16 +169,6 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
             when (uiState) {
                 DialogVisible -> bottomSheet.show(childFragmentManager, SortingTypeBottomSheetFragment.TAG)
                 else -> bottomSheet.dismiss()
-            }
-        }
-
-        viewModel.mDiscoverSortingButtonUiState.observe(viewLifecycleOwner) { event ->
-            event.getContentIfNotHandled()?.let { uiState ->
-                uiHelpers.updateVisibility(btnSortingType, uiState.canShow)
-                uiHelpers.setTextOrHide(btnSortingType, uiState.title)
-                if (uiState.icon != null) {
-                    btnSortingType.setIconResource(uiState.icon)
-                }
             }
         }
 

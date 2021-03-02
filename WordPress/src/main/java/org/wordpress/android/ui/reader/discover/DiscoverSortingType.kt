@@ -1,7 +1,6 @@
 package org.wordpress.android.ui.reader.discover
 
-import androidx.annotation.DrawableRes
-import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.reader.discover.DiscoverSortingType.NONE
 
 /**
  * Use for filtering posts in Discover tab
@@ -18,9 +17,3 @@ enum class DiscoverSortingType(val sortedBy: String) {
     POPULARITY("popularity"),
     TIME("date")
 }
-
-data class DiscoverSortingButtonUiState(
-    @DrawableRes val icon: Int?,
-    val title: UiString?,
-    val canShow: Boolean
-)

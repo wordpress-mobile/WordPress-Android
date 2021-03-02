@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.Transformations
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -29,6 +28,7 @@ import org.wordpress.android.ui.reader.discover.DiscoverSortingType.POPULARITY
 import org.wordpress.android.ui.reader.discover.DiscoverSortingType.TIME
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState.ReaderRecommendedBlogUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderSortingTypeUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.ContentUiState
 import org.wordpress.android.ui.reader.discover.ReaderDiscoverViewModel.DiscoverUiState.EmptyUiState.RequestFailedUiState
@@ -103,34 +103,6 @@ class ReaderDiscoverViewModel @Inject constructor(
     private val _sortingType = MutableLiveData<DiscoverSortingType>()
     val sortingType: LiveData<DiscoverSortingType> = _sortingType
 
-    val mDiscoverSortingButtonUiState: LiveData<Event<DiscoverSortingButtonUiState>> = Transformations.map(_sortingType) { sortingType ->
-        val uiState = when (sortingType) {
-            POPULARITY ->
-                DiscoverSortingButtonUiState(
-                        icon = R.drawable.ic_trending_up_24dp,
-                        title = UiStringRes(R.string.reader_discover_sorting_type_popular),
-                        canShow = true
-                )
-            TIME ->
-                DiscoverSortingButtonUiState(
-                        icon = R.drawable.ic_time_neutral_400_16dp,
-                        title = UiStringRes(R.string.reader_discover_sorting_type_recent),
-                        canShow = true
-                )
-            NONE ->
-                DiscoverSortingButtonUiState(
-                        icon = null,
-                        title = null,
-                        canShow = false
-                )
-            else -> null
-        }
-
-        uiState?.let {
-            Event(it)
-        }
-    }
-
     /**
      * Post which is about to be reblogged after the user selects a target site.
      */
@@ -187,8 +159,11 @@ class ReaderDiscoverViewModel @Inject constructor(
                     _uiState.value = ShowNoFollowedTagsUiState { parentViewModel.onShowReaderInterests() }
                 } else {
                     if (posts != null && posts.cards.isNotEmpty()) {
+                        val cardUiStates = convertCardsToUiStates(posts)
+                        val cardUiStatesWithSortingButton = addSortingTypeButton(cardUiStates)
+
                         _uiState.value = ContentUiState(
-                                convertCardsToUiStates(posts),
+                                cardUiStatesWithSortingButton,
                                 reloadProgressVisibility = false,
                                 loadMoreProgressVisibility = false,
                                 scrollToTop = swipeToRefreshTriggered
@@ -260,6 +235,29 @@ class ReaderDiscoverViewModel @Inject constructor(
                 }
             }
         }
+    }
+
+    private fun addSortingTypeButton(uiStateList: List<ReaderCardUiState>): List<ReaderCardUiState> {
+        val hasWelcomeCard = uiStateList.firstOrNull() is ReaderWelcomeBannerCardUiState
+        val sortingTypeButtonIndex = if (hasWelcomeCard) 1 else 0
+        val sortingTypeUiState = when (_sortingType.value) {
+            POPULARITY -> ReaderSortingTypeUiState(
+                    icon = R.drawable.ic_trending_up_24dp,
+                    title = UiStringRes(R.string.reader_discover_sorting_type_popular),
+                    onFilterClicked = this::onSortingTypeButtonClicked
+            )
+            TIME -> ReaderSortingTypeUiState(
+                    icon = R.drawable.ic_new_releases_24,
+                    title = UiStringRes(R.string.reader_discover_sorting_type_recent),
+                    onFilterClicked = this::onSortingTypeButtonClicked
+            )
+            else -> null
+        }
+        val mutableUiStateList = uiStateList.toMutableList()
+        if (sortingTypeUiState != null) {
+            mutableUiStateList.add(sortingTypeButtonIndex, sortingTypeUiState)
+        }
+        return mutableUiStateList
     }
 
     private fun handleDataProviderEvent(it: ReaderDiscoverCommunication) {

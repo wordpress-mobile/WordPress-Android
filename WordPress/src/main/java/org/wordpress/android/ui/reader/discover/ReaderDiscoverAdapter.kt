@@ -6,10 +6,12 @@ import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderRecommendedBlogsCardUiState
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderSortingTypeUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderWelcomeBannerCardUiState
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderInterestsCardViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderPostViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderRecommendedBlogsCardViewHolder
+import org.wordpress.android.ui.reader.discover.viewholders.ReaderSortingViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.ReaderViewHolder
 import org.wordpress.android.ui.reader.discover.viewholders.WelcomeBannerViewHolder
 import org.wordpress.android.ui.utils.UiHelpers
@@ -19,6 +21,7 @@ private const val welcomeBannerViewType: Int = 1
 private const val postViewType: Int = 2
 private const val interestViewType: Int = 3
 private const val recommendedBlogsViewType: Int = 4
+private const val readerSortingTypeViewType: Int = 5
 
 class ReaderDiscoverAdapter(
     private val uiHelpers: UiHelpers,
@@ -35,6 +38,7 @@ class ReaderDiscoverAdapter(
             )
             interestViewType -> ReaderInterestsCardViewHolder(uiHelpers, parent)
             recommendedBlogsViewType -> ReaderRecommendedBlogsCardViewHolder(parent, imageManager, uiHelpers)
+            readerSortingTypeViewType -> ReaderSortingViewHolder(parent, uiHelpers)
             else -> throw NotImplementedError("Unknown ViewType")
         }
     }
@@ -58,6 +62,7 @@ class ReaderDiscoverAdapter(
             is ReaderPostUiState -> postViewType
             is ReaderInterestsCardUiState -> interestViewType
             is ReaderRecommendedBlogsCardUiState -> recommendedBlogsViewType
+            is ReaderSortingTypeUiState -> readerSortingTypeViewType
         }
     }
 
@@ -80,6 +85,7 @@ class ReaderDiscoverAdapter(
                     oldItem.blogs.map { it.blogId to it.feedId } == newItemState?.blogs?.map { it.blogId to it.feedId }
                 }
                 is ReaderWelcomeBannerCardUiState,
+                is ReaderSortingTypeUiState,
                 is ReaderInterestsCardUiState -> {
                     oldItem == newItem
                 }
