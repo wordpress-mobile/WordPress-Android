@@ -9,7 +9,7 @@
         android:id="@+id/button_negative"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         tools:text="Cancel" />
 
@@ -17,7 +17,7 @@
         android:id="@+id/button_positive"
         style="@style/Widget.MaterialComponents.Button.TextButton"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginEnd="@dimen/margin_medium"
         tools:text="OK" />
