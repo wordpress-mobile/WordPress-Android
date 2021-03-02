@@ -248,9 +248,6 @@ class ReaderPostUiStateBuilder @Inject constructor(
         )
     }
 
-    private fun buildIsStartingChip(readerTag: ReaderTag, readerTagList: ReaderTagList, firstIndex: Int) =
-            readerTagList.indexOf(readerTag) == firstIndex
-
     private fun buildOnBlogSectionClicked(
         onBlogSectionClicked: (Long, Long) -> Unit,
         postListType: ReaderPostListType?
