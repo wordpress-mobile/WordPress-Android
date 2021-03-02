@@ -461,7 +461,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                         showBookmarkSavedLocallyDialog(this)
 
                     is ReaderNavigationEvents.ShowRelatedPostDetails ->
-                        showRelatedPostDetail(postId = this.postId, blogId = this.blogId, isGlobal = this.isGlobal)
+                        showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
                     is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
                         replaceRelatedPostDetailWithHistory(
@@ -793,7 +793,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return false
     }
 
-    private fun showRelatedPostDetail(postId: Long, blogId: Long, isGlobal: Boolean) {
+    private fun showRelatedPostDetail(postId: Long, blogId: Long) {
         ReaderActivityLauncher.showReaderPostDetail(
                 activity,
                 false,

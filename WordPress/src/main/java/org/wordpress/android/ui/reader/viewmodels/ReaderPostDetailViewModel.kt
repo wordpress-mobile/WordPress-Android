@@ -214,7 +214,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         _navigationEvents.value = if (isRelatedPost) {
             Event(ReplaceRelatedPostDetailsWithHistory(postId = postId, blogId = blogId, isGlobal = isGlobal))
         } else {
-            Event(ShowRelatedPostDetails(postId = postId, blogId = blogId, isGlobal = isGlobal))
+            Event(ShowRelatedPostDetails(postId = postId, blogId = blogId))
         }
     }
 

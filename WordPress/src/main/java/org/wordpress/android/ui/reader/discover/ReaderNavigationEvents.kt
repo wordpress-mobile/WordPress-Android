@@ -34,7 +34,7 @@ sealed class ReaderNavigationEvents {
     data class ShowBlogPreview(val siteId: Long, val feedId: Long) : ReaderNavigationEvents()
     data class ShowReportPost(val url: String) : ReaderNavigationEvents()
     object ShowReaderSubs : ReaderNavigationEvents()
-    data class ShowRelatedPostDetails(val postId: Long, val blogId: Long, val isGlobal: Boolean) :
+    data class ShowRelatedPostDetails(val postId: Long, val blogId: Long) :
             ReaderNavigationEvents()
 
     data class ReplaceRelatedPostDetailsWithHistory(val postId: Long, val blogId: Long, val isGlobal: Boolean) :
