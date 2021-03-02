@@ -337,7 +337,6 @@ dependencies {
     implementation (project(path:':libs:editor:WordPressEditor')) {
         exclude group: 'org.wordpress', module: 'utils' 
     }
-
     implementation (project(path:':libs:login:WordPressLoginFlow')) {
         exclude group: "com.github.wordpress-mobile.WordPress-FluxC-Android", module: "fluxc"
         exclude group: 'com.github.bumptech.glide'
