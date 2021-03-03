@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.RecyclerView
 
 data class QuickStartListItemDecoration(
     val itemHorizontalSpacing: Int,
-    val edgeHorizontalSpacing: Int,
+    val edgeHorizontalSpacing: Int
 ) : RecyclerView.ItemDecoration() {
     override fun getItemOffsets(outRect: Rect, view: View, parent: RecyclerView, state: RecyclerView.State) {
         super.getItemOffsets(outRect, view, parent, state)
