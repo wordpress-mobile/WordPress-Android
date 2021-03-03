@@ -115,6 +115,7 @@ class ModalLayoutPickerViewModelTest {
             whenever(supportedBlocksProvider.fromAssets()).thenReturn(SupportedBlocks())
             whenever(thumbDimensionProvider.previewWidth).thenReturn(136)
             whenever(thumbDimensionProvider.scale).thenReturn(1.0)
+            whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
             setupFetchLayoutsDispatcher(isError)
             block()
         }

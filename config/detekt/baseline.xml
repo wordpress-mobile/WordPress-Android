@@ -503,11 +503,12 @@
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
     <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
-    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : ScopedViewModelPreviewModeHandler</ID>
+    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
     <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>
     <ID>TooManyFunctions:LatestPostSummaryUseCase.kt$LatestPostSummaryUseCase : StatelessUseCase</ID>
+    <ID>TooManyFunctions:LayoutPickerViewModel.kt$LayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:LiveDataUtils.kt$org.wordpress.android.util.LiveDataUtils.kt</ID>
     <ID>TooManyFunctions:MeFragment.kt$MeFragment : FragmentOnScrollToTopListener</ID>
     <ID>TooManyFunctions:MediaPickerActivity.kt$MediaPickerActivity : LocaleAwareActivityMediaPickerListener</ID>
@@ -517,7 +518,6 @@
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
     <ID>TooManyFunctions:ModalLayoutPickerFragment.kt$ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment</ID>
-    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>

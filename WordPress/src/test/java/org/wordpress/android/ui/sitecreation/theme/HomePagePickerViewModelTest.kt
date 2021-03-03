@@ -98,6 +98,7 @@ class HomePagePickerViewModelTest {
                 null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         block()
     }
 
