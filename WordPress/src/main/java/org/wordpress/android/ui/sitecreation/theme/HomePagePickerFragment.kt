@@ -32,8 +32,8 @@ import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
 import org.wordpress.android.ui.sitecreation.theme.DesignPreviewFragment.Companion.DESIGN_PREVIEW_TAG
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Dismiss
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.AniUtils
@@ -126,7 +126,7 @@ class HomePagePickerFragment : Fragment() {
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
-                        val previewFragment = DesignPreviewFragment.newInstance(action.template, action.demoUrl)
+                        val previewFragment = DesignPreviewFragment.newInstance()
                         previewFragment.show(fm, DESIGN_PREVIEW_TAG)
                     }
                     is Dismiss -> {

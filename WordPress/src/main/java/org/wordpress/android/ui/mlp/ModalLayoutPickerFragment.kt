@@ -25,7 +25,6 @@ import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.previewTypeSe
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.title
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.PreviewModeSelectorPopup
 import org.wordpress.android.ui.RequestCodes
@@ -39,6 +38,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import javax.inject.Inject
 
 /**
@@ -168,7 +168,10 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         })
 
         viewModel.onPreviewPageRequested.observe(this, Observer { request ->
-            ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
+            activity?.supportFragmentManager?.let { fm ->
+                val previewFragment = BlockLayoutPreviewFragment.newInstance()
+                previewFragment.show(fm, BLOCK_LAYOUT_PREVIEW_TAG)
+            }
         })
 
         viewModel.onCategorySelectionChanged.observe(this, Observer {

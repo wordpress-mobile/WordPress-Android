@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.sitecreation.theme
+package org.wordpress.android.ui.mlp
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,28 +9,29 @@ import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment
+import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import javax.inject.Inject
 
 /**
- * Implements the Home Page Picker Design Preview UI
+ * Implements the Modal Layout Picker Preview UI
  */
-class DesignPreviewFragment : LayoutPreviewFragment() {
+class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
-    private lateinit var viewModel: HomePagePickerViewModel
+    private lateinit var viewModel: ModalLayoutPickerViewModel
 
     companion object {
-        const val DESIGN_PREVIEW_TAG = "DESIGN_PREVIEW_TAG"
+        const val BLOCK_LAYOUT_PREVIEW_TAG = "BLOCK_LAYOUT_PREVIEW_TAG"
 
-        fun newInstance() = DesignPreviewFragment()
+        fun newInstance() = BlockLayoutPreviewFragment()
     }
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        chooseButton.setText(R.string.hpp_choose_button)
+        chooseButton.setText(R.string.mlp_create_page)
 
-        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(HomePagePickerViewModel::class.java)
+        viewModel = ViewModelProvider(requireActivity(), viewModelFactory).get(ModalLayoutPickerViewModel::class.java)
         setViewModel(viewModel)
     }
 

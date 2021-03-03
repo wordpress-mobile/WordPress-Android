@@ -43,10 +43,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
-    private val networkUtils: NetworkUtilsWrapper,
+    override val networkUtils: NetworkUtilsWrapper,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
-) : LayoutPickerViewModel(mainDispatcher, bgDispatcher) {
+) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils) {
     /**
      * Tracks the Modal Layout Picker visibility state
      */
@@ -156,6 +156,8 @@ class ModalLayoutPickerViewModel @Inject constructor(
         createPage()
         dismiss()
     }
+
+    override fun onPreviewChooseTapped() = onCreatePageClicked()
 
     /**
      * Preview page tapped
