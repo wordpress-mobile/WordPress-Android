@@ -3,11 +3,11 @@ package org.wordpress.android.ui.mysite
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.distinctUntilChanged
-import androidx.lifecycle.map
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.prefs.SiteSettingsInterfaceWrapper
+import org.wordpress.android.util.map
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,9 +18,9 @@ class SelectedSiteRepository
     private val siteSettingsInterfaceFactory: SiteSettingsInterfaceWrapper.Factory
 ) {
     private var siteSettings: SiteSettingsInterfaceWrapper? = null
-    private val _selectedSiteChange = MutableLiveData<SiteModel>()
+    private val _selectedSiteChange = MutableLiveData<SiteModel?>(null)
     private val _showSiteIconProgressBar = MutableLiveData<Boolean>()
-    val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel>
+    val selectedSiteChange = _selectedSiteChange as LiveData<SiteModel?>
     val siteSelected = _selectedSiteChange.map { it?.id }.distinctUntilChanged()
     val showSiteIconProgressBar = _showSiteIconProgressBar as LiveData<Boolean>
     fun updateSite(selectedSite: SiteModel?) {
