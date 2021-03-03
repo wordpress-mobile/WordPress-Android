@@ -158,11 +158,14 @@ public class ThemeRestClient extends BaseWPComRestClient {
     /**
      * Endpoint:  v2/common-starter-site-designs
      */
-    public void fetchStarterDesigns(Float previewWidth, Float scale, String[] groups) {
+    public void fetchStarterDesigns(Float previewWidth, Float previewHeight, Float scale, String[] groups) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "mobile");
         if (previewWidth != null) {
             params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
+        }
+        if (previewHeight != null) {
+            params.put("preview_height", String.format(Locale.US, "%.1f", previewHeight));
         }
         if (scale != null) {
             params.put("scale", String.format(Locale.US, "%.1f", scale));
