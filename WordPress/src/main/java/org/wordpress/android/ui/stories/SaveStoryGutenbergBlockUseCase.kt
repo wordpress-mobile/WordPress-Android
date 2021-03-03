@@ -10,12 +10,16 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
+import org.wordpress.android.util.AppLog
+import org.wordpress.android.util.AppLog.T.EDITOR
+import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.StringUtils
 import org.wordpress.android.util.helpers.MediaFile
 import javax.inject.Inject
 
 class SaveStoryGutenbergBlockUseCase @Inject constructor(
-    private val storiesPrefs: StoriesPrefs
+    private val storiesPrefs: StoriesPrefs,
+    private val crashLogging: CrashLogging
 ) {
     fun buildJetpackStoryBlockInPost(
         editPostRepository: EditPostRepository,
@@ -103,11 +107,17 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
             storyBlockStartIndex = content.indexOf(HEADING_START, storyBlockStartIndex)
             if (storyBlockStartIndex > -1) {
                 val storyBlockEndIndex = content.indexOf(HEADING_END, storyBlockStartIndex)
-                val jsonString: String = content.substring(
-                        storyBlockStartIndex + HEADING_START.length,
-                        storyBlockEndIndex)
-                content = listener.doWithMediaFilesJson(content, jsonString)
-                storyBlockStartIndex += HEADING_START.length
+                try {
+                    val jsonString: String = content.substring(
+                            storyBlockStartIndex + HEADING_START.length,
+                            storyBlockEndIndex
+                    )
+                    content = listener.doWithMediaFilesJson(content, jsonString)
+                    storyBlockStartIndex += HEADING_START.length
+                } catch (exception: IndexOutOfBoundsException) {
+                    crashLogging.reportException(exception, EDITOR.toString())
+                    AppLog.e(EDITOR, exception.message)
+                }
             }
         }
 
