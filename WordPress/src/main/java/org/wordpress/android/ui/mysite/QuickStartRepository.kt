@@ -108,9 +108,9 @@ class QuickStartRepository
         }
     }
 
-    fun startQuickStart() {
-        selectedSiteRepository.getSelectedSite()?.let { site ->
-            quickStartStore.setDoneTask(site.id.toLong(), CREATE_SITE, true)
+    fun startQuickStart(newSiteLocalID: Int) {
+        if (newSiteLocalID != -1) {
+            quickStartStore.setDoneTask(newSiteLocalID.toLong(), CREATE_SITE, true)
             refresh()
         }
     }
