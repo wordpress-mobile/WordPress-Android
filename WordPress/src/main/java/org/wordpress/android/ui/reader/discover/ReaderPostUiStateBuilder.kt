@@ -23,7 +23,7 @@ import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestChipStyleColor
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle
-import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleBlue
+import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStylePurple
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleGreen
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleOrange
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState.ChipStyle.ChipStyleYellow
@@ -455,7 +455,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
         return when (index % colorCount) {
             ReaderInterestChipStyleColor.GREEN.id -> ChipStyleGreen
-            ReaderInterestChipStyleColor.BLUE.id -> ChipStyleBlue
+            ReaderInterestChipStyleColor.BLUE.id -> ChipStylePurple
             ReaderInterestChipStyleColor.YELLOW.id -> ChipStyleYellow
             ReaderInterestChipStyleColor.ORANGE.id -> ChipStyleOrange
             else -> ChipStyleGreen
