@@ -5,6 +5,7 @@ import androidx.lifecycle.MediatorLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
+import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -12,7 +13,9 @@ import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
@@ -24,6 +27,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
+import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
@@ -31,6 +35,7 @@ import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import javax.inject.Inject
@@ -44,6 +49,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
@@ -66,33 +72,40 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var pendingReblogPost: ReaderPost? = null
 
     private var isStarted = false
+    var isRelatedPost: Boolean = false
 
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
 
-    fun start() {
+    fun start(isRelatedPost: Boolean) {
         if (isStarted) {
             return
         }
         isStarted = true
+        this.isRelatedPost = isRelatedPost
 
         init()
     }
 
     private fun init() {
         readerPostCardActionsHandler.initScope(this)
-        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { followStatusChanged ->
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
 
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    post.isFollowedByCurrentUser = data.following
-                    updateFollowButtonUiState(
+                    post.isFollowedByCurrentUser = followStatusChanged.following
+                    updateSelectedPostFollowButton(
                             currentUiState = currentUiState,
                             isFollowed = post.isFollowedByCurrentUser
                     )
                 }
+
+                updateGlobalRelatedPostsFollowButton(
+                        currentUiState = currentUiState,
+                        followStatusChanged = followStatusChanged
+                )
             }
         }
 
@@ -195,6 +208,21 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
+        trackRelatedPostClickAction(postId, blogId, isGlobal)
+        _navigationEvents.value = if (isRelatedPost) {
+            Event(ReplaceRelatedPostDetailsWithHistory(postId = postId, blogId = blogId, isGlobal = isGlobal))
+        } else {
+            Event(ShowRelatedPostDetails(postId = postId, blogId = blogId))
+        }
+    }
+
+    private fun onRelatedPostFollowClicked(blogId: Long, siteName: String) {
+        launch {
+            readerPostCardActionsHandler.onFollowRelatedPostBlog(blogId = blogId, siteName = siteName)
+        }
+    }
+
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {
         /* Related posts only available for wp.com */
         if (!sourcePost.isWP) return
@@ -207,6 +235,11 @@ class ReaderPostDetailViewModel @Inject constructor(
                 is FetchRelatedPostsState.Success -> updateRelatedPostsUiState(sourcePost, fetchRelatedPostsState)
             }
         }
+    }
+
+    private fun trackRelatedPostClickAction(postId: Long, blogId: Long, isGlobal: Boolean) {
+        val stat = if (isGlobal) Stat.READER_GLOBAL_RELATED_POST_CLICKED else Stat.READER_LOCAL_RELATED_POST_CLICKED
+        analyticsUtilsWrapper.trackWithReaderPostDetails(stat = stat, blogId = blogId, postId = postId)
     }
 
     private fun findPost(postId: Long, blogId: Long): ReaderPost? {
@@ -236,10 +269,12 @@ class ReaderPostDetailViewModel @Inject constructor(
     ) = postDetailUiStateBuilder.mapRelatedPostsToUiState(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
-            isGlobal = isGlobal
+            isGlobal = isGlobal,
+            onRelatedPostFollowClicked = this@ReaderPostDetailViewModel::onRelatedPostFollowClicked,
+            onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
-    private fun updateFollowButtonUiState(
+    private fun updateSelectedPostFollowButton(
         currentUiState: ReaderPostDetailsUiState,
         isFollowed: Boolean
     ) {
@@ -253,6 +288,22 @@ class ReaderPostDetailViewModel @Inject constructor(
                 .copy(followButtonUiState = updatedFollowButtonUiState)
 
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
+    }
+
+    private fun updateGlobalRelatedPostsFollowButton(
+        currentUiState: ReaderPostDetailsUiState,
+        followStatusChanged: FollowStatusChanged
+    ) {
+        val updatedGlobalRelatedPosts = currentUiState.globalRelatedPosts?.copy(
+                cards = currentUiState.globalRelatedPosts.cards?.map { post ->
+                    if (post.blogId == followStatusChanged.blogId) {
+                        val updatedFollowState = post.followButtonUiState
+                                ?.copy(isFollowed = followStatusChanged.following)
+                        post.copy(followButtonUiState = updatedFollowState)
+                    } else post
+                }
+        )
+        _uiState.value = currentUiState.copy(globalRelatedPosts = updatedGlobalRelatedPosts)
     }
 
     private fun updatePostActions(post: ReaderPost) {
@@ -300,7 +351,8 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val title: UiString?,
                 val featuredImageUrl: String?,
                 val featuredImageCornerRadius: UiDimen,
-                val followButtonUiState: FollowButtonUiState?
+                val followButtonUiState: FollowButtonUiState?,
+                val onItemClicked: (Long, Long, Boolean) -> Unit
             )
         }
     }

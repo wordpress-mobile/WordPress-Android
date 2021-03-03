@@ -36,7 +36,6 @@ import androidx.core.graphics.BlendModeColorFilterCompat
 import androidx.core.graphics.BlendModeCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.Factory
 import com.google.android.material.appbar.AppBarLayout
@@ -90,10 +89,6 @@ import org.wordpress.android.ui.reader.actions.ReaderActions
 import org.wordpress.android.ui.reader.actions.ReaderPostActions
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
-import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
@@ -106,7 +101,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderSimplePostContainerView
-import org.wordpress.android.ui.reader.views.ReaderSimplePostView
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderWebView
@@ -405,76 +399,81 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel() {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
-        viewModel.uiState.observe(
-                viewLifecycleOwner,
-                Observer<ReaderPostDetailsUiState> { state ->
-                    header_view.updatePost(state.headerUiState)
-                    showOrHideMoreMenu(state)
+        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
 
-                    updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
-                    updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
-                    updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
-                    updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+        viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
 
-                    state.localRelatedPosts?.let { showRelatedPosts(it) }
-                    state.globalRelatedPosts?.let { showRelatedPosts(it) }
-                }
-        )
+        viewModel.snackbarEvents.observe(viewLifecycleOwner, { it?.applyIfNotHandled { showSnackbar() } })
 
-        viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
+        viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
+
+        viewModel.start(isRelatedPost)
+    }
+
+    private fun renderUiState(state: ReaderPostDetailsUiState) {
+        header_view.updatePost(state.headerUiState)
+        showOrHideMoreMenu(state)
+
+        updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
+        updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
+        updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
+        updateActionButton(state.postId, state.blogId, state.actions.bookmarkAction, bookmark)
+
+        state.localRelatedPosts?.let { showRelatedPosts(it) }
+        state.globalRelatedPosts?.let { showRelatedPosts(it) }
+    }
+
+    private fun ReaderNavigationEvents.handleNavigationEvent() {
+        when (this) {
+            is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
+
+            is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                    context,
+                    this.siteId,
+                    this.feedId
+            )
+
+            is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+
+            is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+
+            is ReaderNavigationEvents.ShowReportPost ->
+                ReaderActivityLauncher.openUrl(
+                        context,
+                        readerUtilsWrapper.getReportPostUrl(url),
+                        OpenUrlType.INTERNAL
+                )
+
+            is ReaderNavigationEvents.ShowReaderComments ->
+                ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+
+            is ReaderNavigationEvents.ShowNoSitesToReblog -> ReaderActivityLauncher.showNoSiteToReblog(activity)
+
+            is ReaderNavigationEvents.ShowSitePickerForResult ->
+                ActivityLauncher
+                        .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
+
+            is ReaderNavigationEvents.OpenEditorForReblog ->
+                ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
+
+            is ReaderNavigationEvents.ShowBookmarkedTab -> ActivityLauncher.viewSavedPostsListInReader(activity)
+
+            is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
+
+            is ReaderNavigationEvents.ShowRelatedPostDetails ->
+                showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
+
+            is ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory ->
+                replaceRelatedPostDetailWithHistory(
+                        postId = this.postId,
+                        blogId = this.blogId,
+                        isGlobal = this.isGlobal
+                )
+
+            is ReaderNavigationEvents.ShowPostDetail,
+            is ReaderNavigationEvents.ShowVideoViewer,
+            is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
         }
-        )
-
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                showSnackbar()
-            }
-        }
-        )
-
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
-            it.applyIfNotHandled {
-                when (this) {
-                    is ReaderNavigationEvents.ShowPostsByTag -> {
-                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
-                    }
-                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
-                            context,
-                            this.siteId,
-                            this.feedId
-                    )
-                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
-                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
-                    is ReaderNavigationEvents.ShowReportPost -> {
-                        ReaderActivityLauncher.openUrl(
-                                context,
-                                readerUtilsWrapper.getReportPostUrl(url),
-                                OpenUrlType.INTERNAL
-                        )
-                    }
-                    is ReaderNavigationEvents.ShowReaderComments -> {
-                        ReaderActivityLauncher.showReaderComments(context, blogId, postId)
-                    }
-                    is ReaderNavigationEvents.ShowNoSitesToReblog -> {
-                        ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    }
-                    is ReaderNavigationEvents.ShowSitePickerForResult -> {
-                        ActivityLauncher
-                                .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
-                    }
-                    is OpenEditorForReblog -> {
-                        ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
-                    }
-                    is ShowBookmarkedTab -> {
-                        ActivityLauncher.viewSavedPostsListInReader(activity)
-                    }
-                    is ShowBookmarkedSavedOnlyLocallyDialog -> {
-                        showBookmarkSavedLocallyDialog(this)
-                    }
-                }
-            }
-        })
-        viewModel.start()
     }
 
     private fun updateActionButton(postId: Long, blogId: Long, state: PrimaryAction, view: View) {
@@ -487,7 +486,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         view.setOnClickListener { state.onClicked?.invoke(postId, blogId, state.type) }
     }
 
-    private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
+    private fun showBookmarkSavedLocallyDialog(
+        bookmarkDialog: ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
+    ) {
         if (bookmarksSavedLocallyDialog == null) {
             MaterialAlertDialogBuilder(requireActivity())
                     .setTitle(getString(bookmarkDialog.title))
@@ -746,14 +747,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * across wp.com) or local (related posts from the same site as the current post)
      */
     private fun showRelatedPosts(state: RelatedPostsUiState) {
-        // tapping a related post should open the related post detail
-        val listener = ReaderSimplePostView.OnSimplePostClickListener { _, siteId, postId ->
-            showRelatedPostDetail(siteId, postId, state.isGlobal)
-        }
-
         // different container views for global/local related posts
         val relatedPostsView = if (state.isGlobal) globalRelatedPostsView else localRelatedPostsView
-        relatedPostsView.showPosts(state, listener)
+        relatedPostsView.showPosts(state)
 
         // fade in this related posts view
         if (relatedPostsView.visibility != View.VISIBLE) {
@@ -794,30 +790,21 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         return false
     }
 
-    /*
-     * user clicked a single related post - if we're already viewing a related post, add it to the
-     * history stack so the user can back-button through the history - otherwise start a new detail
-     * activity for this related post
-     */
-    private fun showRelatedPostDetail(blogId: Long, postId: Long, isGlobal: Boolean) {
-        val stat = if (isGlobal)
-            Stat.READER_GLOBAL_RELATED_POST_CLICKED
-        else
-            Stat.READER_LOCAL_RELATED_POST_CLICKED
-        AnalyticsUtils.trackWithReaderPostDetails(stat, blogId, postId)
+    private fun showRelatedPostDetail(postId: Long, blogId: Long) {
+        ReaderActivityLauncher.showReaderPostDetail(
+                activity,
+                false,
+                blogId,
+                postId, null,
+                0,
+                true, null
+        )
+    }
 
-        if (isRelatedPost) {
-            postHistory.push(ReaderBlogIdPostId(post!!.blogId, post!!.postId))
+    private fun replaceRelatedPostDetailWithHistory(postId: Long, blogId: Long, isGlobal: Boolean) {
+        post?.let {
+            postHistory.push(ReaderBlogIdPostId(it.blogId, it.postId))
             replacePost(blogId, postId, true)
-        } else {
-            ReaderActivityLauncher.showReaderPostDetail(
-                    activity,
-                    false,
-                    blogId,
-                    postId, null,
-                    0,
-                    true, null
-            )
         }
     }
 

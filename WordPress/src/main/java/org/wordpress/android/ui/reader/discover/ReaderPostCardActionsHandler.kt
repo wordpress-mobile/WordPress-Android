@@ -136,7 +136,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
             if (type == FOLLOW || type == SITE_NOTIFICATIONS) {
                 val readerBlog = readerBlogTableWrapper.getReaderBlog(post.blogId, post.feedId)
                 if (readerBlog == null) {
-                    val isSiteFetched = preFetchSite(post)
+                    val isSiteFetched = preFetchSite(post.blogId, post.feedId)
                     if (!isSiteFetched) {
                         return@withContext
                     }
@@ -146,9 +146,16 @@ class ReaderPostCardActionsHandler @Inject constructor(
         }
     }
 
-    private suspend fun preFetchSite(post: ReaderPost): Boolean {
+    suspend fun onFollowRelatedPostBlog(blogId: Long, siteName: String) {
+        withContext(bgDispatcher) {
+            if (!preFetchSite(blogId = blogId, feedId = 0)) return@withContext
+            handleFollowClicked(blogId = blogId, feedId = 0, blogName = siteName)
+        }
+    }
+
+    private suspend fun preFetchSite(blogId: Long, feedId: Long): Boolean {
         var isSiteFetched = false
-        when (fetchSiteUseCase.fetchSite(post.blogId, post.feedId, null)) {
+        when (fetchSiteUseCase.fetchSite(blogId = blogId, feedId = feedId, blogUrl = null)) {
             FetchSiteState.AlreadyRunning -> { // Do Nothing
             }
             FetchSiteState.Success -> {
@@ -177,7 +184,7 @@ class ReaderPostCardActionsHandler @Inject constructor(
         isBookmarkList: Boolean
     ) {
         when (type) {
-            FOLLOW -> handleFollowClicked(post)
+            FOLLOW -> handleFollowClicked(post.blogId, post.feedId, post.blogName)
             SITE_NOTIFICATIONS -> handleSiteNotificationsClicked(post.blogId)
             SHARE -> handleShareClicked(post)
             VISIT_SITE -> handleVisitSiteClicked(post)
@@ -266,8 +273,8 @@ class ReaderPostCardActionsHandler @Inject constructor(
         followSite(param)
     }
 
-    private suspend fun handleFollowClicked(post: ReaderPost) {
-        followSite(ReaderSiteFollowUseCase.Param(post.blogId, post.feedId, post.blogName))
+    private suspend fun handleFollowClicked(blogId: Long, feedId: Long, blogName: String) {
+        followSite(ReaderSiteFollowUseCase.Param(blogId, feedId, blogName))
     }
 
     private suspend fun followSite(followSiteParam: ReaderSiteFollowUseCase.Param) {

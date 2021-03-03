@@ -45,7 +45,9 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     fun mapRelatedPostsToUiState(
         sourcePost: ReaderPost,
         relatedPosts: ReaderSimplePostList,
-        isGlobal: Boolean
+        isGlobal: Boolean,
+        onRelatedPostFollowClicked: (Long, String) -> Unit,
+        onRelatedPostItemClicked: (Long, Long, Boolean) -> Unit
     ) = RelatedPostsUiState(
             cards = relatedPosts.map {
                 mapRelatedPostToUiState(
@@ -53,11 +55,12 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         isGlobal = isGlobal,
                         followButtonUiState = if (isGlobal) {
                             FollowButtonUiState(
-                                    onFollowButtonClicked = null, // TODO: ashiagr implement follow button action
+                                    onFollowButtonClicked = { onRelatedPostFollowClicked(it.siteId, it.siteName) },
                                     isFollowed = it.isFollowing,
                                     isEnabled = true
                             )
-                        } else null
+                        } else null,
+                        onItemClicked = onRelatedPostItemClicked
                 )
             },
             isGlobal = isGlobal,
@@ -67,7 +70,8 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private fun mapRelatedPostToUiState(
         post: ReaderSimplePost,
         isGlobal: Boolean,
-        followButtonUiState: FollowButtonUiState?
+        followButtonUiState: FollowButtonUiState?,
+        onItemClicked: (Long, Long, Boolean) -> Unit
     ) = ReaderRelatedPostUiState(
             postId = post.postId,
             blogId = post.siteId,
@@ -75,7 +79,8 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             title = post.title?.let { UiStringText(it) },
             featuredImageUrl = post.featuredImageUrl,
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-            followButtonUiState = followButtonUiState
+            followButtonUiState = followButtonUiState,
+            onItemClicked = onItemClicked
     )
 
     private fun buildPostDetailsHeaderUiState(

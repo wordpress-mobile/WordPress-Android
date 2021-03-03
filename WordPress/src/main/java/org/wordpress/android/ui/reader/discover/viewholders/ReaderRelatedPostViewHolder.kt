@@ -29,6 +29,7 @@ class ReaderRelatedPostViewHolder(
         updateFeaturedImage(state)
         updateFollowButton(state)
         uiHelpers.setTextOrHide(text_title, state.title)
+        itemView.setOnClickListener { state.onItemClicked.invoke(state.postId, state.blogId, state.isGlobal) }
     }
 
     private fun updateFeaturedImage(state: ReaderRelatedPostUiState) {

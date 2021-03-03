@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader.viewmodels
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.anyOrNull
 import com.nhaarman.mockitokotlin2.eq
 import com.nhaarman.mockitokotlin2.mock
@@ -17,6 +18,7 @@ import org.junit.runner.RunWith
 import org.mockito.ArgumentMatchers
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R.dimen
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
@@ -24,7 +26,9 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
@@ -46,12 +50,15 @@ import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSi
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState.ReaderBlogSectionClickData
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
+import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
 
@@ -60,6 +67,10 @@ private const val ON_BUTTON_CLICKED_PARAM_POSITION = 2
 private const val ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION = 3
 private const val ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION = 4
 private const val ON_TAG_CLICKED_PARAM_POSITION = 5
+
+private const val IS_GLOBAL_RELATED_POSTS_PARAM_POSITION = 2
+private const val ON_RELATED_POST_FOLLOW_CLICKED_PARAM_POSITION = 3
+private const val ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION = 4
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -77,6 +88,8 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var reblogUseCase: ReblogUseCase
     @Mock private lateinit var readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
+    @Mock private lateinit var readerSimplePost: ReaderSimplePost
+    @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -84,10 +97,8 @@ class ReaderPostDetailViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
-    private val readerSimplePost = ReaderSimplePost()
 
-    private val localRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
-    private val globalRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
+    private lateinit var relatedPosts: ReaderSimplePostList
 
     @Before
     fun setUp() = test {
@@ -99,6 +110,7 @@ class ReaderPostDetailViewModelTest {
                 postDetailsUiStateBuilder,
                 reblogUseCase,
                 readerFetchRelatedPostsUseCase,
+                analyticsUtilsWrapper,
                 eventBusWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
@@ -134,6 +146,26 @@ class ReaderPostDetailViewModelTest {
                     it.getArgument(ON_BUTTON_CLICKED_PARAM_POSITION),
                     it.getArgument(ON_POST_BLOG_SECTION_CLICKED_PARAM_POSITION),
                     it.getArgument(ON_POST_FOLLOW_BUTTON_CLICKED_PARAM_POSITION)
+            )
+        }
+
+        whenever(readerSimplePost.siteName).thenReturn("")
+        relatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
+
+        whenever(
+                postDetailsUiStateBuilder.mapRelatedPostsToUiState(
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull(),
+                        anyOrNull()
+                )
+        ).thenAnswer {
+            // propagate some of the arguments
+            createDummyRelatedPostsUiState(
+                    it.getArgument(IS_GLOBAL_RELATED_POSTS_PARAM_POSITION),
+                    it.getArgument(ON_RELATED_POST_FOLLOW_CLICKED_PARAM_POSITION),
+                    it.getArgument(ON_RELATED_POST_ITEM_CLICKED_PARAM_POSITION)
             )
         }
 
@@ -300,14 +332,16 @@ class ReaderPostDetailViewModelTest {
                 whenever(
                         postDetailsUiStateBuilder.mapRelatedPostsToUiState(
                                 sourcePost = eq(readerPost),
-                                relatedPosts = eq(localRelatedPosts),
-                                isGlobal = eq(false)
+                                relatedPosts = eq(relatedPosts),
+                                isGlobal = eq(false),
+                                onRelatedPostFollowClicked = any(),
+                                onRelatedPostItemClicked = any()
                         )
                 ).thenReturn(localRelatedPostsUiState)
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(
                                 FetchRelatedPostsState.Success(
-                                        localRelatedPosts = localRelatedPosts,
+                                        localRelatedPosts = relatedPosts,
                                         globalRelatedPosts = ReaderSimplePostList()
                                 )
                         )
@@ -321,19 +355,21 @@ class ReaderPostDetailViewModelTest {
     @Test
     fun `given global related posts fetch succeeds, when related posts requested, then global related posts shown`() =
             test {
-                val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = true)
+                val globalRelatedPostsUiState = createDummyRelatedPostsUiState(isGlobal = false)
                 whenever(
                         postDetailsUiStateBuilder.mapRelatedPostsToUiState(
                                 sourcePost = eq(readerPost),
-                                relatedPosts = eq(globalRelatedPosts),
-                                isGlobal = eq(true)
+                                relatedPosts = eq(relatedPosts),
+                                isGlobal = eq(true),
+                                onRelatedPostFollowClicked = any(),
+                                onRelatedPostItemClicked = any()
                         )
                 ).thenReturn(globalRelatedPostsUiState)
                 whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
                         .thenReturn(
                                 FetchRelatedPostsState.Success(
                                         localRelatedPosts = ReaderSimplePostList(),
-                                        globalRelatedPosts = globalRelatedPosts
+                                        globalRelatedPosts = relatedPosts
                                 )
                         )
                 val uiStates = init().uiStates
@@ -408,6 +444,103 @@ class ReaderPostDetailViewModelTest {
                 verify(readerFetchRelatedPostsUseCase, times(0)).fetchRelatedPosts(readerPost)
             }
 
+    @Test
+    fun `when related post is clicked from non related post details screen, then related post details screen shown`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
+                                        globalRelatedPosts = relatedPosts
+                                )
+                        )
+                val observers = init(isRelatedPost = false)
+
+                viewModel.onRelatedPostsRequested(readerPost)
+                val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
+                relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
+
+                assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowRelatedPostDetails::class.java)
+            }
+
+    @Test
+    fun `when related post is clicked from related post screen, then related post replaced with history`() =
+            test {
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
+                                        globalRelatedPosts = relatedPosts
+                                )
+                        )
+                val observers = init(isRelatedPost = true)
+
+                viewModel.onRelatedPostsRequested(readerPost)
+                val relatedPost = observers.uiStates.last().globalRelatedPosts?.cards?.first()
+                relatedPost?.onItemClicked?.invoke(relatedPost.postId, relatedPost.blogId, relatedPost.isGlobal)
+
+                assertThat(observers.navigation[0].peekContent())
+                        .isInstanceOf(ReplaceRelatedPostDetailsWithHistory::class.java)
+            }
+
+    @Test
+    fun `when related post is followed, then related post follow button ui is shown`() =
+            test {
+                whenever(readerPostCardActionsHandler.onFollowRelatedPostBlog(any(), any())).thenAnswer {
+                    fakePostFollowStatusChangedFeed.postValue(
+                            FollowStatusChanged(
+                                    blogId = relatedPosts.first().siteId,
+                                    following = true,
+                                    deleteNotificationSubscription = false,
+                                    showEnableNotification = true
+                            )
+                    )
+                }
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
+                                        globalRelatedPosts = relatedPosts
+                                )
+                        )
+                val uiStates = init().uiStates
+
+                viewModel.onRelatedPostsRequested(readerPost)
+                uiStates.last().globalRelatedPosts?.cards?.first()?.followButtonUiState?.onFollowButtonClicked?.invoke()
+
+                assertThat(uiStates.last().globalRelatedPosts?.cards?.first()?.followButtonUiState?.isFollowed)
+                        .isEqualTo(true)
+            }
+
+    @Test
+    fun `when related post is un-followed, then related post un-follow button ui is shown`() =
+            test {
+                whenever(readerPostCardActionsHandler.onFollowRelatedPostBlog(any(), any())).thenAnswer {
+                    fakePostFollowStatusChangedFeed.postValue(
+                            FollowStatusChanged(
+                                    blogId = relatedPosts.first().siteId,
+                                    following = false,
+                                    deleteNotificationSubscription = true,
+                                    showEnableNotification = false
+                            )
+                    )
+                }
+                whenever(readerFetchRelatedPostsUseCase.fetchRelatedPosts(readerPost))
+                        .thenReturn(
+                                FetchRelatedPostsState.Success(
+                                        localRelatedPosts = ReaderSimplePostList(),
+                                        globalRelatedPosts = relatedPosts
+                                )
+                        )
+                val uiStates = init().uiStates
+
+                viewModel.onRelatedPostsRequested(readerPost)
+                uiStates.last().globalRelatedPosts?.cards?.first()?.followButtonUiState?.onFollowButtonClicked?.invoke()
+
+                assertThat(uiStates.last().globalRelatedPosts?.cards?.first()?.followButtonUiState?.isFollowed)
+                        .isEqualTo(false)
+            }
+
     private fun createDummyReaderPost(id: Long, isWpComPost: Boolean = true): ReaderPost = ReaderPost().apply {
         this.postId = id
         this.blogId = id * 100
@@ -462,10 +595,36 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
-    private fun createDummyRelatedPostsUiState(isGlobal: Boolean) =
-            RelatedPostsUiState(cards = mock(), isGlobal = isGlobal, siteName = readerPost.blogName)
+    private fun createDummyRelatedPostsUiState(
+        isGlobal: Boolean,
+        onRelatedPostFollowClicked: ((Long, String) -> Unit)? = null,
+        onRelatedPostItemClicked: ((Long, Long, Boolean) -> Unit)? = null
+    ) = RelatedPostsUiState(
+            cards = relatedPosts.map {
+                ReaderRelatedPostUiState(
+                        postId = it.postId,
+                        blogId = it.siteId,
+                        isGlobal = isGlobal,
+                        title = UiStringText(""),
+                        featuredImageUrl = "",
+                        featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
+                        followButtonUiState = if (isGlobal) {
+                            FollowButtonUiState(
+                                    onFollowButtonClicked = {
+                                        onRelatedPostFollowClicked?.invoke(it.siteId, it.siteName)
+                                    },
+                                    isFollowed = true,
+                                    isEnabled = true
+                            )
+                        } else null,
+                        onItemClicked = onRelatedPostItemClicked ?: mock()
+                )
+            },
+            isGlobal = isGlobal,
+            siteName = "site name"
+    )
 
-    private fun init(showPost: Boolean = true): Observers {
+    private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {
         val uiStates = mutableListOf<ReaderPostDetailsUiState>()
         viewModel.uiState.observeForever {
             uiStates.add(it)
@@ -478,7 +637,7 @@ class ReaderPostDetailViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start()
+        viewModel.start(isRelatedPost)
 
         if (showPost) {
             viewModel.onShowPost(readerPost)

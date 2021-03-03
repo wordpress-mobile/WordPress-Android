@@ -8,11 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.reader.ReaderInterfaces.OnFollowListener
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
-import org.wordpress.android.ui.reader.views.ReaderSimplePostView.OnSimplePostClickListener
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.image.ImageManager
@@ -27,7 +25,6 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private var followListener: OnFollowListener? = null
     private val simplePostList = ReaderSimplePostList()
 
     @Inject lateinit var uiHelpers: UiHelpers
@@ -54,7 +51,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         recycler_view.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
-    fun showPosts(state: RelatedPostsUiState, listener: OnSimplePostClickListener?) {
+    fun showPosts(state: RelatedPostsUiState) {
         if (state.cards?.size == 0) return
 
         state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
@@ -68,10 +65,6 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
                     state.siteName
             )
         }
-    }
-
-    fun setOnFollowListener(listener: OnFollowListener?) {
-        followListener = listener
     }
 
     /*
