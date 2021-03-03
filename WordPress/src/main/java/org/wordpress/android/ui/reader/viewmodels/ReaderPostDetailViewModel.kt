@@ -23,12 +23,10 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
-import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
@@ -102,11 +100,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                             isFollowed = post.isFollowedByCurrentUser
                     )
                 }
-
-                updateGlobalRelatedPostsFollowButton(
-                        currentUiState = currentUiState,
-                        followStatusChanged = followStatusChanged
-                )
             }
         }
 
@@ -218,15 +211,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onRelatedPostFollowClicked(relatedPost: ReaderSimplePost) {
-        launch {
-            readerPostCardActionsHandler.onFollowRelatedPostBlog(
-                    blogId = relatedPost.siteId,
-                    siteName = relatedPost.siteName
-            )
-        }
-    }
-
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {
         /* Related posts only available for wp.com */
         if (!sourcePost.isWP) return
@@ -274,7 +258,6 @@ class ReaderPostDetailViewModel @Inject constructor(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
-            onRelatedPostFollowClicked = this@ReaderPostDetailViewModel::onRelatedPostFollowClicked,
             onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
@@ -292,22 +275,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 .copy(followButtonUiState = updatedFollowButtonUiState)
 
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
-    }
-
-    private fun updateGlobalRelatedPostsFollowButton(
-        currentUiState: ReaderPostDetailsUiState,
-        followStatusChanged: FollowStatusChanged
-    ) {
-        val updatedGlobalRelatedPosts = currentUiState.globalRelatedPosts?.copy(
-                cards = currentUiState.globalRelatedPosts.cards?.map { post ->
-                    if (post.blogId == followStatusChanged.blogId) {
-                        val updatedFollowState = post.followButtonUiState
-                                ?.copy(isFollowed = followStatusChanged.following)
-                        post.copy(followButtonUiState = updatedFollowState)
-                    } else post
-                }
-        )
-        _uiState.value = currentUiState.copy(globalRelatedPosts = updatedGlobalRelatedPosts)
     }
 
     private fun updatePostActions(post: ReaderPost) {
