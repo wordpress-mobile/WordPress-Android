@@ -108,7 +108,7 @@ abstract class LayoutPickerViewModel(
     fun loadCategories() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
-            val listItems: List<CategoryListItemUiState> = categories.sortedBy { it.title }.map {
+            val listItems: List<CategoryListItemUiState> = categories.map {
                 CategoryListItemUiState(
                         it.slug,
                         it.title,
@@ -134,7 +134,7 @@ abstract class LayoutPickerViewModel(
                 categories
             }
 
-            selectedCategories.sortedBy { it.title }.forEach { category ->
+            selectedCategories.forEach { category ->
 
                 val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
                     LayoutListItemUiState(
