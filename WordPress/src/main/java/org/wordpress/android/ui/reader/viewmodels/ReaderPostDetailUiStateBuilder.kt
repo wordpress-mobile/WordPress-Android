@@ -46,7 +46,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         sourcePost: ReaderPost,
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean,
-        onRelatedPostFollowClicked: (ReaderSimplePost) -> Unit,
+        onRelatedPostFollowClicked: (Long, String) -> Unit,
         onRelatedPostItemClicked: (Long, Long, Boolean) -> Unit
     ) = RelatedPostsUiState(
             cards = relatedPosts.map {
@@ -55,7 +55,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         isGlobal = isGlobal,
                         followButtonUiState = if (isGlobal) {
                             FollowButtonUiState(
-                                    onFollowButtonClicked = { onRelatedPostFollowClicked(it) },
+                                    onFollowButtonClicked = { onRelatedPostFollowClicked( it.siteId, it.siteName) },
                                     isFollowed = it.isFollowing,
                                     isEnabled = true
                             )

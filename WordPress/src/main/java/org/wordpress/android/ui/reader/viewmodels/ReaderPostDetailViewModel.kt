@@ -23,7 +23,6 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
 import org.wordpress.android.ui.reader.discover.ReaderPostMoreButtonUiStateBuilder
-import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
@@ -218,12 +217,9 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onRelatedPostFollowClicked(relatedPost: ReaderSimplePost) {
+    private fun onRelatedPostFollowClicked(blogId: Long, siteName: String) {
         launch {
-            readerPostCardActionsHandler.onFollowRelatedPostBlog(
-                    blogId = relatedPost.siteId,
-                    siteName = relatedPost.siteName
-            )
+            readerPostCardActionsHandler.onFollowRelatedPostBlog(blogId = blogId, siteName = siteName)
         }
     }
 

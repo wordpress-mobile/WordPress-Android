@@ -608,7 +608,7 @@ class ReaderPostDetailViewModelTest {
     private fun createDummyRelatedPostsUiState(
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean,
-        onRelatedPostFollowClicked: ((ReaderSimplePost) -> Unit)? = null,
+        onRelatedPostFollowClicked: ((Long, String) -> Unit)? = null,
         onRelatedPostItemClicked: ((Long, Long, Boolean) -> Unit)? = null
     ) = RelatedPostsUiState(
             cards = relatedPosts.map {
@@ -621,7 +621,9 @@ class ReaderPostDetailViewModelTest {
                         featuredImageCornerRadius = UIDimenRes(dimen.reader_featured_image_corner_radius),
                         followButtonUiState = if (isGlobal) {
                             FollowButtonUiState(
-                                    onFollowButtonClicked = { onRelatedPostFollowClicked?.invoke(it) },
+                                    onFollowButtonClicked = {
+                                        onRelatedPostFollowClicked?.invoke(it.siteId, it.siteName)
+                                    },
                                     isFollowed = true,
                                     isEnabled = true
                             )

@@ -38,7 +38,7 @@ class ReaderPostDetailsUiStateBuilderTest {
         this.blogName = "blog name"
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
-    private val dummyOnRelatedPostFollowClicked: (ReaderSimplePost) -> Unit = { _ -> }
+    private val dummyOnRelatedPostFollowClicked: (Long, String) -> Unit = { _, _ -> }
 
     @Before
     fun setUp() = test {
