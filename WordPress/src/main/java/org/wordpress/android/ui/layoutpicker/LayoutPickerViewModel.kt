@@ -251,9 +251,7 @@ abstract class LayoutPickerViewModel(
 
     fun writeToBundle(outState: Bundle) {
         (uiState.value as? Content)?.let {
-            if (!layouts.isTooLargeForBundle()) {
-                outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
-            }
+            outState.putParcelableArrayList(FETCHED_LAYOUTS, ArrayList(layouts))
             outState.putParcelableArrayList(FETCHED_CATEGORIES, ArrayList(categories))
             outState.putString(SELECTED_LAYOUT, it.selectedLayoutSlug)
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)

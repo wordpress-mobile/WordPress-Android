@@ -5,8 +5,6 @@ import kotlinx.android.parcel.Parcelize
 import org.wordpress.android.fluxc.network.rest.wpcom.site.GutenbergLayout
 import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
 
-private const val LARGE_LAYOUT_LIST_LIMIT = 30
-
 @Parcelize
 class LayoutModel(private val starterDesign: StarterDesign? = null, private val blockLayout: GutenbergLayout? = null) :
         Parcelable {
@@ -43,8 +41,3 @@ class LayoutModel(private val starterDesign: StarterDesign? = null, private val 
 
 fun List<LayoutModel>.getFilteredLayouts(categorySlug: String) =
         filter { l -> l.categories.any { c -> c.slug == categorySlug } }
-
-/**
- * In low memory conditions saving a big list of layouts with content causes a crash with TransactionTooLargeException
- */
-fun List<LayoutModel>.isTooLargeForBundle() = filter { it.content != "" }.size > LARGE_LAYOUT_LIST_LIMIT
