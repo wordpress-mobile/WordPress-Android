@@ -368,4 +368,18 @@
     <color name="quick_start_task_card_illustration_set_site_title_body">@color/white</color>
     <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/blue_5</color>
     <color name="quick_start_task_card_illustration_visit_your_site_star">#FFD60A</color>
+
+    <!-- Reader Topics You Might Like Chips -->
+    <color name="reader_topics_you_might_like_chip_green_stroke">@color/green_5</color>
+    <color name="reader_topics_you_might_like_chip_green_font">@color/green_50</color>
+    <color name="reader_topics_you_might_like_chip_green_fill">@color/green_0</color>
+    <color name="reader_topics_you_might_like_chip_purple_stroke">@color/purple_5</color>
+    <color name="reader_topics_you_might_like_chip_purple_font">@color/purple_50</color>
+    <color name="reader_topics_you_might_like_chip_purple_fill">@color/purple_0</color>
+    <color name="reader_topics_you_might_like_chip_yellow_stroke">@color/yellow_5</color>
+    <color name="reader_topics_you_might_like_chip_yellow_font">@color/yellow_50</color>
+    <color name="reader_topics_you_might_like_chip_yellow_fill">@color/yellow_0</color>
+    <color name="reader_topics_you_might_like_chip_orange_stroke">@color/orange_5</color>
+    <color name="reader_topics_you_might_like_chip_orange_font">@color/orange_50</color>
+    <color name="reader_topics_you_might_like_chip_orange_fill">@color/orange_0</color>
 </resources>
