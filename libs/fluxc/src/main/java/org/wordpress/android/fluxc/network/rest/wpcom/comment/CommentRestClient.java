@@ -26,6 +26,7 @@ import org.wordpress.android.fluxc.network.rest.wpcom.comment.CommentWPComRestRe
 import org.wordpress.android.fluxc.store.CommentStore.FetchCommentsResponsePayload;
 import org.wordpress.android.fluxc.store.CommentStore.RemoteCommentResponsePayload;
 import org.wordpress.android.fluxc.utils.CommentErrorUtils;
+import org.wordpress.android.util.DateTimeUtils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -281,6 +282,7 @@ public class CommentRestClient extends BaseWPComRestClient {
         comment.setContent(response.content);
         comment.setILike(response.i_like);
         comment.setUrl(response.URL);
+        comment.setPublishedTimestamp(DateTimeUtils.timestampFromIso8601(response.date));
 
         if (response.author != null) {
             comment.setAuthorUrl(response.author.URL);
