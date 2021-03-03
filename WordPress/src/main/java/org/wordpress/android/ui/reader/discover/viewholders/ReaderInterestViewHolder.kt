@@ -19,7 +19,7 @@ class ReaderInterestViewHolder(
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
     fun onBind(uiState: ReaderInterestUiState) {
         uiHelpers.setTextOrHide(interest, uiState.interest)
-        reader_interest_container.setOnClickListener { uiState.onClicked.invoke(uiState.interest) }
+        interest.setOnClickListener { uiState.onClicked.invoke(uiState.interest) }
 
         with(uiState.chipStyle) {
             interest.setChipStrokeColorResource(chipStrokeColorResId)
