@@ -91,13 +91,13 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun init() {
         readerPostCardActionsHandler.initScope(this)
-        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { followStatusChanged ->
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
 
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    post.isFollowedByCurrentUser = followStatusChanged.following
-                    updateSelectedPostFollowButton(
+                    post.isFollowedByCurrentUser = data.following
+                    updateFollowButtonUiState(
                             currentUiState = currentUiState,
                             isFollowed = post.isFollowedByCurrentUser
                     )
@@ -278,7 +278,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
-    private fun updateSelectedPostFollowButton(
+    private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
         isFollowed: Boolean
     ) {
