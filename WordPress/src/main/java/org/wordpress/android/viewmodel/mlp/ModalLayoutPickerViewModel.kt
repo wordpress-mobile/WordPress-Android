@@ -118,6 +118,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                     site,
                     supportedBlocksProvider.fromAssets().supported,
                     thumbDimensionProvider.previewWidth.toFloat(),
+                    thumbDimensionProvider.previewHeight.toFloat(),
                     thumbDimensionProvider.scale.toFloat(),
                     BuildConfig.DEBUG
             )

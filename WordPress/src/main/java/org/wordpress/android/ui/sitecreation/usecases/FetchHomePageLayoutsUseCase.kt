@@ -26,6 +26,7 @@ class FetchHomePageLayoutsUseCase @Inject constructor(
         }
         val payload = FetchStarterDesignsPayload(
                 thumbDimensionProvider.previewWidth.toFloat(),
+                thumbDimensionProvider.previewHeight.toFloat(),
                 thumbDimensionProvider.scale.toFloat()
         )
         return suspendCoroutine { cont ->
