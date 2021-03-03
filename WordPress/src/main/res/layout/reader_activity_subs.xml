@@ -30,6 +30,18 @@
         android:layout_above="@+id/divider_list"
         android:layout_below="@+id/appbar" />
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/divider_list"
+        android:layout_alignParentEnd="true"
+        android:layout_marginBottom="@dimen/fab_margin"
+        android:layout_marginEnd="@dimen/fab_margin"
+        android:contentDescription="@string/add"
+        android:src="@drawable/ic_plus_white_24dp"
+        app:borderWidth="0dp" />
+
     <View
         android:id="@+id/divider_list"
         android:layout_width="match_parent"
