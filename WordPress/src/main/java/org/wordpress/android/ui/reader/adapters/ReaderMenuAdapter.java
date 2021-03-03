@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Space;
 import android.widget.TextView;
 
@@ -88,6 +89,8 @@ public class ReaderMenuAdapter extends BaseAdapter {
             holder = (ReaderMenuSpacerHolder) convertView.getTag();
         }
         holder.mSpacer.setVisibility(View.VISIBLE);
+        holder.mContainer.setEnabled(false);
+        holder.mContainer.setClickable(false);
         return convertView;
     }
 
@@ -126,8 +129,10 @@ public class ReaderMenuAdapter extends BaseAdapter {
 
     class ReaderMenuSpacerHolder {
         private final Space mSpacer;
+        private final LinearLayout mContainer;
         ReaderMenuSpacerHolder(View view) {
             mSpacer = view.findViewById(R.id.reader_popup_menu_item_spacer);
+            mContainer = view.findViewById(R.id.reader_popup_menu_item_spacer_container);
         }
     }
 }
