@@ -119,7 +119,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         onVideoOverlayClicked: (Long, Long) -> Unit,
         onPostHeaderViewClicked: (Long, Long) -> Unit,
         onTagItemClicked: (String) -> Unit,
-        moreMenuItems: List<SecondaryAction>? = null
+        moreMenuItems: List<ReaderPostCardAction>? = null
     ): ReaderPostUiState {
         return ReaderPostUiState(
                 postId = post.postId,
