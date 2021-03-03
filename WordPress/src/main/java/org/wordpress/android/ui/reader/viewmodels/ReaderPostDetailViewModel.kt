@@ -319,6 +319,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val blogId: Long,
                 val isGlobal: Boolean,
                 val title: UiString?,
+                val excerpt: UiString?,
                 val featuredImageUrl: String?,
                 val featuredImageCornerRadius: UiDimen,
                 val onItemClicked: (Long, Long, Boolean) -> Unit

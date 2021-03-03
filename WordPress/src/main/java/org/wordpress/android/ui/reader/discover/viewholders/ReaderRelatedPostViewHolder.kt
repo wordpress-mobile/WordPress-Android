@@ -27,6 +27,7 @@ class ReaderRelatedPostViewHolder(
     fun onBind(state: ReaderRelatedPostUiState) {
         updateFeaturedImage(state)
         uiHelpers.setTextOrHide(text_title, state.title)
+        uiHelpers.setTextOrHide(text_excerpt, state.excerpt)
         itemView.setOnClickListener { state.onItemClicked.invoke(state.postId, state.blogId, state.isGlobal) }
     }
 
