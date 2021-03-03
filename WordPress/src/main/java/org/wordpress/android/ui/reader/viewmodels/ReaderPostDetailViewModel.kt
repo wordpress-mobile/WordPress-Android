@@ -321,6 +321,7 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val title: UiString?,
                 val excerpt: UiString?,
                 val featuredImageUrl: String?,
+                val featuredImageVisibility: Boolean,
                 val featuredImageCornerRadius: UiDimen,
                 val onItemClicked: (Long, Long, Boolean) -> Unit
             )

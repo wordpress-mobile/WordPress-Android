@@ -32,6 +32,7 @@ class ReaderRelatedPostViewHolder(
     }
 
     private fun updateFeaturedImage(state: ReaderRelatedPostUiState) {
+        uiHelpers.updateVisibility(image_featured, state.featuredImageVisibility)
         if (state.featuredImageUrl == null) {
             imageManager.cancelRequestAndClearImageView(image_featured)
         } else {

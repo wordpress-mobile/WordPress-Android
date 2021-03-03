@@ -69,6 +69,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             title = post.title?.let { UiStringText(it) },
             excerpt = post.excerpt?.let { UiStringText(it) },
             featuredImageUrl = post.featuredImageUrl,
+            featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
             onItemClicked = onItemClicked
     )
