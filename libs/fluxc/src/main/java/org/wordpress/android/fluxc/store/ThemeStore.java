@@ -87,12 +87,14 @@ public class ThemeStore extends Store {
 
     public static class FetchStarterDesignsPayload extends Payload<BaseNetworkError> {
         @Nullable public Float previewWidth;
+        @Nullable public Float previewHeight;
         @Nullable public Float scale;
         @Nullable public String[] groups;
 
-        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float scale,
-                                          @Nullable String... groups) {
+        public FetchStarterDesignsPayload(@Nullable Float previewWidth, @Nullable Float previewHeight,
+                                          @Nullable Float scale, @Nullable String... groups) {
             this.previewWidth = previewWidth;
+            this.previewHeight = previewHeight;
             this.scale = scale;
             this.groups = groups;
         }
@@ -341,7 +343,8 @@ public class ThemeStore extends Store {
     }
 
     private void fetchStarterDesigns(FetchStarterDesignsPayload payload) {
-        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.scale, payload.groups);
+        mThemeRestClient.fetchStarterDesigns(payload.previewWidth, payload.previewHeight,
+                payload.scale, payload.groups);
     }
 
     private void handleWpComThemesFetched(@NonNull FetchedWpComThemesPayload payload) {
