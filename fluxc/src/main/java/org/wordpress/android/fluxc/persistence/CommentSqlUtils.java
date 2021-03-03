@@ -10,8 +10,10 @@ import org.wordpress.android.fluxc.model.CommentModel;
 import org.wordpress.android.fluxc.model.CommentStatus;
 import org.wordpress.android.fluxc.model.SiteModel;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommentSqlUtils {
@@ -73,6 +75,71 @@ public class CommentSqlUtils {
         return WellSql.delete(CommentModel.class)
                       .where().equals(CommentModelTable.LOCAL_SITE_ID, site.getId()).endWhere()
                       .execute();
+    }
+
+    public static int removeDeletedComments(SiteModel site, ArrayList<CommentModel> comments, boolean isEndOfDataSet,
+                                            boolean isStartOfDataSet,
+                                            CommentStatus... statuses) {
+        if (site == null) {
+            return 0;
+        }
+
+        ArrayList<Long> remoteIds = new ArrayList<>();
+
+        Collections.sort(comments, new Comparator<CommentModel>() {
+            @Override
+            public int compare(CommentModel o1, CommentModel o2) {
+                long x = o1.getPublishedTimestamp();
+                long y = o2.getPublishedTimestamp();
+                return (x < y) ? -1 : ((x == y) ? 0 : 1);
+            }
+        });
+
+        for (CommentModel comment : comments) {
+            remoteIds.add(comment.getRemoteCommentId());
+        }
+
+        long topTimeStamp = comments.get(0).getPublishedTimestamp();
+        long bottomTimeStamp = comments.get(comments.size() - 1).getPublishedTimestamp();
+
+
+        ArrayList<CommentStatus> targetStatuses = new ArrayList<>();
+        if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
+            targetStatuses.add(CommentStatus.APPROVED);
+            targetStatuses.add(CommentStatus.UNAPPROVED);
+        } else {
+            targetStatuses.addAll(Arrays.asList(statuses));
+        }
+
+        if (isEndOfDataSet) {
+            return WellSql.delete(CommentModel.class)
+                          .where()
+                          .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                          .isIn(CommentModelTable.STATUS, targetStatuses)
+                          .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                          .endWhere()
+                          .execute();
+        } else {
+            int numOfDeletedComments = 0;
+            if (isStartOfDataSet) {
+                numOfDeletedComments += WellSql.delete(CommentModel.class)
+                              .where()
+                              .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                              .isIn(CommentModelTable.STATUS, targetStatuses)
+                              .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                              .endWhere()
+                              .execute();
+            }
+            return numOfDeletedComments + WellSql.delete(CommentModel.class)
+                          .where()
+                          .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                          .isIn(CommentModelTable.STATUS, targetStatuses)
+                          .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
+                          .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                          .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
+                          .endWhere()
+                          .execute();
+        }
     }
 
     public static int removeCommentsWithFilters(SiteModel site, CommentStatus... statuses) {
