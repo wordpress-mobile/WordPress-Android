@@ -17,7 +17,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:chipStrokeWidth="@dimen/divider_size"
-        app:chipStartPadding="@dimen/margin_extra_large"
-        app:chipEndPadding="@dimen/margin_extra_large"
+        app:chipStartPadding="@dimen/margin_large"
+        app:chipEndPadding="@dimen/margin_large"
         tools:text="Photography"/>
 </androidx.constraintlayout.widget.ConstraintLayout>
