@@ -104,6 +104,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
         }
     }
 
+    @Suppress("LongParameterList")
     fun mapPostToUiStateBlocking(
         post: ReaderPost,
         isDiscover: Boolean = false,
