@@ -257,7 +257,6 @@ Language: pt_BR
     <string name="signup_confirmation_title">Confirmação de inscrição</string>
     <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
     <string name="continue_terms_of_service_text">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Enviaremos um link por e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_magic_link_message">Nós enviamos um link por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
     <string name="enter_account_info_for_site">Digite as informações da conta de %1$s.</string>
@@ -935,7 +934,6 @@ Language: pt_BR
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
     <string name="notification_new_site_creation_title">Criar site</string>
     <string name="new_site_creation_create_site_button">Criar site</string>
-    <string name="new_site_creation_search_domain_input_hint">Pesquisar por domínios</string>
     <string name="notification_new_site_creation_failed">Ocorreu um problema</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Estamos criando seu novo site</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>

@@ -6,13 +6,16 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView.Adapter
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Event
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Header
+import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Notice
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.Progress
 import org.wordpress.android.ui.activitylog.list.ActivityLogListItem.ViewType
+import org.wordpress.android.ui.utils.UiHelpers
 
 class ActivityLogAdapter(
     private val itemClickListener: (ActivityLogListItem) -> Unit,
     private val rewindClickListener: (ActivityLogListItem) -> Unit,
-    private val secondaryActionClickListener: (ActivityLogListItem.SecondaryAction, ActivityLogListItem) -> Boolean
+    private val secondaryActionClickListener: (ActivityLogListItem.SecondaryAction, ActivityLogListItem) -> Boolean,
+    private val uiHelpers: UiHelpers
 ) : Adapter<ActivityLogViewHolder>() {
     private val list = mutableListOf<ActivityLogListItem>()
 
@@ -32,6 +35,7 @@ class ActivityLogAdapter(
             is HeaderItemViewHolder -> holder.bind(list[position] as Header)
             is FooterItemViewHolder -> {}
             is LoadingItemViewHolder -> {}
+            is NoticeItemViewHolder -> holder.bind(list[position] as Notice, uiHelpers)
             else -> throw IllegalArgumentException("Unexpected view holder in ActivityLog")
         }
     }
@@ -64,6 +68,7 @@ class ActivityLogAdapter(
             ViewType.HEADER.id -> HeaderItemViewHolder(parent)
             ViewType.FOOTER.id -> FooterItemViewHolder(parent)
             ViewType.LOADING.id -> LoadingItemViewHolder(parent)
+            ViewType.NOTICE.id -> NoticeItemViewHolder(parent)
             else -> throw IllegalArgumentException("Unexpected view type in ActivityLog")
         }
     }

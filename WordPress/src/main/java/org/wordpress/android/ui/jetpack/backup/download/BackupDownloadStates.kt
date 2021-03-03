@@ -96,7 +96,9 @@ sealed class BackupDownloadRequestState {
         val rewindId: String,
         val downloadId: Long,
         val url: String?,
-        val published: Date? = null
+        val published: Date? = null,
+        val validUntil: Date? = null,
+        val isValid: Boolean = false
     ) : BackupDownloadRequestState()
 
     object Empty : BackupDownloadRequestState()

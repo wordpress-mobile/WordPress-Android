@@ -252,7 +252,6 @@ Language: pl
     <string name="continue_with_google_terms_of_service_text">Jeśli kontynuujesz z logowamiem poprzez Google, a nie masz jeszcze konta na WordPress.com, zakładasz automatycznie konto i zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
     <string name="enter_your_site_address">Wprowadź adres swojej istniejącej witryny</string>
     <string name="continue_terms_of_service_text">Kontynuując, zgadzasz się z naszymi %1$sWarunkami świadczenia usługi%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Prześlemy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com.</string>
     <string name="signup_confirmation_message">Twój adres email będzie użyty to utworzenia twojego nowego konta na WordPress.com.</string>
     <string name="signup_magic_link_message">Wysłaliśmy tobie odnośnik, za pomocą którego utworzysz nowe konto na WordPress.com. Sprawdź pocztę na tym urządzeniu, i stuknij odnośnik we wiadomości email, którą otrzymasz od WordPress.com</string>
     <string name="enter_account_info_for_site">Wprowadź informacje dotyczące swoje konta dla %1$s.</string>
@@ -936,7 +935,6 @@ Language: pl
     <string name="notification_new_site_creation_failed">Wystąpił problem</string>
     <string name="notification_new_site_creation_title">Tworzenie nowej witryny</string>
     <string name="new_site_creation_create_site_button">Tworzenie nowej witryny</string>
-    <string name="new_site_creation_search_domain_input_hint">Przeszukaj domeny</string>
     <string name="new_site_creation_domain_header_subtitle">To tu ludzie odnajdą ciebie w internecie.</string>
     <string name="new_site_creation_empty_domain_list_message">Brak dostępnych adresów zgodnych z twoimi kryteriami wyszukiwania</string>
     <string name="site_creation_error_generic_subtitle">Błąd komunikacji z serwerem, spróbuj ponownie</string>

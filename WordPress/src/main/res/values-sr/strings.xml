@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-15 04:04:36+0000
+Translation-Revision-Date: 2021-02-24 19:43:05+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: sr_RS
 -->
 <resources>
+    <string name="threat_fix_all_status_success_message_plural">Претње су успешно исправљене.</string>
+    <string name="threat_fix_all_warning_message_plural">Молимо потврдите да желите да исправите свих %s активних претњи.</string>
+    <string name="scan_idle_with_threats_description_plural">Скенирањем је пронађено %1s потенцијалних претњи са %2s. Молимо прегледајте их и примените радњу или притисните дугме за поправку свих. Ми смо %3$s ако смо Вам потребни.</string>
     <string name="quick_start_list_view_site_title">Посетите своје веб место</string>
     <string name="quick_start_list_upload_icon_subtitle">Додајте иконицу веб места за исполиран професионални изглед.</string>
     <string name="quick_start_list_follow_site_subtitle">Откријте и пратите веб места која Вас инспиришу.</string>
@@ -34,7 +37,6 @@ Language: sr_RS
     <string name="backup_download_complete_failed_action_button_content_description">Дугме за урађено</string>
     <string name="backup_download_complete_failed_action_button">Урађено</string>
     <string name="backup_download_complete_failed_title">Неуспело преузимање</string>
-    <string name="rewind">Поврати</string>
     <string name="backup_item_sqls">База података веб места</string>
     <string name="backup_item_roots_hint">(садржи wp-config.php и све не-Вордпресове датотеке)</string>
     <string name="backup_item_media_uploads">Отпремања садржаја</string>
@@ -637,7 +639,6 @@ Language: sr_RS
     <string name="notification_new_site_creation_failed">Дошло је до проблема</string>
     <string name="notification_new_site_creation_title">Креирај сајт</string>
     <string name="new_site_creation_create_site_button">Креирај сајт</string>
-    <string name="new_site_creation_search_domain_input_hint">Претражи домене</string>
     <string name="site_creation_error_generic_title">Дошло је до проблема</string>
     <string name="site_creation_fetch_suggestions_error_unknown">Дошло је до проблема</string>
     <string name="new_site_creation_preview_title">Ваша страница је креирана!</string>

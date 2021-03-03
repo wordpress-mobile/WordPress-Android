@@ -286,7 +286,6 @@ Language: es_MX
     <string name="gutenberg_native_choose_video">Elegir un video</string>
     <string name="enter_your_site_address">Ingresa la dirección de tu sitio existente</string>
     <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Te enviaremos por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos esta dirección de correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_magic_link_message">Te hemos enviado por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
     <string name="enter_account_info_for_site">Introduce la información de tu cuenta para %1$s.</string>
@@ -970,7 +969,6 @@ Language: es_MX
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
     <string name="notification_new_site_creation_title">Creación de un sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar Dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en el internet.</string>
     <string name="new_site_creation_clear_all_content_description">Limpiar</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>
