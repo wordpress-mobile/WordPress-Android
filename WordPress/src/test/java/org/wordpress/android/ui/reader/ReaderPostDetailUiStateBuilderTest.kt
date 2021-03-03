@@ -54,56 +54,56 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `when related posts ui is built, site name exists`() = test {
+    fun `when related posts ui is built, then site name exists`() = test {
         val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
 
         assertThat(relatedPostsUiState.siteName).isNotNull
     }
 
     @Test
-    fun `given empty related posts, when related posts ui is built, related post cards are empty`() = test {
+    fun `given empty related posts, when related posts ui is built, then related post cards are empty`() = test {
         val relatedPostsUiState = init(relatedPosts = ReaderSimplePostList())
 
         assertThat(relatedPostsUiState.cards).isEmpty()
     }
 
     @Test
-    fun `given local related posts, when related posts ui is built, related post cards exist`() = test {
+    fun `given local related posts, when related posts ui is built, then related post cards exist`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
         assertThat(relatedPostsUiState.cards).isNotEmpty
     }
 
     @Test
-    fun `given global related posts, when related posts ui is built, related post cards exists`() = test {
+    fun `given global related posts, when related posts ui is built, then related post cards exists`() = test {
         val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
 
         assertThat(relatedPostsUiState.cards).isNotEmpty
     }
 
     @Test
-    fun `given local related posts, when related posts ui is built, follow button does not exist`() = test {
+    fun `given local related posts, when related posts ui is built, then follow button does not exist`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
         assertThat(relatedPostsUiState.cards?.first()?.followButtonUiState).isNull()
     }
 
     @Test
-    fun `given global related posts, when related posts ui is built, follow button exists`() = test {
+    fun `given global related posts, when related posts ui is built, then follow button exists`() = test {
         val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
 
         assertThat(relatedPostsUiState.cards?.first()?.followButtonUiState).isNotNull
     }
 
     @Test
-    fun `given related post title, when related posts ui is built, related post title exists`() = test {
+    fun `given related post title, when related posts ui is built, then related post title exists`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
         assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(readerSimplePost.title))
     }
 
     @Test
-    fun `given related post null title, when related posts ui is built, related post title does not exists`() = test {
+    fun `given related post null title, when related posts ui is built, then related post title does not exists`() = test {
         whenever(readerSimplePost.title).thenReturn(null)
 
         val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
@@ -112,7 +112,7 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `given related post featured image url, when related posts ui is built, featured image exists`() = test {
+    fun `given related post featured image url, when related posts ui is built, then featured image exists`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
         assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(readerSimplePost.featuredImageUrl)
