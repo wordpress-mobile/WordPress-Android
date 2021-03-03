@@ -55,7 +55,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                         isGlobal = isGlobal,
                         followButtonUiState = if (isGlobal) {
                             FollowButtonUiState(
-                                    onFollowButtonClicked = { onRelatedPostFollowClicked( it.siteId, it.siteName) },
+                                    onFollowButtonClicked = { onRelatedPostFollowClicked(it.siteId, it.siteName) },
                                     isFollowed = it.isFollowing,
                                     isEnabled = true
                             )
