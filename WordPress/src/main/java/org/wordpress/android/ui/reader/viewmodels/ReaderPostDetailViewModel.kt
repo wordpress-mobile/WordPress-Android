@@ -28,7 +28,6 @@ import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -258,7 +257,7 @@ class ReaderPostDetailViewModel @Inject constructor(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
-            onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
+            onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
     private fun updateFollowButtonUiState(
@@ -322,7 +321,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 val title: UiString?,
                 val featuredImageUrl: String?,
                 val featuredImageCornerRadius: UiDimen,
-                val followButtonUiState: FollowButtonUiState?,
                 val onItemClicked: (Long, Long, Boolean) -> Unit
             )
         }

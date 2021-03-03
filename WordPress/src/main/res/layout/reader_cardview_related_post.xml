@@ -31,23 +31,10 @@
             android:includeFontPadding="false"
             android:paddingTop="@dimen/margin_extra_large"
             android:textAlignment="viewStart"
-            app:layout_constraintEnd_toStartOf="@id/follow_button"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/image_featured"
             tools:text="text title" />
-
-        <org.wordpress.android.ui.reader.views.ReaderFollowButton
-            android:id="@+id/follow_button"
-            style="@style/Reader.Follow.Button.Icon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_centerVertical="true"
-            android:layout_marginStart="@dimen/margin_medium"
-            android:contentDescription="@string/reader_btn_follow"
-            android:padding="@dimen/reader_follow_button_padding"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/image_featured"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

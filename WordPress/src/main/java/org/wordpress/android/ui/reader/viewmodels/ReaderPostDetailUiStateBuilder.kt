@@ -12,7 +12,6 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Read
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
-import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import javax.inject.Inject
@@ -52,13 +51,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 mapRelatedPostToUiState(
                         post = it,
                         isGlobal = isGlobal,
-                        followButtonUiState = if (isGlobal) {
-                            FollowButtonUiState(
-                                    onFollowButtonClicked = null, // TODO: ashiagr implement follow button action
-                                    isFollowed = it.isFollowing,
-                                    isEnabled = true
-                            )
-                        } else null,
                         onItemClicked = onItemClicked
                 )
             },
@@ -69,7 +61,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private fun mapRelatedPostToUiState(
         post: ReaderSimplePost,
         isGlobal: Boolean,
-        followButtonUiState: FollowButtonUiState?,
         onItemClicked: (Long, Long, Boolean) -> Unit
     ) = ReaderRelatedPostUiState(
             postId = post.postId,
@@ -78,7 +69,6 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             title = post.title?.let { UiStringText(it) },
             featuredImageUrl = post.featuredImageUrl,
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-            followButtonUiState = followButtonUiState,
             onItemClicked = onItemClicked
     )
 
