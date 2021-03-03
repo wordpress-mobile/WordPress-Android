@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.view.KeyEvent;
@@ -11,6 +12,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
@@ -20,6 +22,7 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.google.android.material.elevation.ElevationOverlayProvider;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
@@ -35,6 +38,7 @@ import org.wordpress.android.fluxc.store.AccountStore;
 import org.wordpress.android.models.ReaderTag;
 import org.wordpress.android.models.ReaderTagType;
 import org.wordpress.android.ui.LocaleAwareActivity;
+import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.prefs.AppPrefs;
 import org.wordpress.android.ui.reader.actions.ReaderActions;
 import org.wordpress.android.ui.reader.actions.ReaderBlogActions;
@@ -66,6 +70,7 @@ import javax.inject.Inject;
 public class ReaderSubsActivity extends LocaleAwareActivity
         implements ReaderTagAdapter.TagDeletedListener {
     private EditText mEditAdd;
+    private FloatingActionButton mFabButton;
     private ReaderFollowButton mBtnAdd;
     private WPViewPager mViewPager;
     private SubsPageAdapter mPageAdapter;
@@ -134,6 +139,9 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 return false;
             }
         });
+
+        mFabButton = findViewById(R.id.fab_button);
+        mFabButton.setOnClickListener(view -> ReaderActivityLauncher.showReaderInterests(this));
 
         mBtnAdd = findViewById(R.id.btn_add);
         mBtnAdd.setOnClickListener(new View.OnClickListener() {
@@ -511,6 +519,14 @@ public class ReaderSubsActivity extends LocaleAwareActivity
                 mViewPager.setCurrentItem(i);
                 return;
             }
+        }
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == RequestCodes.READER_INTERESTS) {
+            performUpdate(EnumSet.of(UpdateTask.TAGS));
         }
     }
 

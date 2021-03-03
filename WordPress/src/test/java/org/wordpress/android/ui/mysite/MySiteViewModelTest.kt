@@ -31,6 +31,7 @@ import org.wordpress.android.fluxc.model.DynamicCardType.CUSTOMIZE_QUICK_START
 import org.wordpress.android.fluxc.model.DynamicCardType.GROW_QUICK_START
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.AccountStore
+import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CHECK_STATS
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EXPLORE_PLANS
@@ -149,6 +150,7 @@ class MySiteViewModelTest : BaseUnitTest() {
     private val jetpackCapabilities = MutableLiveData(JetpackCapabilities(false, false))
     private val currentAvatar = MutableLiveData(CurrentAvatarUrl(""))
     private val quickStartUpdate = MutableLiveData(QuickStartUpdate())
+    private val activeTask = MutableLiveData<QuickStartTask>()
     private val dynamicCards = MutableLiveData(
             DynamicCardsUpdate(
                     cards = listOf(
@@ -173,6 +175,7 @@ class MySiteViewModelTest : BaseUnitTest() {
         whenever(selectedSiteRepository.selectedSiteChange).thenReturn(onSiteChange)
         whenever(selectedSiteRepository.siteSelected).thenReturn(onSiteSelected)
         whenever(selectedSiteRepository.showSiteIconProgressBar).thenReturn(onShowSiteIconProgressBar)
+        whenever(quickStartRepository.activeTask).thenReturn(activeTask)
         viewModel = MySiteViewModel(
                 networkUtilsWrapper,
                 TEST_DISPATCHER,

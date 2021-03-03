@@ -18,6 +18,10 @@ import org.wordpress.android.fluxc.store.SiteStore.FetchBlockLayoutsPayload
 import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
+import org.wordpress.android.ui.PreviewMode
+import org.wordpress.android.ui.PreviewMode.MOBILE
+import org.wordpress.android.ui.PreviewMode.TABLET
+import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.ui.mlp.CategoryListItemUiState
 import org.wordpress.android.ui.mlp.ButtonsUiState
 import org.wordpress.android.ui.mlp.GutenbergPageLayouts
@@ -26,6 +30,7 @@ import org.wordpress.android.ui.mlp.LayoutCategoryUiState
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.viewmodel.Event
@@ -46,10 +51,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val appPrefsWrapper: AppPrefsWrapper,
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
+    private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val networkUtils: NetworkUtilsWrapper,
     @Named(BG_THREAD) private val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher
-) : ScopedViewModel(mainDispatcher) {
+) : ScopedViewModel(mainDispatcher), PreviewModeHandler {
     private lateinit var layouts: GutenbergPageLayouts
 
     /**
@@ -64,6 +70,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _uiState: MutableLiveData<UiState> = MutableLiveData()
     val uiState: LiveData<UiState> = _uiState
 
+    private val _previewMode = SingleLiveEvent<PreviewMode>()
+    private val previewMode: LiveData<PreviewMode> = _previewMode
+
     /**
      * Create new page event
      */
@@ -76,10 +85,19 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
     val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
+    /**
+     * Thumbnail mode button event
+     */
+    private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
+    val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
+
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
-        class Preview(template: String?, content: String, val site: SiteModel) : PageRequest(template, content)
+        class Preview(template: String?, content: String, val site: SiteModel, val demoUrl: String?) : PageRequest(
+                template,
+                content
+        )
     }
 
     init {
@@ -136,15 +154,24 @@ class ModalLayoutPickerViewModel @Inject constructor(
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
 
-            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty())
+            val selectedCategories = if (state.selectedCategoriesSlugs.isNotEmpty()) {
                 layouts.categories.filter { state.selectedCategoriesSlugs.contains(it.slug) }
-            else layouts.categories
+            } else {
+                layouts.categories
+            }
 
             selectedCategories.sortedBy { it.title }.forEach { category ->
 
                 val layouts = layouts.getFilteredLayouts(category.slug).map { layout ->
-                    val selected = layout.slug == state.selectedLayoutSlug
-                    LayoutListItemUiState(layout.slug, layout.title, layout.preview, selected,
+                    LayoutListItemUiState(
+                            slug = layout.slug,
+                            title = layout.title,
+                            preview = when (_previewMode.value) {
+                                MOBILE -> layout.previewMobile
+                                TABLET -> layout.previewTablet
+                                else -> layout.preview
+                            },
+                            selected = layout.slug == state.selectedLayoutSlug,
                             onItemTapped = { onLayoutTapped(layoutSlug = layout.slug) },
                             onThumbnailReady = { onThumbnailReady(layoutSlug = layout.slug) }
                     )
@@ -171,7 +198,7 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 CategoryListItemUiState(
                         it.slug,
                         it.title,
-                        it.emoji,
+                        it.emoji ?: "",
                         state.selectedCategoriesSlugs.contains(it.slug)
                 ) { onCategoryTapped(it.slug) }
             }
@@ -198,6 +225,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     fun createPageFlowTriggered() {
         _isModalLayoutPickerShowing.value = Event(true)
+        if (_previewMode.value == null) {
+            _previewMode.value = if (displayUtilsWrapper.isTablet()) {
+                TABLET
+            } else {
+                MOBILE
+            }
+        }
         fetchLayouts()
     }
 
@@ -302,9 +336,13 @@ class ModalLayoutPickerViewModel @Inject constructor(
         (uiState.value as? ContentUiState)?.let { state ->
             layouts.layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
                 val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
-                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site)
+                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site, layout.demoUrl)
             }
         }
+    }
+
+    fun onThumbnailModePressed() {
+        _onThumbnailModeButtonPressed.call()
     }
 
     /**
@@ -371,5 +409,16 @@ class ModalLayoutPickerViewModel @Inject constructor(
                 isDescriptionVisible = false,
                 buttonsUiState = ButtonsUiState(retryVisible = true)
         )
+    }
+
+    override fun selectedPreviewMode() = previewMode.value ?: MOBILE
+
+    override fun onPreviewModeChanged(mode: PreviewMode) {
+        if (_previewMode.value !== mode) {
+            _previewMode.value = mode
+            if (uiState.value is ContentUiState) {
+                loadLayouts()
+            }
+        }
     }
 }

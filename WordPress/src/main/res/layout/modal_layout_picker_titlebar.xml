@@ -19,4 +19,14 @@
         android:layout_marginEnd="@dimen/margin_medium"
         android:text="@string/mlp_choose_layout_title"
         android:visibility="gone" />
+
+    <ImageButton
+        android:id="@+id/previewTypeSelectorButton"
+        style="@style/WebPreviewNavbarButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical|end"
+        android:layout_marginEnd="@dimen/margin_extra_large"
+        android:contentDescription="@string/preview_type_desc"
+        android:src="@drawable/ic_devices_white_24dp" />
 </FrameLayout>

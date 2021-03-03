@@ -1873,6 +1873,7 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
+    <string name="reader_title_interests">Follow topics</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
@@ -2907,8 +2908,8 @@
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
+    <string name="quick_start_sites_type_customize">Customize your site</string>
+    <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
