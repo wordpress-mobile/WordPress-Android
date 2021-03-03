@@ -58,7 +58,9 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         }
 
         if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            if (post.isSeenSupported) buildPostSeenUnseen(readerPostTableWrapper.isPostSeen(post), onButtonClicked)
+            if (post.isSeenSupported) {
+                menuItems.add(buildPostSeenUnseen(readerPostTableWrapper.isPostSeen(post), onButtonClicked))
+            }
         }
 
         menuItems.add(buildShare(onButtonClicked))
@@ -83,7 +85,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private fun buildSiteNotifications(
         isNotificationsEnabled: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ) =
+    ): SecondaryAction =
             if (isNotificationsEnabled) {
                 SecondaryAction(
                         type = SITE_NOTIFICATIONS,
@@ -108,7 +110,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private fun buildPostSeenUnseen(
         isPostSeen: Boolean,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ) =
+    ): SecondaryAction =
         if (isPostSeen) {
             SecondaryAction(
                     type = TOGGLE_SEEN_STATUS,
