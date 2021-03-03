@@ -96,27 +96,30 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `given related post title, when related posts ui is built, then related post title exists`() = test {
+    fun `given related post with title, when related posts ui is built, then related post title exists`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
         assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(readerSimplePost.title))
     }
 
     @Test
-    fun `given related post null title, when related posts ui is built, then related post title does not exists`() = test {
-        whenever(readerSimplePost.title).thenReturn(null)
+    fun `given related post without title, when related posts ui is built, then related post title does not exists`() =
+            test {
+                whenever(readerSimplePost.title).thenReturn(null)
 
-        val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
+                val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
 
-        assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
-    }
+                assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
+            }
 
     @Test
-    fun `given related post featured image url, when related posts ui is built, then featured image exists`() = test {
-        val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
+    fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
+            test {
+                val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
-        assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(readerSimplePost.featuredImageUrl)
-    }
+                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl)
+                        .isEqualTo(readerSimplePost.featuredImageUrl)
+            }
 
     private fun init(
         relatedPosts: ReaderSimplePostList,
