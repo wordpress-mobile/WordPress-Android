@@ -21,7 +21,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringText
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class ReaderPostDetailsUiStateBuilderTest {
+class ReaderPostDetailUiStateBuilderTest {
     @Rule
     @JvmField val rule = InstantTaskExecutorRule()
 
