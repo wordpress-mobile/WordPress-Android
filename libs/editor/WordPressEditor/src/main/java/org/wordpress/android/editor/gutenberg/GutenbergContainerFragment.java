@@ -56,6 +56,7 @@ public class GutenbergContainerFragment extends Fragment {
 
     public void attachToContainer(ViewGroup viewGroup, OnMediaLibraryButtonListener onMediaLibraryButtonListener,
                                   OnReattachMediaUploadQueryListener onReattachQueryListener,
+                                  // OnSetFeaturedImageListener onSetFeaturedImageListener,
                                   OnReattachMediaSavingQueryListener onStorySavingReattachQueryListener,
                                   OnEditorMountListener onEditorMountListener,
                                   OnEditorAutosaveListener onEditorAutosaveListener,
@@ -78,6 +79,7 @@ public class GutenbergContainerFragment extends Fragment {
                     onMediaLibraryButtonListener,
                     onReattachQueryListener,
                     onStorySavingReattachQueryListener,
+                    // onSetFeaturedImageListener,
                     onEditorMountListener,
                     onEditorAutosaveListener,
                     onAuthHeaderRequestedListener,
@@ -257,7 +259,11 @@ public class GutenbergContainerFragment extends Fragment {
         mWPAndroidGlueCode.mediaCollectionFinalSaveResult(storyFirstMediaId, success);
     }
 
-    public void onMediaModelCreatedForFile(String oldId, String newId, String oldUrl) {
+    public void onMediaModelCreatedForFile(String oldId, String newId, final String oldUrl) {
         mWPAndroidGlueCode.mediaIdChanged(oldId, newId, oldUrl);
+    }
+
+    public void featuredImageIdNotifier(int mediaId) {
+        mWPAndroidGlueCode.featuredImageIdNotifier(mediaId);
     }
 }

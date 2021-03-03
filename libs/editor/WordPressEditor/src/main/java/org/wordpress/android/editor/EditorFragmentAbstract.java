@@ -91,12 +91,15 @@ public abstract class EditorFragmentAbstract extends Fragment {
     protected EditorFragmentListener mEditorFragmentListener;
     protected EditorDragAndDropListener mEditorDragAndDropListener;
     protected EditorImagePreviewListener mEditorImagePreviewListener;
+    // protected EditPostSettingsFragment mEditPostSettingsFragment;
     protected EditorEditMediaListener mEditorEditMediaListener;
     protected boolean mFeaturedImageSupported;
     protected long mFeaturedImageId;
     protected String mBlogSettingMaxImageWidth;
     protected ImageLoader mImageLoader;
     protected boolean mDebugModeEnabled;
+
+    // protected EditPostSettingsFragment mEditPostSettingsFragment;
 
     protected HashMap<String, String> mCustomHttpHeaders;
 
@@ -179,6 +182,7 @@ public abstract class EditorFragmentAbstract extends Fragment {
         void onEditorFragmentInitialized();
         void onEditorFragmentContentReady(ArrayList<Object> unsupportedBlocks, boolean replaceBlockActionWaiting);
         void onAddMediaClicked();
+        void updateFeaturedImage(long mediaId, boolean imagePicked);
         void onAddMediaImageClicked(boolean allowMultipleSelection);
         void onAddMediaVideoClicked(boolean allowMultipleSelection);
         void onAddLibraryMediaClicked(boolean allowMultipleSelection);
