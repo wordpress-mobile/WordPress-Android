@@ -31,6 +31,7 @@ import org.wordpress.android.ui.mlp.SupportedBlocks
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.mlp.ThumbDimensionProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
 import org.wordpress.android.util.SiteUtils.GB_EDITOR_NAME
@@ -56,6 +57,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var appPrefsWrapper: AppPrefsWrapper
     @Mock lateinit var supportedBlocksProvider: SupportedBlocksProvider
     @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
     @Mock lateinit var onPreviewPageRequestedObserver: Observer<Preview>
@@ -71,8 +73,11 @@ class ModalLayoutPickerViewModelTest {
             val aboutLayout = GutenbergLayout(
                     slug = "about",
                     title = "About",
+                    previewTablet = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
+                    previewMobile = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
                     preview = "https://headstartdata.files.wordpress.com/2020/01/about-2.png",
                     content = "",
+                    demoUrl = "",
                     categories = listOf(aboutCategory)
             )
             return OnBlockLayoutsFetched(listOf(aboutLayout), listOf(aboutCategory), null)
@@ -86,6 +91,7 @@ class ModalLayoutPickerViewModelTest {
                 appPrefsWrapper,
                 supportedBlocksProvider,
                 thumbDimensionProvider,
+                displayUtilsWrapper,
                 networkUtils,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()

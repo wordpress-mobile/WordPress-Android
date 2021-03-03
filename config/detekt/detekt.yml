@@ -95,7 +95,7 @@ complexity:
     constructorThreshold: 7
     ignoreDefaultParameters: false
     ignoreDataClasses: true
-    ignoreAnnotated: []
+    ignoreAnnotated: ['javax.inject.Inject', 'javax.annotation.Generated']
   MethodOverloading:
     active: false
     threshold: 6

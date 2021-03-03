@@ -102,7 +102,7 @@ class QuickStartRepositoryTest : BaseUnitTest() {
     }
 
     @Test
-    fun `refresh shows completion message if all tasks of a same type have been completed`() = test {
+    fun `refresh shows completion message and removes card if all tasks of a same type have been completed`() = test {
         initStore()
 
         val completionMessage = "All tasks completed!"
@@ -118,6 +118,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
         quickStartRepository.refresh()
 
         assertThat(snackbars).containsOnly(SnackbarMessageHolder(UiStringText(completionMessage)))
+
+        verify(dynamicCardStore).removeCard(siteId, GROW_QUICK_START)
     }
 
     @Test
@@ -137,10 +139,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
-        quickStartRepository.startQuickStart()
+        quickStartRepository.startQuickStart(siteId)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
         assertModel()
@@ -251,6 +252,8 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `marks EDIT_HOMEPAGE task as done when site showing Posts instead of Homepage`() = test {
+        initStore()
+
         val updatedSiteId = 2
         site.id = updatedSiteId
         site.showOnFront = ShowOnFront.POSTS.value

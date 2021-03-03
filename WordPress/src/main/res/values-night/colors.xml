@@ -82,4 +82,21 @@
     <!-- Scan Threat Context Line Custom Colors -->
     <color name="context_line_highlighted_row_background">@color/red_80</color>
 
+    <!-- Quick Start Task Cards -->
+    <color name="quick_start_task_card_illustration_background">#2C2C2E</color>
+    <color name="quick_start_task_card_illustration_surface">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_details">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_line">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_area">@color/gray_40</color>
+    <color name="quick_start_task_card_illustration_mountain">@color/gray_60</color>
+
+    <color name="quick_start_task_card_illustration_check_site_stats_stroke">@color/gray_60</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_area">@color/white</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_fill">@color/gray_10</color>
+    <color name="quick_start_task_card_illustration_edit_site_icon_mountain_stroke">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_follow_other_sites_fill">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_header">@color/gray_10</color>
+    <color name="quick_start_task_card_illustration_set_site_title_body">@color/gray_0</color>
+    <color name="quick_start_task_card_illustration_set_site_title_box_stroke">@color/gray_50</color>
+    <color name="quick_start_task_card_illustration_visit_your_site_star">@color/purple_30</color>
 </resources>
