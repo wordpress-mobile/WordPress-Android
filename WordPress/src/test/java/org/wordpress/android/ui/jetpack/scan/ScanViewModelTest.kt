@@ -457,10 +457,7 @@ class ScanViewModelTest : BaseUnitTest() {
             with(confirmationDialog) {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
                 assertThat(message).isEqualTo(
-                    UiStringResWithParams(
-                        R.string.threat_fix_all_warning_message_singular,
-                        listOf(UiStringText("1"))
-                    )
+                    UiStringRes(R.string.threat_fix_all_warning_message_singular)
                 )
                 assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
                 assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)

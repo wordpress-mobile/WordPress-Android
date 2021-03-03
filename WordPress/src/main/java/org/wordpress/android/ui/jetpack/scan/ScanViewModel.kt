@@ -270,12 +270,11 @@ class ScanViewModel @Inject constructor(
         updateNavigationEvent(
             OpenFixThreatsConfirmationDialog(
                 title = UiStringRes(R.string.threat_fix_all_warning_title),
-                message = UiStringResWithParams(
-                    if (fixableThreatIds.size > 1) {
-                        R.string.threat_fix_all_warning_message_plural
-                    } else R.string.threat_fix_all_warning_message_singular,
-                    listOf(UiStringText("${fixableThreatIds.size}"))
-                ),
+                message = if (fixableThreatIds.size > 1) {
+                            UiStringResWithParams(
+                                R.string.threat_fix_all_warning_message_plural,
+                                listOf(UiStringText("${fixableThreatIds.size}")))
+                } else UiStringRes(R.string.threat_fix_all_warning_message_singular),
                 okButtonAction = this@ScanViewModel::fixAllThreats
             )
         )
