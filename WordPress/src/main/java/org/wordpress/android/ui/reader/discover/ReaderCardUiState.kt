@@ -6,7 +6,7 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import org.wordpress.android.R
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.SPACER_NO_ACTION
 import org.wordpress.android.ui.reader.discover.interests.TagUiState
 import org.wordpress.android.ui.reader.models.ReaderImageList
 import org.wordpress.android.ui.reader.views.uistates.ReaderBlogSectionUiState
@@ -40,7 +40,7 @@ sealed class ReaderCardUiState {
         val likeAction: PrimaryAction,
         val reblogAction: PrimaryAction,
         val commentsAction: PrimaryAction,
-        val moreMenuItems: List<SecondaryAction>? = null,
+        val moreMenuItems: List<ReaderPostCardAction>? = null,
         val onItemClicked: (Long, Long) -> Unit,
         val onItemRendered: (ReaderCardUiState) -> Unit,
         val onMoreButtonClicked: (ReaderPostUiState) -> Unit,
@@ -123,6 +123,12 @@ sealed class ReaderPostCardAction {
         override val type: ReaderPostCardActionType,
         override val onClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) : ReaderPostCardAction()
+
+    data class SpacerNoAction(
+        override val isSelected: Boolean = false,
+        override val type: ReaderPostCardActionType = SPACER_NO_ACTION,
+        override val onClicked: ((Long, Long, ReaderPostCardActionType) -> Unit)? = null
+    ) : ReaderPostCardAction()
 }
 
 enum class ReaderPostCardActionType {
@@ -136,5 +142,6 @@ enum class ReaderPostCardActionType {
     REBLOG,
     COMMENTS,
     REPORT_POST,
-    TOGGLE_SEEN_STATUS
+    TOGGLE_SEEN_STATUS,
+    SPACER_NO_ACTION
 }
