@@ -6,13 +6,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.content.res.AppCompatResources;
 
 import org.wordpress.android.R;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction;
+import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ColorUtils;
 import org.wordpress.android.util.ContextExtensionsKt;
@@ -25,10 +28,11 @@ import java.util.List;
  */
 public class ReaderMenuAdapter extends BaseAdapter {
     private final LayoutInflater mInflater;
-    private final List<SecondaryAction> mMenuItems = new ArrayList<>();
+    private final List<ReaderPostCardAction> mMenuItems = new ArrayList<>();
     private final UiHelpers mUiHelpers;
 
-    public ReaderMenuAdapter(Context context, @NonNull UiHelpers uiHelpers, @NonNull List<SecondaryAction> menuItems) {
+    public ReaderMenuAdapter(Context context, @NonNull UiHelpers uiHelpers,
+                             @NonNull List<ReaderPostCardAction> menuItems) {
         super();
         mInflater = LayoutInflater.from(context);
         mMenuItems.addAll(menuItems);
@@ -61,17 +65,24 @@ public class ReaderMenuAdapter extends BaseAdapter {
             holder = (ReaderMenuHolder) convertView.getTag();
         }
 
-        SecondaryAction item = mMenuItems.get(position);
-        CharSequence textRes = mUiHelpers.getTextOfUiString(convertView.getContext(), item.getLabel());
-        int textColorRes =
-                ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), item.getLabelColor());
-        int iconColorRes =
-                ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), item.getIconColor());
-        int iconRes = item.getIconRes();
+        ReaderPostCardAction cardAction = mMenuItems.get(position);
+        if (cardAction.getType() == ReaderPostCardActionType.SPACER_NO_ACTION) {
+            holder.mText.setVisibility(View.INVISIBLE);
+            holder.mIcon.setVisibility(View.INVISIBLE);
+            holder.mContainer.setClickable(false);
+        } else {
+            SecondaryAction item = (SecondaryAction) cardAction;
+            CharSequence textRes = mUiHelpers.getTextOfUiString(convertView.getContext(), item.getLabel());
+            int textColorRes =
+                    ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), item.getLabelColor());
+            int iconColorRes =
+                    ContextExtensionsKt.getColorResIdFromAttribute(convertView.getContext(), item.getIconColor());
+            int iconRes = item.getIconRes();
 
-        holder.mText.setText(textRes);
-        holder.mText.setTextColor(AppCompatResources.getColorStateList(convertView.getContext(), textColorRes));
-        ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
+            holder.mText.setText(textRes);
+            holder.mText.setTextColor(AppCompatResources.getColorStateList(convertView.getContext(), textColorRes));
+            ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
+        }
 
         return convertView;
     }
@@ -79,10 +90,12 @@ public class ReaderMenuAdapter extends BaseAdapter {
     class ReaderMenuHolder {
         private final TextView mText;
         private final ImageView mIcon;
+        private final LinearLayout mContainer;
 
         ReaderMenuHolder(View view) {
             mText = view.findViewById(R.id.text);
             mIcon = view.findViewById(R.id.image);
+            mContainer = view.findViewById(R.id.reader_popup_menu_item_container);
         }
     }
 }
