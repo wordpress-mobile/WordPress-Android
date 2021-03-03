@@ -9,6 +9,7 @@ import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SpacerNoAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.BLOCK_SITE
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.REPORT_POST
@@ -33,7 +34,7 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     suspend fun buildMoreMenuItems(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ): List<SecondaryAction> {
+    ): List<ReaderPostCardAction> {
         return withContext(bgDispatcher) {
             buildMoreMenuItemsBlocking(post, onButtonClicked)
         }
@@ -42,22 +43,22 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     fun buildMoreMenuItemsBlocking(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
-    ): MutableList<SecondaryAction> {
-        val menuItems = mutableListOf<SecondaryAction>()
+    ): MutableList<ReaderPostCardAction> {
+        val menuItems = mutableListOf<ReaderPostCardAction>()
         val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
 
-        if (isPostFollowed) {
-            menuItems.add(
-                    SecondaryAction(
-                            type = FOLLOW,
-                            label = UiStringRes(R.string.reader_btn_unfollow),
-                            labelColor = R.attr.wpColorOnSurfaceMedium,
-                            iconRes = R.drawable.ic_reader_following_white_24dp,
-                            isSelected = true,
-                            onClicked = onButtonClicked
-                    )
-            )
+        menuItems.add(
+                SecondaryAction(
+                        type = VISIT_SITE,
+                        label = UiStringRes(R.string.reader_label_visit),
+                        labelColor = R.attr.colorOnSurface,
+                        iconRes = R.drawable.ic_globe_white_24dp,
+                        iconColor = R.attr.wpColorOnSurfaceMedium,
+                        onClicked = onButtonClicked
+                )
+        )
 
+        if (isPostFollowed) {
             // When post not from external feed then show notifications option.
             if (!readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
                 if (readerBlogTableWrapper.isNotificationsEnabled(post.blogId)) {
@@ -85,17 +86,6 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     )
                 }
             }
-        } else {
-            menuItems.add(
-                    SecondaryAction(
-                            type = FOLLOW,
-                            label = UiStringRes(R.string.reader_btn_follow),
-                            labelColor = R.attr.colorSecondary,
-                            iconRes = R.drawable.ic_reader_follow_white_24dp,
-                            isSelected = false,
-                            onClicked = onButtonClicked
-                    )
-            )
         }
 
         if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
@@ -138,38 +128,55 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                         onClicked = onButtonClicked
                 )
         )
-        menuItems.add(
-                SecondaryAction(
-                        type = VISIT_SITE,
-                        label = UiStringRes(R.string.reader_label_visit),
-                        labelColor = R.attr.colorOnSurface,
-                        iconRes = R.drawable.ic_globe_white_24dp,
-                        iconColor = R.attr.wpColorOnSurfaceMedium,
-                        onClicked = onButtonClicked
-                )
-        )
+
+        if (isPostFollowed) {
+            menuItems.add(
+                    SecondaryAction(
+                            type = FOLLOW,
+                            label = UiStringRes(R.string.reader_btn_unfollow),
+                            labelColor = R.attr.wpColorOnSurfaceMedium,
+                            iconRes = R.drawable.ic_reader_following_white_24dp,
+                            isSelected = true,
+                            onClicked = onButtonClicked
+                    )
+            )
+        } else {
+            menuItems.add(
+                    SecondaryAction(
+                            type = FOLLOW,
+                            label = UiStringRes(R.string.reader_btn_follow),
+                            labelColor = R.attr.colorSecondary,
+                            iconRes = R.drawable.ic_reader_follow_white_24dp,
+                            isSelected = false,
+                            onClicked = onButtonClicked
+                    )
+            )
+        }
 
         if (!isPostFollowed) {
+            menuItems.add(SpacerNoAction())
             menuItems.add(
                     SecondaryAction(
                             type = BLOCK_SITE,
                             label = UiStringRes(R.string.reader_menu_block_blog),
-                            labelColor = R.attr.colorOnSurface,
+                            labelColor = R.attr.wpColorError,
                             iconRes = R.drawable.ic_block_white_24dp,
-                            iconColor = R.attr.wpColorOnSurfaceMedium,
+                            iconColor = R.attr.wpColorError,
                             onClicked = onButtonClicked
                     )
             )
+        } else {
+            menuItems.add(SpacerNoAction())
         }
 
         menuItems.add(
                 SecondaryAction(
                         type = REPORT_POST,
                         label = UiStringRes(R.string.reader_menu_report_post),
-                        labelColor = R.attr.colorOnSurface,
+                        labelColor = R.attr.wpColorError,
                         iconRes = R.drawable.ic_block_white_24dp,
-                        iconColor = R.attr.wpColorOnSurfaceMedium,
-                        onClicked = onButtonClicked
+                        iconColor = R.attr.wpColorError,
+                        onClicked = onButtonClicked,
                 )
         )
         return menuItems
