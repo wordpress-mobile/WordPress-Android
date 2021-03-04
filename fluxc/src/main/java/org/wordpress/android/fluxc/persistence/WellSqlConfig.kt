@@ -1494,8 +1494,9 @@ open class WellSqlConfig : DefaultWellConfig {
                 136 -> migrate(version) {
                     db.execSQL("CREATE TABLE DynamicCard (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER," +
                             "DYNAMIC_CARD_TYPE TEXT,STATE TEXT)")
-                } 137 -> migrate(version) {
-                db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
+                }
+                137 -> migrate(version) {
+                    db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
                 }
             }
         }
