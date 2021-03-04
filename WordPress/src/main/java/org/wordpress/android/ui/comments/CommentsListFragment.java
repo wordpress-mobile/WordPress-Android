@@ -629,10 +629,8 @@ public class CommentsListFragment extends ViewPagerFragment {
 
         // Don't refresh the list on push, we already updated comments
         if (event.causeOfChange != CommentAction.PUSH_COMMENT) {
-            if (event.requestedStatus == null || event.requestedStatus.equals(mCommentStatusFilter.toCommentStatus())) {
-                loadComments();
-                return;
-            }
+            loadComments();
+            return;
         }
 
         if (event.isError()) {
