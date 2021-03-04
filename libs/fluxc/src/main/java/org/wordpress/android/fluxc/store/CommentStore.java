@@ -201,21 +201,6 @@ public class CommentStore extends Store {
         return CommentSqlUtils.getCommentsForSite(site, order, limit, statuses);
     }
 
-    /**
-     * Get a list of comment for a specific site.
-     *
-     * @param site Site model to get comment for.
-     * @param orderByDateAscending If true order the results by ascending published date.
-     *                             If false, order the results by descending published date.
-     * @param statuses Array of status or CommentStatus.ALL to get all of them.
-     */
-    @SuppressLint("WrongConstant")
-    public List<CommentModel> getCommentsForSite(SiteModel site, boolean orderByDateAscending,
-                                                 CommentStatus... statuses) {
-        @Order int order = orderByDateAscending ? SelectQuery.ORDER_ASCENDING : SelectQuery.ORDER_DESCENDING;
-        return CommentSqlUtils.getCommentsForSite(site, order, statuses);
-    }
-
     public int getNumberOfCommentsForSite(SiteModel site, CommentStatus... statuses) {
         return CommentSqlUtils.getCommentsCountForSite(site, statuses);
     }
@@ -432,11 +417,9 @@ public class CommentStore extends Store {
         int rowsAffected = 0;
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         if (!payload.isError()) {
-            // Clear existing comments in case some were deleted on the server. Only remove them if we request the
-            // first comments (offset == 0).
-            if (payload.offset == 0) {
-                CommentSqlUtils.removeCommentsWithFilters(payload.site, payload.requestedStatus);
-            }
+            // Find comments deleted on the server and remove them from local DB.
+            CommentSqlUtils.removeDeletedComments(payload.site, payload.comments, payload.number, payload.offset,
+                    payload.requestedStatus);
 
             for (CommentModel comment : payload.comments) {
                 rowsAffected += CommentSqlUtils.insertOrUpdateComment(comment);
