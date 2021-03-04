@@ -113,11 +113,11 @@ public class ReaderMenuAdapter extends BaseAdapter {
 
         holder.mText.setText(textRes);
         holder.mText.setTextColor(AppCompatResources.getColorStateList(convertView.getContext(), textColorRes));
-        ColorUtils.INSTANCE.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
+        ColorUtils.setImageResourceWithTint(holder.mIcon, iconRes, iconColorRes);
         return convertView;
     }
 
-    class ReaderMenuHolder {
+    static class ReaderMenuHolder {
         private final TextView mText;
         private final ImageView mIcon;
 
@@ -127,7 +127,7 @@ public class ReaderMenuAdapter extends BaseAdapter {
         }
     }
 
-    class ReaderMenuSpacerHolder {
+    static class ReaderMenuSpacerHolder {
         private final Space mSpacer;
         private final LinearLayout mContainer;
         ReaderMenuSpacerHolder(View view) {
