@@ -746,7 +746,7 @@ public class SiteStoreUnitTest {
         GutenbergLayoutCategory cat1 = new GutenbergLayoutCategory("a", "About", "About", "👋");
         GutenbergLayoutCategory cat2 = new GutenbergLayoutCategory("b", "Blog", "Blog", "📰");
         List<GutenbergLayoutCategory> categories = Arrays.asList(cat1, cat2);
-        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "content", categories);
+        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
         List<GutenbergLayout> layouts = Collections.singletonList(layout);
         // Store
         SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
@@ -756,6 +756,22 @@ public class SiteStoreUnitTest {
         // Check
         assertEquals(categories, retrievedCategories);
         assertEquals(layouts, retrievedLayouts);
+    }
+
+    @Test
+    public void testInsertBlockLayoutWithNullCategoryEmoji() {
+        // Test data
+        SiteModel site = generateWPComSite();
+        GutenbergLayoutCategory cat = new GutenbergLayoutCategory("a", "About", "About", null);
+        List<GutenbergLayoutCategory> categories = Collections.singletonList(cat);
+        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
+        List<GutenbergLayout> layouts = Collections.singletonList(layout);
+        // Store
+        SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
+        // Retrieve
+        List<GutenbergLayoutCategory> retrievedCategories = SiteSqlUtils.getBlockLayoutCategories(site);
+        // Check
+        assertEquals(retrievedCategories.get(0).getEmoji(), "");
     }
 
     @Test
