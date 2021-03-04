@@ -31,8 +31,7 @@ class ReaderPostDetailUiStateBuilderTest {
     @Mock lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
-    private lateinit var localRelatedPosts: ReaderSimplePostList
-    private lateinit var globalRelatedPosts: ReaderSimplePostList
+    private lateinit var dummyRelatedPosts: ReaderSimplePostList
 
     private var dummyReaderPost = ReaderPost().apply {
         this.blogId = 1L
@@ -45,8 +44,7 @@ class ReaderPostDetailUiStateBuilderTest {
     fun setUp() = test {
         whenever(readerSimplePost.title).thenReturn("")
         whenever(readerSimplePost.featuredImageUrl).thenReturn("")
-        localRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
-        globalRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
+        dummyRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
         builder = ReaderPostDetailUiStateBuilder(
                 headerViewUiStateBuilder,
@@ -57,7 +55,7 @@ class ReaderPostDetailUiStateBuilderTest {
 
     @Test
     fun `when related posts ui is built, then site name exists`() = test {
-        val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
+        val relatedPostsUiState = init()
 
         assertThat(relatedPostsUiState.siteName).isNotNull
     }
@@ -70,22 +68,15 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `given local related posts, when related posts ui is built, then related post cards exist`() = test {
-        val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
-
-        assertThat(relatedPostsUiState.cards).isNotEmpty
-    }
-
-    @Test
-    fun `given global related posts, when related posts ui is built, then related post cards exists`() = test {
-        val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
+    fun `given related posts, when related posts ui is built, then related post cards exist`() = test {
+        val relatedPostsUiState = init()
 
         assertThat(relatedPostsUiState.cards).isNotEmpty
     }
 
     @Test
     fun `given related post with title, when related posts ui is built, then related post title exists`() = test {
-        val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
+        val relatedPostsUiState = init()
 
         assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(readerSimplePost.title))
     }
@@ -95,7 +86,7 @@ class ReaderPostDetailUiStateBuilderTest {
             test {
                 whenever(readerSimplePost.title).thenReturn(null)
 
-                val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
+                val relatedPostsUiState = init()
 
                 assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
             }
@@ -103,14 +94,14 @@ class ReaderPostDetailUiStateBuilderTest {
     @Test
     fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
             test {
-                val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
+                val relatedPostsUiState = init()
 
                 assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl)
                         .isEqualTo(readerSimplePost.featuredImageUrl)
             }
 
     private fun init(
-        relatedPosts: ReaderSimplePostList,
+        relatedPosts: ReaderSimplePostList = dummyRelatedPosts,
         isGlobal: Boolean = false
     ) = builder.mapRelatedPostsToUiState(
             sourcePost = dummyReaderPost,
