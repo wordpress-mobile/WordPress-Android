@@ -17,6 +17,8 @@ import org.wordpress.android.R.id
 import org.wordpress.android.R.layout
 import org.wordpress.android.R.string
 import org.wordpress.android.WordPress
+import org.wordpress.android.analytics.AnalyticsTracker
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.COMMENT_FILTER_CHANGED
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.CommentActionBuilder
 import org.wordpress.android.fluxc.model.CommentModel
@@ -46,6 +48,7 @@ import org.wordpress.android.util.SmartToast.SmartToastType.COMMENTS_LONG_PRESS
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.setLiftOnScrollTargetViewIdAndRequestLayout
 import org.wordpress.android.widgets.WPSnackbar.Companion.make
+import java.util.HashMap
 import javax.inject.Inject
 
 @Suppress("TooManyFunctions")
@@ -90,6 +93,15 @@ class CommentsActivity : LocaleAwareActivity(),
 
         viewPager = findViewById(id.view_pager)
         viewPager.offscreenPageLimit = 1
+
+        viewPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+            override fun onPageSelected(position: Int) {
+                val properties: MutableMap<String, String?> = HashMap()
+                properties["selected_filter"] = commentListFilters[position].label
+                AnalyticsTracker.track(COMMENT_FILTER_CHANGED, properties)
+                super.onPageSelected(position)
+            }
+        })
 
         pagerAdapter = CommentsListPagerAdapter(commentListFilters, this)
         viewPager.adapter = pagerAdapter
