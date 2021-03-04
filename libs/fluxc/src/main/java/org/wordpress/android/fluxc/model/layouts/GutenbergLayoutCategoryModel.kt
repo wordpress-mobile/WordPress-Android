@@ -30,7 +30,7 @@ fun GutenbergLayoutCategory.transform(site: SiteModel) = GutenbergLayoutCategory
         siteId = site.id,
         title = title,
         description = description,
-        emoji = emoji
+        emoji = emoji ?: ""
 )
 
 fun GutenbergLayoutCategoryModel.transform() = GutenbergLayoutCategory(
