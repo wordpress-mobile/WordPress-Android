@@ -258,8 +258,8 @@ class ScanStateListItemsBuilder @Inject constructor(
 
         val descriptionTextResId = if (threatsCount > 1) {
             R.string.scan_idle_with_threats_description_plural
-        } else R.string.scan_idle_with_threats_description_singular
-        val descriptionText = if(threatsCount > 1) {
+        } else R.string.scan_idle_threats_description_singular
+        val descriptionText = if (threatsCount > 1) {
             htmlMessageUtils
                     .getHtmlMessageFromStringFormatResId(
                             descriptionTextResId,

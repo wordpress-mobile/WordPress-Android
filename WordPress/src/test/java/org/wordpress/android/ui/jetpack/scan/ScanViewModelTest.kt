@@ -47,7 +47,6 @@ import org.wordpress.android.ui.jetpack.scan.usecases.StartScanUseCase.StartScan
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.utils.HtmlMessageUtils
 import org.wordpress.android.ui.utils.UiString.UiStringRes
-import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.analytics.ScanTracker
 import org.wordpress.android.viewmodel.Event
@@ -387,7 +386,9 @@ class ScanViewModelTest : BaseUnitTest() {
             val threatFoundMessage = "1 potential threat found"
             whenever(
                 htmlMessageUtils
-                    .getHtmlMessageFromStringFormatResId(R.string.scan_finished_threats_found_message_singular)
+                    .getHtmlMessageFromStringFormatResId(
+                            R.string.scan_finished_potential_threats_found_message_singular
+                    )
             ).thenReturn(threatFoundMessage)
             val fakeScanStateModelWithThreat = fakeScanStateModel.copy(
                 threats = listOf(ThreatTestData.genericThreatModel)
@@ -457,7 +458,7 @@ class ScanViewModelTest : BaseUnitTest() {
             with(confirmationDialog) {
                 assertThat(title).isEqualTo(UiStringRes(R.string.threat_fix_all_warning_title))
                 assertThat(message).isEqualTo(
-                    UiStringRes(R.string.threat_fix_all_warning_message_singular)
+                    UiStringRes(R.string.threat_fix_all_confirmation_message_singular)
                 )
                 assertThat(positiveButtonLabel).isEqualTo(R.string.dialog_button_ok)
                 assertThat(negativeButtonLabel).isEqualTo(R.string.dialog_button_cancel)

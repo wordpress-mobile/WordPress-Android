@@ -145,7 +145,7 @@ class ScanViewModel @Inject constructor(
                 )
 
                 1 -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
-                    R.string.scan_finished_threats_found_message_singular
+                    R.string.scan_finished_potential_threats_found_message_singular
                 )
 
                 else -> htmlMessageUtils.getHtmlMessageFromStringFormatResId(
@@ -274,7 +274,7 @@ class ScanViewModel @Inject constructor(
                             UiStringResWithParams(
                                 R.string.threat_fix_all_warning_message_plural,
                                 listOf(UiStringText("${fixableThreatIds.size}")))
-                } else UiStringRes(R.string.threat_fix_all_warning_message_singular),
+                } else UiStringRes(R.string.threat_fix_all_confirmation_message_singular),
                 okButtonAction = this@ScanViewModel::fixAllThreats
             )
         )
