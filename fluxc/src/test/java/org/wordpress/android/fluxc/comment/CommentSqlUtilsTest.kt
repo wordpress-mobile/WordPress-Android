@@ -135,7 +135,6 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(65)
 
-
         val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(
                 site,
                 freshComments,
