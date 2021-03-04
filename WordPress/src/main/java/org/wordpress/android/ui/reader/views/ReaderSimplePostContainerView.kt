@@ -40,7 +40,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     }
 
     private fun initRecyclerView(context: Context) {
-        recycler_view.layoutManager =  LinearLayoutManager(context)
+        recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
