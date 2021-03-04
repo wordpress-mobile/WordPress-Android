@@ -10,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
+import org.wordpress.android.R
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
@@ -17,6 +18,8 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 
@@ -33,7 +36,7 @@ class ReaderPostDetailUiStateBuilderTest {
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     private lateinit var dummyRelatedPosts: ReaderSimplePostList
 
-    private var dummyReaderPost = ReaderPost().apply {
+    private var dummySourceReaderPost = ReaderPost().apply {
         this.blogId = 1L
         this.feedId = 2L
         this.blogName = "blog name"
@@ -54,10 +57,22 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `when related posts ui is built, then site name exists`() = test {
-        val relatedPostsUiState = init()
+    fun `when local related posts ui is built, then source post site name exists in header label`() = test {
+        val relatedPostsUiState = init(isGlobal = false)
 
-        assertThat(relatedPostsUiState.siteName).isNotNull
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(
+                UiStringResWithParams(
+                        R.string.reader_label_local_related_posts,
+                        listOf(UiStringText(dummySourceReaderPost.blogName))
+                )
+        )
+    }
+
+    @Test
+    fun `when global related posts ui is built, then global related posts header label exists`() = test {
+        val relatedPostsUiState = init(isGlobal = true)
+
+        assertThat(relatedPostsUiState.headerLabel).isEqualTo(UiStringRes(R.string.reader_label_global_related_posts))
     }
 
     @Test
@@ -104,7 +119,7 @@ class ReaderPostDetailUiStateBuilderTest {
         relatedPosts: ReaderSimplePostList = dummyRelatedPosts,
         isGlobal: Boolean = false
     ) = builder.mapRelatedPostsToUiState(
-            sourcePost = dummyReaderPost,
+            sourcePost = dummySourceReaderPost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
             onItemClicked = dummyOnRelatedPostItemClicked

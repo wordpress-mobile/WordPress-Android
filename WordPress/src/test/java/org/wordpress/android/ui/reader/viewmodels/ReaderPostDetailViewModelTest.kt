@@ -549,7 +549,7 @@ class ReaderPostDetailViewModelTest {
                 )
             },
             isGlobal = isGlobal,
-            siteName = "site name"
+            headerLabel = UiStringText("")
     )
 
     private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {
