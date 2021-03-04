@@ -4,6 +4,8 @@ import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.os.Build
 import android.preference.PreferenceManager
+import android.view.Gravity
+import android.widget.Toast
 import androidx.annotation.StringDef
 import com.yarolegovich.wellsql.DefaultWellConfig
 import com.yarolegovich.wellsql.WellSql
@@ -28,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 136 // TODO 138
     }
 
     override fun getDbName(): String {
@@ -1514,6 +1516,27 @@ open class WellSqlConfig : DefaultWellConfig {
         }
         db.setTransactionSuccessful()
         db.endTransaction()
+    }
+
+    /**
+     * Detect when the database is downgraded in debug builds so we can recreate all the tables
+     */
+    override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
+        if (BuildConfig.DEBUG) {
+            // note: don't call super() here because it throws an exception
+            val toast = Toast.makeText(
+                    context,
+                    "Database downgraded from version $oldVersion to $newVersion",
+                    Toast.LENGTH_LONG
+            )
+            toast.setGravity(Gravity.CENTER_HORIZONTAL or Gravity.BOTTOM, 0, 0)
+            toast.show()
+
+            AppLog.d(T.DB, "Database downgraded from version $oldVersion to $newVersion")
+            helper?.let { reset(it) }
+        } else {
+            super.onDowngrade(db, helper, oldVersion, newVersion)
+        }
     }
 
     @Suppress("CheckStyle")
