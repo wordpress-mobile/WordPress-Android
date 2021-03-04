@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 139
     }
 
     override fun getDbName(): String {
@@ -1509,6 +1509,23 @@ open class WellSqlConfig : DefaultWellConfig {
                                     "CONTENT TEXT NOT NULL," +
                                     "DEMO_URL TEXT NOT NULL)"
                     )
+                }
+                138 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                    db.execSQL("DROP TABLE IF EXISTS WCCustomerModel")
+                    db.execSQL("CREATE TABLE WCCustomerModel (AVATAR_URL TEXT NOT NULL," +
+                            "DATE_CREATED TEXT NOT NULL,DATE_CREATED_GMT TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL," +
+                            "DATE_MODIFIED_GMT TEXT NOT NULL,EMAIL TEXT NOT NULL,FIRST_NAME TEXT NOT NULL," +
+                            "REMOTE_CUSTOMER_ID INTEGER,IS_PAYING_CUSTOMER INTEGER,LAST_NAME TEXT NOT NULL," +
+                            "ROLE TEXT NOT NULL,USERNAME TEXT NOT NULL,LOCAL_SITE_ID INTEGER,BILLING_ADDRESS1" +
+                            " TEXT NOT NULL,BILLING_ADDRESS2 TEXT NOT NULL,BILLING_CITY TEXT NOT NULL," +
+                            "BILLING_COMPANY TEXT NOT NULL,BILLING_COUNTRY TEXT NOT NULL,BILLING_EMAIL" +
+                            " TEXT NOT NULL,BILLING_FIRST_NAME TEXT NOT NULL,BILLING_LAST_NAME TEXT " +
+                            "NOT NULL,BILLING_PHONE TEXT NOT NULL,BILLING_POSTCODE TEXT NOT NULL,BILLING_STATE" +
+                            " TEXT NOT NULL,SHIPPING_ADDRESS1 TEXT NOT NULL,SHIPPING_ADDRESS2 TEXT NOT NULL," +
+                            "SHIPPING_CITY TEXT NOT NULL,SHIPPING_COMPANY TEXT NOT NULL,SHIPPING_COUNTRY TEXT" +
+                            " NOT NULL,SHIPPING_FIRST_NAME TEXT NOT NULL,SHIPPING_LAST_NAME TEXT NOT NULL," +
+                            "SHIPPING_POSTCODE TEXT NOT NULL,SHIPPING_STATE TEXT NOT NULL,_id INTEGER" +
+                            " PRIMARY KEY AUTOINCREMENT)")
                 }
             }
         }
