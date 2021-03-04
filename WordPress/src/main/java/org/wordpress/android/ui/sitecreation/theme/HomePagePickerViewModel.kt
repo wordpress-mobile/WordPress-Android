@@ -107,39 +107,25 @@ class HomePagePickerViewModel @Inject constructor(
         _onDesignActionPressed.value = DesignSelectionAction.Skip
     }
 
-    fun onBackPressed() {
-        _onBackButtonPressed.call()
-    }
+    fun onBackPressed() = _onBackButtonPressed.call()
 
-    override fun trackThumbnailModeTapped(mode: String) {
-        analyticsTracker.trackSiteDesignThumbnailModeTapped(mode)
-    }
+    override fun trackThumbnailModeTapped(mode: String) = analyticsTracker.trackSiteDesignThumbnailModeTapped(mode)
 
-    override fun trackPreviewModeChanged(mode: String) {
-        analyticsTracker.trackSiteDesignPreviewModeChanged(mode)
-    }
+    override fun trackPreviewModeChanged(mode: String) = analyticsTracker.trackSiteDesignPreviewModeChanged(mode)
 
-    override fun trackPreviewLoading(template: String, mode: String) {
-        analyticsTracker.trackSiteDesignPreviewLoading(template, mode)
-    }
+    override fun trackPreviewLoading(template: String, mode: String) =
+            analyticsTracker.trackSiteDesignPreviewLoading(template, mode)
 
-    override fun trackPreviewLoaded(template: String, mode: String) {
-        analyticsTracker.trackSiteDesignPreviewLoaded(template, mode)
-    }
+    override fun trackPreviewLoaded(template: String, mode: String) =
+            analyticsTracker.trackSiteDesignPreviewLoaded(template, mode)
 
-    override fun trackPreviewViewed(template: String, mode: String) {
-        analyticsTracker.trackSiteDesignPreviewLoaded(template, mode)
-    }
+    override fun trackPreviewViewed(template: String, mode: String) =
+            analyticsTracker.trackSiteDesignPreviewLoaded(template, mode)
 
-    override fun trackPreviewModeTapped(mode: String) {
-        analyticsTracker.trackSiteDesignPreviewModeTapped(mode)
-    }
+    override fun trackPreviewModeTapped(mode: String) = analyticsTracker.trackSiteDesignPreviewModeTapped(mode)
 
-    override fun trackNoNetworkErrorShown(message: String) {
-        analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
-    }
+    override fun trackNoNetworkErrorShown(message: String) =
+            analyticsTracker.trackErrorShown(ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
 
-    override fun trackErrorShown(message: String) {
-        analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, message)
-    }
+    override fun trackErrorShown(message: String) = analyticsTracker.trackErrorShown(ERROR_CONTEXT, UNKNOWN, message)
 }

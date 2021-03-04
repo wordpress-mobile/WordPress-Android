@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mlp
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -27,7 +25,6 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.PreviewModeSelectorPopup
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.layoutpicker.ButtonsUiState
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
@@ -204,13 +201,5 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         previewButton.setVisible(uiState.previewVisible)
         retryButton.setVisible(uiState.retryVisible)
         createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCodes.PREVIEW_POST) {
-            if (resultCode == Activity.RESULT_OK) {
-                viewModel.onCreatePageClicked()
-            }
-        }
     }
 }

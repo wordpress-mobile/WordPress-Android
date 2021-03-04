@@ -617,7 +617,6 @@
     <dimen name="mlp_layouts_line_separator_height">@dimen/margin_extra_extra_small</dimen>
     <dimen name="mlp_layout_skeleton_line_height">24dp</dimen>
     <dimen name="mlp_layout_skeleton_line_width">100dp</dimen>
-    <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
     <dimen name="hpp_button_max_width">244dp</dimen>
