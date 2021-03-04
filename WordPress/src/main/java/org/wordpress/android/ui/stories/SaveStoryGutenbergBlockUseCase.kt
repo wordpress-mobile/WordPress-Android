@@ -114,7 +114,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     )
                     content = listener.doWithMediaFilesJson(content, jsonString)
                     storyBlockStartIndex += HEADING_START.length
-                } catch (exception: IndexOutOfBoundsException) {
+                } catch (exception: StringIndexOutOfBoundsException) {
                     crashLogging.reportException(exception, EDITOR.toString())
                     AppLog.e(EDITOR, exception.message)
                 }
@@ -191,10 +191,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         frames: List<StoryFrameItem>,
         mediaFiles: ArrayList<MediaFile>
     ): List<MediaFile> {
-        return mediaFiles.mapIndexed { index, mediaFile -> run {
-            mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
-            mediaFile
-        }
+        return mediaFiles.mapIndexed { index, mediaFile ->
+            run {
+                mediaFile.alt = StoryFrameItem.getAltTextFromFrameAddedViews(frames[index])
+                mediaFile
+            }
             mediaFile
         }
     }
