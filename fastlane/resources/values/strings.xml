@@ -1054,6 +1054,11 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- activity log list backup download notice -->
+    <string name="activity_log_backup_download_notice_description_with_two_params" translatable="false">@string/backup_download_complete_description_with_two_parameters</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+
     <!-- backup -->
     <string name="backup">Backup</string>
     <string name="backup_empty_title">Your first backup will be ready soon</string>
@@ -3194,7 +3199,7 @@
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>

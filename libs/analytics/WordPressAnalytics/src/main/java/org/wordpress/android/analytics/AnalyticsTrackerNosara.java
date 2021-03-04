@@ -2036,6 +2036,14 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "invite_links_disable";
             case INVITE_LINKS_SHARE:
                 return "invite_links_share";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "jetpack_backup_download_file_notice_download_tapped";
+            case JETPACK_BACKUP_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "jetpack_backup_download_file_notice_dismissed_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DOWNLOAD_TAPPED:
+                return "activity_log_download_file_notice_download_tapped";
+            case ACTIVITY_LOG_DOWNLOAD_FILE_NOTICE_DISMISSED_TAPPED:
+                return "activity_log_download_file_notice_dismissed_tapped";
         }
         return null;
     }

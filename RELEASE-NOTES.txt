@@ -3,6 +3,7 @@
 16.9
 -----
 * [*] Comments: Switched comments filter from dropdown to tabs. [https://github.com/wordpress-mobile/WordPress-Android/pull/14140]
+* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
 
 16.8
 -----

@@ -1054,6 +1054,11 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- activity log list backup download notice -->
+    <string name="activity_log_backup_download_notice_description_with_two_params" translatable="false">@string/backup_download_complete_description_with_two_parameters</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+
     <!-- backup -->
     <string name="backup">Backup</string>
     <string name="backup_empty_title">Your first backup will be ready soon</string>
@@ -1873,6 +1878,7 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
+    <string name="reader_title_interests">Follow topics</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
@@ -2907,8 +2913,8 @@
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
+    <string name="quick_start_sites_type_customize">Customize your site</string>
+    <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
@@ -3194,7 +3200,7 @@
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>

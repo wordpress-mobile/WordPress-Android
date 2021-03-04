@@ -1,12 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-19 17:24:38+0000
+Translation-Revision-Date: 2021-02-23 13:52:43+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Lösen</string>
+    <string name="new_site_creation_search_domain_example">beispiel.com</string>
+    <string name="invite_links_section_title">Einladungslink</string>
+    <string name="threats_found_plural">Bedrohungen gefunden</string>
+    <string name="threats_found_singular">Bedrohung gefunden</string>
+    <string name="disable">Deaktivieren</string>
+    <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
     <string name="quick_start_list_review_pages_subtitle">Prüfe deine Seiten und nimm Änderungen vor. Du kannst auch Seiten hinzufügen oder entfernen.</string>
     <string name="quick_start_list_view_site_title">Besuche deine Website</string>
     <string name="quick_start_list_upload_icon_subtitle">Füge ein Website-Icon hinzu, um einen eleganten, professionellen Look zu erhalten.</string>
@@ -32,8 +37,6 @@ Language: de
     <string name="backup_item_content_hint">(enthält keine Themes, Plugins und Uploads)</string>
     <string name="backup_item_contents">WP-content-Verzeichnis</string>
     <string name="backup_item_roots">WordPress-Root</string>
-    <string name="backup_download_progress_action_button_content_description">Button „Lass mich wissen, wenn du fertig bist“</string>
-    <string name="backup_download_progress_action_button">Lass mich wissen, wenn du fertig bist!</string>
     <string name="backup_download_details_choose_items_header">In diesem Download enthaltene Elemente</string>
     <string name="gutenberg_native_uploading">Wird hochgeladen …</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Wiederverwendbare Blöcke können auf WordPress für iOS nicht bearbeitet werden</string>
@@ -61,13 +64,10 @@ Language: de
     <string name="threat_status_fixed">Fixiert</string>
     <string name="threat_found_header">Gefunden</string>
     <string name="scan_here_to_help">hier, um zu helfen</string>
-    <string name="scan_idle_with_threats_description">Beim Scan wurden %1s mögliche Bedrohungen bei %2s gefunden. Prüfe diese bitte unten und führe die erforderliche Aktion aus oder tippe auf den Button „Alle beheben“. Wir sind %3$s, wenn du uns brauchst.</string>
     <string name="scan_idle_manual_scan_description">Um deine Website noch einmal zu prüfen, führe einen manuellen Scan aus oder warte, bis deine Website heute zu einem späteren Zeitpunkt von Jetpack gescannt wird.</string>
     <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
-    <string name="scan_fixing_threats_description">Wir arbeiten im Hintergrund daran, diese Bedrohungen zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="scan_scanning_description">Wir werden dir eine Benachrichtigung schicken, sobald der Scan abgeschlossen ist. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
-    <string name="scan_fixing_threats_title">Bedrohungen werden behoben</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan konnte einen Scan deiner Website ausführen. Schau bitte nach, ob deine Website erreichbar ist. Wenn ja, versuche es erneut. Wenn sie nicht erreichbar ist oder wenn mit Jetpack Scan weiterhin Probleme auftreten, wende dich bitte an unser Support-Team.</string>
     <string name="scan_request_failed_title">Etwas ist schiefgelaufen</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Erstellung eines Backups der Website</string>
@@ -107,7 +107,6 @@ Language: de
     <string name="web_preview_mobile">Mobil</string>
     <string name="backup_download_complete_failed_title">Download fehlgeschlagen</string>
     <string name="quick_start_card_menu_remove">Nicht erneut anzeigen</string>
-    <string name="quick_start_card_menu_hide">Ausblenden</string>
     <string name="quick_start_dialog_review_pages_message_short">Wähle %1$s Seiten %2$s aus, um deine Seitenliste anzuzeigen.</string>
     <string name="quick_start_dialog_review_pages_message">Du kannst die Seiten deiner Website ändern, hinzufügen oder entfernen.</string>
     <string name="quick_start_dialog_review_pages_title">Website-Seiten prüfen</string>
@@ -123,9 +122,7 @@ Language: de
     <string name="reader_marked_post_as_unseen">Als nicht gesehen markiert</string>
     <string name="reader_marked_post_as_seen">Beitrag als gesehen markiert</string>
     <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
-    <string name="threat_fix_all_status_success_message">Bedrohungen wurden erfolgreich behoben.</string>
     <string name="threat_fix_all_error_message">Fehler beim Beheben von Bedrohungen. Bitte kontaktiere den Support.</string>
-    <string name="threat_fix_all_warning_message">Bitte bestätige, dass du %s aktive Bedrohungen beheben möchtest.</string>
     <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
     <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
@@ -204,11 +201,7 @@ Language: de
     <string name="threat_item_header_vulnerable_plugin">Gefährdetes Plugin: %s (Version %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: bösartiges Codemuster</string>
     <string name="threat_item_header_database_threat">Datenbankbedrohung %s</string>
-    <string name="scan_in_few_seconds">in wenigen Sekunden</string>
     <string name="scan_this_site">diese Website</string>
-    <string name="scan_in_hours_ago">vor %s Stunden</string>
-    <string name="scan_in_minutes_ago">vor %s Minuten</string>
-    <string name="threats_found">Bedrohungen gefunden</string>
     <string name="threat_item_header_threat_found">Bedrohung gefunden</string>
     <string name="threat_item_header_infected_core_file">%s: infizierte Core-Datei</string>
     <string name="scan_idle_last_scan_description">Der letzte Jetpack Scan wurde ausgeführt am %s. Dabei wurden keine Risiken festgestellt. %s</string>
@@ -229,7 +222,6 @@ Language: de
     <string name="activity_log_date_range_filter_label_content_description">Datumsbereich-Filter</string>
     <string name="activity_log_active_filter_empty_title">Keine passenden Ereignisse gefunden</string>
     <string name="activity_log_active_filter_empty_subtitle">Versuche, deinen Zeitraum oder Aktivitätsfilter zu ändern</string>
-    <string name="rewind">Wiederherstellen</string>
     <string name="backup_item_media_uploads">Medien-Uploads</string>
     <string name="backup_item_themes">WordPress-Themes</string>
     <string name="backup_item_plugins">WordPress-Plugins</string>
@@ -490,7 +482,6 @@ Language: de
     <string name="continue_with_google_terms_of_service_text">Wenn du mit Google fortfährst und noch kein WordPress.com-Konto hast, erstellst du damit ein Konto und stimmst unseren %1$sGeschäftsbedingungen%2$s zu.</string>
     <string name="enter_your_site_address">Gib deine bestehende Website-Adresse ein</string>
     <string name="continue_terms_of_service_text">Wenn du fortfährst, stimmst du unseren %1$sGeschäftsbedingungen%2$s zu.</string>
-    <string name="signup_confirmation_magic_link_message">Wir senden dir einen Anmeldelink per E-Mail, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_confirmation_message">Wir werden diese E-Mail-Adresse verwenden, um dein neues WordPress.com-Konto zu erstellen.</string>
     <string name="signup_magic_link_message">Wir haben dir einen Anmeldelink per E-Mail gesendet, um dein neues WordPress.com-Konto zu erstellen. Überprüfe deine E-Mails auf diesem Gerät und tippe auf den Link in der E-Mail, die du von WordPress.com erhalten hast.</string>
     <string name="enter_account_info_for_site">Gib deine Kontodetails für %1$s ein.</string>
@@ -1171,7 +1162,6 @@ Language: de
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>
     <string name="stats_traffic_increase">+%1$s (%2$s%%)</string>
     <string name="new_site_creation_domain_header_subtitle">Hier wirst du im Internet gefunden.</string>
-    <string name="new_site_creation_search_domain_input_hint">Domains durchsuchen</string>
     <string name="new_site_creation_create_site_button">Website erstellen</string>
     <string name="notification_new_site_creation_title">Website erstellen</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Wir erstellen deine neue Website.</string>

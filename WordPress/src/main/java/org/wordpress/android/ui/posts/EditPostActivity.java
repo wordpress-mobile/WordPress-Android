@@ -451,6 +451,31 @@ public class EditPostActivity extends LocaleAwareActivity implements
         mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
     }
 
+    private void newPageFromLayoutPickerSetup(String title, String content) {
+        mIsNewPost = true;
+
+        if (mSite == null) {
+            showErrorAndFinish(R.string.blog_not_found);
+            return;
+        }
+        if (!mSite.isVisible()) {
+            showErrorAndFinish(R.string.error_blog_hidden);
+            return;
+        }
+
+        // Create a new post
+        mEditPostRepository.set(() -> {
+            PostModel post = mPostStore.instantiatePostModel(mSite, mIsPage, title, content, null,
+                    null, null, false);
+            post.setStatus(PostStatus.DRAFT.toString());
+            return post;
+        });
+        mEditPostRepository.savePostSnapshot();
+        EventBus.getDefault().postSticky(
+                new PostEvents.PostOpenedInEditor(mEditPostRepository.getLocalSiteId(), mEditPostRepository.getId()));
+        mShortcutUtils.reportShortcutUsed(Shortcut.CREATE_NEW_POST);
+    }
+
     private void createPostEditorAnalyticsSessionTracker(boolean showGutenbergEditor, PostImmutableModel post,
                                                          SiteModel site, boolean isNewPost) {
         if (mPostEditorAnalyticsSession == null) {
@@ -530,7 +555,12 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 }
 
                 mIsPage = extras.getBoolean(EXTRA_IS_PAGE);
-                newPostSetup();
+                if (mIsPage && !TextUtils.isEmpty(extras.getString(EXTRA_PAGE_TITLE))) {
+                    newPageFromLayoutPickerSetup(extras.getString(EXTRA_PAGE_TITLE),
+                            extras.getString(EXTRA_PAGE_CONTENT));
+                } else {
+                    newPostSetup();
+                }
             } else {
                 mEditPostRepository.loadPostByLocalPostId(extras.getInt(EXTRA_POST_LOCAL_ID));
                 // Load post from extra)s

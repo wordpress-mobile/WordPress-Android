@@ -84,7 +84,7 @@ class BackupDownloadStateListItemBuilder @Inject constructor(
                         iconRes = R.drawable.ic_info_outline_white_24dp,
                         iconSizeResId = R.dimen.jetpack_backup_restore_footnote_icon_size,
                         textRes = R.string.backup_download_progress_footnote,
-                        isVisible = false)
+                        isVisible = true)
         )
     }
 

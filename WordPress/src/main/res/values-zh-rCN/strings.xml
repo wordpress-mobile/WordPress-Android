@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">取消钉选</string>
     <string name="quick_start_list_review_pages_subtitle">查看您的页面并进行更改，或者添加或移除页面。</string>
     <string name="quick_start_list_view_site_title">访问您的站点</string>
     <string name="quick_start_list_upload_icon_subtitle">添加站点图标，打造精美的专业外观。</string>
@@ -32,8 +31,6 @@ Language: zh_CN
     <string name="backup_item_content_hint">（不包括主题、插件和上传）</string>
     <string name="backup_item_contents">WP-content 目录</string>
     <string name="backup_item_roots">WordPress 根</string>
-    <string name="backup_download_progress_action_button_content_description">“完成时通知我”按钮</string>
-    <string name="backup_download_progress_action_button">完成时通知我！</string>
     <string name="backup_download_details_choose_items_header">此下载包含的项目</string>
     <string name="gutenberg_native_uploading">正在上传…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">可重用区块在 iOS 版 WordPress 上不可编辑</string>
@@ -61,13 +58,10 @@ Language: zh_CN
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">此处可获取帮助</string>
-    <string name="scan_idle_with_threats_description">扫描发现 %2s 存在 %1s 项潜在威胁。 请在下面查看这些威胁并采取行动，或者轻点“全部修复”按钮。 如果您需要，我们%3$s。</string>
     <string name="scan_idle_manual_scan_description">要重新审查您的站点，请手动进行扫描或等待 Jetpack 今日稍后扫描您的站点。</string>
     <string name="scan_provisioning_description">欢迎使用 Jetpack Scan！ 我们正在检查您的站点，准备执行完整扫描。 如果发现任何可能影响扫描的问题，我们将向您发送通知，然后开始您的第一次完整扫描。</string>
     <string name="scan_scanning_is_initial_description">欢迎使用 Jetpack Scan，我们会立即优先浏览您的站点并很快给您结果。</string>
-    <string name="scan_fixing_threats_description">我们正在后台努力修复这些威胁。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
     <string name="scan_scanning_description">扫描完成后，我们会向您发送通知。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
-    <string name="scan_fixing_threats_title">修复威胁</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan 无法完成站点扫描。 请检查您的站点是否已经关闭。如果没有，请再试一次。 如果已经关闭，或 Jetpack Scan 仍然有问题，请联系我们的支持团队。</string>
     <string name="scan_request_failed_title">出错了</string>
     <string name="activity_log_currently_backing_up_message_no_dates">备份站点</string>
@@ -106,13 +100,11 @@ Language: zh_CN
     <string name="web_preview_tablet">平板电脑</string>
     <string name="web_preview_mobile">移动设备</string>
     <string name="quick_start_card_menu_remove">请勿再次显示</string>
-    <string name="quick_start_card_menu_hide">隐藏</string>
     <string name="quick_start_dialog_review_pages_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
     <string name="quick_start_dialog_review_pages_message">更改、添加或删除您站点的页面。</string>
     <string name="quick_start_dialog_review_pages_title">评论站点页面</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">选择%1$s主页%2$s以编辑您的主页。</string>
     <string name="quick_start_dialog_edit_homepage_message_short">选择%1$s页面%2$s以查看您的页面列表。</string>
-    <string name="quick_start_card_menu_pin">置顶</string>
     <string name="quick_start_dialog_edit_homepage_message">在您站点的主页上更改、添加或删除内容。</string>
     <string name="quick_start_dialog_edit_homepage_title">编辑您的主页</string>
     <string name="reader_menu_mark_as_unseen">标记为未读</string>
@@ -123,9 +115,7 @@ Language: zh_CN
     <string name="reader_marked_post_as_unseen">将文章标记为未读</string>
     <string name="reader_marked_post_as_seen">将文章标记为已读</string>
     <string name="threat_fix_all_status_error_message">获取修复状态时出错。 请联系我们的支持人员。</string>
-    <string name="threat_fix_all_status_success_message">威胁已成功修复。</string>
     <string name="threat_fix_all_error_message">修复威胁时出错。 请联系我们的支持人员。</string>
-    <string name="threat_fix_all_warning_message">请确认您希望修复 %s 项活跃威胁。</string>
     <string name="threat_fix_all_warning_title">修复所有威胁</string>
     <string name="threat_ignore_error_message">忽略威胁时出错。 请联系支持人员。</string>
     <string name="threat_ignore_success_message">已忽略威胁。</string>
@@ -203,10 +193,6 @@ Language: zh_CN
     <string name="threat_item_header_database_threat">数据库 %s 威胁</string>
     <string name="threat_item_header_infected_core_file">%s：已感染的核心文件</string>
     <string name="threat_item_header_threat_found">已发现威胁</string>
-    <string name="threats_found">发现威胁</string>
-    <string name="scan_in_few_seconds">几秒后</string>
-    <string name="scan_in_minutes_ago">%s 分钟以前</string>
-    <string name="scan_in_hours_ago">%s 小时以前</string>
     <string name="scan_this_site">此站点</string>
     <string name="scan_idle_last_scan_description">上次 Jetpack 扫描运行了 %s，没有发现任何风险。 %s</string>
     <string name="scan_idle_threats_found_title">您的站点可能存在风险</string>
@@ -226,7 +212,6 @@ Language: zh_CN
     <string name="activity_log_date_range_filter_label_content_description">日期范围过滤器</string>
     <string name="activity_log_active_filter_empty_subtitle">尝试调整日期范围或活动类型过滤器</string>
     <string name="activity_log_active_filter_empty_title">未发现符合条件的事件</string>
-    <string name="rewind">恢复</string>
     <string name="gutenberg_native_file_name">文件名</string>
     <string name="gutenberg_native_file_block_settings">文件区块设置</string>
     <string name="gutenberg_native_failed_to_upload_files_please_tap_for_options">无法上传文件。\n请轻点以查看选项。</string>
@@ -462,7 +447,6 @@ Language: zh_CN
     <string name="continue_with_google_terms_of_service_text">如果您继续使用 Google，并且还没有 WordPress.com 帐户，则需要创建一个帐户，并同意我们的%1$s服务条款%2$s。</string>
     <string name="enter_your_site_address">输入您的现有站点地址</string>
     <string name="continue_terms_of_service_text">继续即表示您同意我们的%1$s服务条款%2$s。</string>
-    <string name="signup_confirmation_magic_link_message">我们将通过电子邮件向您发送注册链接，供您创建新的 WordPress.com 帐户。</string>
     <string name="signup_confirmation_message">我们将使用此电子邮件地址为您创建新 WordPress.com 帐户。</string>
     <string name="signup_magic_link_message">我们已通过电子邮件向您发送一个注册链接，供您创建新的 WordPress.com 帐户。 请在此设备上查看电子邮件，并轻点您从 WordPress.com 收到的电子邮件中的链接。</string>
     <string name="enter_account_info_for_site">输入您的 %1$s 帐户信息。</string>
@@ -1150,7 +1134,6 @@ Language: zh_CN
     <string name="notification_new_site_creation_failed">出现问题</string>
     <string name="notification_new_site_creation_title">创建站点</string>
     <string name="new_site_creation_create_site_button">创建站点</string>
-    <string name="new_site_creation_search_domain_input_hint">搜索域</string>
     <string name="new_site_creation_domain_header_subtitle">人们可以通过此域名在互联网上找到您。</string>
     <string name="new_site_creation_empty_domain_list_message">没有与您的搜索内容相匹配的地址</string>
     <string name="site_creation_error_generic_subtitle">与服务器通信时出错，请重试</string>
