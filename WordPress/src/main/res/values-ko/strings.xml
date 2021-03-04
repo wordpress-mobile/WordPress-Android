@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 11:54:09+0000
+Translation-Revision-Date: 2021-03-04 09:54:09+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ko_KR
 -->
 <resources>
+    <string name="threat_fix_all_status_success_message_plural">위협이 해결되었습니다.</string>
+    <string name="threat_fix_all_warning_message_plural">%s개의 활성 위협을 모두 해결할지 확인해 주세요.</string>
+    <string name="scan_idle_with_threats_description_plural">스캔에서 %2s에 대한 잠재적 위협 %1s개를 찾았습니다. 아래 내용을 검토하고 조치를 취하거나 모두 해결 버튼을 누르세요. 도움말이 필요하면 %3$s을(를) 클릭하세요.</string>
+    <string name="scan_fixing_threats_description_plural">이러한 위협을 해결하기 위해 백그라운드에서 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행률을 확인하실 수 있습니다.</string>
+    <string name="gutenberg_native_edit_focal_point">초점 편집하기</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">이미지를 편집, 교체 또는 지울 하단 시트를 두 번 눌러 열기</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">이미지를 편집, 교체 또는 지울 작업 시트를 두 번 눌러 열기</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">사이트의 이름 입력</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>모든 작업 완료됨&lt;/b>&lt;br/>더 많은 사람에게 도달하게 됩니다. 훌륭합니다!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>모든 작업 완료됨&lt;/b>&lt;br/>사이트를 사용자 정의하셨습니다. 잘하셨습니다!</string>
+    <string name="quick_start_card_menu_hide">일시적으로 숨기기</string>
+    <string name="magic_link_not_meaning_to_create_account">새 계정을 만들 계획이 없으신가요? 뒤로 이동하여 이메일 주소를 다시 입력하세요.</string>
+    <string name="invite_links_disable_dialog_message">초대 링크를 비활성화하면 아무도 이 링크를 사용해서 이 팀에 참여할 수 없습니다. 계속할까요?</string>
+    <string name="invite_links_disable_dialog_title">초대 링크 비활성화</string>
+    <string name="invite_links_bad_format_response">유효하지 않은 반응을 받았습니다</string>
+    <string name="invite_links_null_response">받은 응답이 없습니다</string>
+    <string name="invite_links_cannot_get_role_data_error">역할 %1$s에 대한 데이터를 가져오는 중 오류가 발생했습니다.</string>
+    <string name="invite_links_cannot_get_roles_error">역할을 가져오는 중 오류가 발생했습니다.</string>
+    <string name="invite_links_generic_get_data_error">초대 링크를 가져오는 중 알 수 없는 오류가 발생했습니다.</string>
+    <string name="invite_links_helper_text">이 링크를 활용하면 일일이 한 명씩 초대하지 않아도 여러 팀원이 팀에 참여할 수 있게 됩니다. 이 URL을 방문하는 사람은 누구나 조직에 가입할 수 있습니다. 다른 사람을 통해서 이 링크를 전달받은 사람도 가입할 수 있기 때문에 신뢰할 수 있는 사람에게만 공유하세요.</string>
+    <string name="invite_links_expire_date">만료 %1$s</string>
+    <string name="invite_links_disable_invite_link">초대 링크 비활성화</string>
+    <string name="invite_links_share_invite_link">초대 링크 공유</string>
+    <string name="invite_links_generate">새 링크 생성</string>
+    <string name="invite_links_get_status_retry">링크 상태 새로 고침</string>
+    <string name="invite_links_section_title">초대 링크</string>
+    <string name="threats_found_singular">위협을 찾았습니다</string>
+    <string name="threats_found_plural">위협을 찾았습니다</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>스캔 완료됨&lt;/b> &lt;br>&lt;/br> %s 잠재적 위협 찾음</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>스캔 완료됨&lt;/b> &lt;br>&lt;/br> 잠재적 위협 1개 찾음</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>스캔 완료됨&lt;/b> &lt;br>&lt;/br> 찾은 위협 없음</string>
+    <string name="scan_fixing_threats_title_singular">위협 해결 중</string>
+    <string name="disable">비활성화</string>
     <string name="quick_start_list_review_pages_subtitle">페이지를 점검하고 내용을 변경하거나 페이지를 추가 또는 제거하세요.</string>
+    <string name="quick_start_card_menu_unpin">이 항목 고정 취소</string>
     <string name="quick_start_list_view_site_title">사이트 방문</string>
     <string name="quick_start_list_upload_icon_subtitle">깔끔하고 전문적으로 보이도록 사이트에 아이콘을 추가하세요.</string>
     <string name="quick_start_list_follow_site_subtitle">회원님께 영감을 주는 사이트를 발견하고 팔로우하세요.</string>
@@ -58,10 +93,12 @@ Language: ko_KR
     <string name="threat_status_fixed">해결됨</string>
     <string name="threat_found_header">찾음</string>
     <string name="scan_here_to_help">도움말</string>
+    <string name="scan_idle_with_threats_description_singular">스캔에서 %2s에 대한 잠재적 위협 %1s개를 찾았습니다. 아래 위협을 검토하고 조치를 취하거나 모두 해결 버튼을 누르세요. 도움말이 필요하면 %3$s을(를) 클릭하세요.</string>
     <string name="scan_idle_manual_scan_description">사이트를 다시 검토하려면 수동 스캔을 실행하거나 젯팩의 오늘 중 사이트 스캔을 기다리세요.</string>
     <string name="scan_provisioning_description">Jetpack Scan에 오신 것을 환영합니다. 전체 스캔이 수행되도록 설정하여 사이트를 자세히 살펴보는 중입니다. 스캔에 영향을 미칠 만한 문제를 발견하면 먼저 알려드리고 전체 스캔을 시작합니다.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan에 오신 것을 환영합니다. 지금 회원님 사이트를 살펴보고 있으며 결과를 곧 알려드리겠습니다.</string>
     <string name="scan_scanning_description">스캔이 완료되면 알림을 보내드립니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행 상황을 확인하실 수 있습니다.</string>
+    <string name="scan_fixing_threats_description_singular">이 위협을 해결하기 위해 백그라운드에서 노력하는 중입니다. 그동안 정상적으로 사이트를 계속 사용하면서 언제든지 진행률을 확인하실 수 있습니다.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan에서 사이트 스캔을 완료할 수 없습니다. 사이트가 다운되었는지 확인해 주세요. 다운되지 않았으면 다시 시도해 주세요. 다운되었거나 Jetpack Scan에서 계속 문제가 발생하는 경우 지원팀에 문의하세요.</string>
     <string name="scan_request_failed_title">문제가 발생했습니다</string>
     <string name="activity_log_currently_backing_up_message_no_dates">사이트 백업 중</string>
@@ -191,6 +228,7 @@ Language: ko_KR
     <string name="threat_item_header_threat_found">위협을 찾았습니다</string>
     <string name="threat_item_header_infected_core_file">%s: 감염 코어 파일</string>
     <string name="scan_idle_last_scan_description">%s에 마지막 젯팩 스캔이 실행되었으며 위험이 발견되지 않았습니다. %s</string>
+    <string name="scan_in_few_seconds">몇 초 전</string>
     <string name="activity_log_activity_type_filter_multiple_items_selected_content_description">활동 유형 필터 (%s유형을 선택했습니다)</string>
     <string name="backup">백업하기</string>
     <string name="scan_state_icon">상태 검사하기 아이콘</string>
@@ -332,7 +370,6 @@ Language: ko_KR
     <string name="mlp_notice_page_created">페이지를 만들었습니다</string>
     <string name="mlp_notice_blank_page_created">빈 페이지를 만들었습니다</string>
     <string name="stories_intro_main_title">이야기 글 소개</string>
-    <string name="stories_intro_main_subtitle">이야기 글을 일찍 접근할 수 있게 되었으니 한 번 사용해 보시기 바랍니다.</string>
     <string name="stories_intro_image_caption_first">이야기 글을 만드는 방법</string>
     <string name="stories_intro_image_caption_second">이야기 제목의 예제</string>
     <string name="stories_intro_title_first">이제 모두를 위한 이야기가 있습니다</string>

@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-23 10:07:06+0000
+Translation-Revision-Date: 2021-03-04 10:45:33+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
+    <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
+    <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe situl tău.</string>
     <string name="threat_fix_all_status_success_message_plural">Amenințările au fost înlăturate cu succes.</string>
     <string name="threat_fix_all_warning_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
     <string name="scan_idle_with_threats_description_plural">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
@@ -392,7 +395,6 @@ Language: ro
     <string name="mlp_notice_page_created">A fost creată o pagină</string>
     <string name="mlp_preview_title">Previzualizare aranjament</string>
     <string name="media_picker_soft_ask_permissions_denied">%1$s a fost refuzat accesul la fotografiile tale. Pentru a corecta asta, editează-ți permisiunile și pornește %2$s și %3$s.</string>
-    <string name="stories_intro_main_subtitle">Acum ai acces la Articole narațiune și ne-ar plăcea să le încerci.</string>
     <string name="media_insert_failed">Inserarea media a eșuat.</string>
     <string name="media_insert_failed_with_reason">Inserarea media a eșuat: %s</string>
     <string name="photo_picker_wordpress_media_library">Alege din biblioteca Media din WordPress</string>

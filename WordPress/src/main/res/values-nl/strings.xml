@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-23 10:32:48+0000
+Translation-Revision-Date: 2021-03-03 20:19:21+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: nl
 -->
 <resources>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Negeren</string>
+    <string name="stories_intro_main_subtitle">Een nieuwe manier om boeiende inhoud op je site te maken en te publiceren.</string>
     <string name="scan_idle_with_threats_description_plural">De scan vond %1s potentiële bedreigingen met %2s. Bekijk ze hieronder en onderneem actie of tik op de knop Alles herstellen. We zijn %3$s als je ons nodig hebt.</string>
     <string name="threat_fix_all_warning_message_plural">Bevestig dat je %s actieve bedreigingen wil oplossen.</string>
     <string name="threat_fix_all_status_success_message_plural">Bedreigingen zijn met succes opgelost.</string>
@@ -391,7 +394,6 @@ Language: nl
     <string name="stories_intro_image_caption_second">Voorbeeld verhaaltitel</string>
     <string name="stories_intro_title_first">Nu zijn verhalen voor iedereen</string>
     <string name="stories_intro_image_caption_first">Hoe maak je een verhaal</string>
-    <string name="stories_intro_main_subtitle">Je hebt vroege toegang tot verhalen en we zouden het heel leuk vinden als je het eens probeert.</string>
     <string name="stories_intro_main_title">Introductie verhalen</string>
     <string name="photo_picker_wordpress_media_library">Kies uit WordPress mediabibliotheek</string>
     <string name="media_insert_failed_with_reason">Invoegen media mislukt: %s</string>
