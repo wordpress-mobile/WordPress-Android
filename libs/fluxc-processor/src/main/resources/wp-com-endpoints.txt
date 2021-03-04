@@ -99,8 +99,6 @@
 /sites/$site/themes/$theme_ID#String/delete
 /sites/$site/themes/$theme_ID#String/install
 
-/nux/starter-designs
-
 /sites/$siteUrl#String
 
 /sites/$site/mobile-quick-start

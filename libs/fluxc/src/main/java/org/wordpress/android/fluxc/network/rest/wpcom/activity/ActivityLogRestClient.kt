@@ -33,6 +33,9 @@ import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadRequestT
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusError
 import org.wordpress.android.fluxc.store.ActivityLogStore.BackupDownloadStatusErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadError
+import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadErrorType
+import org.wordpress.android.fluxc.store.ActivityLogStore.DismissBackupDownloadResultPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityLogPayload
 import org.wordpress.android.fluxc.store.ActivityLogStore.FetchedActivityTypesResultPayload
@@ -215,6 +218,34 @@ class ActivityLogRestClient(
                 )
                 val error = ActivityTypesError(errorType, response.error.message)
                 FetchedActivityTypesResultPayload(error, remoteSiteId)
+            }
+        }
+    }
+
+    suspend fun dismissBackupDownload(
+        site: SiteModel,
+        downloadId: Long
+    ): DismissBackupDownloadResultPayload {
+        val url = WPCOMV2.sites.site(site.siteId).rewind.downloads.download(downloadId).url
+        val request = mapOf("dismissed" to true.toString())
+        val response = wpComGsonRequestBuilder.syncPostRequest(
+                this,
+                url,
+                null,
+                request,
+                DismissBackupDownloadResponse::class.java)
+        return when (response) {
+            is Success -> DismissBackupDownloadResultPayload(
+                    site.siteId,
+                    response.data.downloadId,
+                    response.data.isDismissed)
+            is Error -> {
+                val errorType = NetworkErrorMapper.map(response.error,
+                        DismissBackupDownloadErrorType.GENERIC_ERROR,
+                        DismissBackupDownloadErrorType.INVALID_RESPONSE,
+                        DismissBackupDownloadErrorType.AUTHORIZATION_REQUIRED)
+                val error = DismissBackupDownloadError(errorType, response.error.message)
+                DismissBackupDownloadResultPayload(error, site.siteId, downloadId)
             }
         }
     }
@@ -484,4 +515,9 @@ class ActivityLogRestClient(
             val count: Int?
         )
     }
+
+    class DismissBackupDownloadResponse(
+        val downloadId: Long,
+        val isDismissed: Boolean
+    )
 }
