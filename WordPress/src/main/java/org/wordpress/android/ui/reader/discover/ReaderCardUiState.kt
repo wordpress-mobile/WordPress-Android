@@ -99,7 +99,7 @@ sealed class ReaderCardUiState {
 
     enum class ReaderInterestChipStyleColor(val id: Int) {
         GREEN(0),
-        BLUE(1),
+        PURPLE(1),
         YELLOW(2),
         ORANGE(3)
     }

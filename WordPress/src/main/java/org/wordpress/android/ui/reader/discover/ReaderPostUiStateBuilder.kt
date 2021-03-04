@@ -455,7 +455,7 @@ class ReaderPostUiStateBuilder @Inject constructor(
 
         return when (index % colorCount) {
             ReaderInterestChipStyleColor.GREEN.id -> ChipStyleGreen
-            ReaderInterestChipStyleColor.BLUE.id -> ChipStylePurple
+            ReaderInterestChipStyleColor.PURPLE.id -> ChipStylePurple
             ReaderInterestChipStyleColor.YELLOW.id -> ChipStyleYellow
             ReaderInterestChipStyleColor.ORANGE.id -> ChipStyleOrange
             else -> ChipStyleGreen
