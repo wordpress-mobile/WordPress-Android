@@ -759,6 +759,22 @@ public class SiteStoreUnitTest {
     }
 
     @Test
+    public void testInsertBlockLayoutWithNullCategoryEmoji() {
+        // Test data
+        SiteModel site = generateWPComSite();
+        GutenbergLayoutCategory cat = new GutenbergLayoutCategory("a", "About", "About", null);
+        List<GutenbergLayoutCategory> categories = Collections.singletonList(cat);
+        GutenbergLayout layout = new GutenbergLayout("l", "Layout", "img", "img", "img", "content", "url", categories);
+        List<GutenbergLayout> layouts = Collections.singletonList(layout);
+        // Store
+        SiteSqlUtils.insertOrReplaceBlockLayouts(site, categories, layouts);
+        // Retrieve
+        List<GutenbergLayoutCategory> retrievedCategories = SiteSqlUtils.getBlockLayoutCategories(site);
+        // Check
+        assertEquals(retrievedCategories.get(0).getEmoji(), "");
+    }
+
+    @Test
     public void testJetpackSelfHostedAndForceXMLRPC() {
         SiteModel jetpackSite = generateJetpackSiteOverXMLRPC();
         jetpackSite.setOrigin(SiteModel.ORIGIN_WPCOM_REST);
