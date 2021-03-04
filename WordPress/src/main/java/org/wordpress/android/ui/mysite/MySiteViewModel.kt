@@ -6,6 +6,7 @@ import android.text.TextUtils
 import androidx.annotation.StringRes
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.distinctUntilChanged
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
@@ -118,6 +119,7 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("LongMethod")
 class MySiteViewModel
 @Inject constructor(
     private val networkUtilsWrapper: NetworkUtilsWrapper,
@@ -135,7 +137,7 @@ class MySiteViewModel
     private val siteIconUploadHandler: SiteIconUploadHandler,
     private val siteStoriesHandler: SiteStoriesHandler,
     private val domainRegistrationHandler: DomainRegistrationHandler,
-    scanAndBackupSource: ScanAndBackupSource,
+    private val scanAndBackupSource: ScanAndBackupSource,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     private val quickStartRepository: QuickStartRepository,
     private val quickStartItemBuilder: QuickStartItemBuilder,
@@ -148,9 +150,18 @@ class MySiteViewModel
     private val _onDynamicCardMenuShown = MutableLiveData<Event<DynamicCardMenuModel>>()
     private val _onNavigation = MutableLiveData<Event<SiteNavigationAction>>()
     private val _onMediaUpload = MutableLiveData<Event<MediaModel>>()
-    private val _scrollToQuickStartTask = MutableLiveData<Event<Pair<QuickStartTask, Int>>>()
+    private val _activeTaskPosition = MutableLiveData<Pair<QuickStartTask, Int>>()
 
-    val onScrollTo: LiveData<Event<Pair<QuickStartTask, Int>>> = _scrollToQuickStartTask
+    val onScrollTo: LiveData<Event<Int>> = merge(
+            _activeTaskPosition.distinctUntilChanged(),
+            quickStartRepository.activeTask
+    ) { pair, activeTask ->
+        if (pair != null && activeTask != null && pair.first == activeTask) {
+            Event(pair.second)
+        } else {
+            null
+        }
+    }
     val onSnackbarMessage = merge(_onSnackbarMessage, siteStoriesHandler.onSnackbar, quickStartRepository.onSnackbar)
     val onQuickStartMySitePrompts = quickStartRepository.onQuickStartMySitePrompts
     val onTextInputDialogShown = _onTechInputDialogShown as LiveData<Event<TextInputDialogModel>>
@@ -255,9 +266,9 @@ class MySiteViewModel
         position: Int
     ) {
         if (quickStartTask == null) {
-            _scrollToQuickStartTask.postValue(null)
-        } else if (_scrollToQuickStartTask.value?.peekContent()?.first != quickStartTask && position >= 0) {
-            _scrollToQuickStartTask.postValue(Event(quickStartTask to position))
+            _activeTaskPosition.postValue(null)
+        } else if (_activeTaskPosition.value?.first != quickStartTask && position >= 0) {
+            _activeTaskPosition.postValue(quickStartTask to position)
         }
     }
 
@@ -553,6 +564,7 @@ class MySiteViewModel
         siteStoriesHandler.clear()
         domainRegistrationHandler.clear()
         quickStartRepository.clear()
+        scanAndBackupSource.clear()
         super.onCleared()
     }
 
@@ -562,8 +574,8 @@ class MySiteViewModel
         }
     }
 
-    fun startQuickStart() {
-        quickStartRepository.startQuickStart()
+    fun startQuickStart(newSiteLocalID: Int) {
+        quickStartRepository.startQuickStart(newSiteLocalID)
     }
 
     fun onQuickStartMenuInteraction(interaction: DynamicCardMenuInteraction) {

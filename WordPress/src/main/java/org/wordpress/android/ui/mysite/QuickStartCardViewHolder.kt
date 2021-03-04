@@ -20,10 +20,8 @@ import androidx.recyclerview.widget.RecyclerView.RecycledViewPool
 import kotlinx.android.synthetic.main.quick_start_card.view.*
 import org.wordpress.android.R
 import org.wordpress.android.ui.mysite.MySiteItem.DynamicCard.QuickStartCard
-import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.ui.utils.UiHelpers
-import org.wordpress.android.util.DisplayUtils
-import org.wordpress.android.widgets.RecyclerItemDecoration
+import org.wordpress.android.util.ColorUtils
 
 class QuickStartCardViewHolder(
     parent: ViewGroup,
@@ -41,7 +39,12 @@ class QuickStartCardViewHolder(
                 adapter = QuickStartTaskCardAdapter(uiHelpers)
                 layoutManager = LinearLayoutManager(context, HORIZONTAL, false)
                 setRecycledViewPool(viewPool)
-                addItemDecoration(RecyclerItemDecoration(DisplayUtils.dpToPx(context, 2), 0))
+                addItemDecoration(
+                        QuickStartListItemDecoration(
+                                resources.getDimensionPixelSize(R.dimen.margin_extra_small),
+                                resources.getDimensionPixelSize(R.dimen.margin_large)
+                        )
+                )
                 addOnScrollListener(object : OnScrollListener() {
                     override fun onScrollStateChanged(recyclerView: RecyclerView, newState: Int) {
                         if (newState == RecyclerView.SCROLL_STATE_IDLE) {

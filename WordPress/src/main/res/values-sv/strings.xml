@@ -1,11 +1,57 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-09 22:59:11+0000
+Translation-Revision-Date: 2021-03-03 20:04:25+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
+    <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
+    <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
+    <string name="threat_fix_all_warning_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
+    <string name="scan_idle_with_threats_description_plural">Genomsökningen hittade %1s potentiella hot hos %2s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
+    <string name="scan_fixing_threats_description_plural">Vi arbetar intensivt med att rätta dessa hot i bakgrunden. Under tiden får du gärna fortsätta att använda din webbplats som vanligt. Du kan när som helst kolla hur arbetet fortskrider.</string>
+    <string name="gutenberg_native_edit_focal_point">Ändra plats i fokus</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Skriv ett namn för din webbplats</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Alla uppgifter är utförda&lt;/b>&lt;br/>Nu kommer du att nå fler. Bra gjort!</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Dubbeltryck för att öppna åtgärdsbladet där du kan redigera, ersätta eller ta bort bilden</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Dubbeltryck för att öppna nedre bladet där du kan redigera, ersätta eller ta bort bilden</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Alla uppgifter är utförda&lt;/b>&lt;br/>Nu har du anpassat webbplatsen. Bra gjort!</string>
+    <string name="quick_start_card_menu_hide">Dölj tills vidare</string>
+    <string name="invite_links_disable_dialog_message">När denna inbjudningslänk har inaktiverats kan ingen använda den för att ansluta sig till ditt team. Är du säker?</string>
+    <string name="magic_link_not_meaning_to_create_account">Vill du inte registrera ett nytt konto? Gå tillbaka för att mata in e-postadressen igen.</string>
+    <string name="invite_links_disable_dialog_title">Inaktivera inbjudningslänk</string>
+    <string name="invite_links_null_response">Inget svar har tagits emot</string>
+    <string name="invite_links_bad_format_response">Ett ogiltigt svar har tagits emot</string>
+    <string name="invite_links_helper_text">Använd denna länk för att låta dina teammedlemmar gå med utan att behöva bjuda in dem en och en. Vem som helst som besöker denna URL kan registrera sig till din organisation, även om de har fått länken från någon annan, så se till att du delar den med betrodda personer.</string>
+    <string name="invite_links_generic_get_data_error">Ett okänt fel inträffade när uppgifter om inbjudningslänkar skulle hämtas</string>
+    <string name="invite_links_cannot_get_roles_error">Ett fel inträffade när rollerna skulle hämtas</string>
+    <string name="invite_links_cannot_get_role_data_error">Ett fel inträffade när uppgifterna för rollen %1$s skulle hämtas</string>
+    <string name="invite_links_expire_date">Löper ut %1$s</string>
+    <string name="invite_links_disable_invite_link">Inaktivera inbjudningslänk</string>
+    <string name="invite_links_share_invite_link">Dela inbjudningslänk</string>
+    <string name="invite_links_generate">Generera ny länk</string>
+    <string name="invite_links_section_title">Inbjudningslänk</string>
+    <string name="invite_links_get_status_retry">Uppdatera länkarnas status</string>
+    <string name="threats_found_singular">Hot hittat</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>Inga hot hittades</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>1 potentiellt hot hittades</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>%s potentiella hot hittades</string>
+    <string name="threats_found_plural">Hot hittade</string>
+    <string name="disable">Inaktivera</string>
+    <string name="scan_fixing_threats_title_singular">Åtgärdar hot</string>
+    <string name="quick_start_list_review_pages_subtitle">Kontrollera dina sidor och gör ändringar, lägg till eller ta bort sidor.</string>
+    <string name="quick_start_card_menu_unpin">Avklistra detta</string>
+    <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämnesområde.</string>
+    <string name="quick_start_list_enable_sharing_subtitle">Dela automatiskt dina nya inlägg i dina sociala media.</string>
+    <string name="quick_start_list_enable_sharing_title">Aktivera delning</string>
+    <string name="quick_start_list_follow_site_subtitle">Hitta och följ webbplatser som inspirerar dig.</string>
+    <string name="quick_start_list_upload_icon_subtitle">Lägg till en webbplatsikon för ett genomarbetat och proffsigt utseende.</string>
+    <string name="quick_start_list_view_site_title">Besök din webbplats</string>
+    <string name="quick_start_list_check_stats_title">Kolla din statistik</string>
     <string name="backup_download_status_failure_bullet1">Vi lyckades inte hitta statusläget för att kunna säga hur lång tid den nedladdningsbara säkerhetskopieringen kommer att ta.</string>
     <string name="backup_download_status_failure_bullet2">Vi kommer fortfarande att försöka skapa din nedladdningsbara fil med en säkerhetskopia.</string>
     <string name="restore_status_failure_bullet3">Vi aviserar dig när det är klart.</string>
@@ -25,8 +71,6 @@ Language: sv_SE
     <string name="gutenberg_native_uploading">Laddar upp …</string>
     <string name="backup_item_contents">Katalogen wp-content</string>
     <string name="backup_download_details_choose_items_header">Objekt som ingår i denna nedladdning</string>
-    <string name="backup_download_progress_action_button">Berätta för mig när det är klart!</string>
-    <string name="backup_download_progress_action_button_content_description">Knapp för avisering när det är klart</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_android">Återanvändbara block kan inte redigeras i WordPress för Android</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Återanvändbara block kan inte redigeras i WordPress för iOS</string>
     <string name="gutenberg_native_replace_file">Ersätt fil</string>
@@ -50,15 +94,15 @@ Language: sv_SE
     <string name="people_optional_custom_message_helper_text">Valfritt: ange ett anpassat meddelande som ska skickas med din inbjudan.</string>
     <string name="people_learn_more_about_roles">Lär dig mer om roller</string>
     <string name="threat_status_fixed">Åtgärdat</string>
-    <string name="scan_idle_with_threats_description">Jetpack-genomsökningen hittade %1s potentiella hot hos %2s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
     <string name="scan_here_to_help">här</string>
     <string name="threat_found_header">Hittade</string>
+    <string name="scan_idle_with_threats_description_singular">Jetpack-genomsökningen hittade %1s potentiella hot hos %2s. Granska hoten nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
     <string name="scan_provisioning_description">Välkommen till Jetpack Scan! Vi tittar närmare på din webbplats och förbereder för en fullständig genomsökning. Vi meddelar dig om vi upptäcker några problem som kan påverka en genomsökning. Därefter startar din första fullständiga genomsökning.</string>
     <string name="scan_idle_manual_scan_description">För att kontrollera din webbplats igen kan du starta en genomsökning manuellt eller vänta tills Jetpack automatiskt söker igenom webbplatsen senare idag.</string>
     <string name="scan_scanning_is_initial_description">Välkommen till Jetpack Scan. Vi tar nu en första titt på din webbplats och du kommer snart att ha resultaten.</string>
     <string name="scan_scanning_description">Vi kommer att skicka en avisering till dig när genomsökningen har slutförts. Under tiden kan du använda din webbplats som vanligt. Du kan även när som helst kontrollera genomsökningens status.</string>
-    <string name="scan_fixing_threats_description">Vi arbetar intensivt med att rätta dessa hot i bakgrunden. Under tiden kan du fortsätta att använda din webbplats som vanligt. Du kan när som helst kolla hur arbetet fortskrider.</string>
-    <string name="scan_fixing_threats_title">Åtgärdar hot</string>
+    <string name="scan_fixing_threats_description_singular">Vi arbetar intensivt med att rätta dessa hot i bakgrunden. Under tiden kan du fortsätta att använda din webbplats som vanligt. Du kan när som helst kolla hur arbetet fortskrider.</string>
+    <string name="scan_fixing_threats_title_plural">Åtgärdar hot</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan kunde inte slutföra en genomsökning av din webbplats. Kontrollera om din webbplats ligger nere – om den inte gör det, försök igen. Om den gör det, eller om Jetpack Scan fortfarande har problem, kontakta vårt supportteam.</string>
     <string name="scan_request_failed_title">Något gick fel</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Säkerhetskopierar webbplatsen</string>
@@ -100,7 +144,6 @@ Language: sv_SE
     <string name="web_preview_tablet">Surfplatta</string>
     <string name="web_preview_mobile">Mobil</string>
     <string name="quick_start_card_menu_remove">Visa inte igen</string>
-    <string name="quick_start_card_menu_hide">Dölj</string>
     <string name="quick_start_dialog_review_pages_title">Granska webbplatsens sidor</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Välj %1$s Sidor %2$s för att visa listan med dina sidor.</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Välj %1$s Startsida %2$s för att redigera startsidan.</string>
@@ -116,10 +159,10 @@ Language: sv_SE
     <string name="error_media_upload_failed_for_reason">Uppladdningen av media misslyckades.\n%1$s</string>
     <string name="reader_menu_mark_as_seen">Markera som visat</string>
     <string name="reader_menu_mark_as_unseen">Markera som ej visat</string>
-    <string name="threat_fix_all_warning_message">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
+    <string name="threat_fix_all_warning_message_singular">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
     <string name="threat_fix_all_error_message">Fel när hotet åtgärdades. Kontakta vår support.</string>
-    <string name="threat_fix_all_status_success_message">Hoten har åtgärdats utan problem.</string>
     <string name="threat_fix_all_status_error_message">Ett fel inträffade när statusen för åtgärdandet skulle hämtas. Kontakta vår support.</string>
+    <string name="threat_fix_all_status_success_message_singular">Hotet åtgärdades utan problem.</string>
     <string name="threat_ignore_warning">Du bör inte ignorera ett säkerhetshot om du inte är helt säker på att det är ofarligt. Om du väljer att ignorera detta hot kommer det att finnas kvar på webbplatsen &lt;b>%s&lt;/b>.</string>
     <string name="threat_ignore_success_message">Hotet har ignorerats.</string>
     <string name="threat_ignore_error_message">Ett fel inträffade när hotet skulle ignoreras. Kontakta vår support.</string>
@@ -158,7 +201,7 @@ Language: sv_SE
     <string name="backup_download_progress_header">Vi skapar för närvarande en nedladdningsbar säkerhetskopia av din webbplats</string>
     <string name="backup_download_progress_description_with_two_parameters">Vi håller på att skapa en nedladdningsbar säkerhetskopia av din webbplats från %1$s %2$s.</string>
     <string name="backup_download_progress_icon_content_description">Ikon för skapande av nedladdningsbar säkerhetskopia</string>
-    <string name="backup_download_progress_footnote">Du behöver inte sitta och vänta. Vi aviserar dig när din säkerhetskopiering är klar</string>
+    <string name="backup_download_progress_footnote">Du behöver inte sitta och vänta. Vi aviserar dig när din säkerhetskopiering är klar.</string>
     <string name="backup_download_progress_page_title">Ladda ner säkerhetskopia</string>
     <string name="backup_download_details_description_with_two_parameters">%1$s %2$s är den valda punkten för att skapa en nedladdningsbar säkerhetskopia.</string>
     <string name="backup_download_details_action_button_content_description">Skapa knapp för nedladdningsbar säkerhetskopia</string>
@@ -199,15 +242,14 @@ Language: sv_SE
     <string name="threat_item_sub_header_misc_vulnerability">Övrig typ av sårbarhet</string>
     <string name="threat_item_sub_header_file_signature">Hot hittat %s</string>
     <string name="threat_details">Uppgifter om hot</string>
-    <string name="threats_found">Hot hittat</string>
     <string name="scan_this_site">denna webbplats</string>
     <string name="threat_item_header_threat_found">Hot hittat</string>
-    <string name="scan_in_few_seconds">om några sekunder</string>
-    <string name="scan_in_minutes_ago">%s minuter sedan</string>
-    <string name="scan_in_hours_ago">%s timmar sedan</string>
     <string name="scan_idle_last_scan_description">Jetpack körde den senaste genomsökningen %s och då såg allt utmärkt ut. %s</string>
     <string name="threat_item_header_infected_core_file">%s: infekterad fil i WordPress-kärnan</string>
     <string name="threats_fix_all">Åtgärda alla</string>
+    <string name="scan_in_few_seconds">några sekunder sedan</string>
+    <string name="scan_in_minutes_ago">%s minut/minuter sedan</string>
+    <string name="scan_in_hours_ago">%s timme/timmar sedan</string>
     <string name="scan_now">Skanna nu</string>
     <string name="scan_again">Skanna igen</string>
     <string name="scan_idle_threats_found_title">Din webbplats kan vara i riskzonen</string>
@@ -225,7 +267,6 @@ Language: sv_SE
     <string name="activity_log_activity_type_error_title">Ingen anslutning</string>
     <string name="activity_log_active_filter_empty_title">Ingen matchande händelse hittades</string>
     <string name="activity_log_active_filter_empty_subtitle">Försök att justera ditt datumintervall eller filtreringen av aktivitetstyp</string>
-    <string name="rewind">Återställ</string>
     <string name="backup_download_details_icon_content_description">Skapa ikon för nedladdningsbar säkerhetskopia</string>
     <string name="backup_item_themes">WordPress-teman</string>
     <string name="backup_item_plugins">WordPress-tillägg</string>
@@ -351,7 +392,6 @@ Language: sv_SE
     <string name="mlp_notice_page_created">Sidan har skapats</string>
     <string name="mlp_notice_blank_page_created">En blank sida har skapats</string>
     <string name="stories_intro_main_title">Lär känna berättelseinlägg</string>
-    <string name="stories_intro_main_subtitle">Du har fått förhandsåtkomst till berättelseinlägg och det vore härligt om du ville prova dem.</string>
     <string name="stories_intro_image_caption_first">Du kanske vill skapa ett berättelseinlägg</string>
     <string name="stories_intro_image_caption_second">Exempelrubrik för berättelse</string>
     <string name="stories_intro_title_first">Nu kan alla använda berättelser</string>
@@ -486,7 +526,6 @@ Language: sv_SE
     <string name="gutenberg_native_block_removed">Blocket har tagits bort</string>
     <string name="enter_your_site_address">Ange din befintliga webbplatsadress</string>
     <string name="continue_terms_of_service_text">Genom att gå vidare accepterar du våra %1$sanvändarvillkor%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Vi kommer att skicka e-post med en registreringslänk som låter dig skapa ett nytt WordPress.com-konto.</string>
     <string name="signup_confirmation_message">Vi kommer att använda den här e-postadressen för att skapa ditt nya WordPress.com-konto.</string>
     <string name="signup_magic_link_message">Vi har skickat en registreringslänk som låter dig skapa ditt nya konto hos WordPress.com. Öppna e-posten på din enhet och tryck på länken i meddelandet du fått från WordPress.com.</string>
     <string name="enter_account_info_for_site">Ange din kontoinformation för %1$s.</string>
@@ -505,7 +544,6 @@ Language: sv_SE
     <string name="send_link_by_email">Skicka länk via e-post</string>
     <string name="check_email">Kolla din e-post</string>
     <string name="reader_error_request_failed_title">Ett problem inträffade när din begäran skulle behandlas. Försök igen senare.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Ge din webbplats ett namn som återspeglar dess personlighet och ämne. Första intrycket har betydelse!</string>
     <string name="quick_start_dialog_update_site_title_message_short">Tryck &lt;b>%1$s&lt;/b> för att ange en ny rubrik</string>
     <string name="quick_start_list_update_site_title_title">Ange webbplatsens rubrik</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Om du lägger detta inlägg i papperskorgen kommer även lokala ändringar att kastas. Vill du fortsätta?</string>
@@ -1175,7 +1213,6 @@ Language: sv_SE
     <string name="notification_new_site_creation_failed">Ett problem har inträffat</string>
     <string name="notification_new_site_creation_title">Skapa webbplats</string>
     <string name="new_site_creation_create_site_button">Skapa webbplats</string>
-    <string name="new_site_creation_search_domain_input_hint">Sök domäner</string>
     <string name="new_site_creation_domain_header_subtitle">Det är där andra människor hittar dig på internet.</string>
     <string name="new_site_creation_empty_domain_list_message">Det inns ingen adress som matchar din sökning</string>
     <string name="site_creation_error_generic_subtitle">Kommunikationen med servern fungerar inte. Försök igen</string>

@@ -121,7 +121,6 @@ Language: pt_BR
     <string name="stories_intro_title_first">Agora stories são para todo mundo</string>
     <string name="stories_intro_image_caption_second">Título de exemplo to story</string>
     <string name="stories_intro_image_caption_first">Como criar um post de story</string>
-    <string name="stories_intro_main_subtitle">Agora você tem acesso a posts de story e adoraríamos que você desse uma olhada nesse recurso.</string>
     <string name="stories_intro_main_title">Apresentando os posts de Story</string>
     <string name="mlp_notice_blank_page_created">Página vazia criada</string>
     <string name="mlp_notice_page_created">Página criada</string>
@@ -257,7 +256,6 @@ Language: pt_BR
     <string name="signup_confirmation_title">Confirmação de inscrição</string>
     <string name="continue_with_google_terms_of_service_text">Se você continuar com o Google e ainda não tiver uma conta no WordPress.com, você criará uma conta e concordará com nossos %1$sTermos de Serviços%2$s.</string>
     <string name="continue_terms_of_service_text">Ao continuar, você concorda com os nossos %1$sTermos de Serviço%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Enviaremos um link por e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos este endereço de e-mail para criar sua nova conta no WordPress.com.</string>
     <string name="signup_magic_link_message">Nós enviamos um link por e-mail para criar sua nova conta no WordPress.com. Verifique sua caixa de e-mails neste dispositivo e toque no link recebido do WordPress.com.</string>
     <string name="enter_account_info_for_site">Digite as informações da conta de %1$s.</string>
@@ -276,7 +274,6 @@ Language: pt_BR
     <string name="send_link_by_email">Enviar link por e-mail</string>
     <string name="reset_your_password">Redefinir sua senha</string>
     <string name="reader_error_request_failed_title">Houve um problema ao completar a solicitação. Tente novamente mais tarde.</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dê ao seu site um nome que reflita sua personalidade e tópico. As primeiras impressões contam!</string>
     <string name="quick_start_list_update_site_title_title">Defina o título do seu site</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toque em &lt;b>%1$s&lt;/b> para definir um novo título</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Mover esse post para a lixeira também apagará as alterações não salvas. Você tem certeza de que deseja continuar?</string>
@@ -936,7 +933,6 @@ Language: pt_BR
     <string name="stats_select_previous_period_description">Selecionar período anterior</string>
     <string name="notification_new_site_creation_title">Criar site</string>
     <string name="new_site_creation_create_site_button">Criar site</string>
-    <string name="new_site_creation_search_domain_input_hint">Pesquisar por domínios</string>
     <string name="notification_new_site_creation_failed">Ocorreu um problema</string>
     <string name="notification_new_site_creation_creating_site_subtitle">Estamos criando seu novo site</string>
     <string name="new_site_creation_site_preview_content_description">Mostrando pré-visualização do site</string>

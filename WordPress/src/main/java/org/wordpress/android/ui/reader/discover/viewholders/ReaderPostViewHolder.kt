@@ -16,8 +16,8 @@ import org.wordpress.android.datasets.ReaderThumbnailTable
 import org.wordpress.android.ui.reader.adapters.ReaderMenuAdapter
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderPostUiState
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils.VideoThumbnailUrlListener
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -201,7 +201,7 @@ class ReaderPostViewHolder(
         }
     }
 
-    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<SecondaryAction>, v: View) {
+    private fun renderMoreMenu(uiState: ReaderPostUiState, actions: List<ReaderPostCardAction>, v: View) {
         AnalyticsTracker.track(Stat.POST_CARD_MORE_TAPPED)
         val listPopup = ListPopupWindow(v.context)
         listPopup.width = v.context.resources.getDimensionPixelSize(R.dimen.menu_item_width)
@@ -212,7 +212,7 @@ class ReaderPostViewHolder(
         listPopup.setOnItemClickListener { _, _, position, _ ->
             listPopup.dismiss()
             val item = actions[position]
-            item.onClicked.invoke(uiState.postId, uiState.blogId, item.type)
+            item.onClicked?.invoke(uiState.postId, uiState.blogId, item.type)
         }
         listPopup.setOnDismissListener { uiState.onMoreDismissed.invoke(uiState) }
         listPopup.show()

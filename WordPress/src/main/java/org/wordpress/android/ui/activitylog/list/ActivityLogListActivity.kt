@@ -10,8 +10,10 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.activitylog.detail.ActivityLogDetailActivity
+import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID
 import org.wordpress.android.ui.jetpack.backup.download.KEY_BACKUP_DOWNLOAD_REWIND_ID
+import org.wordpress.android.ui.jetpack.common.JetpackBackupDownloadActionState
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_RESTORE_ID
 import org.wordpress.android.ui.jetpack.restore.KEY_RESTORE_REWIND_ID
 import org.wordpress.android.ui.posts.BasicFragmentDialog
@@ -96,8 +98,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
     private fun onActivityResultForBackupDownload(data: Intent?) {
         val rewindId = data?.getStringExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID)
         val downloadId = data?.getLongExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, 0)
-        if (rewindId != null && downloadId != null) {
-            passQueryBackupDownloadStatus(rewindId, downloadId)
+        val actionState = data?.getIntExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, 0)
+                ?: JetpackBackupDownloadActionState.CANCEL.id
+        if (actionState != JetpackBackupDownloadActionState.CANCEL.id && rewindId != null && downloadId != null) {
+            passQueryBackupDownloadStatus(rewindId, downloadId, actionState)
         }
     }
 
@@ -123,10 +127,10 @@ class ActivityLogListActivity : LocaleAwareActivity(),
         }
     }
 
-    private fun passQueryBackupDownloadStatus(rewindId: String, downloadId: Long) {
+    private fun passQueryBackupDownloadStatus(rewindId: String, downloadId: Long, actionState: Int) {
         val fragment = supportFragmentManager.findFragmentById(R.id.fragment_container)
         if (fragment is ActivityLogListFragment) {
-            fragment.onQueryBackupDownloadStatus(rewindId, downloadId)
+            fragment.onQueryBackupDownloadStatus(rewindId, downloadId, actionState)
         }
     }
 }

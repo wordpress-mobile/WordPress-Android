@@ -31,6 +31,14 @@ class JetpackCapabilitiesUseCase @Inject constructor(
 ) {
     private var continuation: HashMap<Long, Continuation<OnJetpackCapabilitiesFetched>?> = hashMapOf()
 
+    init {
+        dispatcher.register(this@JetpackCapabilitiesUseCase)
+    }
+
+    fun clear() {
+        dispatcher.unregister(this)
+    }
+
     suspend fun getJetpackPurchasedProducts(remoteSiteId: Long) = flow {
         emit(getCachedJetpackPurchasedProducts(remoteSiteId))
         emit(fetchJetpackPurchasedProducts(remoteSiteId))
@@ -55,7 +63,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
     private suspend fun fetchJetpackCapabilities(remoteSiteId: Long): List<JetpackCapability> {
         forceResumeDuplicateRequests(remoteSiteId)
 
-        dispatcher.register(this@JetpackCapabilitiesUseCase)
         val response = suspendCoroutine<OnJetpackCapabilitiesFetched> { cont ->
             val payload = FetchJetpackCapabilitiesPayload(remoteSiteId)
             continuation[remoteSiteId] = cont
@@ -95,9 +102,6 @@ class JetpackCapabilitiesUseCase @Inject constructor(
         continuation[event.remoteSiteId]?.let {
             continuation.remove(event.remoteSiteId)
             it.resume(event)
-        }
-        if (continuation.isEmpty()) {
-            dispatcher.unregister(this@JetpackCapabilitiesUseCase)
         }
     }
 

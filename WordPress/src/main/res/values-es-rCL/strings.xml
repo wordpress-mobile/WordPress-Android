@@ -106,7 +106,6 @@ Language: es_CL
     <string name="notification_new_site_creation_creating_site_subtitle">Estamos creando tu nuevo sitio</string>
     <string name="notification_new_site_creation_title">Crear sitio</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar Dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en Internet.</string>
     <string name="site_creation_error_generic_title">Hubo un problema</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>

@@ -96,6 +96,7 @@
     <string name="confirm">Confirm</string>
     <string name="cant_open_url">Unable to open the link</string>
     <string name="retry">Retry</string>
+    <string name="disable">Disable</string>
     <string name="invalid_ip_or_range">Invalid IP or IP range</string>
     <string name="copy_text">Copy</string>
     <string name="error_please_choose_browser">Error opening the default web browser. Please choose another app:</string>
@@ -1013,7 +1014,6 @@
     <string name="activity_log">Activity Log</string>
     <string name="activity_log_icon">Activity icon</string>
     <string name="activity_log_event">Event</string>
-    <string name="rewind">Restore</string>
     <string name="activity_log_button">Activity Log action button</string>
     <string name="activity_log_jetpack_icon">Jetpack icon</string>
     <string name="activity_log_empty_title">No activity yet</string>
@@ -1054,6 +1054,11 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- activity log list backup download notice -->
+    <string name="activity_log_backup_download_notice_description_with_two_params" translatable="false">@string/backup_download_complete_description_with_two_parameters</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+
     <!-- backup -->
     <string name="backup">Backup</string>
     <string name="backup_empty_title">Your first backup will be ready soon</string>
@@ -1080,20 +1085,26 @@
     <string name="scan_scanning_title">Scanning files</string>
     <string name="scan_idle_no_threats_found_title">Don\'t worry about a thing</string>
     <string name="scan_idle_threats_found_title">Your site may be at risk</string>
-    <string name="scan_fixing_threats_title">Fixing Threats</string>
+    <string name="scan_fixing_threats_title_plural">Fixing Threats</string>
+    <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="scan_scanning_description">We will send you a notification once the scan is complete. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
-    <string name="scan_fixing_threats_description">We\'re hard at work fixing these threats in the background. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
+    <string name="scan_fixing_threats_description_singular">We\'re hard at work in the background fixing this threat. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_with_threats_description">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
-    <string name="scan_in_hours_ago">%s hours ago</string>
-    <string name="scan_in_minutes_ago">%s minutes ago</string>
-    <string name="scan_in_few_seconds">in a few seconds</string>
+    <string name="scan_in_hours_ago">%s hour(s) ago</string>
+    <string name="scan_in_minutes_ago">%s minute(s) ago</string>
+    <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; One potential threat found</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
@@ -1105,7 +1116,8 @@
 
     <!-- threats -->
     <string name="threats_fix_all">Fix All</string>
-    <string name="threats_found">Threats found</string>
+    <string name="threats_found_plural">Threats found</string>
+    <string name="threats_found_singular">Threat found</string>
     <string name="threat_fixing">Fixing threat</string>
 
     <!-- threat item header -->
@@ -1158,9 +1170,11 @@
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
-    <string name="threat_fix_all_warning_message">Please confirm you want to fix %s active threats.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Please confirm you want to fix all %s active threats.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Please confirm you want to fix one active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
-    <string name="threat_fix_all_status_success_message">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
+    <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
 
     <!-- stats: labels for timeframes -->
@@ -1569,6 +1583,11 @@
         <item>@string/post_status_post_private</item>
     </string-array>
 
+    <string-array name="post_settings_homepage_statuses" translatable="false">
+        <item>@string/post_status_publish_post</item>
+        <item>@string/post_status_post_private</item>
+    </string-array>
+
     <!-- Aztec -->
     <string name="editor_content_hint">Share your story here…</string>
 
@@ -1859,6 +1878,7 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
+    <string name="reader_title_interests">Follow topics</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
@@ -2265,6 +2285,21 @@
     <string name="role_follower">Follower</string>
     <string name="role_viewer">Viewer</string>
 
+    <string name="invite_links_section_title">Invite Link</string>
+    <string name="invite_links_get_status_retry">Refresh links status</string>
+    <string name="invite_links_generate">Generate new link</string>
+    <string name="invite_links_share_invite_link">Share invite link</string>
+    <string name="invite_links_disable_invite_link">Disable invite link</string>
+    <string name="invite_links_expire_date">Expires %1$s</string>
+    <string name="invite_links_helper_text">Use this link to onboard your team members without having to invite them one by one. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
+    <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
+    <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
+    <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
+    <string name="invite_links_null_response">No response received</string>
+    <string name="invite_links_bad_format_response">Invalid response received</string>
+    <string name="invite_links_disable_dialog_title">Disable invite link</string>
+    <string name="invite_links_disable_dialog_message">Once this invite link is disabled, nobody will be able to use it to join your team. Are you sure?</string>
+
     <!--Plugins-->
     <string name="plugins">Plugins</string>
     <string name="plugin_byline">by %s</string>
@@ -2607,6 +2642,7 @@
     <string name="login_magic_links_sent_label">Check your email on this device and tap the link in the email you received from WordPress.com.</string>
     <string name="login_magic_link_email_requesting">Requesting log-in email</string>
     <string name="magic_link_not_seeing_email_message">Not seeing the email? Check your Spam or Junk Mail folder.</string>
+    <string name="magic_link_not_meaning_to_create_account">Didn\'t mean to create a new account? Go back to re-enter your email address.</string>
     <string name="login_get_link_by_email">Get a login link by email</string>
     <string name="enter_wpcom_password">Enter your WordPress.com password.</string>
     <string name="enter_wpcom_password_google">To proceed with this Google account, please provide the matching WordPress.com password. This will be asked only once.</string>
@@ -2684,7 +2720,6 @@
     <string name="signup_magic_link_message">We’ve emailed you a signup link to create your new WordPress.com account. Check your email on this device, and tap the link in the email you receive from WordPress.com.</string>
     <string name="signup_magic_link_progress">Sending email</string>
     <string name="signup_confirmation_message">We’ll use this email address to create your new WordPress.com account.</string>
-    <string name="signup_confirmation_magic_link_message">We’ll email you a signup link to create your new WordPress.com account.</string>
     <string name="signup_terms_of_service_text">By signing up, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_terms_of_service_text">By continuing, you agree to our %1$sTerms of Service%2$s.</string>
     <string name="continue_with_google_terms_of_service_text">If you continue with Google and don\'t already have a WordPress.com account, you are creating an account and you agree to our %1$sTerms of Service%2$s.</string>
@@ -2878,17 +2913,20 @@
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
+    <string name="quick_start_sites_type_customize">Customize your site</string>
+    <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
     <string name="quick_start_focus_point_description">tap here</string>
 
-    <string name="quick_start_card_menu_pin">Pin</string>
-    <string name="quick_start_card_menu_unpin">Unpin</string>
-    <string name="quick_start_card_menu_hide">Hide</string>
+    <string name="quick_start_card_menu_pin">Pin this</string>
+    <string name="quick_start_card_menu_unpin">Unpin this</string>
+    <string name="quick_start_card_menu_hide">Hide for now</string>
     <string name="quick_start_card_menu_remove">Don\'t show again</string>
+
+    <string name="quick_start_completed_type_customize_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ve customized your site. Well done!</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b&gt;All tasks completed&lt;/b&gt;&lt;br/&gt;You’ll reach more people. Nice job!</string>
 
     <!-- Pages -->
     <string name="pages_published" tools:ignore="UnusedResources">Published</string>
@@ -3002,7 +3040,8 @@
     <string name="new_site_creation_unavailable_domain">This domain is unavailable</string>
     <string name="new_site_creation_domain_header_title">Choose a domain</string>
     <string name="new_site_creation_domain_header_subtitle">This is where people will find you on the internet.</string>
-    <string name="new_site_creation_search_domain_input_hint">Search Domains</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
     <string name="site_creation_domain_finish_button">Create site</string>
     <string name="new_site_creation_create_site_button">Create Site</string>
     <string name="notification_new_site_creation_title">Create Site</string>
@@ -3161,7 +3200,7 @@
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>
@@ -3242,7 +3281,9 @@
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_left" tools:ignore="UnusedResources">Double tap to move the block to the left</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_to_the_right" tools:ignore="UnusedResources">Double tap to move the block to the right</string>
     <string name="gutenberg_native_double_tap_to_move_the_block_up" tools:ignore="UnusedResources">Double tap to move the block up</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Double tap to open Action Sheet to edit, replace, or clear the image</string>
     <string name="gutenberg_native_double_tap_to_open_action_sheet_with_available_options" tools:ignore="UnusedResources">Double tap to open Action Sheet with available options</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag" tools:ignore="UnusedResources">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_with_available_options" tools:ignore="UnusedResources">Double tap to open Bottom Sheet with available options</string>
     <string name="gutenberg_native_double_tap_to_redo_last_change" tools:ignore="UnusedResources">Double tap to redo last change</string>
     <string name="gutenberg_native_double_tap_to_select" tools:ignore="UnusedResources">Double tap to select</string>
@@ -3256,6 +3297,7 @@
     <string name="gutenberg_native_double_tap_to_undo_last_change" tools:ignore="UnusedResources">Double tap to undo last change</string>
     <string name="gutenberg_native_duplicate_block" tools:ignore="UnusedResources">Duplicate block</string>
     <string name="gutenberg_native_edit_file" tools:ignore="UnusedResources">Edit file</string>
+    <string name="gutenberg_native_edit_focal_point" tools:ignore="UnusedResources">Edit focal point</string>
     <string name="gutenberg_native_edit_using_web_editor" tools:ignore="UnusedResources">Edit using web editor</string>
     <string name="gutenberg_native_edit_video" tools:ignore="UnusedResources">Edit video</string>
     <string name="gutenberg_native_error" tools:ignore="UnusedResources">Error</string>
@@ -3404,10 +3446,8 @@
     <string name="backup_download_progress_page_title">Download Backup</string>
     <string name="backup_download_progress_header">Currently creating a downloadable backup of your site</string>
     <string name="backup_download_progress_description_with_two_parameters">We\'re creating a downloadable backup of your site from %1$s %2$s.</string>
-    <string name="backup_download_progress_action_button">Let me know when finished!</string>
     <string name="backup_download_progress_icon_content_description">Creating downloadable backup icon</string>
-    <string name="backup_download_progress_action_button_content_description">Let me know when finished button</string>
-    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready</string>
+    <string name="backup_download_progress_footnote">No need to wait around. We\'ll notify you when your backup is ready.</string>
     <string name="backup_download_progress_label">%1$s%%</string>
 
     <string name="backup_item_themes">WordPress Themes</string>
@@ -3459,9 +3499,7 @@
     <string name="restore_progress_page_title" translatable="false">@string/restore</string>
     <string name="restore_progress_header">Currently restoring site</string>
     <string name="restore_progress_description_with_two_parameters">We\'re restoring your site back to %1$s %2$s.</string>
-    <string name="restore_progress_action_button" translatable="false">@string/backup_download_progress_action_button</string>
     <string name="restore_progress_icon_content_description">Restore site icon</string>
-    <string name="restore_progress_action_button_content_description" translatable="false">@string/backup_download_progress_action_button_content_description</string>
     <string name="restore_progress_footnote">No need to wait around. We\'ll notify you when your site has been restored.</string>
     <string name="restore_progress_label">%1$s%%</string>
 

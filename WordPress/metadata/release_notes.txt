@@ -1,4 +1,1 @@
-- Jetpack customers can now restore a site or download a backup, scan, and fix threats
-- Various block editor updates, including the ability to set anchors in the Heading block
-- New filter of unread posts and the ability to mark posts as seen/unseen in Reader
-- .blog subdomains now available
+The latest updates to the WordPress Android app are here. We improved the functionality of published homepages, ensuring that deleting or reverting them to draft form won’t break your site. We added support for setting the Cover block focal point. Plus, we enhanced P2 management, so you can generate, share, and disable invite links for P2 roles.

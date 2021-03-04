@@ -152,7 +152,6 @@ Language: es_MX
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
-    <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
     <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
     <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
     <string name="stories_intro_title_first">Ahora las historias son para todos</string>
@@ -286,7 +285,6 @@ Language: es_MX
     <string name="gutenberg_native_choose_video">Elegir un video</string>
     <string name="enter_your_site_address">Ingresa la dirección de tu sitio existente</string>
     <string name="continue_terms_of_service_text">Si continúas, aceptas nuestros %1$stérminos del servicio%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Te enviaremos por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_confirmation_message">Usaremos esta dirección de correo electrónico para crear tu nueva cuenta de WordPress.com.</string>
     <string name="signup_magic_link_message">Te hemos enviado por correo electrónico un enlace de registro para crear tu nueva cuenta de WordPress.com. Comprueba tu correo electrónico en este dispositivo y toca el enlace en el correo electrónico que has recibido de WordPress.com.</string>
     <string name="enter_account_info_for_site">Introduce la información de tu cuenta para %1$s.</string>
@@ -306,7 +304,6 @@ Language: es_MX
     <string name="check_email">Comprobar el correo electrónico</string>
     <string name="reader_error_request_failed_title">Ha habido un problema al gestionar la solicitud. Por favor, inténtalo de nuevo más tarde.</string>
     <string name="quick_start_dialog_update_site_title_message_short">Toca &lt;b>%1$s&lt;/b> para configurar un nuevo título</string>
-    <string name="quick_start_list_update_site_title_subtitle">Dale a tu sitio un nombre que refleje su personalidad y temática. ¡Las primeras impresiones cuentan!</string>
     <string name="quick_start_list_update_site_title_title">Establece el título de tu sitio</string>
     <string name="dialog_confirm_trash_losing_local_changes_message">Al enviar esta entrada a la papelera también se descartarán los cambios locales, ¿estás seguro de que quieres continuar?</string>
     <string name="gutenberg_native_s_block_options">Opciones del bloque %s</string>
@@ -971,7 +968,6 @@ Language: es_MX
     <string name="notification_new_site_creation_failed">Hubo un problema</string>
     <string name="new_site_creation_create_site_button">Crear sitio</string>
     <string name="notification_new_site_creation_title">Creación de un sitio</string>
-    <string name="new_site_creation_search_domain_input_hint">Buscar Dominios</string>
     <string name="new_site_creation_domain_header_subtitle">Aquí es donde la gente te encontrará en el internet.</string>
     <string name="new_site_creation_clear_all_content_description">Limpiar</string>
     <string name="new_site_creation_empty_domain_list_message">No hay direcciones disponibles que coincidan con tu búsqueda</string>

@@ -1,24 +1,25 @@
 package org.wordpress.android.models
 
-import android.content.Context
 import dagger.Reusable
-import org.wordpress.android.fluxc.model.RoleModel
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.SiteStore
+import org.wordpress.android.models.wrappers.RoleUtilsWrapper
+import org.wordpress.android.models.wrappers.SimpleDateFormatWrapper
 import org.wordpress.android.ui.people.InviteLinksApiCallsProvider.InviteLinksItem
 import org.wordpress.android.ui.people.InviteLinksUiItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.DateTimeUtilsWrapper
 import org.wordpress.android.viewmodel.ContextProvider
-import java.text.SimpleDateFormat
 import javax.inject.Inject
 
 @Reusable
 class InvitePeopleUtils @Inject constructor(
     private val siteStore: SiteStore,
     private val contextProvider: ContextProvider,
-    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper
+    private val dateTimeUtilsWrapper: DateTimeUtilsWrapper,
+    private val roleUtilsWrapper: RoleUtilsWrapper,
+    private val simpleDateFormatWrapper: SimpleDateFormatWrapper
 ) {
     fun getInviteLinkDataFromRoleDisplayName(
         inviteLinksData: MutableList<InviteLinksItem>,
@@ -39,7 +40,7 @@ class InvitePeopleUtils @Inject constructor(
         siteModel: SiteModel,
         roleName: String
     ): String {
-        val roles = getInviteRoles(siteStore, siteModel, contextProvider.getContext())
+        val roles = roleUtilsWrapper.getInviteRoles(siteStore, siteModel, contextProvider.getContext())
 
         return roles.firstOrNull { roleModel ->
             roleModel.name.equals(roleName, ignoreCase = true)
@@ -50,8 +51,8 @@ class InvitePeopleUtils @Inject constructor(
         inviteLinksData: MutableList<InviteLinksItem>,
         siteModel: SiteModel
     ): List<InviteLinksUiItem> {
-        val formatter = SimpleDateFormat.getDateInstance()
-        val roles = getInviteRoles(siteStore, siteModel, contextProvider.getContext())
+        val formatter = simpleDateFormatWrapper.getDateInstance()
+        val roles = roleUtilsWrapper.getInviteRoles(siteStore, siteModel, contextProvider.getContext())
 
         AppLog.d(T.PEOPLE, "getMappedLinksUiItems > ${siteModel.siteId}")
         AppLog.d(
@@ -93,10 +94,4 @@ class InvitePeopleUtils @Inject constructor(
             linksItem.roleDisplayName
         }
     }
-
-    private fun getInviteRoles(
-        siteStore: SiteStore,
-        siteModel: SiteModel,
-        context: Context
-    ): List<RoleModel> = RoleUtils.getInviteRoles(siteStore, siteModel, context)
 }

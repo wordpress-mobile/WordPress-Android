@@ -20,6 +20,7 @@ class JetpackBackupRestoreFootnoteViewHolder(
         val resources = itemView.context.resources
 
         footnote.text = uiHelpers.getTextOfUiString(itemView.context, state.text)
+        footnote.visibility = if (state.isVisible) View.VISIBLE else View.GONE
 
         state.textAlphaResId?.let {
             footnote.setTextColor(footnote.textColors.withAlpha(state.textAlphaResId))
@@ -35,7 +36,7 @@ class JetpackBackupRestoreFootnoteViewHolder(
 
         state.iconRes?.let {
             imageManager.load(icon, it)
-            icon.visibility = View.VISIBLE
+            icon.visibility = if (state.isVisible) View.VISIBLE else View.GONE
         }
     }
 }

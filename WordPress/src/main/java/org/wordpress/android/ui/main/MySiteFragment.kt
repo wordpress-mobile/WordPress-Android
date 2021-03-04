@@ -246,6 +246,7 @@ class MySiteFragment : Fragment(),
     override fun onDestroy() {
         selectedSiteRepository.clear()
         job.cancel()
+        jetpackCapabilitiesUseCase.clear()
         super.onDestroy()
     }
 
@@ -285,10 +286,13 @@ class MySiteFragment : Fragment(),
                     products = jetpackCapabilitiesUseCase.getCachedJetpackPurchasedProducts(site.siteId)
             )
             uiScope.launch {
-                updateScanAndBackupVisibility(
-                        site = site,
-                        products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
-                )
+                val products = jetpackCapabilitiesUseCase.fetchJetpackPurchasedProducts(site.siteId)
+                view?.let {
+                    updateScanAndBackupVisibility(
+                            site = site,
+                            products = products
+                    )
+                }
             }
         }
     }
