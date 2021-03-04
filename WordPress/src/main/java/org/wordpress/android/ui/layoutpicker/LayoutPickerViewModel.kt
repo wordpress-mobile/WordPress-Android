@@ -29,7 +29,8 @@ private const val PREVIEW_MODE = "PREVIEW_MODE"
 abstract class LayoutPickerViewModel(
     open val mainDispatcher: CoroutineDispatcher,
     open val bgDispatcher: CoroutineDispatcher,
-    open val networkUtils: NetworkUtilsWrapper
+    open val networkUtils: NetworkUtilsWrapper,
+    val layoutPickerTracker: LayoutPickerTracker
 ) : ScopedViewModel(bgDispatcher), PreviewModeHandler {
     lateinit var layouts: List<LayoutModel>
     lateinit var categories: List<LayoutCategoryModel>
@@ -60,22 +61,6 @@ abstract class LayoutPickerViewModel(
 
     abstract fun fetchLayouts()
 
-    abstract fun trackPreviewModeChanged(mode: String)
-
-    abstract fun trackThumbnailModeTapped(mode: String)
-
-    abstract fun trackPreviewModeTapped(mode: String)
-
-    abstract fun trackPreviewLoading(template: String, mode: String)
-
-    abstract fun trackPreviewLoaded(template: String, mode: String)
-
-    abstract fun trackPreviewViewed(template: String, mode: String)
-
-    abstract fun trackNoNetworkErrorShown(message: String)
-
-    abstract fun trackErrorShown(message: String)
-
     open fun onPreviewChooseTapped() = onDismissPreview()
 
     fun handleResponse(layouts: List<LayoutModel>, categories: List<LayoutCategoryModel>) {
@@ -94,7 +79,7 @@ abstract class LayoutPickerViewModel(
 
     override fun onPreviewModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
-            trackPreviewModeChanged(mode.key)
+            layoutPickerTracker.trackPreviewModeChanged(mode.key)
             _previewMode.value = mode
             if (uiState.value is Content) {
                 loadLayouts()
@@ -226,7 +211,7 @@ abstract class LayoutPickerViewModel(
     }
 
     fun onThumbnailModePressed() {
-        trackThumbnailModeTapped(selectedPreviewMode().key)
+        layoutPickerTracker.trackThumbnailModeTapped(selectedPreviewMode().key)
         _onThumbnailModeButtonPressed.call()
     }
 
@@ -240,12 +225,12 @@ abstract class LayoutPickerViewModel(
             (uiState.value as? Content)?.let { state ->
                 layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
                     _previewState.value = PreviewUiState.Loading(layout.demoUrl)
-                    trackPreviewLoading(layout.slug, selectedPreviewMode().key)
+                    layoutPickerTracker.trackPreviewLoading(layout.slug, selectedPreviewMode().key)
                 }
             }
         } else {
             _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
-            trackNoNetworkErrorShown("Preview error")
+            layoutPickerTracker.trackNoNetworkErrorShown("Preview error")
         }
     }
 
@@ -253,18 +238,18 @@ abstract class LayoutPickerViewModel(
         (uiState.value as? Content)?.let { state ->
             layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
                 _previewState.value = PreviewUiState.Loaded
-                trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
+                layoutPickerTracker.trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
             }
         }
     }
 
     fun onPreviewError() {
         _previewState.value = PreviewUiState.Error()
-        trackErrorShown("Preview error")
+        layoutPickerTracker.trackErrorShown("Preview error")
     }
 
     fun onPreviewModePressed() {
-        trackPreviewModeTapped(selectedPreviewMode().key)
+        layoutPickerTracker.trackPreviewModeTapped(selectedPreviewMode().key)
         _onPreviewModeButtonPressed.call()
     }
 
@@ -272,12 +257,12 @@ abstract class LayoutPickerViewModel(
         (uiState.value as? Content)?.let { state ->
             layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
                 val template = layout.slug
-                trackPreviewViewed(template, selectedPreviewMode().key)
+                layoutPickerTracker.trackPreviewViewed(template, selectedPreviewMode().key)
                 _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)
                 return
             }
         }
-        trackErrorShown("Error previewing design")
+        layoutPickerTracker.trackErrorShown("Error previewing design")
         updateUiState(Error(toast = string.hpp_choose_error))
     }
 

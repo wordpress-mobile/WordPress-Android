@@ -8,8 +8,6 @@ import org.greenrobot.eventbus.Subscribe
 import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R.string
-import org.wordpress.android.analytics.AnalyticsTracker
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.EDITOR_SESSION_TEMPLATE_PREVIEW
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
@@ -25,6 +23,7 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
 import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
+import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
@@ -46,9 +45,10 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
     override val networkUtils: NetworkUtilsWrapper,
+    private val analyticsTracker: ModalLayoutPickerTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
-) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils) {
+) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     /**
      * Tracks the Modal Layout Picker visibility state
      */
@@ -170,22 +170,4 @@ class ModalLayoutPickerViewModel @Inject constructor(
         }
         _onCreateNewPageRequested.value = PageRequest.Blank
     }
-
-    override fun trackPreviewViewed(template: String, mode: String) {
-        AnalyticsTracker.track(EDITOR_SESSION_TEMPLATE_PREVIEW, mapOf("template" to template))
-    }
-
-    override fun trackPreviewModeChanged(mode: String) {}
-
-    override fun trackThumbnailModeTapped(mode: String) {}
-
-    override fun trackPreviewModeTapped(mode: String) {}
-
-    override fun trackPreviewLoading(template: String, mode: String) {}
-
-    override fun trackPreviewLoaded(template: String, mode: String) {}
-
-    override fun trackNoNetworkErrorShown(message: String) {}
-
-    override fun trackErrorShown(message: String) {}
 }

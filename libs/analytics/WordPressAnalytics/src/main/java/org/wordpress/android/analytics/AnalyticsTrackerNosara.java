@@ -752,8 +752,6 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "editor_session_switch_editor";
             case EDITOR_SESSION_TEMPLATE_APPLY:
                 return "editor_session_template_apply";
-            case EDITOR_SESSION_TEMPLATE_PREVIEW:
-                return "editor_session_template_preview";
             case EDITOR_SESSION_END:
                 return "editor_session_end";
             case EDITOR_GUTENBERG_ENABLED:
@@ -1400,6 +1398,20 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "enhanced_site_creation_site_design_preview_loading";
             case ENHANCED_SITE_CREATION_SITE_DESIGN_PREVIEW_LOADED:
                 return "enhanced_site_creation_site_design_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_MODE_CHANGED:
+                return "layout_picker_preview_mode_changed";
+            case LAYOUT_PICKER_THUMBNAIL_MODE_BUTTON_TAPPED:
+                return "layout_picker_thumbnail_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_MODE_BUTTON_TAPPED:
+                return "layout_picker_preview_mode_button_tapped";
+            case LAYOUT_PICKER_PREVIEW_LOADING:
+                return "layout_picker_preview_loading";
+            case LAYOUT_PICKER_PREVIEW_LOADED:
+                return "layout_picker_preview_loaded";
+            case LAYOUT_PICKER_PREVIEW_VIEWED:
+                return "layout_picker_preview_viewed";
+            case LAYOUT_PICKER_ERROR_SHOWN:
+                return "layout_picker_error_shown";
             case SITE_CREATED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2

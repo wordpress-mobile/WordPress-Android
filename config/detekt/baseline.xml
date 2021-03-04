@@ -65,7 +65,6 @@
     <ID>EmptyFunctionBlock:GlideMShotsLoader.kt$GlideMShotsLoader.Factory${}</ID>
     <ID>EmptyFunctionBlock:ImageManager.kt$ImageManager.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:LayoutViewHolder.kt$LayoutViewHolder.&lt;no name provided&gt;${ }</ID>
-    <ID>EmptyFunctionBlock:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel${}</ID>
     <ID>EmptyFunctionBlock:MySiteFragment.kt$MySiteFragment${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragment.kt$NotificationsListFragment.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragmentPage.kt$NotificationsListFragmentPage.&lt;no name provided&gt;${}</ID>
@@ -502,7 +501,6 @@
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
     <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
-    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
     <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>
@@ -516,7 +514,6 @@
     <ID>TooManyFunctions:MediaPickerTracker.kt$MediaPickerTracker</ID>
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
-    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
@@ -584,7 +581,7 @@
     <ID>TooManyFunctions:SiteCreationPreviewFragment.kt$SiteCreationPreviewFragment : SiteCreationBaseFormFragmentErrorManagedWebViewClientListener</ID>
     <ID>TooManyFunctions:SiteCreationSegmentsFragment.kt$SiteCreationSegmentsFragment : SiteCreationBaseFormFragment</ID>
     <ID>TooManyFunctions:SiteCreationSegmentsViewModel.kt$SiteCreationSegmentsViewModel : ViewModelCoroutineScope</ID>
-    <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker</ID>
+    <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker : LayoutPickerTracker</ID>
     <ID>TooManyFunctions:SiteListItemBuilder.kt$SiteListItemBuilder</ID>
     <ID>TooManyFunctions:SitePreviewViewModel.kt$SitePreviewViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:StatsDateFormatter.kt$StatsDateFormatter</ID>

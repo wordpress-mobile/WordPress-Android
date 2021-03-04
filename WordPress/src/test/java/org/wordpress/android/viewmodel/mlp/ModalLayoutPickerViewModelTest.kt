@@ -39,6 +39,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageReques
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel.PageRequest.Create
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
 
 @RunWith(MockitoJUnitRunner::class)
 class ModalLayoutPickerViewModelTest {
@@ -58,6 +59,7 @@ class ModalLayoutPickerViewModelTest {
     @Mock lateinit var thumbDimensionProvider: ThumbDimensionProvider
     @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
+    @Mock lateinit var analyticsTracker: ModalLayoutPickerTracker
     @Mock lateinit var onCreateNewPageRequestedObserver: Observer<Create>
 
     private val defaultPageLayoutsEvent: OnBlockLayoutsFetched
@@ -91,6 +93,7 @@ class ModalLayoutPickerViewModelTest {
                 thumbDimensionProvider,
                 displayUtilsWrapper,
                 networkUtils,
+                analyticsTracker,
                 NoDelayCoroutineDispatcher(),
                 NoDelayCoroutineDispatcher()
         )
