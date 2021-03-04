@@ -93,8 +93,8 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEdito
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBlogPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowBookmarkedTab
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
@@ -490,7 +490,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
     }
 
-    private fun createMoreMenuPopup(actions: List<SecondaryAction>, v: View) {
+    private fun createMoreMenuPopup(actions: List<ReaderPostCardAction>, v: View) {
         AnalyticsTracker.track(Stat.READER_ARTICLE_DETAIL_MORE_TAPPED)
         moreMenuPopup = ListPopupWindow(v.context)
         moreMenuPopup?.let {
@@ -1002,9 +1002,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 ReaderPostTable.getFeedPost(blogId, postId, false)
             else
                 ReaderPostTable.getBlogPost(blogId, postId, false)
-            if (post == null) {
-                return false
-            }
+            if (post == null) return false
 
             // "discover" Editor Pick posts should open the original (source) post
             if (post!!.isDiscoverPost) {

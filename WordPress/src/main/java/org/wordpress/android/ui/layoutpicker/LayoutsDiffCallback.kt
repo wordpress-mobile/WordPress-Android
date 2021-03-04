@@ -1,10 +1,13 @@
-package org.wordpress.android.ui.sitecreation.theme
+package org.wordpress.android.ui.layoutpicker
 
 import androidx.recyclerview.widget.DiffUtil.Callback
 
+/**
+ * Implements the Recyclerview list items diff to avoid unneeded UI refresh
+ */
 class LayoutsDiffCallback(
-    private val oldList: List<LayoutGridItemUiState>,
-    private val newList: List<LayoutGridItemUiState>
+    private val oldList: List<LayoutListItemUiState>,
+    private val newList: List<LayoutListItemUiState>
 ) : Callback() {
     override fun areItemsTheSame(oldItemPosition: Int, newItemPosition: Int) =
             newList[newItemPosition].slug == oldList[oldItemPosition].slug

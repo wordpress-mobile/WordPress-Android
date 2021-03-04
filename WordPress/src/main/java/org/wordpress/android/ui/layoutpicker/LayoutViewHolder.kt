@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.mlp
+package org.wordpress.android.ui.layoutpicker
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

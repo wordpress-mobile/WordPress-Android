@@ -434,11 +434,11 @@ class ImprovedMySiteFragment : Fragment(),
                 viewModel.handleSuccessfulDomainRegistrationResult(data.getStringExtra(RESULT_REGISTERED_DOMAIN_EMAIL))
             }
             RequestCodes.CREATE_SITE -> {
-                viewModel.startQuickStart()
+                viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
             }
             RequestCodes.SITE_PICKER -> {
                 if (data.getIntExtra(WPMainActivity.ARG_CREATE_SITE, 0) == RequestCodes.CREATE_SITE) {
-                    viewModel.startQuickStart()
+                    viewModel.startQuickStart(data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1))
                 }
             }
         }

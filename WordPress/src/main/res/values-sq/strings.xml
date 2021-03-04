@@ -1,13 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-13 09:10:37+0000
+Translation-Revision-Date: 2021-02-27 10:55:42+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Shfiksoje</string>
+    <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
+    <string name="threat_fix_all_warning_message_plural">Ju lutemi, ripohoni se doni të zgjidhni krejt %s kërcënimet aktive.</string>
+    <string name="scan_idle_with_threats_description_plural">Kontrolli gjeti %1s kërcënime potenciale me %2s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
+    <string name="scan_fixing_threats_description_plural">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
+    <string name="gutenberg_native_edit_focal_point">Përpunoni pikë vatrore</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Poshtme për përpunim, zëvendësim ose spastrim të figurës</string>
+    <string name="new_site_creation_search_domain_input_hint">Shtypni një emër për sajtin tuaj</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Krejt punët të mbaruara&lt;/b>&lt;br/>Do të mbërrini në më shumë njerëz. Punë e paqme!</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Veprimeve për përpunim, zëvendësim ose spastrim të figurës</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Krejt punët të mbaruara&lt;/b>&lt;br/>E keni përshtatur sajtin tuaj. Ju lumtë!</string>
+    <string name="quick_start_card_menu_hide">Fshihe hëpërhë</string>
+    <string name="magic_link_not_meaning_to_create_account">S’e kishit fjalën të krijonit një llogari të re? Kthehuni mbrapsht, që të jepni adresën tuaj email.</string>
+    <string name="invite_links_disable_dialog_message">Pasi të jetë çaktivizuar kjo lidhje ftese, askush s’do të jetë në gjendje të bëhet pjesë e ekipit tuaj. Jeni i sigurt?</string>
+    <string name="invite_links_disable_dialog_title">Çaktivizo lidhje ftese</string>
+    <string name="invite_links_bad_format_response">U mor përgjigje e pavlefshme</string>
+    <string name="invite_links_null_response">S’u mor përgjigje</string>
+    <string name="invite_links_cannot_get_role_data_error">Pati një gabim në marrjen e të dhënave për rolin %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">Pati një gabim në marrje rolesh</string>
+    <string name="invite_links_generic_get_data_error">Gabim i panjohur në prurje të dhënash lidhjesh ftese</string>
+    <string name="invite_links_helper_text">Përdoreni këtë lidhje për mirëseardhjen e anëtarëve të ekipit tuaj, pa pasur nevojë t’i ftoni ata tek për tek. Cilido që viziton këtë URL, do të jetë në gjendje të regjistrohet në entin tuaj, madje edhe nëse lidhjen e morën nga dikush tjetër, ndaj kujdesuni t’ua jepni personave të besuar.</string>
+    <string name="invite_links_expire_date">Skadon më: %1$s</string>
+    <string name="invite_links_disable_invite_link">Çaktivizo lidhje ftese</string>
+    <string name="invite_links_share_invite_link">Jepni lidhje ftese</string>
+    <string name="invite_links_generate">Prodho lidhje të re</string>
+    <string name="invite_links_get_status_retry">Rifresko gjendje lidhjesh</string>
+    <string name="invite_links_section_title">Lidhje Ftese</string>
+    <string name="threats_found_singular">U gjet kërcënim</string>
+    <string name="threats_found_plural">U gjetën kërcënime</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> U gjetën %s kërcënime potenciale</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> U gjet 1 kërcënim potencial</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> S’u gjetën kërcënime</string>
+    <string name="scan_fixing_threats_title_singular">Po zgjidhet Kërcënimi</string>
+    <string name="disable">Çaktivizoje</string>
     <string name="quick_start_list_review_pages_subtitle">Shihni faqe dhe bëni ndryshime, ose shtoni dhe hiqni faqe.</string>
+    <string name="quick_start_card_menu_unpin">Shfiksoje këtë</string>
     <string name="quick_start_list_view_site_title">Vizitoni sajtin tuaj</string>
     <string name="quick_start_list_upload_icon_subtitle">Shtoni një ikonë sajti, për një pamje të rafinuar, profesionale.</string>
     <string name="quick_start_list_follow_site_subtitle">Zbuloni dhe ndiqni sajte që ju frymëzojnë.</string>
@@ -32,8 +66,6 @@ Language: sq_AL
     <string name="backup_item_content_hint">(përjashton tema, shtojca dhe ngarkime)</string>
     <string name="backup_item_contents">Drejtoria WP-content</string>
     <string name="backup_item_roots">Rrënjë WordPress-i</string>
-    <string name="backup_download_progress_action_button_content_description">Buton “Bëmani të ditur kur të mbarojë”</string>
-    <string name="backup_download_progress_action_button">Bëmani të ditur kur të mbarojë!</string>
     <string name="backup_download_details_choose_items_header">Elementë të përfshirë në këtë shkarkim</string>
     <string name="gutenberg_native_uploading">Po ngarkohet…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Blloqet e ripërdorshëm s’janë të përpunueshëm në WordPress për iOS</string>
@@ -61,19 +93,22 @@ Language: sq_AL
     <string name="threat_status_fixed">Të zgjidhur</string>
     <string name="threat_found_header">Gjetur</string>
     <string name="scan_here_to_help">këtu për t’ju ndihmuar</string>
-    <string name="scan_idle_with_threats_description">Kontrolli gjeti %1s kërcënime potenciale me %2s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
+    <string name="scan_idle_with_threats_description_singular">Kontrolli gjeti %1s kërcënim potencial me %2s. Ju lutemi, shqyrtojeni më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
     <string name="scan_idle_manual_scan_description">Që ta shqyrtoni sajtin tuaj sërish, bëni një kontroll dorazi, ose prisni që Jetpack-u të kontrollojë sajtin tuaj më vonë sot.</string>
     <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
-    <string name="scan_fixing_threats_description">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
     <string name="scan_scanning_description">Do t’ju dërgojmë një njoftim, sapo kontrolli të jetë i plotë. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kur të doni.</string>
-    <string name="scan_fixing_threats_title">Zgjidhje Kërcënimesh</string>
+    <string name="scan_fixing_threats_description_singular">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këtë kërcënim. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
+    <string name="scan_fixing_threats_title_plural">Zgjidhje Kërcënimesh</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan s’plotësoi dot një kontroll të sajtit tuaj. Ju lutemi, kontrolloni se mos sajti juaj s’është në funksionim – nëse s’është, riprovoni. Nëse është jashtë funksionimi, ose në Jetpack Scan prapë ka probleme, lidhuni me ekipin tonë të asistencës.</string>
     <string name="scan_request_failed_title">Diçka shkoi ters</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Kopjeruajtje sajti</string>
     <string name="activity_log_currently_backing_up_title">Po krijohet kopjeruajtje e shkarkueshme</string>
     <string name="activity_log_backup_finished_snackbar_message_no_dates">Sajti juaj u kopjeruajt me sukses</string>
+    <string name="activity_log_currently_backing_up_message">Sajti po rikthehet sipas %1$s %2$s</string>
     <string name="pick_audio">Përzgjidhni audio</string>
+    <string name="activity_log_backup_finished_snackbar_message">Sajti juaj u rikthye me sukses\nU rikthye sipas %1$s %2$s</string>
+    <string name="activity_log_backup_started_snackbar_message">Sajti juaj po rikthehet\nRikthim sipas %1$s %2$s</string>
     <string name="restore_complete_failed_icon_content_description">Ikonë gabimi</string>
     <string name="restore_complete_failed_action_button_content_description">Buton “U bë”</string>
     <string name="restore_another_process_running">Ka një rikthim në kryerje e sipër.</string>
@@ -106,13 +141,12 @@ Language: sq_AL
     <string name="web_preview_tablet">Tablet</string>
     <string name="web_preview_mobile">Celular</string>
     <string name="quick_start_card_menu_remove">Mos e shfaq sërish</string>
-    <string name="quick_start_card_menu_hide">Fshihe</string>
     <string name="quick_start_dialog_review_pages_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
     <string name="quick_start_dialog_review_pages_message">Ndryshoni, shtoni ose hiqni faqe të sajtit tuaj.</string>
     <string name="quick_start_dialog_review_pages_title">Shqyrtoni faqe sajti</string>
     <string name="quick_start_dialog_edit_homepage_message_pages_short">Që të përpunoni Faqen tuaj hyrëse, përzgjidhni %1$s Faqe hyrëse %2$s.</string>
     <string name="quick_start_dialog_edit_homepage_message_short">Që të shihni listën e faqeve tuaja, përzgjidhni %1$s Faqe %2$s.</string>
-    <string name="quick_start_card_menu_pin">Fiksoje</string>
+    <string name="quick_start_card_menu_pin">Fiksoje këtë</string>
     <string name="quick_start_dialog_edit_homepage_message">Ndryshoni, shtoni ose hiqni lëndë nga faqja hyrëse e sajtit tuaj.</string>
     <string name="quick_start_dialog_edit_homepage_title">Përpunoni faqen tuaj hyrëse</string>
     <string name="reader_menu_mark_as_unseen">Hiqi shenjë si i parë</string>
@@ -123,9 +157,9 @@ Language: sq_AL
     <string name="reader_marked_post_as_unseen">Postimit iu hoq shenja si i parë</string>
     <string name="reader_marked_post_as_seen">Postimit iu vu shenjë si i parë</string>
     <string name="threat_fix_all_status_error_message">Gabim në marrje gjendje zgjidhjeje. Ju lutemi, lidhuni me asistencën tonë.</string>
-    <string name="threat_fix_all_status_success_message">Kërcënimet u zgjidhën me sukses.</string>
     <string name="threat_fix_all_error_message">Gabim në zgjidhje kërcënimesh. Ju lutemi, lidhuni me asistencën tonë.</string>
-    <string name="threat_fix_all_warning_message">Ju lutemi, ripohoni se doni të zgjidhni %s kërcënime aktive.</string>
+    <string name="threat_fix_all_status_success_message_singular">Kërcënimi u zgjidh me sukses.</string>
+    <string name="threat_fix_all_warning_message_singular">Ju lutemi, ripohoni se doni të zgjidhni %s kërcënim aktiv.</string>
     <string name="threat_fix_all_warning_title">Zgjidhi krejt kërcënimet</string>
     <string name="threat_ignore_error_message">Gabim në shpërfillje kërcënimi. Ju lutemi, lidhuni me ata të asistencës.</string>
     <string name="threat_ignore_success_message">Kërcënimi u shpërfill.</string>
@@ -162,9 +196,9 @@ Language: sq_AL
     <string name="backup_download_complete_page_title">Kopjeruajtja Juaj</string>
     <string name="backup_download_progress_label">%1$s%%</string>
     <string name="backup_download_progress_icon_content_description">Po krijohet ikonë “kopjeruajtjeje të shkarkueshme”</string>
-    <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati</string>
     <string name="backup_download_progress_description_with_two_parameters">Po krijojmë një kopjeruajtje të shkarkueshme të sajtit tuaj prej %1$s %2$s.</string>
     <string name="backup_download_progress_header">Aktualisht duke krijuar një kopjeruajtje të shkarkueshme të sajtit tuaj</string>
+    <string name="backup_download_progress_footnote">S’ka nevojë të rrini e të pritni. Do t’ju njoftojmë, kur kopjeruajtja juaj të jetë gati.</string>
     <string name="backup_download_progress_page_title">Shkarkoje Kopjeruajtjen</string>
     <string name="backup_download_another_download_running">Po kryhet një shkarkim tjetër.</string>
     <string name="backup_download_generic_failure">Pati një problem me trajtimin e kërkesës. Ju lutemi, riprovoni më vonë.</string>
@@ -205,13 +239,12 @@ Language: sq_AL
     <string name="threat_item_sub_header_file_signature">%s kërcënimi të gjetur</string>
     <string name="threat_item_header_infected_core_file">%s: kartelë bazë e infektuar</string>
     <string name="threat_item_header_threat_found">U gjet kërcënim</string>
-    <string name="threats_found">U gjetën kërcënime</string>
-    <string name="scan_in_few_seconds">pak sekonda</string>
-    <string name="scan_in_minutes_ago">%s minuta më parë</string>
-    <string name="scan_in_hours_ago">%s orë më parë</string>
     <string name="scan_this_site">këtë sajt</string>
     <string name="threats_fix_all">Ndreqi Krejt</string>
     <string name="scan_idle_last_scan_description">Kontrolli i fundit nga Jetpack-u u krye më %s dhe s’gjeti ndonjë rrezik. %s</string>
+    <string name="scan_in_few_seconds">pak sekonda më parë</string>
+    <string name="scan_in_minutes_ago">%s minutë(a) më parë</string>
+    <string name="scan_in_hours_ago">%s orë më parë</string>
     <string name="scan_idle_threats_found_title">Sajti juaj mund të jetë i rrezikuar</string>
     <string name="scan_idle_no_threats_found_title">Mos vrisni mendjen</string>
     <string name="scan_again">Riskanoje</string>
@@ -229,7 +262,6 @@ Language: sq_AL
     <string name="activity_log_date_range_filter_label_content_description">Filtër Interval Datash</string>
     <string name="activity_log_active_filter_empty_subtitle">Provoni të ndryshoni filtrat për intervalin tuaj të datave ose për lloj veprimtarie</string>
     <string name="activity_log_active_filter_empty_title">S’u gjetën veprimtari me përputhje</string>
-    <string name="rewind">Riktheje</string>
     <string name="backup_item_media_uploads">Ngarkime Media</string>
     <string name="backup_item_plugins">Shtojca WordPress</string>
     <string name="backup_item_themes">Tema WordPress</string>
@@ -490,7 +522,6 @@ Language: sq_AL
     <string name="continue_with_google_terms_of_service_text">Nëse vazhdoni me Google dhe ende s’keni një llogari WordPress.com, po krijoni një llogari dhe pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
     <string name="enter_your_site_address">Jepni adresën e sajtit tuaj ekzistues</string>
     <string name="continue_terms_of_service_text">Duke u regjistruar, pajtoheni me %1$sKushtet tona të Shërbimit%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Do t’ju dërgojmë me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com.</string>
     <string name="signup_confirmation_message">Këtë adresë email do ta përdorim për të krijuar llogarinë tuaj të re WordPress.com.</string>
     <string name="signup_magic_link_message">Ju dërguam me email një lidhje regjistrimi për të krijuar llogarinë tuaj të re WordPress.com. Kontrolloni email-et në këtë pajisje dhe prekni lidhjen te email-i i ardhur nga WordPress.com.</string>
     <string name="enter_account_info_for_site">Jepni të dhënat e llogarisë suaj për %1$s.</string>
@@ -1178,7 +1209,6 @@ Language: sq_AL
     <string name="notification_new_site_creation_failed">Pati një problem</string>
     <string name="notification_new_site_creation_title">Krijoni Sajt</string>
     <string name="new_site_creation_create_site_button">Krijoje Sajtin</string>
-    <string name="new_site_creation_search_domain_input_hint">Kërkoni te Përkatësitë</string>
     <string name="new_site_creation_domain_header_subtitle">Ky është vendi ku do t’ju gjejnë njerëzit në internet.</string>
     <string name="new_site_creation_empty_domain_list_message">S’ka adresa me përputhje me kërkimin tuaj</string>
     <string name="site_creation_error_generic_subtitle">Gabim gjatë komunikimit me shërbyesin, ju lutemi, riprovoni</string>
