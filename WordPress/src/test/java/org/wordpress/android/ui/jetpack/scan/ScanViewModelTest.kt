@@ -413,7 +413,7 @@ class ScanViewModelTest : BaseUnitTest() {
             whenever(
                 htmlMessageUtils
                     .getHtmlMessageFromStringFormatResId(
-                        R.string.scan_finished_threats_found_message_plural,
+                        R.string.scan_finished_potential_threats_found_message_plural,
                         "${threats.size}"
                     )
             ).thenReturn(threatsFoundMessage)
