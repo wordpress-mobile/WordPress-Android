@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-25 22:57:29+0000
+Translation-Revision-Date: 2021-03-04 12:31:56+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
+    <string name="activity_log_backup_download_notice_download_action">Stáhnout</string>
+    <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
     <string name="threat_fix_all_status_success_message_plural">Hrozby byly úspěšně opraveny.</string>
     <string name="threat_fix_all_warning_message_plural">Potvrďte, že chcete opravit všechny aktivní hrozby %s.</string>
     <string name="scan_idle_with_threats_description_plural">Prohledávání zjistilo %1s potenciálních hrozeb s %2s. Zkontrolujte je prosím níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
@@ -389,7 +392,6 @@ Language: cs_CZ
     <string name="mlp_preview_title">Náhled rozložení</string>
     <string name="mlp_notice_blank_page_created">Prázdná stránka vytvořena</string>
     <string name="stories_intro_main_title">Představujeme příběhy</string>
-    <string name="stories_intro_main_subtitle">Máte rychlý přístup k příběhu příspěvků a rádi bychom to pro vás zkusiti.</string>
     <string name="stories_intro_image_caption_first">Jak vytvořit příběhový příspěvek</string>
     <string name="stories_intro_image_caption_second">Příklad názvu příběhu</string>
     <string name="stories_intro_title_first">Nyní jsou příběhy pro každého</string>

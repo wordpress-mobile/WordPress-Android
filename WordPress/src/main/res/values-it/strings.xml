@@ -1,12 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-20 13:19:31+0000
+Translation-Revision-Date: 2021-03-04 11:54:10+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: it
 -->
 <resources>
+    <string name="threat_fix_all_status_success_message_plural">Le minacce sono state risolte.</string>
+    <string name="threat_fix_all_warning_message_plural">Conferma di voler risolvere tutte le %s minacce attive</string>
+    <string name="scan_idle_with_threats_description_plural">La scansione ha trovato %1s potenziali minacce con %2s. Esamina questi elementi di seguito oppure tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
+    <string name="scan_fixing_threats_description_plural">Stiamo facendo il possibile per risolvere queste minacce in background. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
+    <string name="gutenberg_native_edit_focal_point">Modifica il punto focale</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio nella parte inferiore per modificare, sostituire o cancellare l\'immagine</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio delle azioni per modificare, sostituire o cancellare l\'immagine</string>
+    <string name="new_site_creation_search_domain_example">esempio.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Digita un nome per il sito</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Tutti i task completati&lt;/b>&lt;br/>Raggiungerai più persone. Buon lavoro.</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Tutti i task completati&lt;/b>&lt;br/>Hai personalizzato il sito. Ben fatto!</string>
+    <string name="quick_start_card_menu_hide">Nascondi per ora</string>
+    <string name="magic_link_not_meaning_to_create_account">Non volevi creare un nuovo account? Torna indietro per inserire nuovamente l\'indirizzo e-mail.</string>
+    <string name="invite_links_disable_dialog_message">Una volta disattivato il link di invito, nessuno sarà in grado di usarlo per unirsi al tuo team. Sei sicuro?</string>
+    <string name="invite_links_disable_dialog_title">Disattiva il link di invito</string>
+    <string name="invite_links_bad_format_response">Risposta non valida ricevuta</string>
+    <string name="invite_links_null_response">Nessuna risposta ricevuta</string>
+    <string name="invite_links_cannot_get_role_data_error">Si è verificato un errore durante il recupero dei dati per il ruolo %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">Si è verificato un errore durante il recupero dei ruoli</string>
+    <string name="invite_links_generic_get_data_error">Errore sconosciuto durante il recupero dei dati dei link di invito</string>
+    <string name="invite_links_helper_text">Usa questo link per accettare i membri del team senza doverli invitare uno per uno. Chiunque visiti questo URL potrà iscriversi alla tua organizzazione, anche se ha ricevuto un link da qualcun altro, quindi assicurati di condividerlo con le persone fidate.</string>
+    <string name="invite_links_expire_date">Scadenza %1$s</string>
+    <string name="invite_links_disable_invite_link">Disattiva il link di invito</string>
+    <string name="invite_links_share_invite_link">Condividi il link di invito</string>
+    <string name="invite_links_generate">Genera un nuovo link</string>
+    <string name="invite_links_get_status_retry">Aggiorna lo stato dei link</string>
+    <string name="invite_links_section_title">Link di invito</string>
+    <string name="threats_found_singular">Trovata minaccia</string>
+    <string name="threats_found_plural">Minacce rivelate</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> %s potenziali minacce trovate</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> 1 potenziale minaccia trovata</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> Nessuna minaccia trovata</string>
+    <string name="scan_fixing_threats_title_singular">Risoluzione della minaccia</string>
+    <string name="disable">Disabilita</string>
     <string name="quick_start_list_review_pages_subtitle">Controlla le pagine e apporta modifiche oppure aggiungi o rimuovi le pagine.</string>
+    <string name="quick_start_card_menu_unpin">Rimuovi questo</string>
     <string name="quick_start_list_view_site_title">Visita il tuo sito</string>
     <string name="quick_start_list_upload_icon_subtitle">Aggiungi un\'icona al sito per un aspetto professionale e raffinato.</string>
     <string name="quick_start_list_follow_site_subtitle">Scopri e segui i siti che ti ispirano.</string>
@@ -58,10 +93,12 @@ Language: it
     <string name="threat_status_fixed">Corretto</string>
     <string name="threat_found_header">Trovato</string>
     <string name="scan_here_to_help">qui per aiutare</string>
+    <string name="scan_idle_with_threats_description_singular">La scansione ha trovato %1s potenziale minaccia con %2s. Esamina questa minaccia di seguito ed tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
     <string name="scan_idle_manual_scan_description">Per esaminare il sito nuovamente, esegui una scansione manuale o attendi che Jetpack scansioni il sito più tardi in giornata.</string>
     <string name="scan_provisioning_description">Jetpack Scan ti dà il benvenuto! Stiamo esaminando l\'ambito del tuo sito, impostando l\'esecuzione di una scansione completa. Ti avviseremo se riscontreremo problemi che possono influire su una scansione, quindi verrà avviata la tua prima scansione completa.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan ti dà il benvenuto. Stiamo analizzando il tuo sito per la prima volta e presto riceverai i risultati.</string>
     <string name="scan_scanning_description">Ti invieremo una notifica al completamento della scansione. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
+    <string name="scan_fixing_threats_description_singular">Stiamo facendo il possibile per risolvere questa minaccia in background. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan non ha potuto completare una scansione del sito. Verifica se il tuo sito non è attivo, in caso contrario riprova. Se lo è, o se Jetpack Scan continua ad avere problemi, contatta il nostro team di supporto.</string>
     <string name="scan_request_failed_title">Si è verificato un problema.</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Backup del sito in corso</string>
@@ -119,6 +156,8 @@ Language: it
     <string name="reader_marked_post_as_seen">Articolo contrassegnato come letto</string>
     <string name="threat_fix_all_status_error_message">Errore durante il recupero dello stato della correzione. Contatta il nostro supporto.</string>
     <string name="threat_fix_all_error_message">Errore durante la risoluzione delle minacce. Contatta il nostro supporto.</string>
+    <string name="threat_fix_all_status_success_message_singular">La minaccia è stata risolta correttamente.</string>
+    <string name="threat_fix_all_warning_message_singular">Conferma di voler correggere la %s minaccia attiva.</string>
     <string name="threat_fix_all_warning_title">Risolvi tutte le minacce</string>
     <string name="threat_ignore_error_message">Errore mentre la minaccia veniva ignorata. Contatta il supporto.</string>
     <string name="threat_ignore_success_message">Minaccia ignorata.</string>
@@ -157,6 +196,7 @@ Language: it
     <string name="backup_download_progress_description_with_two_parameters">Stiamo creando un backup scaricabile del sito da %1$s %2$s.</string>
     <string name="backup_download_progress_header">Creazione in corso del backup scaricabile del sito</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_footnote">Non è necessario attendere. Ti invieremo una notifica quando il backup sarà pronto.</string>
     <string name="backup_download_progress_page_title">Scarica il backup</string>
     <string name="backup_download_another_download_running">È presente un altro donwload in corso.</string>
     <string name="backup_download_generic_failure">Si è verificato un errore durante la gestione della richiesta. Riprova più tardi.</string>
@@ -202,6 +242,9 @@ Language: it
     <string name="threats_fix_all">Correggi tutto</string>
     <string name="scan_this_site">questo sito</string>
     <string name="scan_idle_last_scan_description">L\'ultima scansione di Jetpack è stata eseguita il %s e non abbiamo trovato alcun rischio. %s</string>
+    <string name="scan_in_few_seconds">alcuni secondi fa</string>
+    <string name="scan_in_minutes_ago">%s minuto/i fa</string>
+    <string name="scan_in_hours_ago">%s ora/e fa</string>
     <string name="scan_idle_threats_found_title">Il sito potrebbe essere a rischio</string>
     <string name="scan_idle_no_threats_found_title">Non preoccuparti di nulla</string>
     <string name="scan_again">Esegui di nuovo la scansione</string>
@@ -342,7 +385,6 @@ Language: it
     <string name="stories_intro_title_first">Le storie ora sono per tutti</string>
     <string name="stories_intro_image_caption_second">Esempio titolo storia</string>
     <string name="stories_intro_image_caption_first">Come creare un articolo della storia</string>
-    <string name="stories_intro_main_subtitle">Hai accesso anticipato agli articoli della storia e ci piacerebbe che tu facessi una prova.</string>
     <string name="stories_intro_main_title">Introduzione agli articoli della storia</string>
     <string name="mlp_notice_blank_page_created">Pagina bianca creata</string>
     <string name="mlp_notice_page_created">Pagina creata</string>

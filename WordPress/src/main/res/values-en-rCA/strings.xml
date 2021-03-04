@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-23 12:16:35+0000
+Translation-Revision-Date: 2021-03-04 10:39:20+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: en_CA
 -->
 <resources>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
     <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
     <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
     <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
@@ -387,7 +390,6 @@ Language: en_CA
     <string name="stories_intro_title_first">Now stories are for everyone</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
     <string name="stories_intro_main_title">Introducing Story Posts</string>
     <string name="mlp_notice_blank_page_created">Blank page created</string>
     <string name="mlp_notice_page_created">Page created</string>

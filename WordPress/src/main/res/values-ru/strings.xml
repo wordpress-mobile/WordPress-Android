@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-27 08:51:40+0000
+Translation-Revision-Date: 2021-03-03 20:09:44+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
+    <string name="activity_log_backup_download_notice_download_action">Скачать</string>
     <string name="threat_fix_all_status_success_message_plural">Угрозы были успешно устранены.</string>
     <string name="threat_fix_all_warning_message_plural">Подтвердите исправление всех %s активных угроз.</string>
     <string name="scan_idle_with_threats_description_plural">Проверка обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
@@ -387,7 +390,6 @@ Language: ru
     <string name="stories_intro_title_first">Истории доступны для всех</string>
     <string name="stories_intro_image_caption_second">Пример названия истории</string>
     <string name="stories_intro_image_caption_first">Как создать историю</string>
-    <string name="stories_intro_main_subtitle">Вам предоставлен ранний доступ к Историям, и мы хотим чтобы вы их попробовали.</string>
     <string name="stories_intro_main_title">Представляем записи-истории</string>
     <string name="mlp_notice_blank_page_created">Создана пустая страница</string>
     <string name="mlp_notice_page_created">Страница создана</string>

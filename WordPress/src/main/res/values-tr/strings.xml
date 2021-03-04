@@ -387,7 +387,6 @@ Language: tr
     <string name="stories_intro_title_first">Artık herkes öykülere erişebilir</string>
     <string name="stories_intro_image_caption_second">Öykü başlığı örneği</string>
     <string name="stories_intro_image_caption_first">Öykü yayını nasıl oluşturulur?</string>
-    <string name="stories_intro_main_subtitle">Öykü yayınlarına erken erişiminiz var ve denemenizi çok isteriz.</string>
     <string name="stories_intro_main_title">Öykü Yayınlarına Giriş</string>
     <string name="mlp_notice_blank_page_created">Boş sayfa oluşturuldu</string>
     <string name="mlp_notice_page_created">Sayfa oluşturuldu</string>

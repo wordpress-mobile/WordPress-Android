@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-25 02:40:30+0000
+Translation-Revision-Date: 2021-03-02 21:29:00+0000
 Plural-Forms: nplurals=6; plural=(n == 0) ? 0 : ((n == 1) ? 1 : ((n == 2) ? 2 : ((n % 100 >= 3 && n % 100 <= 10) ? 3 : ((n % 100 >= 11 && n % 100 <= 99) ? 4 : 5))));
 Generator: GlotPress/3.0.0-alpha.2
 Language: ar
@@ -9,13 +9,24 @@ Language: ar
     <string name="threat_fix_all_status_success_message_plural">تم معالجة التهديدات بنجاح.</string>
     <string name="threat_fix_all_warning_message_plural">يرجى التأكيد على رغبتك في معالجة جميع التهديدات النشطة التي تصل إلى %s.</string>
     <string name="scan_idle_with_threats_description_plural">عثر الفحص على %1s من التهديدات المحتملة من خلال %2s. يرجى مراجعتها أدناه واتخاذ الإجراءات أو الضغط على زر إصلاح الكل. نحن ⁦%3$s⁩ إذا كنت بحاجة إلينا.</string>
+    <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
+    <string name="gutenberg_native_edit_focal_point">Edit focal point</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Action Sheet to edit, replace, or clear the image</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Type a name for your site</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>All tasks completed&lt;/b>&lt;br/>You’ll reach more people. Nice job!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>All tasks completed&lt;/b>&lt;br/>You’ve customized your site. أحسنت!</string>
     <string name="quick_start_card_menu_hide">إخفاء حاليًا</string>
     <string name="magic_link_not_meaning_to_create_account">ألم تقصد إنشاء حساب جديد؟ العودة للخلف لإعادة إدخال عنوان بريدك الإلكتروني.</string>
     <string name="invite_links_disable_dialog_message">بمجرد تعطيل رابط الدعوة هذا، لن يتمكن أي شخص من استخدامه للانضمام إلى فريقك. هل أنتَ متأكد؟</string>
     <string name="invite_links_disable_dialog_title">تعطيل رابط الدعوة</string>
     <string name="invite_links_bad_format_response">تم تلقي ردّ غير صالح</string>
     <string name="invite_links_null_response">لم يتم تلقي أي ردّ</string>
+    <string name="invite_links_cannot_get_role_data_error">There was an error getting data for role %1$s</string>
+    <string name="invite_links_cannot_get_roles_error">There was an error getting roles</string>
+    <string name="invite_links_generic_get_data_error">Unknown error fetching invite links data</string>
+    <string name="invite_links_helper_text">استخدم هذا الرابط لضم أعضاء فريقك من دون دعوتهم واحدًا تلو الآخر. Anybody visiting this URL will be able to sign up to your organization, even if they received the link from somebody else, so make sure that you share it with trusted people.</string>
     <string name="invite_links_expire_date">تنتهي الصلاحية في %1$s</string>
     <string name="invite_links_disable_invite_link">تعطيل رابط الدعوة</string>
     <string name="invite_links_share_invite_link">مشاركة رابط الدعوة</string>
@@ -24,6 +35,9 @@ Language: ar
     <string name="invite_links_section_title">رابط الدعوة</string>
     <string name="threats_found_singular">تم العثور على تهديد</string>
     <string name="threats_found_plural">تم العثور على تهديدات</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> %s potential threats found</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> 1 potential threat found</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> No threats found</string>
     <string name="scan_fixing_threats_title_singular">جاري معالجة التهديد</string>
     <string name="disable">تعطيل</string>
     <string name="quick_start_card_menu_unpin">إلغاء تثبيت هذا</string>
@@ -373,7 +387,6 @@ Language: ar
     <string name="stories_intro_title_first">تتوافر القصص الآن للجميع</string>
     <string name="stories_intro_image_caption_second">مثال لعنوان قصة</string>
     <string name="stories_intro_image_caption_first">كيفية إنشاء مقالة قصة</string>
-    <string name="stories_intro_main_subtitle">يحق لك الوصول مبكرًا إلى مقالات القصص، ويسعدنا أن نجربها.</string>
     <string name="stories_intro_main_title">مقدمة لمقالات القصص</string>
     <string name="mlp_notice_blank_page_created">تم إنشاء صفحة فارغة</string>
     <string name="mlp_notice_page_created">تم إنشاء صفحة</string>
