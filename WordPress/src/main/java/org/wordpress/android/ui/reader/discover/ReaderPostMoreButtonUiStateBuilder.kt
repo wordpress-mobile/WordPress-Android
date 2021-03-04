@@ -23,6 +23,7 @@ import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
 import javax.inject.Inject
 import javax.inject.Named
 
+@Suppress("TooManyFunctions")
 @Reusable
 class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
     private val readerPostTableWrapper: ReaderPostTableWrapper,
@@ -48,27 +49,14 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
         val isPostFollowed = readerPostTableWrapper.isPostFollowed(post)
 
         menuItems.add(buildVisitSite(onButtonClicked))
-
-        if (isPostFollowed) {
-            // When post not from external feed then show notifications option.
-            if (!readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
-                menuItems.add(buildSiteNotifications(
-                        readerBlogTableWrapper.isNotificationsEnabled(post.blogId), onButtonClicked))
-            }
-        }
-
-        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
-            if (post.isSeenSupported) {
-                menuItems.add(buildPostSeenUnseen(readerPostTableWrapper.isPostSeen(post), onButtonClicked))
-            }
-        }
-
+        checkAndAddMenuItemForSiteNotifications(menuItems, isPostFollowed, post, onButtonClicked)
+        checkAndAddMenuItemForPostSeenUnseen(menuItems, post, onButtonClicked)
         menuItems.add(buildShare(onButtonClicked))
         menuItems.add(buildFollow(isPostFollowed, onButtonClicked))
         menuItems.add(SpacerNoAction())
-        if (!isPostFollowed) menuItems.add(buildBlockSite(onButtonClicked))
-
+        checkAndAddMenuItemForBlockSite(menuItems, isPostFollowed, onButtonClicked)
         menuItems.add(buildReportPost(onButtonClicked))
+
         return menuItems
     }
 
@@ -81,6 +69,21 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     iconColor = R.attr.wpColorOnSurfaceMedium,
                     onClicked = onButtonClicked
             )
+
+    private fun checkAndAddMenuItemForSiteNotifications(
+        menuItems: MutableList<ReaderPostCardAction>,
+        isPostFollowed: Boolean,
+        post: ReaderPost,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ) {
+        if (isPostFollowed) {
+            // When post not from external feed then show notifications option.
+            if (!readerUtilsWrapper.isExternalFeed(post.blogId, post.feedId)) {
+                menuItems.add(buildSiteNotifications(
+                        readerBlogTableWrapper.isNotificationsEnabled(post.blogId), onButtonClicked))
+            }
+        }
+    }
 
     private fun buildSiteNotifications(
         isNotificationsEnabled: Boolean,
@@ -106,6 +109,18 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                         onClicked = onButtonClicked
                 )
             }
+
+    private fun checkAndAddMenuItemForPostSeenUnseen(
+        menuItems: MutableList<ReaderPostCardAction>,
+        post: ReaderPost,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ) {
+        if (seenUnseenWithCounterFeatureConfig.isEnabled()) {
+            if (post.isSeenSupported) {
+                menuItems.add(buildPostSeenUnseen(readerPostTableWrapper.isPostSeen(post), onButtonClicked))
+            }
+        }
+    }
 
     private fun buildPostSeenUnseen(
         isPostSeen: Boolean,
@@ -163,6 +178,14 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     onClicked = onButtonClicked
             )
         }
+
+    private fun checkAndAddMenuItemForBlockSite(
+        menuItems: MutableList<ReaderPostCardAction>,
+        isPostFollowed: Boolean,
+        onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
+    ) {
+        if (!isPostFollowed) menuItems.add(buildBlockSite(onButtonClicked))
+    }
 
     private fun buildBlockSite(onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit) =
             SecondaryAction(
