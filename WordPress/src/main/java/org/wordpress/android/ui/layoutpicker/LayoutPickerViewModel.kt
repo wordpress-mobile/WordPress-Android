@@ -36,8 +36,8 @@ abstract class LayoutPickerViewModel(
     private val _previewMode = SingleLiveEvent<PreviewMode>()
     val previewMode: LiveData<PreviewMode> = _previewMode
 
-    private val _onCategorySelected = MutableLiveData<Event<Unit>>()
-    val onCategorySelected: LiveData<Event<Unit>> = _onCategorySelected
+    private val _onCategorySelectionChanged = MutableLiveData<Event<Unit>>()
+    val onCategorySelectionChanged: LiveData<Event<Unit>> = _onCategorySelectionChanged
 
     private val _onThumbnailModeButtonPressed = SingleLiveEvent<Unit>()
     val onThumbnailModeButtonPressed: LiveData<Unit> = _onThumbnailModeButtonPressed
@@ -101,7 +101,7 @@ abstract class LayoutPickerViewModel(
                 )
             }
             loadCategories()
-            _onCategorySelected.postValue(Event(Unit))
+            _onCategorySelectionChanged.postValue(Event(Unit))
         }
     }
 

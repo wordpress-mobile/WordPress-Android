@@ -171,7 +171,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
         })
 
-        viewModel.onCategorySelected.observe(this, Observer {
+        viewModel.onCategorySelectionChanged.observe(this, Observer {
             it?.applyIfNotHandled {
                 layoutsRecyclerView?.smoothScrollToPosition(0)
             }

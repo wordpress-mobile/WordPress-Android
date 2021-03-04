@@ -140,7 +140,7 @@ class HomePagePickerFragment : Fragment() {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onCategorySelected.observe(viewLifecycleOwner, Observer {
+        viewModel.onCategorySelectionChanged.observe(viewLifecycleOwner, Observer {
             it?.applyIfNotHandled {
                 layoutsRecyclerView?.smoothScrollToPosition(0)
             }
