@@ -151,7 +151,7 @@ class StatsViewModel
         }
     }
 
-    private fun CoroutineScope.loadData(executeLoading: suspend () -> Unit) = launch {
+    private fun loadData(executeLoading: suspend () -> Unit) = launch {
         _isRefreshing.value = true
 
         executeLoading()
