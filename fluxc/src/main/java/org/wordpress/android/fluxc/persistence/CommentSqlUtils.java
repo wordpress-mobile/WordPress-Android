@@ -77,10 +77,9 @@ public class CommentSqlUtils {
                       .execute();
     }
 
-    public static int removeDeletedComments(SiteModel site, ArrayList<CommentModel> comments, boolean isEndOfDataSet,
-                                            boolean isStartOfDataSet,
-                                            CommentStatus... statuses) {
-        if (site == null) {
+    public static int removeDeletedComments(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
+                                            int requestOffset, CommentStatus... statuses) {
+        if (site == null || comments == null || comments.isEmpty()) {
             return 0;
         }
 
@@ -89,9 +88,9 @@ public class CommentSqlUtils {
         Collections.sort(comments, new Comparator<CommentModel>() {
             @Override
             public int compare(CommentModel o1, CommentModel o2) {
-                long x = o1.getPublishedTimestamp();
-                long y = o2.getPublishedTimestamp();
-                return (x < y) ? -1 : ((x == y) ? 0 : 1);
+                long x = o2.getPublishedTimestamp();
+                long y = o1.getPublishedTimestamp();
+                return (y < y) ? -1 : ((x == y) ? 0 : 1);
             }
         });
 
@@ -111,35 +110,42 @@ public class CommentSqlUtils {
             targetStatuses.addAll(Arrays.asList(statuses));
         }
 
-        if (isEndOfDataSet) {
-            return WellSql.delete(CommentModel.class)
-                          .where()
-                          .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                          .isIn(CommentModelTable.STATUS, targetStatuses)
-                          .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
-                          .endWhere()
-                          .execute();
-        } else {
-            int numOfDeletedComments = 0;
-            if (isStartOfDataSet) {
-                numOfDeletedComments += WellSql.delete(CommentModel.class)
-                              .where()
-                              .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                              .isIn(CommentModelTable.STATUS, targetStatuses)
-                              .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
-                              .endWhere()
-                              .execute();
-            }
-            return numOfDeletedComments + WellSql.delete(CommentModel.class)
-                          .where()
-                          .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                          .isIn(CommentModelTable.STATUS, targetStatuses)
-                          .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                          .greaterThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
-                          .lessThenOrEqual(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
-                          .endWhere()
-                          .execute();
+        int numOfDeletedComments = 0;
+
+        // try to trim comments from the top
+        if (requestOffset == 0) {
+            numOfDeletedComments += WellSql.delete(CommentModel.class)
+                                           .where()
+                                           .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                                           .isIn(CommentModelTable.STATUS, targetStatuses)
+                                           .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
+                                           .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                                           .endWhere()
+                                           .execute();
         }
+
+        // try to trim comments from the bottom
+        if (comments.size() < maxEntriesInResponse) {
+            numOfDeletedComments += WellSql.delete(CommentModel.class)
+                                           .where()
+                                           .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                                           .isIn(CommentModelTable.STATUS, targetStatuses)
+                                           .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
+                                           .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
+                                           .endWhere()
+                                           .execute();
+        }
+
+        // remove comments from the middle
+        return numOfDeletedComments + WellSql.delete(CommentModel.class)
+                                             .where()
+                                             .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
+                                             .isIn(CommentModelTable.STATUS, targetStatuses)
+                                             .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
+                                             .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                                             .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
+                                             .endWhere()
+                                             .execute();
     }
 
     public static int removeCommentsWithFilters(SiteModel site, CommentStatus... statuses) {

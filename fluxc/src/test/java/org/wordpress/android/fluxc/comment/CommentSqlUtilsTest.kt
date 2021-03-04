@@ -18,28 +18,106 @@ import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.persistence.CommentSqlUtils
 import org.wordpress.android.fluxc.persistence.WellSqlConfig
 import java.util.ArrayList
-import java.util.Random
 
 @RunWith(RobolectricTestRunner::class)
 class CommentSqlUtilsTest {
-    private val mRandom = Random(System.currentTimeMillis())
+    val site = SiteModel().apply {
+        id = 1
+        siteId = 2
+    }
 
-    val site = SiteModel()
     @Before fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
         val config: WellSqlConfig = SingleStoreWellSqlConfigForTests(appContext, CommentModel::class.java)
         WellSql.init(config)
         config.reset()
-
-        site.id = 1
-        site.siteId = 2
     }
 
-    // Attempts to insert null then verifies there is no media
     @Test fun `removeDeletedComments correctly removes deleted comments with mixed statuses from mixed list`() {
-        val commentsInDb = generateCommentModels(40, ALL)
-        val freshComments = generateCommentModels(33, ALL)
-        freshComments.removeIf { it.remoteCommentId == 5L }
+        val commentsInDb = generateCommentModels(60, ALL) // timestamp from 60 to 1
+        val freshComments = generateCommentModels(33, ALL, 28) // timestamp from 60 to 28
+
+        // remove 3 comments from the middle so we will get 30 comments in the list
+        freshComments.removeIf { it.remoteCommentId == 55L }
+        freshComments.removeIf { it.remoteCommentId == 45L }
+        freshComments.removeIf { it.remoteCommentId == 35L }
+
+        commentsInDb.forEach {
+            CommentSqlUtils.insertOrUpdateComment(it)
+        }
+
+        Assertions.assertThat(
+                CommentSqlUtils.getCommentsForSite(
+                        site,
+                        SelectQuery.ORDER_DESCENDING,
+                        APPROVED,
+                        UNAPPROVED
+                ).size
+        )
+                .isEqualTo(60)
+
+        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, APPROVED, UNAPPROVED)
+        val cleanedComments = CommentSqlUtils.getCommentsForSite(
+                site,
+                SelectQuery.ORDER_DESCENDING,
+                APPROVED,
+                UNAPPROVED
+        )
+
+        Assertions.assertThat(numCommentsDeleted).isEqualTo(3)
+        Assertions.assertThat(cleanedComments.size).isEqualTo(57)
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 55L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 45L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 35L }).isNull()
+    }
+
+    @Test fun `removeDeletedComments correctly removes deleted comments with one status from mixed list`() {
+        val commentsInDb = generateCommentModels(60, ALL) // timestamp from 60 to 1
+
+        commentsInDb.find { it.remoteCommentId == 55L }?.status = APPROVED.toString()
+        commentsInDb.find { it.remoteCommentId == 45L }?.status = APPROVED.toString()
+        commentsInDb.find { it.remoteCommentId == 35L }?.status = APPROVED.toString()
+
+        val freshComments = generateCommentModels(33, APPROVED, 28) // timestamp from 60 to 28
+        // remove 3 comments from the middle so we will get 30 comments in the list
+        freshComments.removeIf { it.remoteCommentId == 55L }
+        freshComments.removeIf { it.remoteCommentId == 45L }
+        freshComments.removeIf { it.remoteCommentId == 35L }
+
+        commentsInDb.forEach {
+            CommentSqlUtils.insertOrUpdateComment(it)
+        }
+
+        Assertions.assertThat(
+                CommentSqlUtils.getCommentsForSite(
+                        site,
+                        SelectQuery.ORDER_DESCENDING,
+                        APPROVED,
+                        UNAPPROVED
+                ).size
+        )
+                .isEqualTo(60)
+
+        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, APPROVED)
+        val cleanedComments = CommentSqlUtils.getCommentsForSite(
+                site,
+                SelectQuery.ORDER_DESCENDING,
+                ALL
+        )
+
+        Assertions.assertThat(numCommentsDeleted).isEqualTo(3)
+        Assertions.assertThat(cleanedComments.size).isEqualTo(57)
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 55L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 45L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 35L }).isNull()
+    }
+
+    @Test fun `removeDeletedComments removes comments from start, end and the middle of DB`() {
+        val commentsInDb = generateCommentModels(65, ALL)
+        val freshComments = generateCommentModels(25, ALL, 4)
+
+        // 3 comments are missing from the middle
+        freshComments.removeIf { it.remoteCommentId == 7L }
         freshComments.removeIf { it.remoteCommentId == 15L }
         freshComments.removeIf { it.remoteCommentId == 20L }
 
@@ -55,27 +133,41 @@ class CommentSqlUtilsTest {
                         UNAPPROVED
                 ).size
         )
-                .isEqualTo(40)
+                .isEqualTo(65)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, false, false, APPROVED, UNAPPROVED)
+
+        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(
+                site,
+                freshComments,
+                30,
+                0,
+                APPROVED,
+                UNAPPROVED
+        )
         val cleanedComments = CommentSqlUtils.getCommentsForSite(
                 site,
                 SelectQuery.ORDER_DESCENDING,
                 APPROVED,
                 UNAPPROVED
         )
-
-        Assertions.assertThat(numCommentsDeleted).isEqualTo(3)
-        Assertions.assertThat(cleanedComments.size).isEqualTo(37)
-        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 5L }).isNull()
+        // from 65 comments in DB we expect to have only 22 fresh comments (remove first 3, 3 from the middle and all the comments that go after last comment in freshComments
+        Assertions.assertThat(numCommentsDeleted).isEqualTo(43)
+        Assertions.assertThat(cleanedComments.size).isEqualTo(22)
+        freshComments.forEach {
+            CommentSqlUtils.insertOrUpdateComment(it)
+        }
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 7L }).isNull()
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 15L }).isNull()
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 20L }).isNull()
     }
 
-    // Attempts to insert null then verifies there is no media
     @Test fun `removeDeletedComments trims deleted comments from bottom of DB when reaching the end of dataset`() {
-        val commentsInDb = generateCommentModels(50, ALL)
-        val freshComments = generateCommentModels(29, ALL, 31)
+        val commentsInDb = generateCommentModels(60, ALL)
+        val freshComments = generateCommentModels(30, ALL)
+
+        freshComments.removeLast()
+        freshComments.removeLast()
+        freshComments.removeLast()
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -89,13 +181,14 @@ class CommentSqlUtilsTest {
                         UNAPPROVED
                 ).size
         )
-                .isEqualTo(50)
+                .isEqualTo(60)
 
+        // simulate loading more comments
         val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(
                 site,
                 freshComments,
-                true,
-                false,
+                30,
+                30,
                 APPROVED,
                 UNAPPROVED
         )
@@ -106,8 +199,8 @@ class CommentSqlUtilsTest {
                 UNAPPROVED
         )
 
-        Assertions.assertThat(numCommentsDeleted).isEqualTo(20)
-        Assertions.assertThat(cleanedComments.size).isEqualTo(30)
+        Assertions.assertThat(numCommentsDeleted).isEqualTo(3) // we remove comment 1,2 and 3
+        Assertions.assertThat(cleanedComments.size).isEqualTo(57)
         freshComments.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
         }
@@ -120,14 +213,21 @@ class CommentSqlUtilsTest {
                         UNAPPROVED
                 ).size
         )
-                .isEqualTo(59)
+                .isEqualTo(57)
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 1L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 2L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 3L }).isNull()
     }
 
-
-    // Attempts to insert null then verifies there is no media
-    @Test fun `removeDeletedComments trims deleted comments from the top of DB when begining of dataset excludes them`() {
+    @Test
+    fun `removeDeletedComments trims deleted comments from the top of DB when beginning of dataset excludes them`() {
         val commentsInDb = generateCommentModels(50, ALL)
-        val freshComments = generateCommentModels(30, ALL, 3)
+        val freshComments = generateCommentModels(50, ALL)
+
+        // exclude first 3 comments
+        freshComments.removeFirst()
+        freshComments.removeFirst()
+        freshComments.removeFirst()
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -143,29 +243,32 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(50)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, false, true, ALL)
-//        val cleanedComments = CommentSqlUtils.getCommentsForSite(
-//                site,
-//                SelectQuery.ORDER_DESCENDING,
-//                APPROVED,
-//                UNAPPROVED
-//        )
+        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, ALL)
+        val cleanedComments = CommentSqlUtils.getCommentsForSite(
+                site,
+                SelectQuery.ORDER_DESCENDING,
+                APPROVED,
+                UNAPPROVED
+        )
 
         Assertions.assertThat(numCommentsDeleted).isEqualTo(3)
-//        Assertions.assertThat(cleanedComments.size).isEqualTo(30)
-//        freshComments.forEach {
-//            CommentSqlUtils.insertOrUpdateComment(it)
-//        }
-//
-//        Assertions.assertThat(
-//                CommentSqlUtils.getCommentsForSite(
-//                        site,
-//                        SelectQuery.ORDER_DESCENDING,
-//                        APPROVED,
-//                        UNAPPROVED
-//                ).size
-//        )
-//                .isEqualTo(59)
+        Assertions.assertThat(cleanedComments.size).isEqualTo(47)
+        freshComments.forEach {
+            CommentSqlUtils.insertOrUpdateComment(it)
+        }
+
+        Assertions.assertThat(
+                CommentSqlUtils.getCommentsForSite(
+                        site,
+                        SelectQuery.ORDER_DESCENDING,
+                        APPROVED,
+                        UNAPPROVED
+                ).size
+        )
+                .isEqualTo(47)
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 50L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 49L }).isNull()
+        Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 48L }).isNull()
     }
 
     private fun generateCommentModels(num: Int, status: CommentStatus, startId: Int = 1): ArrayList<CommentModel> {
@@ -174,15 +277,16 @@ class CommentSqlUtilsTest {
             val comment = CommentModel()
             comment.remoteCommentId = startId + i.toLong()
             comment.publishedTimestamp = startId + i.toLong()
-            comment.localSiteId = 1
-            comment.remoteSiteId = 2
+            comment.localSiteId = site.id
+            comment.remoteSiteId = site.siteId
             if (status == ALL) {
-                comment.status = if (i % 2 == 0) APPROVED.toString() else CommentStatus.UNAPPROVED.toString()
+                comment.status = if (i % 2 == 0) APPROVED.toString() else UNAPPROVED.toString()
             } else {
                 comment.status = status.toString()
             }
             commentModels.add(comment)
         }
+        commentModels.reverse() // we usually receive comments starting from more recent
         return commentModels
     }
 }
