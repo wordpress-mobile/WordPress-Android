@@ -1095,7 +1095,7 @@
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
     <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_with_threats_description_singular">The scan found 1 potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
+    <string name="scan_idle_with_threats_description_singular">The scan found one potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
@@ -1103,7 +1103,7 @@
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; 1 potential threat found</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; one potential threat found</string>
     <string name="scan_finished_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
 
     <!-- scan history -->
@@ -1171,7 +1171,7 @@
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
-    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix 1 active threat.</string>
+    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix one active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
     <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
