@@ -77,13 +77,11 @@ public class CommentSqlUtils {
                       .execute();
     }
 
-    public static int removeDeletedComments(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
-                                            int requestOffset, CommentStatus... statuses) {
+    public static int removeCommentGaps(SiteModel site, List<CommentModel> comments, int maxEntriesInResponse,
+                                        int requestOffset, CommentStatus... statuses) {
         if (site == null || comments == null || comments.isEmpty()) {
             return 0;
         }
-
-        ArrayList<Long> remoteIds = new ArrayList<>();
 
         Collections.sort(comments, new Comparator<CommentModel>() {
             @Override
@@ -94,13 +92,13 @@ public class CommentSqlUtils {
             }
         });
 
+        ArrayList<Long> remoteIds = new ArrayList<>();
         for (CommentModel comment : comments) {
             remoteIds.add(comment.getRemoteCommentId());
         }
 
-        long topTimeStamp = comments.get(0).getPublishedTimestamp();
-        long bottomTimeStamp = comments.get(comments.size() - 1).getPublishedTimestamp();
-
+        long startOfRange = comments.get(0).getPublishedTimestamp();
+        long endOfRange = comments.get(comments.size() - 1).getPublishedTimestamp();
 
         ArrayList<CommentStatus> targetStatuses = new ArrayList<>();
         if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
@@ -119,7 +117,7 @@ public class CommentSqlUtils {
                                            .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                            .isIn(CommentModelTable.STATUS, targetStatuses)
                                            .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                           .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
+                                           .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
                                            .endWhere()
                                            .execute();
         }
@@ -131,7 +129,7 @@ public class CommentSqlUtils {
                                            .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                            .isIn(CommentModelTable.STATUS, targetStatuses)
                                            .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                           .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
+                                           .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
                                            .endWhere()
                                            .execute();
         }
@@ -142,27 +140,10 @@ public class CommentSqlUtils {
                                              .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
                                              .isIn(CommentModelTable.STATUS, targetStatuses)
                                              .isNotIn(CommentModelTable.REMOTE_COMMENT_ID, remoteIds)
-                                             .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, topTimeStamp)
-                                             .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, bottomTimeStamp)
+                                             .lessThen(CommentModelTable.PUBLISHED_TIMESTAMP, startOfRange)
+                                             .greaterThen(CommentModelTable.PUBLISHED_TIMESTAMP, endOfRange)
                                              .endWhere()
                                              .execute();
-    }
-
-    public static int removeCommentsWithFilters(SiteModel site, CommentStatus... statuses) {
-        if (site == null) {
-            return 0;
-        }
-
-        if (Arrays.asList(statuses).contains(CommentStatus.ALL)) {
-            return removeComments(site);
-        }
-
-        return WellSql.delete(CommentModel.class)
-                      .where()
-                      .equals(CommentModelTable.LOCAL_SITE_ID, site.getId())
-                      .isIn(CommentModelTable.STATUS, Arrays.asList(statuses))
-                      .endWhere()
-                      .execute();
     }
 
     public static int deleteAllComments() {

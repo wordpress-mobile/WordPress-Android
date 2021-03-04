@@ -186,7 +186,7 @@ public class CommentStore extends Store {
     // Getters
 
     /**
-     * Get a limited list of comment for a specific site.
+     * Get a list of comment for a specific site.
      *
      * @param site Site model to get comment for.
      * @param orderByDateAscending If true order the results by ascending published date.
@@ -417,8 +417,9 @@ public class CommentStore extends Store {
         int rowsAffected = 0;
         OnCommentChanged event = new OnCommentChanged(rowsAffected);
         if (!payload.isError()) {
-            // Find comments deleted on the server and remove them from local DB.
-            CommentSqlUtils.removeDeletedComments(payload.site, payload.comments, payload.number, payload.offset,
+            // Find comments that were deleted or moved to a different status on the server and remove them from
+            // local DB.
+            CommentSqlUtils.removeCommentGaps(payload.site, payload.comments, payload.number, payload.offset,
                     payload.requestedStatus);
 
             for (CommentModel comment : payload.comments) {

@@ -26,21 +26,23 @@ class CommentSqlUtilsTest {
         siteId = 2
     }
 
-    @Before fun setUp() {
+    @Before
+    fun setUp() {
         val appContext = RuntimeEnvironment.application.applicationContext
         val config: WellSqlConfig = SingleStoreWellSqlConfigForTests(appContext, CommentModel::class.java)
         WellSql.init(config)
         config.reset()
     }
 
-    @Test fun `removeDeletedComments correctly removes deleted comments with mixed statuses from mixed list`() {
+    @Test
+    fun `removeDeletedComments correctly removes deleted comments with mixed statuses from mixed list`() {
         val commentsInDb = generateCommentModels(60, ALL) // timestamp from 60 to 1
-        val freshComments = generateCommentModels(33, ALL, 28) // timestamp from 60 to 28
+        val remoteComments = generateCommentModels(33, ALL, 28) // timestamp from 60 to 28
 
         // remove 3 comments from the middle so we will get 30 comments in the list
-        freshComments.removeIf { it.remoteCommentId == 55L }
-        freshComments.removeIf { it.remoteCommentId == 45L }
-        freshComments.removeIf { it.remoteCommentId == 35L }
+        remoteComments.removeIf { it.remoteCommentId == 55L }
+        remoteComments.removeIf { it.remoteCommentId == 45L }
+        remoteComments.removeIf { it.remoteCommentId == 35L }
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -56,7 +58,7 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(60)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, APPROVED, UNAPPROVED)
+        val numCommentsDeleted = CommentSqlUtils.removeCommentGaps(site, remoteComments, 30, 0, APPROVED, UNAPPROVED)
         val cleanedComments = CommentSqlUtils.getCommentsForSite(
                 site,
                 SelectQuery.ORDER_DESCENDING,
@@ -71,18 +73,19 @@ class CommentSqlUtilsTest {
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 35L }).isNull()
     }
 
-    @Test fun `removeDeletedComments correctly removes deleted comments with one status from mixed list`() {
+    @Test
+    fun `removeDeletedComments correctly removes deleted comments with one status from mixed list`() {
         val commentsInDb = generateCommentModels(60, ALL) // timestamp from 60 to 1
 
         commentsInDb.find { it.remoteCommentId == 55L }?.status = APPROVED.toString()
         commentsInDb.find { it.remoteCommentId == 45L }?.status = APPROVED.toString()
         commentsInDb.find { it.remoteCommentId == 35L }?.status = APPROVED.toString()
 
-        val freshComments = generateCommentModels(33, APPROVED, 28) // timestamp from 60 to 28
+        val remoteComments = generateCommentModels(33, APPROVED, 28) // timestamp from 60 to 28
         // remove 3 comments from the middle so we will get 30 comments in the list
-        freshComments.removeIf { it.remoteCommentId == 55L }
-        freshComments.removeIf { it.remoteCommentId == 45L }
-        freshComments.removeIf { it.remoteCommentId == 35L }
+        remoteComments.removeIf { it.remoteCommentId == 55L }
+        remoteComments.removeIf { it.remoteCommentId == 45L }
+        remoteComments.removeIf { it.remoteCommentId == 35L }
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -98,7 +101,7 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(60)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, APPROVED)
+        val numCommentsDeleted = CommentSqlUtils.removeCommentGaps(site, remoteComments, 30, 0, APPROVED)
         val cleanedComments = CommentSqlUtils.getCommentsForSite(
                 site,
                 SelectQuery.ORDER_DESCENDING,
@@ -112,14 +115,15 @@ class CommentSqlUtilsTest {
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 35L }).isNull()
     }
 
-    @Test fun `removeDeletedComments removes comments from start, end and the middle of DB`() {
+    @Test
+    fun `removeDeletedComments removes comments from start, end and the middle of DB`() {
         val commentsInDb = generateCommentModels(65, ALL)
-        val freshComments = generateCommentModels(25, ALL, 4)
+        val remoteComments = generateCommentModels(25, ALL, 4)
 
         // 3 comments are missing from the middle
-        freshComments.removeIf { it.remoteCommentId == 7L }
-        freshComments.removeIf { it.remoteCommentId == 15L }
-        freshComments.removeIf { it.remoteCommentId == 20L }
+        remoteComments.removeIf { it.remoteCommentId == 7L }
+        remoteComments.removeIf { it.remoteCommentId == 15L }
+        remoteComments.removeIf { it.remoteCommentId == 20L }
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -135,9 +139,9 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(65)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(
+        val numCommentsDeleted = CommentSqlUtils.removeCommentGaps(
                 site,
-                freshComments,
+                remoteComments,
                 30,
                 0,
                 APPROVED,
@@ -149,10 +153,10 @@ class CommentSqlUtilsTest {
                 APPROVED,
                 UNAPPROVED
         )
-        // from 65 comments in DB we expect to have only 22 fresh comments (remove first 3, 3 from the middle and all the comments that go after last comment in freshComments
+        // from 65 comments in DB we expect to have only 22 remote comments (remove first 3, 3 from the middle and all the comments that go after last comment in remoteComments
         Assertions.assertThat(numCommentsDeleted).isEqualTo(43)
         Assertions.assertThat(cleanedComments.size).isEqualTo(22)
-        freshComments.forEach {
+        remoteComments.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
         }
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 7L }).isNull()
@@ -160,13 +164,14 @@ class CommentSqlUtilsTest {
         Assertions.assertThat(cleanedComments.find { it.remoteCommentId == 20L }).isNull()
     }
 
-    @Test fun `removeDeletedComments trims deleted comments from bottom of DB when reaching the end of dataset`() {
+    @Test
+    fun `removeDeletedComments trims deleted comments from bottom of DB when reaching the end of dataset`() {
         val commentsInDb = generateCommentModels(60, ALL)
-        val freshComments = generateCommentModels(30, ALL)
+        val remoteComments = generateCommentModels(30, ALL)
 
-        freshComments.removeLast()
-        freshComments.removeLast()
-        freshComments.removeLast()
+        remoteComments.removeLast()
+        remoteComments.removeLast()
+        remoteComments.removeLast()
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -183,9 +188,9 @@ class CommentSqlUtilsTest {
                 .isEqualTo(60)
 
         // simulate loading more comments
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(
+        val numCommentsDeleted = CommentSqlUtils.removeCommentGaps(
                 site,
-                freshComments,
+                remoteComments,
                 30,
                 30,
                 APPROVED,
@@ -200,7 +205,7 @@ class CommentSqlUtilsTest {
 
         Assertions.assertThat(numCommentsDeleted).isEqualTo(3) // we remove comment 1,2 and 3
         Assertions.assertThat(cleanedComments.size).isEqualTo(57)
-        freshComments.forEach {
+        remoteComments.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
         }
 
@@ -221,12 +226,12 @@ class CommentSqlUtilsTest {
     @Test
     fun `removeDeletedComments trims deleted comments from the top of DB when beginning of dataset excludes them`() {
         val commentsInDb = generateCommentModels(50, ALL)
-        val freshComments = generateCommentModels(50, ALL)
+        val remoteComments = generateCommentModels(50, ALL)
 
         // exclude first 3 comments
-        freshComments.removeFirst()
-        freshComments.removeFirst()
-        freshComments.removeFirst()
+        remoteComments.removeFirst()
+        remoteComments.removeFirst()
+        remoteComments.removeFirst()
 
         commentsInDb.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
@@ -242,7 +247,7 @@ class CommentSqlUtilsTest {
         )
                 .isEqualTo(50)
 
-        val numCommentsDeleted = CommentSqlUtils.removeDeletedComments(site, freshComments, 30, 0, ALL)
+        val numCommentsDeleted = CommentSqlUtils.removeCommentGaps(site, remoteComments, 30, 0, ALL)
         val cleanedComments = CommentSqlUtils.getCommentsForSite(
                 site,
                 SelectQuery.ORDER_DESCENDING,
@@ -252,7 +257,7 @@ class CommentSqlUtilsTest {
 
         Assertions.assertThat(numCommentsDeleted).isEqualTo(3)
         Assertions.assertThat(cleanedComments.size).isEqualTo(47)
-        freshComments.forEach {
+        remoteComments.forEach {
             CommentSqlUtils.insertOrUpdateComment(it)
         }
 
