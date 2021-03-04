@@ -17,7 +17,6 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
-import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams

@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.viewmodels
+package org.wordpress.android.ui.reader
 
 import dagger.Reusable
 import org.wordpress.android.R
