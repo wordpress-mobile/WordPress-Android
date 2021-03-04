@@ -85,7 +85,7 @@ class HomePagePickerViewModel @Inject constructor(
     }
 
     override fun onPreviewChooseTapped() {
-        onDismissPreview()
+        super.onPreviewChooseTapped()
         onChooseTapped()
     }
 

@@ -38,6 +38,8 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import javax.inject.Inject
 
@@ -92,7 +94,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             viewModel.onCreatePageClicked()
         }
         previewButton.setOnClickListener {
-            viewModel.onPreviewPageClicked()
+            viewModel.onPreviewTapped()
         }
         retryButton.setOnClickListener {
             viewModel.onRetryClicked()
@@ -167,10 +169,17 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onPreviewPageRequested.observe(this, Observer { request ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, Observer { action ->
             activity?.supportFragmentManager?.let { fm ->
-                val previewFragment = BlockLayoutPreviewFragment.newInstance()
-                previewFragment.show(fm, BLOCK_LAYOUT_PREVIEW_TAG)
+                when (action) {
+                    is Show -> {
+                        val previewFragment = BlockLayoutPreviewFragment.newInstance()
+                        previewFragment.show(fm, BLOCK_LAYOUT_PREVIEW_TAG)
+                    }
+                    is Dismiss -> {
+                        (fm.findFragmentByTag(BLOCK_LAYOUT_PREVIEW_TAG) as? BlockLayoutPreviewFragment)?.dismiss()
+                    }
+                }
             }
         })
 

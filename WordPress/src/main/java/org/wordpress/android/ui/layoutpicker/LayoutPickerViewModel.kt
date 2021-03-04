@@ -61,7 +61,7 @@ abstract class LayoutPickerViewModel(
 
     abstract fun fetchLayouts()
 
-    abstract fun onPreviewChooseTapped()
+    open fun onPreviewChooseTapped() = onDismissPreview()
 
     open fun trackPreviewModeChanged(mode: String) {
         // Tracked in subclass

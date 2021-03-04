@@ -59,12 +59,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
 
-    /**
-     * Preview page event
-     */
-    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
-    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
-
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
         object Blank : Create(null, "", "")
@@ -157,18 +151,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
         dismiss()
     }
 
-    override fun onPreviewChooseTapped() = onCreatePageClicked()
-
-    /**
-     * Preview page tapped
-     */
-    fun onPreviewPageClicked() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
-                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site, layout.demoUrl)
-            }
-        }
+    override fun onPreviewChooseTapped() {
+        super.onPreviewChooseTapped()
+        onCreatePageClicked()
     }
 
     /**
