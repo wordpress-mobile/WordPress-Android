@@ -130,11 +130,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
     }
 
     // See: https://git.io/JqfhK
-    private fun shouldLogContent(siteModel: SiteModel?, postModel: PostModel) = siteModel != null
-            && siteModel.isWPCom
-            && !siteModel.isPrivate
-            && postModel.password.isEmpty()
-            && postModel.status != PRIVATE.toString()
+    private fun shouldLogContent(siteModel: SiteModel?, postModel: PostModel) = siteModel != null &&
+            siteModel.isWPCom &&
+            !siteModel.isPrivate &&
+            postModel.password.isEmpty() &&
+            postModel.status != PRIVATE.toString()
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(
         postModel: PostModel,
