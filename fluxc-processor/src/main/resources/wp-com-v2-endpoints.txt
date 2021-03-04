@@ -6,6 +6,7 @@
 /sites/$site/activity/count/group
 /sites/$site/rewind
 /sites/$site/rewind/downloads
+/sites/$site/rewind/downloads/$download_id
 
 /sites/$site/scan
 /sites/$site/scan/enqueue
