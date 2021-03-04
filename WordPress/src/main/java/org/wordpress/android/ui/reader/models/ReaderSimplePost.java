@@ -15,11 +15,7 @@ import org.wordpress.android.util.PhotonUtils;
 public class ReaderSimplePost {
     private long mPostId;
     private long mSiteId;
-    private boolean mIsFollowing;
-
     private String mTitle;
-    private String mAuthorName;
-    private String mAuthorAvatarUrl;
     private String mExcerpt;
     private String mSiteName;
     private String mFeaturedImageUrl;
@@ -33,7 +29,7 @@ public class ReaderSimplePost {
        that makes the call much heavier
     */
     public static final String SIMPLE_POST_FIELDS =
-            "ID,site_ID,title,excerpt,site_name,is_following,author,featured_image,featured_media,railcar";
+            "ID,site_ID,title,excerpt,site_name,featured_image,featured_media,railcar";
 
     public static ReaderSimplePost fromJson(JSONObject json) {
         if (json == null) {
@@ -51,21 +47,10 @@ public class ReaderSimplePost {
             return null;
         }
 
-        post.mIsFollowing = JSONUtils.getBool(json, "is_following");
-
         post.mTitle = JSONUtils.getStringDecoded(json, "title");
         post.mExcerpt = HtmlUtils.fastStripHtml(JSONUtils.getString(json, "excerpt")).trim();
         post.mSiteName = JSONUtils.getStringDecoded(json, "site_name");
         post.mFeaturedImageUrl = JSONUtils.getString(json, "featured_image");
-
-        JSONObject jsonAuthor = json.optJSONObject("author");
-        if (jsonAuthor != null) {
-            post.mAuthorName = JSONUtils.getStringDecoded(jsonAuthor, "name");
-            // don't read the avatar field unless "has_avatar" is true
-            if (JSONUtils.getBool(jsonAuthor, "has_avatar")) {
-                post.mAuthorAvatarUrl = JSONUtils.getString(jsonAuthor, "avatar_URL");
-            }
-        }
 
         // if there's no featured image, check if featured media has been set to an image
         if (!post.hasFeaturedImageUrl() && json.has("featured_media")) {
@@ -104,13 +89,6 @@ public class ReaderSimplePost {
         return mSiteName;
     }
 
-    public String getAuthorName() {
-        return mAuthorName;
-    }
-
-    public String getAuthorAvatarUrl() {
-        return mAuthorAvatarUrl;
-    }
 
     public String getFeaturedImageUrl() {
         return mFeaturedImageUrl;
@@ -120,20 +98,12 @@ public class ReaderSimplePost {
         return mRailcarJson;
     }
 
-    public boolean isFollowing() {
-        return mIsFollowing;
-    }
-
-    public void setIsFollowing(boolean isFollowing) {
-        mIsFollowing = isFollowing;
-    }
-
     public boolean hasExcerpt() {
         return !TextUtils.isEmpty(mExcerpt);
     }
 
-    public boolean hasAuthorAvatarUrl() {
-        return !TextUtils.isEmpty(mAuthorAvatarUrl);
+    public boolean hasTitle() {
+        return !TextUtils.isEmpty(mTitle);
     }
 
     public boolean hasFeaturedImageUrl() {
