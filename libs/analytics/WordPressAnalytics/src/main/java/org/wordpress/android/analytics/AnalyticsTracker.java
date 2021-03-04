@@ -491,6 +491,7 @@ public final class AnalyticsTracker {
         LAYOUT_PICKER_PREVIEW_LOADED,
         LAYOUT_PICKER_PREVIEW_VIEWED,
         LAYOUT_PICKER_ERROR_SHOWN,
+        FILTER_CHANGED,
         // This stat is part of a funnel that provides critical information.  Before
         // making ANY modification to this stat please refer to: p4qSXL-35X-p2
         SITE_CREATED,

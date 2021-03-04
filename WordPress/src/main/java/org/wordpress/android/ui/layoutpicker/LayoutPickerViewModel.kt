@@ -30,7 +30,7 @@ abstract class LayoutPickerViewModel(
     open val mainDispatcher: CoroutineDispatcher,
     open val bgDispatcher: CoroutineDispatcher,
     open val networkUtils: NetworkUtilsWrapper,
-    val layoutPickerTracker: LayoutPickerTracker
+    private val layoutPickerTracker: LayoutPickerTracker
 ) : ScopedViewModel(bgDispatcher), PreviewModeHandler {
     lateinit var layouts: List<LayoutModel>
     lateinit var categories: List<LayoutCategoryModel>
@@ -108,6 +108,7 @@ abstract class LayoutPickerViewModel(
                         state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
                 )
             }
+            layoutPickerTracker.filterChanged(state.selectedCategoriesSlugs)
             loadCategories()
             _onCategorySelectionChanged.postValue(Event(Unit))
         }
