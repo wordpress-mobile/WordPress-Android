@@ -10,17 +10,21 @@ import com.android.volley.Response
 import com.android.volley.VolleyError
 import com.android.volley.toolbox.StringRequest
 import com.android.volley.toolbox.Volley
+import com.google.gson.GsonBuilder
 import org.json.JSONException
 import org.json.JSONObject
 import org.wordpress.android.Constants
 import org.wordpress.android.networking.RestClientUtils
+import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
+import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
+import org.wordpress.android.ui.prefs.timezone.data.Timezones
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
 import org.wordpress.android.util.StringUtils
 import javax.inject.Inject
 
 class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
-    private val timezonesList = mutableListOf<Timezone>()
+    private val timezonesList = mutableListOf<TimezonesList>()
 
     private val _showEmpty = MutableLiveData<Boolean>()
     val showEmptyView: LiveData<Boolean> = _showEmpty
@@ -32,11 +36,11 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
     val dismissWithError: LiveData<Unit> = _dismiss
 
     private val searchInput = MutableLiveData<String>()
-    val timezoneSearch: LiveData<List<Timezone>> = Transformations.switchMap(searchInput) { term ->
+    val timezoneSearch: LiveData<List<TimezonesList>> = Transformations.switchMap(searchInput) { term ->
         filterTimezones(term)
     }
 
-    private val _timezones = MutableLiveData<List<Timezone>>()
+    private val _timezones = MutableLiveData<List<TimezonesList>>()
     val timezones = _timezones
 
 
@@ -44,11 +48,14 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         searchInput.value = city
     }
 
-    private fun filterTimezones(city: String): LiveData<List<Timezone>> {
-        val filteredTimezones = MutableLiveData<List<Timezone>>()
+    private fun filterTimezones(city: String): LiveData<List<TimezonesList>> {
+        val filteredTimezones = MutableLiveData<List<TimezonesList>>()
 
         timezonesList.filter { timezone ->
-            timezone.label.contains(city, true)
+            when (timezone) {
+                is TimezoneItem -> timezone.label.contains(city, true)
+                else -> false
+            }
         }.also {
             filteredTimezones.value = it
         }
@@ -68,7 +75,8 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
 
             if (!TextUtils.isEmpty(response)) {
                 timezonesList.clear()
-                loadTimezones(response)
+//                loadTimezones(response)
+                loadTimezonesByContinent(response)
             } else {
                 AppLog.w(SETTINGS, "empty response requesting timezones")
                 _dismiss.postValue(Unit)
@@ -91,6 +99,70 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         queue.add(request)
     }
 
+    private fun loadTimezonesByContinent(responseJson: String?) {
+        try {
+            val gson = GsonBuilder().create()
+            val timezones = gson.fromJson(responseJson, Timezones::class.java)
+
+            val continents = timezones.timezonesByContinent
+
+
+            timezonesList.add(TimezoneHeader("Africa"))
+            continents.africa.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("America"))
+            continents.america.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Antarctica"))
+            continents.antarctica.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Arctic"))
+            continents.arctic.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Asia"))
+            continents.asia.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Atlantic"))
+            continents.atlantic.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Australia"))
+            continents.australia.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Europe"))
+            continents.europe.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Indian"))
+            continents.indian.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+
+            timezonesList.add(TimezoneHeader("Pacific"))
+            continents.pacific.forEach {
+                timezonesList.add(TimezoneItem(it.label, it.value))
+            }
+            _timezones.postValue(timezonesList)
+        } catch (e: JSONException) {
+            AppLog.e(SETTINGS, "Error parsing timezones", e)
+            _dismiss.postValue(Unit)
+        }
+    }
+
     private fun loadTimezones(responseJson: String?) {
         try {
             val jsonResponse = JSONObject(responseJson.orEmpty())
@@ -98,12 +170,11 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
             for (i in 0 until jsonTimezones.length()) {
                 val json = jsonTimezones.getJSONObject(i)
                 timezonesList.add(
-                        Timezone(json.getString("label"), json.getString("value"))
+                        TimezoneItem(json.getString("label"), json.getString("value"))
                 )
             }
             // sort by label
-            // TODO: Group by continents
-            timezonesList.sortWith { t1: Timezone, t2: Timezone ->
+            timezonesList.sortWith { t1: TimezonesList, t2: TimezonesList ->
                 StringUtils.compare(t1.label, t2.label)
             }
 

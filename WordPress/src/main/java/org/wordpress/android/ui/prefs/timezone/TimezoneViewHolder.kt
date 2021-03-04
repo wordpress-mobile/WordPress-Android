@@ -4,11 +4,12 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView.ViewHolder
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListItemBinding
+import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 
 class TimezoneViewHolder(
     private val binding: SiteSettingsTimezoneBottomSheetListItemBinding
 ) : ViewHolder(binding.root) {
-    fun bind(timezone: Timezone, onClick: (timezone: Timezone) -> Unit) {
+    fun bind(timezone: TimezoneItem, onClick: (timezone: TimezoneItem) -> Unit) {
         binding.apply {
             itemTimeZone.text = timezone.label
             itemTimeZone.setOnClickListener {

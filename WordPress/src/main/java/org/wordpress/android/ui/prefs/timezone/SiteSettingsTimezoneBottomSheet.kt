@@ -12,6 +12,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.SiteSettingsTimezoneBottomSheetListBinding
+import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
@@ -94,13 +95,11 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
         timezoneViewModel.timezones.observe(viewLifecycleOwner, {
             timezoneAdapter.submitList(it)
-            timezoneAdapter.notifyDataSetChanged()
             binding?.searchView?.isEnabled = true
         })
 
         timezoneViewModel.timezoneSearch.observe(viewLifecycleOwner, {
             timezoneAdapter.submitList(it)
-            timezoneAdapter.notifyDataSetChanged()
             hideSearchKeyboard()
         })
 
@@ -115,7 +114,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         super.onDestroyView()
     }
 
-    private fun setSelectedTimezone(timezone: Timezone?) {
+    private fun setSelectedTimezone(timezone: TimezoneItem?) {
         timezone?.let {
             callback?.onSelectTimezone(it.value)
             dismiss()
