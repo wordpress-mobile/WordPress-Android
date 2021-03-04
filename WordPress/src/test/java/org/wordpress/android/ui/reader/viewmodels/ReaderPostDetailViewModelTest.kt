@@ -549,7 +549,8 @@ class ReaderPostDetailViewModelTest {
                 )
             },
             isGlobal = isGlobal,
-            headerLabel = UiStringText("")
+            headerLabel = UiStringText(""),
+            railcarJsonStrings = emptyList()
     )
 
     private fun init(showPost: Boolean = true, isRelatedPost: Boolean = false): Observers {

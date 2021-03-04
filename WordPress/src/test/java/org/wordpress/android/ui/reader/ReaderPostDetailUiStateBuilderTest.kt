@@ -1,6 +1,7 @@
 package org.wordpress.android.ui.reader
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -45,8 +46,6 @@ class ReaderPostDetailUiStateBuilderTest {
 
     @Before
     fun setUp() = test {
-        whenever(readerSimplePost.title).thenReturn("")
-        whenever(readerSimplePost.featuredImageUrl).thenReturn("")
         dummyRelatedPosts = ReaderSimplePostList().apply { add(readerSimplePost) }
 
         builder = ReaderPostDetailUiStateBuilder(
@@ -91,15 +90,19 @@ class ReaderPostDetailUiStateBuilderTest {
 
     @Test
     fun `given related post with title, when related posts ui is built, then related post title exists`() = test {
+        val title = "title"
+        whenever(readerSimplePost.hasTitle()).thenReturn(true)
+        whenever(readerSimplePost.title).thenReturn(title)
+
         val relatedPostsUiState = init()
 
-        assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(readerSimplePost.title))
+        assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(title))
     }
 
     @Test
     fun `given related post without title, when related posts ui is built, then related post title does not exists`() =
             test {
-                whenever(readerSimplePost.title).thenReturn(null)
+                whenever(readerSimplePost.hasTitle()).thenReturn(false)
 
                 val relatedPostsUiState = init()
 
@@ -107,12 +110,45 @@ class ReaderPostDetailUiStateBuilderTest {
             }
 
     @Test
-    fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
+    fun `given related post with excerpt, when related posts ui is built, then excerpt exists`() = test {
+        val excerpt = "excerpt"
+        whenever(readerSimplePost.hasExcerpt()).thenReturn(true)
+        whenever(readerSimplePost.excerpt).thenReturn(excerpt)
+
+        val relatedPostsUiState = init()
+
+        assertThat(relatedPostsUiState.cards?.first()?.excerpt).isEqualTo(UiStringText(excerpt))
+    }
+
+    @Test
+    fun `given related post without excerpt, when related posts ui is built, then excerpt does not exists`() =
             test {
+                whenever(readerSimplePost.hasExcerpt()).thenReturn(false)
+
                 val relatedPostsUiState = init()
 
-                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl)
-                        .isEqualTo(readerSimplePost.featuredImageUrl)
+                assertThat(relatedPostsUiState.cards?.first()?.excerpt).isNull()
+            }
+
+    @Test
+    fun `given related post with featured image url, when related posts ui is built, then featured image exists`() =
+            test {
+                val url = "/featured/image/url"
+                whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(url)
+
+                val relatedPostsUiState = init()
+
+                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(url)
+            }
+
+    @Test
+    fun `given related post without featured image url, when related posts ui is built, then featured image exists`() =
+            test {
+                whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(null)
+
+                val relatedPostsUiState = init()
+
+                assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
             }
 
     private fun init(
