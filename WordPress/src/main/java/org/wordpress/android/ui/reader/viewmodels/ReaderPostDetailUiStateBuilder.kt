@@ -13,6 +13,9 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Read
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
@@ -64,7 +67,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 )
             },
             isGlobal = isGlobal,
-            siteName = sourcePost.blogName
+            headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal)
     )
 
     private fun mapRelatedPostToUiState(
@@ -103,6 +106,14 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) = postUiStateBuilder.mapPostToActions(post, onButtonClicked)
+
+    private fun buildRelatedPostsHeaderLabel(blogName: String, isGlobal: Boolean): UiString {
+        return if (isGlobal) {
+            UiStringRes(R.string.reader_label_global_related_posts)
+        } else {
+            UiStringResWithParams(R.string.reader_label_local_related_posts, listOf(UiStringText(blogName)))
+        }
+    }
 
     private fun buildFeaturedImageUrl(post: ReaderSimplePost, imageWidth: Int, imageHeight: Int) =
             post.getFeaturedImageForDisplay(imageWidth, imageHeight)

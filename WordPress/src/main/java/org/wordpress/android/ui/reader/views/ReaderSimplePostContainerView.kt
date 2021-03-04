@@ -48,16 +48,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
         if (state.cards?.size == 0) return
 
         state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
-
-        // make sure the label for these posts has the correct caption
-        if (state.isGlobal) {
-            text_related_posts_label.text = context.getString(R.string.reader_label_global_related_posts)
-        } else {
-            text_related_posts_label.text = String.format(
-                    context.getString(R.string.reader_label_local_related_posts),
-                    state.siteName
-            )
-        }
+        uiHelpers.setTextOrHide(text_related_posts_label, state.headerLabel)
     }
 
     /*
