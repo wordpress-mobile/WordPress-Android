@@ -30,8 +30,7 @@ abstract class LayoutPickerViewModel(
     open val mainDispatcher: CoroutineDispatcher,
     open val bgDispatcher: CoroutineDispatcher,
     open val networkUtils: NetworkUtilsWrapper
-) : ScopedViewModel(bgDispatcher),
-        PreviewModeHandler {
+) : ScopedViewModel(bgDispatcher), PreviewModeHandler {
     lateinit var layouts: List<LayoutModel>
     lateinit var categories: List<LayoutCategoryModel>
 
@@ -61,39 +60,23 @@ abstract class LayoutPickerViewModel(
 
     abstract fun fetchLayouts()
 
+    abstract fun trackPreviewModeChanged(mode: String)
+
+    abstract fun trackThumbnailModeTapped(mode: String)
+
+    abstract fun trackPreviewModeTapped(mode: String)
+
+    abstract fun trackPreviewLoading(template: String, mode: String)
+
+    abstract fun trackPreviewLoaded(template: String, mode: String)
+
+    abstract fun trackPreviewViewed(template: String, mode: String)
+
+    abstract fun trackNoNetworkErrorShown(message: String)
+
+    abstract fun trackErrorShown(message: String)
+
     open fun onPreviewChooseTapped() = onDismissPreview()
-
-    open fun trackPreviewModeChanged(mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackThumbnailModeTapped(mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackPreviewModeTapped(mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackPreviewLoading(template: String, mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackPreviewLoaded(template: String, mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackPreviewViewed(template: String, mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackNoNetworkErrorShown(message: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackErrorShown(message: String) {
-        // Tracked in subclass
-    }
 
     fun handleResponse(layouts: List<LayoutModel>, categories: List<LayoutCategoryModel>) {
         this.layouts = layouts
@@ -145,7 +128,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    fun loadCategories() {
+    private fun loadCategories() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems: List<CategoryListItemUiState> = categories.map {
@@ -163,7 +146,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    fun loadLayouts() {
+    private fun loadLayouts() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()

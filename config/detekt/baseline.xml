@@ -65,6 +65,7 @@
     <ID>EmptyFunctionBlock:GlideMShotsLoader.kt$GlideMShotsLoader.Factory${}</ID>
     <ID>EmptyFunctionBlock:ImageManager.kt$ImageManager.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:LayoutViewHolder.kt$LayoutViewHolder.&lt;no name provided&gt;${ }</ID>
+    <ID>EmptyFunctionBlock:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel${}</ID>
     <ID>EmptyFunctionBlock:MySiteFragment.kt$MySiteFragment${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragment.kt$NotificationsListFragment.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:NotificationsListFragmentPage.kt$NotificationsListFragmentPage.&lt;no name provided&gt;${}</ID>
@@ -515,6 +516,7 @@
     <ID>TooManyFunctions:MediaPickerTracker.kt$MediaPickerTracker</ID>
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
+    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
