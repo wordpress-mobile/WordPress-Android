@@ -19,5 +19,7 @@ public enum ActivityLogAction implements IAction {
     @Action(payloadType = ActivityLogStore.FetchBackupDownloadStatePayload.class)
     FETCH_BACKUP_DOWNLOAD_STATE,
     @Action(payloadType = ActivityLogStore.FetchActivityTypesPayload.class)
-    FETCH_ACTIVITY_TYPES
+    FETCH_ACTIVITY_TYPES,
+    @Action(payloadType = ActivityLogStore.DismissBackupDownloadPayload.class)
+    DISMISS_BACKUP_DOWNLOAD
 }
