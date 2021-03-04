@@ -23,6 +23,7 @@ import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestConten
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.Companion.TEMPORARY_ID_PREFIX
 import org.wordpress.android.ui.stories.SaveStoryGutenbergBlockUseCase.StoryMediaFileData
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
+import org.wordpress.android.util.CrashLogging
 import org.wordpress.android.util.helpers.MediaFile
 
 @RunWith(MockitoJUnitRunner::class)
@@ -30,6 +31,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     private lateinit var saveStoryGutenbergBlockUseCase: SaveStoryGutenbergBlockUseCase
     private lateinit var editPostRepository: EditPostRepository
     @Mock lateinit var storiesPrefs: StoriesPrefs
+    @Mock lateinit var crashLogging: CrashLogging
     @Mock lateinit var context: Context
     @Mock lateinit var postStore: PostStore
     @Mock lateinit var mediaFile: MediaFile
@@ -38,7 +40,7 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
     @InternalCoroutinesApi
     @Before
     fun setUp() {
-        saveStoryGutenbergBlockUseCase = SaveStoryGutenbergBlockUseCase(storiesPrefs)
+        saveStoryGutenbergBlockUseCase = SaveStoryGutenbergBlockUseCase(storiesPrefs, crashLogging)
         editPostRepository = EditPostRepository(
                 mock(),
                 postStore,
