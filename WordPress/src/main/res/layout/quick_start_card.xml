@@ -52,7 +52,7 @@
             app:tint="?attr/wpColorOnSurfaceMedium" />
     </LinearLayout>
 
-    <androidx.recyclerview.widget.RecyclerView
+    <org.wordpress.android.ui.OrientationAwareRecyclerView
         android:id="@+id/quick_start_card_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
