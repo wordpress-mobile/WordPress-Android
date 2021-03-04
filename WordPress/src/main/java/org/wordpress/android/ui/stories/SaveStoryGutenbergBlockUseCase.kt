@@ -93,6 +93,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
         postModel: PostModel,
+        siteModel: SiteModel?,
         listener: DoWithMediaFilesListener
     ) {
         var content = postModel.content
@@ -124,7 +125,11 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         postModel.setContent(content)
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(
+        postModel: PostModel,
+        siteModel: SiteModel?,
+        mediaFile: MediaFile
+    ) {
         if (TextUtils.isEmpty(mediaFile.mediaId)) {
             // if for any reason we couldn't obtain a remote mediaId, it's not worth spending time
             // looking to replace anything in the Post. Skip processing for later in error handling.
@@ -133,6 +138,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         val gson = Gson()
         findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                 postModel,
+                siteModel,
                 object : DoWithMediaFilesListener {
                     override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
                         var processedContent = content
