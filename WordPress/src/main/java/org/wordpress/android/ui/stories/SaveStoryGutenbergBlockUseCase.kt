@@ -7,6 +7,7 @@ import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
@@ -116,14 +117,24 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     content = listener.doWithMediaFilesJson(content, jsonString)
                     storyBlockStartIndex += HEADING_START.length
                 } catch (exception: StringIndexOutOfBoundsException) {
+                    AppLog.e(EDITOR, "Error while parsing Story blocks: ${exception.message}")
+                    if (shouldLogContent(siteModel, postModel)) {
+                        AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
+                    }
                     crashLogging.reportException(exception, EDITOR.toString())
-                    AppLog.e(EDITOR, exception.message)
                 }
             }
         }
 
         postModel.setContent(content)
     }
+
+    // See: https://git.io/JqfhK
+    private fun shouldLogContent(siteModel: SiteModel?, postModel: PostModel) = siteModel != null
+            && siteModel.isWPCom
+            && !siteModel.isPrivate
+            && postModel.password.isEmpty()
+            && postModel.status != PRIVATE.toString()
 
     fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(
         postModel: PostModel,
