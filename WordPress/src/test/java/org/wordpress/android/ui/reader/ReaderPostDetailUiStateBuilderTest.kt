@@ -38,7 +38,6 @@ class ReaderPostDetailUiStateBuilderTest {
         this.blogName = "blog name"
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
-    private val dummyOnRelatedPostFollowClicked: (Long, String) -> Unit = { _, _ -> }
 
     @Before
     fun setUp() = test {
@@ -82,20 +81,6 @@ class ReaderPostDetailUiStateBuilderTest {
     }
 
     @Test
-    fun `given local related posts, when related posts ui is built, then follow button does not exist`() = test {
-        val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
-
-        assertThat(relatedPostsUiState.cards?.first()?.followButtonUiState).isNull()
-    }
-
-    @Test
-    fun `given global related posts, when related posts ui is built, then follow button exists`() = test {
-        val relatedPostsUiState = init(relatedPosts = globalRelatedPosts, isGlobal = true)
-
-        assertThat(relatedPostsUiState.cards?.first()?.followButtonUiState).isNotNull
-    }
-
-    @Test
     fun `given related post with title, when related posts ui is built, then related post title exists`() = test {
         val relatedPostsUiState = init(relatedPosts = localRelatedPosts, isGlobal = false)
 
@@ -128,7 +113,6 @@ class ReaderPostDetailUiStateBuilderTest {
             sourcePost = dummyReaderPost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
-            onRelatedPostItemClicked = dummyOnRelatedPostItemClicked,
-            onRelatedPostFollowClicked = dummyOnRelatedPostFollowClicked
+            onItemClicked = dummyOnRelatedPostItemClicked
     )
 }
