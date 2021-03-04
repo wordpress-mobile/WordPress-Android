@@ -1,11 +1,10 @@
 package org.wordpress.android.ui.mlp
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.ViewModelProvider
-import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
+import kotlinx.android.synthetic.main.layout_picker_preview_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.layoutpicker.LayoutPreviewFragment
@@ -25,7 +24,6 @@ class BlockLayoutPreviewFragment : LayoutPreviewFragment() {
         fun newInstance() = BlockLayoutPreviewFragment()
     }
 
-    @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

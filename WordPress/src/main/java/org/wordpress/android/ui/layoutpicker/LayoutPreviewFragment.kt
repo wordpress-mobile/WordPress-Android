@@ -13,7 +13,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.FrameLayout.LayoutParams
 import androidx.lifecycle.Observer
-import kotlinx.android.synthetic.main.home_page_picker_preview_fragment.*
+import kotlinx.android.synthetic.main.layout_picker_preview_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
@@ -40,7 +40,7 @@ abstract class LayoutPreviewFragment : FullscreenBottomSheetDialogFragment() {
     private lateinit var previewModeSelectorPopup: PreviewModeSelectorPopup
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-            inflater.inflate(R.layout.home_page_picker_preview_fragment, container)
+            inflater.inflate(R.layout.layout_picker_preview_fragment, container)
 
     @SuppressLint("SetJavaScriptEnabled")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
