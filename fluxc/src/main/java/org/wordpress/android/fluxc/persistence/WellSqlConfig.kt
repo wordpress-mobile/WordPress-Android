@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 139
     }
 
     override fun getDbName(): String {
@@ -1496,6 +1496,21 @@ open class WellSqlConfig : DefaultWellConfig {
                             "DYNAMIC_CARD_TYPE TEXT,STATE TEXT)")
                 }
                 137 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutModel")
+                    db.execSQL(
+                            "CREATE TABLE GutenbergLayoutModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "SITE_ID INTEGER," +
+                                    "TITLE TEXT NOT NULL," +
+                                    "PREVIEW TEXT NOT NULL," +
+                                    "PREVIEW_TABLET TEXT NOT NULL," +
+                                    "PREVIEW_MOBILE TEXT NOT NULL," +
+                                    "CONTENT TEXT NOT NULL," +
+                                    "DEMO_URL TEXT NOT NULL)"
+                    )
+                }
+                138 -> migrate(version) {
                     db.execSQL("ALTER TABLE CommentModel ADD PUBLISHED_TIMESTAMP INTEGER")
                 }
             }
