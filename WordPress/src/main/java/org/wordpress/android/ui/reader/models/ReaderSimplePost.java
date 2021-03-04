@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import org.wordpress.android.util.AppLog;
 import org.wordpress.android.util.HtmlUtils;
 import org.wordpress.android.util.JSONUtils;
+import org.wordpress.android.util.PhotonUtils;
 
 /**
  * simplified version of a reader post
@@ -22,6 +23,7 @@ public class ReaderSimplePost {
     private String mExcerpt;
     private String mSiteName;
     private String mFeaturedImageUrl;
+    private transient String mFeaturedImageForDisplay;
 
     private String mRailcarJson;
 
@@ -136,5 +138,16 @@ public class ReaderSimplePost {
 
     public boolean hasFeaturedImageUrl() {
         return !TextUtils.isEmpty(mFeaturedImageUrl);
+    }
+
+    public String getFeaturedImageForDisplay(int width, int height) {
+        if (mFeaturedImageForDisplay == null) {
+            if (!hasFeaturedImageUrl()) {
+                mFeaturedImageForDisplay = "";
+            } else {
+                mFeaturedImageForDisplay = PhotonUtils.getPhotonImageUrl(getFeaturedImageUrl(), width, height);
+            }
+        }
+        return mFeaturedImageForDisplay;
     }
 }

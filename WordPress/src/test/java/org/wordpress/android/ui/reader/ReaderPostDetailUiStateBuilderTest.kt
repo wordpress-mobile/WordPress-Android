@@ -18,6 +18,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -28,6 +29,7 @@ class ReaderPostDetailUiStateBuilderTest {
     private lateinit var builder: ReaderPostDetailUiStateBuilder
     @Mock lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
     @Mock lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Mock lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     private lateinit var localRelatedPosts: ReaderSimplePostList
     private lateinit var globalRelatedPosts: ReaderSimplePostList
@@ -48,7 +50,8 @@ class ReaderPostDetailUiStateBuilderTest {
 
         builder = ReaderPostDetailUiStateBuilder(
                 headerViewUiStateBuilder,
-                postUiStateBuilder
+                postUiStateBuilder,
+                resourceProvider
         )
     }
 
