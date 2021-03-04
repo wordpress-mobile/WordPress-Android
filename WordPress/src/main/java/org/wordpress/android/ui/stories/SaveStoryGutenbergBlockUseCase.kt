@@ -117,16 +117,20 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     content = listener.doWithMediaFilesJson(content, jsonString)
                     storyBlockStartIndex += HEADING_START.length
                 } catch (exception: StringIndexOutOfBoundsException) {
-                    AppLog.e(EDITOR, "Error while parsing Story blocks: ${exception.message}")
-                    if (shouldLogContent(siteModel, postModel)) {
-                        AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
-                    }
-                    crashLogging.reportException(exception, EDITOR.toString())
+                    logException(exception, postModel, siteModel)
                 }
             }
         }
 
         postModel.setContent(content)
+    }
+
+    private fun logException(exception: Throwable, postModel: PostModel, siteModel: SiteModel?) {
+        AppLog.e(EDITOR, "Error while parsing Story blocks: ${exception.message}")
+        if (shouldLogContent(siteModel, postModel)) {
+            AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
+        }
+        crashLogging.reportException(exception, EDITOR.toString())
     }
 
     // See: https://git.io/JqfhK
