@@ -79,8 +79,8 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             postId = post.postId,
             blogId = post.siteId,
             isGlobal = isGlobal,
-            title = post.title?.let { UiStringText(it) },
-            excerpt = post.excerpt?.let { UiStringText(it) },
+            title = post.takeIf { it.hasTitle() }?.let { UiStringText(it.title) },
+            excerpt = post.takeIf { it.hasExcerpt() }?.let { UiStringText(it.excerpt) },
             featuredImageUrl = buildFeaturedImageUrl(
                     post,
                     relatedPostFeaturedImageWidth,
