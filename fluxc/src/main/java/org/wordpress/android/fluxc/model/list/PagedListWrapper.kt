@@ -70,9 +70,6 @@ class PagedListWrapper<T>(
     private val _isEmpty = MediatorLiveData<Boolean>()
     val isEmpty: LiveData<Boolean> = _isEmpty
 
-    private val _listChanged = MutableLiveData<ListChangedEvent?>()
-    val listChanged: LiveData<ListChangedEvent?> = _listChanged
-
     /**
      * Register the dispatcher so we can handle `ListStore` events and add an observer for the lifecycle so we can
      * cleanup properly in `onDestroy`.
@@ -141,7 +138,6 @@ class PagedListWrapper<T>(
             return
         }
         invalidateData()
-        _listChanged.postValue(ListChangedEvent(cause = event.causeOfChange, totalDuration = event.totalDuration))
     }
 
     /**
