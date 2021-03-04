@@ -181,6 +181,6 @@ class ReaderPostMoreButtonUiStateBuilder @Inject constructor(
                     labelColor = R.attr.wpColorError,
                     iconRes = R.drawable.ic_block_white_24dp,
                     iconColor = R.attr.wpColorError,
-                    onClicked = onButtonClicked,
+                    onClicked = onButtonClicked
             )
 }
