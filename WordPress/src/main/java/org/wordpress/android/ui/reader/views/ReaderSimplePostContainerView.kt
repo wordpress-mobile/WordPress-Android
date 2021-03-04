@@ -8,7 +8,6 @@ import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
-import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -24,7 +23,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val simplePostList = ReaderSimplePostList()
+    private val railcarJsonStrings = mutableListOf<String?>()
 
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
@@ -47,6 +46,9 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     fun showPosts(state: RelatedPostsUiState) {
         if (state.cards?.size == 0) return
 
+        railcarJsonStrings.clear()
+        railcarJsonStrings.addAll(state.railcarJsonStrings)
+
         state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
         uiHelpers.setTextOrHide(text_related_posts_label, state.headerLabel)
     }
@@ -54,9 +56,9 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     /*
      * called by reader detail when scrolled into view, tracks railcar events for each post
      */
-    fun trackRailcarRender() {
-        for (post in simplePostList) {
-            AnalyticsUtils.trackRailcarRender(post.railcarJson)
+    fun trackRailcarRender() { // TODO: move tracking to view model
+        for (railcarJson in railcarJsonStrings) {
+            railcarJson?.let { AnalyticsUtils.trackRailcarRender(it) }
         }
     }
 }

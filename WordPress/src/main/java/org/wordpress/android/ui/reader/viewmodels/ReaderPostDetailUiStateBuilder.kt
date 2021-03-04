@@ -67,7 +67,8 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                 )
             },
             isGlobal = isGlobal,
-            headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal)
+            headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal),
+            railcarJsonStrings = relatedPosts.map { it.railcarJson }
     )
 
     private fun mapRelatedPostToUiState(

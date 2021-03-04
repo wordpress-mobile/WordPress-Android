@@ -312,7 +312,8 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,
             val isGlobal: Boolean,
-            val headerLabel: UiString?
+            val headerLabel: UiString?,
+            val railcarJsonStrings: List<String?>
         ) {
             data class ReaderRelatedPostUiState(
                 val postId: Long,
