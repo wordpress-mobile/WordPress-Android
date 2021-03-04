@@ -159,6 +159,8 @@
     <dimen name="reader_follow_button_skeleton_icon_size">14dp</dimen>
     <dimen name="reader_follow_button_skeleton_icon_text_margin">4dp</dimen>
 
+    <!-- reader more menu spacer height -->
+    <dimen name="reader_more_menu_spacer_height">16dp</dimen>
     <!-- collapsing toolbar scrim visible height trigger -->
     <dimen name="scrim_visible_height_trigger">150dp</dimen>
 

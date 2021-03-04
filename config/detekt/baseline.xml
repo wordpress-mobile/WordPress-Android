@@ -127,7 +127,6 @@
     <ID>LongMethod:ReaderDiscoverFragment.kt$ReaderDiscoverFragment$private fun initViewModel()</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment$private fun initViewModel()</ID>
     <ID>LongMethod:ReaderPostDetailFragment.kt$ReaderPostDetailFragment.ShowPostTask$override fun onPostExecute(result: Boolean)</ID>
-    <ID>LongMethod:ReaderPostMoreButtonUiStateBuilder.kt$ReaderPostMoreButtonUiStateBuilder$fun buildMoreMenuItemsBlocking( post: ReaderPost, onButtonClicked: (Long, Long, ReaderPostCardActionType) -&gt; Unit ): MutableList&lt;SecondaryAction&gt;</ID>
     <ID>LongMethod:ReferrersUseCase.kt$ReferrersUseCase$override fun buildUiModel(domainModel: ReferrersModel, uiState: SelectedGroup): List&lt;BlockListItem&gt;</ID>
     <ID>LongMethod:SearchListViewModel.kt$SearchListViewModel$private fun PageModel.toPageItem(areActionsEnabled: Boolean): PageItem</ID>
     <ID>LongMethod:StatsFragment.kt$StatsFragment$private fun setupObservers(activity: FragmentActivity)</ID>
