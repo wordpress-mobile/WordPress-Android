@@ -2,7 +2,7 @@
 
 16.9
 -----
-* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
+* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
 * [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
 * [**] My Site: Quick Start was completely redesigned and is now always shown after creating a site [https://github.com/wordpress-mobile/WordPress-Android/pull/14122]
 
