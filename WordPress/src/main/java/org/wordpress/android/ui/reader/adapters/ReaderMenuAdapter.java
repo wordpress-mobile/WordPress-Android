@@ -16,7 +16,6 @@ import androidx.appcompat.content.res.AppCompatResources;
 import org.wordpress.android.R;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction;
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SpacerNoAction;
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType;
 import org.wordpress.android.ui.utils.UiHelpers;
 import org.wordpress.android.util.ColorUtils;
@@ -66,20 +65,21 @@ public class ReaderMenuAdapter extends BaseAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (mMenuItems.get(position).getType() == ReaderPostCardActionType.SPACER_NO_ACTION) ? 0 : 1;
+        return (mMenuItems.get(position).getType() == ReaderPostCardActionType.SPACER_NO_ACTION)
+                ? TYPE_SPACER : TYPE_CONTENT;
     }
 
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ReaderPostCardAction cardAction = mMenuItems.get(position);
         if (getItemViewType(position) == TYPE_SPACER) {
-            return handleSpacer((SpacerNoAction) cardAction, convertView, parent);
+            return handleSpacer(convertView, parent);
         } else {
             return handleSecondaryAction((SecondaryAction) cardAction, convertView, parent);
         }
     }
 
-    private View handleSpacer(SpacerNoAction spacerNoAction, View convertView, ViewGroup parent) {
+    private View handleSpacer(View convertView, ViewGroup parent) {
         ReaderMenuSpacerHolder holder;
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.reader_popup_menu_spacer_item, parent, false);
