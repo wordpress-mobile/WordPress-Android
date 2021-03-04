@@ -593,13 +593,13 @@
     <dimen name="picker_header_selection_overlay_width">2dp</dimen>
 
     <!-- Modal Layout Picker -->
-    <dimen name="mlp_layouts_row_height">281dp</dimen>
+    <dimen name="mlp_layouts_row_height">317dp</dimen>
     <dimen name="mlp_bottom_shadow_height">@dimen/margin_medium</dimen>
     <dimen name="mlp_bottom_button_horizontal_margin">@dimen/mlp_layout_card_margin_start</dimen>
     <dimen name="mlp_bottom_button_horizontal_central_margin">@dimen/margin_extra_large</dimen>
     <dimen name="mlp_categories_bar_height">44dp</dimen>
-    <dimen name="mlp_layout_card_height">204dp</dimen>
-    <dimen name="mlp_layout_card_width">153dp</dimen>
+    <dimen name="mlp_layout_card_height">240dp</dimen>
+    <dimen name="mlp_layout_card_width">160dp</dimen>
     <dimen name="mlp_layout_card_margin_start">20dp</dimen>
     <dimen name="mlp_layouts_category_radius">40dp</dimen>
     <dimen name="mlp_layouts_category_height">36dp</dimen>
@@ -619,11 +619,6 @@
     <dimen name="mlp_preview_toolbar_offset">80dp</dimen>
 
     <!-- Home Page Picker -->
-    <dimen name="hpp_card_width">160dp</dimen>
-    <dimen name="hpp_card_padding">16dp</dimen>
-    <dimen name="hpp_card_margin_outer">40dp</dimen>
-    <dimen name="hpp_maximum_container_width">728dp</dimen>
-    <dimen name="hpp_subtitle_width">350dp</dimen>
     <dimen name="hpp_button_max_width">244dp</dimen>
     <dimen name="hpp_title_padding_start">@dimen/margin_extra_extra_medium_large</dimen>
 

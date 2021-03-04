@@ -63,7 +63,6 @@
     <ID>EmptyFunctionBlock:DomainSuggestionsFragment.kt$DomainSuggestionsFragment.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:EditPostPublishSettingsFragment.kt$EditPostPublishSettingsFragment${}</ID>
     <ID>EmptyFunctionBlock:GlideMShotsLoader.kt$GlideMShotsLoader.Factory${}</ID>
-    <ID>EmptyFunctionBlock:HomePagePickerViewHolder.kt$HomePagePickerViewHolder.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:ImageManager.kt$ImageManager.&lt;no name provided&gt;${}</ID>
     <ID>EmptyFunctionBlock:LayoutViewHolder.kt$LayoutViewHolder.&lt;no name provided&gt;${ }</ID>
     <ID>EmptyFunctionBlock:MySiteFragment.kt$MySiteFragment${}</ID>
@@ -370,7 +369,6 @@
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.subfilter.SubFilterViewModel.kt:253</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.kt:103</ID>
     <ID>MultiLineIfElse:org.wordpress.android.ui.reader.usecases.ReaderCommentsFollowUseCase.kt:105</ID>
-    <ID>MultiLineIfElse:org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewHolder.kt:37</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:54</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.main.SitePickerViewModel.kt:56</ID>
     <ID>MultiLineIfElse:org.wordpress.android.viewmodel.pages.PageListViewModel.kt:309</ID>
@@ -505,11 +503,12 @@
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
     <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
-    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : ViewModelCoroutineScopePreviewModeHandler</ID>
+    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
     <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>
     <ID>TooManyFunctions:LatestPostSummaryUseCase.kt$LatestPostSummaryUseCase : StatelessUseCase</ID>
+    <ID>TooManyFunctions:LayoutPickerViewModel.kt$LayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:LiveDataUtils.kt$org.wordpress.android.util.LiveDataUtils.kt</ID>
     <ID>TooManyFunctions:MeFragment.kt$MeFragment : FragmentOnScrollToTopListener</ID>
     <ID>TooManyFunctions:MediaPickerActivity.kt$MediaPickerActivity : LocaleAwareActivityMediaPickerListener</ID>
@@ -519,7 +518,6 @@
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
     <ID>TooManyFunctions:ModalLayoutPickerFragment.kt$ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment</ID>
-    <ID>TooManyFunctions:ModalLayoutPickerViewModel.kt$ModalLayoutPickerViewModel : ScopedViewModelPreviewModeHandler</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
@@ -627,7 +625,6 @@
     <ID>TopLevelPropertyNaming:SiteCreationSegmentsAdapter.kt$private const val progressViewType: Int = 2</ID>
     <ID>TopLevelPropertyNaming:SiteCreationSegmentsAdapter.kt$private const val segmentViewType: Int = 3</ID>
     <ID>TopLevelPropertyNaming:SupportedBlocks.kt$private const val defaultAssetFilename = "supported-blocks.json"</ID>
-    <ID>TopLevelPropertyNaming:ThumbDimensionProvider.kt$/** * Width to height thumbnail dimension ratio */ private const val ratio = 0.75</ID>
     <ID>TopLevelPropertyNaming:ZendeskHelper.kt$private const val enablePushNotificationsDelayAfterIdentityChange: Long = 2500</ID>
     <ID>TopLevelPropertyNaming:ZendeskHelper.kt$private const val zendeskNeedsToBeEnabledError = "Zendesk needs to be setup before this method can be called"</ID>
     <ID>UnnecessaryAbstractClass:JetpackListItemState.kt$JetpackListItemState</ID>
