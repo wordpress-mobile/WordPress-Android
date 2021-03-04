@@ -28,7 +28,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 138
+        return 139
     }
 
     override fun getDbName(): String {
@@ -1495,7 +1495,22 @@ open class WellSqlConfig : DefaultWellConfig {
                     db.execSQL("CREATE TABLE DynamicCard (_id INTEGER PRIMARY KEY AUTOINCREMENT,SITE_ID INTEGER," +
                             "DYNAMIC_CARD_TYPE TEXT,STATE TEXT)")
                 }
-                137 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
+                137 -> migrate(version) {
+                    db.execSQL("DROP TABLE IF EXISTS GutenbergLayoutModel")
+                    db.execSQL(
+                            "CREATE TABLE GutenbergLayoutModel (" +
+                                    "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                                    "SLUG TEXT NOT NULL," +
+                                    "SITE_ID INTEGER," +
+                                    "TITLE TEXT NOT NULL," +
+                                    "PREVIEW TEXT NOT NULL," +
+                                    "PREVIEW_TABLET TEXT NOT NULL," +
+                                    "PREVIEW_MOBILE TEXT NOT NULL," +
+                                    "CONTENT TEXT NOT NULL," +
+                                    "DEMO_URL TEXT NOT NULL)"
+                    )
+                }
+                138 -> migrateAddOn(ADDON_WOOCOMMERCE, version) {
                     db.execSQL("DROP TABLE IF EXISTS WCCustomerModel")
                     db.execSQL("CREATE TABLE WCCustomerModel (AVATAR_URL TEXT NOT NULL," +
                             "DATE_CREATED TEXT NOT NULL,DATE_CREATED_GMT TEXT NOT NULL,DATE_MODIFIED TEXT NOT NULL," +
