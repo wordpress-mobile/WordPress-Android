@@ -423,6 +423,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
+        //Existing Posts have title set before onResume is called
         if (isEmptyPost() && !hasSeenTryBlockEditorDialog()) {
             showTryBlockEditorDialog();
         }
@@ -2391,16 +2392,14 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
      * Methods for showing Classic Editor Deprecation notice
      */
     private boolean isEmptyPost() {
-        boolean isEmpty = TextUtils.isEmpty(mTitle.getText())
+        return TextUtils.isEmpty(mTitle.getText())
                           && TextUtils.isEmpty(mContent.getText());
-        return isEmpty;
     }
 
     private boolean hasSeenTryBlockEditorDialog() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        boolean hasSeen = prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice)
+        return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice)
                 , false);
-        return hasSeen;
     }
 
     private void showTryBlockEditorDialog() {
