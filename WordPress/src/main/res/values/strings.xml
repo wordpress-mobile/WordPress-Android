@@ -1094,8 +1094,8 @@
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
+    <string name="scan_idle_threats_description_plural">The scan found %1$s potential threats with %2$s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1$s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
