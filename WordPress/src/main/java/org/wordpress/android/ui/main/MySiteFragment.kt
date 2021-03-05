@@ -1330,7 +1330,7 @@ class MySiteFragment : Fragment(),
     }
 
     private fun startQuickStart() {
-        quickStartStore.setDoneTask(AppPrefs.getSelectedSite().toLong(), CREATE_SITE, true)
+        quickStartUtilsWrapper.startQuickStart(AppPrefs.getSelectedSite())
         updateQuickStartContainer()
     }
 

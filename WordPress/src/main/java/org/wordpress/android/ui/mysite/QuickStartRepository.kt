@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -110,7 +109,7 @@ class QuickStartRepository
 
     fun startQuickStart(newSiteLocalID: Int) {
         if (newSiteLocalID != -1) {
-            quickStartStore.setDoneTask(newSiteLocalID.toLong(), CREATE_SITE, true)
+            quickStartUtils.startQuickStart(newSiteLocalID)
             refresh()
         }
     }
