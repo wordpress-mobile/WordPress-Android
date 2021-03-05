@@ -12,6 +12,7 @@ buildscript {
     repositories {
         google()
         jcenter()
+        maven { url "https://dl.bintray.com/automattic/maven/" }
     }
 
     dependencies {
@@ -22,6 +23,7 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-serialization:$kotlinVersion"
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$navComponentVersion"
         classpath "io.gitlab.arturbosch.detekt:detekt-gradle-plugin:$detektVersion"
+        classpath 'com.automattic.android:configure:0.5.0'
     }
 }
 
@@ -30,6 +32,7 @@ ext {
 }
 
 apply plugin: 'com.automattic.android.fetchstyle'
+apply plugin: 'com.automattic.android.configure'
 
 project.ext.buildGutenbergFromSource = project.properties.getOrDefault('wp.BUILD_GUTENBERG_FROM_SOURCE', false).toBoolean()
 def suppressJSBundle =  System.getenv('SUPPRESS_GUTENBERG_MOBILE_JS_BUNDLE_BUILD').asBoolean()
@@ -173,68 +176,4 @@ ext {
     espressoVersion = '3.1.0'
     mockitoCoreVersion = "3.3.3"
     nhaarmanMockitoVersion = "2.2.0"
-}
-
-// Onboarding and dev env setup tasks
-task checkBundler(type:Exec) {
-    doFirst {
-        println "Check Bundler"
-    }
-
-    workingDir = './'
-    executable "sh"
-    args "-c", "if ! type 'bundle' > /dev/null; then gem install bundler; fi"
-
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
-
-    //extension method checkBundler.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
-}
-
-task checkBundle(type:Exec, dependsOn:checkBundler) {
-    doFirst {
-        println "Check Bundle"
-    }
-
-    workingDir = './'
-    executable "sh"
-    args "-c", "bundle check --path=\${BUNDLE_PATH:-vendor/bundle} > /dev/null || bundle install --jobs=3 --retry=3 --path=\${BUNDLE_PATH:-vendor/bundle}"
-
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
-
-    //extension method checkBundle.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
-}
-
-task applyCredentials(type:Exec, dependsOn:checkBundle) {
-    doFirst {
-        println "Apply credentials for this branch"
-    }
-
-    workingDir = './'
-    executable "sh"
-    args "-c", "FASTLANE_SKIP_UPDATE_CHECK=1 FASTLANE_ENV_PRINTER=1 bundle exec fastlane run configure_apply force:true"
-
-    //store the output instead of printing to the console:
-    standardOutput = new ByteArrayOutputStream()
-
-    //extension method checkBundle.output() can be used to obtain the output:
-    ext.output = {
-        return standardOutput.toString()
-    }
-}
-
-tasks.register("configureApply") {
-    group = 'Onboarding'
-    description = 'Install dependencies for debug and production builds'
-    dependsOn applyCredentials
-    doLast {
-        println("Done")
-    }
 }
