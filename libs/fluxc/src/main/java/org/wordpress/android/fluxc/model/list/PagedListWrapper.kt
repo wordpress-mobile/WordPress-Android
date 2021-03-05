@@ -15,7 +15,6 @@ import org.greenrobot.eventbus.ThreadMode
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
-import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
@@ -31,8 +30,6 @@ import kotlin.coroutines.CoroutineContext
  * can be directly used in the UI.
  * @property listError A [LiveData] instance that tells whether the last fetch resulted in an error. It can be used
  * to either let the user know of each error or present the error in the empty view when it's visible.
- * @property listChanged A [LiveData] instance that emits events when the list is changed due to first or subsequent
- * page loads, or fetch errors. The values will typically only be used to metric tracking.
  */
 class PagedListWrapper<T>(
     val data: LiveData<PagedList<T>>,
@@ -43,16 +40,6 @@ class PagedListWrapper<T>(
     private val invalidate: () -> Unit,
     private val parentCoroutineContext: CoroutineContext
 ) : LifecycleObserver, CoroutineScope {
-    /**
-     * Extra information about the events that led to the list changing.
-     * @property cause The cause of the change.
-     * @property totalDuration The total duration in milliseconds from the start of an API request until data persistence finished.
-     */
-    data class ListChangedEvent(
-        val cause: CauseOfListChange,
-        val totalDuration: Long?
-    )
-
     private var job: Job = Job()
 
     override val coroutineContext: CoroutineContext
