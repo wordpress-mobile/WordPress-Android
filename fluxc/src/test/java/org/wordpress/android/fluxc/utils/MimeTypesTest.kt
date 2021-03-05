@@ -67,7 +67,7 @@ class MimeTypesTest {
                         "application/x-excel",
                         "application/vnd.ms-excel",
                         "application/x-msexcel",
-                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
                 )
         )
     }
