@@ -2396,8 +2396,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
 
     private boolean hasSeenClassicEditorDeprecationDialog() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
-        return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice)
-                , false);
+        return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), false);
     }
 
     private void showClassicEditorDeprecationDialog() {
@@ -2410,5 +2409,4 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         prefs.edit().putBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), true).apply();
     }
-
 }
