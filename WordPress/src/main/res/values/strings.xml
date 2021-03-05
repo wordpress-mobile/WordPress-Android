@@ -3112,7 +3112,6 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
-    <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_notice_page_created">Page created</string>

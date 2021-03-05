@@ -70,6 +70,7 @@ import org.wordpress.android.ui.media.services.MediaDeleteService;
 import org.wordpress.android.ui.mediapicker.MediaPickerActivity;
 import org.wordpress.android.ui.mediapicker.MediaPickerFragment;
 import org.wordpress.android.ui.layoutpicker.LayoutsAdapter;
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment;
 import org.wordpress.android.ui.mlp.ModalLayoutPickerFragment;
 import org.wordpress.android.ui.mysite.ImprovedMySiteFragment;
 import org.wordpress.android.ui.mysite.dynamiccards.DynamicCardMenuFragment;
@@ -569,6 +570,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(HomePagePickerFragment object);
 
     void inject(DesignPreviewFragment object);
+
+    void inject(BlockLayoutPreviewFragment object);
 
     void inject(SubfilterBottomSheetFragment object);
 

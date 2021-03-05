@@ -17,13 +17,14 @@ import org.wordpress.android.fluxc.store.SiteStore.OnBlockLayoutsFetched
 import org.wordpress.android.modules.BG_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
-import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
 import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel
-import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.layoutpicker.ThumbDimensionProvider
 import org.wordpress.android.ui.layoutpicker.toLayoutCategories
 import org.wordpress.android.ui.layoutpicker.toLayoutModels
+import org.wordpress.android.ui.mlp.ModalLayoutPickerTracker
+import org.wordpress.android.ui.mlp.SupportedBlocksProvider
 import org.wordpress.android.ui.prefs.AppPrefsWrapper
 import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.NetworkUtilsWrapper
@@ -43,10 +44,11 @@ class ModalLayoutPickerViewModel @Inject constructor(
     private val supportedBlocksProvider: SupportedBlocksProvider,
     private val thumbDimensionProvider: ThumbDimensionProvider,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
-    private val networkUtils: NetworkUtilsWrapper,
+    override val networkUtils: NetworkUtilsWrapper,
+    private val analyticsTracker: ModalLayoutPickerTracker,
     @Named(BG_THREAD) override val bgDispatcher: CoroutineDispatcher,
     @Named(UI_THREAD) override val mainDispatcher: CoroutineDispatcher
-) : LayoutPickerViewModel(mainDispatcher, bgDispatcher) {
+) : LayoutPickerViewModel(mainDispatcher, bgDispatcher, networkUtils, analyticsTracker) {
     /**
      * Tracks the Modal Layout Picker visibility state
      */
@@ -58,12 +60,6 @@ class ModalLayoutPickerViewModel @Inject constructor(
      */
     private val _onCreateNewPageRequested = SingleLiveEvent<PageRequest.Create>()
     val onCreateNewPageRequested: LiveData<PageRequest.Create> = _onCreateNewPageRequested
-
-    /**
-     * Preview page event
-     */
-    private val _onPreviewPageRequested = SingleLiveEvent<PageRequest.Preview>()
-    val onPreviewPageRequested: LiveData<PageRequest.Preview> = _onPreviewPageRequested
 
     sealed class PageRequest(val template: String?, val content: String) {
         open class Create(template: String?, content: String, val title: String) : PageRequest(template, content)
@@ -157,16 +153,9 @@ class ModalLayoutPickerViewModel @Inject constructor(
         dismiss()
     }
 
-    /**
-     * Preview page tapped
-     */
-    fun onPreviewPageClicked() {
-        (uiState.value as? Content)?.let { state ->
-            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
-                val site = siteStore.getSiteByLocalId(appPrefsWrapper.getSelectedSite())
-                _onPreviewPageRequested.value = PageRequest.Preview(layout.slug, layout.content, site, layout.demoUrl)
-            }
-        }
+    override fun onPreviewChooseTapped() {
+        super.onPreviewChooseTapped()
+        onCreatePageClicked()
     }
 
     /**

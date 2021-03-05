@@ -115,14 +115,14 @@
             android:gravity="center"
             android:paddingBottom="@dimen/picker_bottom_button_vertical_margin"
             android:paddingTop="@dimen/picker_bottom_button_vertical_margin">
+
             <com.google.android.material.button.MaterialButton
                 android:id="@+id/chooseButton"
                 style="@style/Widget.ModalLayoutPicker.Button.Primary"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="@dimen/mlp_bottom_button_horizontal_margin"
-                android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin"
-                android:text="@string/hpp_choose_button" />
+                android:layout_marginStart="@dimen/mlp_bottom_button_horizontal_margin" />
         </FrameLayout>
     </LinearLayout>
 </LinearLayout>

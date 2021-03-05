@@ -14,7 +14,6 @@
     <ID>ComplexCondition:ScanAndBackupSource.kt$ScanAndBackupSource$site != null &amp;&amp; site.id == siteId &amp;&amp; (scanScreenFeatureConfig.isEnabled() || backupScreenFeatureConfig.isEnabled())</ID>
     <ID>ComplexCondition:SiteListItemBuilder.kt$SiteListItemBuilder$!TextUtils.isEmpty(planShortName) &amp;&amp; site.hasCapabilityManageOptions &amp;&amp; !site.isWpForTeamsSite &amp;&amp; (site.isWPCom || site.isAutomatedTransfer)</ID>
     <ID>ComplexCondition:TodayStatsUseCase.kt$TodayStatsUseCase$!hasViews &amp;&amp; !hasVisitors &amp;&amp; !hasLikes &amp;&amp; !hasComments</ID>
-    <ID>ComplexMethod:ActivityLogViewModel.kt$ActivityLogViewModel$@VisibleForTesting fun reloadEvents( done: Boolean = isDone, restoreEvent: RestoreEvent = currentRestoreEvent, backupDownloadEvent: BackupDownloadEvent = currentBackupDownloadEvent )</ID>
     <ID>ComplexMethod:BarChartViewHolder.kt$BarChartViewHolder$private fun BarChart.draw( item: BarChartItem, labelStart: TextView, labelEnd: TextView ): BarCount</ID>
     <ID>ComplexMethod:BlockDiffCallback.kt$BlockDiffCallback$override fun getChangePayload(oldItemPosition: Int, newItemPosition: Int): Any?</ID>
     <ID>ComplexMethod:BlockListAdapter.kt$BlockListAdapter$override fun onBindViewHolder(holder: BlockListItemViewHolder, position: Int, payloads: List&lt;Any&gt;)</ID>
@@ -238,8 +237,6 @@
     <ID>MagicNumber:DateUtils.kt$DateUtils$5</ID>
     <ID>MagicNumber:DateUtils.kt$DateUtils$50</ID>
     <ID>MagicNumber:DateUtils.kt$DateUtils$6</ID>
-    <ID>MagicNumber:DesignPreviewFragment.kt$DesignPreviewFragment$100</ID>
-    <ID>MagicNumber:DesignPreviewFragment.kt$DesignPreviewFragment.&lt;no name provided&gt;$250</ID>
     <ID>MagicNumber:DeviceMediaLoader.kt$DeviceMediaLoader$1000</ID>
     <ID>MagicNumber:EditorPhotoPicker.kt$EditorPhotoPicker$0.5f</ID>
     <ID>MagicNumber:EncryptedLogWriter.kt$EncryptedLogWriter$108</ID>
@@ -504,7 +501,6 @@
     <ID>TooManyFunctions:FollowersUseCase.kt$FollowersUseCase : BaseStatsUseCase</ID>
     <ID>TooManyFunctions:FormattableContentUtils.kt$org.wordpress.android.util.FormattableContentUtils.kt</ID>
     <ID>TooManyFunctions:GifPickerActivity.kt$GifPickerActivity : LocaleAwareActivity</ID>
-    <ID>TooManyFunctions:HomePagePickerViewModel.kt$HomePagePickerViewModel : LayoutPickerViewModel</ID>
     <ID>TooManyFunctions:HomepageSettingsViewModel.kt$HomepageSettingsViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:ImageManager.kt$ImageManager</ID>
     <ID>TooManyFunctions:ImprovedMySiteFragment.kt$ImprovedMySiteFragment : FragmentCallback</ID>
@@ -518,7 +514,6 @@
     <ID>TooManyFunctions:MediaPickerTracker.kt$MediaPickerTracker</ID>
     <ID>TooManyFunctions:MediaPickerViewModel.kt$MediaPickerViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:MediaUtilsWrapper.kt$MediaUtilsWrapper</ID>
-    <ID>TooManyFunctions:ModalLayoutPickerFragment.kt$ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment</ID>
     <ID>TooManyFunctions:MySiteFragment.kt$MySiteFragment : FragmentOnScrollToTopListenerBasicDialogPositiveClickInterfaceBasicDialogNegativeClickInterfaceBasicDialogOnDismissByOutsideTouchInterfacePromoDialogClickInterfaceOnConfirmListenerOnDismissListenerCallback</ID>
     <ID>TooManyFunctions:MySiteViewModel.kt$MySiteViewModel : ScopedViewModel</ID>
     <ID>TooManyFunctions:NestedCoordinatorLayout.kt$NestedCoordinatorLayout : CoordinatorLayoutNestedScrollingChild3</ID>
@@ -586,7 +581,7 @@
     <ID>TooManyFunctions:SiteCreationPreviewFragment.kt$SiteCreationPreviewFragment : SiteCreationBaseFormFragmentErrorManagedWebViewClientListener</ID>
     <ID>TooManyFunctions:SiteCreationSegmentsFragment.kt$SiteCreationSegmentsFragment : SiteCreationBaseFormFragment</ID>
     <ID>TooManyFunctions:SiteCreationSegmentsViewModel.kt$SiteCreationSegmentsViewModel : ViewModelCoroutineScope</ID>
-    <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker</ID>
+    <ID>TooManyFunctions:SiteCreationTracker.kt$SiteCreationTracker : LayoutPickerTracker</ID>
     <ID>TooManyFunctions:SiteListItemBuilder.kt$SiteListItemBuilder</ID>
     <ID>TooManyFunctions:SitePreviewViewModel.kt$SitePreviewViewModel : ViewModelCoroutineScope</ID>
     <ID>TooManyFunctions:StatsDateFormatter.kt$StatsDateFormatter</ID>
