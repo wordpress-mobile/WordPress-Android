@@ -2396,13 +2396,13 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
                           && TextUtils.isEmpty(mContent.getText());
     }
 
-    private boolean hasSeenTryBlockEditorDialog() {
+    private boolean hasSeenClassicEditorDeprecationDialog() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
         return prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice)
                 , false);
     }
 
-    private void showTryBlockEditorDialog() {
+    private void showClassicEditorDeprecationDialog() {
         MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
         builder.setTitle(getString(R.string.dialog_title_try_block_editor));
         builder.setMessage(getString(R.string.dialog_body_try_block_editor));
