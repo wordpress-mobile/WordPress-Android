@@ -81,7 +81,7 @@
     <string name="pref_key_site_allowlist" translatable="false">wp_pref_site_whitelist</string>
     <string name="pref_key_site_multiple_links" translatable="false">wp_pref_site_multiple_links</string>
     <string name="pref_key_site_moderation_hold" translatable="false">wp_pref_site_moderation_hold</string>
-    <string name="pref_key_site_blacklist" translatable="false">wp_pref_site_blacklist</string>
+    <string name="pref_key_site_denylist" translatable="false">wp_pref_site_blacklist</string>
     <string name="pref_key_site_advanced" translatable="false">wp_pref_site_advanced</string>
     <string name="pref_key_site_disconnect" translatable="false">wp_pref_site_disconnect</string>
     <string name="pref_key_site_start_over" translatable="false">wp_pref_site_start_over</string>

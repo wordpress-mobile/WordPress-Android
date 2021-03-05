@@ -56,7 +56,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String ALLOWLIST_KNOWN_USERS_KEY = "comment_whitelist";
     private static final String MAX_LINKS_KEY = "comment_max_links";
     private static final String MODERATION_KEYS_KEY = "moderation_keys";
-    private static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
+    private static final String DENYLIST_KEYS_KEY = "blacklist_keys";
     private static final String SHARING_LABEL_KEY = "sharing_label";
     private static final String SHARING_BUTTON_STYLE_KEY = "sharing_button_style";
     private static final String SHARING_REBLOGS_DISABLED_KEY = "disabled_reblogs";
@@ -684,7 +684,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(ALLOWLIST_KNOWN_USERS_KEY, false);
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
-        mRemoteSettings.blacklist = new ArrayList<>();
+        mRemoteSettings.denylist = new ArrayList<>();
         mRemoteSettings.sharingLabel = settingsObject.optString(SHARING_LABEL_KEY, "");
         mRemoteSettings.sharingButtonStyle = settingsObject.optString(SHARING_BUTTON_STYLE_KEY,
                                                                       DEFAULT_SHARING_BUTTON_STYLE);
@@ -709,9 +709,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (modKeys.length() > 0) {
             Collections.addAll(mRemoteSettings.holdForModeration, modKeys.split("\n"));
         }
-        String blacklistKeys = settingsObject.optString(BLACKLIST_KEYS_KEY, "");
-        if (blacklistKeys.length() > 0) {
-            Collections.addAll(mRemoteSettings.blacklist, blacklistKeys.split("\n"));
+        String denylistKeys = settingsObject.optString(DENYLIST_KEYS_KEY, "");
+        if (denylistKeys.length() > 0) {
+            Collections.addAll(mRemoteSettings.denylist, denylistKeys.split("\n"));
         }
 
         if (settingsObject.optString(COMMENT_SORT_ORDER_KEY, "").equals("asc")) {
@@ -834,16 +834,16 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 params.put(MODERATION_KEYS_KEY, "");
             }
         }
-        if (mSettings.blacklist != null && !mSettings.blacklist.equals(mRemoteSettings.blacklist)) {
+        if (mSettings.denylist != null && !mSettings.denylist.equals(mRemoteSettings.denylist)) {
             StringBuilder builder = new StringBuilder();
-            for (String key : mSettings.blacklist) {
+            for (String key : mSettings.denylist) {
                 builder.append(key);
                 builder.append("\n");
             }
             if (builder.length() > 1) {
-                params.put(BLACKLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
+                params.put(DENYLIST_KEYS_KEY, builder.substring(0, builder.length() - 1));
             } else {
-                params.put(BLACKLIST_KEYS_KEY, "");
+                params.put(DENYLIST_KEYS_KEY, "");
             }
         }
         if (mSettings.sharingLabel != null && !mSettings.sharingLabel.equals(mRemoteSettings.sharingLabel)) {

@@ -231,7 +231,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     private DetailListPreference mAllowlistPref;
     private Preference mMultipleLinksPref;
     private Preference mModerationHoldPref;
-    private Preference mBlacklistPref;
+    private Preference mDenylistPref;
 
     // Advanced settings
     private Preference mStartOverPref;
@@ -276,7 +276,7 @@ public class SiteSettingsFragment extends PreferenceFragment
     // Reference to the state of the fragment
     private boolean mIsFragmentPaused = false;
 
-    // Hold for Moderation and Blacklist settings
+    // Hold for Moderation and Denylist settings
     private Dialog mDialog;
     private ActionMode mActionMode;
     private MultiSelectRecyclerViewAdapter mAdapter;
@@ -557,10 +557,10 @@ public class SiteSettingsFragment extends PreferenceFragment
             mEditingList = mSiteSettings.getModerationKeys();
             showListEditorDialog(R.string.site_settings_moderation_hold_title,
                     R.string.site_settings_hold_for_moderation_description);
-        } else if (preference == mBlacklistPref) {
-            mEditingList = mSiteSettings.getBlacklistKeys();
-            showListEditorDialog(R.string.site_settings_blacklist_title,
-                    R.string.site_settings_blacklist_description);
+        } else if (preference == mDenylistPref) {
+            mEditingList = mSiteSettings.getDenylistKeys();
+            showListEditorDialog(R.string.site_settings_denylist_title,
+                    R.string.site_settings_denylist_description);
         } else if (preference == mJpAllowlistPref) {
             AnalyticsTracker.track(Stat.SITE_SETTINGS_JETPACK_ALLOWLISTED_IPS_VIEWED);
             mEditingList = mSiteSettings.getJetpackAllowlistKeys();
@@ -738,8 +738,8 @@ public class SiteSettingsFragment extends PreferenceFragment
             mRelatedPostsPref.setSummary(newValue.toString());
         } else if (preference == mModerationHoldPref) {
             mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        } else if (preference == mBlacklistPref) {
-            mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        } else if (preference == mDenylistPref) {
+            mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         } else if (preference == mWeekStartPref) {
             mSiteSettings.setStartOfWeek(newValue.toString());
             mWeekStartPref.setValue(newValue.toString());
@@ -806,8 +806,8 @@ public class SiteSettingsFragment extends PreferenceFragment
     public void onDismiss(DialogInterface dialog) {
         if (mEditingList == mSiteSettings.getModerationKeys()) {
             onPreferenceChange(mModerationHoldPref, mEditingList.size());
-        } else if (mEditingList == mSiteSettings.getBlacklistKeys()) {
-            onPreferenceChange(mBlacklistPref, mEditingList.size());
+        } else if (mEditingList == mSiteSettings.getDenylistKeys()) {
+            onPreferenceChange(mDenylistPref, mEditingList.size());
         } else if (mEditingList == mSiteSettings.getJetpackAllowlistKeys()) {
             onPreferenceChange(mJpAllowlistPref, mEditingList.size());
         }
@@ -914,7 +914,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mThreadingPref = getClickPref(R.string.pref_key_site_threading);
         mMultipleLinksPref = getClickPref(R.string.pref_key_site_multiple_links);
         mModerationHoldPref = getClickPref(R.string.pref_key_site_moderation_hold);
-        mBlacklistPref = getClickPref(R.string.pref_key_site_blacklist);
+        mDenylistPref = getClickPref(R.string.pref_key_site_denylist);
         mStartOverPref = getClickPref(R.string.pref_key_site_start_over);
         mExportSitePref = getClickPref(R.string.pref_key_site_export_site);
         mDeleteSitePref = getClickPref(R.string.pref_key_site_delete_site);
@@ -1035,7 +1035,7 @@ public class SiteSettingsFragment extends PreferenceFragment
                 mAllowCommentsNested, mSendPingbacksPref, mSendPingbacksNested, mReceivePingbacksPref,
                 mReceivePingbacksNested, mIdentityRequiredPreference, mUserAccountRequiredPref,
                 mSortByPref, mAllowlistPref, mRelatedPostsPref, mCloseAfterPref, mPagingPref,
-                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mBlacklistPref, mWeekStartPref,
+                mThreadingPref, mMultipleLinksPref, mModerationHoldPref, mDenylistPref, mWeekStartPref,
                 mDateFormatPref, mTimeFormatPref, mTimezonePref, mPostsPerPagePref, mAmpPref,
                 mDeleteSitePref, mJpMonitorActivePref, mJpMonitorEmailNotesPref, mJpSsoPref,
                 mJpMonitorWpNotesPref, mJpBruteForcePref, mJpAllowlistPref, mJpMatchEmailPref, mJpUseTwoFactorPref,
@@ -1309,7 +1309,7 @@ public class SiteSettingsFragment extends PreferenceFragment
         mPagingPref.setSummary(mSiteSettings.getPagingDescription());
         mRelatedPostsPref.setSummary(mSiteSettings.getRelatedPostsDescription());
         mModerationHoldPref.setSummary(mSiteSettings.getModerationHoldDescription());
-        mBlacklistPref.setSummary(mSiteSettings.getBlacklistDescription());
+        mDenylistPref.setSummary(mSiteSettings.getDenylistDescription());
         mJpMonitorActivePref.setChecked(mSiteSettings.isJetpackMonitorEnabled());
         mJpMonitorEmailNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorEmailNotifications());
         mJpMonitorWpNotesPref.setChecked(mSiteSettings.shouldSendJetpackMonitorWpNotifications());

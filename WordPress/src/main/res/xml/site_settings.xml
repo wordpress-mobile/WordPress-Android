@@ -449,10 +449,10 @@
                     app:longClickHint="@string/site_settings_moderation_hold_hint" />
 
                 <org.wordpress.android.ui.prefs.WPPreference
-                    android:id="@+id/pref_blacklist"
-                    android:key="@string/pref_key_site_blacklist"
-                    android:title="@string/site_settings_blacklist_title"
-                    app:longClickHint="@string/site_settings_blacklist_hint" />
+                    android:id="@+id/pref_denylist"
+                    android:key="@string/pref_key_site_denylist"
+                    android:title="@string/site_settings_denylist_title"
+                    app:longClickHint="@string/site_settings_denylist_hint" />
 
             </PreferenceCategory>
 

@@ -620,7 +620,7 @@
     <string name="site_settings_allowlist_title">Automatically approve</string>
     <string name="site_settings_multiple_links_title">Links in comments</string>
     <string name="site_settings_moderation_hold_title">Hold for Moderation</string>
-    <string name="site_settings_blacklist_title">Blacklist</string>
+    <string name="site_settings_denylist_title">Disallowed comments</string>
     <string name="site_settings_delete_site_title">Delete Site</string>
     <string name="site_settings_timezones_error">Unable to load timezones</string>
     <string name="site_settings_amp_title">Accelerated Mobile Pages (AMP)</string>
@@ -799,7 +799,7 @@
     <string name="site_settings_allowlist_hint">Comment author must have a previously approved comment</string>
     <string name="site_settings_multiple_links_hint">Ignores link limit from known users</string>
     <string name="site_settings_moderation_hold_hint">Comments that match a filter are put in the moderation queue</string>
-    <string name="site_settings_blacklist_hint">Comments that match a filter are marked as spam</string>
+    <string name="site_settings_denylist_hint">Comments that match a filter are marked as spam</string>
 
     <!-- Related Posts -->
     <string name="site_settings_rp_switch_title">Show Related Posts</string>
@@ -818,7 +818,7 @@
     <string name="site_settings_learn_more_header" translatable="false">@string/learn_more</string>
     <string name="site_settings_learn_more_caption">You can override these settings for individual posts.</string>
 
-    <!-- List Editors (Blacklist, Hold for Moderation) -->
+    <!-- List Editors (Denylist, Hold for Moderation) -->
     <string name="site_settings_list_editor_summary_one">1 item</string>
     <string name="site_settings_list_editor_summary_other">%d items</string>
 
@@ -826,7 +826,7 @@
     <string name="site_settings_list_editor_no_items_text">No items</string>
     <string name="site_settings_list_editor_input_hint">Enter a word or phrase</string>
     <string name="site_settings_hold_for_moderation_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be held in the moderation queue. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
-    <string name="site_settings_blacklist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
+    <string name="site_settings_denylist_description">When a comment contains any of these words in its content, name, URL, e-mail, or IP, it will be marked as spam. You can enter partial words, so \"press\" will match \"WordPress.\"</string>
     <string name="site_settings_jetpack_allowlist_description">You may mark an IP address (or series of addresses) as \"Always allowed\", preventing them from ever being blocked by Jetpack. IPv4 and IPv6 are acceptable. To specify a range, enter the low value and high value separated by a dash. Example: 12.12.12.1–12.12.12.100</string>
 
     <!-- Dialogs -->
