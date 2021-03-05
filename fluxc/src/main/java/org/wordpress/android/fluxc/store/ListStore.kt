@@ -256,7 +256,6 @@ class ListStore @Inject constructor(
         } else {
             if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
         }
-
         emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
         handleListStateChange(payload.listDescriptor, newState, payload.error)
     }
