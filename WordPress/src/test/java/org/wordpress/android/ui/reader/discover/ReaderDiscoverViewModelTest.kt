@@ -696,7 +696,7 @@ class ReaderDiscoverViewModelTest {
     }
 
     private fun createReaderInterestsCardUiState(readerTagList: ReaderTagList) =
-            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", false, mock()) })
+            ReaderInterestsCardUiState(readerTagList.map { ReaderInterestUiState("", mock(), mock()) })
 
     private fun createReaderRecommendedBlogsCardUiState(
         recommendedBlogs: List<ReaderBlog>,
