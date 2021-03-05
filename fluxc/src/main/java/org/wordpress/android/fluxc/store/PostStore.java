@@ -825,7 +825,7 @@ public class PostStore extends Store {
 
         FetchedListItemsPayload fetchedListItemsPayload =
                 new FetchedListItemsPayload(payload.listDescriptor, postIds,
-                        payload.loadedMore, payload.canLoadMore, null, fetchedListItemsError);
+                        payload.loadedMore, payload.canLoadMore, fetchedListItemsError);
         mDispatcher.dispatch(ListActionBuilder.newFetchedListItemsAction(fetchedListItemsPayload));
     }
 
