@@ -4,7 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.widget.SearchView.OnQueryTextListener
+import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.RecyclerView
@@ -56,30 +56,12 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     }
 
     private fun setupUI() {
-        binding.apply {
-            this?.list?.adapter = timezoneAdapter
-            this?.list?.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
+        binding?.apply {
+            list.adapter = timezoneAdapter
+            list.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
 
-            this?.searchView?.setOnQueryTextListener(object : OnQueryTextListener {
-                override fun onQueryTextSubmit(query: String?): Boolean {
-                    query?.let {
-                        timezoneViewModel.searchTimezones(it)
-                    }
-                    return true
-                }
-
-                override fun onQueryTextChange(newText: String?): Boolean {
-                    newText?.let {
-                        timezoneViewModel.searchTimezones(it)
-                    }
-                    return true
-                }
-            })
-
-            this?.searchView?.setOnCloseListener {
-                timezoneViewModel.onSearchCancelled()
-                hideSearchKeyboard()
-                true
+            searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
+                timezoneViewModel.searchTimezones(inputText)
             }
         }
     }
@@ -95,7 +77,6 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
         timezoneViewModel.timezones.observe(viewLifecycleOwner, {
             timezoneAdapter.submitList(it)
-            binding?.searchView?.isEnabled = true
         })
 
         timezoneViewModel.timezoneSearch.observe(viewLifecycleOwner, {
@@ -135,7 +116,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
     private fun hideSearchKeyboard() {
         if (isAdded) {
-            ActivityUtils.hideKeyboardForced(binding?.searchView)
+            ActivityUtils.hideKeyboardForced(binding?.searchInputLayout)
         }
     }
 

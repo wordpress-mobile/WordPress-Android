@@ -44,8 +44,8 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
     val timezones = _timezones
 
 
-    fun searchTimezones(city: String) {
-        searchInput.value = city
+    fun searchTimezones(city: CharSequence?) {
+        searchInput.value = city.toString()
     }
 
     private fun filterTimezones(city: String): LiveData<List<TimezonesList>> {
