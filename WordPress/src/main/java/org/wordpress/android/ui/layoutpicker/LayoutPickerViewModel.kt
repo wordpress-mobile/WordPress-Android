@@ -103,12 +103,13 @@ abstract class LayoutPickerViewModel(
                             remove(categorySlug)
                         })
                 )
+                layoutPickerTracker.filterDeselected(categorySlug, state.selectedCategoriesSlugs)
             } else {
                 updateUiState(
                         state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
                 )
+                layoutPickerTracker.filterSelected(categorySlug, state.selectedCategoriesSlugs)
             }
-            layoutPickerTracker.filterChanged(state.selectedCategoriesSlugs)
             loadCategories()
             _onCategorySelectionChanged.postValue(Event(Unit))
         }

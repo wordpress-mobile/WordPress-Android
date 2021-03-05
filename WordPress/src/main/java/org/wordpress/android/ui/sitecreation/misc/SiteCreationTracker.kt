@@ -11,6 +11,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.P
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -37,7 +38,8 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         THUMBNAIL_MODE("thumbnail_mode"),
         PREVIEW_MODE("preview_mode"),
         LOCATION("location"),
-        FILTER("filter")
+        FILTER("filter"),
+        SELECTED_FILTERS("selected_filters")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -211,10 +213,25 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
 
     override fun trackErrorShown(message: String) = trackErrorShown(DESIGN_ERROR_CONTEXT, UNKNOWN, message)
 
-    override fun filterChanged(filter: List<String>) {
+    override fun filterSelected(filter: String, selectedFilters: List<String>) {
         tracker.track(
-                AnalyticsTracker.Stat.FILTER_CHANGED,
-                mapOf(LOCATION.key to SITE_CREATION_LOCATION, FILTER.key to filter.joinToString())
+                AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
+    }
+
+    override fun filterDeselected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
         )
     }
 }

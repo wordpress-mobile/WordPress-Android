@@ -17,5 +17,7 @@ interface LayoutPickerTracker {
 
     fun trackErrorShown(message: String)
 
-    fun filterChanged(filter: List<String>)
+    fun filterSelected(filter: String, selectedFilters: List<String>)
+
+    fun filterDeselected(filter: String, selectedFilters: List<String>)
 }
