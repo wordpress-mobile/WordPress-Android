@@ -223,7 +223,8 @@ class QuickStartUtils {
 
         @JvmStatic
         fun isEveryQuickStartTaskDone(quickStartStore: QuickStartStore, selectedSiteId: Int): Boolean {
-            return quickStartStore.getDoneCount(selectedSiteId.toLong()) == QuickStartTask.values().size
+            return quickStartStore.getDoneCount(selectedSiteId.toLong()) >= QuickStartTask.values()
+                    .filter { it.taskType != UNKNOWN }.size
         }
 
         @JvmStatic
