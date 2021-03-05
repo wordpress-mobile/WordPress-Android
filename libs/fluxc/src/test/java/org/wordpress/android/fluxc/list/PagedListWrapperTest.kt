@@ -22,14 +22,12 @@ import org.wordpress.android.fluxc.model.list.ListDescriptor
 import org.wordpress.android.fluxc.model.list.ListDescriptorTypeIdentifier
 import org.wordpress.android.fluxc.model.list.ListState
 import org.wordpress.android.fluxc.model.list.PagedListWrapper
-import org.wordpress.android.fluxc.model.list.PagedListWrapper.ListChangedEvent
 import org.wordpress.android.fluxc.store.ListStore.ListError
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.GENERIC_ERROR
 import org.wordpress.android.fluxc.store.ListStore.ListErrorType.PERMISSION_ERROR
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange
 import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.FIRST_PAGE_FETCHED
-import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChange.LOADED_MORE
 import org.wordpress.android.fluxc.store.ListStore.OnListDataInvalidated
 import org.wordpress.android.fluxc.store.ListStore.OnListRequiresRefresh
 import org.wordpress.android.fluxc.store.ListStore.OnListStateChanged
@@ -126,23 +124,6 @@ class PagedListWrapperTest {
     fun `onListChanged invokes invalidate property`() {
         triggerOnListChanged()
         verify(mockInvalidate).invoke()
-    }
-
-    @Test
-    fun `onListChanged emits ListChangedEvent`() {
-        val pagedListWrapper = createPagedListWrapper()
-        val listChangedObserver = mock<Observer<ListChangedEvent?>>()
-        pagedListWrapper.listChanged.observeForever(listChangedObserver)
-
-        pagedListWrapper.onListChanged(OnListChanged(
-                listOf(mockListDescriptor),
-                causeOfChange = LOADED_MORE,
-                totalDuration = 1_984_981,
-                error = null
-        ))
-
-        captureAndVerifySingleValue(listChangedObserver,
-                ListChangedEvent(cause = LOADED_MORE, totalDuration = 1_984_981))
     }
 
     @Test
