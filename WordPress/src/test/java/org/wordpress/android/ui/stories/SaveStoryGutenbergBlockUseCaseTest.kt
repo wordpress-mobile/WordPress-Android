@@ -17,6 +17,7 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.BaseUnitTest
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.fluxc.model.PostModel
+import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.PostStore
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.posts.mediauploadcompletionprocessors.TestContent
@@ -140,10 +141,12 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         val mediaFile = getMediaFile(1)
         val postModel = PostModel()
         postModel.setContent(BLOCK_WITH_NON_EMPTY_MEDIA_FILES)
+        val siteModel = SiteModel()
 
         // When
         saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(
                 postModel,
+                siteModel,
                 mediaFile
         )
 
@@ -178,9 +181,10 @@ class SaveStoryGutenbergBlockUseCaseTest : BaseUnitTest() {
         whenever(mediaFile.fileURL).thenReturn(TestContent.remoteImageUrl)
         val postModel = PostModel()
         postModel.setContent(TestContent.storyBlockWithLocalIdsAndUrls)
+        val siteModel = SiteModel()
 
         // act
-        saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel, mediaFile)
+        saveStoryGutenbergBlockUseCase.replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel, siteModel, mediaFile)
 
         // assert
         Assertions.assertThat(postModel.content).isEqualTo(TestContent.storyBlockWithFirstRemoteIdsAndUrlsReplaced)

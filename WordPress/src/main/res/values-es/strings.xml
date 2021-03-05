@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-01 17:51:11+0000
+Translation-Revision-Date: 2021-03-03 20:02:15+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: es
 -->
 <resources>
+    <string name="activity_log_backup_download_notice_download_action">Descargar</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Descartar</string>
+    <string name="stories_intro_main_subtitle">Una nueva forma de crear y publicar contenidos atrayentes en tu sitio.</string>
     <string name="threat_fix_all_status_success_message_plural">Amenazas corregidas correctamente.</string>
     <string name="threat_fix_all_warning_message_plural">Por favor, confirma que quieres corregir todas las %s amenazas activas.</string>
     <string name="scan_idle_with_threats_description_plural">La exploración de Jetpack encontró %1s amenazas potenciales con %2s. Por favor, revísalas a continuación y lleva a cabo alguna acción o toca el botón de corregir todo. Estamos %3$s si nos necesitas.</string>
@@ -389,7 +392,6 @@ Language: es
     <string name="mlp_notice_page_created">Página creada</string>
     <string name="mlp_notice_blank_page_created">Página en blanco creada</string>
     <string name="stories_intro_main_title">Presentación de las entradas de historias</string>
-    <string name="stories_intro_main_subtitle">Tienes acceso anticipado a las entradas de historias y nos encantaría que las probaras.</string>
     <string name="stories_intro_image_caption_first">Cómo crear una entrada de historias</string>
     <string name="stories_intro_image_caption_second">Título de la entrada de historia</string>
     <string name="stories_intro_title_first">Ahora las historias son para todos</string>

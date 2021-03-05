@@ -7,6 +7,7 @@ import com.wordpress.stories.compose.story.StoryFrameItem
 import com.wordpress.stories.compose.story.StoryIndex
 import org.wordpress.android.fluxc.model.PostModel
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.model.post.PostStatus.PRIVATE
 import org.wordpress.android.ui.posts.EditPostRepository
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs
 import org.wordpress.android.ui.stories.prefs.StoriesPrefs.TempId
@@ -93,6 +94,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
 
     fun findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
         postModel: PostModel,
+        siteModel: SiteModel?,
         listener: DoWithMediaFilesListener
     ) {
         var content = postModel.content
@@ -115,8 +117,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
                     content = listener.doWithMediaFilesJson(content, jsonString)
                     storyBlockStartIndex += HEADING_START.length
                 } catch (exception: StringIndexOutOfBoundsException) {
-                    crashLogging.reportException(exception, EDITOR.toString())
-                    AppLog.e(EDITOR, exception.message)
+                    logException(exception, postModel, siteModel)
                 }
             }
         }
@@ -124,7 +125,26 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         postModel.setContent(content)
     }
 
-    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(postModel: PostModel, mediaFile: MediaFile) {
+    private fun logException(exception: Throwable, postModel: PostModel, siteModel: SiteModel?) {
+        AppLog.e(EDITOR, "Error while parsing Story blocks: ${exception.message}")
+        if (shouldLogContent(siteModel, postModel)) {
+            AppLog.e(EDITOR, "HTML content of the post before the crash: ${postModel.content}")
+        }
+        crashLogging.reportException(exception, EDITOR.toString())
+    }
+
+    // See: https://git.io/JqfhK
+    private fun shouldLogContent(siteModel: SiteModel?, postModel: PostModel) = siteModel != null &&
+            siteModel.isWPCom &&
+            !siteModel.isPrivate &&
+            postModel.password.isEmpty() &&
+            postModel.status != PRIVATE.toString()
+
+    fun replaceLocalMediaIdsWithRemoteMediaIdsInPost(
+        postModel: PostModel,
+        siteModel: SiteModel?,
+        mediaFile: MediaFile
+    ) {
         if (TextUtils.isEmpty(mediaFile.mediaId)) {
             // if for any reason we couldn't obtain a remote mediaId, it's not worth spending time
             // looking to replace anything in the Post. Skip processing for later in error handling.
@@ -133,6 +153,7 @@ class SaveStoryGutenbergBlockUseCase @Inject constructor(
         val gson = Gson()
         findAllStoryBlocksInPostAndPerformOnEachMediaFilesJson(
                 postModel,
+                siteModel,
                 object : DoWithMediaFilesListener {
                     override fun doWithMediaFilesJson(content: String, mediaFilesJsonString: String): String {
                         var processedContent = content

@@ -1094,17 +1094,19 @@
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <!-- translators: %3$s: "here to help" clickable text linking to help screen inside the app. -->
+    <string name="scan_idle_threats_description_plural">The scan found %1$s potential threats with %2$s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <!-- translators: %2$s: "here to help" clickable text linking to help screen inside the app. -->
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1$s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
     <string name="scan_in_minutes_ago">%s minute(s) ago</string>
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
-    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; 1 potential threat found</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; No threats found</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; One potential threat found</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
@@ -1170,8 +1172,8 @@
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
-    <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
-    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix %s active threat.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Please confirm you want to fix all %s active threats.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Please confirm you want to fix one active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
     <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
@@ -1875,6 +1877,7 @@
     <string name="reader_title_blog_preview">Reader Site</string>
     <string name="reader_title_tag_preview">Topic</string>
     <string name="reader_title_post_detail">Reader Post</string>
+    <string name="reader_title_related_post_detail">Related Post</string>
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
@@ -1912,7 +1915,7 @@
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
-    <string name="reader_choose_interests_content_description">Choose your interests</string>
+    <string name="reader_choose_interests_content_description">Choose your topics</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1937,10 +1940,10 @@
     <string name="reader_label_follow_count">%,d Followers</string>
     <string name="reader_label_gap_marker">Load more posts</string>
     <string name="reader_label_post_search_explainer">What would you like to find?</string>
-    <string name="reader_label_local_related_posts">More in %s</string>
+    <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_choose_your_interests">Choose your interests</string>
+    <string name="reader_label_choose_your_interests">Choose your topics</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
     <string name="reader_label_toolbar_back">Back</string>
@@ -2597,7 +2600,7 @@
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
     <string name="login_prologue_title_third">See comments and notifications in real time.</string>
     <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new reads.</string>
+    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
     <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
@@ -2858,7 +2861,7 @@
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
@@ -3111,7 +3114,6 @@
     <string name="mlp_create_blank_page">Create blank page</string>
     <string name="mlp_create_page">Create page</string>
     <string name="mlp_preview_page">Preview</string>
-    <string name="mlp_preview_title">Layout Preview</string>
     <string name="mlp_selected_description">%s selected</string>
     <string name="mlp_notselected_description">%s</string>
     <string name="mlp_notice_page_created">Page created</string>
@@ -3219,6 +3221,7 @@
     <string name="gutenberg_native_add_block_after" tools:ignore="UnusedResources">Add Block After</string>
     <string name="gutenberg_native_add_block_before" tools:ignore="UnusedResources">Add Block Before</string>
     <string name="gutenberg_native_add_block_here" tools:ignore="UnusedResources">ADD BLOCK HERE</string>
+    <string name="gutenberg_native_add_button_text" tools:ignore="UnusedResources">Add button text</string>
     <string name="gutenberg_native_add_image" tools:ignore="UnusedResources">ADD IMAGE</string>
     <string name="gutenberg_native_add_image_or_video" tools:ignore="UnusedResources">ADD IMAGE OR VIDEO</string>
     <string name="gutenberg_native_add_paragraph_block" tools:ignore="UnusedResources">Add paragraph block</string>
@@ -3360,6 +3363,8 @@
     <string name="gutenberg_native_page_title_s" tools:ignore="UnusedResources">Page title. %s</string>
     <string name="gutenberg_native_paste_block_after" tools:ignore="UnusedResources">Paste block after</string>
     <string name="gutenberg_native_paste_url" tools:ignore="UnusedResources">Paste URL</string>
+    <string name="gutenberg_native_plugin_sidebar_more_menu_title" tools:ignore="UnusedResources">Plugin sidebar more menu title</string>
+    <string name="gutenberg_native_plugin_sidebar_title" tools:ignore="UnusedResources">Plugin sidebar title</string>
     <!-- translators: accessibility text. empty post title. -->
     <string name="gutenberg_native_post_title_empty" tools:ignore="UnusedResources">Post title. Empty</string>
     <!-- translators: accessibility text. %s: text content of the post title. -->
@@ -3393,7 +3398,6 @@
     <string name="gutenberg_native_show_post_content" tools:ignore="UnusedResources">Show post content</string>
     <!-- translators: Checkbox toggle label -->
     <string name="gutenberg_native_show_section" tools:ignore="UnusedResources">Show section</string>
-    <string name="gutenberg_native_sidebar_title_plugin" tools:ignore="UnusedResources">Sidebar title plugin</string>
     <string name="gutenberg_native_start_writing" tools:ignore="UnusedResources">Start writing…</string>
     <string name="gutenberg_native_success_message" tools:ignore="UnusedResources">Success Message</string>
     <string name="gutenberg_native_take_a_photo" tools:ignore="UnusedResources">Take a Photo</string>

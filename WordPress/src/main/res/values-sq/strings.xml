@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-27 10:55:42+0000
+Translation-Revision-Date: 2021-03-04 09:39:48+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sq_AL
 -->
 <resources>
+    <string name="stories_intro_main_subtitle">Një rrugë e re për të krijuar dhe botuar lëndë tërheqëse në sajtin tuaj.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
+    <string name="activity_log_backup_download_notice_download_action">Shkarkoje</string>
     <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
     <string name="threat_fix_all_warning_message_plural">Ju lutemi, ripohoni se doni të zgjidhni krejt %s kërcënimet aktive.</string>
     <string name="scan_idle_with_threats_description_plural">Kontrolli gjeti %1s kërcënime potenciale me %2s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
@@ -237,6 +240,7 @@ Language: sq_AL
     <string name="threat_item_header_vulnerable_plugin">Shtojcë e Cenueshme: %s (version %s)</string>
     <string name="threat_item_header_file_malicious_code_pattern">%s: rregullsi kodi dashakeq</string>
     <string name="threat_item_sub_header_file_signature">%s kërcënimi të gjetur</string>
+    <string name="threat_item_header_database_threat">Kërcënime ndaj bazës së të dhënave %s</string>
     <string name="threat_item_header_infected_core_file">%s: kartelë bazë e infektuar</string>
     <string name="threat_item_header_threat_found">U gjet kërcënim</string>
     <string name="scan_this_site">këtë sajt</string>
@@ -384,7 +388,6 @@ Language: sq_AL
     <string name="stories_intro_description_first">Ndërthurni foto, video dhe tekst, që të krijoni postime shkrimesh tërheqës, që vizitorët tuaj do t’i duan fort.</string>
     <string name="stories_intro_image_caption_second">Titull shembulli shkrimi</string>
     <string name="stories_intro_image_caption_first">Si të krijohet një postim shkrimi</string>
-    <string name="stories_intro_main_subtitle">Ju është dhënë mundësia e përdorimit të hershëm të Postimeve të Shkrimeve dhe do të donim ta provonit.</string>
     <string name="stories_intro_main_title">Ju Paraqesim Postime Shkrimesh</string>
     <string name="mlp_notice_blank_page_created">U krijua faqe e zbrazët</string>
     <string name="mlp_notice_page_created">Faqja u krijua</string>

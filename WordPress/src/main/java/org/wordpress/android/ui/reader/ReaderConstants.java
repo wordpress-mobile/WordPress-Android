@@ -47,6 +47,7 @@ public class ReaderConstants {
     static final String ARG_POST_LIST_TYPE = "post_list_type";
     static final String ARG_CONTENT = "content";
     static final String ARG_IS_SINGLE_POST = "is_single_post";
+    static final String ARG_IS_RELATED_POST = "is_related_post";
     static final String ARG_SEARCH_QUERY = "search_query";
     static final String ARG_VIDEO_URL = "video_url";
     static final String ARG_IS_TOP_LEVEL = "is_top_level";
