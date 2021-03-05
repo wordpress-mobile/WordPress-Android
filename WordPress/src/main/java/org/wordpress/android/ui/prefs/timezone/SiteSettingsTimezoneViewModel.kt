@@ -1,26 +1,21 @@
 package org.wordpress.android.ui.prefs.timezone
 
-import android.app.Activity
-import android.text.TextUtils
+import android.content.Context
+import android.os.Build.VERSION_CODES
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
-import com.android.volley.Response
-import com.android.volley.VolleyError
-import com.android.volley.toolbox.StringRequest
-import com.android.volley.toolbox.Volley
-import com.google.gson.GsonBuilder
-import org.json.JSONException
-import org.json.JSONObject
-import org.wordpress.android.Constants
-import org.wordpress.android.networking.RestClientUtils
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
-import org.wordpress.android.ui.prefs.timezone.data.Timezones
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
-import org.wordpress.android.util.StringUtils
+import java.text.SimpleDateFormat
+import java.time.Instant
+import java.util.Date
+import java.util.Locale
+import java.util.TimeZone
 import javax.inject.Inject
 
 class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
@@ -67,121 +62,38 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         _timezones.postValue(timezonesList)
     }
 
-    // TODO: Might need to refactor and move api call to use a Repository or FluxC Store
-    fun requestTimezones(context: Activity) {
-        val listener = Response.Listener { response: String? ->
-            AppLog.d(SETTINGS, "timezones requested")
-            _showProgress.postValue(false)
+    @RequiresApi(VERSION_CODES.O) fun getTimezones(context: Context) {
+        val zoneIds = TimeZone.getAvailableIDs().asList()
 
-            if (!TextUtils.isEmpty(response)) {
-                timezonesList.clear()
-//                loadTimezones(response)
-                loadTimezonesByContinent(response)
-            } else {
-                AppLog.w(SETTINGS, "empty response requesting timezones")
-                _dismiss.postValue(Unit)
-            }
-        }
-
-        val errorListener = Response.ErrorListener { error: VolleyError? ->
-            AppLog.e(SETTINGS, "Error requesting timezones", error)
-            _dismiss.postValue(Unit)
-        }
-
-        val request: StringRequest = object : StringRequest(Constants.URL_TIMEZONE_ENDPOINT, listener, errorListener) {
-            override fun getParams(): Map<String, String> {
-                return RestClientUtils.getRestLocaleParams(context)
-            }
-        }
-
-        _showProgress.postValue(true)
-        val queue = Volley.newRequestQueue(context)
-        queue.add(request)
-    }
-
-    private fun loadTimezonesByContinent(responseJson: String?) {
-        try {
-            val gson = GsonBuilder().create()
-            val timezones = gson.fromJson(responseJson, Timezones::class.java)
-
-            val continents = timezones.timezonesByContinent
-
-
-            timezonesList.add(TimezoneHeader("Africa"))
-            continents.africa.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("America"))
-            continents.america.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Antarctica"))
-            continents.antarctica.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Arctic"))
-            continents.arctic.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Asia"))
-            continents.asia.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Atlantic"))
-            continents.atlantic.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Australia"))
-            continents.australia.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Europe"))
-            continents.europe.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Indian"))
-            continents.indian.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-
-            timezonesList.add(TimezoneHeader("Pacific"))
-            continents.pacific.forEach {
-                timezonesList.add(TimezoneItem(it.label, it.value))
-            }
-            _timezones.postValue(timezonesList)
-        } catch (e: JSONException) {
-            AppLog.e(SETTINGS, "Error parsing timezones", e)
-            _dismiss.postValue(Unit)
-        }
-    }
-
-    private fun loadTimezones(responseJson: String?) {
-        try {
-            val jsonResponse = JSONObject(responseJson.orEmpty())
-            val jsonTimezones = jsonResponse.getJSONArray("timezones")
-            for (i in 0 until jsonTimezones.length()) {
-                val json = jsonTimezones.getJSONObject(i)
+        val zones = zoneIds.groupBy {
+            it.split('/').first()
+        }.map {
+            timezonesList.add(TimezoneHeader(it.key))
+            it.value.map { zone ->
                 timezonesList.add(
-                        TimezoneItem(json.getString("label"), json.getString("value"))
+                        TimezoneItem(
+                                zone.split("/").last(),
+                                zone,
+                                getZoneOffset(zone)
+                        )
                 )
             }
-            // sort by label
-            timezonesList.sortWith { t1: TimezonesList, t2: TimezonesList ->
-                StringUtils.compare(t1.label, t2.label)
-            }
-
-            _timezones.postValue(timezonesList)
-        } catch (e: JSONException) {
-            AppLog.e(SETTINGS, "Error parsing timezones", e)
-            _dismiss.postValue(Unit)
         }
+
+        AppLog.d(SETTINGS, zones.toString())
+
+        _timezones.postValue(timezonesList)
+    }
+
+    @RequiresApi(VERSION_CODES.O)
+    private fun getZoneOffset(zone: String): String {
+        val now = Instant.now()
+        val fmt = SimpleDateFormat("Z", Locale.getDefault())
+
+        fmt.timeZone = TimeZone.getTimeZone(zone)
+        var offset: String = fmt.format(Date.from(now))
+        offset = offset.substring(0, 3) + ":" + offset.substring(3)
+
+        return "${zone.split('/').first()} Time (GMT${offset})"
     }
 }

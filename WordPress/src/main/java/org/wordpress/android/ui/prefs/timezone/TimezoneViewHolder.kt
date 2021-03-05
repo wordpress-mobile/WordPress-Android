@@ -11,7 +11,8 @@ class TimezoneViewHolder(
 ) : ViewHolder(binding.root) {
     fun bind(timezone: TimezoneItem, onClick: (timezone: TimezoneItem) -> Unit) {
         binding.apply {
-            itemTimeZone.text = timezone.label
+            timeZone.text = timezone.label
+            zoneOffset.text = timezone.offset
             itemTimeZone.setOnClickListener {
                 onClick(timezone)
             }

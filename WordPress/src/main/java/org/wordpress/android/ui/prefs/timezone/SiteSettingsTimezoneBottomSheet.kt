@@ -1,9 +1,11 @@
 package org.wordpress.android.ui.prefs.timezone
 
+import android.os.Build.VERSION_CODES
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.annotation.RequiresApi
 import androidx.core.widget.doOnTextChanged
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -49,10 +51,11 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
         return binding?.root
     }
 
+    @RequiresApi(VERSION_CODES.O)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
         setupLiveData()
-        timezoneViewModel.requestTimezones(requireActivity())
+        timezoneViewModel.getTimezones(requireContext())
     }
 
     private fun setupUI() {
