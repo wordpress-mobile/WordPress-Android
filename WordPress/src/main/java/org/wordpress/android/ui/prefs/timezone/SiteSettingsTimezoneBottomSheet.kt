@@ -66,6 +66,10 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
                 timezoneViewModel.searchTimezones(inputText)
             }
+
+            searchInputLayout.setEndIconOnClickListener {
+                timezoneViewModel.onSearchCancelled()
+            }
         }
     }
 
