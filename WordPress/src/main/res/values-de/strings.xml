@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 13:54:08+0000
+Translation-Revision-Date: 2021-03-04 23:23:30+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: de
 -->
 <resources>
+    <string name="reader_title_interests">Themen folgen</string>
+    <string name="activity_log_backup_download_notice_download_action">Herunterladen</string>
+    <string name="stories_intro_main_subtitle">Eine neue Möglichkeit, ansprechende Inhalte auf deiner Website zu erstellen und zu veröffentlichen.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Ausblenden</string>
     <string name="threat_fix_all_status_success_message_plural">Bedrohungen wurden erfolgreich behoben.</string>
-    <string name="threat_fix_all_warning_message_plural">Bitte bestätige, dass du alle %s aktiven Bedrohungen beheben möchtest.</string>
-    <string name="scan_idle_with_threats_description_plural">Beim Scan wurden %1s mögliche Bedrohungen bei %2s gefunden. Prüfe diese bitte unten und führe die erforderliche Aktion aus oder tippe auf den Button „Alle beheben“. Wir sind %3$s, wenn du uns brauchst.</string>
     <string name="scan_fixing_threats_description_plural">Wir arbeiten im Hintergrund daran, diese Bedrohungen zu beheben. In der Zwischenzeit kannst du deine Website ganz normal verwenden und jederzeit nachsehen, wie weit der Scan schon ist.</string>
     <string name="gutenberg_native_edit_focal_point">Fokuspunkt bearbeiten</string>
     <string name="new_site_creation_search_domain_example">beispiel.com</string>
@@ -35,8 +37,6 @@ Language: de
     <string name="invite_links_get_status_retry">Link-Status aktualisieren</string>
     <string name="threats_found_plural">Bedrohungen gefunden</string>
     <string name="threats_found_singular">Bedrohung gefunden</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scan abgeschlossen&lt;/b> &lt;br>&lt;/br> %s potenzielle Bedrohungen gefunden</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scan abgeschlossen&lt;/b> &lt;br>&lt;/br> 1 potenzielle Bedrohung gefunden</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Scan abgeschlossen&lt;/b> &lt;br>&lt;/br> Keine Bedrohungen gefunden</string>
     <string name="disable">Deaktivieren</string>
     <string name="scan_fixing_threats_title_singular">Bedrohung wird behoben</string>
@@ -93,7 +93,6 @@ Language: de
     <string name="threat_status_fixed">Fixiert</string>
     <string name="threat_found_header">Gefunden</string>
     <string name="scan_here_to_help">hier, um zu helfen</string>
-    <string name="scan_idle_with_threats_description_singular">Beim Scan wurden %1s mögliche Bedrohung bei %2s gefunden. Prüfe die Bedrohung bitte unten und führe die erforderliche Aktion aus oder tippe auf den Button „Alle beheben“. Wir sind %3$s, wenn du uns brauchst.</string>
     <string name="scan_idle_manual_scan_description">Um deine Website noch einmal zu prüfen, führe einen manuellen Scan aus oder warte, bis deine Website heute zu einem späteren Zeitpunkt von Jetpack gescannt wird.</string>
     <string name="scan_provisioning_description">Willkommen bei Jetpack Scan! Wir bereiten gerade einen vollständigen Scan vor und sehen uns deine Website genau an. Wir geben dir Bescheid, wenn wir etwas sehen, das den Scan beeinträchtigen könnte. Anschließend beginnt dein erster vollständiger Scan.</string>
     <string name="scan_scanning_is_initial_description">Willkommen bei Jetpack Scan! Wir sehen uns deine Website jetzt an und teilen dir die Ergebnisse bald mit.</string>
@@ -155,7 +154,6 @@ Language: de
     <string name="threat_fix_all_status_error_message">Fehler beim Abrufen des Behebungsstatus. Bitte kontaktiere den Support.</string>
     <string name="threat_fix_all_error_message">Fehler beim Beheben von Bedrohungen. Bitte kontaktiere den Support.</string>
     <string name="threat_fix_all_status_success_message_singular">Die Bedrohung wurde erfolgreich behoben.</string>
-    <string name="threat_fix_all_warning_message_singular">Bitte bestätige, dass du %s aktive Bedrohung beheben möchtest.</string>
     <string name="threat_fix_all_warning_title">Alle Bedrohungen beheben</string>
     <string name="threat_ignore_error_message">Fehler beim Ignorieren der Bedrohung. Bitte kontaktiere den Support.</string>
     <string name="threat_ignore_success_message">Bedrohung ignoriert.</string>
@@ -1163,8 +1161,6 @@ Language: de
     <string name="exit">beenden</string>
     <string name="quick_start_sites">Nächste Schritte</string>
     <string name="quick_start_sites_type_subtitle">%1$d von %2$d komplett</string>
-    <string name="quick_start_sites_type_grow">Erweitere deinen Nutzerkreis</string>
-    <string name="quick_start_sites_type_customize">Deine Website anpassen</string>
     <string name="quick_start_complete_tasks_header">(%d) komplett</string>
     <string name="quick_start_dialog_view_site_message">Genieße dein fertiges Produkt!</string>
     <string name="quick_start_dialog_upload_icon_title">Hochladen eines Website-Icons</string>

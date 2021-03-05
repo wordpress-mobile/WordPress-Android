@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 12:31:56+0000
+Translation-Revision-Date: 2021-03-05 09:28:25+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n >= 2 && n <= 4) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: cs_CZ
 -->
 <resources>
+    <string name="reader_title_interests">Sledujte témata</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Zamítnout</string>
     <string name="activity_log_backup_download_notice_download_action">Stáhnout</string>
     <string name="stories_intro_main_subtitle">Nový způsob vytváření a publikování poutavého obsahu na vašem webu.</string>
     <string name="threat_fix_all_status_success_message_plural">Hrozby byly úspěšně opraveny.</string>
-    <string name="threat_fix_all_warning_message_plural">Potvrďte, že chcete opravit všechny aktivní hrozby %s.</string>
-    <string name="scan_idle_with_threats_description_plural">Prohledávání zjistilo %1s potenciálních hrozeb s %2s. Zkontrolujte je prosím níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Potvrďte, že chcete opravit všechny aktivní hrozby %s.</string>
+    <string name="scan_idle_threats_description_plural">Prohledávání zjistilo %1s potenciálních hrozeb s %2s. Zkontrolujte je prosím níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
     <string name="scan_fixing_threats_description_plural">Na pozadí tyto hrozby tvrdě pracujeme. Mezitím můžete svůj web nadále používat jako obvykle. Průběh můžete kdykoli zkontrolovat.</string>
     <string name="gutenberg_native_edit_focal_point">Změňte zaostřovací pole</string>
     <string name="new_site_creation_search_domain_example">priklad.com</string>
@@ -38,9 +39,9 @@ Language: cs_CZ
     <string name="invite_links_get_status_retry">Obnovit stav odkazů</string>
     <string name="threats_found_plural">Nalezeny hrozby</string>
     <string name="threats_found_singular">Nalezena hrozba</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Skenování dokončeno&lt;/b>&lt;br>&lt;/br>Nalezeny %s potenciální hrozby</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Skenování dokončeno&lt;/b>&lt;br>&lt;/br>Nalezena 1 potenciální hrozba</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Skenování dokončeno&lt;/b>&lt;br>&lt;/br>Nebyly nalezeny žádné hrozby</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Skenování dokončeno&lt;/b>&lt;br>&lt;/br>Nalezeny %s potenciální hrozby</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Skenování dokončeno&lt;/b>&lt;br>&lt;/br>Nalezena 1 potenciální hrozba</string>
     <string name="disable">Zakázat</string>
     <string name="scan_fixing_threats_title_singular">Oprava hrozby</string>
     <string name="quick_start_card_menu_unpin">Uvolněte to</string>
@@ -96,7 +97,7 @@ Language: cs_CZ
     <string name="threat_found_header">Nalezeno</string>
     <string name="people_learn_more_about_roles">Dozvědět se více o uživatelských úrovních</string>
     <string name="scan_here_to_help">tady pro pomoc</string>
-    <string name="scan_idle_with_threats_description_singular">Skenování našlo %1s potenciální hrozbu s %2s. Zkontrolujte prosím hrozbu níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %3$s, pokud nás potřebujete.</string>
+    <string name="scan_idle_threats_description_singular">Skenování našlo 1 potenciální hrozbu s %1s. Zkontrolujte prosím hrozbu níže a proveďte akci nebo klepněte na tlačítko opravit vše. Jsme %2$s, pokud nás potřebujete.</string>
     <string name="scan_idle_manual_scan_description">Chcete-li znovu zkontrolovat svůj web, spusťte ruční skenování nebo počkejte, až Jetpack prohledá váš web ještě dnes.</string>
     <string name="scan_provisioning_description">Vítejte v Jetpack Scan! Vyhodnocujeme váš web a nastavujeme úplné skenování. Pokud zjistíme jakékoli problémy, které by mohly ovlivnit skenování, dáme vám vědět, poté se spustí vaše první úplné skenování.</string>
     <string name="scan_scanning_is_initial_description">Vítejte v Jetpack Scan, nyní se nejprve podíváme na vaše stránky a výsledky budou brzy k dispozici.</string>
@@ -159,10 +160,10 @@ Language: cs_CZ
     <string name="error_media_upload_failed_for_reason">Nahrávání médií se nezdařilo.\n%1$s</string>
     <string name="reader_menu_mark_as_seen">Označit jako viditelné</string>
     <string name="reader_menu_mark_as_unseen">Označit jako neviditelné</string>
-    <string name="threat_fix_all_warning_message_singular">Potvrďte, že chcete opravit %s aktivních hrozeb.</string>
     <string name="threat_fix_all_error_message">Chyba při opravě hrozeb. Kontaktujte naši podporu.</string>
     <string name="threat_fix_all_status_success_message_singular">Hrozby byly úspěšně opraveny.</string>
     <string name="threat_fix_all_status_error_message">Chyba při získávání stavu opravy. Kontaktujte naši podporu.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Potvrďte, že chcete opravit 1 aktivní hrozbu.</string>
     <string name="threat_ignore_warning">Zabezpečení byste neměli ignorovat, pokud si nejste absolutně jisti, že je neškodný. Pokud se rozhodnete tuto hrozbu ignorovat, zůstane na vašem webu &lt;b>%s&lt;/b>.</string>
     <string name="threat_ignore_success_message">Hrozba ignorována.</string>
     <string name="threat_ignore_error_message">Chyba při ignorování hrozby. Kontaktujte podporu.</string>

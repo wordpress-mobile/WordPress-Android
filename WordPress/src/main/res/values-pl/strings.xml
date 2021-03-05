@@ -891,8 +891,6 @@ Language: pl
     <string name="site_settings_gutenberg_default_for_new_posts">Użyj edytora blokowego</string>
     <string name="exit">wyjdź</string>
     <string name="quick_start_sites_type_subtitle">Wykonano %1$d z %2$d</string>
-    <string name="quick_start_sites_type_grow">Rozwiń swoją społeczność</string>
-    <string name="quick_start_sites_type_customize">Spersonalizuj swoją witrynę</string>
     <string name="quick_start_sites">Kolejne kroki</string>
     <string name="quick_start_complete_tasks_header">Ukończono (%d)</string>
     <string name="quick_start_dialog_view_site_message">Ciesz się gotowym produktem!</string>

@@ -10,8 +10,6 @@ Language: en_CA
     <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
     <string name="activity_log_backup_download_notice_download_action">Download</string>
     <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
-    <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
-    <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. In the meantime feel free to continue to use your site as normal, you can check the progress at anytime.</string>
     <string name="gutenberg_native_edit_focal_point">Edit focal point</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
@@ -38,8 +36,6 @@ Language: en_CA
     <string name="invite_links_section_title">Invite Link</string>
     <string name="threats_found_singular">Threat found</string>
     <string name="threats_found_plural">Threats found</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> %s potential threats found</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> 1 potential threat found</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> No threats found</string>
     <string name="scan_fixing_threats_title_singular">Fixing Threat</string>
     <string name="disable">Disable</string>
@@ -96,7 +92,6 @@ Language: en_CA
     <string name="threat_status_fixed">Fixed</string>
     <string name="threat_found_header">Found</string>
     <string name="scan_here_to_help">here to help</string>
-    <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_scanning_is_initial_description">Welcome to Jetpack Scan, we are taking a first look at your site now and the results will be with you soon.</string>
@@ -162,7 +157,6 @@ Language: en_CA
     <string name="threat_fix_all_status_error_message">Error getting fix status. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
-    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix %s active threat.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_ignore_success_message">Threat ignored.</string>
@@ -1170,8 +1164,6 @@ Language: en_CA
     <string name="site_settings_gutenberg_default_for_new_posts">Use Block Editor</string>
     <string name="exit">exit</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
     <string name="quick_start_sites">Next Steps</string>
     <string name="quick_start_complete_tasks_header">Complete (%d)</string>
     <string name="quick_start_dialog_view_site_message">Enjoy your finished product!</string>

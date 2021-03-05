@@ -7,16 +7,12 @@ Language: fr
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">Les menaces ont bien été corrigées.</string>
-    <string name="threat_fix_all_warning_message_plural">Veuillez confirmer que vous souhaitez corriger les %s menaces actives.</string>
-    <string name="scan_idle_with_threats_description_plural">L’analyse a trouvé %1s menaces potentielles avec %2s. Veuillez passer en revue les éléments ci-dessous et corriger ou appuyer sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
     <string name="scan_fixing_threats_description_plural">Nous rencontrons des difficultés à résoudre ces menaces en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
     <string name="invite_links_cannot_get_roles_error">Une erreur s’est produite lors de la récupération des rôles</string>
     <string name="invite_links_helper_text">Utilisez ce lien pour ajouter les membres de votre équipe sans avoir à les inviter individuellement. Toute personne ayant accès à ce lien sera en mesure de rejoindre votre organisation, même si le lien a été envoyé par quelqu’un d’autre que vous. Veillez à le partager uniquement avec des personnes de confiance.</string>
     <string name="invite_links_expire_date">Expiration %1$s</string>
     <string name="threats_found_singular">Menace détectée</string>
     <string name="threats_found_plural">Menaces détectées</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> %s menaces potentielles détectées</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> 1 menace potentielle détectée</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> Aucune menace détectée</string>
     <string name="scan_fixing_threats_title_singular">Menace en cours de correction…</string>
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
@@ -71,7 +67,6 @@ Language: fr
     <string name="threat_status_fixed">Exact</string>
     <string name="threat_found_header">Trouvé</string>
     <string name="scan_here_to_help">Aide ici</string>
-    <string name="scan_idle_with_threats_description_singular">L’analyse a détecté %1s menace potentielle avec %2s. Vérifiez la menace ci-dessous et agissez en conséquence, ou appuyez sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
     <string name="scan_idle_manual_scan_description">Pour contrôler votre site à nouveau, exécutez une analyse manuelle ou attendez la prochaine analyse Jetpack plus tard dans la journée.</string>
     <string name="scan_provisioning_description">Bienvenue dans Jetpack Scan ! Nous étudions votre site en vue de préparer une analyse complète. Nous vous ferons savoir si nous rencontrons un problème susceptible de compromettre l’analyse, puis nous démarrerons votre première analyse complète.</string>
     <string name="scan_scanning_is_initial_description">Bienvenue sur Jetpack Scan. Nous réalisons actuellement un état des lieux de votre site et les résultats devraient bientôt vous parvenir.</string>
@@ -126,7 +121,6 @@ Language: fr
     <string name="threat_fix_all_status_error_message">Erreur lors de la récupération de l’état de la résolution. Veuillez contacter l’assistance.</string>
     <string name="threat_fix_all_status_success_message_singular">La menace a bien été corrigée.</string>
     <string name="threat_fix_all_error_message">Erreur lors de la correction de menaces. Veuillez contacter l’assistance.</string>
-    <string name="threat_fix_all_warning_message_singular">Veuillez confirmer que vous souhaitez corriger %s menace active.</string>
     <string name="threat_fix_all_warning_title">Corriger l’ensemble des menaces</string>
     <string name="threat_ignore_error_message">Une erreur s’est produite, l’erreur n’a pas pu être ignorée. Veuillez contacter l’assistance.</string>
     <string name="threat_ignore_success_message">Menace ignorée.</string>
@@ -1115,8 +1109,6 @@ Language: fr
     <string name="site_settings_gutenberg_default_for_new_posts">Utiliser l’éditeur de blocs</string>
     <string name="exit">sortir</string>
     <string name="quick_start_sites_type_subtitle">Fait : %1$d of %2$d</string>
-    <string name="quick_start_sites_type_grow">Développez votre audience</string>
-    <string name="quick_start_sites_type_customize">Personnalisez votre site</string>
     <string name="quick_start_sites">Prochaines étapes</string>
     <string name="quick_start_complete_tasks_header">Terminé (%d)</string>
     <string name="quick_start_dialog_view_site_message">Profitez de votre produit fini !</string>

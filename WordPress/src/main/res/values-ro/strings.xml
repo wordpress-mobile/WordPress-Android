@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-04 10:45:33+0000
+Translation-Revision-Date: 2021-03-05 08:03:20+0000
 Plural-Forms: nplurals=3; plural=(n == 1) ? 0 : ((n == 0 || n % 100 >= 2 && n % 100 <= 19) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ro
 -->
 <resources>
+    <string name="reader_title_interests">Urmărește subiecte</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Refuză</string>
     <string name="activity_log_backup_download_notice_download_action">Descarcă</string>
     <string name="stories_intro_main_subtitle">Un mod nou de a crea și publica conținut captivant pe situl tău.</string>
     <string name="threat_fix_all_status_success_message_plural">Amenințările au fost înlăturate cu succes.</string>
-    <string name="threat_fix_all_warning_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
-    <string name="scan_idle_with_threats_description_plural">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Te rog confirmă că vrei să înlături toate cele %s amenințări active.</string>
+    <string name="scan_idle_threats_description_plural">Scanarea a găsit %1s amenințări posibile pe %2s. Te rog examinează fiecare amenințare și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s, dacă ai nevoie de noi.</string>
     <string name="scan_fixing_threats_description_plural">Lucrăm din greu, în fundal, pentru înlăturarea acestor amenințări. Între timp, îți poți folosi situl așa cum o faci de obicei și poți vedea oricând progresul făcut.</string>
     <string name="gutenberg_native_edit_focal_point">Editează punctul central</string>
     <string name="new_site_creation_search_domain_example">exemplu.com</string>
@@ -37,8 +38,8 @@ Language: ro
     <string name="invite_links_disable_invite_link">Dezactivează legătura la invitație</string>
     <string name="invite_links_share_invite_link">Partajează legătura la invitație</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Nu am găsit amenințări</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit o posibilă amenințare</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit %s posibile amenințări</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit o posibilă amenințare</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Scanarea a fost finalizată&lt;/b> &lt;br>&lt;/br> Am găsit %s posibile amenințări</string>
     <string name="threats_found_singular">Amenințare găsită</string>
     <string name="threats_found_plural">Amenințări găsite</string>
     <string name="scan_fixing_threats_title_singular">Înlătur amenințarea</string>
@@ -96,7 +97,7 @@ Language: ro
     <string name="threat_status_fixed">Înlăturate</string>
     <string name="threat_found_header">Găsite</string>
     <string name="scan_here_to_help">aici pentru a te ajuta</string>
-    <string name="scan_idle_with_threats_description_singular">Scanarea a găsit %1s posibilă amenințare pe %2s. Te rog examinează amenințarea și acționează sau atinge butonul Înlătură-le pe toate. Suntem %3$s dacă ai nevoie de noi.</string>
+    <string name="scan_idle_threats_description_singular">Scanarea a găsit o posibilă amenințare pe %1s. Te rog examinează amenințarea și acționează sau atinge butonul Înlătură-le pe toate. Suntem %2$s dacă ai nevoie de noi.</string>
     <string name="scan_idle_manual_scan_description">Pentru a analiza situl din nou, Rulează acum o scanare manuală sau așteaptă ca Jetpack să-ți scaneze situl azi, mai târziu.</string>
     <string name="scan_provisioning_description">Bine ai venit la scanarea Jetpack Scan! Îți investigăm situl și ne pregătim să facem o scanare completă. Te vom anunța dacă detectăm probleme care ar putea afecta scanarea, apoi va începe prima scanare completă.</string>
     <string name="scan_scanning_is_initial_description">Bine ai venit la scanarea Jetpack, acum aruncăm o primă privire pe situl tău, vei primi rezultatele în curând.</string>
@@ -161,7 +162,7 @@ Language: ro
     <string name="error_media_upload_failed_for_reason">Încărcarea elementului media a eșuat.\n%1$s</string>
     <string name="threat_fix_all_status_error_message">Eroare la primirea stării pentru înlăturarea amenințărilor. Te rog contactează suportul.</string>
     <string name="threat_fix_all_error_message">Eroare la înlăturarea amenințărilor. Te rog contactează suportul.</string>
-    <string name="threat_fix_all_warning_message_singular">Te rog confirmă că vrei să înlături %s amenințare activă.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Te rog confirmă că vrei să înlături o amenințare activă.</string>
     <string name="threat_fix_all_status_success_message_singular">Amenințarea a fost înlăturată cu succes.</string>
     <string name="threat_fix_all_warning_title">Înlătură toate amenințările</string>
     <string name="threat_ignore_error_message">Eroare la ignorarea amenințării. Te rog contactează suportul.</string>
