@@ -20,8 +20,6 @@ import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
-import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.generated.SiteActionBuilder
 import org.wordpress.android.fluxc.model.SiteModel
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
@@ -38,11 +36,8 @@ import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPLOAD_S
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.VIEW_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType.UNKNOWN
-import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartPayload
-import org.wordpress.android.fluxc.store.SiteStore.CompleteQuickStartVariant.NEXT_STEPS
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.prefs.AppPrefs
-import org.wordpress.android.ui.quickstart.QuickStartEvent
 import org.wordpress.android.ui.quickstart.QuickStartReminderReceiver
 import org.wordpress.android.ui.quickstart.QuickStartTaskDetails
 import org.wordpress.android.ui.themes.ThemeBrowserUtils
@@ -228,53 +223,6 @@ class QuickStartUtils {
         }
 
         @JvmStatic
-        @JvmOverloads
-        fun completeTaskAndRemindNextOne(
-            quickStartStore: QuickStartStore,
-            task: QuickStartTask,
-            dispatcher: Dispatcher,
-            site: SiteModel,
-            quickStartEvent: QuickStartEvent? = null,
-            context: Context?,
-            track: (Stat) -> Any
-        ) {
-            val siteId = site.id.toLong()
-
-            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore, site.id) ||
-                    quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
-                return
-            }
-
-            if (context != null) {
-                cancelQuickStartReminder(context)
-            }
-
-            quickStartStore.setDoneTask(siteId, task, true)
-            track(getTaskCompletedTracker(task))
-
-            if (isEveryQuickStartTaskDone(quickStartStore, site.id)) {
-                quickStartStore.setQuickStartCompleted(siteId, true)
-                track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
-                val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
-                dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
-            } else if (quickStartEvent?.task == task) {
-                AppPrefs.setQuickStartNoticeRequired(true)
-            } else {
-                if (context != null && quickStartStore.hasDoneTask(siteId, CREATE_SITE)) {
-                    val nextTask =
-                            getNextUncompletedQuickStartTaskForReminderNotification(
-                                    quickStartStore,
-                                    siteId,
-                                    task.taskType
-                            )
-                    if (nextTask != null) {
-                        startQuickStartReminderTimer(context, nextTask)
-                    }
-                }
-            }
-        }
-
-        @JvmStatic
         fun getQuickStartListTappedTracker(task: QuickStartTask): Stat {
             return when (task) {
                 CREATE_SITE -> Stat.QUICK_START_LIST_CREATE_SITE_TAPPED
@@ -330,7 +278,7 @@ class QuickStartUtils {
             }
         }
 
-        private fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
+        fun startQuickStartReminderTimer(context: Context, quickStartTask: QuickStartTask) {
             val intent = Intent(context, QuickStartReminderReceiver::class.java)
 
             // for some reason we have to use a bundle to pass serializable to broadcast receiver
