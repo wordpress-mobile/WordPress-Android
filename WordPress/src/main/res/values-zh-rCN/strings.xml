@@ -6,7 +6,6 @@ Generator: GlotPress/3.0.0-alpha.2
 Language: zh_CN
 -->
 <resources>
-    <string name="scan_idle_with_threats_description_plural">扫描发现 %2s 存在 %1s 项潜在威胁。 请在下面查看这些威胁并采取行动，或者轻点“全部修复”按钮。 如果您需要，我们%3$s。</string>
     <string name="scan_fixing_threats_description_plural">我们正在后台努力修复这些威胁。 在此期间，您可以继续正常使用您的站点，您可以随时查看进度。</string>
     <string name="gutenberg_native_edit_focal_point">编辑焦点</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">双击“底部表页”，将其打开，以编辑、替换或清除图片</string>
@@ -29,8 +28,6 @@ Language: zh_CN
     <string name="invite_links_section_title">邀请链接</string>
     <string name="threats_found_singular">已发现威胁</string>
     <string name="threats_found_plural">发现威胁</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>扫描完成&lt;/b> &lt;br>&lt;/br> %s 发现潜在威胁</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>扫描完成&lt;/b> &lt;br>&lt;/br> 发现 1 项潜在威胁</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>扫描完成&lt;/b> &lt;br>&lt;/br> 未发现威胁</string>
     <string name="quick_start_list_review_pages_subtitle">查看您的页面并进行更改，或者添加或移除页面。</string>
     <string name="quick_start_card_menu_unpin">取消钉选此项</string>
@@ -85,7 +82,6 @@ Language: zh_CN
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">此处可获取帮助</string>
-    <string name="scan_idle_with_threats_description_singular">扫描发现 %2s 存在 %1s 项潜在威胁 请在下面查看这些威胁并采取行动，或者轻点“全部修复”按钮。 如果您需要，我们%3$s。</string>
     <string name="scan_idle_manual_scan_description">要重新审查您的站点，请手动进行扫描或等待 Jetpack 今日稍后扫描您的站点。</string>
     <string name="scan_provisioning_description">欢迎使用 Jetpack Scan！ 我们正在检查您的站点，准备执行完整扫描。 如果发现任何可能影响扫描的问题，我们将向您发送通知，然后开始您的第一次完整扫描。</string>
     <string name="scan_scanning_is_initial_description">欢迎使用 Jetpack Scan，我们会立即优先浏览您的站点并很快给您结果。</string>
@@ -145,7 +141,6 @@ Language: zh_CN
     <string name="reader_marked_post_as_seen">将文章标记为已读</string>
     <string name="threat_fix_all_status_error_message">获取修复状态时出错。 请联系我们的支持人员。</string>
     <string name="threat_fix_all_error_message">修复威胁时出错。 请联系我们的支持人员。</string>
-    <string name="threat_fix_all_warning_message_singular">请确认您希望修复 %s 活跃威胁。</string>
     <string name="threat_fix_all_warning_title">修复所有威胁</string>
     <string name="threat_ignore_error_message">忽略威胁时出错。 请联系支持人员。</string>
     <string name="threat_ignore_success_message">已忽略威胁。</string>
@@ -1120,8 +1115,6 @@ Language: zh_CN
     <string name="menu_switch_to_aztec_editor">切换到经典编辑器</string>
     <string name="exit">退出</string>
     <string name="quick_start_sites_type_subtitle">已完成 %1$d 个（共 %2$d 个）</string>
-    <string name="quick_start_sites_type_grow">增加您的受众</string>
-    <string name="quick_start_sites_type_customize">定制您的站点</string>
     <string name="quick_start_sites">后续步骤</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受您的成果吧！</string>

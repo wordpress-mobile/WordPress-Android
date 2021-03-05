@@ -7,8 +7,6 @@ Language: zh_TW
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">已成功修正威脅。</string>
-    <string name="threat_fix_all_warning_message_plural">請確認你要修正所有 %s 個作用中威脅。</string>
-    <string name="scan_idle_with_threats_description_plural">掃描作業已在 %2s 上找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_fixing_threats_description_plural">我們正努力在背景修正這些威脅。 這段時間你可以照常使用網站，也可以隨時回來查看掃瞄進度。</string>
     <string name="gutenberg_native_edit_focal_point">編輯焦點</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">點兩下開啟底部工作表，然後編輯、取代或清除圖片</string>
@@ -35,8 +33,6 @@ Language: zh_TW
     <string name="invite_links_section_title">邀請連結</string>
     <string name="threats_found_singular">發現威脅</string>
     <string name="threats_found_plural">發現數個威脅</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br> %s發現潛在威脅</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br>發現 1 個潛在威脅</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>掃描完成&lt;/b> &lt;br>&lt;/br>沒有發現潛在威脅</string>
     <string name="scan_fixing_threats_title_singular">正在修正威脅</string>
     <string name="disable">停用</string>
@@ -93,7 +89,6 @@ Language: zh_TW
     <string name="threat_status_fixed">固定</string>
     <string name="threat_found_header">找到</string>
     <string name="scan_here_to_help">隨時為你提供協助</string>
-    <string name="scan_idle_with_threats_description_singular">掃描作業已在 %2s 上找到 %1s 個潛在威脅。 請檢閱以下威脅並採取行動，或點選「全部修正」按鈕。 如果你有需要，我們 %3$s。</string>
     <string name="scan_idle_manual_scan_description">如要再次檢查網站，請執行手動掃瞄，或等待 Jetpack 於今日稍晚掃瞄你的網站。</string>
     <string name="scan_provisioning_description">歡迎使用 Jetpack Scan！ 我們已經預定執行完整掃描，將會徹底審視你的網站。 如果我們發現可能影響掃瞄作業的問題，就會通知你；接著就可以開始進行首次完整掃瞄。</string>
     <string name="scan_scanning_is_initial_description">歡迎使用 Jetpack Scan 服務。我們會掃瞄你的網站，並且很快讓你得知結果。</string>
@@ -155,7 +150,6 @@ Language: zh_TW
     <string name="threat_fix_all_status_error_message">取得修正狀態時發生錯誤。 請聯絡我們的支援團隊。</string>
     <string name="threat_fix_all_status_success_message_singular">已成功修正威脅。</string>
     <string name="threat_fix_all_error_message">修正威脅時發生錯誤。 請聯絡我們的支援團隊。</string>
-    <string name="threat_fix_all_warning_message_singular">請確認你要修正 %s 個作用中威脅。</string>
     <string name="threat_fix_all_warning_title">修復所有威脅</string>
     <string name="threat_ignore_error_message">忽略威脅時發生錯誤。 請聯絡支援團隊。</string>
     <string name="threat_ignore_success_message">已忽略威脅。</string>
@@ -1149,8 +1143,6 @@ Language: zh_TW
     <string name="site_settings_gutenberg_default_for_new_posts">使用區塊編輯器</string>
     <string name="exit">結束</string>
     <string name="quick_start_sites_type_subtitle">已完成 %2$d 個，共 %1$d 個</string>
-    <string name="quick_start_sites_type_grow">拓展你的讀者群</string>
-    <string name="quick_start_sites_type_customize">自訂你的網站</string>
     <string name="quick_start_sites">後續步驟</string>
     <string name="quick_start_complete_tasks_header">完成 (%d)</string>
     <string name="quick_start_dialog_view_site_message">享受完成的成果！</string>

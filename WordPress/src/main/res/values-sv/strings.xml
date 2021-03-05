@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-03 20:04:25+0000
+Translation-Revision-Date: 2021-03-05 12:30:50+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: sv_SE
 -->
 <resources>
+    <string name="reader_title_interests">Följda ämnen</string>
     <string name="activity_log_backup_download_notice_download_action">Ladda ner</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Stäng</string>
     <string name="stories_intro_main_subtitle">Ett nytt sätt att skapa och publicera engagerande innehåll på din webbplats.</string>
     <string name="threat_fix_all_status_success_message_plural">Hoten har åtgärdats utan problem.</string>
-    <string name="threat_fix_all_warning_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
-    <string name="scan_idle_with_threats_description_plural">Genomsökningen hittade %1s potentiella hot hos %2s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
+    <string name="scan_idle_threats_description_plural">Genomsökningen hittade %1s potentiella hot hos %2s. Granska dem nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
     <string name="scan_fixing_threats_description_plural">Vi arbetar intensivt med att rätta dessa hot i bakgrunden. Under tiden får du gärna fortsätta att använda din webbplats som vanligt. Du kan när som helst kolla hur arbetet fortskrider.</string>
     <string name="gutenberg_native_edit_focal_point">Ändra plats i fokus</string>
     <string name="new_site_creation_search_domain_example">example.com</string>
@@ -38,8 +39,8 @@ Language: sv_SE
     <string name="invite_links_get_status_retry">Uppdatera länkarnas status</string>
     <string name="threats_found_singular">Hot hittat</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>Inga hot hittades</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>1 potentiellt hot hittades</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>%s potentiella hot hittades</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>1 potentiellt hot hittades</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Genomsökningen genomförd&lt;/b> &lt;br>&lt;/br>%s potentiella hot hittades</string>
     <string name="threats_found_plural">Hot hittade</string>
     <string name="disable">Inaktivera</string>
     <string name="scan_fixing_threats_title_singular">Åtgärdar hot</string>
@@ -96,7 +97,7 @@ Language: sv_SE
     <string name="threat_status_fixed">Åtgärdat</string>
     <string name="scan_here_to_help">här</string>
     <string name="threat_found_header">Hittade</string>
-    <string name="scan_idle_with_threats_description_singular">Jetpack-genomsökningen hittade %1s potentiella hot hos %2s. Granska hoten nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %3$s om du behöver vår hjälp.</string>
+    <string name="scan_idle_threats_description_singular">Jetpack-genomsökningen hittade ett potentiellt hot hos %1s. Granska hoten nedan och vidta åtgärder eller tryck på knappen ”Åtgärda allt”. Vi finns %2$s om du behöver vår hjälp.</string>
     <string name="scan_provisioning_description">Välkommen till Jetpack Scan! Vi tittar närmare på din webbplats och förbereder för en fullständig genomsökning. Vi meddelar dig om vi upptäcker några problem som kan påverka en genomsökning. Därefter startar din första fullständiga genomsökning.</string>
     <string name="scan_idle_manual_scan_description">För att kontrollera din webbplats igen kan du starta en genomsökning manuellt eller vänta tills Jetpack automatiskt söker igenom webbplatsen senare idag.</string>
     <string name="scan_scanning_is_initial_description">Välkommen till Jetpack Scan. Vi tar nu en första titt på din webbplats och du kommer snart att ha resultaten.</string>
@@ -159,10 +160,10 @@ Language: sv_SE
     <string name="error_media_upload_failed_for_reason">Uppladdningen av media misslyckades.\n%1$s</string>
     <string name="reader_menu_mark_as_seen">Markera som visat</string>
     <string name="reader_menu_mark_as_unseen">Markera som ej visat</string>
-    <string name="threat_fix_all_warning_message_singular">Bekräfta att du vill åtgärda alla %s aktiva hot.</string>
     <string name="threat_fix_all_error_message">Fel när hotet åtgärdades. Kontakta vår support.</string>
     <string name="threat_fix_all_status_error_message">Ett fel inträffade när statusen för åtgärdandet skulle hämtas. Kontakta vår support.</string>
     <string name="threat_fix_all_status_success_message_singular">Hotet åtgärdades utan problem.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Bekräfta att du vill åtgärda ett aktivt hot.</string>
     <string name="threat_ignore_warning">Du bör inte ignorera ett säkerhetshot om du inte är helt säker på att det är ofarligt. Om du väljer att ignorera detta hot kommer det att finnas kvar på webbplatsen &lt;b>%s&lt;/b>.</string>
     <string name="threat_ignore_success_message">Hotet har ignorerats.</string>
     <string name="threat_ignore_error_message">Ett fel inträffade när hotet skulle ignoreras. Kontakta vår support.</string>
