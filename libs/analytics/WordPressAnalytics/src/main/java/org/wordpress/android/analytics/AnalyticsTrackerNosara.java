@@ -1728,6 +1728,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "support_identity_set";
             case QUICK_START_TASK_DIALOG_VIEWED:
                 return "quick_start_task_dialog_viewed";
+            case QUICK_START_STARTED:
+                return "quick_start_started";
             case QUICK_START_TASK_DIALOG_NEGATIVE_TAPPED:
             case QUICK_START_TASK_DIALOG_POSITIVE_TAPPED:
                 return "quick_start_task_dialog_button_tapped";
