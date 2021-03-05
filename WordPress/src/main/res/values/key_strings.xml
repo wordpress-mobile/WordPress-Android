@@ -136,7 +136,7 @@
     <string name="pref_key_jetpack_learn_more" translatable="false">wp_pref_jetpack_learn_more</string>
 
     <string name="wp_pref_notifications_root" translatable="false">wp_pref_notifications_root</string>
-    <string name="wp_pref_notifications_master" translatable="false">wp_pref_notifications_master</string>
+    <string name="wp_pref_notifications_main" translatable="false">wp_pref_notifications_master</string>
     <string name="wp_pref_custom_notification_sound" translatable="false">wp_pref_custom_notification_sound</string>
     <string name="wp_pref_notification_vibrate" translatable="false">wp_pref_notification_vibrate</string>
     <string name="wp_pref_notification_light" translatable="false">wp_pref_notification_light</string>
