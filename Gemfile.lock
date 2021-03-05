@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/wordpress-mobile/release-toolkit
-  revision: 0ad59f8ad1644b68f8dbe3ebc3e16bb331a24117
-  tag: 0.14.0
+  revision: be2d964972e043fe6d97ca871941f573d8ad2a11
+  ref: be2d964
   specs:
     fastlane-plugin-wpmreleasetoolkit (0.14.0)
       activesupport (~> 5)
@@ -174,7 +174,7 @@ GEM
     mini_magick (4.11.0)
     mini_mime (1.0.2)
     mini_portile2 (2.5.0)
-    minitest (5.14.3)
+    minitest (5.14.4)
     multi_json (1.15.0)
     multipart-post (2.0.0)
     nanaimo (0.3.0)
@@ -261,4 +261,4 @@ DEPENDENCIES
   rmagick (~> 4.1)
 
 BUNDLED WITH
-   2.2.10
+   2.2.11
