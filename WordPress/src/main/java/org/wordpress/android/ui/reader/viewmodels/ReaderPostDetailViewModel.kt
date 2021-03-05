@@ -12,6 +12,7 @@ import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
 import org.wordpress.android.modules.UI_THREAD
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
+import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
@@ -27,9 +28,7 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.reblog.ReblogUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
-import org.wordpress.android.ui.reader.usecases.ReaderSiteFollowUseCase.FollowSiteState.FollowStatusChanged
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
-import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
 import org.wordpress.android.ui.utils.UiString
@@ -90,22 +89,17 @@ class ReaderPostDetailViewModel @Inject constructor(
 
     private fun init() {
         readerPostCardActionsHandler.initScope(this)
-        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { followStatusChanged ->
+        _uiState.addSource(readerPostCardActionsHandler.followStatusUpdated) { data ->
             val currentUiState: ReaderPostDetailsUiState? = _uiState.value
 
             currentUiState?.let {
                 findPost(currentUiState.postId, currentUiState.blogId)?.let { post ->
-                    post.isFollowedByCurrentUser = followStatusChanged.following
-                    updateSelectedPostFollowButton(
+                    post.isFollowedByCurrentUser = data.following
+                    updateFollowButtonUiState(
                             currentUiState = currentUiState,
                             isFollowed = post.isFollowedByCurrentUser
                     )
                 }
-
-                updateGlobalRelatedPostsFollowButton(
-                        currentUiState = currentUiState,
-                        followStatusChanged = followStatusChanged
-                )
             }
         }
 
@@ -217,12 +211,6 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
-    private fun onRelatedPostFollowClicked(blogId: Long, siteName: String) {
-        launch {
-            readerPostCardActionsHandler.onFollowRelatedPostBlog(blogId = blogId, siteName = siteName)
-        }
-    }
-
     fun onRelatedPostsRequested(sourcePost: ReaderPost) {
         /* Related posts only available for wp.com */
         if (!sourcePost.isWP) return
@@ -270,11 +258,10 @@ class ReaderPostDetailViewModel @Inject constructor(
             sourcePost = sourcePost,
             relatedPosts = relatedPosts,
             isGlobal = isGlobal,
-            onRelatedPostFollowClicked = this@ReaderPostDetailViewModel::onRelatedPostFollowClicked,
-            onRelatedPostItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
+            onItemClicked = this@ReaderPostDetailViewModel::onRelatedPostItemClicked
     )
 
-    private fun updateSelectedPostFollowButton(
+    private fun updateFollowButtonUiState(
         currentUiState: ReaderPostDetailsUiState,
         isFollowed: Boolean
     ) {
@@ -288,22 +275,6 @@ class ReaderPostDetailViewModel @Inject constructor(
                 .copy(followButtonUiState = updatedFollowButtonUiState)
 
         _uiState.value = currentUiState.copy(headerUiState = updatedHeaderUiState)
-    }
-
-    private fun updateGlobalRelatedPostsFollowButton(
-        currentUiState: ReaderPostDetailsUiState,
-        followStatusChanged: FollowStatusChanged
-    ) {
-        val updatedGlobalRelatedPosts = currentUiState.globalRelatedPosts?.copy(
-                cards = currentUiState.globalRelatedPosts.cards?.map { post ->
-                    if (post.blogId == followStatusChanged.blogId) {
-                        val updatedFollowState = post.followButtonUiState
-                                ?.copy(isFollowed = followStatusChanged.following)
-                        post.copy(followButtonUiState = updatedFollowState)
-                    } else post
-                }
-        )
-        _uiState.value = currentUiState.copy(globalRelatedPosts = updatedGlobalRelatedPosts)
     }
 
     private fun updatePostActions(post: ReaderPost) {
@@ -342,16 +313,18 @@ class ReaderPostDetailViewModel @Inject constructor(
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,
             val isGlobal: Boolean,
-            val siteName: String?
+            val headerLabel: UiString?,
+            val railcarJsonStrings: List<String?>
         ) {
             data class ReaderRelatedPostUiState(
                 val postId: Long,
                 val blogId: Long,
                 val isGlobal: Boolean,
                 val title: UiString?,
+                val excerpt: UiString?,
                 val featuredImageUrl: String?,
+                val featuredImageVisibility: Boolean,
                 val featuredImageCornerRadius: UiDimen,
-                val followButtonUiState: FollowButtonUiState?,
                 val onItemClicked: (Long, Long, Boolean) -> Unit
             )
         }

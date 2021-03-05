@@ -4,12 +4,10 @@ import android.content.Context
 import android.util.AttributeSet
 import android.widget.LinearLayout
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.reader_simple_posts_container_view.view.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.ui.reader.adapters.ReaderRelatedPostsAdapter
-import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.analytics.AnalyticsUtils
@@ -25,7 +23,7 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val simplePostList = ReaderSimplePostList()
+    private val railcarJsonStrings = mutableListOf<String?>()
 
     @Inject lateinit var uiHelpers: UiHelpers
     @Inject lateinit var imageManager: ImageManager
@@ -41,38 +39,26 @@ class ReaderSimplePostContainerView @JvmOverloads constructor(
     }
 
     private fun initRecyclerView(context: Context) {
-        recycler_view.layoutManager = object : LinearLayoutManager(context, RecyclerView.HORIZONTAL, false) {
-            override
-            fun checkLayoutParams(lp: RecyclerView.LayoutParams): Boolean {
-                lp.width = width / 2
-                return true
-            }
-        }
+        recycler_view.layoutManager = LinearLayoutManager(context)
         recycler_view.adapter = ReaderRelatedPostsAdapter(uiHelpers, imageManager)
     }
 
     fun showPosts(state: RelatedPostsUiState) {
         if (state.cards?.size == 0) return
 
-        state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
+        railcarJsonStrings.clear()
+        railcarJsonStrings.addAll(state.railcarJsonStrings)
 
-        // make sure the label for these posts has the correct caption
-        if (state.isGlobal) {
-            text_related_posts_label.text = context.getString(R.string.reader_label_global_related_posts)
-        } else {
-            text_related_posts_label.text = String.format(
-                    context.getString(R.string.reader_label_local_related_posts),
-                    state.siteName
-            )
-        }
+        state.cards?.let { (recycler_view.adapter as ReaderRelatedPostsAdapter).update(it) }
+        uiHelpers.setTextOrHide(text_related_posts_label, state.headerLabel)
     }
 
     /*
      * called by reader detail when scrolled into view, tracks railcar events for each post
      */
-    fun trackRailcarRender() {
-        for (post in simplePostList) {
-            AnalyticsUtils.trackRailcarRender(post.railcarJson)
+    fun trackRailcarRender() { // TODO: move tracking to view model
+        for (railcarJson in railcarJsonStrings) {
+            railcarJson?.let { AnalyticsUtils.trackRailcarRender(it) }
         }
     }
 }

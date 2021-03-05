@@ -1,4 +1,4 @@
-package org.wordpress.android.ui.reader.viewmodels
+package org.wordpress.android.ui.reader
 
 import dagger.Reusable
 import org.wordpress.android.R
@@ -12,16 +12,27 @@ import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.Read
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
-import org.wordpress.android.ui.reader.views.uistates.FollowButtonUiState
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
+import org.wordpress.android.ui.utils.UiString
+import org.wordpress.android.ui.utils.UiString.UiStringRes
+import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
+
+const val RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION = 0.56 // 9:16
 
 @Reusable
 class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val postDetailsHeaderViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder,
-    private val postUiStateBuilder: ReaderPostUiStateBuilder
+    private val postUiStateBuilder: ReaderPostUiStateBuilder,
+    resourceProvider: ResourceProvider
 ) {
+    private val relatedPostFeaturedImageWidth: Int = resourceProvider
+            .getDimensionPixelSize(R.dimen.reader_related_post_image_width)
+    private val relatedPostFeaturedImageHeight: Int = (relatedPostFeaturedImageWidth
+            * RELATED_POST_IMAGE_HEIGHT_WIDTH_RATION).toInt()
+
     fun mapPostToUiState(
         post: ReaderPost,
         moreMenuItems: List<SecondaryAction>? = null,
@@ -46,40 +57,37 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         sourcePost: ReaderPost,
         relatedPosts: ReaderSimplePostList,
         isGlobal: Boolean,
-        onRelatedPostFollowClicked: (Long, String) -> Unit,
-        onRelatedPostItemClicked: (Long, Long, Boolean) -> Unit
+        onItemClicked: (Long, Long, Boolean) -> Unit
     ) = RelatedPostsUiState(
             cards = relatedPosts.map {
                 mapRelatedPostToUiState(
                         post = it,
                         isGlobal = isGlobal,
-                        followButtonUiState = if (isGlobal) {
-                            FollowButtonUiState(
-                                    onFollowButtonClicked = { onRelatedPostFollowClicked(it.siteId, it.siteName) },
-                                    isFollowed = it.isFollowing,
-                                    isEnabled = true
-                            )
-                        } else null,
-                        onItemClicked = onRelatedPostItemClicked
+                        onItemClicked = onItemClicked
                 )
             },
             isGlobal = isGlobal,
-            siteName = sourcePost.blogName
+            headerLabel = buildRelatedPostsHeaderLabel(blogName = sourcePost.blogName, isGlobal = isGlobal),
+            railcarJsonStrings = relatedPosts.map { it.railcarJson }
     )
 
     private fun mapRelatedPostToUiState(
         post: ReaderSimplePost,
         isGlobal: Boolean,
-        followButtonUiState: FollowButtonUiState?,
         onItemClicked: (Long, Long, Boolean) -> Unit
     ) = ReaderRelatedPostUiState(
             postId = post.postId,
             blogId = post.siteId,
             isGlobal = isGlobal,
-            title = post.title?.let { UiStringText(it) },
-            featuredImageUrl = post.featuredImageUrl,
+            title = post.takeIf { it.hasTitle() }?.let { UiStringText(it.title) },
+            excerpt = post.takeIf { it.hasExcerpt() }?.let { UiStringText(it.excerpt) },
+            featuredImageUrl = buildFeaturedImageUrl(
+                    post,
+                    relatedPostFeaturedImageWidth,
+                    relatedPostFeaturedImageHeight
+            ),
+            featuredImageVisibility = post.featuredImageUrl?.isNotEmpty() == true,
             featuredImageCornerRadius = UIDimenRes(R.dimen.reader_featured_image_corner_radius),
-            followButtonUiState = followButtonUiState,
             onItemClicked = onItemClicked
     )
 
@@ -99,4 +107,15 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
         post: ReaderPost,
         onButtonClicked: (Long, Long, ReaderPostCardActionType) -> Unit
     ) = postUiStateBuilder.mapPostToActions(post, onButtonClicked)
+
+    private fun buildRelatedPostsHeaderLabel(blogName: String, isGlobal: Boolean): UiString {
+        return if (isGlobal) {
+            UiStringRes(R.string.reader_label_global_related_posts)
+        } else {
+            UiStringResWithParams(R.string.reader_label_local_related_posts, listOf(UiStringText(blogName)))
+        }
+    }
+
+    private fun buildFeaturedImageUrl(post: ReaderSimplePost, imageWidth: Int, imageHeight: Int) =
+            post.getFeaturedImageForDisplay(imageWidth, imageHeight)
 }
