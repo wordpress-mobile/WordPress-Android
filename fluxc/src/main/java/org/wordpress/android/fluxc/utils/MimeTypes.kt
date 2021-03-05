@@ -170,7 +170,8 @@ class MimeTypes {
     }
 
     fun getAllTypes(plan: Plan = NO_PLAN_SPECIFIED): Array<String> {
-        return (getAudioMimeTypesOnly(plan).toStrings() + videoTypes.toStrings() + imageTypes.toStrings() + getDocumentMimeTypesOnly(
+        return (getAudioMimeTypesOnly(plan).toStrings() + videoTypes.toStrings() +
+                imageTypes.toStrings() + getDocumentMimeTypesOnly(
                 plan
         ).toStrings())
                 .toSet()
