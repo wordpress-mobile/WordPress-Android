@@ -197,7 +197,6 @@
     <dimen name="reader_more_icon">36dp</dimen>
     <dimen name="reader_follow_icon">16dp</dimen>
     <dimen name="reader_follow_icon_no_caption">24dp</dimen>
-    <dimen name="reader_follow_button_padding">@dimen/margin_small</dimen>
     <dimen name="reader_follow_icon_padding_no_caption">@dimen/margin_none</dimen>
 
     <dimen name="reader_featured_image_height_default">220dp</dimen>
@@ -208,7 +207,7 @@
     <dimen name="reader_featured_image_corner_radius">4dp</dimen>
     <dimen name="reader_image_featured_border_width">1dp</dimen>
 
-    <dimen name="reader_simple_post_image_width">72dp</dimen>
+    <dimen name="reader_related_post_image_width">150dp</dimen>
 
     <dimen name="reader_subfilter_end_guideline_margin">16dp</dimen>
 
