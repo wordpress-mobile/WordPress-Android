@@ -422,7 +422,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             hideActionBarIfNeeded();
         }
 
-        //Existing Posts have title set before onResume is called
+        // Existing Posts have title set before onResume is called
         if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
             showClassicEditorDeprecationDialog();
         }
