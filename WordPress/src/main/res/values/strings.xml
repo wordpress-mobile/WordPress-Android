@@ -1913,7 +1913,7 @@
     <string name="reader_btn_remove_filter_content_description">Remove the current filter</string>
     <string name="reader_btn_select_filter_content_description">Select a Site or Tag to filter posts</string>
     <string name="reader_bottom_sheet_content_description">Select a Tag or Site, Pop Up Window</string>
-    <string name="reader_choose_interests_content_description">Choose your interests</string>
+    <string name="reader_choose_interests_content_description">Choose your topics</string>
 
     <string name="reader_followed_blog_notifications">Enable notifications for %1$s%2$s%3$s?</string>
     <string name="reader_followed_blog_notifications_action">Enable</string>
@@ -1941,7 +1941,7 @@
     <string name="reader_label_local_related_posts">More from %s</string>
     <string name="reader_label_global_related_posts">More on WordPress.com</string>
     <string name="reader_label_visit">Visit site</string>
-    <string name="reader_label_choose_your_interests">Choose your interests</string>
+    <string name="reader_label_choose_your_interests">Choose your topics</string>
     <string name="reader_view_comments">View comments</string>
     <string name="reader_welcome_banner">Welcome to Reader. Discover millions of blogs at your fingertips.</string>
     <string name="reader_label_toolbar_back">Back</string>
@@ -2598,7 +2598,7 @@
     <string name="login_prologue_title_second">With the powerful editor you can post on the go.</string>
     <string name="login_prologue_title_third">See comments and notifications in real time.</string>
     <string name="login_prologue_title_fourth">Watch your audience grow with in-depth analytics.</string>
-    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new reads.</string>
+    <string name="login_prologue_title_fifth">Follow your favorite sites and discover new blogs.</string>
     <string name="login_prologue_second_subtitle_one">Getting Inspired</string>
     <string name="login_prologue_second_subtitle_two">I am so inspired by photographer Cameron Karsten\’s work. I will be trying these techniques on my next</string>
     <string name="login_prologue_third_subtitle_one">&lt;b&gt;Madison Ruiz&lt;/b&gt; liked your post</string>
@@ -2859,7 +2859,7 @@
     <string name="quick_start_dialog_explore_plans_title">Explore plans</string>
     <string name="quick_start_dialog_follow_sites_message">Find sites that inspire you, and follow them to get updates when they post.</string>
     <string name="quick_start_dialog_follow_sites_message_short_reader" tools:ignore="UnusedResources">Tap %1$s Reader %2$s to continue</string>
-    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar interests</string>
+    <string name="quick_start_dialog_follow_sites_message_short_search">Tap %1$s Search %2$s to look for sites with similar topics</string>
     <string name="quick_start_dialog_follow_sites_title">Follow other sites</string>
     <string name="quick_start_dialog_migration_message">We\'ve added more tasks to help you grow your audience.</string>
     <string name="quick_start_dialog_migration_title">We\'ve made some changes to your checklist</string>
