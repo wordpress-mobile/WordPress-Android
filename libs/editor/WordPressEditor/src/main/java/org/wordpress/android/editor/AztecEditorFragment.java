@@ -225,7 +225,6 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (savedInstanceState != null) {
             mTappedMediaPredicate = savedInstanceState.getParcelable(ATTR_TAPPED_MEDIA_PREDICATE);
         }
-
     }
 
     @Override
@@ -424,11 +423,10 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         }
 
         //Existing Posts have title set before onResume is called
-        if (isEmptyPost() && !hasSeenTryBlockEditorDialog()) {
-            showTryBlockEditorDialog();
+        if (isEmptyPost() && !hasSeenClassicEditorDeprecationDialog()) {
+            showClassicEditorDeprecationDialog();
         }
-
-
+        
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
     }
