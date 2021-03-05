@@ -18,6 +18,7 @@ import org.wordpress.android.datasets.ReaderBlogTableWrapper
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.config.SeenUnseenWithCounterFeatureConfig
@@ -57,7 +58,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.label == UiStringRes(R.string.reader_btn_follow)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_follow)
         }).isNotNull
     }
 
@@ -70,7 +71,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.label == UiStringRes(R.string.reader_btn_unfollow)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_unfollow)
         }).isNotNull
     }
 
@@ -121,7 +122,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    it.label == UiStringRes(R.string.reader_btn_notifications_on)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_notifications_on)
         }).isNotNull
     }
 
@@ -134,7 +135,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    it.label == UiStringRes(R.string.reader_btn_notifications_off)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_btn_notifications_off)
         }).isNotNull
     }
 
@@ -187,7 +188,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.labelColor == R.attr.colorSecondary
+                    (it as SecondaryAction).labelColor == R.attr.colorSecondary
         }).isNotNull
     }
 
@@ -200,7 +201,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.FOLLOW &&
-                    it.labelColor == R.attr.wpColorOnSurfaceMedium
+                    (it as SecondaryAction).labelColor == R.attr.wpColorOnSurfaceMedium
         }).isNotNull
     }
 
@@ -213,7 +214,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    it.labelColor == R.attr.colorOnSurface
+                    (it as SecondaryAction).labelColor == R.attr.colorOnSurface
         }).isNotNull
     }
 
@@ -226,7 +227,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.SITE_NOTIFICATIONS &&
-                    it.labelColor == R.attr.wpColorOnSurfaceMedium
+                    (it as SecondaryAction).labelColor == R.attr.wpColorOnSurfaceMedium
         }).isNotNull
     }
 
@@ -249,7 +250,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
-                    it.label == UiStringRes(R.string.reader_menu_mark_as_seen)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_menu_mark_as_seen)
         }).isNotNull
     }
 
@@ -262,7 +263,7 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         // Assert
         assertThat(menuItems.find {
             it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS &&
-                    it.label == UiStringRes(R.string.reader_menu_mark_as_unseen)
+                    (it as SecondaryAction).label == UiStringRes(R.string.reader_menu_mark_as_unseen)
         }).isNotNull
     }
 
@@ -284,6 +285,16 @@ class ReaderPostMoreButtonUiStateBuilderTest {
         val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
         // Assert
         assertThat(menuItems.find { it.type == ReaderPostCardActionType.TOGGLE_SEEN_STATUS }).isNull()
+    }
+
+    @Test
+    fun `given post list card actions created, then list contains spacer no action`() = test {
+        // Arrange
+        val post = init()
+        // Act
+        val menuItems = builder.buildMoreMenuItems(post, dummyOnClick)
+        // Assert
+        assertThat(menuItems.find { it.type == ReaderPostCardActionType.SPACER_NO_ACTION }).isNotNull
     }
 
     private fun init(

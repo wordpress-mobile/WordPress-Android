@@ -1,12 +1,46 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 11:54:10+0000
+Translation-Revision-Date: 2021-03-04 15:54:58+0000
 Plural-Forms: nplurals=2; plural=n != 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: he_IL
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">להסיר את הנעץ</string>
+    <string name="threat_fix_all_status_success_message_plural">האיומים תוקנו בהצלחה.</string>
+    <string name="threat_fix_all_warning_message_plural">עליך לאשר שברצונך לתקן את כל %s האיומים הפעילים.</string>
+    <string name="scan_idle_with_threats_description_plural">הסריקה איתרה %1s איומים פוטנציאליים עם %2s. עליך לבדוק את הפרטים למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%3$s⁩ אם נדרשת עזרה.</string>
+    <string name="scan_fixing_threats_description_plural">אנחנו משקיעים המון מאמצים ברקע כדי לתקן את האיומים האלה. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="gutenberg_native_edit_focal_point">לערוך נקודת מוקד</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">יש להקיש פעמיים כדי לפתוח את הגיליון התחתון ולערוך, להחליף או למחוק את התמונה</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">יש להקיש פעמיים כדי לפתוח את גיליון הפעולה ולערוך, להחליף או למחוק את התמונה</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">יש להקליד שם לאתר שלך</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>כל המשימות הושלמו&lt;/b>&lt;br/>האתר שלך יקבל חשיפה ליותר אנשים. עבודה מצוינת!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>כל המשימות הושלמו&lt;/b>&lt;br/>האתר שלך הותאם אישית. כל הכבוד!</string>
+    <string name="quick_start_card_menu_hide">להסתיר לעת עתה</string>
+    <string name="magic_link_not_meaning_to_create_account">לא התכוונת ליצור חשבון חדש? יש לחזור אחורה כדי להזין מחדש את כתובת האימייל שלך.</string>
+    <string name="invite_links_disable_dialog_message">לאחר שהקישור להזמנה יושבת, לא תהיה עוד לאף אחד אפשרות להשתמש בו כדי להצטרף לצוות שלך. האם ברצונך להמשיך?</string>
+    <string name="invite_links_disable_dialog_title">להשבית את הקישור להזמנה</string>
+    <string name="invite_links_bad_format_response">התקבלה תגובה לא חוקית</string>
+    <string name="invite_links_null_response">לא התקבלו תגובות</string>
+    <string name="invite_links_cannot_get_role_data_error">אירעה שגיאה בקבלת הנתונים לתפקיד ⁦%1$s⁩</string>
+    <string name="invite_links_cannot_get_roles_error">אירעה שגיאה בקבלת התפקידים</string>
+    <string name="invite_links_generic_get_data_error">אירעה שגיאה לא ידועה בהבאת הנתונים של קישורי ההזמנות</string>
+    <string name="invite_links_helper_text">ניתן להשתמש בקישור זה כדי להזמין את כל חברי הצוות שלך במקביל, במקום לשלוח הזמנות אישיות. לכל אדם שמבקר בכתובת ה-URL הזאת תהיה אפשרות להירשם לארגון שלך, גם אם הוא מקבל את הקישור מאדם אחר ולכן, חשוב לוודא שהקישור נשלח לאנשים מהימנים בלבד.</string>
+    <string name="invite_links_expire_date">יפוג תוקף ביום ⁦%1$s⁩</string>
+    <string name="invite_links_disable_invite_link">להשבית את הקישור להזמנה</string>
+    <string name="invite_links_share_invite_link">לשתף קישור הזמנה</string>
+    <string name="invite_links_generate">ליצור קישור חדש</string>
+    <string name="invite_links_get_status_retry">לרענן את הסטטוס של הקישור</string>
+    <string name="invite_links_section_title">קישור להזמנה</string>
+    <string name="threats_found_singular">אותר איום</string>
+    <string name="threats_found_plural">נמצאו איומים</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br>&lt;/br> נמצאו %s איומים פוטנציאליים</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br>&lt;/br> נמצא איום פוטנציאלי אחד</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>הסריקה הסתיימה&lt;/b> &lt;br>&lt;/br> לא נמצאו איומים</string>
+    <string name="scan_fixing_threats_title_singular">מתקן את האיום</string>
+    <string name="disable">להשבית</string>
+    <string name="quick_start_card_menu_unpin">להסיר את הנעץ מהתוכן</string>
     <string name="quick_start_list_review_pages_subtitle">לבדוק את העמודים ולבצע שינויים או להוסיף ולהסיר עמודים.</string>
     <string name="quick_start_list_view_site_title">מעבר לאתר שלך</string>
     <string name="quick_start_list_upload_icon_subtitle">להוסיף סמל לאתר למראה נקי ומקצועי.</string>
@@ -32,8 +66,6 @@ Language: he_IL
     <string name="backup_item_content_hint">(לא כולל ערכות עיצוב, תוספים והעלאות)</string>
     <string name="backup_item_contents">ספריית WP-content</string>
     <string name="backup_item_roots">בסיס של WordPress</string>
-    <string name="backup_download_progress_action_button_content_description">כפתור \'הודיעו לי כאשר הפעולה מסתיימת\'</string>
-    <string name="backup_download_progress_action_button">הודיעו לי כאשר הפעולה מסתיימת!</string>
     <string name="backup_download_details_choose_items_header">הפריטים שכלולים בהורדה זו</string>
     <string name="gutenberg_native_uploading">מעלה…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">לא ניתן לערוך בלוקים לשימוש חוזר ב-WordPress ל-iOS</string>
@@ -61,13 +93,12 @@ Language: he_IL
     <string name="threat_status_fixed">תוקן</string>
     <string name="threat_found_header">נמצא</string>
     <string name="scan_here_to_help">אנחנו פה לעזור</string>
-    <string name="scan_idle_with_threats_description">הסריקה איתרה %1s איומים פוטנציאליים עם %2s. עליך לבדוק את הפרטים למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%3$s⁩ אם נדרשת עזרה.</string>
+    <string name="scan_idle_with_threats_description_singular">הסריקה איתרה איום פוטנציאלי %1s עם %2s. עליך לבדוק את האיום למטה ולנקוט פעולה או להקיש על הכפתור \'לתקן הכול\'. אנחנו ⁦%3$s⁩ אם נדרשת עזרה.</string>
     <string name="scan_idle_manual_scan_description">כדי לבדוק את האתר שלך שוב, יש להפעיל סריקה ידנית או להמתין לסריקה על ידי Jetpack מאוחר יותר היום.</string>
     <string name="scan_provisioning_description">ברוך בואך ל-Jetpack Scan! אנחנו מכינים את האתר לסריקה מלאה. אנחנו נודיע לך אם נמצא בעיות כלשהן שעלולות להפריע לסריקה ולאחר מכן, הסריקה הראשונה שלך תתחיל.</string>
     <string name="scan_scanning_is_initial_description">ברוך בואך ל-Jetpack Scan, אנחנו בודקים כעת את האתר שלך לראשונה ומייד נעדכן אותך בתוצאות.</string>
-    <string name="scan_fixing_threats_description">אנחנו משקיעים המון מאמצים כדי לתקן את האיומים האלה ברקע. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
+    <string name="scan_fixing_threats_description_singular">אנחנו משקיעים המון מאמצים ברקע כדי לתקן את האיום הזה. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
     <string name="scan_scanning_description">אנחנו נשלח אליך הודעה כאשר הסריקה תושלם. בינתיים, אפשר להמשיך להשתמש באתר כרגיל ולחזור לבדוק את ההתקדמות בכל שלב.</string>
-    <string name="scan_fixing_threats_title">מתקן את האיומים</string>
     <string name="scan_start_request_failed_subtitle">ל-Jetpack Scan לא הייתה אפשרות להשלים את הסריקה של האתר שלך. יש לבדוק אם האתר מושבת – אם לא, יש לנסות שוב. אם האתר מושבת או אם עדיין יש בעיות בהפעלה של Jetpack Scan, עליך ליצור קשר עם צוות התמיכה.</string>
     <string name="scan_request_failed_title">משהו השתבש</string>
     <string name="activity_log_currently_backing_up_message_no_dates">מגבה את האתר</string>
@@ -107,8 +138,6 @@ Language: he_IL
     <string name="web_preview_tablet">טאבלט</string>
     <string name="web_preview_mobile">טלפון נייד</string>
     <string name="quick_start_card_menu_remove">לא להציג שוב</string>
-    <string name="quick_start_card_menu_hide">להסתיר</string>
-    <string name="quick_start_card_menu_pin">לנעוץ</string>
     <string name="quick_start_dialog_review_pages_message_short">יש לבחור באפשרות ⁦%1$s⁩ עמודים ⁦%2$s⁩ כדי להציג את רשימת העמודים שלך.</string>
     <string name="quick_start_dialog_review_pages_message">לשנות, להוסיף או להסיר עמודים באתר.</string>
     <string name="quick_start_dialog_review_pages_title">לבדוק עמודים באתר</string>
@@ -124,9 +153,9 @@ Language: he_IL
     <string name="reader_marked_post_as_unseen">הפוסט סומן כ\'לא נקרא\'</string>
     <string name="reader_marked_post_as_seen">הפוסט סומן כ\'נקרא\'</string>
     <string name="threat_fix_all_status_error_message">שגיאה בקבלה של מצב התיקון. יש לפנות לתמיכה שלנו.</string>
-    <string name="threat_fix_all_status_success_message">האיומים תוקנו בהצלחה.</string>
+    <string name="threat_fix_all_status_success_message_singular">האיום תוקן בהצלחה.</string>
     <string name="threat_fix_all_error_message">שגיאה בתיקון האיומים. יש לפנות לתמיכה שלנו.</string>
-    <string name="threat_fix_all_warning_message">עליך לאשר שברצונך לתקן את %s האיומים הפעילים.</string>
+    <string name="threat_fix_all_warning_message_singular">עליך לאשר שברצונך לתקן איום פעיל %s.</string>
     <string name="threat_fix_all_warning_title">לתקן את כל האיומים</string>
     <string name="threat_ignore_error_message">אירעה שגיאה בעת התעלמות מהאיום. יש לפנות לתמיכה.</string>
     <string name="threat_ignore_success_message">התעלמת מהאיום.</string>
@@ -162,7 +191,7 @@ Language: he_IL
     <string name="backup_download_complete_header">הגיבוי שלך כעת מוכן להורדה</string>
     <string name="backup_download_complete_page_title">הגיבוי שלך</string>
     <string name="backup_download_progress_label">%1$s%%</string>
-    <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן</string>
+    <string name="backup_download_progress_footnote">אין צורך לשהות כאן ולהמתין. אנחנו נודיע לך כאשר הגיבוי לך יהיה מוכן להורדה.</string>
     <string name="backup_download_progress_icon_content_description">סמל \'יוצר גיבוי להורדה\'</string>
     <string name="backup_download_progress_description_with_two_parameters">אנחנו יוצרים גיבוי להורדה של האתר שלך מתאריך ⁦%1$s⁩ %2$s.</string>
     <string name="backup_download_progress_header">אנחנו כעת יוצרים גיבוי של האתר שלך להורדה</string>
@@ -208,10 +237,7 @@ Language: he_IL
     <string name="threat_item_header_database_threat">%s איומים בבסיס הנתונים</string>
     <string name="threat_item_header_infected_core_file">%s: קובץ ליבה נגוע</string>
     <string name="threat_item_header_threat_found">אותר איום</string>
-    <string name="threats_found">נמצאו איומים</string>
-    <string name="scan_in_few_seconds">בעוד מספר שניות</string>
-    <string name="scan_in_minutes_ago">לפני %s דקות</string>
-    <string name="scan_in_hours_ago">לפני %s שעות</string>
+    <string name="scan_in_few_seconds">לפני מספר שניות</string>
     <string name="scan_this_site">האתר הזה</string>
     <string name="scan_idle_last_scan_description">השירות של Jetpack Scan פעל %s ולא איתר סיכונים. %s</string>
     <string name="scan_idle_threats_found_title">ייתכן שהאתר שלך בסיכון</string>
@@ -231,7 +257,6 @@ Language: he_IL
     <string name="activity_log_date_range_filter_label_content_description">מסנן טווח תאריכים</string>
     <string name="activity_log_active_filter_empty_subtitle">יש להתאים את המסננים של טווח התאריכים או של סוג הפעילות</string>
     <string name="activity_log_active_filter_empty_title">לא נמצאו אירועים תואמים</string>
-    <string name="rewind">לשחזר</string>
     <string name="backup_item_sqls">בסיס הנתונים של האתר</string>
     <string name="backup_item_roots_hint">(כולל wp-config.php וקבצים שאינם WordPress)</string>
     <string name="backup_item_media_uploads">העלאות מדיה</string>
@@ -354,7 +379,6 @@ Language: he_IL
     <string name="stories_intro_title_first">הסטוריז החדשים מיועדים לכולם</string>
     <string name="stories_intro_image_caption_second">כותרת סטורי לדוגמה</string>
     <string name="stories_intro_image_caption_first">כיצד ליצור פוסט של סטורי</string>
-    <string name="stories_intro_main_subtitle">אנו מעניקים לך גישה מוקדמת אל \'פוסטים של סטורי\' ונשמח לראות אותך מתנסה בהם.</string>
     <string name="stories_intro_main_title">אנו שמחים להציג את האפשרות \'פוסטים של סטורי\'</string>
     <string name="mlp_notice_blank_page_created">נוצר עמוד ריק</string>
     <string name="mlp_notice_page_created">העמוד נוצר</string>
@@ -491,7 +515,6 @@ Language: he_IL
     <string name="signup_confirmation_title">אישור הרשמה</string>
     <string name="continue_with_google_terms_of_service_text">אם בחרת להמשיך עם Google או ועדיין אין לך חשבון ב-WordPress.com, חשבון ייווצר עבורך ויש הסכמה מצידך ⁦%1$s⁩לתנאי השירות⁦%2$s⁩ שלנו.</string>
     <string name="continue_terms_of_service_text">המשך הפעולה מהווה את הסכמתך ⁦%1$s⁩לתנאי השימוש⁦%2$s⁩ שלנו.</string>
-    <string name="signup_confirmation_magic_link_message">נשלח אליך אימייל עם קישור להרשמה כדי ליצור את חשבון חדש ב-WordPress.com.</string>
     <string name="signup_confirmation_message">אנחנו נשתמש בכתובת האימייל הזאת כדי ליצור את החשבון החדש שלך ב-WordPress.com.</string>
     <string name="signup_magic_link_message">שלחנו אליך אימייל עם קישור להרשמה כדי ליצור את החשבון החדש שלך ב-WordPress.com. עליך לבדוק את האימייל ממכשיר זה ולהקיש על הקישור בהודעה שקיבלת מ-WordPress.com.</string>
     <string name="enter_account_info_for_site">להזין את פרטי החשבון שלך ב-⁦%1$s⁩.</string>
@@ -1179,7 +1202,6 @@ Language: he_IL
     <string name="notification_new_site_creation_failed">הייתה בעיה</string>
     <string name="notification_new_site_creation_title">יצירת אתר</string>
     <string name="new_site_creation_create_site_button">יצירת אתר</string>
-    <string name="new_site_creation_search_domain_input_hint">חיפוש דומיינים</string>
     <string name="new_site_creation_domain_header_subtitle">כאן הגולשים ימצאו אותך באינטרנט.</string>
     <string name="new_site_creation_empty_domain_list_message">לא נמצאו כתובות זמינות שתואמות לחיפוש שלך</string>
     <string name="site_creation_error_generic_subtitle">שגיאה בתקשורת עם השרת, יש לנסות שוב</string>

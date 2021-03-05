@@ -1,12 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-18 13:54:08+0000
+Translation-Revision-Date: 2021-03-04 15:54:59+0000
 Plural-Forms: nplurals=2; plural=n > 1;
 Generator: GlotPress/3.0.0-alpha.2
 Language: fr
 -->
 <resources>
-    <string name="quick_start_card_menu_unpin">Désépingler</string>
+    <string name="threat_fix_all_status_success_message_plural">Les menaces ont bien été corrigées.</string>
+    <string name="threat_fix_all_warning_message_plural">Veuillez confirmer que vous souhaitez corriger les %s menaces actives.</string>
+    <string name="scan_idle_with_threats_description_plural">L’analyse a trouvé %1s menaces potentielles avec %2s. Veuillez passer en revue les éléments ci-dessous et corriger ou appuyer sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
+    <string name="scan_fixing_threats_description_plural">Nous rencontrons des difficultés à résoudre ces menaces en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
+    <string name="invite_links_cannot_get_roles_error">Une erreur s’est produite lors de la récupération des rôles</string>
+    <string name="invite_links_helper_text">Utilisez ce lien pour ajouter les membres de votre équipe sans avoir à les inviter individuellement. Toute personne ayant accès à ce lien sera en mesure de rejoindre votre organisation, même si le lien a été envoyé par quelqu’un d’autre que vous. Veillez à le partager uniquement avec des personnes de confiance.</string>
+    <string name="invite_links_expire_date">Expiration %1$s</string>
+    <string name="threats_found_singular">Menace détectée</string>
+    <string name="threats_found_plural">Menaces détectées</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> %s menaces potentielles détectées</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> 1 menace potentielle détectée</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Analyse terminée&lt;/b> &lt;br>&lt;/br> Aucune menace détectée</string>
+    <string name="scan_fixing_threats_title_singular">Menace en cours de correction…</string>
     <string name="quick_start_list_review_pages_subtitle">Vérifiez vos pages et apportez des modifications, ou ajoutez ou supprimez des pages.</string>
     <string name="quick_start_list_view_site_title">Voir votre site</string>
     <string name="quick_start_list_upload_icon_subtitle">Ajoutez une icône de site pour un aspect brillant et pro.</string>
@@ -32,8 +44,6 @@ Language: fr
     <string name="backup_item_content_hint">(exclut les thèmes, les extensions et les chargements)</string>
     <string name="backup_item_contents">Répertoire WP-content</string>
     <string name="backup_item_roots">Racine WordPress</string>
-    <string name="backup_download_progress_action_button_content_description">Bouton Indiquez-moi lorsque l’opération est terminée</string>
-    <string name="backup_download_progress_action_button">Indiquez-moi lorsque l’opération est terminée !</string>
     <string name="backup_download_details_choose_items_header">Éléments inclus dans ce téléchargement</string>
     <string name="gutenberg_native_uploading">Téléversement…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">Les blocs réutilisables ne sont pas modifiables sur WordPress pour iOS</string>
@@ -61,13 +71,12 @@ Language: fr
     <string name="threat_status_fixed">Exact</string>
     <string name="threat_found_header">Trouvé</string>
     <string name="scan_here_to_help">Aide ici</string>
-    <string name="scan_idle_with_threats_description">L’analyse a trouvé %1s menaces potentielles avec %2s. Veuillez passer en revue les éléments ci-dessous et corriger ou appuyer sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
+    <string name="scan_idle_with_threats_description_singular">L’analyse a détecté %1s menace potentielle avec %2s. Vérifiez la menace ci-dessous et agissez en conséquence, ou appuyez sur le bouton Tout corriger. Nous sommes %3$s au besoin.</string>
     <string name="scan_idle_manual_scan_description">Pour contrôler votre site à nouveau, exécutez une analyse manuelle ou attendez la prochaine analyse Jetpack plus tard dans la journée.</string>
     <string name="scan_provisioning_description">Bienvenue dans Jetpack Scan ! Nous étudions votre site en vue de préparer une analyse complète. Nous vous ferons savoir si nous rencontrons un problème susceptible de compromettre l’analyse, puis nous démarrerons votre première analyse complète.</string>
     <string name="scan_scanning_is_initial_description">Bienvenue sur Jetpack Scan. Nous réalisons actuellement un état des lieux de votre site et les résultats devraient bientôt vous parvenir.</string>
-    <string name="scan_fixing_threats_description">Nous rencontrons des difficultés à résoudre ces menaces en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
+    <string name="scan_fixing_threats_description_singular">Nous rencontrons des difficultés à résoudre cette menace en arrière-plan. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
     <string name="scan_scanning_description">Nous vous enverrons une notification une fois que l’analyse sera terminée. Pendant ce temps, vous pouvez continuer à utiliser votre site comme d’habitude, tout en revenant de temps à autre pour vérifier la progression de l’analyse.</string>
-    <string name="scan_fixing_threats_title">Correction des menaces</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan n’a pas pu terminer l’analyse de votre site. Veuillez vérifier si votre site est indisponible. Si ce n’est pas le cas, réessayez. S’il l’est, ou si Jetpack Scan rencontre toujours des problèmes, contactez notre équipe d’assistance.</string>
     <string name="scan_request_failed_title">Un problème est survenu…</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Sauvegarde du site</string>
@@ -100,8 +109,6 @@ Language: fr
     <string name="web_preview_tablet">Tablette</string>
     <string name="web_preview_mobile">Portable</string>
     <string name="quick_start_card_menu_remove">Ne plus afficher</string>
-    <string name="quick_start_card_menu_hide">Cacher</string>
-    <string name="quick_start_card_menu_pin">Épingler</string>
     <string name="quick_start_dialog_review_pages_message_short">Sélectionnez %1$s Pages %2$s pour afficher votre liste de pages.</string>
     <string name="quick_start_dialog_review_pages_message">Modifiez, ajoutez ou supprimez les pages de votre site.</string>
     <string name="quick_start_dialog_review_pages_title">Passer en revue les pages du site</string>
@@ -117,9 +124,9 @@ Language: fr
     <string name="reader_marked_post_as_unseen">Article marqué comme non lu</string>
     <string name="reader_marked_post_as_seen">Article marqué comme lu</string>
     <string name="threat_fix_all_status_error_message">Erreur lors de la récupération de l’état de la résolution. Veuillez contacter l’assistance.</string>
-    <string name="threat_fix_all_status_success_message">Les menaces ont bien été corrigées.</string>
+    <string name="threat_fix_all_status_success_message_singular">La menace a bien été corrigée.</string>
     <string name="threat_fix_all_error_message">Erreur lors de la correction de menaces. Veuillez contacter l’assistance.</string>
-    <string name="threat_fix_all_warning_message">Veuillez confirmer que vous souhaitez corriger les %s menaces actives.</string>
+    <string name="threat_fix_all_warning_message_singular">Veuillez confirmer que vous souhaitez corriger %s menace active.</string>
     <string name="threat_fix_all_warning_title">Corriger l’ensemble des menaces</string>
     <string name="threat_ignore_error_message">Une erreur s’est produite, l’erreur n’a pas pu être ignorée. Veuillez contacter l’assistance.</string>
     <string name="threat_ignore_success_message">Menace ignorée.</string>
@@ -153,6 +160,7 @@ Language: fr
     <string name="backup_download_complete_description_with_two_parameters">Nous avons créé une sauvegarde de votre site le %1$s %2$s.</string>
     <string name="backup_download_complete_header">Votre sauvegarde peut désormais être téléchargée</string>
     <string name="backup_download_complete_page_title">Votre sauvegarde</string>
+    <string name="backup_download_progress_footnote">Pas besoin d’attendre. Nous vous avertirons lorsque votre sauvegarde sera prête.</string>
     <string name="backup_download_progress_icon_content_description">Icône de sauvegarde téléchargeable en cours de création</string>
     <string name="backup_download_progress_description_with_two_parameters">Nous créons une sauvegarde téléchargeable de votre site tel qu’il était le %1$s %2$s.</string>
     <string name="backup_download_progress_header">Création d’une sauvegarde téléchargeable de votre site en cours</string>
@@ -198,10 +206,9 @@ Language: fr
     <string name="threat_item_header_database_threat">Menaces concernant la base de données %s</string>
     <string name="threat_item_header_infected_core_file">%s : fichier core infecté</string>
     <string name="threat_item_header_threat_found">Menace détectée</string>
-    <string name="threats_found">Menaces détectées</string>
-    <string name="scan_in_few_seconds">en quelques secondes</string>
-    <string name="scan_in_minutes_ago">Il y a %s minutes</string>
-    <string name="scan_in_hours_ago">Il y a %s heures</string>
+    <string name="scan_in_few_seconds">il y a quelques secondes</string>
+    <string name="scan_in_minutes_ago">il y a %s minute(s)</string>
+    <string name="scan_in_hours_ago">il y a %s heure(s)</string>
     <string name="scan_this_site">ce site</string>
     <string name="scan_idle_last_scan_description">La dernière analyse Jetpack exécutée le %s n’a détecté aucun risque. %s</string>
     <string name="scan_idle_threats_found_title">Votre site est peut-être menacé.</string>
@@ -221,7 +228,6 @@ Language: fr
     <string name="activity_log_date_range_filter_label_content_description">Filtre Période</string>
     <string name="activity_log_active_filter_empty_subtitle">Essayez d’ajuster les filtres Période et Type d’activité.</string>
     <string name="activity_log_active_filter_empty_title">Aucun événement ne correspond</string>
-    <string name="rewind">Restaurer</string>
     <string name="backup_item_plugins">Extensions WordPress</string>
     <string name="backup_item_themes">Thèmes WordPress</string>
     <string name="backup_download_details_page_title">Télécharger la sauvegarde</string>
@@ -329,7 +335,6 @@ Language: fr
     <string name="stories_intro_title_first">Maintenant, les stories sont pour tout le monde</string>
     <string name="stories_intro_image_caption_second">Exemple de titre de story</string>
     <string name="stories_intro_image_caption_first">Comment créer une publication de story</string>
-    <string name="stories_intro_main_subtitle">Vous avez un accès anticipé aux publications de story et nous aimerions que vous l’essayiez.</string>
     <string name="stories_intro_main_title">Présentation des publications de story</string>
     <string name="mlp_notice_blank_page_created">Page vide créée</string>
     <string name="mlp_notice_page_created">Page créée</string>
@@ -466,7 +471,6 @@ Language: fr
     <string name="signup_confirmation_title">Confirmation de l’inscription</string>
     <string name="continue_with_google_terms_of_service_text">Si vous continuez avec Google sans disposer au préalable d’un compte WordPress.com, vous créez un compte et acceptez nos %1$sconditions d’utilisation%2$s.</string>
     <string name="continue_terms_of_service_text">En poursuivant, vous acceptez nos %1$sConditions d’utilisation%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Nous vous enverrons un lien par e-mail pour créer votre nouveau compte WordPress.com.</string>
     <string name="signup_confirmation_message">Nous utiliserons cette adresse e-mail pour créer votre nouveau compte WordPress.com.</string>
     <string name="signup_magic_link_message">Nous vous avons envoyé un lien par e-mail pour créer votre nouveau compte WordPress.com. Consultez vos e-mails sur cet appareil et appuyez sur le lien dans l’e-mail que vous avez reçu de WordPress.com.</string>
     <string name="enter_account_info_for_site">Saisissez vos informations de compte pour %1$s.</string>
@@ -1154,7 +1158,6 @@ Language: fr
     <string name="notification_new_site_creation_failed">Un problème est survenu</string>
     <string name="notification_new_site_creation_title">Créer un site</string>
     <string name="new_site_creation_create_site_button">Créer un site</string>
-    <string name="new_site_creation_search_domain_input_hint">Rechercher des domaines</string>
     <string name="new_site_creation_domain_header_subtitle">C\'est ici que les internautes vous trouveront sur Internet.</string>
     <string name="new_site_creation_empty_domain_list_message">Aucune adresse ne correspond à votre recherche</string>
     <string name="site_creation_error_generic_subtitle">Erreur de communication avec le serveur, veuillez essayer à nouveau.</string>

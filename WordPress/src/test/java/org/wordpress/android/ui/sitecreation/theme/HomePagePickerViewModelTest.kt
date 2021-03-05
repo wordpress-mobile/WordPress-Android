@@ -15,7 +15,8 @@ import org.mockito.ArgumentCaptor
 import org.mockito.Mock
 import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.fluxc.Dispatcher
-import org.wordpress.android.fluxc.model.StarterDesignModel
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesign
+import org.wordpress.android.fluxc.network.rest.wpcom.theme.StarterDesignCategory
 import org.wordpress.android.fluxc.store.ThemeStore.OnStarterDesignsFetched
 import org.wordpress.android.fluxc.store.ThemeStore.ThemeErrorType
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
@@ -25,7 +26,7 @@ import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.UiState
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase
 import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.util.NoDelayCoroutineDispatcher
@@ -42,13 +43,20 @@ class HomePagePickerViewModelTest {
     @Mock lateinit var dispatcher: Dispatcher
     @Mock lateinit var networkUtils: NetworkUtilsWrapper
     @Mock lateinit var fetchHomePageLayoutsUseCase: FetchHomePageLayoutsUseCase
-    @Mock lateinit var uiStateObserver: Observer<UiState>
+    @Mock lateinit var uiStateObserver: Observer<LayoutPickerUiState>
     @Mock lateinit var onDesignActionObserver: Observer<DesignSelectionAction>
     @Mock lateinit var onPreviewActionObserver: Observer<DesignPreviewAction>
     @Mock lateinit var previewModeObserver: Observer<PreviewMode>
     @Mock lateinit var analyticsTracker: SiteCreationTracker
 
     private lateinit var viewModel: HomePagePickerViewModel
+
+    val mockCategory = StarterDesignCategory(
+            slug = "about",
+            title = "About",
+            description = "About pages",
+            emoji = "👋"
+    )
 
     @Before
     fun setUp() {
@@ -67,43 +75,48 @@ class HomePagePickerViewModelTest {
     }
 
     private fun <T> mockResponse(isError: Boolean = false, block: suspend CoroutineScope.() -> T) = test {
-        val response = if (isError) OnStarterDesignsFetched(emptyList(), ThemesError(ThemeErrorType.GENERIC_ERROR))
+        val response = if (isError) OnStarterDesignsFetched(
+                emptyList(),
+                emptyList(),
+                ThemesError(ThemeErrorType.GENERIC_ERROR)
+        )
         else OnStarterDesignsFetched(
                 listOf(
-                        StarterDesignModel(
-                                0,
+                        StarterDesign(
                                 mockedDesignSlug,
                                 "title",
-                                "site",
+                                mockedDesignSegmentId,
+                                listOf(mockCategory),
                                 mockedDesignDemoUrl,
                                 "theme",
-                                mockedDesignSegmentId,
                                 "desktopThumbnail",
-                                "mobileThumbnail",
-                                "tabletThumbnail"
+                                "tabletThumbnail",
+                                "mobileThumbnail"
                         )
                 ),
+                listOf(mockCategory),
                 null
         )
         whenever(fetchHomePageLayoutsUseCase.fetchStarterDesigns()).thenReturn(response)
+        whenever(networkUtils.isNetworkAvailable()).thenReturn(true)
         block()
     }
 
     @Test
     fun `when the picker starts the content is loaded`() = mockResponse {
         viewModel.start()
-        val captor = ArgumentCaptor.forClass(UiState::class.java)
-        verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        assertThat(captor.value is UiState.Content)
-        assertThat((captor.value as UiState.Content).layouts.size).isGreaterThan(0)
+        val captor = ArgumentCaptor.forClass(LayoutPickerUiState::class.java)
+        verify(uiStateObserver, times(3)).onChanged(captor.capture())
+        assertThat(captor.value is LayoutPickerUiState.Content)
+        assertThat((captor.value as LayoutPickerUiState.Content).layoutCategories.size).isGreaterThan(0)
     }
 
     @Test
     fun `when the picker starts fetch errors are handled`() = mockResponse(isError = true) {
         viewModel.start()
-        val captor = ArgumentCaptor.forClass(UiState::class.java)
+        val captor = ArgumentCaptor.forClass(LayoutPickerUiState::class.java)
         verify(uiStateObserver, times(2)).onChanged(captor.capture())
-        assertThat(captor.value is UiState.Error)
+        assertThat(captor.value is LayoutPickerUiState.Error)
     }
 
     @Test
@@ -123,7 +136,7 @@ class HomePagePickerViewModelTest {
     @Test
     fun `when the picker starts no layout is selected`() = mockResponse {
         viewModel.start()
-        assertThat(requireNotNull(viewModel.uiState.value as UiState.Content).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
     }
 
     @Test
@@ -131,7 +144,7 @@ class HomePagePickerViewModelTest {
         viewModel.start()
         viewModel.onThumbnailReady(mockedDesignSlug)
         viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as UiState.Content).selectedLayoutSlug)
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug)
                 .isEqualTo(mockedDesignSlug)
     }
 
@@ -139,7 +152,7 @@ class HomePagePickerViewModelTest {
     fun `when the user taps on a layout the layout is not selected if the thumbnail has not loaded`() = mockResponse {
         viewModel.start()
         viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as UiState.Content).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
     }
 
     @Test
@@ -148,7 +161,7 @@ class HomePagePickerViewModelTest {
         viewModel.onThumbnailReady(mockedDesignSlug)
         viewModel.onLayoutTapped(mockedDesignSlug)
         viewModel.onLayoutTapped(mockedDesignSlug)
-        assertThat(requireNotNull(viewModel.uiState.value as UiState.Content).selectedLayoutSlug).isNull()
+        assertThat(requireNotNull(viewModel.uiState.value as LayoutPickerUiState.Content).selectedLayoutSlug).isNull()
     }
 
     @Test

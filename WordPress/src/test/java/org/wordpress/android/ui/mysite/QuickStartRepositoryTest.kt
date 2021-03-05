@@ -139,10 +139,9 @@ class QuickStartRepositoryTest : BaseUnitTest() {
 
     @Test
     fun `start marks CREATE_SITE as done and loads model`() = test {
-        whenever(selectedSiteRepository.getSelectedSite()).thenReturn(site)
         initStore()
 
-        quickStartRepository.startQuickStart()
+        quickStartRepository.startQuickStart(siteId)
 
         verify(quickStartStore).setDoneTask(siteId.toLong(), CREATE_SITE, true)
         assertModel()

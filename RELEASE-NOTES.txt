@@ -2,7 +2,8 @@
 
 16.9
 -----
-
+* [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
+* [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
 
 16.8
 -----

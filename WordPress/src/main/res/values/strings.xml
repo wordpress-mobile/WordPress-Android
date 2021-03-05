@@ -1054,6 +1054,11 @@
     <string name="activity_log_item_menu_restore_label">Restore to this point</string>
     <string name="activity_log_item_menu_download_backup_label">Download backup</string>
 
+    <!-- activity log list backup download notice -->
+    <string name="activity_log_backup_download_notice_description_with_two_params" translatable="false">@string/backup_download_complete_description_with_two_parameters</string>
+    <string name="activity_log_backup_download_notice_download_action">Download</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Dismiss</string>
+
     <!-- backup -->
     <string name="backup">Backup</string>
     <string name="backup_empty_title">Your first backup will be ready soon</string>
@@ -1089,8 +1094,8 @@
     <string name="scan_provisioning_description">Welcome to Jetpack Scan! We\'re scoping out your site, setting up to do a full scan. We\'ll let you know if we spot any issues that might impact a scan, then your first full scan will start.</string>
     <string name="scan_idle_manual_scan_description">To review your site again run a manual scan, or wait for Jetpack to scan your site later today.</string>
     <string name="scan_idle_last_scan_description">The last Jetpack scan ran %s and did not find any risks. %s</string>
-    <string name="scan_idle_with_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
-    <string name="scan_idle_with_threats_description_singular">The scan found %1s potential threat with %2s. Please review the threat below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_plural">The scan found %1s potential threats with %2s. Please review them below and take action or tap the fix all button. We are %3$s if you need us.</string>
+    <string name="scan_idle_threats_description_singular">The scan found one potential threat with %1s. Please review the threat below and take action or tap the fix all button. We are %2$s if you need us.</string>
     <string name="scan_here_to_help">here to help</string>
     <string name="scan_this_site">this site</string>
     <string name="scan_in_hours_ago">%s hour(s) ago</string>
@@ -1098,8 +1103,8 @@
     <string name="scan_in_few_seconds">a few seconds ago</string>
     <string name="scan_progress_label" translatable="false">%1$s%%</string>
     <string name="scan_finished_no_threats_found_message">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; No threats found</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; 1 potential threat found</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; One potential threat found</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b&gt;Scan Finished&lt;/b&gt; &lt;br&gt;&lt;/br&gt; %s potential threats found</string>
 
     <!-- scan history -->
     <string name="scan_history_all_threats_tab">All</string>
@@ -1165,8 +1170,8 @@
     <string name="threat_ignore_success_message">Threat ignored.</string>
     <string name="threat_ignore_error_message">Error ignoring threat. Please contact support.</string>
     <string name="threat_fix_all_warning_title">Fix all threats</string>
-    <string name="threat_fix_all_warning_message_plural">Please confirm you want to fix all %s active threats.</string>
-    <string name="threat_fix_all_warning_message_singular">Please confirm you want to fix %s active threat.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Please confirm you want to fix all %s active threats.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Please confirm you want to fix one active threat.</string>
     <string name="threat_fix_all_error_message">Error fixing threats. Please contact our support.</string>
     <string name="threat_fix_all_status_success_message_plural">Threats were successfully fixed.</string>
     <string name="threat_fix_all_status_success_message_singular">Threat was successfully fixed.</string>
@@ -1874,6 +1879,7 @@
     <string name="reader_title_subs">Manage Topics &amp; Sites</string>
     <string name="reader_title_photo_viewer">%1$d of %2$d</string>
     <string name="reader_title_comments" translatable="false">@string/comments</string>
+    <string name="reader_title_interests">Follow topics</string>
 
     <!-- view pager titles -->
     <string name="reader_page_followed_tags">Followed topics</string>
@@ -2908,8 +2914,8 @@
     <string name="quick_start_list_review_pages_subtitle">Check your pages and make changes, or add or remove pages.</string>
     <string name="quick_start_list_review_pages_title" translatable="false">@string/quick_start_dialog_review_pages_title</string>
     <string name="quick_start_sites">Next Steps</string>
-    <string name="quick_start_sites_type_customize">Customize Your Site</string>
-    <string name="quick_start_sites_type_grow">Grow Your Audience</string>
+    <string name="quick_start_sites_type_customize">Customize your site</string>
+    <string name="quick_start_sites_type_grow">Grow your audience</string>
     <string name="quick_start_sites_type_subtitle">%1$d of %2$d complete</string>
     <string name="quick_start_span_end" translatable="false">&lt;/span&gt;</string>
     <string name="quick_start_span_start" translatable="false">&lt;span&gt;</string>
@@ -3195,7 +3201,7 @@
 
     <!-- Intro to Stories screen -->
     <string name="stories_intro_main_title">Introducing Story Posts</string>
-    <string name="stories_intro_main_subtitle">You\'ve got early access to Story Posts and we\'d love for you to give it a try.</string>
+    <string name="stories_intro_main_subtitle">A new way to create and publish engaging content on your site.</string>
     <string name="stories_intro_image_caption_first">How to create a story post</string>
     <string name="stories_intro_image_caption_second">Example story title</string>
     <string name="stories_intro_title_first">Now stories are for everyone</string>

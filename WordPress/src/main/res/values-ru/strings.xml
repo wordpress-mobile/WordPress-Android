@@ -1,11 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-02-11 06:44:13+0000
+Translation-Revision-Date: 2021-03-03 20:09:44+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
+    <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
+    <string name="activity_log_backup_download_notice_download_action">Скачать</string>
+    <string name="threat_fix_all_status_success_message_plural">Угрозы были успешно устранены.</string>
+    <string name="threat_fix_all_warning_message_plural">Подтвердите исправление всех %s активных угроз.</string>
+    <string name="scan_idle_with_threats_description_plural">Проверка обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
+    <string name="scan_fixing_threats_description_plural">Мы сейчас стараемся исправить эти угрозы в фоновом режиме, вы можете продолжать использовать ваш сайт как обычно, проверить состояние вы сможете в любое время.</string>
+    <string name="gutenberg_native_edit_focal_point">Изменить точку фокусировки</string>
+    <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Нажмите дважды, чтобы открыть нижний список действий для редактирования, замены или очистки изображения.</string>
+    <string name="gutenberg_native_double_tap_to_open_action_sheet_to_edit_replace_or_clear_the_imag">Нажмите дважды, чтобы открыть список действий для редактирования, замены или очистки изображения.</string>
+    <string name="new_site_creation_search_domain_example">example.com</string>
+    <string name="new_site_creation_search_domain_input_hint">Выберите название для вашего сайта.</string>
+    <string name="quick_start_completed_type_grow_message">&lt;b>Все задачи выполнены&lt;/b>&lt;br/> Вы привлечёте больше посетителей. Хорошая работа!</string>
+    <string name="quick_start_completed_type_customize_message">&lt;b>Все задачи выполнены&lt;/b>&lt;br/>Вы персонализировали ваш сайт. Отлично!</string>
+    <string name="quick_start_card_menu_hide">Временно скрыть</string>
+    <string name="magic_link_not_meaning_to_create_account">Не планировали создание новой учётной записи? Перейдите назад и введите ваш адрес email.</string>
+    <string name="invite_links_disable_dialog_message">Если эта ссылка для приглашения будет отключена, никто не сможет использовать её для присоединения к вашей команде. Вы уверены в этом?</string>
+    <string name="invite_links_disable_dialog_title">Отключить пригласительную ссылку</string>
+    <string name="invite_links_bad_format_response">Получен неверный ответ</string>
+    <string name="invite_links_null_response">Ответ не получен</string>
+    <string name="invite_links_cannot_get_role_data_error">При получении данных для роли %1$s произошла ошибка</string>
+    <string name="invite_links_cannot_get_roles_error">При получении ролей произошла ошибка</string>
+    <string name="invite_links_generic_get_data_error">Неизвестная ошибка при получении данных пригласительных ссылок</string>
+    <string name="invite_links_helper_text">Используйте эту ссылку, чтобы подключить членов вашей команды, не приглашая их по одному. Любой, кто посетит этот URL-адрес, сможет зарегистрироваться в вашей организации, даже если получит ссылку от кого-то другого, поэтому убедитесь, что вы делитесь ею с доверенными людьми.</string>
+    <string name="invite_links_expire_date">Действует до %1$s</string>
+    <string name="invite_links_disable_invite_link">Отключить пригласительную ссылку</string>
+    <string name="invite_links_share_invite_link">Поделиться ссылкой приглашения</string>
+    <string name="invite_links_generate">Сгенерировать новую ссылку</string>
+    <string name="invite_links_get_status_retry">Обновить состояние ссылки</string>
+    <string name="invite_links_section_title">Пригласительная ссылка</string>
+    <string name="threats_found_singular">Обнаружена угроза</string>
+    <string name="threats_found_plural">Обнаружены угрозы</string>
+    <string name="scan_finished_threats_found_message_plural">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Обнаружено возможных угроз - %s</string>
+    <string name="scan_finished_threats_found_message_singular">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Найдена одна возможная угроза</string>
+    <string name="scan_finished_no_threats_found_message">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Угроз не найдено</string>
+    <string name="scan_fixing_threats_title_singular">Устранение угрозы</string>
+    <string name="disable">Отключить</string>
     <string name="quick_start_card_menu_unpin">Открепить</string>
     <string name="quick_start_list_review_pages_subtitle">Просмотрите ваши страницы, внесите изменение или добавьте/удалите страницы.</string>
     <string name="quick_start_list_view_site_title">Перейдите на свой сайт</string>
@@ -32,8 +69,6 @@ Language: ru
     <string name="backup_item_content_hint">(исключает темы, плагины и загруженные файлы)</string>
     <string name="backup_item_contents">Папка wp-content</string>
     <string name="backup_item_roots">Корневая папка WordPress</string>
-    <string name="backup_download_progress_action_button_content_description">Кнопка - Дайте мне знать по завершению</string>
-    <string name="backup_download_progress_action_button">Дайте мне знать по завершению!</string>
     <string name="backup_download_details_choose_items_header">Элементы включенные для скачивания</string>
     <string name="gutenberg_native_uploading">Загрузка…</string>
     <string name="gutenberg_native_reusable_blocks_aren_t_editable_on_wordpress_for_ios">\"Мои блоки\" нельзя редактировать в приложении WordPress для iOS</string>
@@ -61,13 +96,13 @@ Language: ru
     <string name="threat_status_fixed">Исправлено</string>
     <string name="threat_found_header">Обнаружено</string>
     <string name="scan_here_to_help">готовы помочь вам</string>
-    <string name="scan_idle_with_threats_description">Проверка Jetpack обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
+    <string name="scan_idle_with_threats_description_singular">Проверка Jetpack обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
     <string name="scan_idle_manual_scan_description">Для повторного обзора запустите проверку вручную или подождите результатов следующей проверки Jetpack сегодня.</string>
     <string name="scan_provisioning_description">Вас приветствует Jetpack Scan! Сейчас мы анализируем ваш сайт для проведения полного сканирования. Мы обязательно сообщим вам, если обнаружим потенциальные проблемы. После этого начнётся первое полное сканирование.</string>
     <string name="scan_scanning_is_initial_description">Добро пожаловать в Jetpack Scan! Мы изучаем ваш сайт и скоро поделимся с вами результатами.</string>
-    <string name="scan_fixing_threats_description">Мы сейчас стараемся исправить эти угрозы в фоновом режиме, вы можете продолжать использовать ваш сайт как обычно, проверить состояние вы сможете в любое время.</string>
+    <string name="scan_fixing_threats_description_singular">Мы сейчас стараемся исправить эти угрозы в фоновом режиме, вы можете продолжать использовать ваш сайт как обычно, проверить состояние вы сможете в любое время.</string>
     <string name="scan_scanning_description">Мы пришлем уведомление после завершения сканирования. Вы можете продолжать работать со своим сайтом как обычно — прогресс сканирования можно проверить в любое удобное время. </string>
-    <string name="scan_fixing_threats_title">Устранение угроз</string>
+    <string name="scan_fixing_threats_title_plural">Устранение угроз</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan не удалось завершить проверку вашего сайта. Пожалуйста, проверьте, доступен ли ваш сайт в принципе. Если всё в порядке, то повторите попытку. Если нет, а также если Jetpack Scan по-прежнему не работает, обратитесь в службу поддержки.</string>
     <string name="scan_request_failed_title">Что-то пошло не так</string>
     <string name="activity_log_currently_backing_up_message_no_dates">Резервное копирование сайта</string>
@@ -109,8 +144,7 @@ Language: ru
     <string name="web_preview_tablet">Планшет</string>
     <string name="web_preview_mobile">Мобильное устройство</string>
     <string name="quick_start_card_menu_remove">Не показывать снова</string>
-    <string name="quick_start_card_menu_hide">Скрыть</string>
-    <string name="quick_start_card_menu_pin">Закрепить</string>
+    <string name="quick_start_card_menu_pin">Прикрепить</string>
     <string name="quick_start_dialog_review_pages_message_short">Выберите %1$s страницы %2$s для просмотра списка страниц.</string>
     <string name="quick_start_dialog_review_pages_message">Изменить, добавить или удалить страницы вашего сайта.</string>
     <string name="quick_start_dialog_review_pages_title">Обзор страниц сайта</string>
@@ -126,9 +160,9 @@ Language: ru
     <string name="reader_marked_post_as_unseen">Запись отмечена как непрочитанная</string>
     <string name="reader_marked_post_as_seen">Запись отмечена как прочитанная</string>
     <string name="threat_fix_all_status_error_message">Ошибка получения статуса исправлений. Обратитесь в  службу поддержки.</string>
-    <string name="threat_fix_all_status_success_message">Угрозы были успешно устранены.</string>
+    <string name="threat_fix_all_status_success_message_singular">Угрозы были успешно устранены.</string>
     <string name="threat_fix_all_error_message">Ошибка устранения угроз. Обратитесь в  службу поддержки.</string>
-    <string name="threat_fix_all_warning_message">Подтвердите исправление %s активных угроз.</string>
+    <string name="threat_fix_all_warning_message_singular">Подтвердите исправление %s активных угроз.</string>
     <string name="threat_fix_all_warning_title">Устранить все угрозы</string>
     <string name="threat_ignore_error_message">Ошибка при игнорировании угрозы. Обратитесь в службу поддержки.</string>
     <string name="threat_ignore_success_message">Угроза проигнорирована.</string>
@@ -210,11 +244,10 @@ Language: ru
     <string name="threat_item_header_database_threat">Угроза базы данных %s</string>
     <string name="threat_item_header_infected_core_file">%s: заражены файлы ядра</string>
     <string name="threat_item_header_threat_found">Обнаружена угроза</string>
-    <string name="threats_found">Обнаружены угрозы</string>
     <string name="threats_fix_all">Устранить все</string>
-    <string name="scan_in_few_seconds">несколько секунд</string>
+    <string name="scan_in_few_seconds">несколько секунд назад</string>
     <string name="scan_in_minutes_ago">%s минут(ы) назад</string>
-    <string name="scan_in_hours_ago">%s часов назад</string>
+    <string name="scan_in_hours_ago">%s час(-a,-ов) назад</string>
     <string name="scan_this_site">этот сайт</string>
     <string name="scan_idle_last_scan_description">Последняя проверка Jetpack была %s и всё выглядело замечательно, %s</string>
     <string name="scan_idle_threats_found_title">Ваш сайт может быть под угрозой</string>
@@ -234,7 +267,6 @@ Language: ru
     <string name="activity_log_date_range_filter_label_content_description">Фильтр диапазона дат</string>
     <string name="activity_log_active_filter_empty_subtitle">Попробуйте настроить диапазон дат или фильтры по типу активности</string>
     <string name="activity_log_active_filter_empty_title">Соответствующие события не найдены</string>
-    <string name="rewind">Восстановление</string>
     <string name="backup_item_sqls">База данных сайта (SQL)</string>
     <string name="backup_item_roots_hint">(включая wp-config.php и любые файлы, не относящиеся к WordPress)</string>
     <string name="backup_item_media_uploads">Загруженные медиафайлы</string>
@@ -358,7 +390,6 @@ Language: ru
     <string name="stories_intro_title_first">Истории доступны для всех</string>
     <string name="stories_intro_image_caption_second">Пример названия истории</string>
     <string name="stories_intro_image_caption_first">Как создать историю</string>
-    <string name="stories_intro_main_subtitle">Вам предоставлен ранний доступ к Историям, и мы хотим чтобы вы их попробовали.</string>
     <string name="stories_intro_main_title">Представляем записи-истории</string>
     <string name="mlp_notice_blank_page_created">Создана пустая страница</string>
     <string name="mlp_notice_page_created">Страница создана</string>
@@ -495,7 +526,6 @@ Language: ru
     <string name="signup_confirmation_title">Подтверждение регистрации</string>
     <string name="continue_with_google_terms_of_service_text">Если вы продолжите работу с учетной записью Google, не имея учётной записи WordPress.com, вы создадите учётную запись и примете наши %1$sУсловия обслуживания%2$s.</string>
     <string name="continue_terms_of_service_text">Продолжив, вы соглашаетесь с нашими %1$sПравилами пользования%2$s.</string>
-    <string name="signup_confirmation_magic_link_message">Мы пришлём вам ссылку для создания учётной записи WordPress.com.</string>
     <string name="signup_confirmation_message">Этот адрес эл.почты будет использован при создании вашей новой учётной записи WordPress.com.</string>
     <string name="signup_magic_link_message">Мы отослали вам ссылку для создания учётной записи WordPress.com. Проверьте почту на вашем устройстве и нажмите на ссылку, полученную с WordPress.com.</string>
     <string name="enter_account_info_for_site">Введите данные вашей учётной записи для %1$s.</string>
@@ -1183,7 +1213,6 @@ Language: ru
     <string name="notification_new_site_creation_failed">Возникла проблема</string>
     <string name="notification_new_site_creation_title">Создание сайта</string>
     <string name="new_site_creation_create_site_button">Создать сайт</string>
-    <string name="new_site_creation_search_domain_input_hint">Поиск доменов</string>
     <string name="new_site_creation_domain_header_subtitle">Это место, где вас можно найти в сети.</string>
     <string name="new_site_creation_empty_domain_list_message">Нет доступных адресов по критериям поиска</string>
     <string name="site_creation_error_generic_subtitle">Ошибка подключения к серверу, пожалуйста попробуйте еще раз</string>

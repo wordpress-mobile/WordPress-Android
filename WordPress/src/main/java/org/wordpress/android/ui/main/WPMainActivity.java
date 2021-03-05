@@ -1060,7 +1060,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.CREATE_SITE:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 QuickStartUtils.cancelQuickStartReminder(this);
                 AppPrefs.setQuickStartNoticeRequired(false);
                 AppPrefs.setLastSkippedQuickStartTask(null);
@@ -1096,7 +1095,6 @@ public class WPMainActivity extends LocaleAwareActivity implements
                 }
                 break;
             case RequestCodes.SITE_PICKER:
-                passOnActivityResultToMySiteFragment(requestCode, resultCode, data);
                 if (getMySiteFragment() != null) {
                     boolean isSameSiteSelected = data != null
                                                  && data.getIntExtra(SitePickerActivity.KEY_LOCAL_ID, -1) == AppPrefs

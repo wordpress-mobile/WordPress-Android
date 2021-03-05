@@ -20,12 +20,16 @@ import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.WPWebViewActivity;
 import org.wordpress.android.ui.reader.ReaderPostPagerActivity.DirectOperation;
 import org.wordpress.android.ui.reader.ReaderTypes.ReaderPostListType;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsActivity;
+import org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.EntryPoint;
 import org.wordpress.android.ui.reader.utils.ReaderUtils;
 import org.wordpress.android.util.WPUrlUtils;
 
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
+
+import static org.wordpress.android.ui.reader.discover.interests.ReaderInterestsFragment.READER_INTEREST_ENTRY_POINT;
 
 public class ReaderActivityLauncher {
     /*
@@ -212,6 +216,12 @@ public class ReaderActivityLauncher {
         Intent intent = new Intent(context, ReaderSubsActivity.class);
         intent.putExtra(ReaderConstants.ARG_SUBS_TAB_POSITION, selectPosition);
         context.startActivity(intent);
+    }
+
+    public static void showReaderInterests(Activity activity) {
+        Intent intent = new Intent(activity, ReaderInterestsActivity.class);
+        intent.putExtra(READER_INTEREST_ENTRY_POINT, EntryPoint.SETTINGS);
+        activity.startActivityForResult(intent, RequestCodes.READER_INTERESTS);
     }
 
     /*

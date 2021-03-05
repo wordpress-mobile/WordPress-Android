@@ -19,7 +19,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPosts
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderPostActions
-import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.SecondaryAction
+import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType.FOLLOW
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionsHandler
@@ -305,7 +305,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val postId: Long,
         val blogId: Long,
         val headerUiState: ReaderPostDetailsHeaderUiState,
-        val moreMenuItems: List<SecondaryAction>? = null,
+        val moreMenuItems: List<ReaderPostCardAction>? = null,
         val actions: ReaderPostActions,
         val localRelatedPosts: RelatedPostsUiState? = null,
         val globalRelatedPosts: RelatedPostsUiState? = null

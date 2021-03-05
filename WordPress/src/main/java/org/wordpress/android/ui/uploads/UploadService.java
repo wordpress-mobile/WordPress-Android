@@ -624,7 +624,7 @@ public class UploadService extends Service {
 
             // actually replace the media ID with the media uri
             processor.replaceMediaFileWithUrlInPost(post, String.valueOf(media.getId()),
-                    FluxCUtils.mediaFileFromMediaModel(media), site.getUrl());
+                    FluxCUtils.mediaFileFromMediaModel(media), site);
 
             // we changed the post, so let’s mark this down
             if (!post.isLocalDraft()) {
