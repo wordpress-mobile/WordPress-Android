@@ -7,13 +7,12 @@ import androidx.annotation.NonNull;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
-import com.google.gson.reflect.TypeToken;
 
 import org.wordpress.android.fluxc.Dispatcher;
 import org.wordpress.android.fluxc.generated.ThemeActionBuilder;
 import org.wordpress.android.fluxc.generated.endpoint.WPCOMREST;
+import org.wordpress.android.fluxc.generated.endpoint.WPCOMV2;
 import org.wordpress.android.fluxc.model.SiteModel;
-import org.wordpress.android.fluxc.model.StarterDesignModel;
 import org.wordpress.android.fluxc.model.ThemeModel;
 import org.wordpress.android.fluxc.network.UserAgent;
 import org.wordpress.android.fluxc.network.rest.wpcom.BaseWPComRestClient;
@@ -31,7 +30,6 @@ import org.wordpress.android.fluxc.store.ThemeStore.FetchedWpComThemesPayload;
 import org.wordpress.android.fluxc.store.ThemeStore.SiteThemePayload;
 import org.wordpress.android.fluxc.store.ThemeStore.ThemesError;
 import org.wordpress.android.util.AppLog;
-import org.wordpress.android.util.LanguageUtils;
 import org.wordpress.android.util.StringUtils;
 
 import java.util.ArrayList;
@@ -157,22 +155,31 @@ public class ThemeRestClient extends BaseWPComRestClient {
                 }));
     }
 
-    public void fetchStarterDesigns(Float previewWidth, Float scale) {
+    /**
+     * Endpoint:  v2/common-starter-site-designs
+     */
+    public void fetchStarterDesigns(Float previewWidth, Float previewHeight, Float scale, String[] groups) {
         Map<String, String> params = new HashMap<>();
         params.put("type", "mobile");
-        params.put("language", LanguageUtils.getPatchedCurrentDeviceLanguage(mAppContext));
         if (previewWidth != null) {
             params.put("preview_width", String.format(Locale.US, "%.1f", previewWidth));
+        }
+        if (previewHeight != null) {
+            params.put("preview_height", String.format(Locale.US, "%.1f", previewHeight));
         }
         if (scale != null) {
             params.put("scale", String.format(Locale.US, "%.1f", scale));
         }
-        String url = WPCOMREST.nux.starter_designs.getUrlV1_1();
-        add(WPComGsonRequest.buildGetRequest(url, params, new TypeToken<List<StarterDesignModel>>() {}.getType(),
-                new Response.Listener<List<StarterDesignModel>>() {
-                    @Override public void onResponse(List<StarterDesignModel> response) {
+        if (groups != null && groups.length > 0) {
+            params.put("group", TextUtils.join(",", groups));
+        }
+        String url = WPCOMV2.common_starter_site_designs.getUrl();
+        add(WPComGsonRequest.buildGetRequest(url, params, StarterDesignsResponse.class,
+                new Response.Listener<StarterDesignsResponse>() {
+                    @Override public void onResponse(StarterDesignsResponse response) {
                         AppLog.d(AppLog.T.API, "Received response to WP.com starter designs fetch request.");
-                        FetchedStarterDesignsPayload payload = new FetchedStarterDesignsPayload(response);
+                        FetchedStarterDesignsPayload payload =
+                                new FetchedStarterDesignsPayload(response.getDesigns(), response.getCategories());
                         mDispatcher.dispatch(ThemeActionBuilder.newFetchedStarterDesignsAction(payload));
                     }
                 }, new WPComErrorListener() {
