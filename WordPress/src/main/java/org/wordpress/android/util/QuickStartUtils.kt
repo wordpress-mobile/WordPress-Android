@@ -240,7 +240,7 @@ class QuickStartUtils {
         ) {
             val siteId = site.id.toLong()
 
-            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore) ||
+            if (quickStartStore.getQuickStartCompleted(siteId) || isEveryQuickStartTaskDone(quickStartStore, site.id) ||
                     quickStartStore.hasDoneTask(siteId, task) || !isQuickStartAvailableForTheSite(site)) {
                 return
             }
@@ -252,7 +252,7 @@ class QuickStartUtils {
             quickStartStore.setDoneTask(siteId, task, true)
             track(getTaskCompletedTracker(task))
 
-            if (isEveryQuickStartTaskDone(quickStartStore)) {
+            if (isEveryQuickStartTaskDone(quickStartStore, site.id)) {
                 quickStartStore.setQuickStartCompleted(siteId, true)
                 track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
