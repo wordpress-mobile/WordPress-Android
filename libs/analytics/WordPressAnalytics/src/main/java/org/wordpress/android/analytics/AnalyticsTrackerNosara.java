@@ -2000,6 +2000,8 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "comment_batch_deleted";
             case COMMENT_EDITOR_OPENED:
                 return "comment_editor_opened";
+            case COMMENT_FILTER_CHANGED:
+                return "comment_filter_changed";
             case READER_POST_MARKED_AS_SEEN:
                 return "reader_mark_as_seen";
             case READER_POST_MARKED_AS_UNSEEN:
