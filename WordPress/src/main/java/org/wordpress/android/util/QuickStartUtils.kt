@@ -19,7 +19,6 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.text.HtmlCompat
 import org.wordpress.android.R
-import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.fluxc.Dispatcher
 import org.wordpress.android.fluxc.generated.SiteActionBuilder
@@ -235,7 +234,8 @@ class QuickStartUtils {
             dispatcher: Dispatcher,
             site: SiteModel,
             quickStartEvent: QuickStartEvent? = null,
-            context: Context?
+            context: Context?,
+            track: (Stat) -> Any
         ) {
             val siteId = site.id.toLong()
 
@@ -249,10 +249,11 @@ class QuickStartUtils {
             }
 
             quickStartStore.setDoneTask(siteId, task, true)
-            AnalyticsTracker.track(getTaskCompletedTracker(task))
+            track(getTaskCompletedTracker(task))
 
             if (isEveryQuickStartTaskDone(quickStartStore)) {
-                AnalyticsTracker.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                quickStartStore.setQuickStartCompleted(siteId, true)
+                track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             } else if (quickStartEvent?.task == task) {

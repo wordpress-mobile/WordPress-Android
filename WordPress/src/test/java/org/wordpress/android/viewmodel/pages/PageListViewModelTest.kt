@@ -22,7 +22,6 @@ import org.wordpress.android.fluxc.model.page.PageModel
 import org.wordpress.android.fluxc.model.page.PageStatus
 import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.MediaStore
-import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.ui.mysite.QuickStartRepository
 import org.wordpress.android.ui.pages.PageItem
@@ -34,6 +33,7 @@ import org.wordpress.android.ui.posts.AuthorFilterSelection
 import org.wordpress.android.ui.posts.AuthorFilterSelection.EVERYONE
 import org.wordpress.android.ui.posts.AuthorFilterSelection.ME
 import org.wordpress.android.util.LocaleManagerWrapper
+import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListState
 import org.wordpress.android.viewmodel.pages.PageListViewModel.PageListType.PUBLISHED
@@ -54,7 +54,7 @@ class PageListViewModelTest : BaseUnitTest() {
     @Mock lateinit var createUploadStateUseCase: PostModelUploadUiStateUseCase
     @Mock lateinit var createLabelsUseCase: CreatePageListItemLabelsUseCase
     @Mock lateinit var accountStore: AccountStore
-    @Mock lateinit var quickStartStore: QuickStartStore
+    @Mock lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
     @Mock lateinit var mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
     @Mock lateinit var quickStartRepository: QuickStartRepository
 
@@ -73,10 +73,10 @@ class PageListViewModelTest : BaseUnitTest() {
                 dispatcher,
                 localeManagerWrapper,
                 accountStore,
-                quickStartStore,
                 Dispatchers.Unconfined,
                 mySiteImprovementsFeatureConfig,
-                quickStartRepository
+                quickStartRepository,
+                quickStartUtilsWrapper
         )
 
         whenever(pageItemProgressUiStateUseCase.getProgressStateForPage(any())).thenReturn(

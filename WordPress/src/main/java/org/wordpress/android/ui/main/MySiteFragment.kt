@@ -149,7 +149,6 @@ import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PhotonUtils
 import org.wordpress.android.util.PhotonUtils.Quality.HIGH
 import org.wordpress.android.util.QuickStartUtils.Companion.addQuickStartFocusPointAboveTheView
-import org.wordpress.android.util.QuickStartUtils.Companion.completeTaskAndRemindNextOne
 import org.wordpress.android.util.QuickStartUtils.Companion.getNextUncompletedQuickStartTask
 import org.wordpress.android.util.QuickStartUtils.Companion.isQuickStartInProgress
 import org.wordpress.android.util.QuickStartUtils.Companion.removeQuickStartFocusPoint
@@ -159,6 +158,7 @@ import org.wordpress.android.util.SiteUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.ToastUtils.Duration.SHORT
 import org.wordpress.android.util.WPMediaUtils
+import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.config.BackupScreenFeatureConfig
 import org.wordpress.android.util.config.ConsolidatedMediaPickerFeatureConfig
@@ -215,6 +215,7 @@ class MySiteFragment : Fragment(),
     @Inject lateinit var jetpackCapabilitiesUseCase: JetpackCapabilitiesUseCase
     @Inject lateinit var siteUtilsWrapper: SiteUtilsWrapper
     @Inject lateinit var quickStartUtilsWrapper: QuickStartUtilsWrapper
+    @Inject lateinit var analyticsTrackerWrapper: AnalyticsTrackerWrapper
     @Inject @Named(UI_THREAD) lateinit var uiDispatcher: CoroutineDispatcher
     @Inject @Named(BG_THREAD) lateinit var bgDispatcher: CoroutineDispatcher
     lateinit var uiScope: CoroutineScope
@@ -309,15 +310,16 @@ class MySiteFragment : Fragment(),
     private fun completeQuickStartStepsIfNeeded() {
         selectedSite?.let {
             if (it.showOnFront == ShowOnFront.POSTS.value) {
-                completeTaskAndRemindNextOne(quickStartStore,
+                quickStartUtilsWrapper.completeTaskAndRemindNextOne(
                         EDIT_HOMEPAGE,
-                        dispatcher,
                         it,
                         null,
-                        requireContext())
+                        requireContext()
+                )
             }
         }
     }
+
     private fun showQuickStartNoticeIfNecessary() {
         if (!isQuickStartInProgress(quickStartStore) || !AppPrefs.isQuickStartNoticeRequired()) {
             return
@@ -1503,10 +1505,7 @@ class MySiteFragment : Fragment(),
                             activeTutorialPrompt != null &&
                             activeTutorialPrompt!!.task == quickStartTask
             )
-            completeTaskAndRemindNextOne(
-                    quickStartStore, quickStartTask, dispatcher,
-                    site, context = requireContext()
-            )
+            quickStartUtilsWrapper.completeTaskAndRemindNextOne(quickStartTask, site, context = requireContext())
             // We update completed tasks counter onResume, but UPLOAD_SITE_ICON can be completed without navigating
             // away from the activity, so we are updating counter here
             if (quickStartTask == UPLOAD_SITE_ICON) {

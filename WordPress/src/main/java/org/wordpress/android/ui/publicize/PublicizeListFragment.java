@@ -55,8 +55,6 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
     private QuickStartEvent mQuickStartEvent;
 
     @Inject AccountStore mAccountStore;
-    @Inject QuickStartStore mQuickStartStore;
-    @Inject Dispatcher mDispatcher;
     @Inject QuickStartUtilsWrapper mQuickStartUtilsWrapper;
     @Inject QuickStartRepository mQuickStartRepository;
     @Inject MySiteImprovementsFeatureConfig mMySiteImprovementsFeatureConfig;
@@ -236,8 +234,9 @@ public class PublicizeListFragment extends PublicizeBaseFragment {
                     if (mMySiteImprovementsFeatureConfig.isEnabled()) {
                         mQuickStartRepository.completeTask(ENABLE_POST_SHARING);
                     } else {
-                        QuickStartUtils.completeTaskAndRemindNextOne(mQuickStartStore, ENABLE_POST_SHARING,
-                                mDispatcher, mSite, mQuickStartEvent, getContext());
+                        mQuickStartUtilsWrapper
+                                .completeTaskAndRemindNextOne(ENABLE_POST_SHARING, mSite, mQuickStartEvent,
+                                        getContext());
                     }
                     if (getView() != null) {
                         QuickStartUtils.removeQuickStartFocusPoint((ViewGroup) getView());
