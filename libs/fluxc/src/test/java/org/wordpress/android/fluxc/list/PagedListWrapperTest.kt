@@ -163,14 +163,12 @@ class PagedListWrapperTest {
 
     private fun triggerOnListChanged(
         causeOfListChange: CauseOfListChange = FIRST_PAGE_FETCHED,
-        totalDuration: Long? = null,
         error: ListError? = null
     ) {
         val pagedListWrapper = createPagedListWrapper()
         val event = OnListChanged(
                 listDescriptors = listOf(mockListDescriptor),
                 causeOfChange = causeOfListChange,
-                totalDuration = totalDuration,
                 error = error
         )
         pagedListWrapper.onListChanged(event)
