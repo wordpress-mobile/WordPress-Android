@@ -8,6 +8,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -19,6 +20,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.preference.PreferenceManager;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -223,6 +225,7 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
         if (savedInstanceState != null) {
             mTappedMediaPredicate = savedInstanceState.getParcelable(ATTR_TAPPED_MEDIA_PREDICATE);
         }
+
     }
 
     @Override
@@ -419,6 +422,11 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
             mHideActionBarOnSoftKeyboardUp = true;
             hideActionBarIfNeeded();
         }
+
+        if (isEmptyPost() && !hasSeenTryBlockEditorDialog()) {
+            showTryBlockEditorDialog();
+        }
+
 
         addOverlayToGifs();
         updateFailedAndUploadingMedia();
@@ -2378,4 +2386,32 @@ public class AztecEditorFragment extends EditorFragmentAbstract implements
     public void disableHWAcceleration() {
         mFragmentView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
     }
+
+    /**
+     * Methods for showing Classic Editor Deprecation notice
+     */
+    private boolean isEmptyPost() {
+        boolean isEmpty = TextUtils.isEmpty(mTitle.getText())
+                          && TextUtils.isEmpty(mContent.getText());
+        return isEmpty;
+    }
+
+    private boolean hasSeenTryBlockEditorDialog() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        boolean hasSeen = prefs.getBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice)
+                , false);
+        return hasSeen;
+    }
+
+    private void showTryBlockEditorDialog() {
+        MaterialAlertDialogBuilder builder = new MaterialAlertDialogBuilder(getActivity());
+        builder.setTitle(getString(R.string.dialog_title_try_block_editor));
+        builder.setMessage(getString(R.string.dialog_body_try_block_editor));
+        builder.setNegativeButton(getString(R.string.dialog_dismiss_try_block_editor), null);
+        builder.show();
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getContext());
+        prefs.edit().putBoolean(getString(R.string.pref_key_seen_classic_editor_deprecation_notice), true).apply();
+    }
+
 }
