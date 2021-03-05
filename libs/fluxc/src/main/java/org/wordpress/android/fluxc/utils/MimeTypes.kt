@@ -132,7 +132,7 @@ class MimeTypes {
                     listOf(Subtype.EXCEL, Subtype.X_EXCEL, Subtype.VND_MS_EXCEL, Subtype.X_MS_EXCEL),
                     listOf("xls")
             ),
-            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx")),
+            MimeType(APPLICATION, Subtype.XLSX, listOf("xlsx"))
     )
 
     private val documentTypes = wpComPaidAndSelfHostedDocumentTypes
