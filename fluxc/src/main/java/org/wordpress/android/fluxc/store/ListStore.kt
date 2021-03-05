@@ -258,11 +258,7 @@ class ListStore @Inject constructor(
             if (payload.loadedMore) CauseOfListChange.LOADED_MORE else CauseOfListChange.FIRST_PAGE_FETCHED
         }
 
-        val totalDuration = payload.requestStartTime?.let {
-            Calendar.getInstance().timeInMillis - it.timeInMillis
-        }
-
-        emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, totalDuration, payload.error))
+        emitChange(OnListChanged(listOf(payload.listDescriptor), causeOfChange, payload.error))
         handleListStateChange(payload.listDescriptor, newState, payload.error)
     }
 
@@ -361,7 +357,6 @@ class ListStore @Inject constructor(
     class OnListChanged(
         val listDescriptors: List<ListDescriptor>,
         val causeOfChange: CauseOfListChange,
-        val totalDuration: Long?,
         error: ListError?
     ) : Store.OnChanged<ListError>() {
         enum class CauseOfListChange {
