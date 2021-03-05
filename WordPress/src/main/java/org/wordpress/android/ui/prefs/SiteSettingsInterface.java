@@ -70,7 +70,7 @@ import javax.inject.Inject;
  * - Comment Sort Order
  * - Comment Threading
  * - Comment Paging
- * - Comment User Whitelist
+ * - Comment User Allowlist
  * - Comment Link Limit
  * - Comment Moderation Hold Filter
  * - Comment Blacklist Filter
@@ -456,7 +456,7 @@ public abstract class SiteSettingsInterface {
         return mSettings.commentsRequireUserAccount;
     }
 
-    public boolean getUseCommentWhitelist() {
+    public boolean getUseCommentAllowlist() {
         return mSettings.commentAutoApprovalKnownUsers;
     }
 
@@ -486,8 +486,8 @@ public abstract class SiteSettingsInterface {
         return getKeysDescription(getBlacklistKeys().size());
     }
 
-    public @NonNull String getJetpackProtectWhitelistSummary() {
-        return getKeysDescription(getJetpackWhitelistKeys().size());
+    public @NonNull String getJetpackProtectAllowlistSummary() {
+        return getKeysDescription(getJetpackAllowlistKeys().size());
     }
 
     public String getSharingLabel() {
@@ -649,13 +649,13 @@ public abstract class SiteSettingsInterface {
         mJpSettings.jetpackProtectEnabled = enabled;
     }
 
-    public @NonNull List<String> getJetpackWhitelistKeys() {
-        return mJpSettings.jetpackProtectWhitelist;
+    public @NonNull List<String> getJetpackAllowlistKeys() {
+        return mJpSettings.jetpackProtectAllowlist;
     }
 
-    public void setJetpackWhitelistKeys(@NonNull List<String> whitelistKeys) {
-        mJpSettings.jetpackProtectWhitelist.clear();
-        mJpSettings.jetpackProtectWhitelist.addAll(whitelistKeys);
+    public void setJetpackAllowlistKeys(@NonNull List<String> allowlistKeys) {
+        mJpSettings.jetpackProtectAllowlist.clear();
+        mJpSettings.jetpackProtectAllowlist.addAll(allowlistKeys);
     }
 
     public void enableJetpackSsoMatchEmail(boolean enabled) {
@@ -829,8 +829,8 @@ public abstract class SiteSettingsInterface {
         mSettings.commentsRequireUserAccount = required;
     }
 
-    public void setUseCommentWhitelist(boolean useWhitelist) {
-        mSettings.commentAutoApprovalKnownUsers = useWhitelist;
+    public void setUseCommentAllowlist(boolean useAllowlist) {
+        mSettings.commentAutoApprovalKnownUsers = useAllowlist;
     }
 
     public void setMultipleLinks(int count) {

@@ -428,13 +428,13 @@
                     app:longClickHint="@string/site_settings_paging_hint" />
 
                 <org.wordpress.android.ui.prefs.DetailListPreference
-                    android:id="@+id/pref_whitelist"
+                    android:id="@+id/pref_allowlist"
                     android:entries="@array/site_settings_auto_approve_entries"
                     android:entryValues="@array/site_settings_auto_approve_values"
-                    android:key="@string/pref_key_site_whitelist"
-                    android:title="@string/site_settings_whitelist_title"
+                    android:key="@string/pref_key_site_allowlist"
+                    android:title="@string/site_settings_allowlist_title"
                     app:entryDetails="@array/site_settings_auto_approve_details"
-                    app:longClickHint="@string/site_settings_whitelist_hint" />
+                    app:longClickHint="@string/site_settings_allowlist_hint" />
 
                 <org.wordpress.android.ui.prefs.WPPreference
                     android:id="@+id/pref_multiple_links"
@@ -498,10 +498,10 @@
                     android:title="@string/jetpack_prevent_brute_force_title" />
 
                 <org.wordpress.android.ui.prefs.WPPreference
-                    android:id="@+id/pref_brute_force_whitelist"
+                    android:id="@+id/pref_brute_force_allowlist"
                     android:dependency="@string/pref_key_jetpack_prevent_brute_force"
-                    android:key="@string/pref_key_jetpack_brute_force_whitelist"
-                    android:title="@string/jetpack_brute_force_whitelist_title" />
+                    android:key="@string/pref_key_jetpack_brute_force_allowlist"
+                    android:title="@string/jetpack_brute_force_allowlist_title" />
 
             </PreferenceCategory>
 

@@ -53,7 +53,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String COMMENT_MODERATION_KEY = "comment_moderation";
     private static final String REQUIRE_IDENTITY_KEY = "require_name_email";
     private static final String REQUIRE_USER_ACCOUNT_KEY = "comment_registration";
-    private static final String WHITELIST_KNOWN_USERS_KEY = "comment_whitelist";
+    private static final String ALLOWLIST_KNOWN_USERS_KEY = "comment_whitelist";
     private static final String MAX_LINKS_KEY = "comment_max_links";
     private static final String MODERATION_KEYS_KEY = "moderation_keys";
     private static final String BLACKLIST_KEYS_KEY = "blacklist_keys";
@@ -65,7 +65,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     private static final String TWITTER_USERNAME_KEY = "twitter_via";
     private static final String JP_MONITOR_EMAIL_NOTES_KEY = "email_notifications";
     private static final String JP_MONITOR_WP_NOTES_KEY = "wp_note_notifications";
-    private static final String JP_PROTECT_WHITELIST_KEY = "jetpack_protect_whitelist";
+    private static final String JP_PROTECT_ALLOWLIST_KEY = "jetpack_protect_whitelist";
     // Jetpack modules
     private static final String SERVE_IMAGES_FROM_OUR_SERVERS = "photon";
     private static final String SERVE_STATIC_FILES_FROM_OUR_SERVERS = "photon-cdn";
@@ -257,17 +257,17 @@ class WPComSiteSettings extends SiteSettingsInterface {
                 mRemoteJpSettings.ssoRequireTwoFactor = data.optBoolean("jetpack_sso_require_two_step", false);
                 mRemoteJpSettings.commentLikes = data.optBoolean(COMMENT_LIKES, false);
 
-                JSONObject jetpackProtectWhitelist = data.optJSONObject("jetpack_protect_global_whitelist");
-                if (jetpackProtectWhitelist != null) {
-                    // clear existing whitelist entries before adding items from response
-                    mRemoteJpSettings.jetpackProtectWhitelist.clear();
+                JSONObject jetpackProtectAllowlist = data.optJSONObject("jetpack_protect_global_whitelist");
+                if (jetpackProtectAllowlist != null) {
+                    // clear existing allowlist entries before adding items from response
+                    mRemoteJpSettings.jetpackProtectAllowlist.clear();
 
-                    JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
-                    if (whitelistItems != null) {
-                        for (int i = 0; i < whitelistItems.length(); ++i) {
-                            String item = whitelistItems.optString(i, "");
-                            if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                                mRemoteJpSettings.jetpackProtectWhitelist.add(item);
+                    JSONArray allowlistItems = jetpackProtectAllowlist.optJSONArray("local");
+                    if (allowlistItems != null) {
+                        for (int i = 0; i < allowlistItems.length(); ++i) {
+                            String item = allowlistItems.optString(i, "");
+                            if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectAllowlist.contains(item)) {
+                                mRemoteJpSettings.jetpackProtectAllowlist.add(item);
                             }
                         }
                     }
@@ -275,8 +275,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
 
                 mJpSettings.monitorActive = mRemoteJpSettings.monitorActive;
                 mJpSettings.jetpackProtectEnabled = mRemoteJpSettings.jetpackProtectEnabled;
-                mJpSettings.jetpackProtectWhitelist.clear();
-                mJpSettings.jetpackProtectWhitelist.addAll(mRemoteJpSettings.jetpackProtectWhitelist);
+                mJpSettings.jetpackProtectAllowlist.clear();
+                mJpSettings.jetpackProtectAllowlist.addAll(mRemoteJpSettings.jetpackProtectAllowlist);
                 mJpSettings.ssoActive = mRemoteJpSettings.ssoActive;
                 mJpSettings.ssoMatchEmail = mRemoteJpSettings.ssoMatchEmail;
                 mJpSettings.ssoRequireTwoFactor = mRemoteJpSettings.ssoRequireTwoFactor;
@@ -445,8 +445,8 @@ class WPComSiteSettings extends SiteSettingsInterface {
                         AppLog.d(AppLog.T.API, "Jetpack settings updated");
                         mRemoteJpSettings.monitorActive = sentJpData.monitorActive;
                         mRemoteJpSettings.jetpackProtectEnabled = sentJpData.jetpackProtectEnabled;
-                        mRemoteJpSettings.jetpackProtectWhitelist.clear();
-                        mRemoteJpSettings.jetpackProtectWhitelist.addAll(sentJpData.jetpackProtectWhitelist);
+                        mRemoteJpSettings.jetpackProtectAllowlist.clear();
+                        mRemoteJpSettings.jetpackProtectAllowlist.addAll(sentJpData.jetpackProtectAllowlist);
                         mRemoteJpSettings.ssoActive = sentJpData.ssoActive;
                         mRemoteJpSettings.ssoMatchEmail = sentJpData.ssoMatchEmail;
                         mRemoteJpSettings.ssoRequireTwoFactor = sentJpData.ssoRequireTwoFactor;
@@ -681,7 +681,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
         mRemoteSettings.commentApprovalRequired = settingsObject.optBoolean(COMMENT_MODERATION_KEY, false);
         mRemoteSettings.commentsRequireIdentity = settingsObject.optBoolean(REQUIRE_IDENTITY_KEY, false);
         mRemoteSettings.commentsRequireUserAccount = settingsObject.optBoolean(REQUIRE_USER_ACCOUNT_KEY, true);
-        mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(WHITELIST_KNOWN_USERS_KEY, false);
+        mRemoteSettings.commentAutoApprovalKnownUsers = settingsObject.optBoolean(ALLOWLIST_KNOWN_USERS_KEY, false);
         mRemoteSettings.maxLinks = settingsObject.optInt(MAX_LINKS_KEY, 0);
         mRemoteSettings.holdForModeration = new ArrayList<>();
         mRemoteSettings.blacklist = new ArrayList<>();
@@ -720,14 +720,14 @@ class WPComSiteSettings extends SiteSettingsInterface {
             mRemoteSettings.sortCommentsBy = DESCENDING_SORT;
         }
 
-        JSONObject jetpackProtectWhitelist = settingsObject.optJSONObject(JP_PROTECT_WHITELIST_KEY);
-        if (jetpackProtectWhitelist != null) {
-            JSONArray whitelistItems = jetpackProtectWhitelist.optJSONArray("local");
-            if (whitelistItems != null) {
-                for (int i = 0; i < whitelistItems.length(); ++i) {
-                    String item = whitelistItems.optString(i, "");
-                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectWhitelist.contains(item)) {
-                        mRemoteJpSettings.jetpackProtectWhitelist.add(item);
+        JSONObject jetpackProtectAllowlist = settingsObject.optJSONObject(JP_PROTECT_ALLOWLIST_KEY);
+        if (jetpackProtectAllowlist != null) {
+            JSONArray allowlistItems = jetpackProtectAllowlist.optJSONArray("local");
+            if (allowlistItems != null) {
+                for (int i = 0; i < allowlistItems.length(); ++i) {
+                    String item = allowlistItems.optString(i, "");
+                    if (!item.isEmpty() && !mRemoteJpSettings.jetpackProtectAllowlist.contains(item)) {
+                        mRemoteJpSettings.jetpackProtectAllowlist.add(item);
                     }
                 }
             }
@@ -741,7 +741,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
     }
 
     /**
-     * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Whitelist)
+     * Need to use JSONObject's instead of HashMap<String, String> to serialize array values (Jetpack Allowlist)
      */
     private JSONObject serializeWpComParamsToJSONObject() throws JSONException {
         JSONObject params = new JSONObject();
@@ -816,7 +816,7 @@ class WPComSiteSettings extends SiteSettingsInterface {
             params.put(REQUIRE_USER_ACCOUNT_KEY, String.valueOf(mSettings.commentsRequireUserAccount));
         }
         if (mSettings.commentAutoApprovalKnownUsers != mRemoteSettings.commentAutoApprovalKnownUsers) {
-            params.put(WHITELIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
+            params.put(ALLOWLIST_KNOWN_USERS_KEY, String.valueOf(mSettings.commentAutoApprovalKnownUsers));
         }
         if (mSettings.maxLinks != mRemoteSettings.maxLinks) {
             params.put(MAX_LINKS_KEY, String.valueOf(mSettings.maxLinks));
@@ -918,9 +918,9 @@ class WPComSiteSettings extends SiteSettingsInterface {
         if (mJpSettings.jetpackProtectEnabled != mRemoteJpSettings.jetpackProtectEnabled) {
             params.put("protect", mJpSettings.jetpackProtectEnabled);
         }
-        if (!mJpSettings.whitelistMatches(mRemoteJpSettings.jetpackProtectWhitelist)) {
-            String whitelistArray = TextUtils.join(",", mJpSettings.jetpackProtectWhitelist);
-            params.put("jetpack_protect_global_whitelist", whitelistArray);
+        if (!mJpSettings.allowlistMatches(mRemoteJpSettings.jetpackProtectAllowlist)) {
+            String allowlistArray = TextUtils.join(",", mJpSettings.jetpackProtectAllowlist);
+            params.put("jetpack_protect_global_whitelist", allowlistArray);
         }
         if (mJpSettings.ssoActive != mRemoteJpSettings.ssoActive) {
             params.put("sso", mJpSettings.ssoActive);

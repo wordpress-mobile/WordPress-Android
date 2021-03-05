@@ -51,7 +51,7 @@ public class SiteSettingsModel {
     private static final String MANUAL_APPROVAL_COLUMN_NAME = "manualApproval";
     private static final String IDENTITY_REQUIRED_COLUMN_NAME = "identityRequired";
     private static final String USER_ACCOUNT_REQUIRED_COLUMN_NAME = "userAccountRequired";
-    private static final String WHITELIST_COLUMN_NAME = "whitelist";
+    private static final String ALLOWLIST_COLUMN_NAME = "whitelist";
     private static final String MODERATION_KEYS_COLUMN_NAME = "moderationKeys";
     private static final String BLACKLIST_KEYS_COLUMN_NAME = "blacklistKeys";
     private static final String SHARING_LABEL_COLUMN_NAME = "sharingLabel";
@@ -137,7 +137,7 @@ public class SiteSettingsModel {
             + MANUAL_APPROVAL_COLUMN_NAME + " BOOLEAN, "
             + IDENTITY_REQUIRED_COLUMN_NAME + " BOOLEAN, "
             + USER_ACCOUNT_REQUIRED_COLUMN_NAME + " BOOLEAN, "
-            + WHITELIST_COLUMN_NAME + " BOOLEAN, "
+            + ALLOWLIST_COLUMN_NAME + " BOOLEAN, "
             + MODERATION_KEYS_COLUMN_NAME + " TEXT, "
             + BLACKLIST_KEYS_COLUMN_NAME + " TEXT"
             + ");";
@@ -357,7 +357,7 @@ public class SiteSettingsModel {
         commentApprovalRequired = getBooleanFromCursor(cursor, MANUAL_APPROVAL_COLUMN_NAME);
         commentsRequireIdentity = getBooleanFromCursor(cursor, IDENTITY_REQUIRED_COLUMN_NAME);
         commentsRequireUserAccount = getBooleanFromCursor(cursor, USER_ACCOUNT_REQUIRED_COLUMN_NAME);
-        commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, WHITELIST_COLUMN_NAME);
+        commentAutoApprovalKnownUsers = getBooleanFromCursor(cursor, ALLOWLIST_COLUMN_NAME);
         startOfWeek = getStringFromCursor(cursor, START_OF_WEEK_COLUMN_NAME);
         dateFormat = getStringFromCursor(cursor, DATE_FORMAT_COLUMN_NAME);
         timeFormat = getStringFromCursor(cursor, TIME_FORMAT_COLUMN_NAME);
@@ -449,7 +449,7 @@ public class SiteSettingsModel {
         values.put(MANUAL_APPROVAL_COLUMN_NAME, commentApprovalRequired);
         values.put(IDENTITY_REQUIRED_COLUMN_NAME, commentsRequireIdentity);
         values.put(USER_ACCOUNT_REQUIRED_COLUMN_NAME, commentsRequireUserAccount);
-        values.put(WHITELIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
+        values.put(ALLOWLIST_COLUMN_NAME, commentAutoApprovalKnownUsers);
         values.put(START_OF_WEEK_COLUMN_NAME, startOfWeek);
         values.put(DATE_FORMAT_COLUMN_NAME, dateFormat);
         values.put(TIME_FORMAT_COLUMN_NAME, timeFormat);
