@@ -16,4 +16,8 @@ interface LayoutPickerTracker {
     fun trackNoNetworkErrorShown(message: String)
 
     fun trackErrorShown(message: String)
+
+    fun filterSelected(filter: String, selectedFilters: List<String>)
+
+    fun filterDeselected(filter: String, selectedFilters: List<String>)
 }

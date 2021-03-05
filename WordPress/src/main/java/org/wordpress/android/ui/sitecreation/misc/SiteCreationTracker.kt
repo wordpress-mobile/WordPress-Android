@@ -5,10 +5,13 @@ import org.wordpress.android.ui.layoutpicker.LayoutPickerTracker
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.INTERNET_UNAVAILABLE_ERROR
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationErrorType.UNKNOWN
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.CHOSEN_DOMAIN
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.FILTER
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.LOCATION
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.PREVIEW_MODE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEARCH_TERM
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_ID
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SEGMENT_NAME
+import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.SELECTED_FILTERS
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.TEMPLATE
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker.PROPERTY.THUMBNAIL_MODE
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
@@ -22,6 +25,7 @@ enum class SiteCreationErrorType {
 }
 
 private const val DESIGN_ERROR_CONTEXT = "design"
+private const val SITE_CREATION_LOCATION = "site_creation"
 
 @Singleton
 class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapper) : LayoutPickerTracker {
@@ -32,7 +36,10 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
         CHOSEN_DOMAIN("chosen_domain"),
         SEARCH_TERM("search_term"),
         THUMBNAIL_MODE("thumbnail_mode"),
-        PREVIEW_MODE("preview_mode")
+        PREVIEW_MODE("preview_mode"),
+        LOCATION("location"),
+        FILTER("filter"),
+        SELECTED_FILTERS("selected_filters")
     }
 
     private var designSelectionSkipped: Boolean = false
@@ -205,4 +212,26 @@ class SiteCreationTracker @Inject constructor(val tracker: AnalyticsTrackerWrapp
             trackErrorShown(DESIGN_ERROR_CONTEXT, INTERNET_UNAVAILABLE_ERROR, message)
 
     override fun trackErrorShown(message: String) = trackErrorShown(DESIGN_ERROR_CONTEXT, UNKNOWN, message)
+
+    override fun filterSelected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_SELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
+    }
+
+    override fun filterDeselected(filter: String, selectedFilters: List<String>) {
+        tracker.track(
+                AnalyticsTracker.Stat.CATEGORY_FILTER_DESELECTED,
+                mapOf(
+                        LOCATION.key to SITE_CREATION_LOCATION,
+                        FILTER.key to filter,
+                        SELECTED_FILTERS.key to selectedFilters.joinToString()
+                )
+        )
+    }
 }

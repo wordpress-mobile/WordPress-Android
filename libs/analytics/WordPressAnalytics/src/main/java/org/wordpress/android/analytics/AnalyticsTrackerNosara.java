@@ -1412,6 +1412,10 @@ public class AnalyticsTrackerNosara extends Tracker {
                 return "layout_picker_preview_viewed";
             case LAYOUT_PICKER_ERROR_SHOWN:
                 return "layout_picker_error_shown";
+            case CATEGORY_FILTER_SELECTED:
+                return "category_filter_selected";
+            case CATEGORY_FILTER_DESELECTED:
+                return "category_filter_deselected";
             case SITE_CREATED:
                 // This stat is part of a funnel that provides critical information.  Before
                 // making ANY modification to this stat please refer to: p4qSXL-35X-p2
