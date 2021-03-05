@@ -36,7 +36,6 @@ import org.wordpress.android.fluxc.store.ListStore.OnListChanged.CauseOfListChan
 import org.wordpress.android.fluxc.tools.CoroutineEngine
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.DateTimeUtils
-import java.util.Calendar
 import java.util.Date
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -415,7 +414,6 @@ class ListStore @Inject constructor(
         val remoteItemIds: List<Long>,
         val loadedMore: Boolean,
         val canLoadMore: Boolean,
-        val requestStartTime: Calendar?,
         error: ListError?
     ) : Payload<ListError>() {
         init {
