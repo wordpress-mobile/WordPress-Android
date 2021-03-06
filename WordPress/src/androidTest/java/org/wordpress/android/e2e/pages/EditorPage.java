@@ -49,6 +49,7 @@ public class EditorPage {
     public EditorPage() {
         onView(withText("Dismiss")).withFailureHandler(new FailureHandler() {
             @Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+                // Deprecation Dialog only shows up the first time this test is run because of SharedPreference
             }
         }).check(matches(isDisplayed())).perform(click());
 
