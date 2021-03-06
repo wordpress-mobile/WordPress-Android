@@ -26,6 +26,7 @@
 
 /sites/$site/block-layouts
 /common-block-layouts
+/common-starter-site-designs
 
 /sites/$site/xposts
 
