@@ -1,11 +1,15 @@
 package org.wordpress.android.e2e.pages;
 
+import android.view.View;
+
 import androidx.test.core.app.ApplicationProvider;
+import androidx.test.espresso.FailureHandler;
 import androidx.test.espresso.ViewInteraction;
 import androidx.test.espresso.action.ViewActions;
 
 import com.google.android.material.snackbar.SnackbarContentLayout;
 
+import org.hamcrest.Matcher;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
@@ -43,6 +47,11 @@ public class EditorPage {
 
 
     public EditorPage() {
+        onView(withText("Dismiss")).withFailureHandler(new FailureHandler() {
+            @Override public void handle(Throwable error, Matcher<View> viewMatcher) {
+            }
+        }).check(matches(isDisplayed())).perform(click());
+
         editor.check(matches(isDisplayed()));
     }
 
