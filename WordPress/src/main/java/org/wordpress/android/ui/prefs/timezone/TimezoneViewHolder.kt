@@ -13,6 +13,7 @@ class TimezoneViewHolder(
         binding.apply {
             timeZone.text = timezone.label
             zoneOffset.text = timezone.offset
+            zoneTime.text = timezone.time
             itemTimeZone.setOnClickListener {
                 onClick(timezone)
             }

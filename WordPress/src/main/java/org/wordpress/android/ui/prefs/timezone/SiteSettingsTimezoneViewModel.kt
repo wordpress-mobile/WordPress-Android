@@ -1,9 +1,5 @@
 package org.wordpress.android.ui.prefs.timezone
 
-import android.content.Context
-import android.os.Build
-import android.os.Build.VERSION_CODES
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -12,9 +8,11 @@ import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneHeader
 import org.wordpress.android.ui.prefs.timezone.TimezonesList.TimezoneItem
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T.SETTINGS
-import java.text.SimpleDateFormat
-import java.time.Instant
-import java.util.Date
+import java.time.DateTimeException
+import java.time.ZoneId
+import java.time.ZonedDateTime
+import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle.FULL
 import java.util.Locale
 import java.util.TimeZone
 import javax.inject.Inject
@@ -63,38 +61,10 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
         _timezones.postValue(timezonesList)
     }
 
-    fun getTimezones(context: Context) {
+    fun getTimezones() {
         timezonesList.clear()
-        if (Build.VERSION.SDK_INT >= VERSION_CODES.O) displayTimzonesWithOffset() else displayTimezones()
 
-        _timezones.postValue(timezonesList)
-    }
-
-    private fun displayTimezones() {
-        val zoneIds = TimeZone.getAvailableIDs().asList()
-
-        val zones = zoneIds.groupBy {
-            it.split('/').first()
-        }.map {
-            timezonesList.add(TimezoneHeader(it.key))
-            it.value.map { zone ->
-                timezonesList.add(
-                        TimezoneItem(
-                                zone.split("/").last(),
-                                zone
-                        )
-                )
-            }
-        }
-
-        AppLog.d(SETTINGS, zones.toString())
-    }
-
-    @RequiresApi(VERSION_CODES.O)
-    private fun displayTimzonesWithOffset() {
-        val zoneIds = TimeZone.getAvailableIDs().asList()
-
-        val zones = zoneIds.groupBy {
+        TimeZone.getAvailableIDs().asList().groupBy {
             it.split('/').first()
         }.map {
             timezonesList.add(TimezoneHeader(it.key))
@@ -103,24 +73,36 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
                         TimezoneItem(
                                 zone.split("/").last(),
                                 zone,
-                                getZoneOffset(zone)
+                                getZoneOffset(zone),
+                                getTimeAtZone(zone)
                         )
                 )
             }
         }
 
-        AppLog.d(SETTINGS, zones.toString())
+        AppLog.d(SETTINGS, timezonesList.toString())
+
+        _timezones.postValue(timezonesList)
     }
 
-    @RequiresApi(VERSION_CODES.O)
     private fun getZoneOffset(zone: String): String {
-        val now = Instant.now()
-        val fmt = SimpleDateFormat("Z", Locale.getDefault())
+        val zoneId = ZoneId.of(zone)
+        val zoneDateTime = ZonedDateTime.now(zoneId)
+        val offset = zoneDateTime.offset
 
-        fmt.timeZone = TimeZone.getTimeZone(zone)
-        var offset: String = fmt.format(Date.from(now))
-        offset = offset.substring(0, 3) + ":" + offset.substring(3)
+        return "${zoneId.getDisplayName(FULL, Locale.getDefault())} (GMT$offset)"
+    }
 
-        return "${zone.split('/').first()} Time (GMT${offset})"
+    private fun getTimeAtZone(zone: String): String {
+        val dateTimeFormatter = DateTimeFormatter.ofPattern("h:mm a")
+        val zoneId = ZoneId.of(zone)
+        val zoneDateTime = ZonedDateTime.now(zoneId)
+
+        return try {
+            zoneDateTime.format(dateTimeFormatter)
+        } catch (e: DateTimeException) {
+            AppLog.d(SETTINGS, e.localizedMessage)
+            ""
+        }
     }
 }

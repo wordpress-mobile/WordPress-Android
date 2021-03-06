@@ -55,7 +55,7 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         setupUI()
         setupLiveData()
-        timezoneViewModel.getTimezones(requireContext())
+        timezoneViewModel.getTimezones()
     }
 
     private fun setupUI() {

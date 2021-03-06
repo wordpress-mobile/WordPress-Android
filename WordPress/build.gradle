@@ -93,6 +93,9 @@ android {
     // Gutenberg's dependency - react-native-video is using
     // Java API 1.8
     compileOptions {
+        //https://developer.android.com/studio/write/java8-support
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -196,6 +199,8 @@ androidExtensions {
 }
 
 dependencies {
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:1.1.5'
+
     implementation project(path:':libs:stories-android:stories')
     testImplementation project(path:':photoeditor')
     implementation project(path:':libs:image-editor::ImageEditor')
