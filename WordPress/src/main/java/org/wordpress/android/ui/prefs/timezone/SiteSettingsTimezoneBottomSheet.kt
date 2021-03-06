@@ -63,12 +63,21 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
             list.adapter = timezoneAdapter
             list.addItemDecoration(DividerItemDecoration(requireContext(), RecyclerView.VERTICAL))
 
+            searchInputLayout.editText?.onFocusChangeListener = View.OnFocusChangeListener { view, hasFocus ->
+                if (!hasFocus) {
+                    hideSearchKeyboard()
+                }
+            }
+
             searchInputLayout.editText?.doOnTextChanged { inputText, _, _, _ ->
                 timezoneViewModel.searchTimezones(inputText)
             }
 
             searchInputLayout.setEndIconOnClickListener {
+                searchInputLayout.editText?.text?.clear()
+                searchInputLayout.editText?.clearFocus()
                 timezoneViewModel.onSearchCancelled()
+                hideSearchKeyboard()
             }
         }
     }
@@ -88,7 +97,6 @@ class SiteSettingsTimezoneBottomSheet : BottomSheetDialogFragment() {
 
         timezoneViewModel.timezoneSearch.observe(viewLifecycleOwner, {
             timezoneAdapter.submitList(it)
-            hideSearchKeyboard()
         })
 
         timezoneViewModel.dismissWithError.observe(viewLifecycleOwner, {

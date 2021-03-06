@@ -4,8 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:padding="@dimen/margin_extra_large"
-    app:layout_constraintHeight_min="320dp">
+    android:padding="@dimen/margin_extra_large">
 
     <ProgressBar
         android:id="@+id/progress_view"
@@ -36,6 +35,7 @@
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/list"
+        android:minHeight="480dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="@dimen/margin_extra_extra_medium_large"
