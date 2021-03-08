@@ -184,6 +184,10 @@ android {
             enableSplit = false
         }
     }
+
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 // allows us to use cool things like @Parcelize annotations
