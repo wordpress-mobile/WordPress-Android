@@ -1,12 +1,11 @@
 package org.wordpress.android.ui.stats.refresh
 
 import android.animation.StateListAnimator
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -17,9 +16,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
@@ -53,9 +52,10 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         setHasOptionsMenu(true)
 
         val nonNullActivity = requireActivity()
+        val binding = StatsFragmentBinding.bind(requireView())
 
-        initializeViewModels(nonNullActivity, savedInstanceState == null, savedInstanceState)
-        initializeViews(nonNullActivity)
+        initializeViewModels(nonNullActivity, binding, savedInstanceState == null, savedInstanceState)
+        initializeViews(nonNullActivity, binding)
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
@@ -64,7 +64,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(activity: FragmentActivity) {
+    private fun initializeViews(activity: FragmentActivity, binding: StatsFragmentBinding) = with(binding) {
         statsPager.adapter = StatsPagerAdapter(activity, childFragmentManager)
         tabLayout.setupWithViewPager(statsPager)
         statsPager.pageMargin = resources.getDimensionPixelSize(R.dimen.margin_extra_large)
@@ -75,16 +75,18 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         }
     }
 
+    @SuppressLint("ClickableViewAccessibility")
     private fun initializeViewModels(
         activity: FragmentActivity,
+        binding: StatsFragmentBinding,
         isFirstStart: Boolean,
         savedInstanceState: Bundle?
-    ) {
+    ) = with(binding) {
         viewModel = ViewModelProvider(activity, viewModelFactory).get(StatsViewModel::class.java)
 
         viewModel.onRestoreInstanceState(savedInstanceState)
 
-        setupObservers(activity)
+        setupObservers(activity, binding)
 
         viewModel.start(activity.intent)
 
@@ -101,7 +103,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         }
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity, binding: StatsFragmentBinding) = with(binding) {
         viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -132,23 +134,23 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
         })
 
         viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed(
+            appBarLayout.postDelayed(
                     {
-                        if (app_bar_layout != null) {
-                            val originalStateListAnimator = app_bar_layout.stateListAnimator
+                        if (appBarLayout != null) {
+                            val originalStateListAnimator = appBarLayout.stateListAnimator
                             if (originalStateListAnimator != null) {
-                                app_bar_layout.setTag(
+                                appBarLayout.setTag(
                                         R.id.appbar_layout_original_animator_tag_key,
                                         originalStateListAnimator
                                 )
                             }
 
                             if (hasShadow == true) {
-                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
+                                appBarLayout.stateListAnimator = appBarLayout.getTag(
                                         R.id.appbar_layout_original_animator_tag_key
                                 ) as StateListAnimator
                             } else {
-                                app_bar_layout.stateListAnimator = null
+                                appBarLayout.stateListAnimator = null
                             }
                         }
                     },
@@ -167,7 +169,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
 
         viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
             event?.getContentIfNotHandled()?.let { hideToolbar ->
-                app_bar_layout.setExpanded(!hideToolbar, true)
+                appBarLayout.setExpanded(!hideToolbar, true)
             }
         })
 
@@ -194,7 +196,7 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
-        app_bar_layout.liftOnScrollTargetViewId = containerId
+        StatsFragmentBinding.bind(requireView()).appBarLayout.liftOnScrollTargetViewId = containerId
     }
 }
 
