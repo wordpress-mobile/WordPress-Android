@@ -3696,7 +3696,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onSend() {
-        System.out.println("ChatEditor.onSend");
+    public void onSend(@NotNull String content) {
+        mEditPostRepository.updateAsync(postModel -> {
+            postModel.setContent(postModel.getContent() + "\n" + content);
+            return true;
+        }, (postModel, result) -> {
+            if (result == UpdatePostResult.Updated.INSTANCE) {
+                mEditorFragment.setContent(postModel.getContent());
+            }
+            return null;
+        });
     }
 }

@@ -123,6 +123,7 @@ import org.wordpress.android.ui.posts.PrepublishingTagsFragment;
 import org.wordpress.android.ui.posts.PublishNotificationReceiver;
 import org.wordpress.android.ui.posts.SelectCategoriesActivity;
 import org.wordpress.android.ui.posts.adapters.AuthorSelectionAdapter;
+import org.wordpress.android.ui.posts.chat.ChatEditorFragment;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsFragment;
 import org.wordpress.android.ui.posts.services.AztecVideoLoader;
 import org.wordpress.android.ui.prefs.AccountSettingsFragment;
@@ -502,6 +503,8 @@ public interface AppComponent extends AndroidInjector<WordPress> {
     void inject(MediaGridAdapter object);
 
     void inject(PagesFragment object);
+
+    void inject(ChatEditorFragment object);
 
     void inject(PageListFragment object);
 

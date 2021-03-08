@@ -27,6 +27,7 @@ import org.wordpress.android.ui.posts.PrepublishingCategoriesViewModel;
 import org.wordpress.android.ui.posts.PrepublishingHomeViewModel;
 import org.wordpress.android.ui.posts.PrepublishingTagsViewModel;
 import org.wordpress.android.ui.posts.PrepublishingViewModel;
+import org.wordpress.android.ui.posts.chat.ChatEditorViewModel;
 import org.wordpress.android.ui.posts.editor.StorePostViewModel;
 import org.wordpress.android.ui.posts.prepublishing.PrepublishingPublishSettingsViewModel;
 import org.wordpress.android.ui.prefs.homepage.HomepageSettingsViewModel;
@@ -320,6 +321,11 @@ abstract class ViewModelModule {
     @IntoMap
     @ViewModelKey(HomePagePickerViewModel.class)
     abstract ViewModel hppViewModel(HomePagePickerViewModel viewModel);
+
+    @Binds
+    @IntoMap
+    @ViewModelKey(ChatEditorViewModel.class)
+    abstract ViewModel chatEditorViewModel(ChatEditorViewModel viewModel);
 
     @Binds
     @IntoMap

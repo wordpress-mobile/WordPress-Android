@@ -645,5 +645,5 @@
         @dimen/design_snackbar_padding_vertical
     </dimen>
 
-    <dimen name="editor_toolbar_height">44dp</dimen>
+    <dimen name="chat_editor_height">76dp</dimen>
 </resources>

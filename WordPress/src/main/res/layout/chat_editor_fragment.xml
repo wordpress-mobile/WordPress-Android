@@ -1,56 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_marginBottom="@dimen/editor_toolbar_height"
-    android:orientation="vertical">
+    android:layout_height="@dimen/chat_editor_height"
+    android:background="?attr/layoutPickerBackground"
+    android:orientation="horizontal">
 
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/margin_medium"
-        android:background="@drawable/modal_layout_picker_bottom_shadow" />
-
-    <LinearLayout
-        android:layout_width="match_parent"
+    <ImageButton
+        android:id="@+id/attachButton"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="?attr/layoutPickerBackground"
-        android:orientation="horizontal">
+        android:layout_gravity="center"
+        android:background="@color/transparent"
+        android:contentDescription="@string/gutenberg_native_add_image_or_video"
+        android:paddingEnd="@dimen/margin_extra_small"
+        android:paddingStart="@dimen/margin_small"
+        android:src="@drawable/ic_media_white_24dp"
+        android:tint="?attr/colorControlNormal" />
 
-        <ImageButton
-            android:id="@+id/attachButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/transparent"
-            android:contentDescription="@string/gutenberg_native_add_image_or_video"
-            android:paddingEnd="@dimen/margin_extra_small"
-            android:paddingStart="@dimen/margin_small"
-            android:src="@drawable/ic_media_white_24dp"
-            android:tint="?attr/colorControlNormal" />
+    <EditText
+        android:id="@+id/chatEditor"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:hint="@string/gutenberg_native_start_writing"
+        android:inputType="textCapSentences|textMultiLine"
+        android:paddingEnd="@dimen/margin_extra_small"
+        android:paddingStart="@dimen/margin_small"
+        android:scrollbars="vertical" />
 
-        <EditText
-            android:id="@+id/chatEditor"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/gutenberg_native_start_writing"
-            android:inputType="textCapSentences|textMultiLine"
-            android:maxLines="3"
-            android:paddingEnd="@dimen/margin_extra_small"
-            android:paddingStart="@dimen/margin_small"
-            android:scrollbars="vertical" />
-
-        <ImageButton
-            android:id="@+id/sendButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/transparent"
-            android:contentDescription="@string/gutenberg_native_start_writing"
-            android:paddingEnd="@dimen/margin_small"
-            android:paddingStart="@dimen/margin_extra_small"
-            android:src="@drawable/ic_send_white_24dp"
-            android:tint="?attr/colorControlNormal" />
-
-    </LinearLayout>
+    <ImageButton
+        android:id="@+id/sendButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:background="@color/transparent"
+        android:contentDescription="@string/gutenberg_native_start_writing"
+        android:paddingEnd="@dimen/margin_small"
+        android:paddingStart="@dimen/margin_extra_small"
+        android:src="@drawable/ic_send_white_24dp"
+        android:tint="?attr/colorControlNormal" />
 </LinearLayout>
