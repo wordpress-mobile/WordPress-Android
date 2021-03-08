@@ -184,9 +184,10 @@ class MediaPickerLauncher @Inject constructor(
         fragment.startActivityForResult(intent, RequestCodes.PHOTO_PICKER)
     }
 
-    fun showFilePicker(activity: Activity, canMultiselect: Boolean = true) {
+    fun showFilePicker(activity: Activity, canMultiselect: Boolean = true, site: SiteModel) {
         showFilePicker(
                 activity,
+                site,
                 canMultiselect,
                 mutableSetOf(IMAGE, VIDEO, AUDIO, DOCUMENT),
                 RequestCodes.FILE_LIBRARY,
@@ -194,9 +195,10 @@ class MediaPickerLauncher @Inject constructor(
         )
     }
 
-    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false) {
+    fun showAudioFilePicker(activity: Activity, canMultiselect: Boolean = false, site: SiteModel) {
         showFilePicker(
                 activity,
+                site,
                 canMultiselect,
                 mutableSetOf(AUDIO),
                 RequestCodes.AUDIO_LIBRARY,
@@ -206,6 +208,7 @@ class MediaPickerLauncher @Inject constructor(
 
     private fun showFilePicker(
         activity: Activity,
+        site: SiteModel,
         canMultiselect: Boolean = false,
         allowedTypes: Set<MediaType>,
         requestCode: Int,
@@ -234,7 +237,7 @@ class MediaPickerLauncher @Inject constructor(
                     requestCode
             )
         } else {
-            WPMediaUtils.launchFileLibrary(activity, canMultiselect, requestCode)
+            WPMediaUtils.launchFileLibrary(activity, canMultiselect, requestCode, site)
         }
     }
 
