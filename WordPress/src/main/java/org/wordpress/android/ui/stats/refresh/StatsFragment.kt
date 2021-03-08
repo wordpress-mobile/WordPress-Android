@@ -38,7 +38,7 @@ import javax.inject.Inject
 
 private val statsSections = listOf(INSIGHTS, DAYS, WEEKS, MONTHS, YEARS)
 
-class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
+class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewInitializedListener {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
@@ -48,13 +48,9 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
 
     private var restorePreviousSearch = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        setHasOptionsMenu(true)
-        return inflater.inflate(R.layout.stats_fragment, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setHasOptionsMenu(true)
 
         val nonNullActivity = requireActivity()
 
