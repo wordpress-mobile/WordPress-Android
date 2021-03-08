@@ -1519,10 +1519,12 @@ open class WellSqlConfig : DefaultWellConfig {
     }
 
     /**
-     * Detect when the database is downgraded in debug builds so we can recreate all the tables
+     * Detect when the database is downgraded in debug builds so we can recreate all the tables. Note that we
+     * hide this behind a BuildConfig flag as a protection against accidentally deleting the data (ie: we
+     * don't want this to ever be enabled for release builds by mistake).
      */
     override fun onDowngrade(db: SQLiteDatabase?, helper: WellTableManager?, oldVersion: Int, newVersion: Int) {
-        if (BuildConfig.DEBUG) {
+        if (BuildConfig.DEBUG && BuildConfig.WP_ENABLE_DATABASE_DOWNGRADE) {
             // note: don't call super() here because it throws an exception
             val toast = Toast.makeText(
                     context,
