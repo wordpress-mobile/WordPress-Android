@@ -1,5 +1,9 @@
 *** PLEASE FOLLOW THIS FORMAT: [<priority indicator, more stars = higher priority>] <description> [<PR URL>]
 
+17.0
+-----
+
+
 16.9
 -----
 * [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails and previews
