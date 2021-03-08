@@ -30,7 +30,7 @@ open class WellSqlConfig : DefaultWellConfig {
     annotation class AddOn
 
     override fun getDbVersion(): Int {
-        return 136 // TODO 138
+        return 138
     }
 
     override fun getDbName(): String {
