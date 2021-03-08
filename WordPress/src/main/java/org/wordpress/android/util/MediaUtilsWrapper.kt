@@ -4,6 +4,8 @@ import android.content.Context
 import android.net.Uri
 import dagger.Reusable
 import org.wordpress.android.editor.EditorMediaUtils
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.utils.MimeTypes.Plan
 import javax.inject.Inject
 
 /**
@@ -51,4 +53,6 @@ class MediaUtilsWrapper @Inject constructor(private val appContext: Context) {
     fun getExtensionForMimeType(mimeType: String?): String = MediaUtils.getExtensionForMimeType(mimeType)
 
     fun isFile(mediaUri: Uri): Boolean = MediaUtils.isFile(mediaUri)
+
+    fun getSitePlanForMimeTypes(site: SiteModel?): Plan = WPMediaUtils.getSitePlanForMimeTypes(site);
 }
