@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.jetpack.common.viewholders
 
-import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.ViewGroup.MarginLayoutParams
 import org.wordpress.android.databinding.JetpackBackupRestoreListSubheaderItemBinding
