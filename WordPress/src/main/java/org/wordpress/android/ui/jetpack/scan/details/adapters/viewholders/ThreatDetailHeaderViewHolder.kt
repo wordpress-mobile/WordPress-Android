@@ -1,18 +1,20 @@
 package org.wordpress.android.ui.jetpack.scan.details.adapters.viewholders
 
 import android.view.ViewGroup
-import kotlinx.android.synthetic.main.threat_details_list_header.*
-import org.wordpress.android.R
+import org.wordpress.android.databinding.ThreatDetailsListHeaderBinding
 import org.wordpress.android.ui.jetpack.common.JetpackListItemState
 import org.wordpress.android.ui.jetpack.common.viewholders.JetpackViewHolder
 import org.wordpress.android.ui.jetpack.scan.details.ThreatDetailsListItemState.ThreatDetailHeaderState
 import org.wordpress.android.ui.utils.UiHelpers
 
-class ThreatDetailHeaderViewHolder(private val uiHelpers: UiHelpers, parent: ViewGroup) : JetpackViewHolder(
-        R.layout.threat_details_list_header,
-        parent
+class ThreatDetailHeaderViewHolder(
+    private val uiHelpers: UiHelpers,
+    parent: ViewGroup
+) : JetpackViewHolder<ThreatDetailsListHeaderBinding>(
+        parent,
+        ThreatDetailsListHeaderBinding::inflate
 ) {
-    override fun onBind(itemUiState: JetpackListItemState) {
+    override fun onBind(itemUiState: JetpackListItemState) = with(binding) {
         val state = itemUiState as ThreatDetailHeaderState
         with(uiHelpers) {
             setTextOrHide(header, state.header)
