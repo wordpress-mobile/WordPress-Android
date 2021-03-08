@@ -60,4 +60,11 @@
 
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/chat_editor_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:orientation="vertical" />
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

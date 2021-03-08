@@ -644,4 +644,6 @@
     <dimen name="design_snackbar_padding_vertical_2lines" tools:ignore="MissingDefaultResource" tools:override="true">
         @dimen/design_snackbar_padding_vertical
     </dimen>
+
+    <dimen name="editor_toolbar_height">44dp</dimen>
 </resources>

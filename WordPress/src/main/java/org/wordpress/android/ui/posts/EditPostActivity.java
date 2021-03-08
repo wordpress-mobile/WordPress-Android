@@ -123,6 +123,8 @@ import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog;
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog.PrivateAtCookieProgressDialogOnDismissListener;
 import org.wordpress.android.ui.RequestCodes;
 import org.wordpress.android.ui.Shortcut;
+import org.wordpress.android.ui.posts.chat.ChatEditorFragment;
+import org.wordpress.android.ui.posts.chat.ChatEditorListener;
 import org.wordpress.android.ui.posts.editor.XPostsCapabilityChecker;
 import org.wordpress.android.ui.suggestion.SuggestionActivity;
 import org.wordpress.android.ui.gif.GifPickerActivity;
@@ -242,6 +244,7 @@ import javax.inject.Inject;
 import static org.wordpress.android.analytics.AnalyticsTracker.Stat.APP_REVIEWS_EVENT_INCREMENTED_BY_PUBLISHING_POST_OR_PAGE;
 import static org.wordpress.android.imageeditor.preview.PreviewImageFragment.PREVIEW_IMAGE_REDUCED_SIZE_FACTOR;
 import static org.wordpress.android.ui.history.HistoryDetailContainerFragment.KEY_REVISION;
+import static org.wordpress.android.ui.posts.chat.ChatEditorFragment.CHAT_EDITOR_FRAGMENT_TAG;
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
@@ -257,6 +260,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         PhotoPickerFragment.PhotoPickerListener,
         EditorPhotoPickerListener,
         EditorMediaListener,
+        ChatEditorListener,
         EditPostSettingsFragment.EditPostActivityHook,
         PostSettingsListDialogFragment.OnPostSettingsDialogFragmentListener,
         HistoryListFragment.HistoryItemClickInterface,
@@ -340,6 +344,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
 
     private EditorFragmentAbstract mEditorFragment;
     private EditPostSettingsFragment mEditPostSettingsFragment;
+    private ChatEditorFragment mChatEditorFragment;
     private EditorMediaUploadListener mEditorMediaUploadListener;
     private EditorPhotoPicker mEditorPhotoPicker;
 
@@ -1382,6 +1387,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
         int itemId = item.getItemId();
 
         if (itemId == android.R.id.home) {
+            showChatEditor(mShowGutenbergEditor);
             return handleBackPressed();
         }
 
@@ -1420,6 +1426,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
                 if (mEditPostSettingsFragment != null) {
                     mEditPostSettingsFragment.refreshViews();
                 }
+                showChatEditor(false);
                 ActivityUtils.hideKeyboard(this);
                 mViewPager.setCurrentItem(PAGE_SETTINGS);
             } else if (itemId == R.id.menu_secondary_action) {
@@ -2195,6 +2202,7 @@ public class EditPostActivity extends LocaleAwareActivity implements
             switch (position) {
                 case PAGE_CONTENT:
                     if (mShowGutenbergEditor) {
+                        showChatEditor(true);
                         // Enable gutenberg on the site & show the informative popup upon opening
                         // the GB editor the first time when the remote setting value is still null
                         setGutenbergEnabledIfNeeded();
@@ -3665,5 +3673,30 @@ public class EditPostActivity extends LocaleAwareActivity implements
     @Override
     public LiveData<DialogVisibility> getSavingInProgressDialogVisibility() {
         return mViewModel.getSavingInProgressDialogVisibility();
+    }
+
+    /**
+     * Chat Editor Methods
+     */
+
+    private void showChatEditor(Boolean chatEditorVisible) {
+        if (chatEditorVisible && mChatEditorFragment == null) {
+            mChatEditorFragment = ChatEditorFragment.Companion.newInstance(this);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.chat_editor_fragment_container, mChatEditorFragment, CHAT_EDITOR_FRAGMENT_TAG)
+                    .commit();
+        }
+        findViewById(R.id.chat_editor_fragment_container).setVisibility(chatEditorVisible ? View.VISIBLE : View.GONE);
+    }
+
+    @Override
+    public void onAddChatMedia() {
+        System.out.println("ChatEditor.onAddChatMedia");
+    }
+
+    @Override
+    public void onSend() {
+        System.out.println("ChatEditor.onSend");
     }
 }
