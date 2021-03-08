@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.discover.viewholders
 
+import android.view.GestureDetector
 import android.view.MotionEvent
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,6 +12,8 @@ import org.wordpress.android.ui.reader.discover.ReaderCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderCardUiState.ReaderInterestsCardUiState
 import org.wordpress.android.ui.reader.discover.ReaderInterestAdapter
 import org.wordpress.android.ui.utils.UiHelpers
+
+private const val Y_BUFFER = 10
 
 class ReaderInterestsCardViewHolder(
     uiHelpers: UiHelpers,
@@ -24,27 +27,20 @@ class ReaderInterestsCardViewHolder(
         }
     }
 
+    override fun onBind(uiState: ReaderCardUiState) {
+        uiState as ReaderInterestsCardUiState
+        setOnTouchItemListener()
+        (interests_list.adapter as ReaderInterestAdapter).update(uiState.interest)
+    }
+
     private fun setOnTouchItemListener() {
+        val gestureDetector = GestureDetector(interests_list.context, GestureListener())
         interests_list.addOnItemTouchListener(object : OnItemTouchListener {
             override fun onInterceptTouchEvent(recyclerView: RecyclerView, e: MotionEvent): Boolean {
-                val action = e.action
-                return if (recyclerView.canScrollHorizontally(RecyclerView.FOCUS_FORWARD)) {
-                    when (action) {
-                        MotionEvent.ACTION_MOVE -> recyclerView.parent
-                                .requestDisallowInterceptTouchEvent(true)
-                    }
-                    false
-                } else {
-                    when (action) {
-                        MotionEvent.ACTION_MOVE -> recyclerView.parent
-                                .requestDisallowInterceptTouchEvent(false)
-                    }
-                    recyclerView.removeOnItemTouchListener(this)
-                    true
-                }
+                return gestureDetector.onTouchEvent(e)
             }
 
-            override fun onTouchEvent(rv: RecyclerView, e: MotionEvent) {
+            override fun onTouchEvent(recyclerView: RecyclerView, e: MotionEvent) {
                 // NO OP
             }
 
@@ -54,9 +50,26 @@ class ReaderInterestsCardViewHolder(
         })
     }
 
-    override fun onBind(uiState: ReaderCardUiState) {
-        uiState as ReaderInterestsCardUiState
-        setOnTouchItemListener()
-        (interests_list.adapter as ReaderInterestAdapter).update(uiState.interest)
+    private inner class GestureListener : GestureDetector.SimpleOnGestureListener() {
+        /**
+         * Capture the DOWN as soon as it's detected to prevent the viewPager from intercepting touch events
+         * We need to do this immediately, because if we don't, then the next move event could potentially
+         * trigger the viewPager to switch tabs
+         */
+        override fun onDown(e: MotionEvent?): Boolean {
+            interests_list.parent.requestDisallowInterceptTouchEvent(true)
+            return super.onDown(e)
+        }
+
+        override fun onScroll(e1: MotionEvent?, e2: MotionEvent?, distanceX: Float, distanceY: Float): Boolean {
+            if (kotlin.math.abs(distanceX) > kotlin.math.abs(distanceY)) {
+                // Detected a horizontal scroll, prevent the viewpager from switching tabs
+                interests_list.parent.requestDisallowInterceptTouchEvent(true)
+            } else if (kotlin.math.abs(distanceY) > Y_BUFFER) {
+                // Detected a vertical scroll allow the viewpager to switch tabs
+                interests_list.parent.requestDisallowInterceptTouchEvent(false)
+            }
+            return super.onScroll(e1, e2, distanceX, distanceY)
+        }
     }
 }
