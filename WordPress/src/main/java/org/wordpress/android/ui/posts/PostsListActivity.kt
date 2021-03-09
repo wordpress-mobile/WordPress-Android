@@ -290,9 +290,9 @@ class PostsListActivity : LocaleAwareActivity(),
                 tabLayoutFadingEdge.visibility = authorSelectionVisibility
 
                 val tabLayoutPaddingStart =
-                        if (state.isAuthorFilterVisible)
+                        if (state.isAuthorFilterVisible) {
                             resources.getDimensionPixelSize(R.dimen.posts_list_tab_layout_fading_edge_width)
-                        else 0
+                        } else 0
                 tabLayout.setPaddingRelative(tabLayoutPaddingStart, 0, 0, 0)
 
                 authorSelectionAdapter.updateItems(state.authorFilterItems)

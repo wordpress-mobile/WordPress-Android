@@ -112,42 +112,42 @@ class BackupDownloadFragment : Fragment(R.layout.jetpack_backup_restore_fragment
         })
 
         viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
-                when (it) {
-                    is ShareLink -> {
-                        ActivityLauncher.shareBackupDownloadFileLink(requireContext(), it.url)
-                    }
-                    is DownloadFile -> {
-                        ActivityLauncher.downloadBackupDownloadFile(requireContext(), it.url)
-                    }
+            when (it) {
+                is ShareLink -> {
+                    ActivityLauncher.shareBackupDownloadFileLink(requireContext(), it.url)
+                }
+                is DownloadFile -> {
+                    ActivityLauncher.downloadBackupDownloadFile(requireContext(), it.url)
+                }
             }
         })
 
-        viewModel.wizardFinishedObservable.observeEvent(viewLifecycleOwner, {state ->
-                val intent = Intent()
-                val (backupDownloadCreated, ids, actionType) = when (state) {
-                    is BackupDownloadCanceled -> Triple(
-                            false,
-                            null,
-                            JetpackBackupDownloadActionState.CANCEL
-                    )
-                    is BackupDownloadInProgress -> Triple(
-                            true,
-                            Pair(state.rewindId, state.downloadId),
-                            JetpackBackupDownloadActionState.PROGRESS
-                    )
-                    is BackupDownloadCompleted -> Triple(
-                            true,
-                            Pair(state.rewindId, state.downloadId),
-                            JetpackBackupDownloadActionState.COMPLETE
-                    )
-                }
-                intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
-                intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, ids?.second)
-                intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, actionType.id)
-                requireActivity().let { activity ->
-                    activity.setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
-                    activity.finish()
-                }
+        viewModel.wizardFinishedObservable.observeEvent(viewLifecycleOwner, { state ->
+            val intent = Intent()
+            val (backupDownloadCreated, ids, actionType) = when (state) {
+                is BackupDownloadCanceled -> Triple(
+                        false,
+                        null,
+                        JetpackBackupDownloadActionState.CANCEL
+                )
+                is BackupDownloadInProgress -> Triple(
+                        true,
+                        Pair(state.rewindId, state.downloadId),
+                        JetpackBackupDownloadActionState.PROGRESS
+                )
+                is BackupDownloadCompleted -> Triple(
+                        true,
+                        Pair(state.rewindId, state.downloadId),
+                        JetpackBackupDownloadActionState.COMPLETE
+                )
+            }
+            intent.putExtra(KEY_BACKUP_DOWNLOAD_REWIND_ID, ids?.first)
+            intent.putExtra(KEY_BACKUP_DOWNLOAD_DOWNLOAD_ID, ids?.second)
+            intent.putExtra(KEY_BACKUP_DOWNLOAD_ACTION_STATE_ID, actionType.id)
+            requireActivity().let { activity ->
+                activity.setResult(if (backupDownloadCreated) RESULT_OK else RESULT_CANCELED, intent)
+                activity.finish()
+            }
         })
     }
 

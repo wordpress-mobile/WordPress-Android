@@ -3,7 +3,6 @@ package org.wordpress.android.ui.posts
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import kotlinx.android.synthetic.main.fragment_post_settings_tags.*
 import kotlinx.android.synthetic.main.prepublishing_toolbar.*

@@ -144,7 +144,6 @@ class StatsWidgetConfigureFragment : DaggerFragment() {
             resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, appWidgetId)
             activity?.setResult(RESULT_OK, resultValue)
             activity?.finish()
-
         })
     }
 

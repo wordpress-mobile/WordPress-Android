@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -21,10 +20,7 @@ import kotlinx.android.synthetic.main.stats_date_selector.*
 import kotlinx.android.synthetic.main.stats_empty_view.*
 import kotlinx.android.synthetic.main.stats_error_view.*
 import kotlinx.android.synthetic.main.stats_list_fragment.*
-import kotlinx.android.synthetic.main.stats_view_all_fragment.app_bar_layout
-import kotlinx.android.synthetic.main.stats_view_all_fragment.pullToRefresh
-import kotlinx.android.synthetic.main.stats_view_all_fragment.tabLayout
-import kotlinx.android.synthetic.main.stats_view_all_fragment.toolbar
+import kotlinx.android.synthetic.main.stats_view_all_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.fluxc.network.utils.StatsGranularity

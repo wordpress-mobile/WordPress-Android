@@ -12,7 +12,6 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.NonNull
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -163,7 +162,6 @@ class PrepublishingBottomSheetFragment : WPBottomSheetDialogFragment(),
 
         viewModel.dismissKeyboard.observeEvent(this, {
             ActivityUtils.hideKeyboardForced(view)
-
         })
 
         val prepublishingScreenState = savedInstanceState?.getParcelable<PrepublishingScreen>(
