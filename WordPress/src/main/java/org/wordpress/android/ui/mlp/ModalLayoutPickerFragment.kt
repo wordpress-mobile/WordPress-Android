@@ -39,6 +39,7 @@ import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Loading
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -144,7 +145,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
 
         viewModel.loadSavedState(savedInstanceState)
 
-        viewModel.uiState.observe(this, Observer { uiState ->
+        viewModel.uiState.observe(this, { uiState ->
             uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             setDescriptionVisibility(uiState.isDescriptionVisible)
             setButtonsVisibility(uiState.buttonsUiState)
@@ -163,18 +164,16 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onPreviewPageRequested.observe(this, Observer { request ->
+        viewModel.onPreviewPageRequested.observe(this, { request ->
             ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
         })
 
-        viewModel.onCategorySelectionChanged.observe(this, Observer {
-            it?.applyIfNotHandled {
-                layoutsRecyclerView?.smoothScrollToPosition(0)
-            }
+        viewModel.onCategorySelectionChanged.observeEvent(this, {
+            layoutsRecyclerView?.smoothScrollToPosition(0)
         })
     }
 
