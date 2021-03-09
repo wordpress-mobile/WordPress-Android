@@ -65,6 +65,7 @@ import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.fluxc.store.SiteStore.FetchPrivateAtomicCookiePayload
 import org.wordpress.android.fluxc.store.SiteStore.OnPrivateAtomicCookieFetched
+import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderPostDiscoverData
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.PrivateAtCookieRefreshProgressDialog
@@ -1155,87 +1156,94 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         override fun onPostExecute(result: Boolean) {
             isPostTaskRunning = false
 
-            if (!isAdded) {
-                return
-            }
+            if (!isAdded) return
 
             // make sure options menu reflects whether we now have a post
             activity?.invalidateOptionsMenu()
 
-            if (!result) {
-                // post couldn't be loaded which means it doesn't exist in db, so request it from
-                // the server if it hasn't already been requested
-                if (!hasAlreadyRequestedPost) {
-                    AppLog.i(T.READER, "reader post detail > post not found, requesting it")
-                    requestPost()
-                } else if (!TextUtils.isEmpty(errorMessage)) {
-                    // post has already been requested and failed, so restore previous error message
-                    showError(errorMessage)
-                }
-                return
-            } else {
-                showError(null)
-            }
-
-            if (directOperation != null) {
-                when (directOperation) {
-                    COMMENT_JUMP, COMMENT_REPLY, COMMENT_LIKE -> {
-                        viewModel.post?.let {
-                            ReaderActivityLauncher.showReaderComments(
-                                    activity, it.blogId, it.postId,
-                                    directOperation, commentId.toLong(), interceptedUri
-                            )
-                        }
-
-                        activity?.finish()
-                        activity?.overridePendingTransition(0, 0)
-                        return
-                    }
-                    POST_LIKE -> {
-                    }
-                }
-                // Liking needs to be handled "later" after the post has been updated from the server so,
-                // nothing special to do here
-            }
+            if (handleShowPostResult(result)) return
 
             viewModel.post?.let {
-                readerWebView.setIsPrivatePost(it.isPrivate)
-                readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(it.blogUrl))
-            }
+                if (handleDirectOperation()) return
 
-            // scrollView was hidden in onCreateView, show it now that we have the post
-            scrollView.visibility = View.VISIBLE
+                scrollView.visibility = View.VISIBLE
+                layoutFooter.visibility = View.VISIBLE
 
-            // render the post in the webView
-            renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
+                renderPostInWebView(it)
 
-            // if the post is from private atomic site postpone render until we have a special access cookie
-            if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.isCookieRefreshRequired()) {
-                PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
-                dispatcher.dispatch(
-                        viewModel.post?.let {
-                            SiteActionBuilder.newFetchPrivateAtomicCookieAction(
-                                    FetchPrivateAtomicCookiePayload(it.blogId)
-                            )
-                        }
-
-                )
-            } else if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.exists()) {
-                // make sure we add cookie to the cookie manager if it exists before starting render
-                CookieManager.getInstance().setCookie(
-                        privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
-                )
-                renderer?.beginRender()
-            } else {
-                renderer?.beginRender()
-            }
-
-            viewModel.post?.let {
                 viewModel.onShowPost(it)
             }
-
-            layoutFooter.visibility = View.VISIBLE
         }
+    }
+
+    private fun handleShowPostResult(result: Boolean): Boolean {
+        if (!result) {
+            // post couldn't be loaded which means it doesn't exist in db, so request it from
+            // the server if it hasn't already been requested
+            if (!hasAlreadyRequestedPost) {
+                AppLog.i(READER, "reader post detail > post not found, requesting it")
+                requestPost()
+            } else if (!TextUtils.isEmpty(errorMessage)) {
+                // post has already been requested and failed, so restore previous error message
+                showError(errorMessage)
+            }
+            return true
+        } else {
+            showError(null)
+        }
+        return false
+    }
+
+    private fun handleDirectOperation(): Boolean {
+        if (directOperation != null) {
+            when (directOperation) {
+                COMMENT_JUMP, COMMENT_REPLY, COMMENT_LIKE -> {
+                    viewModel.post?.let {
+                        ReaderActivityLauncher.showReaderComments(
+                                activity, it.blogId, it.postId,
+                                directOperation, commentId.toLong(), interceptedUri
+                        )
+                    }
+
+                    activity?.finish()
+                    activity?.overridePendingTransition(0, 0)
+                    return true
+                }
+                POST_LIKE -> {
+                }
+            }
+            // Liking needs to be handled "later" after the post has been updated from the server so,
+            // nothing special to do here
+        }
+        return false
+    }
+
+    private fun ReaderPostDetailFragment.renderPostInWebView(it: ReaderPost) {
+        readerWebView.setIsPrivatePost(it.isPrivate)
+        readerWebView.setBlogSchemeIsHttps(UrlUtils.isHttps(it.blogUrl))
+        renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
+
+        // if the post is from private atomic site postpone render until we have a special access cookie
+        if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.isCookieRefreshRequired()) {
+            PrivateAtCookieRefreshProgressDialog.showIfNecessary(fragmentManager, this@ReaderPostDetailFragment)
+            requestPrivateAtomicCookie()
+        } else if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.exists()) {
+            // make sure we add cookie to the cookie manager if it exists before starting render
+            CookieManager.getInstance().setCookie(
+                    privateAtomicCookie.getDomain(), privateAtomicCookie.getCookieContent()
+            )
+            renderer?.beginRender()
+        } else {
+            renderer?.beginRender()
+        }
+    }
+
+    private fun requestPrivateAtomicCookie() {
+        dispatcher.dispatch(
+                viewModel.post?.let {
+                    SiteActionBuilder.newFetchPrivateAtomicCookieAction(FetchPrivateAtomicCookiePayload(it.blogId))
+                }
+        )
     }
 
     /*
