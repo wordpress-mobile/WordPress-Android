@@ -4,21 +4,18 @@ import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.tabs.TabLayoutMediator
-import kotlinx.android.synthetic.main.login_intro_template_view.view.*
-import kotlinx.android.synthetic.main.login_prologue_bottom_buttons_container_default.*
-import kotlinx.android.synthetic.main.login_signup_screen.*
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
+import org.wordpress.android.databinding.LoginIntroTemplateViewBinding
+import org.wordpress.android.databinding.LoginSignupScreenBinding
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Flow
@@ -26,7 +23,7 @@ import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Step.PROLOGUE
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import javax.inject.Inject
 
-class LoginPrologueFragment : Fragment() {
+class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
     private lateinit var loginPrologueListener: LoginPrologueListener
 
     @Inject lateinit var unifiedLoginTracker: UnifiedLoginTracker
@@ -43,12 +40,6 @@ class LoginPrologueFragment : Fragment() {
         loginPrologueListener = context
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View = inflater.inflate(R.layout.login_signup_screen, container, false)
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -62,18 +53,19 @@ class LoginPrologueFragment : Fragment() {
             flags = flags or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
             decorView.systemUiVisibility = flags
         }
+        val binding = LoginSignupScreenBinding.bind(view)
 
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
-            bottom_buttons.removeAllViews()
-            View.inflate(context, R.layout.login_prologue_bottom_buttons_container_unified, bottom_buttons)
+            binding.bottomButtons.removeAllViews()
+            View.inflate(context, R.layout.login_prologue_bottom_buttons_container_unified, binding.bottomButtons)
         }
 
-        first_button.setOnClickListener {
+        binding.loginPrologueBottomButtonsContainerDefault.firstButton.setOnClickListener {
             unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
             loginPrologueListener.showEmailLoginScreen()
         }
 
-        second_button.setOnClickListener {
+        binding.loginPrologueBottomButtonsContainerDefault.secondButton.setOnClickListener {
             if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                 unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
                 loginPrologueListener.loginViaSiteAddress()
@@ -84,21 +76,22 @@ class LoginPrologueFragment : Fragment() {
 
         val adapter = LoginProloguePagerAdapter(this)
 
-        intros_pager.adapter = adapter
-        intros_pager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
+        binding.introsPager.adapter = adapter
+        binding.introsPager.registerOnPageChangeCallback(object : ViewPager2.OnPageChangeCallback() {
             override fun onPageSelected(position: Int) {
                 super.onPageSelected(position)
                 AnalyticsUtils.trackLoginProloguePages(position)
             }
         })
-        intros_pager.setPageTransformer(object : ViewPager2.PageTransformer {
+        binding.introsPager.setPageTransformer(object : ViewPager2.PageTransformer {
             override fun transformPage(page: View, position: Float) {
                 // Since we want to achieve the illusion of having a single continuous background, we apply a
                 // parallax effect to the foreground views of each page, making them enter and exit the screen
                 // at a different speed than the background, which just follows the speed of the swipe gesture.
+                val pageBinding = LoginIntroTemplateViewBinding.bind(page)
                 page.apply {
-                    applyParallaxEffect(promo_title, position, width, 0.25f)
-                    applyParallaxEffect(promo_layout_container, position, width, 0.5f)
+                    applyParallaxEffect(pageBinding.promoTitle, position, width, 0.25f)
+                    applyParallaxEffect(pageBinding.promoLayoutContainer, position, width, 0.5f)
                 }
             }
 
@@ -127,9 +120,9 @@ class LoginPrologueFragment : Fragment() {
 
         if (adapter.itemCount > 1) {
             TabLayoutMediator(
-                    tab_layout_indicator,
-                    intros_pager,
-                    TabLayoutMediator.TabConfigurationStrategy { _, _ -> }).attach()
+                    binding.tabLayoutIndicator,
+                    binding.introsPager,
+                    { _, _ -> }).attach()
         }
 
         if (savedInstanceState == null) {

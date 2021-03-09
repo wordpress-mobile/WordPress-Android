@@ -40,6 +40,8 @@
         app:cardCornerRadius="0dp"
         app:cardElevation="@dimen/appbar_elevation">
 
-        <include layout="@layout/login_prologue_bottom_buttons_container_default" />
+        <include
+            android:id="@+id/login_prologue_bottom_buttons_container_default"
+            layout="@layout/login_prologue_bottom_buttons_container_default" />
     </com.google.android.material.card.MaterialCardView>
 </RelativeLayout>
