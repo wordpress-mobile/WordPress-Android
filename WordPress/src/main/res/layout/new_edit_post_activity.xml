@@ -60,5 +60,4 @@
 
         </RelativeLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <include layout="@layout/mlp_editor_preview_toolbar"/>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

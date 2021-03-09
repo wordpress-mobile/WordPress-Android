@@ -1,17 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-03 20:09:44+0000
+Translation-Revision-Date: 2021-03-05 00:52:49+0000
 Plural-Forms: nplurals=3; plural=(n % 10 == 1 && n % 100 != 11) ? 0 : ((n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % 100 > 14)) ? 1 : 2);
 Generator: GlotPress/3.0.0-alpha.2
 Language: ru
 -->
 <resources>
+    <string name="reader_title_interests">Подписаться на темы</string>
     <string name="stories_intro_main_subtitle">Новый способ создавать и публиковать захватывающее содержимое на вашем сайте.</string>
     <string name="activity_log_backup_download_notice_dismiss_action">Скрыть</string>
     <string name="activity_log_backup_download_notice_download_action">Скачать</string>
     <string name="threat_fix_all_status_success_message_plural">Угрозы были успешно устранены.</string>
-    <string name="threat_fix_all_warning_message_plural">Подтвердите исправление всех %s активных угроз.</string>
-    <string name="scan_idle_with_threats_description_plural">Проверка обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
+    <string name="threat_fix_all_confirmation_message_plural">Подтвердите исправление всех %s активных угроз.</string>
+    <string name="scan_idle_threats_description_plural">Проверка обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
     <string name="scan_fixing_threats_description_plural">Мы сейчас стараемся исправить эти угрозы в фоновом режиме, вы можете продолжать использовать ваш сайт как обычно, проверить состояние вы сможете в любое время.</string>
     <string name="gutenberg_native_edit_focal_point">Изменить точку фокусировки</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Нажмите дважды, чтобы открыть нижний список действий для редактирования, замены или очистки изображения.</string>
@@ -38,8 +39,8 @@ Language: ru
     <string name="invite_links_section_title">Пригласительная ссылка</string>
     <string name="threats_found_singular">Обнаружена угроза</string>
     <string name="threats_found_plural">Обнаружены угрозы</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Обнаружено возможных угроз - %s</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Найдена одна возможная угроза</string>
+    <string name="scan_finished_potential_threats_found_message_plural">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Обнаружено возможных угроз - %s</string>
+    <string name="scan_finished_potential_threats_found_message_singular">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Найдена одна возможная угроза</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Проверка завершена&lt;/b> &lt;br>&lt;/br> Угроз не найдено</string>
     <string name="scan_fixing_threats_title_singular">Устранение угрозы</string>
     <string name="disable">Отключить</string>
@@ -96,7 +97,7 @@ Language: ru
     <string name="threat_status_fixed">Исправлено</string>
     <string name="threat_found_header">Обнаружено</string>
     <string name="scan_here_to_help">готовы помочь вам</string>
-    <string name="scan_idle_with_threats_description_singular">Проверка Jetpack обнаружила %1s возможные угрозы с %2s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %3$s, если требуется.</string>
+    <string name="scan_idle_threats_description_singular">Проверка обнаружила одну возможную угрозу с %1s. Посмотрите подробности ниже и предпримите действие по устранению, или нажмите кнопку Исправить всё. Мы %2$s, если требуется.</string>
     <string name="scan_idle_manual_scan_description">Для повторного обзора запустите проверку вручную или подождите результатов следующей проверки Jetpack сегодня.</string>
     <string name="scan_provisioning_description">Вас приветствует Jetpack Scan! Сейчас мы анализируем ваш сайт для проведения полного сканирования. Мы обязательно сообщим вам, если обнаружим потенциальные проблемы. После этого начнётся первое полное сканирование.</string>
     <string name="scan_scanning_is_initial_description">Добро пожаловать в Jetpack Scan! Мы изучаем ваш сайт и скоро поделимся с вами результатами.</string>
@@ -162,7 +163,7 @@ Language: ru
     <string name="threat_fix_all_status_error_message">Ошибка получения статуса исправлений. Обратитесь в  службу поддержки.</string>
     <string name="threat_fix_all_status_success_message_singular">Угрозы были успешно устранены.</string>
     <string name="threat_fix_all_error_message">Ошибка устранения угроз. Обратитесь в  службу поддержки.</string>
-    <string name="threat_fix_all_warning_message_singular">Подтвердите исправление %s активных угроз.</string>
+    <string name="threat_fix_all_confirmation_message_singular">Подтвердите исправление активной угрозы.</string>
     <string name="threat_fix_all_warning_title">Устранить все угрозы</string>
     <string name="threat_ignore_error_message">Ошибка при игнорировании угрозы. Обратитесь в службу поддержки.</string>
     <string name="threat_ignore_success_message">Угроза проигнорирована.</string>

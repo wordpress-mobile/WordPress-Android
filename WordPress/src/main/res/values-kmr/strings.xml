@@ -848,12 +848,10 @@ Language: ku_TR
     <string name="site_settings_gutenberg_default_for_new_posts_summary">Bi edîtora bloke şandî û rûpelên nû sererast bike</string>
     <string name="site_settings_gutenberg_default_for_new_posts">Edîtora blokê bi kar bîne</string>
     <string name="exit">derketin</string>
-    <string name="quick_start_sites_type_grow">Girseya Xwe Mezin Bike</string>
     <string name="quick_start_sites">Gavên Pêşve</string>
     <string name="quick_start_complete_tasks_header"> (%d) Qediya</string>
     <string name="quick_start_dialog_view_site_message">Kêfa xwe bi berhema qediyayî bîne!</string>
     <string name="quick_start_sites_type_subtitle">%1$d / %2$d qediya</string>
-    <string name="quick_start_sites_type_customize">Malpera Xwe Taybet Bike</string>
     <string name="quick_start_dialog_upload_icon_title">Îkona malperekê hilxîne</string>
     <string name="quick_start_dialog_upload_icon_message">Mêvanên te ew ê îkona te di gerokên xwe de bibînin. Ji bo xuyangeke profesyonel û balkêş îkoneke taybet tevlî bike.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ji bo tu pakêta xwe ya heyî û pakêtên din ên berdest bibînî li %1$sPakêt%2$s\'ê bitepîne</string>

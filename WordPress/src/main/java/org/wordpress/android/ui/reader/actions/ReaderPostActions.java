@@ -403,6 +403,13 @@ public class ReaderPostActions {
             public void onErrorResponse(VolleyError volleyError) {
                 AppLog.w(T.READER, "updateRelatedPosts failed");
                 AppLog.e(T.READER, volleyError);
+                EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(
+                        sourcePost,
+                        new ReaderSimplePostList(),
+                        new ReaderSimplePostList(),
+                        false
+                    )
+                );
             }
         };
 
@@ -438,7 +445,7 @@ public class ReaderPostActions {
                         }
                     }
                     EventBus.getDefault().post(new ReaderEvents.RelatedPostsUpdated(sourcePost, localRelatedPosts,
-                                                                                    globalRelatedPosts));
+                                                                                    globalRelatedPosts, true));
                 }
             }
         }.start();

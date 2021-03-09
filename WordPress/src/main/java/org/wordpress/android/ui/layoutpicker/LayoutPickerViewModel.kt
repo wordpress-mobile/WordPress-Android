@@ -6,12 +6,16 @@ import androidx.lifecycle.MutableLiveData
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.wordpress.android.R
+import org.wordpress.android.R.string
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.PreviewMode.MOBILE
 import org.wordpress.android.ui.PreviewMode.TABLET
 import org.wordpress.android.ui.PreviewMode.valueOf
 import org.wordpress.android.ui.PreviewModeHandler
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Content
+import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState.Error
+import org.wordpress.android.util.NetworkUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
 import org.wordpress.android.viewmodel.SingleLiveEvent
@@ -24,9 +28,10 @@ private const val PREVIEW_MODE = "PREVIEW_MODE"
 
 abstract class LayoutPickerViewModel(
     open val mainDispatcher: CoroutineDispatcher,
-    open val bgDispatcher: CoroutineDispatcher
-) : ScopedViewModel(bgDispatcher),
-        PreviewModeHandler {
+    open val bgDispatcher: CoroutineDispatcher,
+    open val networkUtils: NetworkUtilsWrapper,
+    private val layoutPickerTracker: LayoutPickerTracker
+) : ScopedViewModel(bgDispatcher), PreviewModeHandler {
     lateinit var layouts: List<LayoutModel>
     lateinit var categories: List<LayoutCategoryModel>
 
@@ -35,6 +40,15 @@ abstract class LayoutPickerViewModel(
 
     private val _previewMode = SingleLiveEvent<PreviewMode>()
     val previewMode: LiveData<PreviewMode> = _previewMode
+
+    private val _previewState: MutableLiveData<PreviewUiState> = MutableLiveData()
+    val previewState: LiveData<PreviewUiState> = _previewState
+
+    private val _onPreviewModeButtonPressed = SingleLiveEvent<Unit>()
+    val onPreviewModeButtonPressed: LiveData<Unit> = _onPreviewModeButtonPressed
+
+    private val _onPreviewActionPressed = SingleLiveEvent<DesignPreviewAction>()
+    val onPreviewActionPressed: LiveData<DesignPreviewAction> = _onPreviewActionPressed
 
     private val _onCategorySelectionChanged = MutableLiveData<Event<Unit>>()
     val onCategorySelectionChanged: LiveData<Event<Unit>> = _onCategorySelectionChanged
@@ -47,13 +61,7 @@ abstract class LayoutPickerViewModel(
 
     abstract fun fetchLayouts()
 
-    open fun trackPreviewModeChanged(mode: String) {
-        // Tracked in subclass
-    }
-
-    open fun trackThumbnailModeTapped(mode: String) {
-        // Tracked in subclass
-    }
+    open fun onPreviewChooseTapped() = onDismissPreview()
 
     fun handleResponse(layouts: List<LayoutModel>, categories: List<LayoutCategoryModel>) {
         this.layouts = layouts
@@ -71,7 +79,7 @@ abstract class LayoutPickerViewModel(
 
     override fun onPreviewModeChanged(mode: PreviewMode) {
         if (_previewMode.value !== mode) {
-            trackPreviewModeChanged(mode.key)
+            layoutPickerTracker.trackPreviewModeChanged(mode.key)
             _previewMode.value = mode
             if (uiState.value is Content) {
                 loadLayouts()
@@ -95,17 +103,19 @@ abstract class LayoutPickerViewModel(
                             remove(categorySlug)
                         })
                 )
+                layoutPickerTracker.filterDeselected(categorySlug, state.selectedCategoriesSlugs)
             } else {
                 updateUiState(
                         state.copy(selectedCategoriesSlugs = state.selectedCategoriesSlugs.apply { add(categorySlug) })
                 )
+                layoutPickerTracker.filterSelected(categorySlug, state.selectedCategoriesSlugs)
             }
             loadCategories()
             _onCategorySelectionChanged.postValue(Event(Unit))
         }
     }
 
-    fun loadCategories() {
+    private fun loadCategories() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems: List<CategoryListItemUiState> = categories.map {
@@ -123,7 +133,7 @@ abstract class LayoutPickerViewModel(
         }
     }
 
-    fun loadLayouts() {
+    private fun loadLayouts() {
         val state = uiState.value as? Content ?: Content()
         launch(bgDispatcher) {
             val listItems = ArrayList<LayoutCategoryUiState>()
@@ -203,7 +213,7 @@ abstract class LayoutPickerViewModel(
     }
 
     fun onThumbnailModePressed() {
-        trackThumbnailModeTapped(selectedPreviewMode().key)
+        layoutPickerTracker.trackThumbnailModeTapped(selectedPreviewMode().key)
         _onThumbnailModeButtonPressed.call()
     }
 
@@ -211,6 +221,56 @@ abstract class LayoutPickerViewModel(
      * Retries data fetching
      */
     fun onRetryClicked() = fetchLayouts()
+
+    fun onPreviewLoading() {
+        if (networkUtils.isNetworkAvailable()) {
+            (uiState.value as? Content)?.let { state ->
+                layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                    _previewState.value = PreviewUiState.Loading(layout.demoUrl)
+                    layoutPickerTracker.trackPreviewLoading(layout.slug, selectedPreviewMode().key)
+                }
+            }
+        } else {
+            _previewState.value = PreviewUiState.Error(toast = R.string.hpp_retry_error)
+            layoutPickerTracker.trackNoNetworkErrorShown("Preview error")
+        }
+    }
+
+    fun onPreviewLoaded() {
+        (uiState.value as? Content)?.let { state ->
+            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                _previewState.value = PreviewUiState.Loaded
+                layoutPickerTracker.trackPreviewLoaded(layout.slug, selectedPreviewMode().key)
+            }
+        }
+    }
+
+    fun onPreviewError() {
+        _previewState.value = PreviewUiState.Error()
+        layoutPickerTracker.trackErrorShown("Preview error")
+    }
+
+    fun onPreviewModePressed() {
+        layoutPickerTracker.trackPreviewModeTapped(selectedPreviewMode().key)
+        _onPreviewModeButtonPressed.call()
+    }
+
+    fun onPreviewTapped() {
+        (uiState.value as? Content)?.let { state ->
+            layouts.firstOrNull { it.slug == state.selectedLayoutSlug }?.let { layout ->
+                val template = layout.slug
+                layoutPickerTracker.trackPreviewViewed(template, selectedPreviewMode().key)
+                _onPreviewActionPressed.value = DesignPreviewAction.Show(template, layout.demoUrl)
+                return
+            }
+        }
+        layoutPickerTracker.trackErrorShown("Error previewing design")
+        updateUiState(Error(toast = string.hpp_choose_error))
+    }
+
+    fun onDismissPreview() {
+        _onPreviewActionPressed.value = DesignPreviewAction.Dismiss
+    }
 
     /**
      * Appbar scrolled event used to set the header and title visibility
@@ -257,5 +317,10 @@ abstract class LayoutPickerViewModel(
             outState.putSerializable(SELECTED_CATEGORIES, it.selectedCategoriesSlugs)
             outState.putString(PREVIEW_MODE, selectedPreviewMode().name)
         }
+    }
+
+    sealed class DesignPreviewAction {
+        object Dismiss : DesignPreviewAction()
+        class Show(val template: String, val demoUrl: String) : DesignPreviewAction()
     }
 }

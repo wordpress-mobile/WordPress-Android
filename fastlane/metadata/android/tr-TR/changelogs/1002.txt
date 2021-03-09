@@ -1,5 +1,0 @@
-16.7:
-- Jetpack müşterileri artık bir siteyi geri yükleyebilir veya bir yedeği indirebilir, tarayabilir ve tehditleri giderebilir
-- Başlık bloğunda bağlayıcı ayarlama olanağı da dahil olmak üzere blok düzenleyicide çeşitli güncellemeler
-- Okunmamış gönderiler için yeni filtre ve yazıları Okuyucu'da görüldü/görülmedi olarak işaretleme olanağı
-- .blog alt alan adları artık kullanılabilir

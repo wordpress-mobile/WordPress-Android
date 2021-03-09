@@ -16,7 +16,6 @@ import org.wordpress.android.fluxc.model.SiteHomepageSettings.ShowOnFront
 import org.wordpress.android.fluxc.store.DynamicCardStore
 import org.wordpress.android.fluxc.store.QuickStartStore
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask
-import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.CREATE_SITE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.EDIT_HOMEPAGE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTask.UPDATE_SITE_TITLE
 import org.wordpress.android.fluxc.store.QuickStartStore.QuickStartTaskType
@@ -37,6 +36,7 @@ import org.wordpress.android.util.HtmlCompatWrapper
 import org.wordpress.android.util.QuickStartUtilsWrapper
 import org.wordpress.android.util.SiteUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.util.config.MySiteImprovementsFeatureConfig
 import org.wordpress.android.util.mapAsync
 import org.wordpress.android.util.merge
 import org.wordpress.android.viewmodel.Event
@@ -58,7 +58,8 @@ class QuickStartRepository
     private val dispatcher: Dispatcher,
     private val eventBus: EventBusWrapper,
     private val dynamicCardStore: DynamicCardStore,
-    private val htmlCompat: HtmlCompatWrapper
+    private val htmlCompat: HtmlCompatWrapper,
+    private val mySiteImprovementsFeatureConfig: MySiteImprovementsFeatureConfig
 ) : CoroutineScope, MySiteSource<QuickStartUpdate> {
     private val job: Job = Job()
     override val coroutineContext: CoroutineContext
@@ -88,7 +89,7 @@ class QuickStartRepository
         pendingTask = null
         if (selectedSiteRepository.getSelectedSite()?.showOnFront == ShowOnFront.POSTS.value &&
                 !quickStartStore.hasDoneTask(siteId.toLong(), EDIT_HOMEPAGE)) {
-            quickStartStore.setDoneTask(siteId.toLong(), EDIT_HOMEPAGE, true)
+            setTaskDoneAndTrack(EDIT_HOMEPAGE, siteId)
             refresh()
         }
         val quickStartTaskTypes = refresh.mapAsync(coroutineScope) {
@@ -110,7 +111,7 @@ class QuickStartRepository
 
     fun startQuickStart(newSiteLocalID: Int) {
         if (newSiteLocalID != -1) {
-            quickStartStore.setDoneTask(newSiteLocalID.toLong(), CREATE_SITE, true)
+            quickStartUtils.startQuickStart(newSiteLocalID)
             refresh()
         }
     }
@@ -146,18 +147,26 @@ class QuickStartRepository
             pendingTask = null
             if (quickStartStore.hasDoneTask(site.id.toLong(), task)) return
             // If we want notice and reminders, we should call QuickStartUtils.completeTaskAndRemindNextOne here
-            quickStartStore.setDoneTask(site.id.toLong(), task, true)
-            analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task))
+            setTaskDoneAndTrack(task, site.id)
             // We need to refresh immediately. This is useful for tasks that are completed on the My Site screen.
             if (refreshImmediately) {
                 refresh()
             }
             if (quickStartUtils.isEveryQuickStartTaskDone(site.id)) {
-                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED)
+                quickStartStore.setQuickStartCompleted(site.id.toLong(), true)
+                analyticsTrackerWrapper.track(Stat.QUICK_START_ALL_TASKS_COMPLETED, mySiteImprovementsFeatureConfig)
                 val payload = CompleteQuickStartPayload(site, NEXT_STEPS.toString())
                 dispatcher.dispatch(SiteActionBuilder.newCompleteQuickStartAction(payload))
             }
         }
+    }
+
+    private fun setTaskDoneAndTrack(
+        task: QuickStartTask,
+        siteId: Int
+    ) {
+        quickStartStore.setDoneTask(siteId.toLong(), task, true)
+        analyticsTrackerWrapper.track(quickStartUtils.getTaskCompletedTracker(task), mySiteImprovementsFeatureConfig)
     }
 
     fun requestNextStepOfTask(task: QuickStartTask) {

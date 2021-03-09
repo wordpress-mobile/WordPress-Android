@@ -7,8 +7,6 @@ Language: ar
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">تم معالجة التهديدات بنجاح.</string>
-    <string name="threat_fix_all_warning_message_plural">يرجى التأكيد على رغبتك في معالجة جميع التهديدات النشطة التي تصل إلى %s.</string>
-    <string name="scan_idle_with_threats_description_plural">عثر الفحص على %1s من التهديدات المحتملة من خلال %2s. يرجى مراجعتها أدناه واتخاذ الإجراءات أو الضغط على زر إصلاح الكل. نحن ⁦%3$s⁩ إذا كنت بحاجة إلينا.</string>
     <string name="scan_fixing_threats_description_plural">We\'re hard at work in the background fixing these threats. في هذه الأثناء، لا تتردد في الاستمرار في استخدام موقعك كالمعتاد، ويمكنك التحقُّق من التقدُّم في أي وقت.</string>
     <string name="gutenberg_native_edit_focal_point">Edit focal point</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Double tap to open Bottom Sheet to edit, replace, or clear the image</string>
@@ -35,8 +33,6 @@ Language: ar
     <string name="invite_links_section_title">رابط الدعوة</string>
     <string name="threats_found_singular">تم العثور على تهديد</string>
     <string name="threats_found_plural">تم العثور على تهديدات</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> %s potential threats found</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> 1 potential threat found</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Scan Finished&lt;/b> &lt;br>&lt;/br> No threats found</string>
     <string name="scan_fixing_threats_title_singular">جاري معالجة التهديد</string>
     <string name="disable">تعطيل</string>
@@ -93,7 +89,6 @@ Language: ar
     <string name="threat_status_fixed">تمت المعالجة</string>
     <string name="threat_found_header">المعثور عليه</string>
     <string name="scan_here_to_help">نحن هنا لمساعدتك</string>
-    <string name="scan_idle_with_threats_description_singular">عثر الفحص على %1s تهديد محتمل من خلال %2s. يرجى مراجعة التهديد أدناه واتخاذ إجراء أو الضغط على زر معالجة الكل. نحن ⁦%3$s⁩ إذا كنت بحاجة إلينا.</string>
     <string name="scan_idle_manual_scan_description">لمراجعة مواقعك مرة أخرى، قم بتشغيل فحص يدوي أو انتظر Jetpack حتى يقوم بفحص موقعك لاحقًا اليوم.</string>
     <string name="scan_provisioning_description">مرحبًا بك في فحص Jetpack! سنُحدِّد نطاق موقعك، وسنقوم بإعداده لإجراء فحص كامل. سنخبرك إذا اكتشفنا أي مشاكل قد تؤثر على الفحص، فسيبدأ حينها أول فحص كامل لك.</string>
     <string name="scan_scanning_is_initial_description">مرحبًا بك في \"فحص Jetpack\"، نلقي نظرة أولية على موقعك الآن وستكون النتائج معك قريبًا.</string>
@@ -159,7 +154,6 @@ Language: ar
     <string name="threat_fix_all_status_error_message">خطأ في الحصول على حالة المعالجة. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
     <string name="threat_fix_all_status_success_message_singular">تم معالجة التهديد بنجاح.</string>
     <string name="threat_fix_all_error_message">خطأ في معالجة التهديدات. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
-    <string name="threat_fix_all_warning_message_singular">يرجى التأكيد على رغبتك في معالجة التهديد %s النشط.</string>
     <string name="threat_fix_all_warning_title">معالجة كل التهديدات</string>
     <string name="threat_ignore_error_message">خطأ في تجاهل التهديد. يرجى الاتصال بالدعم الفني الخاص بنا.</string>
     <string name="threat_ignore_success_message">تم تجاهل التهديد.</string>
@@ -1167,8 +1161,6 @@ Language: ar
     <string name="site_settings_gutenberg_default_for_new_posts">استخدام مُحرر المكوّنات</string>
     <string name="exit">خروج</string>
     <string name="quick_start_sites_type_subtitle">تم استكمال %1$d من %2$d</string>
-    <string name="quick_start_sites_type_grow">تنمية جمهورك</string>
-    <string name="quick_start_sites_type_customize">تخصيص موقعك</string>
     <string name="quick_start_sites">الخطوات التالية</string>
     <string name="quick_start_complete_tasks_header">مكتمل (%d)</string>
     <string name="quick_start_dialog_view_site_message">استمتع بمنتجك النهائي!</string>
