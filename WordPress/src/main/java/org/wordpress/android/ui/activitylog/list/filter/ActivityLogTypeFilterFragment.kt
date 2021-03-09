@@ -26,6 +26,7 @@ import org.wordpress.android.util.ColorUtils
 import org.wordpress.android.util.getColorResIdFromAttribute
 import org.wordpress.android.viewmodel.activitylog.ActivityLogViewModel
 import org.wordpress.android.viewmodel.activitylog.DateRange
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 private const val ARG_INITIAL_SELECTION = "arg_initial_selection"
@@ -89,7 +90,7 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
         val parentViewModel = ViewModelProvider(requireParentFragment(), viewModelFactory)
                 .get(ActivityLogViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiHelpers.updateVisibility(actionable_empty_view, uiState.errorVisibility)
             uiHelpers.updateVisibility(recycler_view, uiState.contentVisibility)
             uiHelpers.updateVisibility(progress_layout, uiState.loadingVisibility)
@@ -100,8 +101,8 @@ class ActivityLogTypeFilterFragment : DialogFragment() {
                 is Content -> refreshContentScreen(uiState)
             }
         })
-        viewModel.dismissDialog.observe(viewLifecycleOwner, Observer {
-            it.applyIfNotHandled { dismiss() }
+        viewModel.dismissDialog.observeEvent(viewLifecycleOwner, {
+            dismiss()
         })
 
         val afterDateRangeAvailable = requireNotNull(arguments).containsKey(ARG_DATE_RANGE_AFTER)
