@@ -54,7 +54,6 @@ Language: el_GR
     <string name="post_list_tab_drafts">Προσχέδια</string>
     <string name="plans_loading_error_network_title">Δεν υπάρχει σύνδεση</string>
     <string name="quick_start_sites">Επόμενα βήματα</string>
-    <string name="quick_start_sites_type_customize">Προσαρμόστε τον ιστότοπο σας</string>
     <string name="notification_channel_reminder_title">Υπενθύμιση</string>
     <string name="quick_start_completed_tasks_header_chevron_collapse_desc">σύμπτηξη</string>
     <string name="stats_traffic_change">%1$s (%2$s%%)</string>

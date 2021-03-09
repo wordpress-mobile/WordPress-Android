@@ -925,7 +925,6 @@ Language: es_MX
     <string name="site_settings_gutenberg_default_for_new_posts">Usar Editor de Bloques</string>
     <string name="plans_loading_error_no_plans_title">No se pueden cargar los Planes</string>
     <string name="exit">salir</string>
-    <string name="quick_start_sites_type_customize">Personaliza Tu Sitio</string>
     <string name="quick_start_sites">Siguientes Pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
@@ -933,7 +932,6 @@ Language: es_MX
     <string name="quick_start_dialog_upload_icon_title">Carga un icono del sitio</string>
     <string name="quick_start_dialog_upload_icon_message">Tus visitantes verán tu icono en su navegador. Agrega un icono personalizado para conseguir un aspecto profesional y refinado.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toca en %1$s Plan %2$s para ver tu plan actual y otros planes disponibles</string>
-    <string name="quick_start_sites_type_grow">Haz Crecer Tu Audiencia</string>
     <string name="quick_start_dialog_check_stats_message_short">Toca en %1$s Estadísticas %2$s para ver cómo está rindiendo tu sitio.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Toca en %1$s Icono de Tu Sitio %2$s para subir uno nuevo</string>
     <string name="quick_start_dialog_need_help_message">Te guiaremos por los básicos de la construcción y el crecimiento de tu sitio.</string>

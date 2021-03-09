@@ -18,6 +18,7 @@ import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryListViewModel.Sc
 import org.wordpress.android.ui.jetpack.scan.history.ScanHistoryViewModel.ScanHistoryTabType
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fragment) {
@@ -68,10 +69,8 @@ class ScanHistoryListFragment : ViewPagerFragment(R.layout.scan_history_list_fra
                 is ContentUiState -> refreshContentScreen(it.items)
             }
         })
-        viewModel.navigation.observe(viewLifecycleOwner, { event ->
-            event.applyIfNotHandled {
-                ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, siteModel, threatId)
-            }
+        viewModel.navigation.observeEvent(viewLifecycleOwner, {
+            ActivityLauncher.viewThreatDetails(this@ScanHistoryListFragment, it.siteModel, it.threatId)
         })
     }
 

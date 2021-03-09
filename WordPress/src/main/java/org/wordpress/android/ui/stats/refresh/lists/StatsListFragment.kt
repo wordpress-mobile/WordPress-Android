@@ -160,7 +160,7 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
         })
 
         viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
-                navigator.navigate(activity, target)
+            navigator.navigate(activity, target)
         })
 
         viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
@@ -177,13 +177,9 @@ class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
             viewModel.onTypesChanged()
         })
 
-        viewModel.scrollTo?.observe(viewLifecycleOwner, { event ->
-            if (event != null) {
-                (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
-                    event.getContentIfNotHandled()?.let { statsType ->
-                        recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
-                    }
-                }
+        viewModel.scrollTo?.observeEvent(viewLifecycleOwner, { statsType ->
+            (recyclerView.adapter as? StatsBlockAdapter)?.let { adapter ->
+                recyclerView.smoothScrollToPosition(adapter.positionOf(statsType))
             }
         })
     }

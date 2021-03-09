@@ -33,7 +33,5 @@ open class Event<out T>(private val content: T) {
 }
 
 fun <T> LiveData<Event<T>>.observeEvent(owner: LifecycleOwner, block: (T) -> Unit) {
-    this.observe(owner, {
-        it?.getContentIfNotHandled()?.let(block)
-    })
+    this.observe(owner, { it?.getContentIfNotHandled()?.let(block) })
 }
