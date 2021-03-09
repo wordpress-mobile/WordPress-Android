@@ -23,6 +23,7 @@ import org.wordpress.android.ui.CollapseFullScreenDialogFragment.CollapseFullScr
 import org.wordpress.android.ui.suggestion.util.SuggestionServiceConnectionManager
 import org.wordpress.android.ui.suggestion.util.SuggestionUtils
 import org.wordpress.android.util.SiteUtils
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.SuggestionAutoCompleteText
 import javax.inject.Inject
 
@@ -52,12 +53,10 @@ class CommentFullScreenDialogFragment : Fragment(), CollapseFullScreenDialogCont
             }
         })
 
-        viewModel.onKeyboardOpened.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                coroutineScope.launch {
-                    val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
-                    imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
-                }
+        viewModel.onKeyboardOpened.observeEvent(viewLifecycleOwner, {
+            coroutineScope.launch {
+                val imm = activity?.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+                imm?.showSoftInput(reply, InputMethodManager.SHOW_IMPLICIT)
             }
         })
 
