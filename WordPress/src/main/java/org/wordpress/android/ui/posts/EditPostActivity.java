@@ -248,6 +248,7 @@ import static org.wordpress.android.ui.posts.chat.ChatEditorFragment.CHAT_EDITOR
 
 import kotlin.Unit;
 import kotlin.jvm.functions.Function0;
+import kotlin.jvm.functions.Function1;
 
 public class EditPostActivity extends LocaleAwareActivity implements
         EditorFragmentActivity,
@@ -422,6 +423,8 @@ public class EditPostActivity extends LocaleAwareActivity implements
     private boolean mStoryEditingCancelled = false;
 
     private boolean mNetworkErrorOnLastMediaFetchAttempt = false;
+
+    private Function1<? super List<Long>, Unit> mOnChatMediaSelected = null;
 
     public static boolean checkToRestart(@NonNull Intent data) {
         return data.hasExtra(EditPostActivity.EXTRA_RESTART_EDITOR)
@@ -2829,10 +2832,15 @@ public class EditPostActivity extends LocaleAwareActivity implements
         if (ids.size() > 1 && allAreImages && !mShowGutenbergEditor) {
             showInsertMediaDialog(ids);
         } else {
-            // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
-            mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
-            if (mShowGutenbergEditor && mEditorPhotoPicker.getAllowMultipleSelection()) {
-                mEditorPhotoPicker.setAllowMultipleSelection(false);
+            if (mOnChatMediaSelected != null) {
+                mOnChatMediaSelected.invoke(ids);
+                mOnChatMediaSelected = null;
+            } else {
+                // if allowMultipleSelection and gutenberg editor, pass all ids to addExistingMediaToEditor at once
+                mEditorMedia.addExistingMediaToEditorAsync(AddExistingMediaSource.WP_MEDIA_LIBRARY, ids);
+                if (mShowGutenbergEditor && mEditorPhotoPicker.getAllowMultipleSelection()) {
+                    mEditorPhotoPicker.setAllowMultipleSelection(false);
+                }
             }
         }
     }
@@ -3691,8 +3699,10 @@ public class EditPostActivity extends LocaleAwareActivity implements
     }
 
     @Override
-    public void onAddChatMedia() {
-        System.out.println("ChatEditor.onAddChatMedia");
+    public void onAddChatMedia(@NotNull Function1<? super List<Long>, Unit> onMediaSelected) {
+        mOnChatMediaSelected = onMediaSelected;
+        // TODO: A proper implementation would allow adding new media
+        onAddLibraryMediaClicked(true);
     }
 
     @Override

@@ -14,6 +14,7 @@ import kotlinx.android.synthetic.main.chat_editor_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.util.ActivityUtils
+import org.wordpress.android.util.ToastUtils
 import javax.inject.Inject
 
 private const val BLOCK_LIST_CONTENT_DESCRIPTION = "block-list"
@@ -59,6 +60,7 @@ class ChatEditorFragment : Fragment() {
         viewModel.onNewContent.observe(viewLifecycleOwner, Observer { content ->
             listener.onSend(content)
             editorScrollView?.post {
+                // TODO: A proper implementation would probably call the editor for this
                 editorScrollView?.fullScroll(View.FOCUS_DOWN)
             }
         })
@@ -66,7 +68,17 @@ class ChatEditorFragment : Fragment() {
             chatEditor.text.clear()
         })
         viewModel.onAttachRequest.observe(viewLifecycleOwner, Observer {
-            listener.onAddChatMedia()
+            listener.onAddChatMedia { viewModel.onMediaSelected(it) }
+        })
+        viewModel.onMediaListChanged.observe(viewLifecycleOwner, Observer { media ->
+            // TODO: It would be nice to have thumbnails
+            mediaCount.text = if (media.isEmpty()) {
+                ToastUtils.showToast(requireContext(), getString(R.string.chat_editor_media_cleared))
+                ""
+            } else {
+                ToastUtils.showToast(requireContext(), getString(R.string.chat_editor_media_attached, media.size))
+                media.size.toString()
+            }
         })
     }
 
