@@ -43,6 +43,7 @@ import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
+import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
@@ -163,7 +164,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private lateinit var signInButton: WPTextView
     private lateinit var readerBookmarkButton: ImageView
-    private lateinit var featuredImageView: ImageView
 
     private lateinit var appBar: AppBarLayout
     private lateinit var toolBar: Toolbar
@@ -329,9 +329,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             toolBar.setNavigationOnClickListener { requireActivity().onBackPressed() }
         }
 
-        featuredImageView = appBar.findViewById(R.id.featured_image)
-        featuredImageView.setOnClickListener { showFullScreen() }
-
         layoutFooter = view.findViewById(R.id.layout_post_detail_footer)
 
         val elevationOverlayProvider = ElevationOverlayProvider(layoutFooter.context)
@@ -423,6 +420,9 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun ReaderNavigationEvents.handleNavigationEvent() {
         when (this) {
+            is ReaderNavigationEvents.ShowMediaPreview -> MediaPreviewActivity
+                    .showPreview(requireContext(), site, featuredImage)
+
             is ReaderNavigationEvents.ShowPostsByTag -> ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
 
             is ReaderNavigationEvents.ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
@@ -475,10 +475,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun updateFeaturedImage(state: ReaderPostFeaturedImageUiState?) {
-        featuredImageView.setVisible(state != null)
+        featured_image.setVisible(state != null)
         state?.let {
-            featuredImageView.layoutParams.height = it.height
-            it.url?.let { url -> imageManager.load(featuredImageView, PHOTO, url, CENTER_CROP) }
+            featured_image.layoutParams.height = it.height
+            it.url?.let { url ->
+                imageManager.load(featured_image, PHOTO, url, CENTER_CROP)
+                featured_image.setOnClickListener {
+                    viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
+                }
+            }
         }
     }
 
@@ -1443,13 +1448,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun onShowHideToolbar(show: Boolean) {
         if (isAdded) {
             AniUtils.animateTopBar(appBar, show)
-        }
-    }
-
-    private fun showFullScreen() {
-        viewModel.post?.let {
-            val site = siteStore.getSiteBySiteId(it.blogId)
-            MediaPreviewActivity.showPreview(requireContext(), site, it.featuredImage)
         }
     }
 

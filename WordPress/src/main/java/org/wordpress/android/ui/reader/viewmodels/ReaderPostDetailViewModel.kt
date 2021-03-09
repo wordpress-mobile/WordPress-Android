@@ -7,6 +7,7 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
 import org.wordpress.android.modules.IO_THREAD
@@ -48,6 +49,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val postDetailUiStateBuilder: ReaderPostDetailUiStateBuilder,
     private val reblogUseCase: ReblogUseCase,
     private val readerFetchRelatedPostsUseCase: ReaderFetchRelatedPostsUseCase,
+    private val siteStore: SiteStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
@@ -160,6 +162,13 @@ class ReaderPostDetailViewModel @Inject constructor(
                 _uiState.value = it.copy(moreMenuItems = moreMenuItems)
             }
         }
+    }
+
+    fun onFeaturedImageClicked(blogId: Long, featuredImageUrl: String) {
+        val site = siteStore.getSiteBySiteId(blogId)
+        _navigationEvents.value = Event(
+                ReaderNavigationEvents.ShowMediaPreview(site = site, featuredImage = featuredImageUrl)
+        )
     }
 
     fun onButtonClicked(postId: Long, blogId: Long, type: ReaderPostCardActionType) {
@@ -315,7 +324,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         val localRelatedPosts: RelatedPostsUiState? = null,
         val globalRelatedPosts: RelatedPostsUiState? = null
     ) {
-        data class ReaderPostFeaturedImageUiState(val url: String? = null, val height: Int)
+        data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
 
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,

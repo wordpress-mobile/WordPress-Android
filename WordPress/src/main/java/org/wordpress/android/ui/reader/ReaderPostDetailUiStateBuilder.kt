@@ -103,6 +103,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private fun buildReaderPostFeaturedImageUiState(post: ReaderPost) =
             post.takeIf { featuredImageUtils.shouldAddFeaturedImage(post) }?.let {
                 ReaderPostFeaturedImageUiState(
+                        blogId = post.blogId,
                         url = buildReaderPostFeaturedImageUrl(post),
                         height = (displayUtilsWrapper.getDisplayPixelHeight() *
                                 READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
