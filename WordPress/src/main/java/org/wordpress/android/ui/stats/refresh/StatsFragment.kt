@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -106,13 +107,13 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
             val parent = activity.findViewById<View>(R.id.coordinatorLayout)
             if (holder != null && parent != null) {
                 if (holder.buttonTitle == null) {
@@ -135,7 +136,7 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
@@ -160,22 +161,18 @@ class StatsFragment : DaggerFragment(), ScrollableViewInitializedListener {
             )
         })
 
-        viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
-            siteChangedEvent?.applyIfNotHandled {
-                when (this) {
+        viewModel.siteChanged.observeEvent(viewLifecycleOwner, {
+                when (it) {
                     is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
                     is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
                 }
-            }
         })
 
-        viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { hideToolbar ->
+        viewModel.hideToolbar.observeEvent(viewLifecycleOwner, { hideToolbar ->
                 app_bar_layout.setExpanded(!hideToolbar, true)
-            }
         })
 
-        viewModel.selectedSection.observe(viewLifecycleOwner, Observer { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
             selectedSection?.let {
                 val position = when (selectedSection) {
                     INSIGHTS -> 0

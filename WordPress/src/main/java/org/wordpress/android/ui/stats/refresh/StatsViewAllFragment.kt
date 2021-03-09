@@ -42,6 +42,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -161,38 +162,36 @@ class StatsViewAllFragment : DaggerFragment() {
     }
 
     private fun setupObservers(activity: FragmentActivity) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { holder ->
-                val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-                if (parent != null) {
-                    if (holder.buttonTitle == null) {
-                        WPSnackbar.make(
-                                parent,
-                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                                Snackbar.LENGTH_LONG
-                        ).show()
-                    } else {
-                        val snackbar = WPSnackbar.make(
-                                parent,
-                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                                Snackbar.LENGTH_LONG
-                        )
-                        snackbar.setAction(
-                                uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
-                        ) { holder.buttonAction() }
-                        snackbar.show()
-                    }
+        viewModel.showSnackbarMessage.observeEvent(viewLifecycleOwner, { holder ->
+            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+            if (parent != null) {
+                if (holder.buttonTitle == null) {
+                    WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    ).show()
+                } else {
+                    val snackbar = WPSnackbar.make(
+                            parent,
+                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                            Snackbar.LENGTH_LONG
+                    )
+                    snackbar.setAction(
+                            uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
+                    ) { holder.buttonAction() }
+                    snackbar.show()
                 }
             }
         })
 
-        viewModel.data.observe(viewLifecycleOwner, Observer {
+        viewModel.data.observe(viewLifecycleOwner, {
             if (it != null) {
                 recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
                 loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
@@ -213,29 +212,25 @@ class StatsViewAllFragment : DaggerFragment() {
                 }
             }
         })
-        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+            navigator.navigate(activity, target)
         })
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+            navigator.navigate(activity, target)
         })
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
             if (event != null) {
                 viewModel.onDateChanged()
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
             app_bar_layout.postDelayed(
                     {
                         if (app_bar_layout != null) {
