@@ -308,12 +308,15 @@ class ReaderPostDetailViewModel @Inject constructor(
     data class ReaderPostDetailsUiState(
         val postId: Long,
         val blogId: Long,
+        val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
         val headerUiState: ReaderPostDetailsHeaderUiState,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
         val actions: ReaderPostActions,
         val localRelatedPosts: RelatedPostsUiState? = null,
         val globalRelatedPosts: RelatedPostsUiState? = null
     ) {
+        data class ReaderPostFeaturedImageUiState(val url: String? = null, val height: Int)
+
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,
             val isGlobal: Boolean,

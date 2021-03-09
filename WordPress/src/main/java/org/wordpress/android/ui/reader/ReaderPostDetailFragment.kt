@@ -92,12 +92,12 @@ import org.wordpress.android.ui.reader.discover.ReaderPostCardAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardAction.PrimaryAction
 import org.wordpress.android.ui.reader.discover.ReaderPostCardActionType
 import org.wordpress.android.ui.reader.models.ReaderBlogIdPostId
-import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
@@ -111,7 +111,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
@@ -192,7 +191,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     @Inject internal lateinit var siteStore: SiteStore
     @Inject internal lateinit var dispatcher: Dispatcher
     @Inject internal lateinit var readerFileDownloadManager: ReaderFileDownloadManager
-    @Inject internal lateinit var featuredImageUtils: FeaturedImageUtils
     @Inject internal lateinit var privateAtomicCookie: PrivateAtomicCookie
     @Inject internal lateinit var readerCssProvider: ReaderCssProvider
     @Inject internal lateinit var imageManager: ImageManager
@@ -412,6 +410,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         header_view.updatePost(state.headerUiState)
         showOrHideMoreMenu(state)
 
+        updateFeaturedImage(state.featuredImageUiState)
+
         updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
         updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
         updateActionButton(state.postId, state.blogId, state.actions.commentsAction, count_comments)
@@ -471,6 +471,14 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             is ReaderNavigationEvents.ShowPostDetail,
             is ReaderNavigationEvents.ShowVideoViewer,
             is ReaderNavigationEvents.ShowReaderSubs -> Unit // Do Nothing
+        }
+    }
+
+    private fun updateFeaturedImage(state: ReaderPostFeaturedImageUiState?) {
+        featuredImageView.setVisible(state != null)
+        state?.let {
+            featuredImageView.layoutParams.height = it.height
+            it.url?.let { url -> imageManager.load(featuredImageView, PHOTO, url, CENTER_CROP) }
         }
     }
 
@@ -1182,32 +1190,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             // scrollView was hidden in onCreateView, show it now that we have the post
             scrollView.visibility = View.VISIBLE
 
-            viewModel.post?.let {
-                if (featuredImageUtils.shouldAddFeaturedImage(it)) {
-                    val displayWidth = DisplayUtils.getDisplayPixelWidth(context)
-                    val imageUrl = ReaderUtils.getResizedImageUrl(
-                            it.featuredImage,
-                            displayWidth,
-                            0,
-                            it.isPrivate,
-                            it.isPrivateAtomic
-                    )
-
-                    val displayHeight = DisplayUtils.getDisplayPixelHeight(requireContext())
-                    val imageHeight = (displayHeight * FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
-                    featuredImageView.layoutParams.height = imageHeight
-
-                    imageManager.load(
-                            featuredImageView,
-                            PHOTO,
-                            imageUrl,
-                            CENTER_CROP
-                    )
-                }
-            }
-
             // render the post in the webView
-            renderer = ReaderPostRenderer(readerWebView, viewModel.post, featuredImageUtils, readerCssProvider)
+            renderer = ReaderPostRenderer(readerWebView, viewModel.post, readerCssProvider)
 
             // if the post is from private atomic site postpone render until we have a special access cookie
             if (viewModel.post?.isPrivateAtomic == true && privateAtomicCookie.isCookieRefreshRequired()) {
@@ -1470,8 +1454,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     companion object {
-        private const val FEATURED_IMAGE_HEIGHT_PERCENT = 0.4
-
         fun newInstance(blogId: Long, postId: Long): ReaderPostDetailFragment {
             return newInstance(false, blogId, postId, null, 0, false, null, null, false)
         }
