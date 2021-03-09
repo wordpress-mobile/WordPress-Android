@@ -88,8 +88,8 @@ dependencies {
     lintChecks 'org.wordpress:lint:1.0.1'
 
     // We need to add the hermes library manually for binary dependency.
-    // There doesn't seem to be a good way to integrate an aar into a library dependency, and it's
-    // not something Google wants to support, so this is a necessary workaround.
+    // There doesn't seem to be a good way to integrate an aar into a library dependency and Google
+    // doesn't seem to believe its worth implementing one: https://stackoverflow.com/a/20715155
     if (!buildGutenbergFromSource) {
         def hermesPath = './libs/hermes/'
         debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
