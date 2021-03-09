@@ -5,6 +5,10 @@
 * [*] Starter Page Templates: Adds the option to choose between mobile, tablet or desktop thumbnails
 * [**] Site Creation: Adds filterable categories to the site design picker when creating a WordPress.com site [#14144]
 
+16.8.1
+------
+* [**] Block Editor: Reduce the number of items per page when fetching reusable blocks to prevent a crash. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3227]
+
 16.8
 -----
 * [*] Block Editor: Fixed block mover title wording for better clarity from 'Move block position' to 'Change block position'. [https://github.com/wordpress-mobile/gutenberg-mobile/pull/3049]
