@@ -131,6 +131,7 @@ import org.wordpress.android.util.image.ImageType.PHOTO
 import org.wordpress.android.util.isDarkTheme
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.util.widgets.CustomSwipeRefreshLayout
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPScrollView
 import org.wordpress.android.widgets.WPSnackbar
 import org.wordpress.android.widgets.WPTextView
@@ -207,8 +208,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     val isCustomViewShowing: Boolean
         get() = view != null && readerWebView.isCustomViewShowing
 
-    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener {
-        appBarLayout, verticalOffset ->
+    private val appBarLayoutOffsetChangedListener = AppBarLayout.OnOffsetChangedListener { appBarLayout, verticalOffset ->
         val collapsingToolbarLayout = appBarLayout
                 .findViewById<CollapsingToolbarLayout>(R.id.collapsing_toolbar)
         val toolbar = appBarLayout.findViewById<Toolbar>(R.id.toolbar_main)
@@ -379,7 +379,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.uiState.observe(
                 viewLifecycleOwner,
-                Observer<ReaderPostDetailsUiState> { state ->
+                { state ->
                     header_view.updatePost(state.headerUiState)
                     showOrHideMoreMenu(state)
 
@@ -390,56 +390,52 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 }
         )
 
-        viewModel.refreshPost.observe(viewLifecycleOwner, Observer { // Do nothing
+        viewModel.refreshPost.observeEvent(viewLifecycleOwner, { // Do nothing
         }
         )
 
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
-                showSnackbar()
-            }
+        viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {
+            it.showSnackbar()
         }
         )
 
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
-            it.applyIfNotHandled {
-                when (this) {
-                    is ReaderNavigationEvents.ShowPostsByTag -> {
-                        ReaderActivityLauncher.showReaderTagPreview(context, this.tag)
-                    }
-                    is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+        viewModel.navigationEvents.observeEvent(viewLifecycleOwner, {
+            when (it) {
+                is ReaderNavigationEvents.ShowPostsByTag -> {
+                    ReaderActivityLauncher.showReaderTagPreview(context, it.tag)
+                }
+                is ShowBlogPreview -> ReaderActivityLauncher.showReaderBlogOrFeedPreview(
+                        context,
+                        it.siteId,
+                        it.feedId
+                )
+                is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
+                is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
+                is ReaderNavigationEvents.ShowReportPost -> {
+                    ReaderActivityLauncher.openUrl(
                             context,
-                            this.siteId,
-                            this.feedId
+                            readerUtilsWrapper.getReportPostUrl(it.url),
+                            OpenUrlType.INTERNAL
                     )
-                    is ReaderNavigationEvents.SharePost -> ReaderActivityLauncher.sharePost(context, post)
-                    is ReaderNavigationEvents.OpenPost -> ReaderActivityLauncher.openPost(context, post)
-                    is ReaderNavigationEvents.ShowReportPost -> {
-                        ReaderActivityLauncher.openUrl(
-                                context,
-                                readerUtilsWrapper.getReportPostUrl(url),
-                                OpenUrlType.INTERNAL
-                        )
-                    }
-                    is ReaderNavigationEvents.ShowReaderComments -> {
-                        ReaderActivityLauncher.showReaderComments(context, blogId, postId)
-                    }
-                    is ReaderNavigationEvents.ShowNoSitesToReblog -> {
-                        ReaderActivityLauncher.showNoSiteToReblog(activity)
-                    }
-                    is ReaderNavigationEvents.ShowSitePickerForResult -> {
-                        ActivityLauncher
-                                .showSitePickerForResult(this@ReaderPostDetailFragment, this.preselectedSite, this.mode)
-                    }
-                    is OpenEditorForReblog -> {
-                        ActivityLauncher.openEditorForReblog(activity, this.site, this.post, this.source)
-                    }
-                    is ShowBookmarkedTab -> {
-                        ActivityLauncher.viewSavedPostsListInReader(activity)
-                    }
-                    is ShowBookmarkedSavedOnlyLocallyDialog -> {
-                        showBookmarkSavedLocallyDialog(this)
-                    }
+                }
+                is ReaderNavigationEvents.ShowReaderComments -> {
+                    ReaderActivityLauncher.showReaderComments(context, blogId, postId)
+                }
+                is ReaderNavigationEvents.ShowNoSitesToReblog -> {
+                    ReaderActivityLauncher.showNoSiteToReblog(activity)
+                }
+                is ReaderNavigationEvents.ShowSitePickerForResult -> {
+                    ActivityLauncher
+                            .showSitePickerForResult(this@ReaderPostDetailFragment, it.preselectedSite, it.mode)
+                }
+                is OpenEditorForReblog -> {
+                    ActivityLauncher.openEditorForReblog(activity, it.site, it.post, it.source)
+                }
+                is ShowBookmarkedTab -> {
+                    ActivityLauncher.viewSavedPostsListInReader(activity)
+                }
+                is ShowBookmarkedSavedOnlyLocallyDialog -> {
+                    showBookmarkSavedLocallyDialog(it)
                 }
             }
         })
