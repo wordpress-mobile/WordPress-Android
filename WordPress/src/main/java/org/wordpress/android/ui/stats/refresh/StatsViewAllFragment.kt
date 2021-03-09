@@ -1,12 +1,10 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.animation.StateListAnimator
 import android.os.Bundle
 import android.os.Parcelable
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -19,6 +17,7 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsViewAllFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.StatsViewType
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
@@ -37,6 +36,7 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
 import org.wordpress.android.util.image.ImageManager
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -167,35 +167,14 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     }
 
     private fun setupObservers(activity: FragmentActivity, binding: StatsViewAllFragmentBinding) = with(binding) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { holder ->
-                val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-                if (parent != null) {
-                    if (holder.buttonTitle == null) {
-                        WPSnackbar.make(
-                                parent,
-                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                                Snackbar.LENGTH_LONG
-                        ).show()
-                    } else {
-                        val snackbar = WPSnackbar.make(
-                                parent,
-                                uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                                Snackbar.LENGTH_LONG
-                        )
-                        snackbar.setAction(
-                                uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
-                        ) { holder.buttonAction() }
-                        snackbar.show()
-                    }
-                }
-            }
+        viewModel.showSnackbarMessage.observeEvent(viewLifecycleOwner, { holder ->
+            showSnackbar(activity, holder)
         })
 
         viewModel.data.observe(viewLifecycleOwner, {
@@ -225,20 +204,16 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
                 }
             }
         })
-        viewModel.navigationTarget.observe(viewLifecycleOwner, { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+            navigator.navigate(activity, target)
         })
 
         viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(viewLifecycleOwner, { event ->
-            event?.getContentIfNotHandled()?.let { target ->
-                navigator.navigate(activity, target)
-            }
+        viewModel.navigationTarget.observeEvent(viewLifecycleOwner, { target ->
+            navigator.navigate(activity, target)
         })
 
         viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
@@ -248,27 +223,34 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         })
 
         viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
-            appBarLayout.postDelayed(
-                    {
-                        val originalStateListAnimator = appBarLayout.stateListAnimator
-                        if (originalStateListAnimator != null) {
-                            appBarLayout.setTag(
-                                    R.id.appbar_layout_original_animator_tag_key,
-                                    originalStateListAnimator
-                            )
-                        }
-
-                        if (hasShadow == true) {
-                            appBarLayout.stateListAnimator = appBarLayout.getTag(
-                                    R.id.appbar_layout_original_animator_tag_key
-                            ) as StateListAnimator
-                        } else {
-                            appBarLayout.stateListAnimator = null
-                        }
-                    },
-                    100
-            )
+            appBarLayout.showShadow(hasShadow == true)
         })
+    }
+
+    private fun showSnackbar(
+        activity: FragmentActivity,
+        holder: SnackbarMessageHolder
+    ) {
+        val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+        if (parent != null) {
+            if (holder.buttonTitle == null) {
+                WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                val snackbar = WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                )
+                snackbar.setAction(
+                        uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)
+                ) { holder.buttonAction() }
+                snackbar.show()
+            }
+        }
     }
 
     private fun loadData(recyclerView: RecyclerView, data: List<BlockListItem>) {

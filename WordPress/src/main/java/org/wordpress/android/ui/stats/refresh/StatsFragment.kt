@@ -1,6 +1,5 @@
 package org.wordpress.android.ui.stats.refresh
 
-import android.animation.StateListAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
@@ -11,7 +10,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
@@ -21,7 +19,9 @@ import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.databinding.StatsFragmentBinding
 import org.wordpress.android.ui.ScrollableViewInitializedListener
+import org.wordpress.android.ui.pages.SnackbarMessageHolder
 import org.wordpress.android.ui.stats.refresh.lists.StatsListFragment
+import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.ANNUAL_STATS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DAYS
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection.DETAIL
@@ -33,6 +33,7 @@ import org.wordpress.android.ui.stats.refresh.utils.StatsSiteProvider.SiteUpdate
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.WPSwipeToRefreshHelper
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
+import org.wordpress.android.viewmodel.observeEvent
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
@@ -117,95 +118,83 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     }
 
     private fun setupObservers(activity: FragmentActivity, binding: StatsFragmentBinding) = with(binding) {
-        viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
+        viewModel.isRefreshing.observe(viewLifecycleOwner, {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
             }
         })
 
-        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, Observer { holder ->
-            val parent = activity.findViewById<View>(R.id.coordinatorLayout)
-            if (holder != null && parent != null) {
-                if (holder.buttonTitle == null) {
-                    WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    ).show()
-                } else {
-                    val snackbar = WPSnackbar.make(
-                            parent,
-                            uiHelpers.getTextOfUiString(requireContext(), holder.message),
-                            Snackbar.LENGTH_LONG
-                    )
-                    snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
-                        holder.buttonAction()
-                    }
-                    snackbar.show()
-                }
+        viewModel.showSnackbarMessage.observe(viewLifecycleOwner, { holder ->
+            showSnackbar(activity, holder)
+        })
+
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
+            appBarLayout.showShadow(hasShadow == true)
+        })
+
+        viewModel.siteChanged.observeEvent(viewLifecycleOwner, { siteUpdateResult ->
+            when (siteUpdateResult) {
+                is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
+                is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            appBarLayout.postDelayed(
-                    {
-                        if (appBarLayout != null) {
-                            val originalStateListAnimator = appBarLayout.stateListAnimator
-                            if (originalStateListAnimator != null) {
-                                appBarLayout.setTag(
-                                        R.id.appbar_layout_original_animator_tag_key,
-                                        originalStateListAnimator
-                                )
-                            }
-
-                            if (hasShadow == true) {
-                                appBarLayout.stateListAnimator = appBarLayout.getTag(
-                                        R.id.appbar_layout_original_animator_tag_key
-                                ) as StateListAnimator
-                            } else {
-                                appBarLayout.stateListAnimator = null
-                            }
-                        }
-                    },
-                    100
-            )
+        viewModel.hideToolbar.observeEvent(viewLifecycleOwner, { hideToolbar ->
+            appBarLayout.setExpanded(!hideToolbar, true)
         })
 
-        viewModel.siteChanged.observe(viewLifecycleOwner, Observer { siteChangedEvent ->
-            siteChangedEvent?.applyIfNotHandled {
-                when (this) {
-                    is SiteUpdateResult.SiteConnected -> viewModel.onSiteChanged()
-                    is SiteUpdateResult.NotConnectedJetpackSite -> getActivity()?.finish()
-                }
-            }
-        })
-
-        viewModel.hideToolbar.observe(viewLifecycleOwner, Observer { event ->
-            event?.getContentIfNotHandled()?.let { hideToolbar ->
-                appBarLayout.setExpanded(!hideToolbar, true)
-            }
-        })
-
-        viewModel.selectedSection.observe(viewLifecycleOwner, Observer { selectedSection ->
+        viewModel.selectedSection.observe(viewLifecycleOwner, { selectedSection ->
             selectedSection?.let {
-                val position = when (selectedSection) {
-                    INSIGHTS -> 0
-                    DAYS -> 1
-                    WEEKS -> 2
-                    MONTHS -> 3
-                    YEARS -> 4
-                    DETAIL -> null
-                    ANNUAL_STATS -> null
-                }
-                position?.let {
-                    if (statsPager.currentItem != position) {
-                        tabLayout.removeOnTabSelectedListener(selectedTabListener)
-                        statsPager.setCurrentItem(position, false)
-                        tabLayout.addOnTabSelectedListener(selectedTabListener)
-                    }
-                }
+                handleSelectedSection(selectedSection)
             }
         })
+    }
+
+    private fun StatsFragmentBinding.handleSelectedSection(
+        selectedSection: StatsSection
+    ) {
+        val position = when (selectedSection) {
+            INSIGHTS -> 0
+            DAYS -> 1
+            WEEKS -> 2
+            MONTHS -> 3
+            YEARS -> 4
+            DETAIL -> null
+            ANNUAL_STATS -> null
+        }
+        position?.let {
+            if (statsPager.currentItem != position) {
+                tabLayout.removeOnTabSelectedListener(selectedTabListener)
+                statsPager.setCurrentItem(position, false)
+                tabLayout.addOnTabSelectedListener(selectedTabListener)
+            }
+        }
+    }
+
+    private fun showSnackbar(
+        activity: FragmentActivity,
+        holder: SnackbarMessageHolder?
+    ) {
+        val parent = activity.findViewById<View>(R.id.coordinatorLayout)
+        if (holder != null && parent != null) {
+            if (holder.buttonTitle == null) {
+                WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                ).show()
+            } else {
+                val snackbar = WPSnackbar.make(
+                        parent,
+                        uiHelpers.getTextOfUiString(requireContext(), holder.message),
+                        Snackbar.LENGTH_LONG
+                )
+                snackbar.setAction(uiHelpers.getTextOfUiString(requireContext(), holder.buttonTitle)) {
+                    holder.buttonAction()
+                }
+                snackbar.show()
+            }
+        }
     }
 
     override fun onScrollableViewInitialized(containerId: Int) {
