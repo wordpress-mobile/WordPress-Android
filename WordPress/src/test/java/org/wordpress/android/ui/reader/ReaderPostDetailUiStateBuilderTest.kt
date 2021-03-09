@@ -54,9 +54,10 @@ class ReaderPostDetailUiStateBuilderTest {
         )
     }
 
+    /* RELATED POSTS */
     @Test
     fun `when local related posts ui is built, then source post site name exists in header label`() = test {
-        val relatedPostsUiState = init(isGlobal = false)
+        val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = false)
 
         assertThat(relatedPostsUiState.headerLabel).isEqualTo(
                 UiStringResWithParams(
@@ -68,21 +69,21 @@ class ReaderPostDetailUiStateBuilderTest {
 
     @Test
     fun `when global related posts ui is built, then global related posts header label exists`() = test {
-        val relatedPostsUiState = init(isGlobal = true)
+        val relatedPostsUiState = buildRelatedPostsUiState(isGlobal = true)
 
         assertThat(relatedPostsUiState.headerLabel).isEqualTo(UiStringRes(R.string.reader_label_global_related_posts))
     }
 
     @Test
     fun `given empty related posts, when related posts ui is built, then related post cards are empty`() = test {
-        val relatedPostsUiState = init(relatedPosts = ReaderSimplePostList())
+        val relatedPostsUiState = buildRelatedPostsUiState(relatedPosts = ReaderSimplePostList())
 
         assertThat(relatedPostsUiState.cards).isEmpty()
     }
 
     @Test
     fun `given related posts, when related posts ui is built, then related post cards exist`() = test {
-        val relatedPostsUiState = init()
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
         assertThat(relatedPostsUiState.cards).isNotEmpty
     }
@@ -93,7 +94,7 @@ class ReaderPostDetailUiStateBuilderTest {
         whenever(readerSimplePost.hasTitle()).thenReturn(true)
         whenever(readerSimplePost.title).thenReturn(title)
 
-        val relatedPostsUiState = init()
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
         assertThat(relatedPostsUiState.cards?.first()?.title).isEqualTo(UiStringText(title))
     }
@@ -103,7 +104,7 @@ class ReaderPostDetailUiStateBuilderTest {
             test {
                 whenever(readerSimplePost.hasTitle()).thenReturn(false)
 
-                val relatedPostsUiState = init()
+                val relatedPostsUiState = buildRelatedPostsUiState()
 
                 assertThat(relatedPostsUiState.cards?.first()?.title).isNull()
             }
@@ -114,7 +115,7 @@ class ReaderPostDetailUiStateBuilderTest {
         whenever(readerSimplePost.hasExcerpt()).thenReturn(true)
         whenever(readerSimplePost.excerpt).thenReturn(excerpt)
 
-        val relatedPostsUiState = init()
+        val relatedPostsUiState = buildRelatedPostsUiState()
 
         assertThat(relatedPostsUiState.cards?.first()?.excerpt).isEqualTo(UiStringText(excerpt))
     }
@@ -124,7 +125,7 @@ class ReaderPostDetailUiStateBuilderTest {
             test {
                 whenever(readerSimplePost.hasExcerpt()).thenReturn(false)
 
-                val relatedPostsUiState = init()
+                val relatedPostsUiState = buildRelatedPostsUiState()
 
                 assertThat(relatedPostsUiState.cards?.first()?.excerpt).isNull()
             }
@@ -135,7 +136,7 @@ class ReaderPostDetailUiStateBuilderTest {
                 val url = "/featured/image/url"
                 whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(url)
 
-                val relatedPostsUiState = init()
+                val relatedPostsUiState = buildRelatedPostsUiState()
 
                 assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isEqualTo(url)
             }
@@ -145,12 +146,12 @@ class ReaderPostDetailUiStateBuilderTest {
             test {
                 whenever(readerSimplePost.getFeaturedImageForDisplay(any(), any())).thenReturn(null)
 
-                val relatedPostsUiState = init()
+                val relatedPostsUiState = buildRelatedPostsUiState()
 
                 assertThat(relatedPostsUiState.cards?.first()?.featuredImageUrl).isNull()
             }
 
-    private fun init(
+    private fun buildRelatedPostsUiState(
         relatedPosts: ReaderSimplePostList = dummyRelatedPosts,
         isGlobal: Boolean = false
     ) = builder.mapRelatedPostsToUiState(
