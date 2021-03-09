@@ -26,8 +26,6 @@ apply plugin: 'signing'
 apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 
-def buildGutenbergFromSource = gradle.ext.includedBuildGutenbergMobilePath != null
-
 android {
     compileSdkVersion 29
 
@@ -36,7 +34,6 @@ android {
         versionName "1.3"
         minSdkVersion 21
         targetSdkVersion 29
-        buildConfigField "boolean", "BUILD_GUTENBERG_FROM_SOURCE", buildGutenbergFromSource.toString()
     }
     compileOptions {
         sourceCompatibility 1.8
@@ -90,7 +87,7 @@ dependencies {
     // We need to add the hermes library manually for binary dependency.
     // There doesn't seem to be a good way to integrate an aar into a library dependency and Google
     // doesn't seem to believe its worth implementing one: https://stackoverflow.com/a/20715155
-    if (!buildGutenbergFromSource) {
+    if (gradle.ext.includedBuildGutenbergMobilePath == null) {
         def hermesPath = './libs/hermes/'
         debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
         releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
