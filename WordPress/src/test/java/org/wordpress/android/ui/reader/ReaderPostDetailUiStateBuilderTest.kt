@@ -2,6 +2,7 @@ package org.wordpress.android.ui.reader
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.any
+import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.whenever
 import kotlinx.coroutines.InternalCoroutinesApi
 import org.assertj.core.api.Assertions.assertThat
@@ -17,10 +18,15 @@ import org.wordpress.android.test
 import org.wordpress.android.ui.reader.discover.ReaderPostUiStateBuilder
 import org.wordpress.android.ui.reader.models.ReaderSimplePost
 import org.wordpress.android.ui.reader.models.ReaderSimplePostList
+import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
+import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
+import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.viewmodel.ResourceProvider
 
 @InternalCoroutinesApi
@@ -32,6 +38,9 @@ class ReaderPostDetailUiStateBuilderTest {
     private lateinit var builder: ReaderPostDetailUiStateBuilder
     @Mock lateinit var postUiStateBuilder: ReaderPostUiStateBuilder
     @Mock lateinit var headerViewUiStateBuilder: ReaderPostDetailsHeaderViewUiStateBuilder
+    @Mock lateinit var featuredImageUtils: FeaturedImageUtils
+    @Mock lateinit var readerUtilsWrapper: ReaderUtilsWrapper
+    @Mock lateinit var displayUtilsWrapper: DisplayUtilsWrapper
     @Mock lateinit var resourceProvider: ResourceProvider
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     private lateinit var dummyRelatedPosts: ReaderSimplePostList
@@ -42,6 +51,8 @@ class ReaderPostDetailUiStateBuilderTest {
         this.blogName = "blog name"
     }
     private val dummyOnRelatedPostItemClicked: (Long, Long, Boolean) -> Unit = { _, _, _ -> }
+    private val dummyFeaturedImageUrl = "/image/url"
+    private val dummyDisplayPixelHeight = 100
 
     @Before
     fun setUp() = test {
@@ -50,9 +61,34 @@ class ReaderPostDetailUiStateBuilderTest {
         builder = ReaderPostDetailUiStateBuilder(
                 headerViewUiStateBuilder,
                 postUiStateBuilder,
+                featuredImageUtils,
+                readerUtilsWrapper,
+                displayUtilsWrapper,
                 resourceProvider
         )
     }
+
+    /* READER POST FEATURED IMAGE */
+    @Test
+    fun `given featured image should be shown, when post ui is built, then featured image exists`() = test {
+        val postUiState = buildPostUiState(shouldShowFeaturedImage = true)
+
+        assertThat(postUiState.featuredImageUiState).isEqualTo(
+                ReaderPostFeaturedImageUiState(
+                        blogId = dummySourceReaderPost.blogId,
+                        url = dummyFeaturedImageUrl,
+                        height = (dummyDisplayPixelHeight * READER_POST_FEATURED_IMAGE_HEIGHT_PERCENT).toInt()
+                )
+        )
+    }
+
+    @Test
+    fun `given featured image should not be shown, when post ui is built, then featured image does not exists`() =
+            test {
+                val postUiState = buildPostUiState(shouldShowFeaturedImage = false)
+
+                assertThat(postUiState.featuredImageUiState).isNull()
+            }
 
     /* RELATED POSTS */
     @Test
@@ -160,4 +196,23 @@ class ReaderPostDetailUiStateBuilderTest {
             isGlobal = isGlobal,
             onItemClicked = dummyOnRelatedPostItemClicked
     )
+
+    private fun buildPostUiState(shouldShowFeaturedImage: Boolean): ReaderPostDetailsUiState {
+        whenever(featuredImageUtils.shouldAddFeaturedImage(any())).thenReturn(shouldShowFeaturedImage)
+        whenever(displayUtilsWrapper.getDisplayPixelHeight()).thenReturn(dummyDisplayPixelHeight)
+        whenever(readerUtilsWrapper.getResizedImageUrl(any(), any(), any(), any(), any()))
+                .thenReturn(dummyFeaturedImageUrl)
+
+        whenever(headerViewUiStateBuilder.mapPostToUiState(any(), any(), any(), any())).thenReturn(mock())
+        whenever(postUiStateBuilder.mapPostToActions(any(), any())).thenReturn(mock())
+
+        return builder.mapPostToUiState(
+                post = dummySourceReaderPost,
+                moreMenuItems = null,
+                onButtonClicked = mock(),
+                onBlogSectionClicked = mock(),
+                onFollowClicked = mock(),
+                onTagItemClicked = mock()
+        )
+    }
 }

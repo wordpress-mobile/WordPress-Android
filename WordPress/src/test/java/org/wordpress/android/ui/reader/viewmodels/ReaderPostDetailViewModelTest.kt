@@ -21,6 +21,8 @@ import org.mockito.junit.MockitoJUnitRunner
 import org.wordpress.android.R.dimen
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
 import org.wordpress.android.ui.pages.SnackbarMessageHolder
@@ -28,6 +30,7 @@ import org.wordpress.android.ui.reader.ReaderPostDetailUiStateBuilder
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.OpenEditorForReblog
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ReplaceRelatedPostDetailsWithHistory
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowMediaPreview
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
@@ -90,6 +93,7 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var eventBusWrapper: EventBusWrapper
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
+    @Mock private lateinit var siteStore: SiteStore
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -97,6 +101,7 @@ class ReaderPostDetailViewModelTest {
     private val fakeSnackBarFeed = MutableLiveData<Event<SnackbarMessageHolder>>()
 
     private val readerPost = createDummyReaderPost(2)
+    private val site = SiteModel().apply { siteId = readerPost.blogId }
 
     private lateinit var relatedPosts: ReaderSimplePostList
 
@@ -110,6 +115,7 @@ class ReaderPostDetailViewModelTest {
                 postDetailsUiStateBuilder,
                 reblogUseCase,
                 readerFetchRelatedPostsUseCase,
+                siteStore,
                 analyticsUtilsWrapper,
                 eventBusWrapper,
                 TEST_DISPATCHER,
@@ -119,6 +125,7 @@ class ReaderPostDetailViewModelTest {
         whenever(readerPostCardActionsHandler.refreshPosts).thenReturn(fakeRefreshPostFeed)
         whenever(readerPostCardActionsHandler.navigationEvents).thenReturn(fakeNavigationFeed)
         whenever(readerPostCardActionsHandler.snackbarEvents).thenReturn(fakeSnackBarFeed)
+        whenever(siteStore.getSiteBySiteId(readerPost.blogId)).thenReturn(site)
 
         whenever(readerUtilsWrapper.getTagFromTagName(anyOrNull(), anyOrNull())).thenReturn(mock())
 
@@ -322,6 +329,28 @@ class ReaderPostDetailViewModelTest {
         )
     }
 
+    /* READER POST FEATURED IMAGE */
+    @Test
+    fun `when featured image is clicked, then media preview is shown`() = test {
+        val observers = init()
+
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
+
+        assertThat(observers.navigation[0].peekContent()).isInstanceOf(ShowMediaPreview::class.java)
+    }
+
+    @Test
+    fun `when media preview is requested, then correct media from selected post's site is previewed`() = test {
+        val observers = init()
+
+        viewModel.onFeaturedImageClicked(blogId = readerPost.blogId, featuredImageUrl = readerPost.featuredImage)
+
+        assertThat(observers.navigation[0].peekContent() as ShowMediaPreview).isEqualTo(
+                ShowMediaPreview(site = site, featuredImage = readerPost.featuredImage)
+        )
+    }
+
+    /* RELATED POSTS */
     @Test
     fun `given local related posts fetch succeeds, when related posts are requested, then local related posts shown`() =
             test {
@@ -484,6 +513,7 @@ class ReaderPostDetailViewModelTest {
         this.feedId = id * 1000
         this.title = "DummyPost"
         this.featuredVideo = id.toString()
+        this.featuredImage = "/featured_image/$id/url"
         this.isExternal = !isWpComPost
     }
 
@@ -497,6 +527,7 @@ class ReaderPostDetailViewModelTest {
         return ReaderPostDetailsUiState(
                 postId = post.postId,
                 blogId = post.blogId,
+                featuredImageUiState = mock(),
                 headerUiState = ReaderPostDetailsHeaderUiState(
                         UiStringText(post.title),
                         post.authorName,
