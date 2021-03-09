@@ -41,6 +41,7 @@ import org.wordpress.android.util.DisplayUtilsWrapper
 import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 /**
@@ -104,7 +105,7 @@ class HomePagePickerFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(), viewModelFactory)
                 .get(HomePagePickerViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, Observer { uiState ->
+        viewModel.uiState.observe(viewLifecycleOwner, { uiState ->
             uiHelper.fadeInfadeOutViews(title, header, uiState.isHeaderVisible)
             description?.visibility = if (uiState.isDescriptionVisible) View.VISIBLE else View.INVISIBLE
             setContentVisibility(uiState.loadingSkeletonVisible, uiState.errorViewVisible)
@@ -122,7 +123,7 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, Observer { action ->
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
             activity?.supportFragmentManager?.let { fm ->
                 when (action) {
                     is Show -> {
@@ -136,14 +137,12 @@ class HomePagePickerFragment : Fragment() {
             }
         })
 
-        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, Observer {
+        viewModel.onThumbnailModeButtonPressed.observe(viewLifecycleOwner, {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onCategorySelectionChanged.observe(viewLifecycleOwner, Observer {
-            it?.applyIfNotHandled {
+        viewModel.onCategorySelectionChanged.observeEvent(viewLifecycleOwner, {
                 layoutsRecyclerView?.smoothScrollToPosition(0)
-            }
         })
 
         viewModel.start(displayUtils.isTablet())
