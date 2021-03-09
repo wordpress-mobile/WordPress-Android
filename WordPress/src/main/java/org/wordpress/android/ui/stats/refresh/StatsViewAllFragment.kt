@@ -48,6 +48,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewAllViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private lateinit var binding: StatsViewAllFragmentBinding
 
     private val listStateKey = "list_state"
 
@@ -59,7 +60,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        StatsViewAllFragmentBinding.bind(requireView()).statsListFragment.recyclerView.layoutManager?.let {
+        binding.statsListFragment.recyclerView.layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -112,7 +113,7 @@ class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-        val binding = StatsViewAllFragmentBinding.bind(requireView())
+        binding = StatsViewAllFragmentBinding.bind(requireView())
         with(nonNullActivity as AppCompatActivity) {
             setSupportActionBar(binding.toolbar)
             supportActionBar?.let {
