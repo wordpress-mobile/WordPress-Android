@@ -7,16 +7,16 @@ import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 
-public class MasterbarComponent {
-    public MasterbarComponent() {
+public class MainNavBarComponent {
+    public MainNavBarComponent() {
     }
 
-    public MasterbarComponent goToMySitesTab() {
+    public MainNavBarComponent goToMySitesTab() {
         clickOn(R.id.nav_sites);
         return this;
     }
 
-    public MasterbarComponent clickBlogPosts() {
+    public MainNavBarComponent clickBlogPosts() {
         onView(withId(R.id.quick_action_posts_button))
                 .perform(scrollTo());
         clickOn(R.id.quick_action_posts_button);

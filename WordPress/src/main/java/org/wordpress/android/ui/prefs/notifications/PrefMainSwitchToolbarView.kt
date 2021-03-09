@@ -22,9 +22,9 @@ import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.redirectContextClickToLongPressListener
 
 /**
- * Custom view for master switch in toolbar for preferences.
+ * Custom view for main switch in toolbar for preferences.
  */
-class PrefMasterSwitchToolbarView @JvmOverloads constructor(
+class PrefMainSwitchToolbarView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null,
     defStyle: Int = 0,
@@ -34,7 +34,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         OnLongClickListener,
         OnClickListener {
     // We should refactor this part to use style attributes, since enum is not too theming friendly
-    enum class PrefMasterSwitchToolbarViewStyle constructor(
+    enum class PrefMainSwitchToolbarViewStyle constructor(
         val value: Int,
         @AttrRes val titleColorResId: Int,
         @AttrRes val backgroundColorResId: Int
@@ -51,88 +51,80 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         );
 
         companion object {
-            fun fromInt(value: Int): PrefMasterSwitchToolbarViewStyle? =
+            fun fromInt(value: Int): PrefMainSwitchToolbarViewStyle? =
                     values().firstOrNull { it.value == value }
         }
     }
 
     private var hintOn: String? = null
     private var hintOff: String? = null
-    private var masterSwitch: SwitchCompat
-    private var masterSwitchToolbarListener: MasterSwitchToolbarListener? = null
+    private var mainSwitch: SwitchCompat
+    private var mainSwitchToolbarListener: MainSwitchToolbarListener? = null
     private var toolbarSwitch: Toolbar
     private var titleOff: String? = null
     private var titleOn: String? = null
-    private var viewStyle: PrefMasterSwitchToolbarViewStyle? = null
+    private var viewStyle: PrefMainSwitchToolbarViewStyle? = null
     private var titleContentDescription: String? = null
 
-    val isMasterChecked: Boolean
-        get() = masterSwitch.isChecked
+    val isMainChecked: Boolean
+        get() = mainSwitch.isChecked
 
     /**
-     * Interface definition for callbacks to be invoked on interaction with master switch toolbar.
+     * Interface definition for callbacks to be invoked on interaction with main switch toolbar.
      */
-    interface MasterSwitchToolbarListener {
+    interface MainSwitchToolbarListener {
         /**
-         * Called when the checked state of master switch is changed.
+         * Called when the checked state of main switch is changed.
          *
-         * @param buttonView The master switch whose state has changed.
-         * @param isChecked The new checked state of master switch.
+         * @param buttonView The main switch whose state has changed.
+         * @param isChecked The new checked state of main switch.
          */
-        fun onMasterSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean)
+        fun onMainSwitchCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean)
     }
 
     init {
-        inflate(context, R.layout.preferences_master_switch_toolbar, this)
+        inflate(context, R.layout.preferences_main_switch_toolbar, this)
 
         toolbarSwitch = findViewById(R.id.toolbar_with_switch)
         toolbarSwitch.inflateMenu(R.menu.notifications_settings_secondary)
 
-        val menuItem = toolbarSwitch.menu.findItem(R.id.master_switch)
-        masterSwitch = menuItem.actionView as SwitchCompat
+        val menuItem = toolbarSwitch.menu.findItem(R.id.main_switch)
+        mainSwitch = menuItem.actionView as SwitchCompat
         setChecked(true)
 
         attrs?.let {
             val typedArray = context.obtainStyledAttributes(
                     it,
-                    R.styleable.PrefMasterSwitchToolbarView, 0, 0
+                    R.styleable.PrefMainSwitchToolbarView, 0, 0
             )
             try {
                 titleContentDescription = typedArray
-                        .getString(R.styleable.PrefMasterSwitchToolbarView_masterContentDescription)
+                        .getString(R.styleable.PrefMainSwitchToolbarView_mainContentDescription)
 
-                val titleOn = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterTitleOn)
-                val titleOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterTitleOff)
-                val hintOn = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOn)
-                val hintOff = typedArray.getString(R.styleable.PrefMasterSwitchToolbarView_masterHintOff)
+                val titleOn = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainTitleOn)
+                val titleOff = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainTitleOff)
+                val hintOn = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainHintOn)
+                val hintOff = typedArray.getString(R.styleable.PrefMainSwitchToolbarView_mainHintOff)
 
                 val contentInsetStart = resources.getDimensionPixelSize(
                         typedArray.getResourceId(
-                                R.styleable.PrefMasterSwitchToolbarView_masterContentInsetStart,
+                                R.styleable.PrefMainSwitchToolbarView_mainContentInsetStart,
                                 R.dimen.toolbar_content_offset
                         )
                 )
-                val masterOffsetEndResId = typedArray.getResourceId(
-                        R.styleable.PrefMasterSwitchToolbarView_masterOffsetEnd,
-                        -1
-                )
-                var masterOffsetEnd = -1
-                if (masterOffsetEndResId != -1) {
-                    masterOffsetEnd = resources.getDimensionPixelSize(
-                            masterOffsetEndResId
-                    )
+                val offsetEndResId = typedArray.getResourceId(R.styleable.PrefMainSwitchToolbarView_mainOffsetEnd, -1)
+                var offsetEnd = -1
+                if (offsetEndResId != -1) {
+                    offsetEnd = resources.getDimensionPixelSize(offsetEndResId)
                 }
-                val viewStyle = typedArray.getInt(
-                        R.styleable.PrefMasterSwitchToolbarView_masterViewStyle,
-                        -1
-                )
+                val viewStyle = typedArray.getInt(R.styleable.PrefMainSwitchToolbarView_mainViewStyle, -1)
 
                 setTitleOn(titleOn)
                 setTitleOff(titleOff)
                 setHintOn(hintOn)
                 setHintOff(hintOff)
                 setContentOffset(contentInsetStart)
-                setMasterOffsetEnd(masterOffsetEnd)
+                setOffsetEnd(offsetEnd)
 
                 if (viewStyle != -1) {
                     setViewStyle(viewStyle)
@@ -142,11 +134,11 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
             }
         }
 
-        masterSwitch.setOnCheckedChangeListener(this)
+        mainSwitch.setOnCheckedChangeListener(this)
         toolbarSwitch.setOnLongClickListener(this)
         toolbarSwitch.setOnClickListener(this)
 
-        ViewCompat.setLabelFor(toolbarSwitch, masterSwitch.id)
+        ViewCompat.setLabelFor(toolbarSwitch, mainSwitch.id)
         setupFocusabilityForTalkBack()
         toolbarSwitch.redirectContextClickToLongPressListener()
     }
@@ -171,43 +163,43 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      * Applies end padding to the switch menu
      */
     @Suppress("MemberVisibilityCanBePrivate")
-    fun setMasterOffsetEnd(offsetEnd: Int) {
+    fun setOffsetEnd(offsetEnd: Int) {
         if (offsetEnd != -1) {
-            masterSwitch.setPaddingRelative(
-                    masterSwitch.left,
-                    masterSwitch.top,
+            mainSwitch.setPaddingRelative(
+                    mainSwitch.left,
+                    mainSwitch.top,
                     offsetEnd,
-                    masterSwitch.bottom
+                    mainSwitch.bottom
             )
         }
     }
 
     private fun setupFocusabilityForTalkBack() {
-        masterSwitch.isFocusable = false
-        masterSwitch.isClickable = false
+        mainSwitch.isFocusable = false
+        mainSwitch.isClickable = false
         toolbarSwitch.isFocusableInTouchMode = false
         toolbarSwitch.isFocusable = true
         toolbarSwitch.isClickable = true
     }
 
     /**
-     * Loads initial state of the master switch and toolbar
+     * Loads initial state of the main switch and toolbar
      */
-    fun loadInitialState(checkMaster: Boolean) {
-        setChecked(checkMaster)
-        setToolbarTitle(checkMaster)
+    fun loadInitialState(checkMain: Boolean) {
+        setChecked(checkMain)
+        setToolbarTitle(checkMain)
         toolbarSwitch.visibility = View.VISIBLE
         updateToolbarSwitchForAccessibility()
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setTitleOn(titleOn: String?) {
-        this.titleOn = titleOn ?: resources.getString(R.string.master_switch_default_title_on)
+        this.titleOn = titleOn ?: resources.getString(R.string.main_switch_default_title_on)
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
     fun setTitleOff(titleOff: String?) {
-        this.titleOff = titleOff ?: resources.getString(R.string.master_switch_default_title_off)
+        this.titleOff = titleOff ?: resources.getString(R.string.main_switch_default_title_off)
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
@@ -225,7 +217,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         if (viewStyleInt == this.viewStyle?.value) {
             return
         }
-        val nullableType = PrefMasterSwitchToolbarViewStyle.fromInt(viewStyleInt)
+        val nullableType = PrefMainSwitchToolbarViewStyle.fromInt(viewStyleInt)
         nullableType?.let {
             updateViewStyle(nullableType)
         } ?: if (BuildConfig.DEBUG) {
@@ -233,13 +225,13 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         } else {
             AppLog.e(
                     AppLog.T.SETTINGS,
-                    "PrefMasterSwitchToolbarView.setViewStyle called from xml with an unknown viewStyle."
+                    "PrefMainSwitchToolbarView.setViewStyle called from xml with an unknown viewStyle."
             )
         }
     }
 
     @Suppress("MemberVisibilityCanBePrivate")
-    fun updateViewStyle(viewStyle: PrefMasterSwitchToolbarViewStyle) {
+    fun updateViewStyle(viewStyle: PrefMainSwitchToolbarViewStyle) {
         if (viewStyle == this.viewStyle) {
             return
         }
@@ -247,7 +239,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
         loadResourcesForViewStyle(viewStyle)
     }
 
-    private fun loadResourcesForViewStyle(viewStyle: PrefMasterSwitchToolbarViewStyle) {
+    private fun loadResourcesForViewStyle(viewStyle: PrefMainSwitchToolbarViewStyle) {
         val titleColor = context.getColorFromAttribute(viewStyle.titleColorResId)
         val backgroundColor = context.getColorFromAttribute(viewStyle.backgroundColorResId)
 
@@ -263,7 +255,7 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
      * User long clicked the toolbar
      */
     override fun onLongClick(v: View?): Boolean {
-        val toastText = if (masterSwitch.isChecked) {
+        val toastText = if (mainSwitch.isChecked) {
             hintOn
         } else {
             hintOff
@@ -283,15 +275,15 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     * User clicked the toolbar
     */
     override fun onClick(v: View?) {
-        setChecked(!masterSwitch.isChecked)
+        setChecked(!mainSwitch.isChecked)
     }
 
     fun setChecked(isChecked: Boolean) {
-        masterSwitch.isChecked = isChecked
+        mainSwitch.isChecked = isChecked
     }
 
-    private fun setToolbarTitle(checkMaster: Boolean) {
-        toolbarSwitch.title = if (checkMaster) {
+    private fun setToolbarTitle(checkMain: Boolean) {
+        toolbarSwitch.title = if (checkMain) {
             titleOn
         } else {
             titleOff
@@ -299,14 +291,14 @@ class PrefMasterSwitchToolbarView @JvmOverloads constructor(
     }
 
     /*
-     * User toggled the master switch
+     * User toggled the main switch
      */
     override fun onCheckedChanged(buttonView: CompoundButton?, isChecked: Boolean) {
         setToolbarTitle(isChecked)
-        masterSwitchToolbarListener?.onMasterSwitchCheckedChanged(buttonView, isChecked)
+        mainSwitchToolbarListener?.onMainSwitchCheckedChanged(buttonView, isChecked)
     }
 
-    fun setMasterSwitchToolbarListener(masterSwitchToolbarListener: MasterSwitchToolbarListener) {
-        this.masterSwitchToolbarListener = masterSwitchToolbarListener
+    fun setMainSwitchToolbarListener(mainSwitchToolbarListener: MainSwitchToolbarListener) {
+        this.mainSwitchToolbarListener = mainSwitchToolbarListener
     }
 }
