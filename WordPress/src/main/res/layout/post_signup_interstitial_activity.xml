@@ -7,6 +7,6 @@
     tools:context=".ui.accounts.PostSignupInterstitialActivity">
 
     <include
-        android:id="@+id/post_signup_interstitial_default"
-        layout="@layout/post_signup_interstitial_default" />
+        android:id="@+id/post_signup_interstitial"
+        layout="@layout/post_signup_interstitial" />
 </ScrollView>

@@ -27,7 +27,7 @@ class PostSignupInterstitialActivity : LocaleAwareActivity() {
                 .get(PostSignupInterstitialViewModel::class.java)
         val binding = PostSignupInterstitialActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        with(binding.postSignupInterstitialDefault!!) {
+        with(binding.postSignupInterstitial) {
 
             viewModel.onInterstitialShown()
 
