@@ -40,4 +40,5 @@ sealed class ReaderNavigationEvents {
     data class ReplaceRelatedPostDetailsWithHistory(val postId: Long, val blogId: Long, val isGlobal: Boolean) :
             ReaderNavigationEvents()
     data class ShowMediaPreview(val site: SiteModel, val featuredImage: String) : ReaderNavigationEvents()
+    data class OpenUrl(val url: String) : ReaderNavigationEvents()
 }

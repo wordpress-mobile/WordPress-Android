@@ -11,16 +11,20 @@ import org.wordpress.android.ui.reader.models.ReaderSimplePostList
 import org.wordpress.android.ui.reader.utils.FeaturedImageUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ExcerptFooterUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState.ReaderRelatedPostUiState
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
+import org.wordpress.android.ui.utils.HtmlMessageUtils
+import org.wordpress.android.ui.utils.HtmlUtilsWrapper
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString
 import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.ui.utils.UiString.UiStringResWithParams
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.DisplayUtilsWrapper
+import org.wordpress.android.viewmodel.ContextProvider
 import org.wordpress.android.viewmodel.ResourceProvider
 import javax.inject.Inject
 
@@ -34,6 +38,9 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
     private val featuredImageUtils: FeaturedImageUtils,
     private val readerUtilsWrapper: ReaderUtilsWrapper,
     private val displayUtilsWrapper: DisplayUtilsWrapper,
+    private val contextProvider: ContextProvider,
+    private val htmlUtilsWrapper: HtmlUtilsWrapper,
+    private val htmlMessageUtils: HtmlMessageUtils,
     resourceProvider: ResourceProvider
 ) {
     private val relatedPostFeaturedImageWidth: Int = resourceProvider
@@ -58,6 +65,7 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
                     onFollowClicked,
                     onTagItemClicked
             ),
+            excerptFooterUiState = buildExcerptFooterUiState(post),
             moreMenuItems = moreMenuItems,
             actions = buildPostActions(post, onButtonClicked)
     )
@@ -128,6 +136,24 @@ class ReaderPostDetailUiStateBuilder @Inject constructor(
             onBlogSectionClicked,
             onFollowClicked,
             onTagItemClicked
+    )
+
+    private fun buildExcerptFooterUiState(post: ReaderPost): ExcerptFooterUiState? =
+            post.takeIf { post.shouldShowExcerpt() }?.let {
+                ExcerptFooterUiState(
+                        visitPostExcerptFooterLinkText = buildPostExcerptFooterLinkText(post),
+                        postLink = post.url
+                )
+            }
+
+    private fun buildPostExcerptFooterLinkText(post: ReaderPost) = UiStringText(
+            htmlMessageUtils.getHtmlMessageFromStringFormatResId(
+                    R.string.reader_excerpt_link,
+                    "<font color='" +
+                            htmlUtilsWrapper
+                                    .colorResToHtmlColor(contextProvider.getContext(), R.color.link_reader) + "'>" +
+                            post.blogName + "</font>"
+            )
     )
 
     fun buildPostActions(

@@ -215,6 +215,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         }
     }
 
+    fun onVisitPostExcerptFooterClicked(postLink: String) {
+        _navigationEvents.value = Event(ReaderNavigationEvents.OpenUrl(url = postLink))
+    }
+
     private fun onRelatedPostItemClicked(postId: Long, blogId: Long, isGlobal: Boolean) {
         trackRelatedPostClickAction(postId, blogId, isGlobal)
         _navigationEvents.value = if (isRelatedPost) {
@@ -319,12 +323,15 @@ class ReaderPostDetailViewModel @Inject constructor(
         val blogId: Long,
         val featuredImageUiState: ReaderPostFeaturedImageUiState? = null,
         val headerUiState: ReaderPostDetailsHeaderUiState,
+        val excerptFooterUiState: ExcerptFooterUiState?,
         val moreMenuItems: List<ReaderPostCardAction>? = null,
         val actions: ReaderPostActions,
         val localRelatedPosts: RelatedPostsUiState? = null,
         val globalRelatedPosts: RelatedPostsUiState? = null
     ) {
         data class ReaderPostFeaturedImageUiState(val blogId: Long, val url: String? = null, val height: Int)
+
+        data class ExcerptFooterUiState(val visitPostExcerptFooterLinkText: UiString? = null, val postLink: String?)
 
         data class RelatedPostsUiState(
             val cards: List<ReaderRelatedPostUiState>?,

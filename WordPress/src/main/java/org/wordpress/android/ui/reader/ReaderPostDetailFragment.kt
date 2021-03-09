@@ -12,7 +12,6 @@ import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.AsyncTask
 import android.os.Bundle
-import android.text.Html
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -45,6 +44,7 @@ import com.google.android.material.elevation.ElevationOverlayProvider
 import com.google.android.material.snackbar.Snackbar
 import kotlinx.android.synthetic.main.appbar_with_collapsing_toolbar_layout.*
 import kotlinx.android.synthetic.main.reader_fragment_post_detail.*
+import kotlinx.android.synthetic.main.reader_include_post_detail_content.*
 import kotlinx.android.synthetic.main.reader_include_post_detail_footer.*
 import org.greenrobot.eventbus.EventBus
 import org.greenrobot.eventbus.Subscribe
@@ -98,6 +98,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ExcerptFooterUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.ReaderPostFeaturedImageUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.ReaderPostDetailsUiState.RelatedPostsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
@@ -112,7 +113,6 @@ import org.wordpress.android.util.AniUtils
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.AppLog.T.READER
-import org.wordpress.android.util.HtmlUtils
 import org.wordpress.android.util.NetworkUtils
 import org.wordpress.android.util.PermissionUtils
 import org.wordpress.android.util.StringUtils
@@ -408,6 +408,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         showOrHideMoreMenu(state)
 
         updateFeaturedImage(state.featuredImageUiState)
+        updateExcerptFooter(state.excerptFooterUiState)
 
         updateActionButton(state.postId, state.blogId, state.actions.likeAction, count_likes)
         updateActionButton(state.postId, state.blogId, state.actions.reblogAction, reblog)
@@ -458,6 +459,8 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
             is ReaderNavigationEvents.ShowBookmarkedSavedOnlyLocallyDialog -> showBookmarkSavedLocallyDialog(this)
 
+            is ReaderNavigationEvents.OpenUrl -> ReaderActivityLauncher.openUrl(requireContext(), url)
+
             is ReaderNavigationEvents.ShowRelatedPostDetails ->
                 showRelatedPostDetail(postId = this.postId, blogId = this.blogId)
 
@@ -483,6 +486,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 featured_image.setOnClickListener {
                     viewModel.onFeaturedImageClicked(blogId = state.blogId, featuredImageUrl = url)
                 }
+            }
+        }
+    }
+
+    private fun updateExcerptFooter(state: ExcerptFooterUiState?) {
+        // if we're showing just the excerpt, show a footer which links to the full post
+        excerpt_footer?.setVisible(state != null)
+        state?.let {
+            uiHelpers.setTextOrHide(text_excerpt_footer, it.visitPostExcerptFooterLinkText)
+            text_excerpt_footer?.setOnClickListener {
+                state.postLink?.let { link -> viewModel.onVisitPostExcerptFooterClicked(postLink = link) }
             }
         }
     }
@@ -1217,24 +1231,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 renderer?.beginRender()
             } else {
                 renderer?.beginRender()
-            }
-
-            // if we're showing just the excerpt, also show a footer which links to the full post
-            if (viewModel.post?.shouldShowExcerpt() == true) {
-                val excerptFooter = view?.findViewById<ViewGroup>(R.id.excerpt_footer)
-                excerptFooter?.visibility = View.VISIBLE
-
-                val blogName = "<font color='" +
-                        HtmlUtils.colorResToHtmlColor(context, R.color.link_reader) + "'>" +
-                        viewModel.post?.blogName + "</font>"
-                val linkText = String.format(WordPress.getContext().getString(R.string.reader_excerpt_link), blogName)
-
-                val txtExcerptFooter = excerptFooter?.findViewById<TextView>(R.id.text_excerpt_footer)
-                txtExcerptFooter?.text = Html.fromHtml(linkText)
-
-                txtExcerptFooter?.setOnClickListener { v ->
-                    viewModel.post?.let { ReaderActivityLauncher.openUrl(v.context, it.url) }
-                }
             }
 
             viewModel.post?.let {
