@@ -10,8 +10,6 @@ Language: sq_AL
     <string name="activity_log_backup_download_notice_dismiss_action">Hidhe tej</string>
     <string name="activity_log_backup_download_notice_download_action">Shkarkoje</string>
     <string name="threat_fix_all_status_success_message_plural">Kërcënimet u zgjidhën me sukses.</string>
-    <string name="threat_fix_all_warning_message_plural">Ju lutemi, ripohoni se doni të zgjidhni krejt %s kërcënimet aktive.</string>
-    <string name="scan_idle_with_threats_description_plural">Kontrolli gjeti %1s kërcënime potenciale me %2s. Ju lutemi, shqyrtojini më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
     <string name="scan_fixing_threats_description_plural">Jemi duke punuar fort për t’i zgjidhur pa zhurmë këto kërcënime. Ndërkohë, mos ngurroni të vazhdoni ta përdorni sajtin tuaj si normalisht, ecurinë mund ta kontrolloni kurdo qoftë.</string>
     <string name="gutenberg_native_edit_focal_point">Përpunoni pikë vatrore</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Prekeni dy herë që të hapet Fleta e Poshtme për përpunim, zëvendësim ose spastrim të figurës</string>
@@ -38,8 +36,6 @@ Language: sq_AL
     <string name="invite_links_section_title">Lidhje Ftese</string>
     <string name="threats_found_singular">U gjet kërcënim</string>
     <string name="threats_found_plural">U gjetën kërcënime</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> U gjetën %s kërcënime potenciale</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> U gjet 1 kërcënim potencial</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Kontrolli Përfundoi&lt;/b> &lt;br>&lt;/br> S’u gjetën kërcënime</string>
     <string name="scan_fixing_threats_title_singular">Po zgjidhet Kërcënimi</string>
     <string name="disable">Çaktivizoje</string>
@@ -96,7 +92,6 @@ Language: sq_AL
     <string name="threat_status_fixed">Të zgjidhur</string>
     <string name="threat_found_header">Gjetur</string>
     <string name="scan_here_to_help">këtu për t’ju ndihmuar</string>
-    <string name="scan_idle_with_threats_description_singular">Kontrolli gjeti %1s kërcënim potencial me %2s. Ju lutemi, shqyrtojeni më poshtë dhe ndërmerrni një veprim ose prekni butonin “Ndreqi krejt”. Jemi %3$s, nëse keni nevojë për ne.</string>
     <string name="scan_idle_manual_scan_description">Që ta shqyrtoni sajtin tuaj sërish, bëni një kontroll dorazi, ose prisni që Jetpack-u të kontrollojë sajtin tuaj më vonë sot.</string>
     <string name="scan_provisioning_description">Mirë se vini te Jetpack Scan! Po e shohim sajtin tuaj me vëmendje, teksa ujdisim kryerjen e një kontroll të plotë. Do t’ju vëmë në dijeni, nëse kapim çfarëdo problemi që mund të ketë ndikim te kontrolli, mandej do të fillojë i pari kontroll i juaji i plotë.</string>
     <string name="scan_scanning_is_initial_description">Mirë se vini te Jetpack Scan, tani po i hedhim një sy paraprak sajtit tuaj dhe së shpejti do të keni përfundimin.</string>
@@ -162,7 +157,6 @@ Language: sq_AL
     <string name="threat_fix_all_status_error_message">Gabim në marrje gjendje zgjidhjeje. Ju lutemi, lidhuni me asistencën tonë.</string>
     <string name="threat_fix_all_error_message">Gabim në zgjidhje kërcënimesh. Ju lutemi, lidhuni me asistencën tonë.</string>
     <string name="threat_fix_all_status_success_message_singular">Kërcënimi u zgjidh me sukses.</string>
-    <string name="threat_fix_all_warning_message_singular">Ju lutemi, ripohoni se doni të zgjidhni %s kërcënim aktiv.</string>
     <string name="threat_fix_all_warning_title">Zgjidhi krejt kërcënimet</string>
     <string name="threat_ignore_error_message">Gabim në shpërfillje kërcënimi. Ju lutemi, lidhuni me ata të asistencës.</string>
     <string name="threat_ignore_success_message">Kërcënimi u shpërfill.</string>
@@ -1169,8 +1163,6 @@ Language: sq_AL
     <string name="menu_switch_to_aztec_editor">Kaloni nën përpunuesin klasik</string>
     <string name="exit">dalje</string>
     <string name="quick_start_sites_type_subtitle">%1$d e %2$d e plotësuar</string>
-    <string name="quick_start_sites_type_grow">Shtoni Publikun Tuaj</string>
-    <string name="quick_start_sites_type_customize">Përshtatni Sajtin Tuaj</string>
     <string name="quick_start_sites">Hapat Pasues</string>
     <string name="quick_start_complete_tasks_header">Të plotësuar (%d)</string>
     <string name="quick_start_dialog_view_site_message">Kënaquni me produktin tuaj të përfunduar!</string>

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-Translation-Revision-Date: 2021-03-02 04:27:51+0000
+Translation-Revision-Date: 2021-03-05 09:54:08+0000
 Plural-Forms: nplurals=1; plural=0;
 Generator: GlotPress/3.0.0-alpha.2
 Language: ja_JP
@@ -25,6 +25,7 @@ Language: ja_JP
     <string name="threats_found_plural">検出された脅威</string>
     <string name="scan_fixing_threats_title_singular">脅威の修正</string>
     <string name="disable">無効化</string>
+    <string name="quick_start_card_menu_unpin">これを固定解除</string>
     <string name="quick_start_list_review_pages_subtitle">ページをチェックして変更を加えたり、ページを追加または削除したりしましょう。</string>
     <string name="quick_start_list_view_site_title">サイトを表示</string>
     <string name="quick_start_list_upload_icon_subtitle">センスのよいサイトアイコンを追加しましょう。</string>
@@ -80,6 +81,7 @@ Language: ja_JP
     <string name="scan_idle_manual_scan_description">サイトを再度確認するには、手動スキャンを実行するか、本日中に行われる Jetpack のサイトスキャンをお待ちください。</string>
     <string name="scan_provisioning_description">Jetpack Scan へようこそ ! お客様のサイトを調査し、フルスキャンを実行するための設定を行います。 スキャンに影響する可能性のある問題を見つけたらお知らせします。その後、最初のフルスキャンが開始されます。</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan へようこそ。現在サイトの初回チェックを行っており、結果はすぐに表示されます。</string>
+    <string name="scan_fixing_threats_description_singular">バックグラウンドでこの脅威を修正しています。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
     <string name="scan_scanning_description">スキャンが完了したら、通知が送信されます。 その間、通常通りサイトを使用し、いつでも進行状況を確認できます。</string>
     <string name="scan_start_request_failed_subtitle">Jetpack Scan はサイトのスキャンを完了できませんでした。 サイトがダウンしていないか確認してください。ダウンしていない場合、再度実行してください。 ダウンしている場合、または Jetpack Scan に問題がある場合、サポートチームまでご連絡ください。</string>
     <string name="scan_request_failed_title">問題が発生しました。</string>
@@ -120,6 +122,7 @@ Language: ja_JP
     <string name="web_preview_tablet">タブレット</string>
     <string name="web_preview_mobile">モバイル</string>
     <string name="quick_start_card_menu_remove">二度と表示しない</string>
+    <string name="quick_start_card_menu_pin">上部固定</string>
     <string name="quick_start_dialog_review_pages_message_short">%1$s ページ %2$s を選択してページリストを表示します。</string>
     <string name="quick_start_dialog_review_pages_message">サイトのページを変更、追加、削除します。</string>
     <string name="quick_start_dialog_review_pages_title">サイトページをレビュー</string>
@@ -171,6 +174,7 @@ Language: ja_JP
     <string name="backup_download_complete_header">バックアップをダウンロードする準備が整いました</string>
     <string name="backup_download_complete_page_title">バックアップ</string>
     <string name="backup_download_progress_label">%1$s%%</string>
+    <string name="backup_download_progress_footnote">お待ちいただく必要はありません。 バックアップが完了したら通知します。</string>
     <string name="backup_download_progress_icon_content_description">ダウンロード可能なバックアップを作成中アイコン</string>
     <string name="backup_download_progress_description_with_two_parameters">%1$s %2$s からダウンロード可能なサイトのバックアップを作成中です。</string>
     <string name="backup_download_progress_header">現在、サイトのダウンロード可能なバックアップを作成中です</string>
@@ -216,6 +220,7 @@ Language: ja_JP
     <string name="threat_item_header_database_threat">データベース %s 脅威</string>
     <string name="threat_item_header_infected_core_file">%s: 感染したコアファイル</string>
     <string name="threat_item_header_threat_found">脅威を検出しました</string>
+    <string name="scan_in_few_seconds">数秒前</string>
     <string name="scan_this_site">このサイト</string>
     <string name="scan_idle_last_scan_description">前回の Jetpack スキャンは%sに実行され、リスクは見つかりませんでした。 %s</string>
     <string name="scan_idle_threats_found_title">サイトが危険にさらされている可能性があります</string>
@@ -1137,8 +1142,6 @@ Language: ja_JP
     <string name="site_settings_gutenberg_default_for_new_posts">ブロックエディターを使用</string>
     <string name="exit">終了</string>
     <string name="quick_start_sites_type_subtitle">%1$d/%2$d が完了</string>
-    <string name="quick_start_sites_type_grow">訪問者を増やす</string>
-    <string name="quick_start_sites_type_customize">サイトをカスタマイズ</string>
     <string name="quick_start_sites">次のステップ</string>
     <string name="quick_start_complete_tasks_header">完了 (%d)</string>
     <string name="quick_start_dialog_view_site_message">完成しました。お楽しみください !</string>

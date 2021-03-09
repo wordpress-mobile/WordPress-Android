@@ -1,8 +1,6 @@
 package org.wordpress.android.ui.mlp
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,10 +20,8 @@ import kotlinx.android.synthetic.main.modal_layout_picker_title_row.*
 import kotlinx.android.synthetic.main.modal_layout_picker_titlebar.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
-import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.FullscreenBottomSheetDialogFragment
 import org.wordpress.android.ui.PreviewModeSelectorPopup
-import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.layoutpicker.ButtonsUiState
 import org.wordpress.android.ui.layoutpicker.CategoriesAdapter
 import org.wordpress.android.ui.layoutpicker.LayoutCategoryAdapter
@@ -36,6 +32,9 @@ import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.DisplayUtils
 import org.wordpress.android.util.setVisible
 import org.wordpress.android.viewmodel.mlp.ModalLayoutPickerViewModel
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Dismiss
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.mlp.BlockLayoutPreviewFragment.Companion.BLOCK_LAYOUT_PREVIEW_TAG
 import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
@@ -90,7 +89,7 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             viewModel.onCreatePageClicked()
         }
         previewButton.setOnClickListener {
-            viewModel.onPreviewPageClicked()
+            viewModel.onPreviewTapped()
         }
         retryButton.setOnClickListener {
             viewModel.onRetryClicked()
@@ -165,8 +164,18 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
             previewModeSelectorPopup.show(viewModel)
         })
 
-        viewModel.onPreviewPageRequested.observe(this, { request ->
-            ActivityLauncher.previewPageForResult(this, request.site, request.content, request.template)
+        viewModel.onPreviewActionPressed.observe(viewLifecycleOwner, { action ->
+            activity?.supportFragmentManager?.let { fm ->
+                when (action) {
+                    is Show -> {
+                        val previewFragment = BlockLayoutPreviewFragment.newInstance()
+                        previewFragment.show(fm, BLOCK_LAYOUT_PREVIEW_TAG)
+                    }
+                    is Dismiss -> {
+                        (fm.findFragmentByTag(BLOCK_LAYOUT_PREVIEW_TAG) as? BlockLayoutPreviewFragment)?.dismiss()
+                    }
+                }
+            }
         })
 
         viewModel.onCategorySelectionChanged.observeEvent(this, {
@@ -188,13 +197,5 @@ class ModalLayoutPickerFragment : FullscreenBottomSheetDialogFragment() {
         previewButton.setVisible(uiState.previewVisible)
         retryButton.setVisible(uiState.retryVisible)
         createOrRetryContainer.setVisible(uiState.createBlankPageVisible || uiState.retryVisible)
-    }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RequestCodes.PREVIEW_POST) {
-            if (resultCode == Activity.RESULT_OK) {
-                viewModel.onCreatePageClicked()
-            }
-        }
     }
 }

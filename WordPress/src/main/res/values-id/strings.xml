@@ -7,8 +7,6 @@ Language: id
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">Ancaman berhasil ditangani.</string>
-    <string name="threat_fix_all_warning_message_plural">Harap konfirmasi bahwa Anda ingin memperbaiki %s ancaman aktif seluruhnya.</string>
-    <string name="scan_idle_with_threats_description_plural">Pemindaian menemukan %1s potensi ancaman dengan %2s. Tinjau di bawah ini dan ambil tindakan atau ketuk tombol perbaiki semua. Kami %3$s jika Anda membutuhkan kami.</string>
     <string name="scan_fixing_threats_description_plural">Kami kesulitan di latar belakang untuk memperbaiki ancaman ini. Sementara itu, Anda dapat terus menggunakan situs seperti biasa dan memeriksa progresnya kapan saja.</string>
     <string name="gutenberg_native_edit_focal_point">Edit titik fokus</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Ketuk dua kali untuk membuka Lembar Bawah, untuk mengedit, mengganti, atau menghapus gambar</string>
@@ -35,8 +33,6 @@ Language: id
     <string name="invite_links_section_title">Tautan Undangan</string>
     <string name="threats_found_singular">Ancaman ditemukan</string>
     <string name="threats_found_plural">Ancaman ditemukan</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Pemindaian Selesai&lt;/b> &lt;br>&lt;/br> %s potensi ancaman ditemukan</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Pemindaian Selesai&lt;/b> &lt;br>&lt;/br> 1 potensi ancaman ditemukan</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Pemindaian Selesai&lt;/b> &lt;br>&lt;/br> potensi ancaman tidak ditemukan</string>
     <string name="scan_fixing_threats_title_singular">Memperbaiki Ancaman</string>
     <string name="disable">Nonaktifkan</string>
@@ -93,7 +89,6 @@ Language: id
     <string name="threat_status_fixed">Diperbaiki</string>
     <string name="threat_found_header">Ditemukan</string>
     <string name="scan_here_to_help">siap membantu</string>
-    <string name="scan_idle_with_threats_description_singular">Pemindaian menemukan %1s potensi ancaman dengan %2s. Tinjau ancaman di bawah ini dan ambil tindakan atau ketuk tombol perbaiki semua. Kami %3$s jika Anda membutuhkan kami.</string>
     <string name="scan_idle_manual_scan_description">Untuk meninjau situs Anda lagi, jalankan pemindaian manual atau tunggu Jetpack memindai situs Anda nanti.</string>
     <string name="scan_provisioning_description">Selamat datang di Jetpack Scan! Kami mengamati situs Anda untuk mempersiapkan pemindaian menyeluruh. Kami akan memberi tahu Anda jika kami menemukan kendala yang mungkin memengaruhi proses pemindaian, kemudian pemindaian menyeluruh yang pertama akan dimulai.</string>
     <string name="scan_scanning_is_initial_description">Selamat datang di Jetpack Scan, kami sedang melakukan pemeriksaan perdana untuk situs Anda dan hasilnya akan segera ditampilkan.</string>
@@ -1158,13 +1153,11 @@ Language: id
     <string name="menu_switch_to_aztec_editor">Beralih ke penyunting klasik</string>
     <string name="exit">keluar</string>
     <string name="quick_start_sites_type_subtitle">%1$d dari %2$d selesai</string>
-    <string name="quick_start_sites_type_customize">Sesuaikan Situs Anda</string>
     <string name="quick_start_sites">Langkah Berikutnya</string>
     <string name="quick_start_complete_tasks_header">Selesai (%d)</string>
     <string name="quick_start_dialog_view_site_message">Nikmati hasil akhir produk Anda!</string>
     <string name="quick_start_dialog_upload_icon_title">Unggah ikon situs</string>
     <string name="quick_start_dialog_explore_plans_message_short">Ketuk %1$s Paket %2$s untuk melihat paket Anda saat ini dan paket yang tersedia</string>
-    <string name="quick_start_sites_type_grow">Perbesar jumlah pengunjung Anda</string>
     <string name="quick_start_dialog_upload_icon_message">Pengunjung Anda akan melihat ikon Anda di browser. Tambahkan ikon khusus untuk tampilan yang lebih profesional dan elegan.</string>
     <string name="quick_start_dialog_check_stats_message_short">Ketuk %1$s Statistik %2$s untuk melihat performa situs Anda.</string>
     <string name="quick_start_dialog_upload_site_icon_message_short">Ketuk %1$s Ikon Situs Anda %2$s untuk mengunggah ikon baru</string>

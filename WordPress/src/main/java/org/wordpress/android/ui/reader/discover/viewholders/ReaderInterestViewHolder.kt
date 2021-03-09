@@ -3,6 +3,7 @@ package org.wordpress.android.ui.reader.discover.viewholders
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.content.res.AppCompatResources.getColorStateList
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.extensions.LayoutContainer
 import kotlinx.android.synthetic.main.reader_interest_item.*
@@ -18,7 +19,12 @@ class ReaderInterestViewHolder(
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer {
     fun onBind(uiState: ReaderInterestUiState) {
         uiHelpers.setTextOrHide(interest, uiState.interest)
-        uiHelpers.updateVisibility(divider, uiState.isDividerVisible)
-        reader_interest_container.setOnClickListener { uiState.onClicked.invoke(uiState.interest) }
+        interest.setOnClickListener { uiState.onClicked.invoke(uiState.interest) }
+
+        with(uiState.chipStyle) {
+            interest.setChipStrokeColorResource(chipStrokeColorResId)
+            interest.setChipBackgroundColorResource(chipFillColorResId)
+            interest.setTextColor(getColorStateList(interest.context, chipFontColorResId))
+        }
     }
 }

@@ -896,8 +896,6 @@ Language: pt_BR
     <string name="site_settings_gutenberg_default_for_new_posts">Usar o editor de blocos</string>
     <string name="exit">sair</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d concluído</string>
-    <string name="quick_start_sites_type_grow">Aumente sua audiência</string>
-    <string name="quick_start_sites_type_customize">Personalize seu site</string>
     <string name="quick_start_sites">Próximos passos</string>
     <string name="quick_start_dialog_upload_icon_message">Seus visitantes verão o ícone no navegador. Adicione um ícone personalizado para uma exibição profissional.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Toque em %1$s Plano %2$s para ver seu plano atual e outros planos disponíveis</string>

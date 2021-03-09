@@ -7,8 +7,6 @@ Language: it
 -->
 <resources>
     <string name="threat_fix_all_status_success_message_plural">Le minacce sono state risolte.</string>
-    <string name="threat_fix_all_warning_message_plural">Conferma di voler risolvere tutte le %s minacce attive</string>
-    <string name="scan_idle_with_threats_description_plural">La scansione ha trovato %1s potenziali minacce con %2s. Esamina questi elementi di seguito oppure tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
     <string name="scan_fixing_threats_description_plural">Stiamo facendo il possibile per risolvere queste minacce in background. Nel frattempo continua pure a utilizzare tranquillamente il sito come al solito, puoi controllare l\'andamento in qualsiasi momento.</string>
     <string name="gutenberg_native_edit_focal_point">Modifica il punto focale</string>
     <string name="gutenberg_native_double_tap_to_open_bottom_sheet_to_edit_replace_or_clear_the_imag">Tocca due volte per aprire il foglio nella parte inferiore per modificare, sostituire o cancellare l\'immagine</string>
@@ -35,8 +33,6 @@ Language: it
     <string name="invite_links_section_title">Link di invito</string>
     <string name="threats_found_singular">Trovata minaccia</string>
     <string name="threats_found_plural">Minacce rivelate</string>
-    <string name="scan_finished_threats_found_message_plural">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> %s potenziali minacce trovate</string>
-    <string name="scan_finished_threats_found_message_singular">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> 1 potenziale minaccia trovata</string>
     <string name="scan_finished_no_threats_found_message">&lt;b>Scansione terminata&lt;/b> &lt;br>&lt;/br> Nessuna minaccia trovata</string>
     <string name="scan_fixing_threats_title_singular">Risoluzione della minaccia</string>
     <string name="disable">Disabilita</string>
@@ -93,7 +89,6 @@ Language: it
     <string name="threat_status_fixed">Corretto</string>
     <string name="threat_found_header">Trovato</string>
     <string name="scan_here_to_help">qui per aiutare</string>
-    <string name="scan_idle_with_threats_description_singular">La scansione ha trovato %1s potenziale minaccia con %2s. Esamina questa minaccia di seguito ed tocca il pulsante Correggi tutto. Se hai bisogno, ci trovi qui: %3$s.</string>
     <string name="scan_idle_manual_scan_description">Per esaminare il sito nuovamente, esegui una scansione manuale o attendi che Jetpack scansioni il sito più tardi in giornata.</string>
     <string name="scan_provisioning_description">Jetpack Scan ti dà il benvenuto! Stiamo esaminando l\'ambito del tuo sito, impostando l\'esecuzione di una scansione completa. Ti avviseremo se riscontreremo problemi che possono influire su una scansione, quindi verrà avviata la tua prima scansione completa.</string>
     <string name="scan_scanning_is_initial_description">Jetpack Scan ti dà il benvenuto. Stiamo analizzando il tuo sito per la prima volta e presto riceverai i risultati.</string>
@@ -157,7 +152,6 @@ Language: it
     <string name="threat_fix_all_status_error_message">Errore durante il recupero dello stato della correzione. Contatta il nostro supporto.</string>
     <string name="threat_fix_all_error_message">Errore durante la risoluzione delle minacce. Contatta il nostro supporto.</string>
     <string name="threat_fix_all_status_success_message_singular">La minaccia è stata risolta correttamente.</string>
-    <string name="threat_fix_all_warning_message_singular">Conferma di voler correggere la %s minaccia attiva.</string>
     <string name="threat_fix_all_warning_title">Risolvi tutte le minacce</string>
     <string name="threat_ignore_error_message">Errore mentre la minaccia veniva ignorata. Contatta il supporto.</string>
     <string name="threat_ignore_success_message">Minaccia ignorata.</string>
@@ -1171,8 +1165,6 @@ Language: it
     <string name="quick_start_dialog_upload_icon_title">Carica un\'icona del sito</string>
     <string name="quick_start_dialog_upload_icon_message">I tuoi visitatori vedranno la tua icona nel loro browser. Aggiungi un\'icona personalizzata per un aspetto professionale e raffinato.</string>
     <string name="quick_start_dialog_explore_plans_message_short">Tocca %1$s Piano %2$s per visualizzare il tuo piano attuale e altri piani disponibili</string>
-    <string name="quick_start_sites_type_customize">Personalizza il tuo sito</string>
-    <string name="quick_start_sites_type_grow">Aumenta il tuo pubblico</string>
     <string name="quick_start_dialog_publish_post_message">Scrivi e pubblica il tuo primo articolo.</string>
     <string name="quick_start_dialog_need_help_message">Ti guideremo attraverso le basi per costruire e far crescere il tuo sito.</string>
     <string name="quick_start_dialog_check_stats_message_short">Tocca %1$s Statistiche %2$s per vedere il rendimento del tuo sito.</string>

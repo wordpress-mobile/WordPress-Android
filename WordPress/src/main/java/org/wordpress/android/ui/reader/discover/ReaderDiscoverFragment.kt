@@ -35,6 +35,7 @@ import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostD
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowPostsByTag
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderComments
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReaderSubs
+import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowRelatedPostDetails
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowReportPost
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowSitePickerForResult
 import org.wordpress.android.ui.reader.discover.ReaderNavigationEvents.ShowVideoViewer
@@ -149,6 +150,7 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                 is ShowReaderSubs -> {
                     ReaderActivityLauncher.showReaderSubs(context)
                 }
+                is ShowRelatedPostDetails -> Unit // Do Nothing
             }
         })
         viewModel.snackbarEvents.observeEvent(viewLifecycleOwner, {

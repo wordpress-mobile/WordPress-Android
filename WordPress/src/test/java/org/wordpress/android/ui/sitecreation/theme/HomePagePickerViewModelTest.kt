@@ -23,8 +23,8 @@ import org.wordpress.android.fluxc.store.ThemeStore.ThemesError
 import org.wordpress.android.test
 import org.wordpress.android.ui.PreviewMode
 import org.wordpress.android.ui.sitecreation.misc.SiteCreationTracker
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction
-import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignPreviewAction.Show
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction
+import org.wordpress.android.ui.layoutpicker.LayoutPickerViewModel.DesignPreviewAction.Show
 import org.wordpress.android.ui.sitecreation.theme.HomePagePickerViewModel.DesignSelectionAction
 import org.wordpress.android.ui.layoutpicker.LayoutPickerUiState
 import org.wordpress.android.ui.sitecreation.usecases.FetchHomePageLayoutsUseCase

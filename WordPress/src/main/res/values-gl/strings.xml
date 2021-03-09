@@ -859,8 +859,6 @@ Language: gl_ES
     <string name="site_settings_gutenberg_default_for_new_posts">Usar editor de bloques</string>
     <string name="exit">saír</string>
     <string name="quick_start_sites_type_subtitle">%1$d de %2$d completo</string>
-    <string name="quick_start_sites_type_grow">Fai crecer a túa audiencia</string>
-    <string name="quick_start_sites_type_customize">Personaliza o teu sitio</string>
     <string name="quick_start_sites">Seguintes pasos</string>
     <string name="quick_start_complete_tasks_header">Completo (%d)</string>
     <string name="quick_start_dialog_view_site_message">Goza do teu produto terminado!</string>
