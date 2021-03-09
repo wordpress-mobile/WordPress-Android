@@ -5,16 +5,15 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AlertDialog
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
-import kotlinx.android.synthetic.main.reader_discover_fragment_layout.*
 import org.wordpress.android.R
 import org.wordpress.android.R.dimen
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.ReaderDiscoverFragmentLayoutBinding
 import org.wordpress.android.ui.ActivityLauncher
 import org.wordpress.android.ui.RequestCodes
 import org.wordpress.android.ui.ViewPagerFragment
@@ -61,6 +60,9 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     @Inject lateinit var readerUtilsWrapper: ReaderUtilsWrapper
     private lateinit var parentViewModel: ReaderViewModel
 
+    private var _binding: ReaderDiscoverFragmentLayoutBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         (requireActivity().application as WordPress).component().inject(this)
@@ -68,53 +70,61 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupViews()
-        initViewModel()
+        _binding = ReaderDiscoverFragmentLayoutBinding.bind(view)
+        setupViews(binding)
+        initViewModel(binding)
     }
 
-    private fun setupViews() {
-        recycler_view.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
-        recycler_view.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
+    private fun setupViews(binding: ReaderDiscoverFragmentLayoutBinding) = with(binding) {
+        recyclerView.layoutManager = LinearLayoutManager(context, RecyclerView.VERTICAL, false)
+        recyclerView.adapter = ReaderDiscoverAdapter(uiHelpers, imageManager)
 
         val spacingHorizontal = resources.getDimensionPixelSize(dimen.reader_card_margin)
         val spacingVertical = resources.getDimensionPixelSize(dimen.reader_card_gutters)
-        recycler_view.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
+        recyclerView.addItemDecoration(RecyclerItemDecoration(spacingHorizontal, spacingVertical, false))
 
-        WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptr_layout) {
+        WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(ptrLayout) {
             viewModel.swipeToRefresh()
         }
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(binding: ReaderDiscoverFragmentLayoutBinding) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderDiscoverViewModel::class.java)
         parentViewModel = ViewModelProvider(requireParentFragment()).get(ReaderViewModel::class.java)
-        viewModel.uiState.observe(viewLifecycleOwner, Observer {
+
+        setupObservers(binding)
+
+        viewModel.start(parentViewModel)
+    }
+
+    private fun setupObservers(binding: ReaderDiscoverFragmentLayoutBinding) = with(binding) {
+        viewModel.uiState.observe(viewLifecycleOwner) {
             when (it) {
                 is ContentUiState -> {
-                    (recycler_view.adapter as ReaderDiscoverAdapter).update(it.cards)
+                    (recyclerView.adapter as ReaderDiscoverAdapter).update(it.cards)
                     if (it.scrollToTop) {
-                        recycler_view.scrollToPosition(0)
+                        recyclerView.scrollToPosition(0)
                     }
                 }
                 is EmptyUiState -> {
-                    uiHelpers.setTextOrHide(actionable_empty_view.title, it.titleResId)
-                    uiHelpers.setTextOrHide(actionable_empty_view.subtitle, it.subTitleRes)
-                    uiHelpers.setImageOrHide(actionable_empty_view.image, it.illustrationResId)
-                    uiHelpers.setTextOrHide(actionable_empty_view.button, it.buttonResId)
-                    actionable_empty_view.button.setOnClickListener { _ ->
+                    uiHelpers.setTextOrHide(actionableEmptyView.title, it.titleResId)
+                    uiHelpers.setTextOrHide(actionableEmptyView.subtitle, it.subTitleRes)
+                    uiHelpers.setImageOrHide(actionableEmptyView.image, it.illustrationResId)
+                    uiHelpers.setTextOrHide(actionableEmptyView.button, it.buttonResId)
+                    actionableEmptyView.button.setOnClickListener { _ ->
                         it.action.invoke()
                     }
                 }
             }
-            uiHelpers.updateVisibility(recycler_view, it.contentVisiblity)
-            uiHelpers.updateVisibility(progress_bar, it.fullscreenProgressVisibility)
-            uiHelpers.updateVisibility(progress_text, it.fullscreenProgressVisibility)
-            uiHelpers.updateVisibility(progress_loading_more, it.loadMoreProgressVisibility)
-            uiHelpers.updateVisibility(actionable_empty_view, it.fullscreenEmptyVisibility)
-            ptr_layout.isEnabled = it.swipeToRefreshEnabled
-            ptr_layout.isRefreshing = it.reloadProgressVisibility
-        })
-        viewModel.navigationEvents.observe(viewLifecycleOwner, Observer {
+            uiHelpers.updateVisibility(recyclerView, it.contentVisiblity)
+            uiHelpers.updateVisibility(progressBar, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progressText, it.fullscreenProgressVisibility)
+            uiHelpers.updateVisibility(progressLoadingMore, it.loadMoreProgressVisibility)
+            uiHelpers.updateVisibility(actionableEmptyView, it.fullscreenEmptyVisibility)
+            ptrLayout.isEnabled = it.swipeToRefreshEnabled
+            ptrLayout.isRefreshing = it.reloadProgressVisibility
+        }
+        viewModel.navigationEvents.observe(viewLifecycleOwner) {
             it.applyIfNotHandled {
                 when (this) {
                     is ShowPostDetail -> ReaderActivityLauncher.showReaderPostDetail(context, post.blogId, post.postId)
@@ -150,18 +160,17 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
                     is ShowRelatedPostDetails -> Unit // Do Nothing
                 }
             }
-        })
-        viewModel.snackbarEvents.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.snackbarEvents.observe(viewLifecycleOwner) {
             it?.applyIfNotHandled {
                 showSnackbar()
             }
-        })
-        viewModel.preloadPostEvents.observe(viewLifecycleOwner, Observer {
+        }
+        viewModel.preloadPostEvents.observe(viewLifecycleOwner) {
             it?.applyIfNotHandled {
                 addWebViewCachingFragment()
             }
-        })
-        viewModel.start(parentViewModel)
+        }
     }
 
     private fun showBookmarkSavedLocallyDialog(bookmarkDialog: ShowBookmarkedSavedOnlyLocallyDialog) {
@@ -213,10 +222,11 @@ class ReaderDiscoverFragment : ViewPagerFragment(R.layout.reader_discover_fragme
     override fun onDestroyView() {
         super.onDestroyView()
         bookmarksSavedLocallyDialog?.dismiss()
+        _binding = null
     }
 
     override fun getScrollableViewForUniqueIdProvision(): View {
-        return recycler_view
+        return binding.recyclerView
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
