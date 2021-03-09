@@ -73,6 +73,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private var isStarted = false
     var isRelatedPost: Boolean = false
 
+    var post: ReaderPost? = null
+    val hasPost: Boolean
+        get() = post != null
+
     init {
         eventBusWrapper.register(readerFetchRelatedPostsUseCase)
     }
