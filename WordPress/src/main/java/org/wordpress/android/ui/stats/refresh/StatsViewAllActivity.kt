@@ -8,7 +8,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.databinding.StatsViewAllActivityBinding
-import org.wordpress.android.databinding.StatsViewAllFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.LocaleAwareActivity
 import org.wordpress.android.ui.stats.StatsViewType
@@ -20,12 +19,6 @@ class StatsViewAllActivity : LocaleAwareActivity() {
 
         val binding = StatsViewAllActivityBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-        setSupportActionBar(StatsViewAllFragmentBinding.bind(binding.fragmentContainer).toolbar)
-        supportActionBar?.let {
-            it.setHomeButtonEnabled(true)
-            it.setDisplayHomeAsUpEnabled(true)
-        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {

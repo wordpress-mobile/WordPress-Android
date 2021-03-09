@@ -2,9 +2,7 @@ package org.wordpress.android.ui.stats.refresh.lists
 
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
@@ -12,12 +10,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import androidx.recyclerview.widget.StaggeredGridLayoutManager
-import kotlinx.android.synthetic.main.stats_date_selector.*
-import kotlinx.android.synthetic.main.stats_empty_view.*
-import kotlinx.android.synthetic.main.stats_error_view.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsListFragmentBinding
 import org.wordpress.android.ui.ViewPagerFragment
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.StatsSection
 import org.wordpress.android.ui.stats.refresh.lists.StatsListViewModel.UiModel
@@ -29,7 +24,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.util.setVisible
 import javax.inject.Inject
 
-class StatsListFragment : ViewPagerFragment() {
+class StatsListFragment : ViewPagerFragment(R.layout.stats_list_fragment) {
     @Inject lateinit var viewModelFactory: ViewModelProvider.Factory
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var statsDateFormatter: StatsDateFormatter
@@ -37,6 +32,7 @@ class StatsListFragment : ViewPagerFragment() {
     private lateinit var viewModel: StatsListViewModel
 
     private var layoutManager: LayoutManager? = null
+    private lateinit var binding: StatsListFragmentBinding
 
     private val listStateKey = "list_state"
 
@@ -57,10 +53,6 @@ class StatsListFragment : ViewPagerFragment() {
         (requireActivity().application as WordPress).component().inject(this)
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_list_fragment, container, false)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
         layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
@@ -71,7 +63,7 @@ class StatsListFragment : ViewPagerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun initializeViews(savedInstanceState: Bundle?, binding: StatsListFragmentBinding) = with(binding) {
         val columns = resources.getInteger(R.integer.stats_number_of_columns)
         val layoutManager: LayoutManager = if (columns == 1) {
             LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
@@ -82,8 +74,8 @@ class StatsListFragment : ViewPagerFragment() {
             layoutManager.onRestoreInstanceState(it)
         }
 
-        this.layoutManager = layoutManager
-        recyclerView.layoutManager = this.layoutManager
+        this@StatsListFragment.layoutManager = layoutManager
+        recyclerView.layoutManager = this@StatsListFragment.layoutManager
         recyclerView.addItemDecoration(
                 StatsListItemDecoration(
                         resources.getDimensionPixelSize(R.dimen.stats_list_card_horizontal_spacing),
@@ -95,7 +87,7 @@ class StatsListFragment : ViewPagerFragment() {
                 )
         )
 
-        statsEmptyView.button.setOnClickListener {
+        emptyView.statsEmptyView.button.setOnClickListener {
             viewModel.onEmptyInsightsButtonClicked()
         }
 
@@ -107,33 +99,33 @@ class StatsListFragment : ViewPagerFragment() {
             }
         })
 
-        nextDateButton.setOnClickListener {
+        dateSelector.nextDateButton.setOnClickListener {
             viewModel.onNextDateSelected()
         }
 
-        previousDateButton.setOnClickListener {
+        dateSelector.previousDateButton.setOnClickListener {
             viewModel.onPreviousDateSelected()
         }
 
-        statsErrorView.button.setOnClickListener {
+        errorView.statsErrorView.button.setOnClickListener {
             viewModel.onRetryClick()
         }
     }
 
-    override fun getScrollableViewForUniqueIdProvision(): View? {
-        return recyclerView
+    override fun getScrollableViewForUniqueIdProvision(): View {
+        return binding.recyclerView
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-
-        initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity)
+        binding = StatsListFragmentBinding.bind(view)
+        initializeViews(savedInstanceState, binding)
+        initializeViewModels(nonNullActivity, binding)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity) {
+    private fun initializeViewModels(activity: FragmentActivity, binding: StatsListFragmentBinding) {
         val statsSection = arguments?.getSerializable(LIST_TYPE) as? StatsSection
                 ?: activity.intent?.getSerializableExtra(LIST_TYPE) as? StatsSection
                 ?: StatsSection.INSIGHTS
@@ -151,37 +143,37 @@ class StatsListFragment : ViewPagerFragment() {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(statsSection.name, viewModelClass)
 
-        setupObservers(activity)
+        setupObservers(activity, binding)
         viewModel.start()
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity, binding: StatsListFragmentBinding) = with(binding) {
         viewModel.uiModel.observe(viewLifecycleOwner, Observer {
             when (it) {
                 is UiModel.Success -> {
-                    updateInsights(it.data)
+                    updateInsights(it.data, binding)
                 }
                 is UiModel.Error, null -> {
                     recyclerView.visibility = View.GONE
-                    statsErrorView.visibility = View.VISIBLE
-                    statsEmptyView.visibility = View.GONE
+                    errorView.statsErrorView.visibility = View.VISIBLE
+                    emptyView.statsEmptyView.visibility = View.GONE
                 }
                 is UiModel.Empty -> {
                     recyclerView.visibility = View.GONE
-                    statsEmptyView.visibility = View.VISIBLE
-                    statsErrorView.visibility = View.GONE
-                    statsEmptyView.title.setText(it.title)
+                    emptyView.statsEmptyView.visibility = View.VISIBLE
+                    errorView.statsErrorView.visibility = View.GONE
+                    emptyView.statsEmptyView.title.setText(it.title)
                     if (it.subtitle != null) {
-                        statsEmptyView.subtitle.setText(it.subtitle)
+                        emptyView.statsEmptyView.subtitle.setText(it.subtitle)
                     } else {
-                        statsEmptyView.subtitle.text = ""
+                        emptyView.statsEmptyView.subtitle.text = ""
                     }
                     if (it.image != null) {
-                        statsEmptyView.image.setImageResource(it.image)
+                        emptyView.statsEmptyView.image.setImageResource(it.image)
                     } else {
-                        statsEmptyView.image.setImageDrawable(null)
+                        emptyView.statsEmptyView.image.setImageDrawable(null)
                     }
-                    statsEmptyView.button.setVisible(it.showButton)
+                    emptyView.statsEmptyView.button.setVisible(it.showButton)
                 }
             }
         })
@@ -223,10 +215,10 @@ class StatsListFragment : ViewPagerFragment() {
         })
     }
 
-    private fun updateInsights(statsState: List<StatsBlock>) {
+    private fun updateInsights(statsState: List<StatsBlock>, binding: StatsListFragmentBinding) = with(binding) {
         recyclerView.visibility = View.VISIBLE
-        statsErrorView.visibility = View.GONE
-        statsEmptyView.visibility = View.GONE
+        errorView.statsErrorView.visibility = View.GONE
+        emptyView.statsEmptyView.visibility = View.GONE
 
         val adapter: StatsBlockAdapter
         if (recyclerView.adapter == null) {

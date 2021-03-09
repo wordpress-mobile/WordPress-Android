@@ -3,9 +3,7 @@ package org.wordpress.android.ui.stats.refresh
 import android.animation.StateListAnimator
 import android.os.Bundle
 import android.os.Parcelable
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
@@ -17,19 +15,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.tabs.TabLayout.OnTabSelectedListener
 import com.google.android.material.tabs.TabLayout.Tab
 import dagger.android.support.DaggerFragment
-import kotlinx.android.synthetic.main.stats_date_selector.*
-import kotlinx.android.synthetic.main.stats_empty_view.*
-import kotlinx.android.synthetic.main.stats_error_view.*
-import kotlinx.android.synthetic.main.stats_list_fragment.*
-import kotlinx.android.synthetic.main.stats_view_all_fragment.app_bar_layout
-import kotlinx.android.synthetic.main.stats_view_all_fragment.pullToRefresh
-import kotlinx.android.synthetic.main.stats_view_all_fragment.tabLayout
-import kotlinx.android.synthetic.main.stats_view_all_fragment.toolbar
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
+import org.wordpress.android.databinding.StatsViewAllFragmentBinding
 import org.wordpress.android.fluxc.network.utils.StatsGranularity
 import org.wordpress.android.ui.stats.StatsViewType
-import org.wordpress.android.ui.stats.refresh.lists.StatsBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.EmptyBlock
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Error
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Loading
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Success
+import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type
 import org.wordpress.android.ui.stats.refresh.lists.StatsBlock.Type.LOADING
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListAdapter
 import org.wordpress.android.ui.stats.refresh.lists.sections.BlockListItem
@@ -45,7 +40,7 @@ import org.wordpress.android.util.image.ImageManager
 import org.wordpress.android.widgets.WPSnackbar
 import javax.inject.Inject
 
-class StatsViewAllFragment : DaggerFragment() {
+class StatsViewAllFragment : DaggerFragment(R.layout.stats_view_all_fragment) {
     @Inject lateinit var viewModelFactoryBuilder: StatsViewAllViewModelFactory.Builder
     @Inject lateinit var imageManager: ImageManager
     @Inject lateinit var navigator: StatsNavigator
@@ -63,12 +58,8 @@ class StatsViewAllFragment : DaggerFragment() {
         const val ARGS_SELECTED_DATE = "ARGS_SELECTED_DATE"
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        return inflater.inflate(R.layout.stats_view_all_fragment, container, false)
-    }
-
     override fun onSaveInstanceState(outState: Bundle) {
-        recyclerView.layoutManager?.let {
+        StatsViewAllFragmentBinding.bind(requireView()).statsListFragment.recyclerView.layoutManager?.let {
             outState.putParcelable(listStateKey, it.onSaveInstanceState())
         }
 
@@ -92,25 +83,28 @@ class StatsViewAllFragment : DaggerFragment() {
         super.onSaveInstanceState(outState)
     }
 
-    private fun initializeViews(savedInstanceState: Bundle?) {
+    private fun initializeViews(savedInstanceState: Bundle?, binding: StatsViewAllFragmentBinding) = with(binding) {
         val layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
 
         savedInstanceState?.getParcelable<Parcelable>(listStateKey)?.let {
             layoutManager.onRestoreInstanceState(it)
         }
-
-        recyclerView.layoutManager = layoutManager
-        loadingRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        with(binding.statsListFragment) {
+            recyclerView.layoutManager = layoutManager
+            loadingRecyclerView.layoutManager = LinearLayoutManager(activity, RecyclerView.VERTICAL, false)
+        }
 
         swipeToRefreshHelper = WPSwipeToRefreshHelper.buildSwipeToRefreshHelper(pullToRefresh) {
             viewModel.onPullToRefresh()
         }
 
-        nextDateButton.setOnClickListener {
-            viewModel.onNextDateSelected()
-        }
-        previousDateButton.setOnClickListener {
-            viewModel.onPreviousDateSelected()
+        with(binding.statsListFragment.dateSelector) {
+            nextDateButton.setOnClickListener {
+                viewModel.onNextDateSelected()
+            }
+            previousDateButton.setOnClickListener {
+                viewModel.onPreviousDateSelected()
+            }
         }
     }
 
@@ -118,9 +112,16 @@ class StatsViewAllFragment : DaggerFragment() {
         super.onViewCreated(view, savedInstanceState)
 
         val nonNullActivity = requireActivity()
-
-        initializeViews(savedInstanceState)
-        initializeViewModels(nonNullActivity, savedInstanceState)
+        val binding = StatsViewAllFragmentBinding.bind(requireView())
+        with(nonNullActivity as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.let {
+                it.setHomeButtonEnabled(true)
+                it.setDisplayHomeAsUpEnabled(true)
+            }
+        }
+        initializeViews(savedInstanceState, binding)
+        initializeViewModels(nonNullActivity, savedInstanceState, binding)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -129,7 +130,11 @@ class StatsViewAllFragment : DaggerFragment() {
         (activity as AppCompatActivity).supportActionBar?.title = getString(viewModel.title)
     }
 
-    private fun initializeViewModels(activity: FragmentActivity, savedInstanceState: Bundle?) {
+    private fun initializeViewModels(
+        activity: FragmentActivity,
+        savedInstanceState: Bundle?,
+        binding: StatsViewAllFragmentBinding
+    ) = with(binding) {
         val nonNullIntent = checkNotNull(activity.intent)
         val type = if (savedInstanceState == null) {
             nonNullIntent.getSerializableExtra(ARGS_VIEW_TYPE) as StatsViewType
@@ -155,12 +160,12 @@ class StatsViewAllFragment : DaggerFragment() {
         } else {
             savedInstanceState.getParcelable(ARGS_SELECTED_DATE) as SelectedDate?
         }
-        setupObservers(activity)
+        setupObservers(activity, binding)
 
         viewModel.start(selectedDate)
     }
 
-    private fun setupObservers(activity: FragmentActivity) {
+    private fun setupObservers(activity: FragmentActivity, binding: StatsViewAllFragmentBinding) = with(binding) {
         viewModel.isRefreshing.observe(viewLifecycleOwner, Observer {
             it?.let { isRefreshing ->
                 swipeToRefreshHelper.isRefreshing = isRefreshing
@@ -192,68 +197,72 @@ class StatsViewAllFragment : DaggerFragment() {
             }
         })
 
-        viewModel.data.observe(viewLifecycleOwner, Observer {
+        viewModel.data.observe(viewLifecycleOwner, {
             if (it != null) {
-                recyclerView.visibility = if (it is StatsBlock.Success) View.VISIBLE else View.GONE
-                loadingContainer.visibility = if (it is StatsBlock.Loading) View.VISIBLE else View.GONE
-                statsErrorView.visibility = if (it is StatsBlock.Error) View.VISIBLE else View.GONE
-                statsEmptyView.visibility = if (it is StatsBlock.EmptyBlock) View.VISIBLE else View.GONE
-                when (it) {
-                    is StatsBlock.Success -> {
-                        loadData(recyclerView, prepareLayout(it.data, it.type))
-                    }
-                    is StatsBlock.Loading -> {
-                        loadData(loadingRecyclerView, prepareLayout(it.data, it.type))
-                    }
-                    is StatsBlock.Error -> {
-                        statsErrorView.button.setOnClickListener {
-                            viewModel.onRetryClick()
+                with(binding.statsListFragment) {
+                    recyclerView.visibility = if (it is Success) View.VISIBLE else View.GONE
+                    loadingContainer.visibility = if (it is Loading) View.VISIBLE else View.GONE
+                    val showErrorView = if (it is Error) View.VISIBLE else View.GONE
+                    errorView.statsErrorView.visibility = showErrorView
+                    val showEmptyView = if (it is EmptyBlock) View.VISIBLE else View.GONE
+                    emptyView.statsEmptyView.visibility = showEmptyView
+                    when (it) {
+                        is Success -> {
+                            loadData(recyclerView, prepareLayout(it.data, it.type, binding))
+                        }
+                        is Loading -> {
+                            loadData(loadingRecyclerView, prepareLayout(it.data, it.type, binding))
+                        }
+                        is Error -> {
+                            errorView.statsErrorView.button.setOnClickListener {
+                                viewModel.onRetryClick()
+                            }
+                        }
+                        is EmptyBlock -> {
                         }
                     }
                 }
             }
         })
-        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigationTarget.observe(viewLifecycleOwner, { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 navigator.navigate(activity, target)
             }
         })
 
-        viewModel.dateSelectorData.observe(viewLifecycleOwner, Observer { dateSelectorUiModel ->
+        viewModel.dateSelectorData.observe(viewLifecycleOwner, { dateSelectorUiModel ->
             drawDateSelector(dateSelectorUiModel)
         })
 
-        viewModel.navigationTarget.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.navigationTarget.observe(viewLifecycleOwner, { event ->
             event?.getContentIfNotHandled()?.let { target ->
                 navigator.navigate(activity, target)
             }
         })
 
-        viewModel.selectedDate.observe(viewLifecycleOwner, Observer { event ->
+        viewModel.selectedDate.observe(viewLifecycleOwner, { event ->
             if (event != null) {
                 viewModel.onDateChanged()
             }
         })
 
-        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, Observer { hasShadow ->
-            app_bar_layout.postDelayed(
+        viewModel.toolbarHasShadow.observe(viewLifecycleOwner, { hasShadow ->
+            appBarLayout.postDelayed(
                     {
-                        if (app_bar_layout != null) {
-                            val originalStateListAnimator = app_bar_layout.stateListAnimator
-                            if (originalStateListAnimator != null) {
-                                app_bar_layout.setTag(
-                                        R.id.appbar_layout_original_animator_tag_key,
-                                        originalStateListAnimator
-                                )
-                            }
+                        val originalStateListAnimator = appBarLayout.stateListAnimator
+                        if (originalStateListAnimator != null) {
+                            appBarLayout.setTag(
+                                    R.id.appbar_layout_original_animator_tag_key,
+                                    originalStateListAnimator
+                            )
+                        }
 
-                            if (hasShadow == true) {
-                                app_bar_layout.stateListAnimator = app_bar_layout.getTag(
-                                        R.id.appbar_layout_original_animator_tag_key
-                                ) as StateListAnimator
-                            } else {
-                                app_bar_layout.stateListAnimator = null
-                            }
+                        if (hasShadow == true) {
+                            appBarLayout.stateListAnimator = appBarLayout.getTag(
+                                    R.id.appbar_layout_original_animator_tag_key
+                            ) as StateListAnimator
+                        } else {
+                            appBarLayout.stateListAnimator = null
                         }
                     },
                     100
@@ -275,11 +284,15 @@ class StatsViewAllFragment : DaggerFragment() {
         recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
     }
 
-    private fun prepareLayout(data: List<BlockListItem>, type: StatsBlock.Type): List<BlockListItem> {
+    private fun prepareLayout(
+        data: List<BlockListItem>,
+        type: Type,
+        binding: StatsViewAllFragmentBinding
+    ): List<BlockListItem> = with(binding) {
         val tabs = data.firstOrNull { it is TabsItem } as? TabsItem
         return if (tabs != null) {
             if (tabLayout.tabCount == 0) {
-                setupTabs(tabs)
+                setupTabs(tabs, binding)
             } else if (tabLayout.selectedTabPosition != tabs.selectedTabPosition) {
                 tabLayout.getTabAt(tabs.selectedTabPosition)?.select()
             }
@@ -298,7 +311,7 @@ class StatsViewAllFragment : DaggerFragment() {
         }
     }
 
-    private fun setupTabs(item: TabsItem) {
+    private fun setupTabs(item: TabsItem, binding: StatsViewAllFragmentBinding) = with(binding) {
         tabLayout.clearOnTabSelectedListeners()
         tabLayout.removeAllTabs()
         item.tabs.forEach { tabItem ->

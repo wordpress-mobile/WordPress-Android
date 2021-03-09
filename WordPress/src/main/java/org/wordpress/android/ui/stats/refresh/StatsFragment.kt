@@ -6,6 +6,7 @@ import android.content.Context
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.fragment.app.FragmentManager
@@ -42,17 +43,29 @@ class StatsFragment : DaggerFragment(R.layout.stats_fragment), ScrollableViewIni
     @Inject lateinit var uiHelpers: UiHelpers
     private lateinit var viewModel: StatsViewModel
     private lateinit var swipeToRefreshHelper: SwipeToRefreshHelper
+    private lateinit var binding: StatsFragmentBinding
     private val selectedTabListener: SelectedTabListener
         get() = SelectedTabListener(viewModel)
 
     private var restorePreviousSearch = false
 
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setHasOptionsMenu(true)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setHasOptionsMenu(true)
 
         val nonNullActivity = requireActivity()
-        val binding = StatsFragmentBinding.bind(requireView())
+        binding = StatsFragmentBinding.bind(requireView())
+        with(nonNullActivity as AppCompatActivity) {
+            setSupportActionBar(binding.toolbar)
+            supportActionBar?.let {
+                it.setHomeButtonEnabled(true)
+                it.setDisplayHomeAsUpEnabled(true)
+            }
+        }
 
         initializeViewModels(nonNullActivity, binding, savedInstanceState == null, savedInstanceState)
         initializeViews(nonNullActivity, binding)
