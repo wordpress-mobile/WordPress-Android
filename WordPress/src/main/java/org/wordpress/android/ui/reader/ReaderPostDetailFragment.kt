@@ -54,7 +54,6 @@ import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.DEEP_LINKED_FALLBACK
-import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.SHARED_ITEM
@@ -1198,8 +1197,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 // Liking needs to be handled "later" after the post has been updated from the server so,
                 // nothing special to do here
             }
-
-            AnalyticsUtils.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, viewModel.post)
 
             viewModel.post?.let {
                 readerWebView.setIsPrivatePost(it.isPrivate)

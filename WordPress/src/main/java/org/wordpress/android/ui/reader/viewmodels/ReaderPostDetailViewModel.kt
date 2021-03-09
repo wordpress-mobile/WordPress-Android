@@ -6,6 +6,7 @@ import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
@@ -193,6 +194,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     }
 
     fun onShowPost(post: ReaderPost) {
+        analyticsUtilsWrapper.trackWithReaderPostDetails(READER_ARTICLE_RENDERED, post)
         _uiState.value = convertPostToUiState(post)
     }
 
