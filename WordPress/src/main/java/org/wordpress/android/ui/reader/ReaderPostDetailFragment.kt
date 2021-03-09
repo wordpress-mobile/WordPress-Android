@@ -135,7 +135,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private var blogId: Long = 0
     private var directOperation: DirectOperation? = null
     private var commentId: Int = 0
-    private var isFeed: Boolean = false
     private var interceptedUri: String? = null
     private var renderer: ReaderPostRenderer? = null
     private var postListType: ReaderPostListType = ReaderTypes.DEFAULT_POST_LIST_TYPE
@@ -245,7 +244,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     override fun setArguments(args: Bundle?) {
         super.setArguments(args)
         if (args != null) {
-            isFeed = args.getBoolean(ReaderConstants.ARG_IS_FEED)
             blogId = args.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = args.getLong(ReaderConstants.ARG_POST_ID)
             directOperation = args.getSerializable(ReaderConstants.ARG_DIRECT_OPERATION) as? DirectOperation
@@ -371,12 +369,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViewModel()
+        initViewModel(savedInstanceState)
 
         showPost()
     }
 
-    private fun initViewModel() {
+    private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
         viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
@@ -387,7 +385,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
         viewModel.navigationEvents.observe(viewLifecycleOwner, { it.applyIfNotHandled { handleNavigationEvent() } })
 
-        viewModel.start(isRelatedPost)
+        viewModel.start(isRelatedPost, savedInstanceState ?: arguments)
     }
 
     private fun renderUiState(state: ReaderPostDetailsUiState) {
@@ -629,7 +627,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(ReaderConstants.ARG_IS_FEED, isFeed)
+        outState.putBoolean(ReaderConstants.ARG_IS_FEED, viewModel.isFeed)
         outState.putLong(ReaderConstants.ARG_BLOG_ID, blogId)
         outState.putLong(ReaderConstants.ARG_POST_ID, postId)
         outState.putSerializable(ReaderConstants.ARG_DIRECT_OPERATION, directOperation)
@@ -675,7 +673,6 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
 
     private fun restoreState(savedInstanceState: Bundle?) {
         savedInstanceState?.let {
-            isFeed = it.getBoolean(ReaderConstants.ARG_IS_FEED)
             blogId = it.getLong(ReaderConstants.ARG_BLOG_ID)
             postId = it.getLong(ReaderConstants.ARG_POST_ID)
             directOperation = it
@@ -726,7 +723,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
      * replace the current post with the passed one
      */
     private fun replacePost(blogId: Long, postId: Long, clearCommentOperation: Boolean) {
-        isFeed = false
+        viewModel.isFeed = false
         this.blogId = blogId
         this.postId = postId
 
@@ -960,7 +957,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
             }
         }
 
-        if (isFeed) {
+        if (viewModel.isFeed) {
             ReaderPostActions.requestFeedPost(blogId, postId, listener)
         } else {
             ReaderPostActions.requestBlogPost(blogId, postId, listener)
@@ -1113,7 +1110,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         }
 
         override fun doInBackground(vararg params: Void): Boolean? {
-            viewModel.post = if (isFeed)
+            viewModel.post = if (viewModel.isFeed)
                 ReaderPostTable.getFeedPost(blogId, postId, false)
             else
                 ReaderPostTable.getBlogPost(blogId, postId, false)
@@ -1127,7 +1124,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                             it.blogId != 0L &&
                             it.postId != 0L
                     ) {
-                        isFeed = false
+                        viewModel.isFeed = false
                         blogId = it.blogId
                         postId = it.postId
                         viewModel.post = ReaderPostTable.getBlogPost(blogId, postId, false)

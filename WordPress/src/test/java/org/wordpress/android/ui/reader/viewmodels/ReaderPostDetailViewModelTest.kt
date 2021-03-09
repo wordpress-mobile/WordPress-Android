@@ -1,5 +1,6 @@
 package org.wordpress.android.ui.reader.viewmodels
 
+import android.os.Bundle
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.any
@@ -623,7 +624,7 @@ class ReaderPostDetailViewModelTest {
         viewModel.snackbarEvents.observeForever {
             msgs.add(it)
         }
-        viewModel.start(isRelatedPost)
+        viewModel.start(isRelatedPost = isRelatedPost, bundle = Bundle())
 
         if (showPost) {
             viewModel.onShowPost(readerPost)
