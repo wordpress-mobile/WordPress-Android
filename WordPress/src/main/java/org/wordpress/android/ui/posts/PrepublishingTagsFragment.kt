@@ -15,6 +15,7 @@ import org.wordpress.android.ui.posts.EditPostSettingsFragment.EditPostActivityH
 import org.wordpress.android.ui.utils.UiHelpers
 import org.wordpress.android.util.ActivityUtils
 import org.wordpress.android.util.analytics.AnalyticsTrackerWrapper
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
@@ -85,19 +86,15 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
         viewModel = ViewModelProvider(this, viewModelFactory)
                 .get(PrepublishingTagsViewModel::class.java)
 
-        viewModel.dismissKeyboard.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                ActivityUtils.hideKeyboardForced(tags_edit_text)
-            }
+        viewModel.dismissKeyboard.observeEvent(viewLifecycleOwner, {
+            ActivityUtils.hideKeyboardForced(tags_edit_text)
         })
 
-        viewModel.navigateToHomeScreen.observe(viewLifecycleOwner, Observer { event ->
-            event?.applyIfNotHandled {
-                closeListener?.onBackClicked()
-            }
+        viewModel.navigateToHomeScreen.observeEvent(viewLifecycleOwner, {
+            closeListener?.onBackClicked()
         })
 
-        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, Observer { uiString ->
+        viewModel.toolbarTitleUiState.observe(viewLifecycleOwner, { uiString ->
             toolbar_title.text = uiHelpers.getTextOfUiString(requireContext(), uiString)
         })
 
@@ -106,8 +103,10 @@ class PrepublishingTagsFragment : TagsFragment(), TagsSelectedListener {
     }
 
     private fun getEditPostRepository(): EditPostRepository {
-        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) { "This is possibly null because it's " +
-                "called during config changes." }
+        val editPostActivityHook = requireNotNull(getEditPostActivityHook()) {
+            "This is possibly null because it's " +
+                    "called during config changes."
+        }
 
         return editPostActivityHook.editPostRepository
     }

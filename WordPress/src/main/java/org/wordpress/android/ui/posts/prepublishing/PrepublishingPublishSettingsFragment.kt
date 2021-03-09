@@ -14,6 +14,7 @@ import org.wordpress.android.ui.posts.PublishSettingsFragment
 import org.wordpress.android.ui.posts.PublishSettingsFragmentType.PREPUBLISHING_NUDGES
 import org.wordpress.android.ui.posts.PublishSettingsViewModel
 import org.wordpress.android.ui.utils.UiHelpers
+import org.wordpress.android.viewmodel.observeEvent
 import javax.inject.Inject
 
 class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
@@ -47,13 +48,11 @@ class PrepublishingPublishSettingsFragment : PublishSettingsFragment() {
         (viewModel as PrepublishingPublishSettingsViewModel).let {
             backButton.setOnClickListener { viewModel.onBackButtonClicked() }
 
-            viewModel.navigateToHomeScreen.observe(this, Observer { event ->
-                event?.applyIfNotHandled {
-                    closeListener?.onBackClicked()
-                }
+            viewModel.navigateToHomeScreen.observeEvent(this, {
+                closeListener?.onBackClicked()
             })
 
-            viewModel.updateToolbarTitle.observe(this, Observer { uiString ->
+            viewModel.updateToolbarTitle.observe(this, { uiString ->
                 toolbarTitle.text = uiHelpers.getTextOfUiString(
                         requireContext(),
                         uiString
