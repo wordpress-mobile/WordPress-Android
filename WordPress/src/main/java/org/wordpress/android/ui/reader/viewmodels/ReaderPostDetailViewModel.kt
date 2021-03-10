@@ -8,7 +8,10 @@ import kotlinx.coroutines.launch
 import org.wordpress.android.R
 import org.wordpress.android.analytics.AnalyticsTracker.Stat
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_ARTICLE_RENDERED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_USER_UNAUTHORIZED
+import org.wordpress.android.analytics.AnalyticsTracker.Stat.READER_WPCOM_SIGN_IN_NEEDED
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.models.ReaderTagType.FOLLOWED
@@ -37,6 +40,7 @@ import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase
 import org.wordpress.android.ui.reader.usecases.ReaderFetchRelatedPostsUseCase.FetchRelatedPostsState
 import org.wordpress.android.ui.reader.usecases.ReaderGetPostUseCase
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderViewUiState.ReaderPostDetailsHeaderUiState
 import org.wordpress.android.ui.utils.UiDimen
@@ -45,6 +49,7 @@ import org.wordpress.android.ui.utils.UiString.UiStringRes
 import org.wordpress.android.util.AppLog
 import org.wordpress.android.util.AppLog.T
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.viewmodel.Event
 import org.wordpress.android.viewmodel.ScopedViewModel
@@ -62,8 +67,10 @@ class ReaderPostDetailViewModel @Inject constructor(
     private val readerGetPostUseCase: ReaderGetPostUseCase,
     private val readerFetchPostUseCase: ReaderFetchPostUseCase,
     private val siteStore: SiteStore,
+    private val accountStore: AccountStore,
     private val analyticsUtilsWrapper: AnalyticsUtilsWrapper,
     private val eventBusWrapper: EventBusWrapper,
+    private val wpUrlUtilsWrapper: WpUrlUtilsWrapper,
     @Named(UI_THREAD) private val mainDispatcher: CoroutineDispatcher,
     @Named(IO_THREAD) private val ioDispatcher: CoroutineDispatcher
 ) : ScopedViewModel(mainDispatcher) {
@@ -88,6 +95,7 @@ class ReaderPostDetailViewModel @Inject constructor(
     var isRelatedPost: Boolean = false
 
     var isFeed: Boolean = false
+    var interceptedUri: String? = null
 
     var post: ReaderPost? = null
     val hasPost: Boolean
@@ -104,6 +112,7 @@ class ReaderPostDetailViewModel @Inject constructor(
         isStarted = true
         this.isRelatedPost = isRelatedPost
         this.isFeed = bundle?.getBoolean(ReaderConstants.ARG_IS_FEED) ?: false
+        this.interceptedUri = bundle?.getString(ReaderConstants.ARG_INTERCEPTED_URI)
 
         init()
     }
@@ -162,10 +171,16 @@ class ReaderPostDetailViewModel @Inject constructor(
                 FetchReaderPostState.AlreadyRunning ->
                     AppLog.i(T.READER, "reader post detail > post not found, requesting it")
 
-                FetchReaderPostState.Failed.NoNetwork,
-                FetchReaderPostState.Failed.RequestFailed,
-                FetchReaderPostState.Failed.NotAuthorised,
-                FetchReaderPostState.Failed.PostNotFound -> Unit // To be implemented
+                FetchReaderPostState.Failed.NoNetwork ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.no_network_message))
+
+                FetchReaderPostState.Failed.RequestFailed ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_generic))
+
+                FetchReaderPostState.Failed.NotAuthorised -> updateNotAuthorisedErrorState()
+
+                FetchReaderPostState.Failed.PostNotFound ->
+                    _uiState.value = ErrorUiState(UiStringRes(R.string.reader_err_get_post_not_found))
             }
         } else {
             updatePostDetailsUi()
@@ -176,6 +191,10 @@ class ReaderPostDetailViewModel @Inject constructor(
         val (readerPost, isFeedPost) = readerGetPostUseCase.get(blogId = blogId, postId = postId, isFeed = this.isFeed)
         this.post = readerPost
         this.isFeed = isFeedPost
+    }
+
+    fun onNotAuthorisedRequestFailure() {
+        updateNotAuthorisedErrorState()
     }
 
     fun onMoreButtonClicked() {
@@ -369,8 +388,33 @@ class ReaderPostDetailViewModel @Inject constructor(
         )
     }
 
-    sealed class UiState {
-        object ErrorUiState : UiState()
+    private fun updateNotAuthorisedErrorState() {
+        val offerSignIn = wpUrlUtilsWrapper.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
+        var errMsgResId: Int
+        var signInButtonVisibility = offerSignIn
+
+        if (!offerSignIn) {
+            errMsgResId = if (interceptedUri == null)
+                R.string.reader_err_get_post_not_authorized
+            else
+                R.string.reader_err_get_post_not_authorized_fallback
+        } else {
+            errMsgResId = if (interceptedUri == null)
+                R.string.reader_err_get_post_not_authorized_signin
+            else
+                R.string.reader_err_get_post_not_authorized_signin_fallback
+            post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_WPCOM_SIGN_IN_NEEDED, it) }
+        }
+        post?.let { analyticsUtilsWrapper.trackWithReaderPostDetails(READER_USER_UNAUTHORIZED, it) }
+
+        _uiState.value = ErrorUiState(UiStringRes(errMsgResId), signInButtonVisibility)
+    }
+
+    sealed class UiState(val errorVisible: Boolean = false) {
+        data class ErrorUiState(
+            val message: UiString?,
+            val signInButtonVisibility: Boolean = false
+        ) : UiState(errorVisible = true)
 
         data class ReaderPostDetailsUiState(
             val postId: Long,

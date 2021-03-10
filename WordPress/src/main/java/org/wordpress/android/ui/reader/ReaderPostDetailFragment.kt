@@ -85,6 +85,7 @@ import org.wordpress.android.ui.reader.utils.ReaderUtils
 import org.wordpress.android.ui.reader.utils.ReaderUtilsWrapper
 import org.wordpress.android.ui.reader.utils.ReaderVideoUtils
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel
+import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ErrorUiState
 import org.wordpress.android.ui.reader.viewmodels.ReaderPostDetailViewModel.UiState.ReaderPostDetailsUiState
 import org.wordpress.android.ui.reader.views.ReaderIconCountView
 import org.wordpress.android.ui.reader.views.ReaderPostDetailsHeaderViewUiStateBuilder
@@ -104,7 +105,6 @@ import org.wordpress.android.util.ToastUtils
 import org.wordpress.android.util.UrlUtils
 import org.wordpress.android.util.WPPermissionUtils.READER_FILE_DOWNLOAD_PERMISSION_REQUEST_CODE
 import org.wordpress.android.util.WPSwipeToRefreshHelper.buildSwipeToRefreshHelper
-import org.wordpress.android.util.WPUrlUtils
 import org.wordpress.android.util.analytics.AnalyticsUtils
 import org.wordpress.android.util.getColorFromAttribute
 import org.wordpress.android.util.helpers.SwipeToRefreshHelper
@@ -369,7 +369,17 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     private fun initViewModel(savedInstanceState: Bundle?) {
         viewModel = ViewModelProvider(this, viewModelFactory).get(ReaderPostDetailViewModel::class.java)
 
-        viewModel.uiState.observe(viewLifecycleOwner, { renderUiState(it) })
+        viewModel.uiState.observe(viewLifecycleOwner, {
+            uiHelpers.updateVisibility(text_error, it.errorVisible)
+            when (it) {
+                is ReaderPostDetailsUiState -> renderUiState(it)
+                is ErrorUiState -> {
+                    uiHelpers.updateVisibility(signInButton, it.signInButtonVisibility)
+                    val message = it.message?.let { msg -> uiHelpers.getTextOfUiString(requireContext(), msg) }
+                    showError(message?.toString())
+                }
+            }
+        })
 
         viewModel.refreshPost.observe(viewLifecycleOwner, {} /* Do nothing */)
 
@@ -596,7 +606,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         val postHasUrl = viewModel.post?.hasUrl() == true
         val mnuBrowse = menu.findItem(R.id.menu_browse)
         if (mnuBrowse != null) {
-            mnuBrowse.isVisible = postHasUrl || interceptedUri != null
+            mnuBrowse.isVisible = postHasUrl || viewModel.interceptedUri != null
         }
         val mnuShare = menu.findItem(R.id.menu_share)
         if (mnuShare != null) {
@@ -610,12 +620,12 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                 if (viewModel.hasPost) {
                     AnalyticsTracker.track(Stat.READER_ARTICLE_VISITED)
                     ReaderActivityLauncher.openPost(context, viewModel.post)
-                } else if (interceptedUri != null) {
+                } else if (viewModel.interceptedUri != null) {
                     AnalyticsUtils.trackWithInterceptedUri(
                             Stat.DEEP_LINKED_FALLBACK,
-                            interceptedUri
+                            viewModel.interceptedUri
                     )
-                    ReaderActivityLauncher.openUrl(activity, interceptedUri, OpenUrlType.EXTERNAL)
+                    ReaderActivityLauncher.openUrl(activity, viewModel.interceptedUri, OpenUrlType.EXTERNAL)
                     requireActivity().finish()
                 }
                 return true
@@ -641,7 +651,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
         outState.putInt(ReaderConstants.ARG_COMMENT_ID, commentId)
 
         outState.putBoolean(ReaderConstants.ARG_IS_RELATED_POST, isRelatedPost)
-        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, interceptedUri)
+        outState.putString(ReaderConstants.ARG_INTERCEPTED_URI, viewModel.interceptedUri)
         outState.putBoolean(
                 ReaderConstants.KEY_POST_SLUGS_RESOLUTION_UNDERWAY,
                 postSlugsResolutionUnderway
@@ -993,35 +1003,15 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
     }
 
     private fun onRequestFailure(statusCode: Int) {
-        val errMsgResId: Int
         if (!NetworkUtils.isNetworkAvailable(activity)) {
-            errMsgResId = R.string.no_network_message
+            showError(getString(R.string.no_network_message))
         } else {
             when (statusCode) {
-                401, 403 -> {
-                    val offerSignIn = WPUrlUtils.isWordPressCom(interceptedUri) && !accountStore.hasAccessToken()
-
-                    if (!offerSignIn) {
-                        errMsgResId = if (interceptedUri == null)
-                            R.string.reader_err_get_post_not_authorized
-                        else
-                            R.string.reader_err_get_post_not_authorized_fallback
-                        signInButton.visibility = View.GONE
-                    } else {
-                        errMsgResId = if (interceptedUri == null)
-                            R.string.reader_err_get_post_not_authorized_signin
-                        else
-                            R.string.reader_err_get_post_not_authorized_signin_fallback
-                        signInButton.visibility = View.VISIBLE
-                        AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_WPCOM_SIGN_IN_NEEDED, viewModel.post)
-                    }
-                    AnalyticsUtils.trackWithReaderPostDetails(Stat.READER_USER_UNAUTHORIZED, viewModel.post)
-                }
-                404 -> errMsgResId = R.string.reader_err_get_post_not_found
-                else -> errMsgResId = R.string.reader_err_get_post_generic
+                401, 403 -> viewModel.onNotAuthorisedRequestFailure()
+                404 -> showError(getString(R.string.reader_err_get_post_not_found))
+                else -> showError(getString(R.string.reader_err_get_post_generic))
             }
         }
-        showError(getString(errMsgResId))
     }
 
     /*
@@ -1125,7 +1115,7 @@ class ReaderPostDetailFragment : ViewPagerFragment(),
                     viewModel.post?.let {
                         ReaderActivityLauncher.showReaderComments(
                                 activity, it.blogId, it.postId,
-                                directOperation, commentId.toLong(), interceptedUri
+                                directOperation, commentId.toLong(), viewModel.interceptedUri
                         )
                     }
 

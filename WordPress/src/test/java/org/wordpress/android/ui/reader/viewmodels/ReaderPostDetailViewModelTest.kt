@@ -23,6 +23,7 @@ import org.wordpress.android.R.dimen
 import org.wordpress.android.TEST_DISPATCHER
 import org.wordpress.android.datasets.wrappers.ReaderPostTableWrapper
 import org.wordpress.android.fluxc.model.SiteModel
+import org.wordpress.android.fluxc.store.AccountStore
 import org.wordpress.android.fluxc.store.SiteStore
 import org.wordpress.android.models.ReaderPost
 import org.wordpress.android.test
@@ -69,6 +70,7 @@ import org.wordpress.android.ui.reader.views.uistates.ReaderPostDetailsHeaderVie
 import org.wordpress.android.ui.utils.UiDimen.UIDimenRes
 import org.wordpress.android.ui.utils.UiString.UiStringText
 import org.wordpress.android.util.EventBusWrapper
+import org.wordpress.android.util.WpUrlUtilsWrapper
 import org.wordpress.android.util.analytics.AnalyticsUtilsWrapper
 import org.wordpress.android.util.image.ImageType.BLAVATAR_CIRCULAR
 import org.wordpress.android.viewmodel.Event
@@ -103,6 +105,8 @@ class ReaderPostDetailViewModelTest {
     @Mock private lateinit var readerSimplePost: ReaderSimplePost
     @Mock private lateinit var analyticsUtilsWrapper: AnalyticsUtilsWrapper
     @Mock private lateinit var siteStore: SiteStore
+    @Mock private lateinit var accountStore: AccountStore
+    @Mock private lateinit var wpUrlUtilsWrapper: WpUrlUtilsWrapper
 
     private val fakePostFollowStatusChangedFeed = MutableLiveData<FollowStatusChanged>()
     private val fakeRefreshPostFeed = MutableLiveData<Event<Unit>>()
@@ -127,8 +131,10 @@ class ReaderPostDetailViewModelTest {
                 readerGetPostUseCase,
                 readerFetchPostUseCase,
                 siteStore,
+                accountStore,
                 analyticsUtilsWrapper,
                 eventBusWrapper,
+                wpUrlUtilsWrapper,
                 TEST_DISPATCHER,
                 TEST_DISPATCHER
         )
