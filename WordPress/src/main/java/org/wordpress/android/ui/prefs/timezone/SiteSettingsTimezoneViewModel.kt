@@ -14,7 +14,6 @@ import java.time.ZonedDateTime
 import java.time.format.DateTimeFormatter
 import java.time.format.TextStyle.FULL
 import java.util.Locale
-import java.util.TimeZone
 import javax.inject.Inject
 
 class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
@@ -64,19 +63,29 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
     fun getTimezones() {
         timezonesList.clear()
 
-        TimeZone.getAvailableIDs().asList().groupBy {
+        ZoneId.getAvailableZoneIds().groupBy {
             it.split('/').first()
+        }.entries.sortedBy {
+            it.key
+        }.filter {
+            Continents.values().any { continent ->
+                it.key == continent.s
+            }
         }.map {
             timezonesList.add(TimezoneHeader(it.key))
-            it.value.map { zone ->
-                timezonesList.add(
-                        TimezoneItem(
-                                zone.split("/").last(),
-                                zone,
-                                getZoneOffset(zone),
-                                getTimeAtZone(zone)
-                        )
-                )
+
+            // sort by city with timezone
+            val sortedList = it.value.sortedBy { zone ->
+                zone.split("/").last()
+            }
+
+            sortedList.map { zone ->
+                timezonesList.add(TimezoneItem(
+                        zone.split("/").last().replace("_", " "),
+                        zone,
+                        getZoneOffset(zone),
+                        getTimeAtZone(zone)
+                ))
             }
         }
 
@@ -105,4 +114,18 @@ class SiteSettingsTimezoneViewModel @Inject constructor() : ViewModel() {
             ""
         }
     }
+
+    enum class Continents(val s: String) {
+        AFRICA("Africa"),
+        AMERICA("America"),
+        ANTARCTICA("Antarctica"),
+        ARCTIC("Arctic"),
+        ASIA("Asia"),
+        ATLANTIC("Atlantic"),
+        AUSTRALIA("Australia"),
+        EUROPE("Europe"),
+        INDIAN("Indian"),
+        PACIFIC("Pacific")
+    }
 }
+
