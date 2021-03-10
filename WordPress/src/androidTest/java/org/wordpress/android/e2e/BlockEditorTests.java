@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
-import org.wordpress.android.e2e.components.MainNavBarComponent;
 import org.wordpress.android.e2e.pages.BlockEditorPage;
 import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
@@ -39,10 +38,9 @@ public class BlockEditorTests extends BaseTest {
     public void testSwitchToClassicAndPreview() {
         String title = "Hello Espresso!";
 
-        MainNavBarComponent mnb = new MainNavBarComponent().goToMySitesTab();
+        MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
 
-        MySitesPage mySitesPage = new MySitesPage();
         mySitesPage.gotoSiteSettings();
 
         // Set to Gutenberg. Apparently the site is defaulting to Aztec still.
@@ -53,8 +51,7 @@ public class BlockEditorTests extends BaseTest {
 
         mySitesPage.clickBlogPosts();
 
-        new MySitesPage()
-                .startNewPost();
+        mySitesPage.startNewPost();
 
         BlockEditorPage blockEditorPage = new BlockEditorPage();
         blockEditorPage.waitForTitleDisplayed();

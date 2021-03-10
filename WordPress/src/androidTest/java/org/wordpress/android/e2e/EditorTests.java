@@ -9,7 +9,6 @@ import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
 import org.wordpress.android.R;
-import org.wordpress.android.e2e.components.MainNavBarComponent;
 import org.wordpress.android.e2e.pages.EditorPage;
 import org.wordpress.android.e2e.pages.MySitesPage;
 import org.wordpress.android.e2e.pages.SiteSettingsPage;
@@ -39,10 +38,9 @@ public class EditorTests extends BaseTest {
         logoutIfNecessary();
         wpLogin();
 
-        MainNavBarComponent mnb = new MainNavBarComponent().goToMySitesTab();
+        MySitesPage mySitesPage = new MySitesPage().go();
         sleep();
 
-        MySitesPage mySitesPage = new MySitesPage();
         mySitesPage.gotoSiteSettings();
 
         // Set to Classic.
@@ -53,8 +51,7 @@ public class EditorTests extends BaseTest {
 
         mySitesPage.clickBlogPosts();
 
-        new MySitesPage()
-                .startNewPost();
+        mySitesPage.startNewPost();
     }
 
     @Test
