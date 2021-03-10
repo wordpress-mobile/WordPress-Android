@@ -4,17 +4,19 @@ import android.content.Context
 import android.os.Build.VERSION
 import android.os.Build.VERSION_CODES
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import androidx.annotation.FloatRange
 import androidx.fragment.app.Fragment
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.button.MaterialButton
 import com.google.android.material.tabs.TabLayoutMediator
 import org.wordpress.android.BuildConfig
 import org.wordpress.android.R
 import org.wordpress.android.WordPress
 import org.wordpress.android.analytics.AnalyticsTracker
 import org.wordpress.android.analytics.AnalyticsTracker.Stat.LOGIN_PROLOGUE_VIEWED
-import org.wordpress.android.databinding.LoginIntroTemplateViewBinding
+import org.wordpress.android.databinding.LoginPrologueBottomButtonsContainerUnifiedBinding
 import org.wordpress.android.databinding.LoginSignupScreenBinding
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker
 import org.wordpress.android.ui.accounts.UnifiedLoginTracker.Click
@@ -55,17 +57,28 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         }
         val binding = LoginSignupScreenBinding.bind(view)
 
+        val firstButton: MaterialButton
+        val secondButton: MaterialButton
         if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
             binding.bottomButtons.removeAllViews()
-            View.inflate(context, R.layout.login_prologue_bottom_buttons_container_unified, binding.bottomButtons)
+            val bottomButtonsBinding = LoginPrologueBottomButtonsContainerUnifiedBinding.inflate(
+                    LayoutInflater.from(context),
+                    binding.bottomButtons,
+                    true
+            )
+            firstButton = bottomButtonsBinding.firstButton
+            secondButton = bottomButtonsBinding.secondButton
+        } else {
+            firstButton = binding.loginPrologueBottomButtonsContainer.firstButton
+            secondButton = binding.loginPrologueBottomButtonsContainer.secondButton
         }
 
-        binding.loginPrologueBottomButtonsContainerDefault.firstButton.setOnClickListener {
+        firstButton.setOnClickListener {
             unifiedLoginTracker.trackClick(Click.CONTINUE_WITH_WORDPRESS_COM)
             loginPrologueListener.showEmailLoginScreen()
         }
 
-        binding.loginPrologueBottomButtonsContainerDefault.secondButton.setOnClickListener {
+        secondButton.setOnClickListener {
             if (BuildConfig.UNIFIED_LOGIN_AVAILABLE) {
                 unifiedLoginTracker.trackClick(Click.LOGIN_WITH_SITE_ADDRESS)
                 loginPrologueListener.loginViaSiteAddress()
@@ -88,10 +101,9 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
                 // Since we want to achieve the illusion of having a single continuous background, we apply a
                 // parallax effect to the foreground views of each page, making them enter and exit the screen
                 // at a different speed than the background, which just follows the speed of the swipe gesture.
-                val pageBinding = LoginIntroTemplateViewBinding.bind(page)
                 page.apply {
-                    applyParallaxEffect(pageBinding.promoTitle, position, width, 0.25f)
-                    applyParallaxEffect(pageBinding.promoLayoutContainer, position, width, 0.5f)
+                    applyParallaxEffect(this.findViewById(R.id.promo_title), position, width, 0.25f)
+                    applyParallaxEffect(this.findViewById(R.id.promo_layout_container), position, width, 0.5f)
                 }
             }
 
@@ -121,8 +133,8 @@ class LoginPrologueFragment : Fragment(R.layout.login_signup_screen) {
         if (adapter.itemCount > 1) {
             TabLayoutMediator(
                     binding.tabLayoutIndicator,
-                    binding.introsPager,
-                    { _, _ -> }).attach()
+                    binding.introsPager
+            ) { _, _ -> }.attach()
         }
 
         if (savedInstanceState == null) {
