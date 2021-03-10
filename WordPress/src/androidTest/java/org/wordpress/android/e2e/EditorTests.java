@@ -51,7 +51,7 @@ public class EditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mnb.clickBlogPosts();
+        mySitesPage.clickBlogPosts();
 
         new MySitesPage()
                 .startNewPost();

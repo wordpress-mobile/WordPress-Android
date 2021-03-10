@@ -51,7 +51,7 @@ public class BlockEditorTests extends BaseTest {
         // exit the Settings page
         pressBack();
 
-        mnb.clickBlogPosts();
+        mySitesPage.clickBlogPosts();
 
         new MySitesPage()
                 .startNewPost();

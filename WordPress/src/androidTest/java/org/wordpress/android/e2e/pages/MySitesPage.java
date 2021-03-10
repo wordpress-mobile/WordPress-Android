@@ -8,13 +8,13 @@ import androidx.test.espresso.ViewInteraction;
 import org.wordpress.android.R;
 
 import static androidx.test.espresso.Espresso.onView;
-import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
 import static androidx.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withParent;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.wordpress.android.support.BetterScrollToAction.scrollTo;
 import static org.wordpress.android.support.WPSupportUtils.clickOn;
 import static org.wordpress.android.support.WPSupportUtils.isElementDisplayed;
 import static org.wordpress.android.support.WPSupportUtils.longClickOn;
@@ -60,5 +60,11 @@ public class MySitesPage {
         onView(withId(R.id.row_settings))
                 .perform(scrollTo());
         clickOn(R.id.row_settings);
+    }
+
+    public void clickBlogPosts() {
+        onView(withId(R.id.quick_action_posts_button))
+                .perform(scrollTo());
+        clickOn(R.id.quick_action_posts_button);
     }
 }
