@@ -18,6 +18,7 @@ repositories {
     google()
     jcenter()
     maven { url "https://www.jitpack.io" }
+    maven { url "https://a8c-libs.s3.amazonaws.com/android" }
 }
 
 apply plugin: 'com.android.library'
@@ -83,15 +84,6 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.6.2'
 
     lintChecks 'org.wordpress:lint:1.0.1'
-
-    // We need to add the hermes library manually for binary dependency.
-    // There doesn't seem to be a good way to integrate an aar into a library dependency and Google
-    // doesn't seem to believe its worth implementing one: https://stackoverflow.com/a/20715155
-    if (gradle.ext.includedBuildGutenbergMobilePath == null) {
-        def hermesPath = './libs/hermes/'
-        debugRuntimeOnly files(hermesPath + 'hermes-debug.aar')
-        releaseRuntimeOnly files(hermesPath + 'hermes-release.aar')
-    }
 }
 
 signing {
