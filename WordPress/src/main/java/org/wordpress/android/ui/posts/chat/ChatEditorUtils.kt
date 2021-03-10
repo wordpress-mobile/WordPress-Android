@@ -6,6 +6,7 @@ import org.wordpress.android.fluxc.model.MediaModel
 import kotlin.math.min
 
 private const val MAX_COLUMNS = 3
+private const val SPACER_STEP = 30
 private const val HEADER_LENGTH_THRESHOLD = 4
 private const val QUOTE_PREFIX = ">"
 private const val PREFORMATTED_QUOTE = "`"
@@ -43,9 +44,9 @@ val String.preformattedBlock: String
     |${substring(1, length - 1).brForNewLines}</pre><!-- /wp:preformatted -->""".trimMargin()
 
 val String.spacerBlock: String
-    get() = """<!-- wp:spacer {"height":${30 * split("\n").size}} -->
-        |<div style="height:${30 * split("\n").size}px" aria-hidden="true" class="wp-block-spacer"></div>
-        |<!-- /wp:spacer -->""".trimMargin()
+    get() = """<!-- wp:spacer {"height":${SPACER_STEP * split("\n").size}} -->
+        |<div style="height:${SPACER_STEP * split("\n").size}px" aria-hidden="true" class="wp-block-spacer">
+        |</div><!-- /wp:spacer -->""".trimMargin()
 
 fun imageBlock(image: MediaModel) =
         """<!-- wp:image {"id":${image.mediaId},"sizeSlug":"large"} --><figure class="wp-block-image size-large">
